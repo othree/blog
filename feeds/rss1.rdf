@@ -13,7 +13,7 @@ xmlns="http://purl.org/rss/1.0/">
 <link>http://blog.othree.net/</link>
 <description></description>
 <dc:creator></dc:creator>
-<dc:date>2010-10-04T18:02:59+08:00</dc:date>
+<dc:date>2010-10-10T22:06:24+08:00</dc:date>
 <admin:generatorAgent rdf:resource="http://www.movabletype.org/?v=4.34-en" />
 
 <cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/1.0/" />
@@ -21,6 +21,8 @@ xmlns="http://purl.org/rss/1.0/">
 
 <items>
 <rdf:Seq>
+<rdf:li rdf:resource="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/" />
+
 <rdf:li rdf:resource="http://blog.othree.net/log/2010/10/04/google-font-non-latin/" />
 
 <rdf:li rdf:resource="http://blog.othree.net/log/2010/10/03/style-guide-for-online-hy/" />
@@ -48,13 +50,44 @@ xmlns="http://purl.org/rss/1.0/">
 <rdf:li rdf:resource="http://blog.othree.net/log/2010/05/20/jquery-events/" />
 
 <rdf:li rdf:resource="http://blog.othree.net/log/2010/04/03/jslint-command-line-js/" />
-
-<rdf:li rdf:resource="http://blog.othree.net/log/2010/04/03/easygit/" />
 </rdf:Seq>
 </items>
 
 </channel>
 
+
+<item rdf:about="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">
+<title>WAI-ARIA 介紹之一</title>
+<link>http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/</link>
+<description><![CDATA[<p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，會分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。</p>
+
+<h4>引言</h4>
+
+<p>HTML最初並不是被設計來製作網路應用程式的，所以它所有的控制介面非常少，
+而且受限至於 client-server 的通訊模式，然後開發者們使用 JavaScript 突
+破了這層限制，並建置了各式各樣的介面元件。</p>
+
+<p>然而不幸的是，這些突破 HTML 限制的技術通常也不具備親和力，即使這些介面
+元件看起來用起來都和一般的桌面應用程式沒什麼不同，但是像 screen reader
+這些輔助科技並沒辦法存取到這些介面元件的角色(role，這個元件是什麼東西)
+、狀態(特有的設定，如 checked)和其他重要的資訊，這狀況就如同只是調整樣
+式讓一段文字看起來像標題，卻不使用正確的標題標籤，造成各種輔助科技並無
+法知道這段文字是標題一樣。</p>
+
+<p>使用輔助科技的訪客通常不會注意到網頁動態更新的內容，輔助科技通常會認為
+只有在導航事件，例如開啟連結或是送出表單時，網頁的內容才會變動。網路應
+用程式使用AJAX這類新技術，會在背後默默的更新網頁的內容，即使輔助科技會
+去助益網頁內容的更改，使用者仍然可能不會注意到內容有更新，或是不知道如
+何移動到更新的位置。</p>
+
+<p><a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>為這些介面元件提供了角色(role)定義，以及各種角色狀態和屬
+性的規格，使用輔助科技的訪客便可以理解並使用這些資訊，除此之外，
+WAI-ARIA還提供了一種機制以確保訪客不會錯過資訊的更新。</p>
+]]></description>
+<dc:subject>css-html</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2010-10-10T22:06:24+08:00</dc:date>
+</item>
 
 <item rdf:about="http://blog.othree.net/log/2010/10/04/google-font-non-latin/">
 <title>Google Font 開始提供非拉丁語系字型</title>
@@ -288,23 +321,6 @@ sudo JS_DIST=/usr make -f Makefile.ref export</code></pre>
 <dc:subject>script</dc:subject>
 <dc:creator>othree</dc:creator>
 <dc:date>2010-04-03T17:59:53+08:00</dc:date>
-</item>
-
-<item rdf:about="http://blog.othree.net/log/2010/04/03/easygit/">
-<title>easygit</title>
-<link>http://blog.othree.net/log/2010/04/03/easygit/</link>
-<description><![CDATA[<p>前陣子為了找 tinymce 某個 bug 是在哪個 commit 產生的，用上了 <a href="http://people.gnome.org/~newren/eg/">easygit</a> 因為照原來一直 revert 回去的作法實在弄到會吐血， easygit 可以這樣下命令：</p>
-
-
-
-<pre><code>eg revert -since a326cfb0ff21c928fe69f9f18d62ece31b95c47e</code></pre>
-
-
-
-<p>這樣可以直接回去那個版本了，而不是只 revert 那個 commit 。</p>]]></description>
-<dc:subject>unix</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2010-04-03T14:09:27+08:00</dc:date>
 </item>
 
 

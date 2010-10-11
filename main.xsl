@@ -121,7 +121,7 @@
                         <h3><label for="search" id="search-label">關鍵字搜尋</label></h3>
                         <input type="hidden" name="IncludeBlogs" value="1" />
                         <label for="search" id="sub-search-label">尋找：</label>
-                        <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" value="" />
+                        <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-reauired="true" />
 						<input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" />
 					</fieldset>
 				</form>
