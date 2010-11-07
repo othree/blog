@@ -37,7 +37,7 @@
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/html5reset-1.6.css" />
-		<link rel="stylesheet" type="text/css" href="/stylesheets/default/main.min.css" title="default" />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/default/main.css" title="default" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/hiddenlinks.css" media="screen" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
@@ -349,6 +349,9 @@ google.friendconnect.container.renderMembersGadget(
 			</xsl:for-each>
 			<xsl:if test="$listType = 'c'">
 				<h3><a href="all/{$ext}" class="center">此類別所有文章</a></h3>
+			</xsl:if>
+			<xsl:if test="$listType = 'i'">
+                <h3><a href="log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}" class="center">看看其他文章</a></h3>
 			</xsl:if>
 		</xsl:otherwise>
 	</xsl:choose>

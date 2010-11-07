@@ -71,8 +71,8 @@ if ($format == "html") {
     if ($format == "xhtml") {
         array_push($patterns, "/\s*<meta http-equiv=.*>/");
         array_push($replacements, "");
-        header("Content-type: application/xhtml+xml; charset=UTF-8");
-        //header("Content-type: text/html; charset=UTF-8");
+        //header("Content-type: application/xhtml+xml; charset=UTF-8");
+        header("Content-type: text/html; charset=UTF-8");
     } else {
         //change to XHTML 1.0 strict
         array_push($patterns, "/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>\n/",
