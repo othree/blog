@@ -75,6 +75,7 @@
 		<link rel="openid.server" href="http://www.myopenid.com/server" />
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 	</head>
+<xsl:comment> end of chunk #1 </xsl:comment>
 	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
@@ -114,6 +115,7 @@
                 <xsl:apply-templates select="b:entries"/>
 			</div>
 			<hr />
+<xsl:comment> end of chunk #2 </xsl:comment>
 			<aside role="complementary">
 				<h2>其它資訊</h2>
                 <form method="post" id="search-form" action="http://othree.net/mt/mt-search.cgi" role="search">
@@ -250,6 +252,7 @@
                 <a href="http://creativecommons.org/licenses/by/3.0/tw/">CC-BY-3.0</a>
 			</p>
 		</footer>
+<xsl:comment> end of chunk #3 </xsl:comment>
         <!--script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script-->
         <script src='http://www.google-analytics.com/ga.js' type='text/javascript'></script>
         <script type="text/javascript" charset="UTF-8" src="/scripts/main.min.js"></script>
@@ -284,6 +287,7 @@ google.friendconnect.container.renderMembersGadget(
         <script type="text/javascript" charset="UTF-8" src="/scripts/misc.js"></script-->
 	</body>
 </html>
+<xsl:comment> end of chunk #4 </xsl:comment>
 </xsl:template>
 
 <!-- template entries -->
