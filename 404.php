@@ -15,7 +15,7 @@ if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match(
     <link rel="stylesheet" type="text/css" href="/stylesheets/html5reset-1.6.css" /> 
     <link rel="stylesheet" type="text/css" href="/stylesheets/default/main.css" title="default" /> 
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/rss2.xml" />
-    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="made" href="mailto:othree@gmail.com" />
     <link rel="next" title="彙整" href="/log/" />
     <link rel="top" title="首頁" href="/" />
   </head>
@@ -64,7 +64,9 @@ if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match(
           </fieldset>
         </form>
         <h3>關於本網站</h3>
-        <address class="vcard">本網站是<span class="fn nickname">O3(othree)</span>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，如果需要聯絡我請寄信到<strong><a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></strong>。</address>
+        <address>
+            <p class="vcard">本網站是<span class="fn nickname">O3(othree)</span>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，如果需要聯絡我請寄信到<strong><a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></strong>。</p>
+        </address>
         <h3>我在看什麼</h3>
         <ul>
           <li><a href="http://www.anobii.com/people/othree/">aNobii書櫃</a></li>
@@ -85,10 +87,10 @@ if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match(
     <footer>
       <h2>認證、授權</h2>
       <p>
-        <a href="http://dev.w3.org/html5/spec/Overview.html" title="HTML 5 標準">HTML 5</a>,
-        <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 3 標準">CSS 3</a>,
-        <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>,
-        <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>,
+        <a href="http://dev.w3.org/html5/spec/Overview.html" title="HTML 5 標準">HTML 5</a>
+        <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 3 標準">CSS 3</a>
+        <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
+        <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
         <a href="http://creativecommons.org/licenses/by/3.0/tw/">創用CC 姓名標示</a>
       </p> 
     </footer>

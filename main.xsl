@@ -123,7 +123,7 @@
                         <h3><label for="search" id="search-label">關鍵字搜尋</label></h3>
                         <input type="hidden" name="IncludeBlogs" value="1" />
                         <label for="search" id="sub-search-label">尋找：</label>
-                        <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-reauired="true" />
+                        <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-required="true" />
 						<input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" />
 					</fieldset>
 				</form>
@@ -188,8 +188,8 @@
                 </div>
 
                 <xsl:if test="$listType != 'about'">
-                    <address>
                         <h3>關於本網站</h3>
+                    <address>
                         <p class="vcard">本網站是<span class="fn nickname">O3(othree)</span>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
                     </address>
 				</xsl:if>
@@ -649,7 +649,7 @@ google_color_url = "008000";
             </p>
             <p>
               <label for="url">網站位置：<span class="accesskey"><span>accesskey:</span>U</span></label>
-              <input type="url" tabindex="5" id="url" name="url" accesskey="u" value="http://" />
+              <input type="url" tabindex="5" id="url" name="url" accesskey="u" placeholder="http://" value="" />
             </p>
             <p>
               <label for="text">迴響內容：<span class="accesskey"><span>accesskey:</span>C</span></label>
