@@ -172,11 +172,11 @@
                     ，截至目前為止共有<xsl:value-of select="//b:blog/b:entries/b:entry/b:trackbacks/@trackbackCount" />篇文章引用此文、<xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" />篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
 
                     <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
-                        <div><a class="prev pn" href="/log/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
+                        <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
                     </xsl:if>
 
                     <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
-                        <div><a class="next pn" href="/log/{//b:blog/b:entries/b:entriesMeta/b:next/b:mDate}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
+                        <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
                     </xsl:if>
 
                 </xsl:if>
@@ -254,9 +254,11 @@
 		</footer>
 <xsl:comment> end of chunk #3 </xsl:comment>
         <!--script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script-->
-        <script src='http://www.google-analytics.com/ga.js' type='text/javascript'></script>
-        <script type="text/javascript" charset="UTF-8" src="/scripts/main.min.js"></script>
-        <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+        <script src='http://www.google-analytics.com/ga.js'></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script src="/scripts/detect_cleartype.js"></script>
+        <script src="/scripts/main.min.js"></script>
+        <script src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
         <script type="text/javascript">
 var entryID = "<xsl:value-of select="$listID"/>";
 var COMMENTER = true;
@@ -507,7 +509,7 @@ google.friendconnect.container.renderMembersGadget(
             </xsl:otherwise>
         </xsl:choose>
         <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響(<xsl:value-of select="b:comments/@commentCount" />)</a>
-        <a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>
+        <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
     </footer>
     <xsl:if test="$listType = 's'">
         <xsl:if test="$mime = 'xhtml'">
@@ -533,10 +535,10 @@ google_color_url = "008000";
             <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
         </div>
         </xsl:if>
-        <xsl:apply-templates select="b:trackbacks">
-            <xsl:with-param name="entryID" select="@entryID" />
-            <xsl:with-param name="accepted" select="b:PingsAccepted/text()" />
-        </xsl:apply-templates>
+        <!--<xsl:apply-templates select="b:trackbacks">-->
+            <!--<xsl:with-param name="entryID" select="@entryID" />-->
+            <!--<xsl:with-param name="accepted" select="b:PingsAccepted/text()" />-->
+        <!--</xsl:apply-templates>-->
         <xsl:apply-templates select="b:comments">
             <xsl:with-param name="entryID" select="@entryID" />
             <xsl:with-param name="accepted" select="b:CommentsAccepted/text()" />
