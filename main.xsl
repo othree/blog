@@ -229,7 +229,7 @@
 				<h3>訂閱本網誌</h3>
 				<ul id="feeds">
 					<li><a href="http://feeds.feedburner.com/othree"><img src="http://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
-					<li><a href="/about/feeds/{$ext}">其他版本與快速訂閱</a></li>
+					<li><a href="/about/feeds/{$ext}">其它版本與快速訂閱</a></li>
 				</ul>
 				<h3>貼紙</h3>
                 <p>
@@ -365,10 +365,13 @@ google.friendconnect.container.renderMembersGadget(
                 </xsl:call-template>
 			</xsl:for-each>
 			<xsl:if test="$listType = 'c'">
-				<h3><a href="all/{$ext}" class="center">此類別所有文章</a></h3>
+				<h3><a href="/all/{$ext}" class="center">此類別所有文章</a></h3>
+			</xsl:if>
+			<xsl:if test="$listType = 'm'">
+                <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">➡ 前一個月的文章</a>
 			</xsl:if>
 			<xsl:if test="$listType = 'i'">
-                <h3><a href="log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}" class="center">看看其他文章</a></h3>
+                <a id="prev-link" href="/log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}">➡ 看看其它文章</a>
 			</xsl:if>
 		</xsl:otherwise>
 	</xsl:choose>
