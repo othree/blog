@@ -150,7 +150,7 @@
                 <div role="contentinfo">
                 <xsl:if test="$listType = 's'">
                     <h3>關於本文章</h3>
-                    <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於<xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
+                    <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於 <xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
                     <xsl:choose>
                     <xsl:when test="//b:blog/b:entries/b:entry/b:category != ''">
                         <a href="{$logPath}{//b:blog/b:entries/b:entry/b:category}/{$ext}">
@@ -169,7 +169,7 @@
                         <xsl:text> 無類別 </xsl:text>
                     </xsl:otherwise>
                     </xsl:choose>
-                    ，截至目前為止共有<xsl:value-of select="//b:blog/b:entries/b:entry/b:trackbacks/@trackbackCount" />篇文章引用此文、<xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" />篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
+                    ，截至目前為止共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
 
                     <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
                         <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
