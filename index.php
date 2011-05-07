@@ -53,7 +53,7 @@ if (!is_file($target_file)) {
 if ($format == "html") {
     if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match("/W3C/", getenv('HTTP_USER_AGENT'))) $format = 'xhtml';
     //compitable fix for IE or nonIE
-    $patterns = array("/<(script|textarea)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)\/>/",
+    $patterns = array("/<(script|textarea|iframe)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)\/>/",
         "/([\"\'])\/>/",
         "/ *<(\/?(pre|code))> */is",
         "/\s*<(\/?a)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)>\s*/",

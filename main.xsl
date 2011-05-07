@@ -194,8 +194,6 @@
                     </address>
 				</xsl:if>
 				<xsl:if test="$listType = 'i'">
-                    <h3>Google Friend Connect</h3>
-                    <div id="div-1228827515016" style="width:250px;border:1px solid #cccccc;"><xsl:text> </xsl:text></div>
 				</xsl:if>
 				<xsl:if test="$listType = 'm'">
                     <h3>月曆</h3>
@@ -253,33 +251,13 @@
 			</p>
 		</footer>
 <xsl:comment> end of chunk #3 </xsl:comment>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/main.min.js"></script>
-        <script src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
-        <script>
-var entryID = "<xsl:value-of select="$listID"/>";
-var COMMENTER = true;
-
-var skin = {};
-skin['HEIGHT'] = '385';
-skin['BORDER_COLOR'] = '#cccccc';
-skin['ENDCAP_BG_COLOR'] = '#e0ecff';
-skin['ENDCAP_TEXT_COLOR'] = '#333333';
-skin['ENDCAP_LINK_COLOR'] = '#0000cc';
-skin['ALTERNATE_BG_COLOR'] = '#ffffff';
-skin['CONTENT_BG_COLOR'] = '#ffffff';
-skin['CONTENT_LINK_COLOR'] = '#0000cc';
-skin['CONTENT_TEXT_COLOR'] = '#333333';
-skin['CONTENT_SECONDARY_LINK_COLOR'] = '#7777cc';
-skin['CONTENT_SECONDARY_TEXT_COLOR'] = '#666666';
-skin['CONTENT_HEADLINE_COLOR'] = '#333333';
-google.friendconnect.container.setParentUrl('http://blog.othree.net/');
-google.friendconnect.container.renderMembersGadget(
-{ id: 'div-1228827515016',
-  site: '10757524397863160777'},
-  skin);
-        </script>
+        <!--<script>-->
+<!--var entryID = "<xsl:value-of select="$listID"/>";-->
+<!--var COMMENTER = true;-->
+        <!--</script>-->
         <!--<script type="text/javascript" charset="UTF-8" src="http://othree.net/mt/mt-comments.cgi?__mode=cmtr_name_js"></script>-->
         <!--script type="text/javascript" charset="UTF-8" src="/scripts/form.js"></script>
         <script type="text/javascript" charset="UTF-8" src="/scripts/hiddenlinks.js"></script>
