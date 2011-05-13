@@ -38,7 +38,6 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/html5reset-1.6.css" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/default/main.css" title="default" />
-		<link rel="stylesheet" type="text/css" href="/stylesheets/hiddenlinks.css" media="screen" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
