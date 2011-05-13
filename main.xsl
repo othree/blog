@@ -649,7 +649,7 @@ google_color_url = "008000";
               <label for="text">迴響內容：<span class="accesskey"><span>accesskey:</span>C</span></label>
               <textarea tabindex="6" id="text" name="text" rows="15" cols="60" accesskey="c"></textarea>
               <span class="field-tip">
-                    可以使用 Markdown 語法，<a href="http://daringfireball.net/projects/markdown/syntax">語法說明</a>。
+                    可以使用 Markdown 語法，<a href="http://markdown.tw">語法說明</a>。
               </span>
             </p>
             <p>
