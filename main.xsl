@@ -189,7 +189,7 @@
                 <xsl:if test="$listType != 'about'">
                         <h3>關於本網站</h3>
                     <address>
-                        <p class="vcard">本網站是<span class="fn nickname">O3(othree)</span>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
+                        <p class="vcard">本網站是<a href="https://plus.google.com/108698651587282496682" class="fn nickname" rel="me">O3(othree)</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
                     </address>
 				</xsl:if>
 				<xsl:if test="$listType = 'i'">
