@@ -35,9 +35,12 @@
 			</xsl:attribute>
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-		<link rel="stylesheet" type="text/css" href="/stylesheets/html5reset-1.6.css" />
-		<link rel="stylesheet" type="text/css" href="/stylesheets/default/main.css" title="default" />
+        <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" href="/stylesheets/FortAwesome/css/font-awesome/font-awesome.css" />
+        <link rel="stylesheet" href="/stylesheets/othree.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -80,15 +83,10 @@
 			<xsl:attribute name="class">layout-2</xsl:attribute>
 		</xsl:if>
 		<!--div id="skipnavigation"><a href="#content" title="跳過導覽列">跳過導覽列</a></div-->
-        <div id="container">
-            <header role="banner">
-                <h1>
-                    <!--a href="{$mainPath}{$ext}" accesskey="1" title="{b:blogDescription/text()}">O3noBLOG</a-->
-                    <a href="{$mainPath}{$ext}" accesskey="1" title="{b:blogDescription/text()}"><img src="http://blog.othree.net/stylesheets/default/images/logo.png" alt="O3noBLOG"></img></a>
-                </h1>
-                <nav>
-                    <h2>導覽列</h2>
-                    <ul>
+        <nav class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav pull-right">
                         <li>
                             <xsl:if test="$listType = 'i'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
                             <a href="{$mainPath}{$ext}">首頁</a>
@@ -106,149 +104,157 @@
                             <a href="{$mainPath}about/here/{$ext}">關於這</a>
                         </li>
                     </ul>
-                </nav>
-                <p id="happydesigner">A Happy(?)Designer ~~</p>
-            </header>
-            <xsl:apply-templates select="b:entries/b:entriesMeta" />
-			<div id="content" role="main">
-                <xsl:apply-templates select="b:entries"/>
-			</div>
-			<hr />
-<xsl:comment> end of chunk #2 </xsl:comment>
-			<aside role="complementary">
-				<h2>其它資訊</h2>
-                <form method="post" id="search-form" action="http://othree.net/mt/mt-search.cgi" role="search">
-                    <fieldset>
-                        <h3><label for="search" id="search-label">關鍵字搜尋</label></h3>
-                        <input type="hidden" name="IncludeBlogs" value="1" />
-                        <label for="search" id="sub-search-label">尋找：</label>
-                        <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-required="true" />
-						<input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" />
-					</fieldset>
-				</form>
-<!--
-
-<form method="get" id="search_form" action="http://www.google.com/custom">
-					<fieldset>
-<legend accesskey="s"><label for="search" title="搜尋快速鍵：Alt+4">搜尋</label> by <a href="http://www.google.com"><span style="color:#1d62dc; ">G<span style="color:#f00;">o</span><span style="color:#f0c010;">o</span>g<span style="color:#60c060;">l</span><span style="color:#f00;">e</span></span></a>：<span class="accesskey"><span>accesskey:</span>4</span></legend>
-
-<input type="hidden" name="domains" value="blog.othree.net"></input>
-<input type="text" accesskey="4" tabindex="8" id="search" class="text" name="q" size="20" maxlength="255" value=""></input>
-<input type="submit" name="sa" class="button" value="SEARCH" accesskey="s" tabindex="9"  onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'"></input><span class="accesskey"><span>accesskey:</span>S</span>
-<input type="hidden" name="sitesearch" value="blog.othree.net"></input>
-<input type="hidden" name="client" value="pub-5627928804904245"></input>
-<input type="hidden" name="forid" value="1"></input>
-<input type="hidden" name="ie" value="UTF-8"></input>
-<input type="hidden" name="oe" value="UTF-8"></input>
-<input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:1;"></input>
-<input type="hidden" name="hl" value="zh-TW"></input>
-					</fieldset>
-</form>
--->
-
-                <div role="contentinfo">
-                <xsl:if test="$listType = 's'">
-                    <h3>關於本文章</h3>
-                    <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於 <xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
-                    <xsl:choose>
-                    <xsl:when test="//b:blog/b:entries/b:entry/b:category != ''">
-                        <a href="{$logPath}{//b:blog/b:entries/b:entry/b:category}/{$ext}">
-                            <xsl:variable name="temp" select="//b:blog/b:entries/b:entry/b:category" />
-                            <xsl:choose>
-                                <xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()">
-                                    <xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription" />
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:value-of select="b:category" />
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text> 無類別 </xsl:text>
-                    </xsl:otherwise>
-                    </xsl:choose>
-                    ，截至目前為止共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
-
-                    <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
-                        <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
-                    </xsl:if>
-
-                    <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
-                        <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
-                    </xsl:if>
-
-                </xsl:if>
-
-				<xsl:if test="$listType = 'o'">
-                    <h3>關於部落滾</h3>
-                    <p>部落滾就是blogroll，這裡列出所有我訂閱的網站feed。</p>
-				</xsl:if>
                 </div>
+            </div>
+        </nav>
+        <div id="container" class="container">
+            <header role="banner" class="row">
+                <h1 class="span12">
+                    <a href="{$mainPath}{$ext}" accesskey="1" title="{b:blogDescription/text()}">O3 no BLOG</a>
+                </h1>
+            </header>
+            <div class="row">
+                
+                <xsl:apply-templates select="b:entries/b:entriesMeta" />
+                <div id="content" role="main" class="span8">
+                    <xsl:apply-templates select="b:entries"/>
+                </div>
+                <hr />
+    <xsl:comment> end of chunk #2 </xsl:comment>
+                <aside role="complementary" class="span4">
+                    <h2>其它資訊</h2>
+                    <form method="post" id="search-form" action="http://othree.net/mt/mt-search.cgi" role="search">
+                        <fieldset>
+                            <h3><label for="search" id="search-label">關鍵字搜尋</label></h3>
+                            <input type="hidden" name="IncludeBlogs" value="1" />
+                            <label for="search" id="sub-search-label">尋找：</label>
+                            <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-required="true" />
+                            <input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" />
+                        </fieldset>
+                    </form>
+    <!--
 
-                <xsl:if test="$listType != 'about'">
-                        <h3>關於本網站</h3>
-                    <address>
-                        <p class="vcard">本網站是<a href="https://plus.google.com/108698651587282496682" class="fn nickname" rel="me">O3(othree)</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
-                    </address>
-				</xsl:if>
-				<xsl:if test="$listType = 'i'">
-				</xsl:if>
-				<xsl:if test="$listType = 'm'">
-                    <h3>月曆</h3>
-                    <xsl:call-template name="makeCalendar">
-                        <xsl:with-param name="year" select="substring($listID,1,4)"/>
-                        <xsl:with-param name="month" select="substring($listID,6,2)"/>
-                    </xsl:call-template>
-				</xsl:if>
-				<xsl:apply-templates select="$blogData//b:blogData" />
-				<xsl:if test="$listType = 'about'">
-                    <h3>關於這的子頁面</h3>
-                    <ul>
-                        <li><a href="/about/here/{$ext}">本站資訊</a></li>
-                        <li><a href="/about/feeds/{$ext}">訂閱本BLOG</a></li>
-                        <!--li><a href="/about/styles/{$ext}">切換樣式</a></li-->
-                        <li><a href="/source/">PHP原始碼</a></li>
-                    </ul>
-				</xsl:if>
-                <xsl:if test="$listType != 'archive'">
-                    <h3>分類彙整</h3>
-                    <ul>
-                        <xsl:call-template name="categoryArchive">
-                            <xsl:with-param name="cArchive" select="$blogData//b:blog/b:blogData/b:archives/b:archive[b:archiveMeta/b:listType = 'c']" />
+    <form method="get" id="search_form" action="http://www.google.com/custom">
+                        <fieldset>
+    <legend accesskey="s"><label for="search" title="搜尋快速鍵：Alt+4">搜尋</label> by <a href="http://www.google.com"><span style="color:#1d62dc; ">G<span style="color:#f00;">o</span><span style="color:#f0c010;">o</span>g<span style="color:#60c060;">l</span><span style="color:#f00;">e</span></span></a>：<span class="accesskey"><span>accesskey:</span>4</span></legend>
+
+    <input type="hidden" name="domains" value="blog.othree.net"></input>
+    <input type="text" accesskey="4" tabindex="8" id="search" class="text" name="q" size="20" maxlength="255" value=""></input>
+    <input type="submit" name="sa" class="button" value="SEARCH" accesskey="s" tabindex="9"  onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'"></input><span class="accesskey"><span>accesskey:</span>S</span>
+    <input type="hidden" name="sitesearch" value="blog.othree.net"></input>
+    <input type="hidden" name="client" value="pub-5627928804904245"></input>
+    <input type="hidden" name="forid" value="1"></input>
+    <input type="hidden" name="ie" value="UTF-8"></input>
+    <input type="hidden" name="oe" value="UTF-8"></input>
+    <input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:1;"></input>
+    <input type="hidden" name="hl" value="zh-TW"></input>
+                        </fieldset>
+    </form>
+    -->
+
+                    <div role="contentinfo">
+                    <xsl:if test="$listType = 's'">
+                        <h3>關於本文章</h3>
+                        <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於 <xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
+                        <xsl:choose>
+                        <xsl:when test="//b:blog/b:entries/b:entry/b:category != ''">
+                            <a href="{$logPath}{//b:blog/b:entries/b:entry/b:category}/{$ext}">
+                                <xsl:variable name="temp" select="//b:blog/b:entries/b:entry/b:category" />
+                                <xsl:choose>
+                                    <xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()">
+                                        <xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="b:category" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </a>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text> 無類別 </xsl:text>
+                        </xsl:otherwise>
+                        </xsl:choose>
+                        ，截至目前為止共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
+
+                        <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
+                            <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
+                        </xsl:if>
+
+                        <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
+                            <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
+                        </xsl:if>
+
+                    </xsl:if>
+
+                    <xsl:if test="$listType = 'o'">
+                        <h3>關於部落滾</h3>
+                        <p>部落滾就是blogroll，這裡列出所有我訂閱的網站feed。</p>
+                    </xsl:if>
+                    </div>
+
+                    <xsl:if test="$listType != 'about'">
+                            <h3>關於本網站</h3>
+                        <address>
+                            <p class="vcard">本網站是<a href="https://plus.google.com/108698651587282496682" class="fn nickname" rel="me">O3(othree)</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
+                        </address>
+                    </xsl:if>
+                    <xsl:if test="$listType = 'i'">
+                    </xsl:if>
+                    <xsl:if test="$listType = 'm'">
+                        <h3>月曆</h3>
+                        <xsl:call-template name="makeCalendar">
+                            <xsl:with-param name="year" select="substring($listID,1,4)"/>
+                            <xsl:with-param name="month" select="substring($listID,6,2)"/>
                         </xsl:call-template>
+                    </xsl:if>
+                    <xsl:apply-templates select="$blogData//b:blogData" />
+                    <xsl:if test="$listType = 'about'">
+                        <h3>關於這的子頁面</h3>
+                        <ul>
+                            <li><a href="/about/here/{$ext}">本站資訊</a></li>
+                            <li><a href="/about/feeds/{$ext}">訂閱本BLOG</a></li>
+                            <!--li><a href="/about/styles/{$ext}">切換樣式</a></li-->
+                            <li><a href="/source/">PHP原始碼</a></li>
+                        </ul>
+                    </xsl:if>
+                    <xsl:if test="$listType != 'archive'">
+                        <h3>分類彙整</h3>
+                        <ul>
+                            <xsl:call-template name="categoryArchive">
+                                <xsl:with-param name="cArchive" select="$blogData//b:blog/b:blogData/b:archives/b:archive[b:archiveMeta/b:listType = 'c']" />
+                            </xsl:call-template>
+                        </ul>
+                    </xsl:if>
+                    <h3>我在看什麼</h3>
+                    <ul>
+                        <li><a href="http://www.anobii.com/people/othree/">aNobii書櫃</a></li>
                     </ul>
-                </xsl:if>
-                <h3>我在看什麼</h3>
-                <ul>
-					<li><a href="http://www.anobii.com/people/othree/">aNobii書櫃</a></li>
-                </ul>
-				<h3>訂閱本網誌</h3>
-				<ul id="feeds">
-					<li><a href="http://feeds.feedburner.com/othree"><img src="http://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
-					<li><a href="/about/feeds/{$ext}">其它版本與快速訂閱</a></li>
-				</ul>
-				<h3>貼紙</h3>
-                <p>
-                    <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
-                    <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='http://static.jsconf.us/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
-                    <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="https://creativecommons.net/i/othree/" style="border:0px;" /></a>
+                    <h3>訂閱本網誌</h3>
+                    <ul id="feeds">
+                        <li><a href="http://feeds.feedburner.com/othree"><img src="http://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
+                        <li><a href="/about/feeds/{$ext}">其它版本與快速訂閱</a></li>
+                    </ul>
+                    <h3>貼紙</h3>
+                    <p>
+                        <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
+                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='http://static.jsconf.us/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
+                        <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="https://creativecommons.net/i/othree/" style="border:0px;" /></a>
+                    </p>
+                </aside>
+            </div>
+            <footer class="row">
+                <h2 class="span12">認證、授權</h2>
+                <p class="span12">
+                    <!--a href="http://validator.w3.org/check?uri=referer" xml:lang="en" title="本站所有頁面皆通過W3C檢測器的的檢測為合於規範的XHTML 1.1文件">XHTML</a-->
+                    <!--a href="http://jigsaw.w3.org/css-validator/validator?uri=http://blog.othree.net/&amp;warning=2&amp;profile=css3&amp;usermedium=all" xml:lang="en" title="本站使用的CSS語法通過W3C檢測器的的檢測合於CSS 3的規範">CSS</a--> 
+                    <a href="http://dev.w3.org/html5/spec/Overview.html" title="HTML 5 標準">HTML 5</a>
+                    <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 3 標準">CSS 3</a>
+                    <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
+                    <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
+                    <a href="http://creativecommons.org/licenses/by/3.0/tw/">CC-BY-3.0</a>
                 </p>
-			</aside>
-            <div id="b" role="presentation"><hr /></div>
+            </footer>
 		</div>
-		<footer>
-			<h2>認證、授權</h2>
-			<p>
-				<!--a href="http://validator.w3.org/check?uri=referer" xml:lang="en" title="本站所有頁面皆通過W3C檢測器的的檢測為合於規範的XHTML 1.1文件">XHTML</a-->
-				<!--a href="http://jigsaw.w3.org/css-validator/validator?uri=http://blog.othree.net/&amp;warning=2&amp;profile=css3&amp;usermedium=all" xml:lang="en" title="本站使用的CSS語法通過W3C檢測器的的檢測合於CSS 3的規範">CSS</a--> 
-                <a href="http://dev.w3.org/html5/spec/Overview.html" title="HTML 5 標準">HTML 5</a>
-                <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 3 標準">CSS 3</a>
-                <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
-				<a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
-                <a href="http://creativecommons.org/licenses/by/3.0/tw/">CC-BY-3.0</a>
-			</p>
-		</footer>
 <xsl:comment> end of chunk #3 </xsl:comment>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
         <script src="/scripts/detect_cleartype.js"></script>
@@ -377,9 +383,13 @@
 <!-- template entriesMate -->
 
 <xsl:template match="b:entriesMeta">
-<div id="page-info">
-	<xsl:apply-templates select="b:listType" />
-	<div id="page-nav">
+<div id="page-info" class="span8">
+    <div class="row">
+        
+	<div class="span6">
+        <xsl:apply-templates select="b:listType" />
+    </div>
+	<div id="page-nav" class="span2">
 	<xsl:if test="b:listType = 'c' or b:listType = 'ca' or b:listType = 'm' or b:listType = 'y'">
 		<xsl:call-template name="prev_next">
 			<xsl:with-param name="porn" select="'prev'" />
@@ -396,6 +406,7 @@
 	</xsl:if>
 	<xsl:comment>fix for ie</xsl:comment>
 	</div>
+    </div>
 </div>
 </xsl:template>
 <!-- template listType -->
