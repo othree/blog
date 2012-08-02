@@ -110,7 +110,7 @@
         <div id="container" class="container">
             <header role="banner" class="row">
                 <h1 class="span12">
-                    <a href="{$mainPath}{$ext}" accesskey="1" title="{b:blogDescription/text()}">O3 no BLOG</a>
+                    <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3のBLOG</a>
                 </h1>
             </header>
             <div class="row">
