@@ -109,7 +109,7 @@
         <div id="container" class="container">
             <header role="banner" class="row">
                 <h1 class="span12">
-                    <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3のBLOG</a>
+                    <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3noBLOG</a>
                 </h1>
             </header>
             <div class="row">
