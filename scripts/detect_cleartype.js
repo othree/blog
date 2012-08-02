@@ -86,7 +86,7 @@ var TypeHelpers = new function(){
       }
     }
    
-  $(document).ready(function() {
+  /* $(document).ready(function() {
     var result = me.hasSmoothing();
     if (result == true) {
       $('html').addClass('hasFontSmoothing-true');
@@ -95,5 +95,19 @@ var TypeHelpers = new function(){
     } else { // result == null
       $('html').addClass('hasFontSmoothing-unknown'); 
     }
-  });
+  }); */
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var result = me.hasSmoothing(),
+        html = document.getElementsByTagName('html')[0],
+        className = html.className;
+    if (result == true) {
+      html.className = className + ' hasFontSmoothing-true';
+    } else if (result == false) {
+      html.className = className + ' hasFontSmoothing-false';
+    } else { // result == null
+      html.className = className + ' hasFontSmoothing-unknown';
+    }
+  }, false);
+
 }

@@ -77,7 +77,6 @@
 		<link rel="openid.server" href="http://www.myopenid.com/server" />
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 	</head>
-<xsl:comment> end of chunk #1 </xsl:comment>
 	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
@@ -120,7 +119,6 @@
                     <hr/>
                     <xsl:apply-templates select="b:entries"/>
                 </div>
-    <xsl:comment> end of chunk #2 </xsl:comment>
                 <aside role="complementary" class="span4">
                     <hr />
                     <h2>其它資訊</h2>
@@ -233,19 +231,7 @@
                 </p>
             </footer>
 		</div>
-<xsl:comment> end of chunk #3 </xsl:comment>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
         <script src="/scripts/detect_cleartype.js"></script>
-        <script src="/scripts/main.min.js"></script>
-        <!--<script>-->
-<!--var entryID = "<xsl:value-of select="$listID"/>";-->
-<!--var COMMENTER = true;-->
-        <!--</script>-->
-        <!--<script type="text/javascript" charset="UTF-8" src="http://othree.net/mt/mt-comments.cgi?__mode=cmtr_name_js"></script>-->
-        <!--script type="text/javascript" charset="UTF-8" src="/scripts/form.js"></script>
-        <script type="text/javascript" charset="UTF-8" src="/scripts/hiddenlinks.js"></script>
-        <script type="text/javascript" charset="UTF-8" src="/scripts/llbox.js"></script>
-        <script type="text/javascript" charset="UTF-8" src="/scripts/misc.js"></script-->
         <script>
 
   var _gaq = _gaq || [];
@@ -262,7 +248,6 @@
         </script>
 	</body>
 </html>
-<xsl:comment> end of chunk #4 </xsl:comment>
 </xsl:template>
 
 <!-- template entries -->
