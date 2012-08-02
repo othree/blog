@@ -123,13 +123,14 @@
     <xsl:comment> end of chunk #2 </xsl:comment>
                 <aside role="complementary" class="span4">
                     <h2>其它資訊</h2>
-                    <form method="post" id="search-form" action="http://othree.net/mt/mt-search.cgi" role="search">
+                    <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
                         <fieldset>
-                            <h3><label for="search" id="search-label">關鍵字搜尋</label></h3>
-                            <input type="hidden" name="IncludeBlogs" value="1" />
-                            <label for="search" id="sub-search-label">尋找：</label>
-                            <input accesskey="4" id="search" type="search" name="search" size="20" tabindex="8" placeholder="關鍵字搜尋" required="required" aria-required="true" />
-                            <input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" />
+                            <!-- <h3><label for="search" id="search-label">關鍵字搜尋</label></h3> -->
+                            <!-- <input type="hidden" name="IncludeBlogs" value="1" /> -->
+                            <!-- <label for="search" id="sub-search-label">尋找：</label> -->
+                            <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query" />
+                            <input type="hidden"  name="sitesearch" value="blog.othree.net" />
+                            <input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" class="btn" />
                         </fieldset>
                     </form>
     <!--
