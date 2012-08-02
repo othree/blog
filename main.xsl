@@ -39,7 +39,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <link rel="stylesheet" href="/stylesheets/FortAwesome/css/font-awesome/font-awesome.css" />
+        <!-- <link rel="stylesheet" href="/stylesheets/FontAwesome/css/font-awesome.css" /> -->
         <link rel="stylesheet" href="/stylesheets/othree.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
@@ -117,42 +117,19 @@
                 
                 <xsl:apply-templates select="b:entries/b:entriesMeta" />
                 <div id="content" role="main" class="span8">
+                    <hr/>
                     <xsl:apply-templates select="b:entries"/>
                 </div>
-                <hr />
     <xsl:comment> end of chunk #2 </xsl:comment>
                 <aside role="complementary" class="span4">
+                    <hr />
                     <h2>其它資訊</h2>
-                    <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
-                        <fieldset>
-                            <!-- <h3><label for="search" id="search-label">關鍵字搜尋</label></h3> -->
-                            <!-- <input type="hidden" name="IncludeBlogs" value="1" /> -->
-                            <!-- <label for="search" id="sub-search-label">尋找：</label> -->
-                            <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query" />
-                            <input type="hidden"  name="sitesearch" value="blog.othree.net" />
-                            <input type="submit" value="GO" tabindex="9" onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'" class="btn" />
-                        </fieldset>
+                    <form method="get" id="search-form" class="well form-search" action="http://www.google.com/search" role="search">
+                        <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                        <input type="hidden"  name="sitesearch" value="blog.othree.net" />
+                        <button type="submit" value="GO" tabindex="9" class="btn" >GO</button>
                     </form>
-    <!--
-
-    <form method="get" id="search_form" action="http://www.google.com/custom">
-                        <fieldset>
-    <legend accesskey="s"><label for="search" title="搜尋快速鍵：Alt+4">搜尋</label> by <a href="http://www.google.com"><span style="color:#1d62dc; ">G<span style="color:#f00;">o</span><span style="color:#f0c010;">o</span>g<span style="color:#60c060;">l</span><span style="color:#f00;">e</span></span></a>：<span class="accesskey"><span>accesskey:</span>4</span></legend>
-
-    <input type="hidden" name="domains" value="blog.othree.net"></input>
-    <input type="text" accesskey="4" tabindex="8" id="search" class="text" name="q" size="20" maxlength="255" value=""></input>
-    <input type="submit" name="sa" class="button" value="SEARCH" accesskey="s" tabindex="9"  onclick="this.readonly = 'readonly'" onkeypress="this.readonly = 'readonly'"></input><span class="accesskey"><span>accesskey:</span>S</span>
-    <input type="hidden" name="sitesearch" value="blog.othree.net"></input>
-    <input type="hidden" name="client" value="pub-5627928804904245"></input>
-    <input type="hidden" name="forid" value="1"></input>
-    <input type="hidden" name="ie" value="UTF-8"></input>
-    <input type="hidden" name="oe" value="UTF-8"></input>
-    <input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:336699;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;FORID:1;"></input>
-    <input type="hidden" name="hl" value="zh-TW"></input>
-                        </fieldset>
-    </form>
-    -->
-
+                    <hr />
                     <div role="contentinfo">
                     <xsl:if test="$listType = 's'">
                         <h3>關於本文章</h3>
@@ -201,13 +178,13 @@
                     </xsl:if>
                     <xsl:if test="$listType = 'i'">
                     </xsl:if>
-                    <xsl:if test="$listType = 'm'">
+                    <!-- <xsl:if test="$listType = 'm'">
                         <h3>月曆</h3>
                         <xsl:call-template name="makeCalendar">
                             <xsl:with-param name="year" select="substring($listID,1,4)"/>
                             <xsl:with-param name="month" select="substring($listID,6,2)"/>
                         </xsl:call-template>
-                    </xsl:if>
+                    </xsl:if> -->
                     <xsl:apply-templates select="$blogData//b:blogData" />
                     <xsl:if test="$listType = 'about'">
                         <h3>關於這的子頁面</h3>
@@ -236,7 +213,7 @@
                         <li><a href="/about/feeds/{$ext}">其它版本與快速訂閱</a></li>
                     </ul>
                     <h3>貼紙</h3>
-                    <p>
+                    <p id="stickers">
                         <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
                         <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='http://static.jsconf.us/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
                         <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="https://creativecommons.net/i/othree/" style="border:0px;" /></a>
@@ -350,7 +327,7 @@
                 </xsl:call-template>
 			</xsl:for-each>
 			<xsl:if test="$listType = 'c'">
-				<h3><a href="/all/{$ext}" class="center">此類別所有文章</a></h3>
+            <a id="prev-link" href="/log/{//b:entriesMeta/b:listData}/all/{$ext}" class="center">此類別所有文章</a>
 			</xsl:if>
 			<xsl:if test="$listType = 'm'">
                 <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">➡ 前一個月的文章</a>
@@ -517,10 +494,10 @@
     </footer>
     <xsl:if test="$listType = 's'">
         <xsl:if test="$mime = 'xhtml'">
-        <object id="GoogleAdSense" data="/adsense.php" type="text/html"  width="468" height="60"><xsl:text> </xsl:text></object>
+        <!--object id="GoogleAdSense" data="/adsense.php" type="text/html"  width="468" height="60"><xsl:text> </xsl:text></object-->
         </xsl:if>
         <xsl:if test="$mime = 'html'">
-        <div id="GoogleAdSense">
+        <!--div id="GoogleAdSense">
             <script type="text/javascript"><![CDATA[
 // Adsense for content
 google_ad_client = "pub-5627928804904245";
@@ -537,7 +514,7 @@ google_color_text = "000000";
 google_color_url = "008000";
             ]]></script>
             <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-        </div>
+        </div-->
         </xsl:if>
         <!--<xsl:apply-templates select="b:trackbacks">-->
             <!--<xsl:with-param name="entryID" select="@entryID" />-->
@@ -549,6 +526,7 @@ google_color_url = "008000";
         </xsl:apply-templates>
     </xsl:if>
 </article>
+<hr/>
 </xsl:template>
 
 <!-- template content -->
@@ -620,17 +598,18 @@ google_color_url = "008000";
 <xsl:template match="b:comments">
 <xsl:param name="entryID" />
 <xsl:param name="accepted" />
+<hr/>
 <div id="comments">
-	<h4>迴響<span>(
-	<xsl:choose>
-		<xsl:when test="$accepted = 0">
-			本文章目前不開放發表迴響
-		</xsl:when>
-		<xsl:otherwise>
-			<a href="#post_comment">發表你的迴響</a>
-		</xsl:otherwise>
-	</xsl:choose>
-	)</span></h4>
+	<!-- <h4>迴響<span>( -->
+	<!-- <xsl:choose> -->
+		<!-- <xsl:when test="$accepted = 0"> -->
+			<!-- 本文章目前不開放發表迴響 -->
+		<!-- </xsl:when> -->
+		<!-- <xsl:otherwise> -->
+			<!-- <a href="#post_comment">發表你的迴響</a> -->
+		<!-- </xsl:otherwise> -->
+	<!-- </xsl:choose> -->
+	<!-- )</span></h4> -->
 	<xsl:choose>
 	<xsl:when test="@commentCount &gt; 0">
 		<ol id="commentlist">
@@ -641,41 +620,49 @@ google_color_url = "008000";
 		<p>目前無人回應。</p>
 	</xsl:otherwise>
 	</xsl:choose>
-	<xsl:if test="$accepted = 1">
-        <h4>發表迴響</h4>
-        <form id="comment-form" method="post" action="http://othree.net/mt/mt-comments.cgi" >
-            <p id="author-row">
-              <label for="author">姓名暱稱：<span class="accesskey"><span>accesskey:</span>N</span></label>
-              <input type="text" tabindex="3" id="author" name="author" accesskey="n" value="" />
-            </p>
-            <p id="email-row">
-              <label for="email">電子信箱：<span class="accesskey"><span>accesskey:</span>M</span></label>
-              <input type="email" tabindex="4" id="email" name="email" accesskey="m" value="" />
-            </p>
-            <p>
-              <label for="url">網站位置：<span class="accesskey"><span>accesskey:</span>U</span></label>
-              <input type="url" tabindex="5" id="url" name="url" accesskey="u" placeholder="http://" value="" />
-            </p>
-            <p>
-              <label for="text">迴響內容：<span class="accesskey"><span>accesskey:</span>C</span></label>
-              <textarea tabindex="6" id="text" name="text" rows="15" cols="60" accesskey="c"></textarea>
-              <span class="field-tip">
-                    可以使用 Markdown 語法，<a href="http://markdown.tw">語法說明</a>。
-              </span>
-            </p>
-            <p>
+    <xsl:if test="$accepted = 1">
+        <hr/>
+        <form id="comment-form" method="post" action="http://othree.net/mt/mt-comments.cgi" class="form-horizontal">
+            <fieldset>
+            <div id="author-row" class="control-group">
+              <label for="author" class="control-label">姓名暱稱：<span class="accesskey"><span>accesskey:</span>N</span></label>
+              <div class="controls">
+                  <input type="text" tabindex="3" id="author" name="author" accesskey="n" value="" />
+              </div>
+            </div>
+            <div id="email-row" class="control-group">
+              <label for="email" class="control-label">電子信箱：<span class="accesskey"><span>accesskey:</span>M</span></label>
+              <div class="controls">
+                  <input type="email" tabindex="4" id="email" name="email" accesskey="m" value="" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label for="url" class="control-label">網站位置：<span class="accesskey"><span>accesskey:</span>U</span></label>
+              <div class="controls">
+                  <input type="url" tabindex="5" id="url" name="url" accesskey="u" placeholder="http://" value="" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label for="text" class="control-label">迴響內容：<span class="accesskey"><span>accesskey:</span>C</span></label>
+              <div class="controls">
+                  <textarea tabindex="6" id="text" name="text" rows="15" cols="60" accesskey="c" class="input-mxlarge"></textarea>
+                  <p class="field-tip"> 可以使用 Markdown 語法，<a href="http://markdown.tw">語法說明</a>。 </p>
+              </div>
+            </div>
+            <!--p>
               <label for="remember">記住我：<span class="accesskey"><span>accesskey:</span>R</span></label>
               <input type="checkbox" tabindex="7" id="remember" name="remember" accesskey="r" value="yes" />
-            </p>
-            <p>
+            </p-->
+            <div class="form-actions">
               <input type="hidden" name="static" value="2"/>
               <input type="hidden" name="entry_id" value="{$entryID}"/>
               <input type="hidden" name="blog_id" value="{$blogID}"/>
               <input type="hidden" name="superstarooo" value="ryun" />
 
-              <input type="submit" tabindex="7" name="post" value="送出" accesskey="p" />
+              <button type="submit" tabindex="7" name="post" value="送出" accesskey="p" class="btn btn-primary">送出</button>
               <span class="accesskey"><span>accesskey:</span>P</span>
-            </p>
+            </div>
+            </fieldset>
         </form>
 	</xsl:if>
 </div>
@@ -687,12 +674,12 @@ google_color_url = "008000";
 <li id="comment{@commentID}">
 <xsl:attribute name="class">
 <xsl:choose>
-	<xsl:when test="b:author/b:authorUrl = 'http://blog.othree.net'">comment3</xsl:when>
-	<xsl:otherwise>comment<xsl:value-of select="position() mod 2"/></xsl:otherwise>
+	<xsl:when test="b:author/b:authorUrl = 'http://blog.othree.net'">comment3 well</xsl:when>
+	<xsl:otherwise>comment<xsl:value-of select="position() mod 2"/> well</xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>
 
-<h5><a href="#comment{@commentID}" class="num"><xsl:value-of select="position()" /></a>
+<h5><!--a href="#comment{@commentID}" class="num"><xsl:value-of select="position()" /></a-->
 	由
 	<xsl:choose>
 		<xsl:when test="b:author/b:authorUrl/text()">
