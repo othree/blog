@@ -86,6 +86,10 @@
         <nav class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
+                    <form method="get" id="nav-search" class="navbar-search pull-left" action="http://www.google.com/search" role="search">
+                        <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                        <input type="hidden"  name="sitesearch" value="blog.othree.net" />
+                    </form>
                     <ul class="nav pull-right">
                         <li>
                             <xsl:if test="$listType = 'i'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
@@ -233,6 +237,7 @@
             </footer>
 		</div>
         <script src="/scripts/detect_cleartype.js"></script>
+        <script src="/scripts/nav-search.js"> </script>
         <script>
 
   var _gaq = _gaq || [];
