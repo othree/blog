@@ -1,3 +1,5 @@
+(function () {
+
 function toggleNavSearch(delay) {
     if (!toggleNavSearch.timerId) {
         toggleNavSearch.timerId = setTimeout(function () {
@@ -11,7 +13,9 @@ function toggleNavSearch(delay) {
         }, parseInt(delay) || 200);
     }
 }
-  window.addEventListener('scroll', toggleNavSearch, false);
-  window.addEventListener('resize', toggleNavSearch, false);
-  toggleNavSearch(5);
-        
+
+window.addEventListener('scroll', toggleNavSearch, false);
+window.addEventListener('resize', toggleNavSearch, false);
+toggleNavSearch(5);
+
+}());
