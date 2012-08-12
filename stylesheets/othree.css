@@ -1,3 +1,7 @@
+.o-hidden {
+    opacity: 0;
+}
+
 html.hasFontSmoothing-true body {
     font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
 }
@@ -16,8 +20,18 @@ h1 {
     margin-bottom: 1em;
 }
 
-h1 a {
+h1 a,
+h1 a:hover {
     color: #EC7424;
+    text-decoration: none;
+    -webkit-transition: text-shadow 1s ease;
+    -moz-transition: text-shadow 1s ease;
+    -o-transition: text-shadow 1s ease;
+    transition: text-shadow 1s ease;
+}
+
+h1 a:hover {
+    text-shadow: rgba(0,0,0,0.7) 10px 10px 10px;
 }
 
 #page-info {
@@ -173,4 +187,10 @@ footer a:last-of-type {
 }
 #content .month-archive ol a {
     margin: 0;
+}
+#nav-search {
+    -webkit-transition: opacity 1s ease;
+    -moz-transition: opacity 1s ease;
+    -o-transition: opacity 1s ease;
+    transition: opacity 1s ease;
 }

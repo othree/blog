@@ -86,25 +86,37 @@
         <nav class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <form method="get" id="nav-search" class="navbar-search pull-left" action="http://www.google.com/search" role="search">
+                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="http://www.google.com/search" role="search">
                         <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                     </form>
                     <ul class="nav pull-right">
                         <li>
-                            <xsl:if test="$listType = 'i'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
+                            <xsl:if test="$listType = 'i'">
+                                <xsl:attribute name="id">active</xsl:attribute>
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
                             <a href="{$mainPath}{$ext}">首頁</a>
                         </li>
                         <li>
-                            <xsl:if test="$listType = 'm' or $listType = 'y' or $listType = 'c' or $listType = 's' or $listType = 'a' or $listType = 'ca' or $listType = 'archive'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
+                            <xsl:if test="$listType = 'm' or $listType = 'y' or $listType = 'c' or $listType = 's' or $listType = 'a' or $listType = 'ca' or $listType = 'archive'">
+                                <xsl:attribute name="id">active</xsl:attribute>
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
                             <a href="{$mainPath}log/{$ext}" accesskey="3">彙整</a>
                         </li>
                         <li>
-                            <xsl:if test="$listType = 'o'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
+                            <xsl:if test="$listType = 'o'">
+                                <xsl:attribute name="id">active</xsl:attribute>
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
                             <a href="{$mainPath}blogroll/{$ext}" title="BLOGROLL">部落滾</a>
                         </li>	
                         <li>
-                            <xsl:if test="$listType = 'about'"><xsl:attribute name="id">active</xsl:attribute></xsl:if>
+                            <xsl:if test="$listType = 'about'">
+                                <xsl:attribute name="id">active</xsl:attribute>
+                                <xsl:attribute name="class">active</xsl:attribute>
+                            </xsl:if>
                             <a href="{$mainPath}about/here/{$ext}">關於這</a>
                         </li>
                     </ul>
@@ -176,7 +188,7 @@
                     <xsl:if test="$listType != 'about'">
                             <h3>關於本網站</h3>
                         <address>
-                            <p class="vcard">本網站是<a href="https://plus.google.com/108698651587282496682" class="fn nickname" rel="me">O3(othree)</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
+                            <p class="vcard">本網站是<a href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
                         </address>
                     </xsl:if>
                     <xsl:if test="$listType = 'i'">
@@ -193,7 +205,7 @@
                         <h3>關於這的子頁面</h3>
                         <ul>
                             <li><a href="/about/here/{$ext}">本站資訊</a></li>
-                            <li><a href="/about/feeds/{$ext}">訂閱本BLOG</a></li>
+                            <!-- <li><a href="/about/feeds/{$ext}">訂閱本BLOG</a></li> -->
                             <!--li><a href="/about/styles/{$ext}">切換樣式</a></li-->
                             <li><a href="/source/">PHP原始碼</a></li>
                         </ul>
@@ -224,15 +236,16 @@
                 </aside>
             </div>
             <footer class="row">
-                <h2 class="span12">認證、授權</h2>
+                <h2 class="span12">使用技術、規範、服務</h2>
                 <p class="span12">
                     <!--a href="http://validator.w3.org/check?uri=referer" xml:lang="en" title="本站所有頁面皆通過W3C檢測器的的檢測為合於規範的XHTML 1.1文件">XHTML</a-->
                     <!--a href="http://jigsaw.w3.org/css-validator/validator?uri=http://blog.othree.net/&amp;warning=2&amp;profile=css3&amp;usermedium=all" xml:lang="en" title="本站使用的CSS語法通過W3C檢測器的的檢測合於CSS 3的規範">CSS</a--> 
-                    <a href="http://dev.w3.org/html5/spec/Overview.html" title="HTML 5 標準">HTML 5</a>
-                    <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 3 標準">CSS 3</a>
+                    <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/" title="HTML 標準">HTML</a>
+                    <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 標準">CSS</a>
                     <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
                     <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
                     <a href="http://creativecommons.org/licenses/by/3.0/tw/">CC-BY-3.0</a>
+                    <a href="https://plus.google.com/108698651587282496682?rel=author">Google+</a>
                 </p>
             </footer>
 		</div>

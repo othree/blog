@@ -3,11 +3,12 @@
 function toggleNavSearch(delay) {
     if (!toggleNavSearch.timerId) {
         toggleNavSearch.timerId = setTimeout(function () {
+            var s = document.getElementById('nav-search');
             var t = document.getElementById('search-form').getBoundingClientRect().top;
             if (t <= 0 || t >= 500) {
-                document.getElementById('nav-search').style.visibility = 'visible';
+                s.className = s.className.replace(/ o-hidden/g, '');
             } else {
-                document.getElementById('nav-search').style.visibility = 'hidden';
+                s.className = s.className + ' o-hidden';
             }
             toggleNavSearch.timerId = null;
         }, parseInt(delay) || 200);
@@ -16,6 +17,6 @@ function toggleNavSearch(delay) {
 
 window.addEventListener('scroll', toggleNavSearch, false);
 window.addEventListener('resize', toggleNavSearch, false);
-toggleNavSearch(5);
+toggleNavSearch(0);
 
 }());
