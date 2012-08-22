@@ -132,14 +132,14 @@
             <div class="row">
                 
                 <xsl:apply-templates select="b:entries/b:entriesMeta" />
-                <div id="content" role="main" class="span8">
+                <div id="content" role="main" class="span9">
                     <hr/>
                     <xsl:apply-templates select="b:entries"/>
                 </div>
-                <aside role="complementary" class="span4">
+                <aside role="complementary" class="span3">
                     <hr />
                     <h2>其它資訊</h2>
-                    <form method="get" id="search-form" class="well form-search" action="http://www.google.com/search" role="search">
+                    <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
                         <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                         <button type="submit" value="GO" tabindex="9" class="btn" >GO</button>
@@ -365,7 +365,7 @@
 <!-- template entriesMate -->
 
 <xsl:template match="b:entriesMeta">
-<div id="page-info" class="span8">
+<div id="page-info" class="span9">
     <div class="row">
         
 	<div class="span6">
