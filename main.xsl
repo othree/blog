@@ -142,7 +142,7 @@
                     <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
                         <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
-                        <button type="submit" value="GO" tabindex="9" class="btn" >GO</button>
+                        <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
                     </form>
                     <hr />
                     <div role="contentinfo">
