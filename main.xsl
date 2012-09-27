@@ -39,7 +39,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' rel='stylesheet' type='text/css' />
+        <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:600|Press+Start+2P' rel='stylesheet' type='text/css'/>
         <!-- <link rel="stylesheet" href="/stylesheets/FontAwesome/css/font-awesome.css" /> -->
         <link rel="stylesheet" href="/stylesheets/othree.min.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
