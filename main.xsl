@@ -76,6 +76,14 @@
 		<link rel="top" title="首頁" href="{$mainPath}{$ext}" />
 		<link rel="openid.server" href="http://www.myopenid.com/server" />
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
+        <xsl:if test="$listType = 's'">
+            <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
+            <link rel="canonical" href="{$canonical}" />
+            <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
+            <meta property="og:url" content="{$canonical}" />
+            <meta property="og:type" content="article" />
+            <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
+        </xsl:if>
 	</head>
 	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
