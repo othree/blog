@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:transform version="1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo">
-<xsl:import href="calendar.xsl" />
+<!-- <xsl:import href="calendar.xsl" /> -->
 <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
 <xsl:strip-space elements="*"/>
@@ -176,12 +176,16 @@
                         </xsl:choose>
                         ，截至目前為止共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
 
-                        <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
-                            <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
-                        </xsl:if>
+                        <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous or //b:blog/b:entries/b:entriesMeta/b:next">
+                        <p>
+                            <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
+                                <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
+                            </xsl:if>
 
-                        <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
-                            <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇文章：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
+                            <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
+                                <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
+                            </xsl:if>
+                        </p>
                         </xsl:if>
 
                     </xsl:if>
@@ -964,13 +968,27 @@ google_color_url = "008000";
 			</xsl:when>
 		</xsl:choose>
 	</xsl:when>
-	<xsl:when test="$listType = 'm' or $listType = 's' or $listType = 'y'">
+	<xsl:when test="$listType = 'm' or $listType = 'y'">
 		<xsl:choose>
 			<xsl:when test="$porn = 'next'">
 				<xsl:value-of select="//b:entries/b:entriesMeta/b:next/b:mDate" />
 			</xsl:when>
 			<xsl:when test="$porn = 'prev'">
 				<xsl:value-of select="//b:entries/b:entriesMeta/b:previous/b:mDate" />
+			</xsl:when>
+		</xsl:choose>
+	</xsl:when>
+	<xsl:when test="$listType = 's'">
+		<xsl:choose>
+			<xsl:when test="$porn = 'next'">
+				<xsl:value-of select="translate(//b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')" />
+                <xsl:text>/</xsl:text>
+                <xsl:value-of select="//b:entries/b:entriesMeta/b:next/b:mBase" />
+			</xsl:when>
+			<xsl:when test="$porn = 'prev'">
+                <xsl:value-of select="translate(//b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')" />
+                <xsl:text>/</xsl:text>
+                <xsl:value-of select="//b:entries/b:entriesMeta/b:previous/b:mBase" />
 			</xsl:when>
 		</xsl:choose>
 	</xsl:when>
@@ -1007,7 +1025,7 @@ google_color_url = "008000";
 			<xsl:attribute name="rel"><xsl:value-of select="$porn" /></xsl:attribute>
 		</xsl:if>
 		<xsl:attribute name="title"><xsl:value-of select="$t" /></xsl:attribute>
-        <xsl:attribute name="href"><xsl:value-of select="$p" /><xsl:value-of select="$id" /><xsl:text></xsl:text><xsl:value-of select="$ext" /></xsl:attribute>
+        <xsl:attribute name="href"><xsl:value-of select="$p" /><xsl:value-of select="$id" /><xsl:text>/</xsl:text><xsl:value-of select="$ext" /></xsl:attribute>
 		<xsl:if test="$type = 'a'">
 			<xsl:if test="$porn = 'prev'">« </xsl:if>
 			<xsl:choose>
