@@ -79,10 +79,13 @@
         <xsl:if test="$listType = 's'">
             <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
             <link rel="canonical" href="{$canonical}" />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:site" content="@othree" />
             <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
             <meta property="og:url" content="{$canonical}" />
             <meta property="og:type" content="article" />
             <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
+            <xsl:apply-templates select="//b:blog/b:entries/b:entry/b:content/b:mainContent" mode="img" />
         </xsl:if>
 	</head>
 	<body>
@@ -925,6 +928,13 @@ google_color_url = "008000";
 		<span>(<xsl:value-of select="@archiveCount" /><xsl:if test="$type = 'full'">,<a href="{$logPath}{.}/all/{$ext}">索引</a></xsl:if>)</span>
 	</li>
 </xsl:for-each>
+</xsl:template>
+
+<!-- template img -->
+<xsl:template mode="img" match="*">
+    <xsl:if test="descendant::*[name() = 'img']">
+        <meta name="og:image" content="{descendant::*[name() = 'img'][1]/@src}" />
+    </xsl:if>
 </xsl:template>
 
 <!-- template content -->
