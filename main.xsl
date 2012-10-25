@@ -76,17 +76,33 @@
 		<link rel="top" title="首頁" href="{$mainPath}{$ext}" />
 		<link rel="openid.server" href="http://www.myopenid.com/server" />
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
-        <xsl:if test="$listType = 's'">
-            <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
-            <link rel="canonical" href="{$canonical}" />
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:site" content="@othree" />
-            <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
-            <meta property="og:url" content="{$canonical}" />
-            <meta property="og:type" content="article" />
-            <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
-            <xsl:apply-templates select="//b:blog/b:entries/b:entry/b:content/b:mainContent" mode="img" />
-        </xsl:if>
+		<xsl:choose>
+            <xsl:when test="$listType = 's'">
+                <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
+                <link rel="canonical" href="{$canonical}" />
+                <xsl:choose>
+                    <xsl:when test="descendant::*[name() = 'img']">
+                        <meta name="twitter:card" content="photo" />
+                        <meta name="twitter:site" content="@othree" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <meta name="twitter:card" content="summary" />
+                        <meta name="twitter:creator" content="@othree" />
+                    </xsl:otherwise>
+                </xsl:choose>
+                <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
+                <meta property="og:url" content="{$canonical}" />
+                <meta property="og:type" content="article" />
+                <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:mainContent}" />
+                <xsl:apply-templates select="//b:blog/b:entries/b:entry/b:content/b:mainContent" mode="img" />
+            </xsl:when>
+            <xsl:otherwise>
+                <meta property="og:title" content="{b:blogTitle}" />
+                <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄" />
+                <meta property="og:url" content="http://blog.othree.net" />
+                <meta property="og:type" content="website" />
+        </xsl:otherwise>
+		</xsl:choose>
 	</head>
 	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
@@ -933,7 +949,9 @@ google_color_url = "008000";
 <!-- template img -->
 <xsl:template mode="img" match="*">
     <xsl:if test="descendant::*[name() = 'img']">
-        <meta name="og:image" content="{descendant::*[name() = 'img'][1]/@src}" />
+        <meta property="og:image" content="{descendant::*[name() = 'img'][1]/@src}" />
+        <meta property="og:image:width" content="{descendant::*[name() = 'img'][1]/@width}" />
+        <meta property="og:image:height" content="{descendant::*[name() = 'img'][1]/@height}" />
     </xsl:if>
 </xsl:template>
 
