@@ -6,6 +6,7 @@
 <xsl:strip-space elements="*"/>
 <xsl:param name="ext">xml</xsl:param>
 <xsl:param name="mime">html</xsl:param>
+<xsl:param name="dpr">1</xsl:param>
 <xsl:variable name="blog" select="//b:blog" />
 <xsl:variable name="blogData" select="document('sidebar.xml')" />
 <xsl:variable name="links" select="document('links.xml')" />
@@ -280,6 +281,7 @@
             </footer>
 		</div>
         <script src="/scripts/detect_cleartype.js"></script>
+        <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"> </script>
         <script>
 
@@ -964,8 +966,21 @@ google_color_url = "008000";
 <!-- template copy without namespace -->
 
 <xsl:template mode="copy-no-ns" match="*">
-<xsl:element name="{name()}">
-	<xsl:copy-of select="@*" />
+<xsl:element name="{local-name()}">
+    <xsl:choose>
+    <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
+            <xsl:attribute name="src">
+                <xsl:variable name="p" select="@*[local-name() = 'src']" />
+                <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
+                <xsl:text>_b</xsl:text>
+                <xsl:value-of select="substring($p, string-length($p)-3)"/>
+            </xsl:attribute>
+            <xsl:copy-of select="@*[local-name() != 'src']" />
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:copy-of select="@*" />
+        </xsl:otherwise>
+    </xsl:choose>
 	<xsl:apply-templates mode="copy-no-ns" />
 </xsl:element>
 </xsl:template>
@@ -1008,12 +1023,12 @@ google_color_url = "008000";
 	</xsl:when>
 	<xsl:when test="$listType = 's'">
 		<xsl:choose>
-			<xsl:when test="$porn = 'next'">
+			<xsl:when test="$porn = 'next' and /b:entries/b:entriesMeta/b:next">
 				<xsl:value-of select="translate(//b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')" />
                 <xsl:text>/</xsl:text>
                 <xsl:value-of select="//b:entries/b:entriesMeta/b:next/b:mBase" />
 			</xsl:when>
-			<xsl:when test="$porn = 'prev'">
+			<xsl:when test="$porn = 'prev' and //b:entries/b:entriesMeta/b:previous">
                 <xsl:value-of select="translate(//b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')" />
                 <xsl:text>/</xsl:text>
                 <xsl:value-of select="//b:entries/b:entriesMeta/b:previous/b:mBase" />

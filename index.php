@@ -9,6 +9,11 @@ if (preg_match("/_/", getenv('QUERY_STRING'))) {
     exit();
 }
 
+$dpr = 1;
+if ($_COOKIE['devicePixelRatio']) {
+    $dpr = $_COOKIE['devicePixelRatio'];
+}
+
 //get local path
 $self_path = preg_replace("!index\.php!","",getenv('SCRIPT_NAME'));
 $query_string = preg_replace("!^".$self_path."!","",getenv('QUERY_STRING'));
@@ -17,18 +22,6 @@ if ($query_string == "source/") {
     highlight_file(__FILE__);
     exit;
 }
-
-$style = "default";
-//$style = ($_COOKIE['style'])?$_COOKIE['style']:'sky';
-//if (preg_match("/about\/styles\/[^\.]+/", $query_string)) {
-    //$style = substr($query_string,13);
-    //if (is_file("stylesheets/".$style."/main.css"))    {
-        //setcookie ("style", $style, time() + 60*60*24*30, "/", "blog.othree.net");
-    //} else    {
-        //$style = ($_COOKIE['style'])?$_COOKIE['style']:'sky';    
-    //}
-    //$query_string = "about/styles/";
-//}
 
 //get target file path
 if (preg_match("/^feeds|rss\/?$/", $query_string)) $format = "xml";
@@ -90,7 +83,7 @@ if ($format == "html") {
         header("Content-type: text/html; charset=UTF-8");
     }
     //xsl transform
-    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $format) );
+    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $format, $dpr) );
 } else if ($format == "xml") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
@@ -103,7 +96,7 @@ echo $output;
 
 
 //xsl transform function
-function xslt($xml, $xsl, $mime) {
+function xslt($xml, $xsl, $mime, $dpr) {
     if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);
@@ -115,7 +108,7 @@ function xslt($xml, $xsl, $mime) {
         $proc->importStyleSheet($xslo); // attach the xsl rules
         $proc->setParameter('blog.othree.net', 'ext', '');
         $proc->setParameter('blog.othree.net', 'mime', $mime);
-        //$proc->setParameter('blog.othree.net', 'style', $style);
+        $proc->setParameter('blog.othree.net', 'dpr', $dpr);
         return $proc->transformToXML($xmlo); // actual transformation
     } else {
         header("Content-type: text/html; charset=UTF-8");
