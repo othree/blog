@@ -34,6 +34,8 @@ if (!is_file($target_file))
     $target_file = $query_string.".".$ext;
 if (!is_file($target_file)) {
     $target_file = "about/404.".$ext;
+}
+if ($target_file == "about/404.".$ext) {
     $not_found = true;
 }
 
