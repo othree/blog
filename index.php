@@ -15,17 +15,12 @@ if ($_COOKIE['devicePixelRatio']) {
 }
 
 //get local path
-$self_path = preg_replace("!index\.php!","",getenv('SCRIPT_NAME'));
-$query_string = preg_replace("!^".$self_path."!","",getenv('QUERY_STRING'));
-
-if ($query_string == "source/") {
-    highlight_file(__FILE__);
-    exit;
-}
+$self_path = preg_replace("!index\.php!", "", getenv('SCRIPT_NAME'));
+$query_string = preg_replace("!^".$self_path."!", "", getenv('QUERY_STRING'));
 
 //get target file path
 if (preg_match("/^feeds|rss\/?$/", $query_string)) $format = "xml";
-else $format = (preg_match("/([^\.\/]+)$/", $query_string,$matches))?$matches[0]:"html";
+else $format = (preg_match("/([^\.\/]+)$/", $query_string, $matches))?$matches[0]:"html";
 $ext = ($format == "html")?"xml":$format;
 if (preg_match("/rss\/?$/", $query_string)) {
     $query_string = preg_replace("/rss\/?/", "", $query_string);
@@ -38,8 +33,8 @@ else $target_file = $query_string."/index.".$ext;
 if (!is_file($target_file))
     $target_file = $query_string.".".$ext;
 if (!is_file($target_file)) {
-    include("404.php");
-    exit;
+    $target_file = "about/404.".$ext;
+    $not_found = true;
 }
 
 //output string
@@ -90,6 +85,10 @@ if ($format == "html") {
     fclose($handle);
     if (preg_match("/IE/", getenv('HTTP_USER_AGENT'))) sheader("Content-type: text/xml; charset=UTF-8");
     else header("Content-type: application/xml; charset=UTF-8");
+}
+
+if ($not_found) {
+    header("HTTP/1.0 404 Not Found");
 }
 
 echo $output;

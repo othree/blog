@@ -114,7 +114,7 @@
             <div class="navbar-inner">
                 <div class="container">
                     <form method="get" id="nav-search" class="navbar-search o-hidden" action="http://www.google.com/search" role="search">
-                        <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                        <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                     </form>
                     <ul class="nav pull-right">
@@ -167,7 +167,7 @@
                     <hr />
                     <h2>其它資訊</h2>
                     <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
-                        <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="Google 搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                        <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                         <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
                     </form>
@@ -235,10 +235,8 @@
                     <xsl:if test="$listType = 'about'">
                         <h3>關於這的子頁面</h3>
                         <ul>
+                            <li><a href="/about/me/{$ext}">關於我</a></li>
                             <li><a href="/about/here/{$ext}">本站資訊</a></li>
-                            <!-- <li><a href="/about/feeds/{$ext}">訂閱本BLOG</a></li> -->
-                            <!--li><a href="/about/styles/{$ext}">切換樣式</a></li-->
-                            <li><a href="/source/">PHP原始碼</a></li>
                         </ul>
                     </xsl:if>
                     <xsl:if test="$listType != 'archive'">
@@ -256,7 +254,6 @@
                     <h3>訂閱本網誌</h3>
                     <ul id="feeds">
                         <li><a href="http://feeds.feedburner.com/othree"><img src="http://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
-                        <li><a href="/about/feeds/{$ext}">其它版本與快速訂閱</a></li>
                     </ul>
                     <h3>貼紙</h3>
                     <p id="stickers">
