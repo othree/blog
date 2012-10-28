@@ -11,7 +11,7 @@ if (preg_match("/_/", getenv('QUERY_STRING'))) {
 
 $dpr = 1;
 if ($_COOKIE['devicePixelRatio']) {
-    $dpr = $_COOKIE['devicePixelRatio'];
+    $dpr = floatval($_COOKIE['devicePixelRatio']);
 }
 
 //get local path
