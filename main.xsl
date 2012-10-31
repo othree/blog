@@ -94,7 +94,7 @@
                 <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
                 <meta property="og:url" content="{$canonical}" />
                 <meta property="og:type" content="article" />
-                <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:mainContent}" />
+                <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
                 <xsl:apply-templates select="//b:blog/b:entries/b:entry/b:content/b:mainContent" mode="img" />
             </xsl:when>
             <xsl:otherwise>
