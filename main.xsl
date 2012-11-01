@@ -82,7 +82,7 @@
                 <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
                 <link rel="canonical" href="{$canonical}" />
                 <xsl:choose>
-                    <xsl:when test="descendant::*[name() = 'img']">
+                    <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
                         <meta name="twitter:card" content="photo" />
                         <meta name="twitter:site" content="@othree" />
                     </xsl:when>
