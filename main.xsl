@@ -38,10 +38,10 @@
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' rel='stylesheet' type='text/css' />
-        <link rel="stylesheet" href="/stylesheets/othree.min.css" />
+        <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" type='text/css' href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' />
+        <link rel="stylesheet" type='text/css' href="/stylesheets/othree.min.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -104,6 +104,7 @@
                 <meta property="og:type" content="website" />
         </xsl:otherwise>
 		</xsl:choose>
+        <meta property="fb:admin" content="582724207" />
 	</head>
 	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
