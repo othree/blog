@@ -24,7 +24,7 @@
 <!-- html5 DTD -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html>
 </xsl:text>
-<html lang="zh-tw">
+<html lang="zh-tw" itemscope="itemscope" itemtype="http://schema.org/Blog">
 	<head>
 		<meta charset="UTF-8" />
 		<title>
@@ -80,7 +80,7 @@
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
                 <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
-                <link rel="canonical" href="{$canonical}" />
+                <link rel="canonical" itemprop="url" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
                         <meta name="twitter:card" content="photo" />
@@ -218,9 +218,9 @@
                     </div>
 
                     <xsl:if test="$listType != 'about'">
-                            <h3>關於本網站</h3>
-                        <address>
-                            <p class="vcard">本網站是<a href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
+                        <h3>關於本網站</h3>
+                        <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                            <p class="vcard">本網站是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
                         </address>
                     </xsl:if>
                     <xsl:if test="$listType = 'i'">
@@ -458,10 +458,10 @@
 
 <xsl:param name="showdate"></xsl:param>
 <xsl:variable name="permalink" select="concat('/log/',translate(b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext)" />
-<article id="entry-{@baseName}">
+<article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-{@baseName}">
     <header>
-        <time datetime="{b:datetime/b:date}T{b:datetime/b:time}" pubdate="pubdate">
-            <xsl:choose>
+        <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}" pubdate="pubdate">
+            <!--xsl:choose>
                 <xsl:when test="$showdate != '1'">
                     <xsl:attribute name="style">display: none;</xsl:attribute>
                 </xsl:when>
@@ -470,7 +470,7 @@
                 </xsl:otherwise>
             </xsl:choose>
             <span class="mon">
-                <!-- <xsl:value-of select="substring(b:datetime/b:date,6,2)" />月 -->
+                <xsl:value-of select="substring(b:datetime/b:date,6,2)" />月
                 <xsl:choose>
                     <xsl:when test="substring(b:datetime/b:date,6,2) = '01'">壹月</xsl:when>
                     <xsl:when test="substring(b:datetime/b:date,6,2) = '02'">貳月</xsl:when>
@@ -486,10 +486,10 @@
                     <xsl:when test="substring(b:datetime/b:date,6,2) = '12'">拾貳</xsl:when>
                 </xsl:choose>
             </span>
-            <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" /></span>
+            <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" /></span-->
         </time>
         
-        <h3>
+        <h3 itemprop="name">
             <xsl:choose>
             <xsl:when test="$listType = 's'">
                 <xsl:value-of select="b:title" />
@@ -500,10 +500,12 @@
             </xsl:choose>
         </h3>
     </header>
-    <xsl:apply-templates select="b:content">
-        <xsl:with-param name="entryID" select="@entryID" />
-        <xsl:with-param name="permalink" select="$permalink" />
-    </xsl:apply-templates>
+    <section itemprop="articleBody">
+        <xsl:apply-templates select="b:content">
+            <xsl:with-param name="entryID" select="@entryID" />
+            <xsl:with-param name="permalink" select="$permalink" />
+        </xsl:apply-templates>
+    </section>
     <footer>
         <xsl:choose>
             <xsl:when test="b:category != ''">
