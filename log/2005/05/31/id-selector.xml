@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000168" baseName="id-selector">id選擇器的問題</b:listData>
+
+			<b:previous>
+				<b:mTitle>Firefox用久了以後</b:mTitle>
+				<b:mDate>2005-05-30</b:mDate>
+				<b:mBase>use-fx-for-along-time</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>hlb您回來啦，您終於回來啦！</b:mTitle>
+				<b:mDate>2005-05-31</b:mDate>
+				<b:mBase>hlb-is-back</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000168" baseName="id-selector">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-05-31</b:date>
+				<b:time>00:27:05</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>id選擇器的問題</b:title>
+			<b:content>
+				<b:summary>之前看過兩三篇關於如何寫更有效率的CSS的文章（例如：CSS tips and tricks part 1），講到id選擇器的時候，都提到他前面可以不用加標籤名稱，因為id在一份HTML文件中應該是唯一的，不過我在實際使用時卻遇到一些怪現象，而且IE和Firefox都有這問題，基本上我也不確定這是不是不對的。...</b:summary>
+				<b:mainContent><p>之前看過兩三篇關於如何寫更有效率的CSS的文章（例如：<a href="http://www.456bereastreet.com/archive/200503/css_tips_and_tricks_part_1/"><span class="caps">CSS </span>tips and tricks part 1</a>），講到<a href="http://www.w3.org/TR/CSS21/selector.html#id-selectors">id選擇器</a>的時候，都提到他前面可以不用加標籤名稱，因為id在一份HTML文件中應該是唯一的，不過我在實際使用時卻遇到一些怪現象，而且IE和Firefox都有這問題，基本上我也不確定這是不是不對的。</p></b:mainContent>
+				<b:extendContent><p>首先來看我們的<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.1.html">測試網頁一</a>，在這個網頁可以看到兩個方塊，一個是綠色的，另一個是紅色的。其中綠色的那個方塊他的id是<strong>l1</strong>，紅色那塊則是<strong>l2</strong>，這網頁的完整CSS code如下：</p>
+
+
+
+<pre><code>div {
+	background-color: white;
+}
+
+#l1 {
+	width: 200px;
+	height: 200px;
+	background-color: green;
+}
+
+#l2 {
+	width: 100px;
+	height: 100px;
+	background-color: red;
+}</code></pre>
+
+
+
+<p>看起來一切OK，我先讓所有的div標籤的預設背景色是白色，然後再用id選擇器對兩個物件指定顏色。接著問題來了，來看<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.2.html">測試網頁二</a>。在這個例子中，<code>id=&quot;l2&quot;</code>的方塊變成白色了，事實上CSS code只有改了一行如下：</p>
+
+
+
+<pre><code>#l1 div {
+	background-color: white;
+}
+</code></pre>
+
+
+
+<p>這行的意思是說在<code>id=&quot;l1&quot;</code>之下的div標籤底色都是白的。照理說這樣的設定應該不會影響到顯示結果，因為<code>id=&quot;l2&quot;</code>的設定在他的後面，後宣告的會覆蓋先宣告的，而且同為id選擇器，優先度應該一樣，但是結果卻是<code>#l1 div</code>勝過<code>#l2</code>。所以我試出了兩個可以處理這問題的寫法，分別是<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.3.html">方法一</a>和<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.4.html">方法二</a>，方法一修改的部分如下：</p>
+
+
+
+<pre><code>div#l2 {
+	width: 100px;
+	height: 100px;
+	background-color: red;
+}</code></pre>
+
+
+
+<p>方法二修改的部分如下：</p>
+
+
+
+<pre><code>#l1 #l2 {
+	width: 100px;
+	height: 100px;
+	background-color: red;
+}</code></pre>
+
+
+
+<p>其中方法二我覺得還蠻容易理解的，感覺上就是做一個優先度更高的選擇器（前後都是id選擇器）來覆蓋屬性值，方法一就讓我很困惑了，為什麼我把標籤名稱放到id選擇器前面就可以產生效果，我到現在還是沒個頭緒。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="5">
+
+				<b:comment commentID="000674" entryID="000168">
+					<b:author>
+						<b:authorName>jimmy</b:authorName>
+						<b:authorEmail>i-yo-wai-ya@yahoo.com.tw</b:authorEmail>
+						<b:authorUrl>http://jimmy.j2.idv.tw</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-31</b:date>
+						<b:time>07:44:03</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我的想法是&#8230;這樣parse還算合邏輯
+我想瀏覽器處理tag、class和id應該是分開的
+先parse到div，就會先取用l1的東西，再parse到 l2，再套用l2的東西
+除非你幫他標明順序。</p>
+
+<p>你的解決方法一，或許瀏覽器裡的處理可能是先變白色，在parse l2的時候，發現他有標示div屬性，再變紅色&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000676" entryID="000168">
+					<b:author>
+						<b:authorName>Bob</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-31</b:date>
+						<b:time>13:50:30</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我不太會算 specificity，不過從 <a href="http://www.w3.org/TR/REC-CSS2/cascade.html#specificity" rel="nofollow">http://www.w3.org/TR/REC-CSS2/cascade.html#specificity</a> 看起來，「#l1 div」的明確性（我用的翻譯）為 101，「#l2」的明確性為 100，這樣本來「#l1 div」就會優先於「#l2」，跟先後順序無關。（先後順序僅在明確性相同時才有關。）大概是這樣&#8230;. 吧 =.= (都說不太會算了)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000677" entryID="000168">
+					<b:author>
+						<b:authorName>Bob</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-31</b:date>
+						<b:time>13:51:47</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>補充： 所以 div#l2 的優先權也是 101, 那麼就很明顯後來居「上」（優先順序較高）了</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000678" entryID="000168">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-31</b:date>
+						<b:time>19:05:39</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>嗯嗯，原來優先度的精確算法也有在文件裡啊，這我就完全沒注意到了，不過，寫的也不是很詳細啊。另外我用Opera測試結果也一樣，那應該就是正確的吧@_@。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000684" entryID="000168">
+					<b:author>
+						<b:authorName>jimmy</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://jimmy.j2.idv.tw</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-06-02</b:date>
+						<b:time>01:49:32</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>謝謝bob，這件事告訴我&#8230;不用功一點看手冊的後果，就是有錯誤的認知&#8230; :P </p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/167">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

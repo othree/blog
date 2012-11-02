@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000695" baseName="module-amd-requirejs">Module, AMD, RequireJS</b:listData>
+
+			<b:previous>
+				<b:mTitle>2011</b:mTitle>
+				<b:mDate>2012-01-11</b:mDate>
+				<b:mBase>2011</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>coffee-check.vim</b:mTitle>
+				<b:mDate>2012-01-23</b:mDate>
+				<b:mBase>coffee-check-vim</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000695" baseName="module-amd-requirejs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-22</b:date>
+				<b:time>00:48:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Module, AMD, RequireJS</b:title>
+			<b:content>
+				<b:summary>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 Module Pattern，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下： function Person(age, gender) { var _age = age || 16, _gender = gender || 1; return { getAge: function () { return _age; } }; } 這個範例中，age 和 gender 就是私有屬性，在 Person...</b:summary>
+				<b:mainContent><p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
+
+<pre><code>function Person(age, gender) {
+    var _age = age || 16,
+        _gender = gender || 1;
+
+    return {
+        getAge: function () {
+            return _age;
+        }
+    };
+}
+</code></pre>
+
+<p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
+
+<p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
+
+<pre><code>define('moduleA', [dep1, dep2], function (export1, export2) {
+    //do something..
+    return {
+        method1: function () {},
+        method2: function () {},
+    };
+});
+</code></pre>
+
+<p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
+
+<p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/694">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

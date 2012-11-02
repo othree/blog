@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000606" baseName="basic-javascript-auto-unit-test">簡單的 JavaScript 自動單元測試</b:listData>
+
+			<b:previous>
+				<b:mTitle>closure-compiler on OSX</b:mTitle>
+				<b:mDate>2009-12-29</b:mDate>
+				<b:mBase>closure-compiler-osx</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>新年快樂</b:mTitle>
+				<b:mDate>2010-01-03</b:mDate>
+				<b:mBase>happy-2010</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000606" baseName="basic-javascript-auto-unit-test">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-31</b:date>
+				<b:time>10:18:41</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>簡單的 JavaScript 自動單元測試</b:title>
+			<b:content>
+				<b:summary>前幾天弄完 JSLint.vim 後，就對 server side JavaScript 產生了一些興趣，還抓了 v8 引擎 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 QUnit ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 DOM 和 BOM，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 env.js 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 Rhino 下，因為他是 java based ，可以在 JavaScript 裡面寫...</b:summary>
+				<b:mainContent><p>前幾天弄完 <a href="http://github.com/hallettj/jslint.vim"><span class="caps">JSL</span>int.vim</a> 後，就對 server side JavaScript 產生了一些興趣，還抓了 <a href="http://code.google.com/p/v8/">v8 引擎</a> 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 <a href="http://docs.jquery.com/QUnit">QUnit</a> ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 <span class="caps">DOM </span>和 <span class="caps">BOM</span>，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 <a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">env.js</a> 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 <a href="http://www.mozilla.org/rhino/">Rhino</a> 下，因為他是 java based ，可以在 JavaScript 裡面寫 Java ，所以可以做很多壞事，但是其他的 js shell 沒辦法這樣跑， John Resig 好像有想要 port 成 python + v8 的版本，不過不知道有沒有成功，因為也 <a href="http://groups.google.com/group/envjs/browse_thread/thread/132617236878676b#">沒放出</a> 。</p></b:mainContent>
+				<b:extendContent><p>剛好最近有點紅的 <a href="http://nodejs.org/">node.js</a> ，似乎可以拿來做一樣的事情（要做 http request、開檔案、DOM），於是也調查了一下，結果缺少了重要的 <span class="caps">DOM </span>，這樣也跑不起 Qunit，傷心難過之餘只好把方向改成尋找簡單的 JavaScript Unit Test Framework，希望能找到不會存取到 <span class="caps">BOM </span>和 <span class="caps">DOM </span>的版本，結果找到 <a href="http://github.com/jeresig/env-js/blob/master/test/testrunner.js">這個</a> ，雖然沒完全符合需求，不過裡面要改的地方很少，所以改了一下就拿來用了（還不知道授權所以不敢丟出來），把幾個要用到 jQuery, <span class="caps">DOM </span>的地方註解掉，還有 log 改成有錯誤才輸出，然後 ~/.vimrc 加上：</p>
+
+
+
+<pre><code>function Jsunit ()
+    let ut = 'unit.test.js'
+    let fn = expand('&lt;afile&gt;:t')
+    if fn != ut
+        let cwd = expand('&lt;afile&gt;:p:h')
+        if filereadable(cwd.'/unit.test.js')
+            let has_error = 0
+            let cmd = 'js '. ut
+            let output = system(cmd)
+            for error in split(output, &quot;\n&quot;)
+                let has_error = 1
+                caddexpr expand(&quot;%&quot;) . fn . &quot;:0:0:&quot; . error
+            endfor
+            if has_error == 1
+                copen
+            else
+                echo 'Unit  : All OK.'
+            endif
+        endif
+    endif
+endfunction
+
+autocmd FileWritePost,BufWritePost *.js :call Jsunit()
+</code></pre>
+
+
+
+<p>存檔的時候會自動找 unit.test.js ，如果存在的話就會執行它，unit.test.js 裡面長得像這樣：</p>
+
+
+
+<pre><code>load('testrunner.js');
+load('lib.js');
+
+test('all', function () {
+    ok(libFunc(true) == 530, 'send true');
+    isObj(libFunc(false), {a:'1'}, 'send false');
+});
+</code></pre>
+
+
+
+<p>不過這個 testrunner 不能做任何和 html 文件、瀏覽器有關的測試，只能做很核心部份的測試。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="3">
+
+				<b:comment commentID="102921" entryID="000606">
+					<b:author>
+						<b:authorName>lynn</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-12-31</b:date>
+						<b:time>17:09:43</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>在 javascript 裡面寫 Java ?</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102925" entryID="000606">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-12-31</b:date>
+						<b:time>17:57:40</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>@lynn 沒錯 <a href="http://github.com/jeresig/env-js/blob/master/src/env.js" rel="nofollow">http://github.com/jeresig/env-js/blob/master/src/env.js</a> 第20行就有了</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102994" entryID="000606">
+					<b:author>
+						<b:authorName>c9s</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-01-05</b:date>
+						<b:time>15:09:49</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>看起來可以稍微 patch 一下，在 vim-js 裡面就可以用了 XD</p>
+
+<p>還可以加上 Joose , Joose 還有 ORM &#8230; 好嗨阿。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/605">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

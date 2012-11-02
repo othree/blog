@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2009-01">January 2009</b:listData>
+
+			<b:previous>
+				<b:mTitle>December 2008</b:mTitle>
+				<b:mDate>2008/12</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>February 2009</b:mTitle>
+				<b:mDate>2009/02</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000568" baseName="order-while-search-multiple-fields">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-25</b:date>
+				<b:time>01:33:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>多欄位搜尋時的排序問題</b:title>
+			<b:content>
+				<b:summary>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。 問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 SQL 的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法： SELECT DISTINCT id, title, artist, artist_id, program FROM ( SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION SELECT *, 2 AS o FROM...</b:summary>
+				<b:mainContent><p>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。</p>
+
+<p>問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 <span>SQL </span>的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法：</p>
+
+<pre><code>SELECT DISTINCT id, title, artist, artist_id, program FROM (
+    SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION
+    SELECT *, 2 AS o FROM songs WHERE title LIKE 'keyword' UNION
+    SELECT *, 3 AS o FROM songs WHERE artist LIKE '%keyword%' UNION
+    SELECT *, 4 AS o FROM songs WHERE program LIKE '%keyword%' UNION
+    SELECT *, 5 AS o FROM songs WHERE utaidasi LIKE '%keyword%'
+) s ORDER BY o
+</code></pre>
+
+<p>大量的子查詢，還好我的資料庫小，使用人數也少，不然應該一下系統就撐不下去了吧，而且這個方法還有個問題，就是只能處理一個關鍵字，如果有兩個以上的關鍵字，似乎就沒辦法只用 <span>SQL </span>來做處理了，因為不同的關鍵字可能在不同欄位符合，要計算結果的優先順序會隨著關鍵字增加而變得越來越複雜，純用 <span>SQL </span>來寫感覺就是會整個慢到，不知道 Amazon 是怎麼處理這個問題的架構的，我想應該是自己開發或修改過的資料庫系統吧XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000567" baseName="iterm-alt-key-to-change-irssi-window">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-23</b:date>
+				<b:time>01:32:11</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>iTerm 用 alt + 數字鍵切換視窗</b:title>
+			<b:content>
+				<b:summary>Bookmarks &gt; Manage Profiles &gt; Keyboard Profiles &gt; Global &gt; Option Key as +ESC...</b:summary>
+				<b:mainContent><p>Bookmarks &gt; Manage Profiles &gt; Keyboard Profiles &gt; Global &gt; Option Key as +ESC</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000566" baseName="kakasi">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-20</b:date>
+				<b:time>01:30:27</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>kakasi</b:title>
+			<b:content>
+				<b:summary>kakasi 並不是火影忍者那位卡卡西，他的全名是 Kanji Kana Simple Inverter，用來轉換日文漢字、平假名、片假名和羅馬拼音的。 最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 IRC 上問人，在 zonble 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 apt-get install kakasi 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 UTF-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例： echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://kakasi.namazu.org/">kakasi</a> 並不是火影忍者那位卡卡西，他的全名是 <strong>Kanji Kana Simple Inverter</strong>，用來轉換日文漢字、平假名、片假名和羅馬拼音的。</p>
+
+<p>最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 <span>IRC </span>上問人，在 <a target="_blank" href="http://zonble.twbbs.org/">zonble</a> 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 <code>apt-get install kakasi</code> 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 <span>UTF</span>-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例：</p>
+
+<pre><code>
+echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK | iconv -f sjis -t utf8
+</code></pre>
+
+<p>就可以看到 <strong>マジンエイユウデン</strong> ，這樣我就可以在 python script 裡面呼叫一下命令列來轉字串，處理資料庫的資料，不過要放上網路的程式這樣呼叫其實蠻危險的，所以我又找了一下 <span>PHP </span>有沒有這東西可以用，沒想到還真的有，在 <a target="_blank" href="http://pecl.php.net/"><span>PECL</span></a> 裡面有人有 port，不過網站上看不到，我是從 google 搜尋到 mail list 的 <a target="_blank" href="http://marc.info/?l=php-i18n&amp;m=105914120819128&amp;w=2">舊文章</a> 才找到的，所以就照文內的安裝步驟抓下來 compile，ubuntu 記得要先 <code>apt-get install php5-dev</code> 才有辦法執行 <code>phpize</code> 初始化編譯環境，裝好後就可以在 phpinfo 裡面看到 kakasi 這個模組。</p>
+
+<p>然後測試的結果發現他也只能吃 sjis 字串，所以還是要用 iconv 轉一下碼，使用範例如下：</p>
+
+<pre><code>$roma = kakasi(iconv("UTF-8", "sjis", $qs[0]), array("-Hj", "-Jj", "-Kj"));
+</code></pre>
+
+<p>這串因為是轉成羅馬拼音的，所以最後沒在用一次 iconv 轉回 <span>UTF</span>-8，至於各種轉換的設定請參考 <code>kakasi -help</code>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000565" baseName="ubuntu-yuicompressor">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-15</b:date>
+				<b:time>01:28:47</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>在ubuntu上套件安裝yuicompressor  </b:title>
+			<b:content>
+				<b:summary>很久之前DK長輩跟我說過FreeBSD上有人port好的，所以裝起來很方便，我自己放在學校的主機是用ubuntu，最近又搜尋一次發現也有人有編譯好提供套件安裝，是第三方的套件來源，又花了點時間查要怎樣用命令列新增第三方套件來源並加入public key，所以記錄一下。 首先把下面兩行用root權限加入 /etc/apt/sources.list 檔案裡： deb http://ppa.launchpad.net/launchpad/ubuntu intrepid main deb-src http://ppa.launchpad.net/launchpad/ubuntu intrepid main 接著一樣用root權限執行下面兩行指令來把public key加入apt裡面： gpg --keyserver keyserver.ubuntu.com --recv-keys 0A5174AF gpg --armor --export 0A5174AF | apt-key add - 然後用 apt-get update; apt-get install yuicompressor 就可以把 yuicompressor 裝好了，不過我這台P4 2.4的跑起來還有點慢。 PPA for...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://blog.othree.net/log/2008/10/11/yuicompressor/">很久之前DK長輩跟我說過FreeBSD上有人port好的</a>，所以裝起來很方便，我自己放在學校的主機是用ubuntu，最近又搜尋一次發現也有人有編譯好提供套件安裝，是第三方的套件來源，又花了點時間查要怎樣用命令列新增第三方套件來源並加入public key，所以記錄一下。</p>
+
+<p>首先把下面兩行用root權限加入 <strong>/etc/apt/sources.list</strong> 檔案裡：</p>
+
+<pre><code>deb http://ppa.launchpad.net/launchpad/ubuntu intrepid main
+deb-src http://ppa.launchpad.net/launchpad/ubuntu intrepid main</code></pre>
+
+<p>接著一樣用root權限執行下面兩行指令來把public key加入apt裡面：</p>
+
+<pre><code>gpg --keyserver keyserver.ubuntu.com --recv-keys 0A5174AF
+gpg --armor --export 0A5174AF | apt-key add -</code></pre>
+
+<p>然後用 <code>apt-get update; apt-get install yuicompressor</code> 就可以把 yuicompressor 裝好了，不過我這台P4 2.4的跑起來還有點慢。</p>
+
+<ul>
+<li><a target="_blank" href="https://launchpad.net/%7Elaunchpad/+archive"><span>PPA </span>for Canonical Launchpad Developers</a></li>
+<li><a target="_blank" href="http://wiki.scribus.net/index.php/Getting_Scribus_on_Ubuntu/Kubuntu_up_and_running">Getting Scribus on Ubuntu/Kubuntu up and running</a></li>
+</ul></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

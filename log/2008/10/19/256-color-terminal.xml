@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000546" baseName="256-color-terminal">256色終端機環境</b:listData>
+
+			<b:previous>
+				<b:mTitle>JavaScript 優良部分</b:mTitle>
+				<b:mDate>2008-10-12</b:mDate>
+				<b:mBase>javascript-the-good-parts</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>IE8標準模式將不支援CSS expression</b:mTitle>
+				<b:mDate>2008-10-22</b:mDate>
+				<b:mBase>ie8-dont-support-css-expression</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000546" baseName="256-color-terminal">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-10-19</b:date>
+				<b:time>01:28:16</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>256色終端機環境</b:title>
+			<b:content>
+				<b:summary>前兩天重灌OSX，在搞定OSX上的終端機（目前換用 iTerm）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。 Linux端 Linux 是 Ubuntu 8.04，內建的.bashrc會判斷 $TERM 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為： sudo aptitude install ncurses-term 裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。 PuTTY端 我目前使用 PuTTY Tray，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「xterm-256color」，二是要把 Backspace 設為 Control-H ，選項位置在 Terminal → Keyboard 的 Change the...</b:summary>
+				<b:mainContent><p>前兩天重灌OSX，在搞定OSX上的終端機（目前換用 <a href="http://iterm.sourceforge.net/">iTerm</a>）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。</p>
+
+<h4>Linux端</h4>
+
+<p>Linux 是 <a href="http://www.ubuntu-tw.org/">Ubuntu 8.04</a>，內建的.bashrc會判斷 <strong>$TERM</strong> 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為：</p>
+
+
+
+<pre>sudo aptitude install ncurses-term</pre>
+
+
+
+<p>裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。</p>
+
+<h4>PuTTY端</h4>
+
+<p>我目前使用 <a href="http://www.xs4all.nl/~whaa/putty/">PuTTY Tray</a>，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「<strong>xterm-256color</strong>」，二是要把 Backspace 設為 <strong>Control-H</strong> ，選項位置在 Terminal → Keyboard 的 Change the sequences sent by 內，這樣設完重新連線應該就可以使用256色的環境了，不確定有沒有成功的可以去抓 <a href="http://www.system-linux.net/doc/xterm/colortest.pl">colortest.pl</a> 這個perl script來跑跑看。</p>
+
+<p>256色有什麼好處呢？雖然掛BBS和IRC是都沒差，不過平常操作和vim的樣式就可以使用比較多顏色了，我現在在主機上的vim就改用 <a href="http://blog.infinitered.com/entries/show/8">IR_Black</a> 這個 color schema 了，顏色漂亮不少。</p>
+
+<p><a href="http://www.flickr.com/photos/othree/2962106594/" title="Flickr 上 othree 的 vim"><img src="http://farm4.static.flickr.com/3276/2962106594_9f865fda34.jpg" width="500" height="314" alt="vim" /></a></p>
+
+
+<ul>
+<li><a href="http://push.cx/2008/256-color-xterms-in-ubuntu">256-Color XTerms in Ubuntu</a></li>
+<li><a href="http://blog.yzlin.org/2008/05/14/22/">Make <span class="caps">UTF</span>-8 Environment Comfortable</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/544">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

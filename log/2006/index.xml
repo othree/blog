@@ -1,0 +1,2008 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>y</b:listType>
+			<b:listData listID="2006">2006</b:listData>
+
+			<b:previous>
+				<b:mTitle>2005</b:mTitle>
+				<b:mDate>2005</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>2007</b:mTitle>
+				<b:mDate>2007</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000369" baseName="jquery-11-no-backward-compatible">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-29</b:date>
+				<b:time>00:22:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery 1.1將不會向下相容</b:title>
+			<b:content>
+				<b:summary>根據jQuery Blog的文章The Path to 1.1，jQuery 1.1將在1月7號公開alpha版、14號正式公開（剛好一週年），然後值得注意的就是他將不會向下相容，不相容處如下所述：...</b:summary>
+				<b:mainContent><p>根據jQuery Blog的文章<a href="http://jquery.com/blog/2006/12/27/the-path-to-11/">The Path to 1.1</a>，jQuery 1.1將在1月7號公開alpha版、14號正式公開（剛好一週年），然後值得注意的就是他將不會向下相容，不相容處如下所述：</p></b:mainContent>
+				<b:extendContent>
+<ul>
+<li>像是.onclick()和.unclick()的事件處理器會改成.one("click")和.unbind("click")，他們發現這些功能不是這麼的需要。</li>
+<li>:nth-child()、:gt()、:lt()和:eq()選擇器將換改成由1開始計算，這樣才符合CSS的標準（這其實是一個bug fix）。</li>
+<li>部份的CSS相關函式像是.color()和.background()將不再被支援，你應該改成使用.css("color")和.css("background")這樣的方式。</li>
+<li>一些屬性的相關函式如.title()和.rel()也將取消，你應該改為使用.attr("title")和.attr("rel")。</li>
+</ul>
+
+
+
+<p>我覺得這些改變都很不錯，把整個核心弄的更精簡了，或許還是會有人不習慣吧，也不用擔心，他還有說另外會有一個相容plugin讓你可以拿1.0的程式在1.1跑。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000368" baseName="little-thins-about-javascript">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-28</b:date>
+				<b:time>23:41:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript 二三事</b:title>
+			<b:content>
+				<b:summary>最近在看ppk on JavaScript，目前進度是第五章後半，覺得有些小東西可以先講一講，其實也是我在學習 JavaScript 中遇到的不少問題，而且一直以來我的想法也沒有得到證實。 本來是這樣想的啦，結果寫一寫變成我的 JavaScript 學習歷程....。...</b:summary>
+				<b:mainContent><p>最近在看ppk on JavaScript，目前進度是第五章後半，覺得有些小東西可以先講一講，其實也是我在學習 JavaScript 中遇到的不少問題，而且一直以來我的想法也沒有得到證實。</p>
+
+<p>本來是這樣想的啦，結果寫一寫變成我的 JavaScript 學習歷程....。</p></b:mainContent>
+				<b:extendContent><p>雖然CSS我學習上沒什麼障礙，但是我學習 JavaScript 的路其實算蠻艱辛的，第一本買的書是<a href="http://www.oreilly.com.tw/product_web.php?id=a003">JavaScript 設計風格第一版</a>，那本書現在來看算是蠻過時的書了，像是他講的瀏覽器不少還是第四版的，不過也因此他的程式碼很簡單，不複雜，所以我對 JavaScript 算是有個基本的概念了，不過接著問題來了，很常見的瀏覽器差異問題，我那時候想要找一本可以幫助我處理這方面問題的文件或書，我發現市面上沒有一本書能符合我的需要，我要的有點像是官方標準那樣的東西，所以我後來去找 JavaScript 的標準，尋線找到了<a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><span class="caps">ECMAS</span>cript</a>這東西，結果抓下的規格書都是核心語法的內容，之後我找到了<a href="http://msdn2.microsoft.com/en-us/library/default.aspx"><span class="caps">MSDN</span> Library</a>的關於<a href="http://msdn2.microsoft.com/en-us/library/hbxc2t98.aspx">JScript的文件模型的文件</a>，結果我好一陣子寫的 JavaScript 是IE only的....。</p>
+
+<p>過了一兩年吧，我發現到 <a href="http://www.w3.org/DOM/"><span class="caps">DOM</span></a> 這個東西，似乎有跨瀏覽器的支援能力，於是也研究了起來，後來還到 <span class="caps">W3C </span>抓標準文件來看，想當然看不懂，那時候我已經看得懂HTML和CSS的標準文件了說@@，等我看的懂時不知道已經是第幾次看他了，總之，這時候我終於了解，不同瀏覽器的文件模型和瀏覽器模型命名方式不一樣，並不是 JavaScript 的問題，而是瀏覽器開發公司的問題，也才會有W3C <span class="caps">DOM</span>的出現。一直到我了解DOM，我才覺得我會寫 JavaScript 了，不過其實那時候我對 JavaScript 的 prototype 和物件觀念完全是 0。</p>
+
+<p>我會看到 prototype 和物件的使用主要都是<a href="http://dean.edwards.name/IE7/"><span class="caps">IE7</span></a>作者<a href="http://dean.edwards.name/">dean edwards</a>的 JavaScript 程式，看時看他的一些 script 是一整個看不懂，後來才又從一些其他的文章和程式瞭解到 prototype 和 JavaScript 的物件要怎樣產生，到這個地步，我總算把 JavaScript 該學的東西都學到了，然後<a href="http://jquery.com/">jQuery</a>就出現了，結果我現在幾乎都用 jQuery 寫XD。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000367" baseName="bought-ys-origin">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-28</b:date>
+				<b:time>22:01:43</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>ys origin入手</b:title>
+			<b:content>
+				<b:summary> 今天拿到了上週訂的ys origin了，這是伊蘇系列許久不見和伊蘇有關的新劇情，上一款ysf其實是很久以前的ys4的劇情，然後我買來一直沒玩XD，不過我想這次origin我很快就會開始玩了吧。 另外據已經先玩的朋友說，這次設計的比上一代更周全了，我想應該是從ys6之後最完美的系統和關卡設計了吧，ys6是首次進入3D世界的依蘇，ysf在整個動作性則是有很大的進步，看過ysf在回頭看ys6就會覺得很多部份其實都還很陽春，那時已經覺得FALCOM在這種3D動作系統的設計已經很完整了吧，沒想到在yso還能夠在進步，真是很棒，FALCOM真是間好公司，真不愧是少數還能在日本存活的一般向PC Game廠商啊。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/12/28/bought-ys-origin/DSCF0948.JPG" class="thickbox"><img alt="yso包裝中規中矩，不過比起之前幾代小很多" src="http://blog.othree.net/log/2006/12/28/bought-ys-origin/DSCF0948-thumb-300x400.jpg" width="300" height="400" /></a></p>
+
+<p>今天拿到了上週訂的<a href="http://www.falcom.com/yso/">ys origin</a>了，這是伊蘇系列許久不見和伊蘇有關的新劇情，上一款<a href="http://www.falcom.com/ysf/index.html">ysf</a>其實是很久以前的ys4的劇情，然後我買來一直沒玩XD，不過我想這次origin我很快就會開始玩了吧。</p>
+
+<p>另外據已經先玩的朋友說，這次設計的比上一代更周全了，我想應該是從ys6之後最完美的系統和關卡設計了吧，<a href="http://www.falcom.com/newgames/win_xp/ys6.html">ys6</a>是首次進入3D世界的依蘇，ysf在整個動作性則是有很大的進步，看過ysf在回頭看ys6就會覺得很多部份其實都還很陽春，那時已經覺得<a href="http://www.falcom.com"><span class="caps">FALCOM</span></a>在這種3D動作系統的設計已經很完整了吧，沒想到在yso還能夠在進步，真是很棒，FALCOM真是間好公司，真不愧是少數還能在日本存活的一般向PC Game廠商啊。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000366" baseName="fon-party">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-25</b:date>
+				<b:time>22:40:21</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>遲來的FON Party心得</b:title>
+			<b:content>
+				<b:summary>因為已經遲來許久，那我覺得報告Party過程也沒什麼意義，這方面的文章也已經很多人寫了，而且圖文並茂，過程也介紹得很詳細，所以我覺得我就不要再這方面著墨了，改成來說說FON的缺點吧。...</b:summary>
+				<b:mainContent><p>因為已經遲來許久，那我覺得報告Party過程也沒什麼意義，這方面的文章也已經很多人寫了，而且圖文並茂，過程也介紹得很詳細，所以我覺得我就不要再這方面著墨了，改成來說說FON的缺點吧。</p></b:mainContent>
+				<b:extendContent><p>其實我個人是非常期待FON能在台灣成功的，因為我自己前陣子常常帶著NB在外面找不到網路可用，所以如果FON的點夠多的話，以後我就不太需要擔心這問題了，不過台灣FON團隊卻一直讓我有點失望，當然他們很努力在佈點、推廣，這我看的出來，我要講的問題是別的方面。首先FON Party就讓人覺得有些缺點，主要是時間的掌控，位子要給記者作這點我能理解，不過讓我們進場後還要在那邊等上半小時才開始活動，我就覺得感覺不太好，不過Party畢竟只有一次。我覺得更大的問題是客服，上週我去交通大學作Firefox的推廣活動時，本來想把我的La Fonera帶去當獎品，不過我這台是Party上拿到的，拿的時候有登記我的個人資訊和機器的序號，所以我想說要轉贈的話應該要先跟那邊知會，結果，網頁上找不到一通聯絡電話，只有服務信箱，寄去過後也個了一整天才回信，沒想到回信也沒把我內容看清楚，以為我要跟他們拉贊助，另外要跟他們拿機器去當贈品...，然後我又回了一封信給他們，結果到我那場推廣結束超過一週的今天，都沒下文了...，然後我透過其他管道想跟他們聯絡也是一樣。</p>
+
+<p>我想是因為人力很不足吧，不過草草了事總是比慢工出細活來的糟糕，FON Taiwan，你們還需要多多加油啊！！</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000364" baseName="bullet-proof-web-design-zh">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>22:08:10</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>無懈可擊的Web設計</b:title>
+			<b:content>
+				<b:summary> 本書評由othree 評論於2006/12/24 ，評分為5分（滿分5分） ，採創用 CC 姓名標示-相同方式分享 授權條款釋出。 Bulletproof Web Design出了中文版，不過只有簡體版的，因為沒有繁體版的，所以我特別去找了幾個入手方法，不過運費都很驚人...，後來有朋友告訴我有人有在拍賣，我就跑去下標了，終於上禮拜入手了，結果當天就看完了，先就內容來簡單說一下吧，這是一本好書，相較於designing with web standards是告訴你為甚麼要遵循網路標準、Eric Meyer on CSS是教你怎麼用CSS，這本書則是告訴你要怎樣利用CSS和HTML來設計出靈活度較高的網站，例如可調的字體大小設定、不會因為使用者調整字體大小而破掉的版面等等，我認為這本書的內容是任何一個想要往網頁標準之路邁進的設計師都需要經歷的，不過不一定只有這本書才有就是，因為以我來說，其實這些技巧和方法我都有在網路上看過，例如標籤頁（書中翻為選項卡）那章的內容在A List Apart也有，叫做Sliding Doors of CSS，也因此我才能一個晚上就看完。 接下來的部份則是要講中譯本的缺點了，當然話要說在前頭，我絕對不是要刻意找碴，而是因為這兩個問題蠻明顯的。首先是圖6-18用錯了，用到和6-19同一張圖，但是因為大小不一樣所以整個比例就變的很奇怪。第二點則是整本書的第一句話：「在Web設計領域中，"如何設定頁面文字的大小"是為數不多的充滿爭議的著名話題之一。」這句感覺一整個怪，最主要是因為用了兩個的吧，不過我不確定是不是兩邊的文法差異造成的感覺@@。...</b:summary>
+				<b:mainContent>        <div class="hreview" id="hreview-BPWD">
+          <p class="item"><a class="fn url" href="http://www.sinzy.net/BPWD/"><img alt="無懈可擊的Web設計" src="http://blog.othree.net/log/2006/12/24/bullet-proof-web-design-zh/bpwd.jpg" class="photo" width="200" height="243" /></a></p>
+          <p class="entry-info">
+  本書評由<span class="reviewer vcard"><span class="fn nickname">othree</span></span>
+
+  評論於<abbr class="dtreviewed" title="20061224">2006/12/24</abbr>
+  ，評分為<abbr title="5" class="rating">5分（滿分5分）</abbr>
+  ，採<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/tw/deed.zh_TW">創用 CC 姓名標示-相同方式分享 授權條款</a>釋出。
+  </p>
+          <div class="description">
+        <p><a href="http://www.simplebits.com/publications/bulletproof/">Bulletproof Web Design</a>出了<a href="http://www.sinzy.net/BPWD/">中文版</a>，不過只有簡體版的，因為沒有繁體版的，所以我特別去找了幾個入手方法，不過運費都很驚人...，後來有朋友告訴我有人有在拍賣，我就跑去下標了，終於上禮拜入手了，結果當天就看完了，先就內容來簡單說一下吧，這是一本好書，相較於<a href="http://www.zeldman.com/dwws/">designing with web standards</a>是告訴你為甚麼要遵循網路標準、<a href="http://www.ericmeyeroncss.com/">Eric Meyer on <span class="caps">CSS</span></a>是教你怎麼用CSS，這本書則是告訴你要怎樣利用CSS和HTML來設計出靈活度較高的網站，例如可調的字體大小設定、不會因為使用者調整字體大小而破掉的版面等等，我認為這本書的內容是任何一個想要往網頁標準之路邁進的設計師都需要經歷的，不過不一定只有這本書才有就是，因為以我來說，其實這些技巧和方法我都有在網路上看過，例如標籤頁（書中翻為選項卡）那章的內容在<a href="http://www.alistapart.com/">A List Apart</a>也有，叫做<a href="http://www.alistapart.com/articles/slidingdoors">Sliding Doors of <span class="caps">CSS</span></a>，也因此我才能一個晚上就看完。</p>
+
+        <p>接下來的部份則是要講中譯本的缺點了，當然話要說在前頭，我絕對不是要刻意找碴，而是因為這兩個問題蠻明顯的。首先是圖6-18用錯了，用到和6-19同一張圖，但是因為大小不一樣所以整個比例就變的很奇怪。第二點則是整本書的第一句話：「<q>在Web設計領域中，"如何設定頁面文字的大小"是為數不多的充滿爭議的著名話題之一。</q>」這句感覺一整個怪，最主要是因為用了兩個<strong>的</strong>吧，不過我不確定是不是兩邊的文法差異造成的感覺@@。</p>
+           </div>
+        </div></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000363" baseName="firefox-win">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>18:19:41</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Firefox大獲全勝？</b:title>
+			<b:content>
+				<b:summary>請先看圖： 真是想不到來我這的訪客使用Firefox的人數比例這麼高XD，要是這是什麼大型入口網站的資料就好了。 這段期間好像我有東西沒弄好結果IE的根本上不來。...</b:summary>
+				<b:mainContent><p>請先看圖：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/24/firefox-win/agents.png" class="thickbox"><img alt="Firefox佔有率高達87.24%，IE則只有1.69%，排第5名" src="http://blog.othree.net/log/2006/12/24/firefox-win/agents-thumb-400x233.png" width="400" height="233" /></a></p>
+
+<p>真是想不到來我這的訪客使用Firefox的人數比例這麼高XD，要是這是什麼大型入口網站的資料就好了。</p>
+
+<p class="update">這段期間好像我有東西沒弄好結果IE的根本上不來。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000362" baseName="hemidemi-1year">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>18:00:49</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>HEMiDEMi總部一遊</b:title>
+			<b:content>
+				<b:summary> 上週五是HEMiDEMi的一週年慶，我剛好要拿定的襯衫，所以中午就跑過去了，除了吃了紅豆湯圓，和親切的葛力、閃恩碰面之外（其他幾位其實我都不知道你們是誰orz），還玩到夢寐以求的Wii，果然是沒有讓我失望，一下就玩到不知時間，要是下午沒其他事，我搞不好會泡在那邊一下午，然後之後就兩手都廢掉吧XD。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0933.JPG" class="thickbox"><img alt="黑米T-shirt" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0933-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p>上週五是<a href="http://www.hemidemi.com/home"><span class="caps">HEM</span>iDEMi</a>的一週年慶，我剛好要拿定的襯衫，所以中午就跑過去了，除了吃了紅豆湯圓，和親切的葛力、閃恩碰面之外（其他幾位其實我都不知道你們是誰orz），還玩到夢寐以求的Wii，果然是沒有讓我失望，一下就玩到不知時間，要是下午沒其他事，我搞不好會泡在那邊一下午，然後之後就兩手都廢掉吧XD。</p></b:mainContent>
+				<b:extendContent><p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0934.JPG" class="thickbox"><img alt="用投機玩Wii果然是最棒的" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0934-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0935.JPG" class="thickbox"><img alt="Wii主機" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0935-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p>雖然只待了短短的兩個小時左右，但卻是事讓人身心都愉快的旅程啊（到今天肩膀肌肉都還會痛）。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000361" baseName="w11">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-23</b:date>
+				<b:time>11:25:45</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>W11</b:title>
+			<b:content>
+				<b:summary>今天終於弄到了，話不多說，看圖先：...</b:summary>
+				<b:mainContent><p>今天終於弄到了，話不多說，看圖先：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/23/w11/DSCF0938.JPG" class="thickbox"><img alt="很小的W11，就是一般手機吊飾大小" src="http://blog.othree.net/log/2006/12/23/w11/DSCF0938-thumb-400x300.jpg" width="400" height="300" /></a></p></b:mainContent>
+				<b:extendContent><p>近一點看：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/23/w11/DSCF0939.JPG" class="thickbox"><img alt="進看就會發現比例還是有差" src="http://blog.othree.net/log/2006/12/23/w11/DSCF0939-thumb-300x400.jpg" width="300" height="400" /></a></p>
+
+<p>然後我錄了一段<a href="http://blog.othree.net/log/2006/12/23/w11/W11.mov"><span class="caps">W11</span>的叫聲</a>:P。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000360" baseName="nice-day">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-23</b:date>
+				<b:time>01:12:42</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>不錯的一天</b:title>
+			<b:content>
+				<b:summary>今天（12/22）對我來說是很不錯的一天，玩到了夢寐以求的Wii，blog新版面上線，唯一的缺憾就是為了更新而積欠的好幾篇文章來不及在今天都寫完吧，因為前幾天的動畫都沒看，然後明天活動又很滿，明天下午我就兩個活動衝到了@@，總之現在大概欠fon party心得、無懈可擊網頁設計心得、HEMiDEMi總部一遊幾篇文章吧，欠最久的是FON Party的那篇，可能也要到週日才能寫吧。...</b:summary>
+				<b:mainContent><p>今天（12/22）對我來說是很不錯的一天，玩到了夢寐以求的Wii，blog新版面上線，唯一的缺憾就是為了更新而積欠的好幾篇文章來不及在今天都寫完吧，因為前幾天的動畫都沒看，然後明天活動又很滿，明天下午我就兩個活動衝到了@@，總之現在大概欠fon party心得、無懈可擊網頁設計心得、HEMiDEMi總部一遊幾篇文章吧，欠最久的是FON Party的那篇，可能也要到週日才能寫吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000359" baseName="new-theme">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-22</b:date>
+				<b:time>22:53:39</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>新版面上線</b:title>
+			<b:content>
+				<b:summary>今天更新了，因為不是只有改到樣式表，而是連HTML結構都有作改變，所以舊的兩個樣式就都先下線了，等修改到新結構也可以正常套用時會在重新放上來給大家選用的:P。...</b:summary>
+				<b:mainContent><p>今天更新了，因為不是只有改到樣式表，而是連HTML結構都有作改變，所以舊的兩個樣式就都先下線了，等修改到新結構也可以正常套用時會在重新放上來給大家選用的:P。</p></b:mainContent>
+				<b:extendContent><p>這次更新有幾點主要的不同，首先是我放棄了自由頁寬的設計，改成固定頁寬的設計，因為我發現用寬螢幕看網頁的時候自由頁寬的版面會因為左右拉長，造成文章閱讀不易，我目前寬度是固定在900px，其實是給1024以上的解析度用的，如果使用者只有800px寬的解析度，那至少看主要內容的部份不會受影響。再來是側邊欄的內容，相較於以往，現在的側邊欄內容我覺得可用性高很多，以前幾乎每頁的都差不多～～，不過這部份我還要慢慢調整，看看不同的頁面要放上什麼樣的資訊會比較有用。最後就是網站基本框架又改變了，雖然還是header+2 column+footer，不過這次參考<a href="http://www.satzansatz.de/cssd/columnswapping.html">Column-swapping: an attempt for two columns with equal height</a>這篇文章做了修改，所以現在更接近我理想的等高雙欄版面了。</p>
+
+<p>主要改變的大方向就是以上三點，其實三點都還有進步空間，不過像第一點會卡在IE對CSS支援度的問題，另外現在的雙欄寬度都是定死的，如果要改成可變動的可能還要改不少地方吧。講到這我就不得不說，其實這次設計新版面時我很想不管IE 6（含以下）的死活，然後在網頁內註明一下如果你用IE6看會發生什麼事我也不知道之類的警告語，結果全部設計好後，打開IE6檢查，發現幾乎沒問題（冏），只有幾個小地方有問題，我就很不情願的把他修正了XD，現在連IE 5.5都沒什麼問題，不過IE5就比較不行了 飄～～。</p>
+
+<p>最後，其實我正式上線後發現某個神秘的bug，就是如果我現在HTML結構中的某個element內沒有東西的話，在IE下會整個亂掉，而且亂到不可思議XD。</p>
+
+<p>補充：本來文章寫完後當機，嚇到死，還好有<a href="http://moztw.org/firefox/">Firefox</a>的還原功能O_O。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="8"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000358" baseName="hemidemi-button-beta-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-11</b:date>
+				<b:time>21:35:59</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>HEMiDEMi Firefox 擴充套件測試版 2</b:title>
+			<b:content>
+				<b:summary> 拖了很久，最近實在是沒時間也沒動力把lightbox完成，不過新分頁和網頁標題問題已經解決了，有一個簡單的設定介面可以切換新分頁或現在的分頁，至於lightbox我已經把基本的技術掌握了，接下來就是師程工和美術設計的問題XD。 下載HEMiDEMi Firefox 擴充套件測試版 2...</b:summary>
+				<b:mainContent><p><img alt="陽春的設定畫面" src="http://blog.othree.net/log/2006/12/11/hemidemi-button-beta-2/hemi-config.png" width="133" height="192" /></p>
+
+<p>拖了很久，最近實在是沒時間也沒動力把lightbox完成，不過新分頁和網頁標題問題已經解決了，有一個簡單的設定介面可以切換新分頁或現在的分頁，至於lightbox我已經把基本的技術掌握了，接下來就是師程工和美術設計的問題XD。</p>
+
+
+<ul>
+<li><a href="http://blog.othree.net/log/2006/12/11/hemidemi-button-beta-2/hemidemibutton.xpi">下載HEMiDEMi Firefox 擴充套件測試版 2</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000357" baseName="sitemapxml">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-25</b:date>
+				<b:time>10:16:47</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>sitemap.xml</b:title>
+			<b:content>
+				<b:summary>Google的sitemap.xml已經變成一個標準格式了，Yahoo和MSN搜尋都將支援此一種格式，以上是舊聞，這篇只是要說一下要到哪登錄自己的sitemap.xml，Google的話就是用他的webmaster tools，用Gmail帳號都入後就可以註冊自己的網址並加入sitemap的位置，不過之後還要自己去網頁加上認證碼，這樣Google才能確認這個網站是你所擁有的。Yahoo的其實也差不多，透過他的Site Explorer，在Feed的地方加上自己的sitemap.xml位置，一樣需要認證，不過是建立一個特定檔名的HTML（好像有兩三個方法），24小時過後就算完成了。至於MSN目前還沒有方法XD，可能要使用固定位置的sitemap.xml吧。...</b:summary>
+				<b:mainContent><p>Google的<a href="http://www.sitemaps.org/">sitemap.xml</a>已經變成一個標準格式了，Yahoo和MSN搜尋都將支援此一種格式，以上是舊聞，這篇只是要說一下要到哪登錄自己的sitemap.xml，Google的話就是用他的<a href="https://www.google.com/webmasters/tools/siteoverview?hl=zh_TW">webmaster tools</a>，用Gmail帳號都入後就可以註冊自己的網址並加入sitemap的位置，不過之後還要自己去網頁加上認證碼，這樣Google才能確認這個網站是你所擁有的。Yahoo的其實也差不多，透過他的<a href="https://siteexplorer.search.yahoo.com/mysites">Site Explorer</a>，在Feed的地方加上自己的sitemap.xml位置，一樣需要認證，不過是建立一個特定檔名的HTML（好像有兩三個方法），24小時過後就算完成了。至於MSN目前還沒有方法XD，可能要使用<a href="http://www.sitemaps.org/protocol.html#location">固定位置的sitemap.xml</a>吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000356" baseName="wordpress-2-upgrade">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-25</b:date>
+				<b:time>00:30:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>wordpress 2 升級的問題</b:title>
+			<b:content>
+				<b:summary>如果升級後，他說你好像沒裝WP，那可以檢查一下資料庫中options資料表裡面的siteurl這筆資料是否有值，如果登入主控台看到以下的錯誤訊息： Invalid argument supplied for foreach() in /home/waterblo/public_html/wp-includes/capabilities.php on line 19″ 那檢查看看同個資料表的prefix_user_roles這筆資料裡是否有亂碼，當然那個prefix是代稱，預設安裝的話應該會是wp_user_roles。...</b:summary>
+				<b:mainContent><p>如果升級後，他說你好像沒裝WP，那可以檢查一下資料庫中options資料表裡面的<strong>siteurl</strong>這筆資料是否有值，如果登入主控台看到以下的錯誤訊息：</p>
+
+
+
+<pre><code>Invalid argument supplied for foreach() in /home/waterblo/public_html/wp-includes/capabilities.php on line 19″</code></pre>
+
+
+
+<p>那檢查看看同個資料表的prefix_user_roles這筆資料裡是否有亂碼，當然那個prefix是代稱，預設安裝的話應該會是<strong>wp_user_roles</strong>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000355" baseName="hemidemi-button">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-18</b:date>
+				<b:time>00:59:52</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>HEMiDEMi Firefox 擴充套件測試版</b:title>
+			<b:content>
+				<b:summary> 下載 很想睡了，所以簡單說，基本上就是安裝完到自訂工具列那把按鈕拉到你想要的位置，記得新增書籤前先登入:P。 雖然想睡，不過還是要來點免則申明，安裝前請先備份一下你的Firefox，雖然我自己測試沒問題，不過畢竟是我第一次寫擴充套件，還是會小擔心@@。 有新的0.2beta版。...</b:summary>
+				<b:mainContent>
+<ul>
+<li><a href="http://blog.othree.net/log/2006/11/18/hemidemi-button/hemidemibutton.xpi">下載</a></li>
+</ul>
+
+
+
+<p>很想睡了，所以簡單說，基本上就是安裝完到自訂工具列那把按鈕拉到你想要的位置，記得新增書籤前先登入:P。</p>
+
+<p>雖然想睡，不過還是要來點免則申明，安裝前請先備份一下你的Firefox，雖然我自己測試沒問題，不過畢竟是我第一次寫擴充套件，還是會小擔心@@。</p>
+
+<p class="update">有新的<a href="http://blog.othree.net/log/2006/12/11/hemidemi-button-beta-2/">0.2beta</a>版。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="17"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000354" baseName="develop-firefox-extension">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-17</b:date>
+				<b:time>10:15:18</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>開始學寫Firefox Extension了</b:title>
+			<b:content>
+				<b:summary>因為現在找到的HEMiDEMi的擴充套件不是工具列形式^^b，最快今晚會有測試版吧:P...</b:summary>
+				<b:mainContent><p>因為現在找到的HEMiDEMi的擴充套件不是工具列形式^^b，最快今晚會有測試版吧:P</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000353" baseName="my-fx2-extensions">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-16</b:date>
+				<b:time>01:12:13</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>我的Firefox 2擴充套件</b:title>
+			<b:content>
+				<b:summary>很久以前有一篇我的Firefox擴充套件，紀錄了我在Firefox 1.x時所使用的擴充套件，那時候我是能不裝就不裝型的，不過最近升級2.0後卻開始猛裝，弄到現在總共裝了有26個，整理介紹如下：...</b:summary>
+				<b:mainContent><p>很久以前有一篇我的<a href="http://blog.othree.net/log/2005/08/11/my_fx_extensions/">Firefox擴充套件</a>，紀錄了我在Firefox 1.x時所使用的擴充套件，那時候我是能不裝就不裝型的，不過最近升級2.0後卻開始猛裝，弄到現在總共裝了有26個，整理介紹如下：</p></b:mainContent>
+				<b:extendContent>
+<ul>
+<li><a href="http://firefox.exxile.net/aios/">All-in-One Sidebar</a> 0.7 : 為了有像Opera那樣的方法開啟側邊欄才裝這套的，不過這套包了太多東西，希望有其他套件可以達到我想要的效果</li>
+<li><a href="http://www.krickelkrackel.de/autohide/">Autohide</a> 1.1.3 : 用來達到真正的全螢幕效果，如果要用<a href="http://meyerweb.com/eric/tools/s5/">S5</a>之類的網頁簡報來作簡報的話不錯用</li>
+<li><a href="http://bbs2ch.sourceforge.jp/">bbs2chreader</a> 0.2.13 : 看<a href="http://www.2ch.net/">2ch</a>用的</li>
+<li><a href="http://jayseae.cxliv.org/">Bloglines Toolkit</a> 1.6.5 : 提醒我的<a href="http://www.bloglines.com/">bloglines</a>上是否有新文章出現</li>
+<li><a href="http://forum.moztw.org/viewtopic.php?p=75914%2375914">Compact Menu CE</a> 2.1.2 : 把選單工具咧藏起來</li>
+<li><a href="http://del.icio.us/">del.icio.us</a> 1.2 : 方便我新增<a href="http://del.icio.us/">del.icio.us</a>書籤</li>
+<li><a href="http://downloadstatusbar.mozdev.org/">Download Statusbar</a> 0.9.4.5 : 取代預設下載管理視窗用的</li>
+<li><a href="http://fasterfox.mozdev.org/">Fasterfox</a> 2.0.0 : 似乎可以加速Firefox XD</li>
+<li><a href="http://www.joehewitt.com/software/firebug/">FireBug</a> 0.4.1 : 網頁除錯用，作網頁時的好工具</li>
+<li><a href="http://flashgot.net/">FlashGot</a> 0.5.97.01 : 抓大檔時還是會用<a href="http://www.flashget.com/index_tw.htm">FlashGet</a></li>
+<li><a href="http://www.nexgenmedia.net/extensions/">Gmail Notifier</a> 0.5.6.5 : 提醒我Gmail是否有新信件</li>
+<li><a href="http://www.google.com/">Google Toolbar for Firefox</a> 2.1.20060807W : Google Toolbar</li>
+<li><a href="http://ietab.mozdev.org/">IE Tab</a> 1.2.0.20061113 : 可以開IE分頁的套件，Windows only</li>
+<li><a href="http://www.cusser.net/">Image Toolbar</a> 0.6.4 : 會在圖片上浮出的小工具列</li>
+<li><a href="http://mozilla.doslash.org/infolister">InfoLister</a> 0.9f : 輸出這分清單用的擴充套件^^</li>
+<li><a href="http://livehttpheaders.mozdev.org/">Live <span class="caps">HTTP</span> Headers</a> 0.13.1 : 檢視HTTP Header，個人興趣</li>
+<li><a href="http://users.blueprintit.co.uk/~dave/web/firefox/nightly">Nightly Tester Tools</a> 1.2 : 可以不管擴充套件的版本支援度，硬裝上去</li>
+<li><a href="http://ook.dedos.net/">Ook? Video Ook!</a> 0.6.2 : 抓<a href="http://www.youtube.com/">YouTube</a>這類網站的影片用的</li>
+<li><a href="http://heygom.com/extensions/">Right Encoding</a> 0.2.2 : 右鍵選擇編碼</li>
+<li><a href="http://pearlcrescent.com/products/pagesaver/">Pearl Crescent Page Saver Basic</a> 1.3 : 將網頁存成圖片</li>
+<li><a href="http://showimage.mozdev.org/">Show Image</a> 0.4.2 : 單獨重新讀取圖片</li>
+<li><a href="http://www.skype.com/">Skype extension for Firefox</a> 2.2.0.44 : 裝完Skype 3.0 beta後就冒出來的XD</li>
+<li><a href="http://tmp.garyr.net/">Tab Mix Plus</a> 0.3.5 : 分頁瀏覽的擴充套件，內建的分頁瀏覽功能雖然已經加強不少，不過我還是覺得不夠</li>
+<li><a href="http://talkback.mozilla.org/">Talkback</a> 2.0 : 內建的錯誤回報系統</li>
+<li><a href="http://chrispederick.com/work/firefox/useragentswitcher/">User Agent Switcher</a> 0.6.9 : 偽裝成其他瀏覽器:P</li>
+<li><a href="http://chrispederick.com/work/webdeveloper/">Web Developer</a> 1.0.2 : 製作網頁的好工具</li>
+<li><a href="http://piro.sakura.ne.jp/xul/_rubysupport.html.en"><span class="caps">XHTML</span> Ruby Support</a> 1.4.2006100801 : 顯示Ruby標籤</li>
+</ul>
+
+
+
+<p>最後就是今天開始用<a href="http://www.hemidemi.com/home"><span class="caps">HEM</span>iDEMi</a>了，好像也有Firefox的擴充套件的樣子，可能也會裝吧。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000352" baseName="firefox-2-party">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-13</b:date>
+				<b:time>22:44:01</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>Firefox 2 Party</b:title>
+			<b:content>
+				<b:summary> 這次最大的心得是，看到要報名馬上就要報XD，會這樣說是因為剛好前一天的HappyWeb就因為看到時沒報名，等想參加時已經額滿了，不過Firefox 2 Party就很早報名了:P，後來還不小心假裝工作人員這樣XD。 活動過程保密（誤），直接講結論，基本上我渡過了美好的一天，FON的東西沒什麼拿到有點可惜，最後拿回來的東西中，最特別的是6張空白A4紙。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/11/13/firefox-2-party/DSCF0749.jpg" class="thickbox"><img alt="本次聚會的banner超大" src="http://blog.othree.net/log/2006/11/13/firefox-2-party/DSCF0749-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p>這次最大的心得是，看到要報名馬上就要報XD，會這樣說是因為剛好前一天的<a href="http://blog.schee.info/archives/2006/11/02/2700/">HappyWeb</a>就因為看到時沒報名，等想參加時已經額滿了，不過Firefox 2 Party就很早報名了:P，後來還不小心假裝工作人員這樣XD。</p>
+
+<p>活動過程保密（誤），直接講結論，基本上我渡過了美好的一天，FON的東西沒什麼拿到有點可惜，最後拿回來的東西中，最特別的是<strong>6張空白A4紙</strong>。</p></b:mainContent>
+				<b:extendContent><p>補充要說得是我正在收集相簿網址，目前整理放在moztw wiki<a href="http://wiki.moztw.org/index.php/%E7%94%A8%E6%88%B6%E8%A8%8E%E8%AB%96:Othree">我的用戶討論頁面</a>。</p>
+
+<p>補充之二，<a href="http://www.flickr.com/photos/ernest/295424870/in/set-72157594371920434/">這張</a>是一定要連的啦。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000351" baseName="there-are-10-kinds-of-peo">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-11</b:date>
+				<b:time>00:45:32</b:time>
+			</b:datetime>
+			<b:category>others</b:category>
+			<b:title>There are 10 kinds of people in the world</b:title>
+			<b:content>
+				<b:summary>There are 10 kinds of people in the world: those who understand binary, and those who don't. 前幾天看到的好句子，不過我到剛剛才通透。...</b:summary>
+				<b:mainContent><p><strong>There are 10 kinds of people in the world:</strong><br />
+<strong>those who understand binary, and those who don't.</strong></p>
+
+<p>前幾天看到的好句子，不過我到剛剛才通透。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000350" baseName="form-validator-project">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-05</b:date>
+				<b:time>20:29:16</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>想寫個表單檢查的javascript</b:title>
+			<b:content>
+				<b:summary>表單檢查這東西很多人都有作過，所以當然不只是這麼簡單啦，想做的是透過class來指定表單的資料型態、甚至上下限，然後交給javascript來作判斷，有點像是Web Forms 2.0的預覽實作這樣，不過事實上還蠻多Web Forms 2.0 Working Draft上的東西不好只靠class和ajavascript來作，光是現在要處理上下限就不太方便了，不知道最後會設計成怎樣。 更新：結果今天就看到類似的東西了，wForms。...</b:summary>
+				<b:mainContent><p>表單檢查這東西很多人都有作過，所以當然不只是這麼簡單啦，想做的是透過class來指定表單的資料型態、甚至上下限，然後交給javascript來作判斷，有點像是<a href="http://www.whatwg.org/specs/web-forms/current-work/">Web Forms 2.0</a>的預覽實作這樣，不過事實上還蠻多Web Forms 2.0 Working Draft上的東西不好只靠class和ajavascript來作，光是現在要處理上下限就不太方便了，不知道最後會設計成怎樣。</p>
+
+<p>更新：結果今天就看到類似的東西了，<a href="http://www.formassembly.com/wForms/">wForms</a>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000348" baseName="reinventing-html">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-05</b:date>
+				<b:time>12:43:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>HTML Work Group 再開</b:title>
+			<b:content>
+				<b:summary>Tim Bernes Lee在10月27日發表了一篇Reinventing HTML，說到他們在推廣網路世界從HTML進到XHTML的這一步算是失敗了，所以他接下來打算組成一個新的HTML團隊，將會同時加強HTML和XHTML，並且會有和以往不同的成員。不過這個Group所製作的新的HTML和現在正在制定的XHTML 2將會是分開的兩個標準，所以在後續的討論中就有人持反對立場，認為已經這麼多標準了，而且事實上網路世界確實是有在朝著XHTML邁進的，為甚麼還要在增加一個標準？...</b:summary>
+				<b:mainContent><p>Tim Bernes Lee在10月27日發表了一篇<a href="http://dig.csail.mit.edu/breadcrumbs/node/166">Reinventing <span class="caps">HTML</span></a>，說到他們在推廣網路世界從HTML進到XHTML的這一步算是失敗了，所以他接下來打算組成一個新的HTML團隊，將會同時加強HTML和XHTML，並且會有和以往不同的成員。不過這個Group所製作的新的HTML和現在正在制定的XHTML 2將會是分開的兩個標準，所以在<a href="http://www.w3.org/QA/2006/10/reinventing_html_discuss.html">後續的討論</a>中就有人持反對立場，認為已經這麼多標準了，而且事實上網路世界確實是有在朝著XHTML邁進的，為甚麼還要在增加一個標準？</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000347" baseName="coscup-2006-keynote">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-02</b:date>
+				<b:time>21:08:25</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>COSCUP 2006 投影片</b:title>
+			<b:content>
+				<b:summary>下載投影片 我講的是WOA這個session的WEB 2.0 &amp; AJAX，其實WEB 2.0我也沒講什麼詳細的東西，最後只花了5分鐘左右，Ajax反而花了15分左右，時間分配和一開始不預期比例的剛好相反XD，最後，投影片的授權方式是創意公用授權條款 姓名標示-相同方式分享，改掉了兩張投影片。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/11/02/coscup-2006-keynote/coscup-2006-web2.10-ajax-keynote.pdf">下載投影片</a></p>
+
+<p>我講的是<acronym title="Web Oriented Architecture">WOA</acronym>這個session的WEB 2.0 &amp; <span class="caps">AJAX</span>，其實WEB 2.0我也沒講什麼詳細的東西，最後只花了5分鐘左右，Ajax反而花了15分左右，時間分配和一開始不預期比例的剛好相反XD，最後，投影片的授權方式是創意公用授權條款 姓名標示-相同方式分享，改掉了兩張投影片。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000346" baseName="firefox2go">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-02</b:date>
+				<b:time>18:12:10</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>火狐月</b:title>
+			<b:content>
+				<b:summary> Firefox 2 go Party，即將舉辦了！ 日期時間：11/12 中午12:30~14:30 (12:00~12:30報到) 地點：信義誠品 6F 「The Library」，台北市信義區松高路11號 6 樓 備茶點，請先吃飽（或是會後續攤 :P） 衣著輕鬆即可 (會場有 Firefox Party T-shirt 喔！) 當然我也會去，我想不會有什麼人會特別要那時去找我吧:P。 PS: 推廣圖的授權條款是「創用CC 姓名標示-非商業性-相同方式分享 2.5 台灣」...</b:summary>
+				<b:mainContent><!--a href="http://moztw.org/events/firefox2party/" title="參加 Firefox 2 火狐月活動!" class="thickbox"><img src="http://blog.othree.net/log/2006/11/02/firefox2go/feature-firefox-2-party.jpg" width="660" height="260" alt="參加火狐月!"/></a-->
+
+<p><a href="http://moztw.org/events/firefox2party/">Firefox 2 go Party</a>，即將舉辦了！</p>
+
+
+<ul>
+<li> 日期時間：11/12 中午12:30~14:30 (12:00~12:30報到)</li>
+<li>地點：信義誠品 6F 「The Library」，台北市信義區松高路11號 6 樓</li>
+<li>備茶點，請先吃飽（或是會後續攤 :P）</li>
+<li>衣著輕鬆即可 (會場有 Firefox Party T-shirt 喔！)</li>
+</ul>
+
+
+
+<p>當然我也會去，我想不會有什麼人會特別要那時去找我吧:P。</p>
+
+<p>PS: 推廣圖的授權條款是「創用CC 姓名標示-非商業性-相同方式分享 2.5 台灣」</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000345" baseName="ppk-on-javascript">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-02</b:date>
+				<b:time>11:41:41</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>ppk on javascript</b:title>
+			<b:content>
+				<b:summary> 之前和長輩團購的ppk on javascript昨天終於拿到了，比想像的厚多了，所以接下來的日子我要邊學RoR邊看這本還要每週看超過20部動畫 冏。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/11/02/ppk-on-javascript/ppk.jpg" alt="藍色的封面，2.3公分厚" height="155" width="125" /></p>
+
+<p>之前和長輩團購的<a href="http://www.quirksmode.org/book/">ppk on javascript</a>昨天終於拿到了，比想像的厚多了，所以接下來的日子我要邊學RoR邊看這本還要每週看超過20部動畫 冏。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000344" baseName="ruby-on-rails-on-windows">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-02</b:date>
+				<b:time>10:45:40</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Ruby On Rails on Windows with Apache</b:title>
+			<b:content>
+				<b:summary>昨天花了整天的時間在安裝RoR的環境，除了Windows還想辦法在ubuntu上裝，我覺得RoR有一個問題是在上手困難，其一是安裝問題，安裝方法太多了，再來是他強項的MVC架構，和一般的伺服器語言的概念不同，兩者都是需要瞭解過後才能正確的生產程式吧，事實上我現在的RoR程度只在裝好server而已XD。這篇先介紹Windows上使用Mongrel service的安裝方法，其實網路上現在也一堆安裝教學，但是幾乎都是用virtual host的，沒有自己的domain name做起來蠻麻煩的，所以我一直想作成在不同子目錄下跑不同的RoR應用程式，昨天最後是找到這個方法。...</b:summary>
+				<b:mainContent><p>昨天花了整天的時間在安裝<acronym title="Ruby on Rails">RoR</acronym>的環境，除了Windows還想辦法在ubuntu上裝，我覺得RoR有一個問題是在上手困難，其一是安裝問題，安裝方法太多了，再來是他強項的<acronym title="model view controller">MVC</acronym>架構，和一般的伺服器語言的概念不同，兩者都是需要瞭解過後才能正確的生產程式吧，事實上我現在的RoR程度只在裝好server而已XD。這篇先介紹Windows上使用Mongrel service的安裝方法，其實網路上現在也一堆安裝教學，但是幾乎都是用virtual host的，沒有自己的domain name做起來蠻麻煩的，所以我一直想作成在不同子目錄下跑不同的RoR應用程式，昨天最後是找到這個方法。</p></b:mainContent>
+				<b:extendContent><p>首先到<a href="http://rubyforge.org/">Rubyforge</a>下載<a href="http://rubyforge.org/frs/?group_id=167">Windows版的Ruby</a>回來安裝，安裝時記得要勾選<strong>RubyGems</strong>，安裝完成後開啟命令列（DOS視窗），輸入以下指令安裝需要的套件：</p>
+
+
+
+<pre><code>gem install rails
+gem install win32-service
+gem install mongrel
+gem install mongrel_service</code></pre>
+
+
+
+<p>途中會問你要不要安裝其他需要的套件，都回答要，直接按下enter預設就是要安裝了，安裝mongrel時選擇最新的win32版。接下來隨便產生一個RoR app，假設產生的app名稱叫myapp，位置在C:\myapp下，那就是在C:\輸入以下指令：</p>
+
+
+
+<pre><code>rails myapp
+cd myapp
+ruby script/service</code></pre>
+
+
+
+<p>這時候連到 http://127.0.0.1:3000/ 看看，如果有看到東西就表示Rails server有跑起來，回到命令列那按Ctrl+C停止server，繼續輸入以下命令：</p>
+
+
+
+<pre><code>mongrel_rails service::install -N myapp -c c:\myapp -p 4000 -e production
+mongrel_rails service::start -N myapp</code></pre>
+
+
+
+<p>第一行的目的在安裝service，其中的-p 4000代表開在port 4000的位置，如果之要要增加其他應用程式的話集得要改成其他數字，第二行則是開啟service，如果要關閉此服務則是輸入以下命令：</p>
+
+
+
+<pre><code>mongrel_rails service::stop -N myapp</code></pre>
+
+
+
+<p>做到這一步就把RoR端都搞定了，mongrel service就讓他保持開啟的狀態，接下來要修改Apache端的設定了，修改httpd.conf檔，首先要開啟proxy module，其實我不確定這裡開啟哪幾格，不過我最後是開了三個如下：</p>
+
+
+
+<pre><code>LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_connect_module modules/mod_proxy_connect.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+</code></pre>
+
+
+
+<p>然後在檔案最下面加上proxy pass的設定：</p>
+
+
+
+<pre><code>ProxyPass /myapp http://127.0.0.1:4000/
+ProxyPassReverse /myapp http://127.0.0.1:4000/
+</code></pre>
+
+
+
+<p>表示連到/myapp這個位置的連線會被轉到http://127.0.0.1:4000/的位置，也就是mongrel service的位置，設定好後，重新啟動Apache然後連到<strong>http://127.0.0.1/myapp/</strong>看看，有看到RoR起始頁就是安裝成功了，如果想測試看看有沒有正確的運作，可以自己建立一個controller連線看看，這部份我就不詳述了:P。</p>
+
+
+<ul>
+<li><a href="http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html">Rolling with Ruby on Rails</a></li>
+<li><a href="http://mongrel.rubyforge.org/docs/win32.html">Mongrel win32 How to</a></li>
+<li><a href="http://lightyror.blogspot.com/index.html">lighty ror</a></li>
+</ul>
+
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000343" baseName="high-performance">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-10-29</b:date>
+				<b:time>20:51:48</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>高速開發的好處</b:title>
+			<b:content>
+				<b:summary>昨天聽了COSCUP的RoR，就想體會一下，不過我不是跑去玩RoR，而是用jQuery把這裡用到的javascript都改寫一次，果然就是會多很多時間作其他事，看到漂亮的程式碼也會覺得很開心^^，原本預期用一天來處理，結果下午就弄完了，就想說用javascript compressor來壓縮一下程式碼，然後發現thickbox裡面的程式碼有些 ; 沒有放上，會造成壓縮後的javascript執行時有錯誤，然後就開始幫他找錯誤，結果發現大約四個地方沒有加上 ; 吧。然後還順便把Movable Type升級了，多做了一堆沒預期的事XD。...</b:summary>
+				<b:mainContent><p>昨天聽了COSCUP的<acronym title="Ruby on Rails">RoR</acronym>，就想體會一下，不過我不是跑去玩RoR，而是用<a href="http://jquery.com">jQuery</a>把這裡用到的javascript都改寫一次，果然就是會多很多時間作其他事，看到漂亮的程式碼也會覺得很開心^^，原本預期用一天來處理，結果下午就弄完了，就想說用<a href="http://javascriptcompressor.com/">javascript compressor</a>來壓縮一下程式碼，然後發現<a href="http://jquery.com/demo/thickbox/">thickbox</a>裡面的程式碼有些 <code>;</code> 沒有放上，會造成壓縮後的javascript執行時有錯誤，然後就開始幫他找錯誤，結果發現大約四個地方沒有加上 <code>;</code> 吧。然後還順便把<a href="http://www.movabletype.org">Movable Type</a>升級了，多做了一堆沒預期的事XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000342" baseName="coscup-2006">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-10-28</b:date>
+				<b:time>20:10:31</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>COSCUP 2006</b:title>
+			<b:content>
+				<b:summary>今天跑到COSCUP 2006去講Web 2.0和Ajax，順便聽了同場地的前一場，終於證實了我的疑惑，COSCUP的COS果然是COSPLAY阿！！...</b:summary>
+				<b:mainContent><p>今天跑到<a href="http://coscup.tossug.org/"><span class="caps">COSCUP</span> 2006</a>去講Web 2.0和Ajax，順便聽了同場地的前一場，終於證實了我的疑惑，COSCUP的COS果然是<acronym title="角色扮演">COSPLAY</acronym>阿！！</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000341" baseName="deliciousfirefox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-10-28</b:date>
+				<b:time>16:59:48</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>del.icio.us的Firefox的擴充套件</b:title>
+			<b:content>
+				<b:summary>最近Firefox 2.0出了，更新之後到處找擴充套件來增強功能，發現Yahoo官方出了del.icio.us的Firefox的擴充套件del.icio.us Bookmarks，可以完全的把Firefox的書籤用del.icio.us的取代掉，整合的程度很高，功能也不少，不過相對的，就會變成無法使用本地書籤，所以我最後還是選用另一個擴充套件del.icio.us Complete，這個擴充套件就只是單純的讓使用者方便把網頁bookmark到del.icio.us裡面。...</b:summary>
+				<b:mainContent><p>最近Firefox 2.0出了，更新之後到處找擴充套件來增強功能，發現Yahoo官方出了<a href="http://del.icio.us/">del.icio.us</a>的Firefox的擴充套件<a href="https://addons.mozilla.org/firefox/3615/">del.icio.us Bookmarks</a>，可以完全的把Firefox的書籤用del.icio.us的取代掉，整合的程度很高，功能也不少，不過相對的，就會變成無法使用本地書籤，所以我最後還是選用另一個擴充套件<a href="https://addons.mozilla.org/firefox/2354/">del.icio.us Complete</a>，這個擴充套件就只是單純的讓使用者方便把網頁bookmark到del.icio.us裡面。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000340" baseName="happydesigner-meetup-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-10-01</b:date>
+				<b:time>22:53:32</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>HappyDesigner 第二次聚會</b:title>
+			<b:content>
+				<b:summary>今天去竹東參加HappyDesigner的第二次聚會，聽說本來這次要在台北辦的，因為種種原因就跑到竹東了，主題是GTD，本來還以為只是單純的工作時程規劃，沒想到這竟然是專有名詞啊XD，托福學到一個新的工作管理的方法，其實我上研究所後，要做的事情也越來越多了，很難像以前整天都做某件工作了，開始覺得需要一個to do list來幫助我不要忘記工作，所以經過今天的聚會，我大概會花些時間研究一下相關的軟體吧，大概吧... 至於離題的部份也還是超精彩的啦，還看到入力娘實際運作的樣子，沒想到還有其他神秘的介面啊，以後只要會HTML和CSS就可以自己寫OV的選字框了，真棒O_O。另外因為沒錄音錄影，所以有好多消息喔（謎）。...</b:summary>
+				<b:mainContent><p>今天去竹東參加<a href="http://happydesigner.org/">HappyDesigner</a>的<a href="http://happydesigner.org/blog/2006/10/02/27">第二次聚會</a>，聽說本來這次要在台北辦的，因為種種原因就跑到竹東了，主題是<acronym title="Getting Things Done">GTD</acronym>，本來還以為只是單純的工作時程規劃，沒想到這竟然是專有名詞啊XD，托福學到一個新的工作管理的方法，其實我上研究所後，要做的事情也越來越多了，很難像以前整天都做某件工作了，開始覺得需要一個to do list來幫助我不要忘記工作，所以經過今天的聚會，我大概會花些時間研究一下相關的軟體吧，大概吧...</p>
+
+<p>至於離題的部份也還是超精彩的啦，還看到<a href="http://zonble.twbbs.org/archives/2006_09/883.php">入力娘</a>實際運作的樣子，沒想到還有其他神秘的介面啊，以後只要會HTML和CSS就可以自己寫OV的選字框了，真棒O_O。另外因為沒錄音錄影，所以有好多消息喔（謎）。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000339" baseName="desktop">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-09-30</b:date>
+				<b:time>10:37:11</b:time>
+			</b:datetime>
+			<b:category>others</b:category>
+			<b:title>桌面接力</b:title>
+			<b:content>
+				<b:summary>因慘事，故圖已經消失。 從東大大那傳來的:P...</b:summary>
+				<b:mainContent><p class="update">因<a href="http://blog.othree.net/log/2007/08/16/bad-bad-bad/">慘事</a>，故圖已經消失。</p>
+
+<p>從<a href="http://blog.yam.com/ikaridon/archives/2187203.html">東大大</a>那傳來的:P</p></b:mainContent>
+				<b:extendContent><p>●OS為？<br />
+Windows XP <span class="caps">SP2 </span>英文版</p>
+
+<p>●這台是你的個人電腦？還是公司或家人共用的電腦？<br />
+個人電腦であります</p>
+
+<p>●這張桌布是什麼？從哪取得的？<br />
+Fate的桌布一張，某貼圖網站抓到的吧～～</p>
+
+<p>●更換桌布的頻率高嗎？<br />
+普通吧，通常看到不錯的會拿來放到又看到不錯的，或是突然覺得看不順眼為止。</p>
+
+<p>●桌面上有幾個ICON？<br />
+看起來大約是0個吧。</p>
+
+<p>●一堆檔案和快捷方式放得亂七八糟的桌面，你看得下去嗎？<br />
+ㄅ能。</p>
+
+<p>●有沒有什麼堅持點？<br />
+東西越少越好。</p>
+
+<p>●有為了填這份接力，還特地整理一下桌面嗎？<br />
+其實電腦剛好重灌，本來有一篇文章放桌面就這樣消失了....</p>
+
+<p>●最後請再傳給５個『我想看看他的桌面』的人。<br />
+那就oone、otwo、ofour、ofive、osix吧。</p>
+
+<p>其實我自己會偶爾拍一下桌面抓圖，現在都放在相簿的<a href="http://othree.net/gallery2/v/OOO/desktop/">桌面區</a>裡。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000338" baseName="opml-icon">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-09-24</b:date>
+				<b:time>23:49:05</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>OPML icon標準化計畫</b:title>
+			<b:content>
+				<b:summary>昨天發現這個OPML的icon標準化計畫，只能說這個icon和RSS的好像XD。...</b:summary>
+				<b:mainContent><p>昨天發現這個<a href="http://www.opmlicons.com/"><span class="caps">OPML</span>的icon標準化計畫</a>，只能說這個icon和RSS的好像XD。</p>
+
+<p><img src="http://blog.othree.net/log/2006/09/24/opml-icon/opml-icon-32x32.png" alt="藍色底的同心圓" height="32" width="32" /></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000337" baseName="css-tree-sitemap">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-09-07</b:date>
+				<b:time>00:45:47</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS樹狀網站地圖</b:title>
+			<b:content>
+				<b:summary> 前幾天去日月潭參加工程研討會時做的，基本上是為了某網站設計的，很基本的樹狀網站地圖，IE 5.5測試過也沒問題，請見範例，希望有一天能做出橫向展開的:P。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/09/07/css-tree-sitemap/sitemap.png" alt="" height="100" width="160" /></p>
+
+<p>前幾天去日月潭參加工程研討會時做的，基本上是為了某網站設計的，很基本的樹狀網站地圖，IE 5.5測試過也沒問題，請見<a href="http://blog.othree.net/log/2006/09/07/css-tree-sitemap/sitemap.html">範例</a>，希望有一天能做出橫向展開的:P。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000336" baseName="firefox2-beta2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-09-06</b:date>
+				<b:time>01:13:38</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Firefox2 beta2小感</b:title>
+			<b:content>
+				<b:summary>比想像的還好，Firefox在1.0正式版後一直沒什麼大進步，不過最近公開的2.0 beta 2真是很不錯，我比較注意的幾個改變： 內建session restore，可以自動還原上次開啟的網頁（連表單填到一半都會保留，我做過測試） tab bar的進化，不過這個口述不容易完整表達，我覺得新改變都很棒 搜尋引擎的管理介面，以及支援搜尋引擎suggest的功能，例如Google Suggest 穩定性高，以前的測試版穩定性都不太好，這次的版本我遇到現在還沒出過問題 不過我覺得他tab的部份還有些功能可以加強，像是書籤自動開到新分頁和搜尋自動開新分頁等，希望正式版出來時會支援，不然只好改變使用習慣了，不過我已經拿這個beta版取代1.5正式版來用，搞不好正式版出來時我已經習慣了。想玩玩看又怕把現有環境搞壞的可以下載可攜版。...</b:summary>
+				<b:mainContent><p>比想像的還好，Firefox在1.0正式版後一直沒什麼大進步，不過最近公開的<a href="http://www.mozilla.org/projects/bonecho/releases/2.0b2.html">2.0 beta 2</a>真是很不錯，我比較注意的幾個改變：</p>
+
+
+<ul>
+<li>內建session restore，可以自動還原上次開啟的網頁（連表單填到一半都會保留，我做過測試）</li>
+<li>tab bar的進化，不過這個口述不容易完整表達，我覺得新改變都很棒</li>
+<li>搜尋引擎的管理介面，以及支援搜尋引擎suggest的功能，例如Google Suggest</li>
+<li>穩定性高，以前的測試版穩定性都不太好，這次的版本我遇到現在還沒出過問題</li>
+</ul>
+
+
+
+<p>不過我覺得他tab的部份還有些功能可以加強，像是書籤自動開到新分頁和搜尋自動開新分頁等，希望正式版出來時會支援，不然只好改變使用習慣了，不過我已經拿這個beta版取代1.5正式版來用，搞不好正式版出來時我已經習慣了。想玩玩看又怕把現有環境搞壞的可以下載<a href="http://portableapps.com/apps/internet/firefox_portable/test">可攜版</a>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000335" baseName="details-on-css-changes-for-ie7">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-08-24</b:date>
+				<b:time>00:10:52</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>微軟IE7的CSS修改清單</b:title>
+			<b:content>
+				<b:summary>IEBlog22日貼出一篇新文章，提到IE7已經快要上市了，並且將他們對CSS支援所作的修改條列出來，看起來蠻令人振奮的，position is everything上提到的問題只有一個沒改正，其他還有很多bug修改和支援增加，我還真有些迫不及待的想要玩玩看最後的正式版。...</b:summary>
+				<b:mainContent><p><a href="http://blogs.msdn.com/ie/default.aspx"><span class="caps">IEB</span>log</a>22日貼出一篇<a href="http://blogs.msdn.com/ie/archive/2006/08/22/712830.aspx">新文章</a>，提到IE7已經快要上市了，並且將他們對CSS支援所作的修改條列出來，看起來蠻令人振奮的，<a href="http://www.positioniseverything.net/">position is everything</a>上提到的問題只有一個沒改正，其他還有很多bug修改和支援增加，我還真有些迫不及待的想要玩玩看最後的正式版。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000334" baseName="svntrac">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-08-12</b:date>
+				<b:time>10:30:07</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>svn+trac</b:title>
+			<b:content>
+				<b:summary> 這兩天花了些時間研究這個，這也是我第一次接觸版本控制系統，因為之前完全沒安裝過svn，弄起來還蠻辛苦的，不過現在總算搞懂兩邊的安裝各是怎樣了，這兩天有空再寫個重頭到尾的安裝過程吧。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/08/12/svntrac/trac_logo.png" alt="trac圖示是一個熊掌印" height="61" width="214" /></p>
+
+<p>這兩天花了些時間研究這個，這也是我第一次接觸版本控制系統，因為之前完全沒安裝過svn，弄起來還蠻辛苦的，不過現在總算搞懂兩邊的安裝各是怎樣了，這兩天有空再寫個重頭到尾的安裝過程吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000333" baseName="zh-tw-case-insensitive">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-07-21</b:date>
+				<b:time>22:44:48</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>zh-tw還是zh-TW</b:title>
+			<b:content>
+				<b:summary>剛剛看了Jedi的好孩子的網頁設計的第八課，註解及標籤屬性，裡面提到了xml:lang這個用來標示標籤內容使用語言的屬性，而這個屬性的內容可以是簡單的兩個代表某種語言的英文字，使用的是ISO 639.2 : Codes for the　Representation of Names　of Languages這個標準，例如中文是zh。更詳細的話還可以包含國碼，使用的是ISO 3166 : English country names and code elements這個標準，以台灣為例，台灣的國碼是TW，而兩個代碼是用一個-合在一起，以台灣地區使用的中文為例，xml:lang屬性值就是zh-TW。 然後這有個小問題是我再接觸到lang屬性時就有的，後面的國碼似乎有人用大寫，有人用小寫，我一直無法確定到底哪怎才是正確的，今天終於確認了，其實是大小寫都可以的，其實在W3C的規範裡是說要照ISO訂的國家代碼，不過事實上ISO所制定的國家代碼並沒有限定使用大寫還是小寫，常見到大寫只是一種習慣而已，所以lang屬性的屬性值裡也沒有限定使用大寫，此一結果參照的是W3C的Language tags in HTML and XML這篇文章，裡面說：Two-letter ISO subtags indicating country are commonly written uppercase, but this is only a convention。...</b:summary>
+				<b:mainContent><p>剛剛看了Jedi的<a href="http://jedi.org/blog/archives/005444.html#entry">好孩子的網頁設計</a>的第八課，註解及標籤屬性，裡面提到了xml:lang這個用來標示標籤內容使用語言的屬性，而這個屬性的內容可以是簡單的兩個代表某種語言的英文字，使用的是<a href="http://www.loc.gov/standards/iso639-2/langcodes.html"><span class="caps">ISO</span> 639.2 : Codes for the　Representation of Names　of Languages</a>這個標準，例如中文是<strong>zh</strong>。更詳細的話還可以包含國碼，使用的是<a href="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html"><span class="caps">ISO</span> 3166 : English country names and code elements</a>這個標準，以台灣為例，台灣的國碼是<strong>TW</strong>，而兩個代碼是用一個<strong>-</strong>合在一起，以台灣地區使用的中文為例，xml:lang屬性值就是<strong>zh-TW</strong>。</p>
+
+<p>然後這有個小問題是我再接觸到lang屬性時就有的，後面的國碼似乎有人用大寫，有人用小寫，我一直無法確定到底哪怎才是正確的，今天終於確認了，其實是大小寫都可以的，其實在W3C的規範裡是說要照ISO訂的國家代碼，不過事實上ISO所制定的國家代碼並沒有限定使用大寫還是小寫，常見到大寫只是一種習慣而已，所以lang屬性的屬性值裡也沒有限定使用大寫，此一結果參照的是W3C的<a href="http://www.w3.org/International/articles/language-tags/">Language tags in <span class="caps">HTML </span>and <span class="caps">XML</span></a>這篇文章，裡面說：<q cite="http://www.w3.org/International/articles/language-tags/">Two-letter <span class="caps">ISO </span>subtags indicating country are commonly written uppercase, but this is only a convention</q>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000332" baseName="master">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-07-16</b:date>
+				<b:time>21:40:02</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>碩士學位，幾乎入手</b:title>
+			<b:content>
+				<b:summary>上週四颱風天，我口試通過了，之後改完論文，辦完離校手續就是碩士了，所以終於有閒繼續blog了…吧，不過最近其實要做之前答應要做的網站，可能要兩週左右吧^^b。...</b:summary>
+				<b:mainContent><p>上週四颱風天，我口試通過了，之後改完論文，辦完離校手續就是碩士了，所以終於有閒繼續blog了…吧，不過最近其實要做之前答應要做的網站，可能要兩週左右吧^^b。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000331" baseName="5cm">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-07-10</b:date>
+				<b:time>23:36:57</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>秒速5CM</b:title>
+			<b:content>
+				<b:summary> 好一陣子沒blog了，主要是因為在準備碩士畢業，今天是要來介紹新海誠的新作品，秒速5CM，不過其實這部作品是在說什麼還完全不知道，我主要是推薦大家去日本Yahoo的特設網頁上抓那下載版預告片來看而已，720p的解析度看的真是令人感動T_T（感動的眼淚）。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/07/10/5cm/phg_9.jpg"><img src="http://blog.othree.net/log/2006/07/10/5cm/phg_9-thumb-350x197.jpg" alt="畫質超高，每張圖都可以當桌布" height="197" width="350" /></a></p>
+
+<p>好一陣子沒blog了，主要是因為在準備碩士畢業，今天是要來介紹新海誠的新作品，秒速5CM，不過其實這部作品是在說什麼還完全不知道，我主要是推薦大家去日本Yahoo的<a href="http://5cm.yahoo.co.jp/">特設網頁</a>上抓那下載版預告片來看而已，720p的解析度看的真是令人感動T_T（感動的眼淚）。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000330" baseName="fon-taiwan">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-06-21</b:date>
+				<b:time>22:24:27</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>FON Taiwan</b:title>
+			<b:content>
+				<b:summary>FON是一個很有意思的計畫，簡單來說就是你把你家無線網路分享出去，相對的你也可以用其他FON成員的無線網路，所以你走在路上想用網路時，剛好附近又有FON成員提供的網路就很棒了。背後的股東好像有Google和Skype。然後我決定加入了，不過下一步動作要等暑假吧，有興趣的的可以到FON Taiwna Blog看看。...</b:summary>
+				<b:mainContent><p><a href="http://en.fon.com/"><span class="caps">FON</span></a>是一個很有意思的計畫，簡單來說就是你把你家無線網路分享出去，相對的你也可以用其他FON成員的無線網路，所以你走在路上想用網路時，剛好附近又有FON成員提供的網路就很棒了。背後的股東好像有Google和Skype。然後我決定加入了，不過下一步動作要等暑假吧，有興趣的的可以到<a href="http://blog.yam.com/twfon"><span class="caps">FON</span> Taiwna Blog</a>看看。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000329" baseName="levels-of">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-06-03</b:date>
+				<b:time>19:43:46</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Levels of</b:title>
+			<b:content>
+				<b:summary>最早，有一篇Levels of CSS knowledge，然後有一篇Levels of HTML knowledge，之後又出現一篇Levels of JavaScript Knowledge。 更新：還有一篇Levels of Accessibility Knowledge。...</b:summary>
+				<b:mainContent><p>最早，有一篇<a href="http://friendlybit.com/css/levels-of-css-knowledge/">Levels of <span class="caps">CSS </span>knowledge</a>，然後有一篇<a href="http://www.456bereastreet.com/archive/200605/levels_of_html_knowledge/">Levels of <span class="caps">HTML </span>knowledge</a>，之後又出現一篇<a href="http://dean.edwards.name/weblog/2006/06/levels/">Levels of JavaScript Knowledge</a>。</p>
+
+<p class="update">更新：還有一篇<a href="http://blog.fawny.org/2006/06/02/niveaux/">Levels of Accessibility Knowledge</a>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000328" baseName="jquery">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-05-31</b:date>
+				<b:time>22:21:30</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery</b:title>
+			<b:content>
+				<b:summary> jQuery New Wave Javascript，要說這是什麼我還有點不會說呢，基本上他是一個javascript的lib，可以幫助你用更簡單的方式撰寫javascript，和Yahoo! UI算是同一類的東西，不過他更偏程式碼的部份，Yahoo! UI則是各方面都有，看需求include進來。jQuery的程式碼我覺得更好用，下面是一個簡單的範例： $(&quot;p.surprise&quot;).addClass(&quot;ohmy&quot;).show(&quot;slow&quot;); 最前面的(&quot;p.surprise&quot;)是一個利用CSS選擇器來對文件內元素做選取的動作，事實上，他還支援XPath和DOM，後面則是一些內建好的prototype function，雖然提供的不多，不過都很實用，通常也不會再需要其他function了，如果有需要，還可以自己寫plugin，感覺上真是完美XD。有寫javascript的人大概已經感覺的到上面這一行所表現的方便度了，更棒的是他程式碼只有10k，而且支援IE、Fx、Safari、Opera，使用的方法除了官網上的說明文件外，另外有一個15 days Of jQuery，裡面介紹了一些不錯的用法，有興趣的人也可以參考看看。...</b:summary>
+				<b:mainContent><p><a href="http://jquery.com/"> jQuery New Wave Javascript</a>，要說這是什麼我還有點不會說呢，基本上他是一個javascript的lib，可以幫助你用更簡單的方式撰寫javascript，和<a href="http://developer.yahoo.com/yui/">Yahoo! UI</a>算是同一類的東西，不過他更偏程式碼的部份，Yahoo! UI則是各方面都有，看需求include進來。jQuery的程式碼我覺得更好用，下面是一個簡單的範例：</p>
+
+
+
+<pre><code>$(&quot;p.surprise&quot;).addClass(&quot;ohmy&quot;).show(&quot;slow&quot;);</code></pre>
+
+
+
+<p>最前面的<code>(&quot;p.surprise&quot;)</code>是一個利用CSS選擇器來對文件內元素做選取的動作，事實上，他還支援XPath和DOM，後面則是一些內建好的prototype function，雖然提供的不多，不過都很實用，通常也不會再需要其他function了，如果有需要，還可以自己寫plugin，感覺上真是完美XD。有寫javascript的人大概已經感覺的到上面這一行所表現的方便度了，更棒的是他程式碼只有10k，而且支援IE、Fx、Safari、Opera，使用的方法除了官網上的<a href="http://jquery.com/docs/">說明文件</a>外，另外有一個<a href="http://15daysofjquery.com/">15 days Of jQuery</a>，裡面介紹了一些不錯的用法，有興趣的人也可以參考看看。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000327" baseName="smackbook-pro">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-05-27</b:date>
+				<b:time>01:07:30</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>SmackBook Pro 快速切換桌面</b:title>
+			<b:content>
+				<b:summary> 想知道這是什麼，看上面這段動畫就知道了:P。SmackBook Pro是利用Mac Book Pro內建的Motion Sensor來切換桌面的小hack，他並不是一個單獨的軟體，而是包含了一個多桌面管理工具Desktop Manager（需要patch），一個擷取Motion Sensor的程式AMSTracker，還有兩個作者寫的小程式。事實上任何內建Motion Sensor的蘋果筆記型電腦都可以裝這個hack，包括了PowerBook G4、末代iBook G4、Mac Book Pro、Mac Book。我的iBook很不幸的是倒數第二代，經過幾次測試後確定不能使用T_T，這也加深了我想換Mac Book的決心。...</b:summary>
+				<b:mainContent><p><object width="425" height="350"><param name="movie" value="http://www.youtube.com/v/6uvQTTPr9Rw"></param><embed src="http://www.youtube.com/v/6uvQTTPr9Rw" type="application/x-shockwave-flash" width="425" height="350"></embed></object></p>
+
+<p>想知道這是什麼，看上面這段動畫就知道了:P。<a href="http://blog.medallia.com/2006/05/smacbook_pro.html">SmackBook Pro</a>是利用Mac Book Pro內建的Motion Sensor來切換桌面的小hack，他並不是一個單獨的軟體，而是包含了一個多桌面管理工具<a href="http://desktopmanager.berlios.de/">Desktop Manager</a>（需要patch），一個擷取Motion Sensor的程式<a href="http://www.osxbook.com/software/sms/amstracker/"><span class="caps">AMST</span>racker</a>，還有兩個作者寫的小程式。事實上任何內建Motion Sensor的蘋果筆記型電腦都可以裝這個hack，包括了PowerBook G4、末代iBook G4、Mac Book Pro、Mac Book。我的iBook很不幸的是倒數第二代，經過幾次測試後確定不能使用T_T，這也加深了我想換Mac Book的決心。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000326" baseName="vim-7-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-05-11</b:date>
+				<b:time>23:36:46</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim 7</b:title>
+			<b:content>
+				<b:summary>Vim7正式版Release了，幾個新功能之前也介紹過了，現在幾乎都還沒有什麼rpm套件可以裝，所以建議還是先抓原始碼下來自己compile，別忘了./configure時要加上--enable-multibyte才能支援非英語的編碼。...</b:summary>
+				<b:mainContent><p><a href="http://www.vim.org">Vim7</a>正式版Release了，幾個新功能之前也介紹過了，現在幾乎都還沒有什麼rpm套件可以裝，所以建議還是先抓原始碼下來自己compile，別忘了<code>./configure</code>時要加上<code>--enable-multibyte</code>才能支援非英語的編碼。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000325" baseName="happydesigner-meetup-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-05-11</b:date>
+				<b:time>21:07:13</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>HappyDesigner 第一次聚會</b:title>
+			<b:content>
+				<b:summary>上週參加了HappyDesigner的第一次聚會，雖然一開始主題定在簡報方法，不過後來又陸續新增了不少題目，包括自由工作者經驗談，WCAG 2.0...etc，還現場做了一個短短的高橋流簡報:P。 Jedi講的WCAG 2.0算是我比較有興趣的一部分吧，其中有不少改進的地方，像是網頁的語言只需要指定主要語言，裡面的其他語言的單詞不需要特別標注，還有所有的Guideline都需要程式可判讀等等，詳細的內容在Happy Designer Blog上都有錄影檔。 除了WCAG之外的各位講者的東西其實都讓我獲益不少，至於我只抱怨一下沒吃過某家包子店的包子T_T。...</b:summary>
+				<b:mainContent><p>上週參加了<a href="http://happydesigner.org/">HappyDesigner</a>的第一次聚會，雖然一開始主題定在簡報方法，不過後來又陸續新增了不少題目，包括自由工作者經驗談，<a href="http://www.w3.org/TR/WCAG20/"><span class="caps">WCAG</span> 2.0</a>...etc，還現場做了一個短短的<span title="只是字大">高橋流</span>簡報:P。</p>
+
+<p><a href="http://jedi.org/blog/">Jedi</a>講的WCAG 2.0算是我比較有興趣的一部分吧，其中有不少改進的地方，像是網頁的語言只需要指定主要語言，裡面的其他語言的單詞不需要特別標注，還有所有的Guideline都需要程式可判讀等等，詳細的內容在<a href="http://happydesigner.org/blog/2006/05/10/17">Happy Designer Blog</a>上都有錄影檔。</p>
+
+<p>除了WCAG之外的各位講者的東西其實都讓我獲益不少，至於我只抱怨一下沒吃過某家包子店的包子T_T。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000324" baseName="google-calendar">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-04-18</b:date>
+				<b:time>22:42:07</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Google Calendar 行事曆</b:title>
+			<b:content>
+				<b:summary> 之前傳聞許久的Google Calendar終於正式公佈了，試用過後感覺很棒，除了匯入資料時中文會變亂碼以及safari尚不支援外，整個使用的感覺都很棒，我一下就從iCal跳槽過來了，介紹一下幾個比較有趣的特色： 事件地點和Google Map簡單整合，可以直接透過Google Map搜尋地名，不過台灣還沒有這方面資訊，所以不會跑到正確的地方。 行事曆可以選擇是否共享，也可以把其他人的行事加到你的行事曆內，選擇共享的可能會被人用Google搜尋搜尋到。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/04/18/google-calendar/google-calendar.png" class="thickbox"><img alt="和gmail一樣風格的介面" src="http://blog.othree.net/log/2006/04/18/google-calendar/google-calendar-thumb-400x248.png" width="400" height="248"/></a></p>
+
+<p>之前傳聞許久的<a href="http://www.google.com/calendar/">Google Calendar</a>終於正式公佈了，試用過後感覺很棒，除了匯入資料時中文會變亂碼以及safari尚不支援外，整個使用的感覺都很棒，我一下就從iCal跳槽過來了，介紹一下幾個比較有趣的特色：</p>
+
+
+<ol>
+<li>事件地點和<a href="http://maps.google.com/">Google Map</a>簡單整合，可以直接透過Google Map搜尋地名，不過台灣還沒有這方面資訊，所以不會跑到正確的地方。</li>
+<li>行事曆可以選擇是否共享，也可以把其他人的行事加到你的行事曆內，選擇共享的可能會被人用Google搜尋搜尋到。</li>
+</ol>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000323" baseName="css-naked-day">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-04-09</b:date>
+				<b:time>00:53:38</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>CSS Naked Day</b:title>
+			<b:content>
+				<b:summary>過時新聞啦，其實是4/5的，不過那天一早就出門掃墓，回來已經沒力弄了，之後才看到有人有提供PHP程式碼...，總之我今天弄好了本站的設定，明年就會自動把style關掉了，我是用.htaccess來做設定，設定如下： RewriteBase / RewriteCond %{TIME_MON}%{TIME_DAY} =0405 RewriteRule .css$ stylesheets/naked.css 這樣4月5日時候所有css檔都會被轉到naked.css這個檔案，然後裡面沒有任何關於CSS的設定。...</b:summary>
+				<b:mainContent><p><a href="http://naked.dustindiaz.com/">過時新聞</a>啦，其實是4/5的，不過那天一早就出門掃墓，回來已經沒力弄了，之後才看到有人有提供PHP程式碼...，總之我今天弄好了本站的設定，明年就會自動把style關掉了，我是用.htaccess來做設定，設定如下：</p>
+
+
+
+<pre><code>RewriteBase /
+
+RewriteCond %{TIME_MON}%{TIME_DAY} =0405
+RewriteRule .css$       stylesheets/naked.css</code></pre>
+
+
+
+<p>這樣4月5日時候所有css檔都會被轉到<a href="http://blog.othree.net/stylesheets/naked.css">naked.css</a>這個檔案，然後裡面沒有任何關於CSS的設定。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000322" baseName="vim-7-beta">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-04-08</b:date>
+				<b:time>23:28:51</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim 7 beta</b:title>
+			<b:content>
+				<b:summary>Vim前些日子發佈了公開測試的beta版，我也正式的來看有哪些新功能，沒想到有tab和自動完成（這裡叫Omni completion），經過一天的調整後終於兩個功能都可以用了。附圖如下，另外也可以抓我的rc檔回去，需要說得只有我設定Ctrl+N是產生新tab，Ctrl+\是切換tab（本來想用[和]的，不過[的部份放在rc檔裡面還有問題，所以乾脆做成單循環）。另外自動完成是Ctrl+X後Ctrl+O。...</b:summary>
+				<b:mainContent><p><a href="http://www.vim.org/">Vim</a>前些日子發佈了公開測試的beta版，我也正式的來看有哪些新功能，沒想到有tab和自動完成（這裡叫Omni completion），經過一天的調整後終於兩個功能都可以用了。附圖如下，另外也可以抓我的<a href="https://github.com/othree/rc/blob/master/home/.vimrc">rc檔</a>回去，需要說得只有我設定<strong>Ctrl+N</strong>是產生新tab，<strong>Ctrl+\</strong>是切換tab（本來想用<strong>[</strong>和<strong>]</strong>的，不過[的部份放在rc檔裡面還有問題，所以乾脆做成單循環）。另外自動完成是<strong>Ctrl+X</strong>後<strong>Ctrl+O</strong>。</p>
+
+<p><img src="http://blog.othree.net/log/2006/04/08/vim-7-beta/vim7.png" alt="上有tab，下有自動完成" /></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000317" baseName="ie7-beta2-domcss">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-26</b:date>
+				<b:time>00:35:03</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>IE7 公開版beta2 對DOM和CSS的支援度就是最終版的支援度</b:title>
+			<b:content>
+				<b:summary>這消息其實是蠻讓我失望的，之前公開的IE7公開測試版，他的CSS和DOM的修正已經是最終版了，就是說正式版的IE7在這部份不會有所更改了，消息來源我忘了，不過前兩天國外的網站不少在講這件事。...</b:summary>
+				<b:mainContent><p>這消息其實是蠻讓我失望的，之前公開的<a href="http://www.microsoft.com/windows/ie/ie7/ie7betaredirect.mspx"><span class="caps">IE7</span>公開測試版</a>，他的CSS和DOM的修正已經是最終版了，就是說正式版的IE7在這部份不會有所更改了，消息來源我忘了，不過前兩天國外的網站不少在講這件事。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000316" baseName="we-blog-on-eslite-reader">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-16</b:date>
+				<b:time>20:19:01</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>誠品好讀三月號有blog專題</b:title>
+			<b:content>
+				<b:summary> 今天在誠品剛好看到三月號的誠品好讀有blog的專題，稍微翻一下覺得內容不少就買下來了，剛剛又稍微翻一下，內容大概佔了整本書的一半，感覺蠻划算的，內容也不差，只是真的蠻多的，還沒時間看。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/03/14/we_blog_on_eslite_reader/eslite_reader_63.jpg" alt="誠品好讀三月號封面" height="151" width="120" /></p>
+
+<p>今天在誠品剛好看到三月號的誠品好讀有blog的專題，稍微翻一下覺得內容不少就買下來了，剛剛又稍微翻一下，內容大概佔了整本書的一半，感覺蠻划算的，內容也不差，只是真的蠻多的，還沒時間看。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000315" baseName="winxp-on-intel-mac">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-16</b:date>
+				<b:time>19:14:47</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>WinXP on Intel Mac</b:title>
+			<b:content>
+				<b:summary>懸賞很久的Windows XP on an Intel Mac終於結束了，由一位叫clay的Mac Hacker贏得，他也把幾張照片和安裝過程的影片放到網路上，另外也在他的blog上發表一篇文章，並且未來將會公開方法。...</b:summary>
+				<b:mainContent><p>懸賞很久的<a href="http://www.winxponmac.com/">Windows XP on an Intel Mac</a>終於結束了，由一位叫<a href="http://daemons.net/~clay/">clay</a>的Mac Hacker贏得，他也把幾張<a href="http://www.flickr.com/photos/32436196@N00/with/110977744/">照片</a>和<a href="http://youtube.com/watch?v=nzH6OFpXgzI">安裝過程的影片</a>放到網路上，另外也在他的blog上發表一篇<a href="http://daemons.net.nyud.net:8080/~clay/index.php/2006/03/15/dual-booting-windows-xp-and-mac-os-x-on-intel-macs/">文章</a>，並且未來將會公開方法。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000314" baseName="web-host-accusation-customer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-16</b:date>
+				<b:time>09:57:33</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>戰國策？</b:title>
+			<b:content>
+				<b:summary>昨天第一次聽到這個名字，原來是國內的主機供應商，不過很可惜的第一次聽到竟然就是他告自己的客戶，真是太誇張了，以前網路不發達的時代，這種事情還可以偷偷幹，現在都甚麼時代了，還想用這種方法封人的嘴，所以我覺得不發揮一下blogger的力量串連一下不行。 虛擬主機請勿選擇戰國策，會遭該公司提起告訴! 戰國策真是一間有趣的主機商啊… 戰國策想用法律來塞 Blogger 的嘴？門都沒有！...</b:summary>
+				<b:mainContent><p>昨天第一次聽到這個名字，原來是國內的主機供應商，不過很可惜的第一次聽到竟然就是他告自己的客戶，真是太誇張了，以前網路不發達的時代，這種事情還可以偷偷幹，現在都甚麼時代了，還想用這種方法封人的嘴，所以我覺得不發揮一下blogger的力量串連一下不行。</p>
+
+
+<ul>
+<li><a href="http://www.neo.com.tw/archives/000871.html">虛擬主機請勿選擇戰國策，會遭該公司提起告訴!</a></li>
+<li><a href="http://blog.bcse.info/307">戰國策真是一間有趣的主機商啊…</a></li>
+<li><a href="http://blog.markplace.net/marks_place/1/2006/03/15/88"> 戰國策想用法律來塞 Blogger 的嘴？門都沒有！</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000313" baseName="yahoo-ui-library-connection-manager">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-14</b:date>
+				<b:time>22:11:40</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Yahoo! UI Library: Connection Manager</b:title>
+			<b:content>
+				<b:summary>Yahoo!最近放出了他的UI Library（以後簡稱YUI），一開始我還沒特別在意，直到看了Forget addEvent, use Yahoo!’s Event Utility，才覺得好像很方便用，而且甚麼瀏覽器間的問題都處理好了，真是好XD。所以最近寫的東西就拿來用了，現在已經研究了Connection Manager和Event，其中Event的部份已經有Forget addEvent, use Yahoo!’s Event Utility這篇文章介紹了，所以這篇先介紹Connection Manager吧。...</b:summary>
+				<b:mainContent><p>Yahoo!最近放出了他的<a href="http://developer.yahoo.net/yui/">UI Library</a>（以後簡稱YUI），一開始我還沒特別在意，直到看了<a href="http://www.dustindiaz.com/yahoo-event-utility/">Forget addEvent, use Yahoo!’s Event Utility</a>，才覺得好像很方便用，而且甚麼瀏覽器間的問題都處理好了，真是好XD。所以最近寫的東西就拿來用了，現在已經研究了<a href="http://developer.yahoo.net/yui/connection/index.html">Connection Manager</a>和<a href="http://developer.yahoo.net/yui/event/index.html">Event</a>，其中Event的部份已經有<a href="http://www.dustindiaz.com/yahoo-event-utility/">Forget addEvent, use Yahoo!’s Event Utility</a>這篇文章介紹了，所以這篇先介紹<strong>Connection Manager</strong>吧。</p></b:mainContent>
+				<b:extendContent><p>其實，<strong>Connection Manager</strong>就是Ajax技術用到的XMLHttpRequest的library。IE不支援XMLHttpRequest，他是用ActiveX來達到HttpRequest的功能（不過最早可以做到這件事的也是IE），當然程式碼也會不一樣，YUI的Connection Manager就可以迴避掉這個問題，以下大部分範例都是用YUI的<a href="http://developer.yahoo.net/yui/connection/index.html#docs">文件</a>的範例。</p>
+
+<p>首先要使用YUI先要把程式碼include進來，檔案在官方網頁有得抓：</p>
+
+<pre><code>&lt;!-- Namespace source file --&gt;
+&lt;script src = "http://yourwebsite.com/util/YAHOO.js" &gt;&lt;/script&gt;
+
+&lt;!-- Connection Manager source file --&gt;
+&lt;script src = "http://yourwebsite.com/util/connection.js" &gt;&lt;/script&gt;</code></pre>
+
+
+
+<p>其中第一個<strong>YAHOO.js</strong>是不管哪一個library都需要的，不過也只需要include一次，如果有同時用到兩個以上的YUI，記得YAHOO.js只需要一次喔。接下來我們就可以建立連線做出HttpRequest了：</p>
+
+<pre><code>var cObj = YAHOO.util.Connect.asyncRequest('GET','http://www.yahoo.com',callback,null);</code></pre>
+
+<p>這樣就做出連線了，這邊要稍微解釋一下<code>asyncRequest</code>裡面的幾個參數，基本上就是如上所示的四個：</p>
+
+
+<ol>
+<li>就是傳資料的method，就只有GET和POST可用，不過我還不會用POST。</li>
+<li>是RequestUri，如果使用GET method，要傳遞的資料就要字幾家在網址後面。</li>
+<li>則是伺服器回傳後負責處理的function。</li>
+<li>最後則是使用POST method時要送出的資料，我不會用POST就是因為這裡看不懂，似乎是需要用實際的HTML表單來作傳出的資料，而不能自己用javascript產生，有時間測試再說。</li>
+</ol>
+
+
+
+<p>如果只是要偷偷上傳資料，那這樣就可以了，不過Ajax的精華在於背後傳遞資料的互動模式，所以伺服器回傳後的動作一定是要的，因此接下來要介紹<strong>callback</strong>這個function的形式。</p>
+
+<p>到這我要改口了，<strong>callback</strong>（名稱可以自取）其實是個物件，裡面至少要指定成功回傳和失敗時負責處理的兩個function，另外還有兩個屬性，argument、scope：長相如下：</p>
+
+
+
+<pre><code>var responseSuccess = function(o){ //transaction success case logic }
+var responseFailure = function(o){ //transaction failure case logic }
+
+var callback =
+{
+    success:responseSuccess,
+    failure:responseFailure,
+    argument: arguments ,
+    scope: this
+}</code></pre>
+
+
+
+<p><code>argument</code>用途不明，似乎不論是成功還是失敗function都會收到的樣子，可以不加，scope只有在function要用到this的時候需要。至於一開始的兩個則是一定要的。一開始定義functiong時的<code>function(o)</code>裡面的o就是代表回傳的物件，如果成功，裡面會包含回傳的網頁內容，可能是XML或是string，不過為了有效利用當然是要回傳XML啦。如果是失敗的狀況，則會包含相關錯誤訊息。至於XML的資料使用方法當然就是DOM了，以上面的function為例，回傳的XML文件就是<code>o.responseXML</code>，可以直接對他套用DOM的function。以下提供一個我前兩天寫的回傳成功的處理function給各位做參考：</p>
+
+<pre><code>var updateS = function (o) {
+    var strDocument = o.responseText; 
+    var xmlDocument = o.responseXML;
+    if(!xmlDocument || xmlDocument.childNodes.length==0) {
+           xmlDocument = (new DOMParser()).parseFromString(strDocument, &quot;text/xml&quot;);
+    }
+    sselect = document.createElement(&quot;select&quot;);
+    sselect.name = &quot;s&quot;;
+    sselect.id = &quot;s&quot;;
+    YAHOO.util.Event.addListener(sselect, &quot;change&quot;, getList, 's');
+    YAHOO.util.Event.addListener(sselect, &quot;keydown&quot;, getList, 's');
+    var options = xmlDocument.getElementsByTagName('option');
+	soption = document.createElement(&quot;option&quot;);
+	soption.value = &quot;-1&quot;;
+	soption.id = &quot;fb&quot;;
+	text = document.createTextNode(&quot;學校&quot;);
+	soption.appendChild(text);
+	sselect.appendChild(soption);
+	for (i = 0; i &lt; options.length; i++) {
+		soption = document.createElement(&quot;option&quot;);
+		soption.value = options[i].getAttribute('value');
+		text = document.createTextNode(options[i].firstChild.nodeValue);
+		soption.appendChild(text);
+		sselect.appendChild(soption);
+	}
+	remove(null, 's');
+	remove(null, 'b');
+	document.getElementById('form').insertBefore(sselect, document.getElementById('sub'));
+}</code></pre>
+
+不過這個function有另外用到別的function IE可能不支援，所以還有如下的code：
+
+<pre><code>if (typeof DOMParser == "undefined") { DOMParser = function (){}
+  DOMParser.prototype.parseFromString = function (str, contentType) {
+    if (typeof ActiveXObject != "undefined") { 
+      var d = new ActiveXObject("MSXML.DomDocument"); 
+      d.loadXML(str); 
+      return d; 
+    } 
+    else if (typeof XMLHttpRequest != "undefined") {
+      var req = new XMLHttpRequest; 
+      req.open("GET", "data:" + (contentType || "application/xml") +  
+                                 ";charset=Big-5," + encodeURIComponent(str), false); 
+      if (req.overrideMimeType) { 
+        req.overrideMimeType(contentType); 
+      } 
+      req.send(null); 
+      return req.responseXML; 
+    } 
+  } 
+}</code></pre>
+
+如果大家發現IE不能正常的取得回傳的XML的話，可以參考我的作法，上面這段code也是找來的，出處會再補上。</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000312" baseName="css-percentage-minus-pixels">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-07</b:date>
+				<b:time>12:55:18</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS的百分比減像素</b:title>
+			<b:content>
+				<b:summary>根據這篇文章表示，W3C 的CSS工作小組已經通過一篇proposal，讓設計師在指定長度時可以讓百分比和像素做加減運算，這真是最近最讓人振奮的消息了，不過還不知道詳細內容是怎樣就是，不知道有沒有可能直接拿IE的方法來用。...</b:summary>
+				<b:mainContent><p>根據這篇<a href="http://cow.neondragon.net/index.php/688-Css-Percentage-Minus-Pixels">文章</a>表示，W3C 的CSS工作小組已經通過一篇proposal，讓設計師在指定長度時可以讓百分比和像素做加減運算，這真是最近最讓人振奮的消息了，不過還不知道詳細內容是怎樣就是，不知道有沒有可能直接拿IE的方法來用。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000311" baseName="osx-terminal-utf8-fix">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-02</b:date>
+				<b:time>20:29:22</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>OSX的終端機的UTF-8問題解決辦法</b:title>
+			<b:content>
+				<b:summary>前兩天終於搞定我的iBook的終端機了，之前跑上掛站的主機輸入文字總是變亂碼，昨天才解決，原來之前已經改到只差一步了。...</b:summary>
+				<b:mainContent><p>前兩天終於搞定我的iBook的終端機了，之前跑上掛站的主機輸入文字總是變亂碼，昨天才解決，原來之前已經改到只差一步了。</p></b:mainContent>
+				<b:extendContent><p>首先是更新Bash，不過其實這不在夠新的還靜下是不用做的，因為還要透過<a href="http://www.darwinports.org/">DarwinPorts</a>更新，步驟我也忘了，所以就先跳過，bash版本在2.0.4以上的都不需要更新（最新的是3.1.1），想知道版本的只要執行<code>bash --version</code>即可。</p>
+
+<p>第二步則是要編輯或修改兩個rc檔，第一個是<strong>.inputrc</strong>，內容如下：</p>
+
+<pre><code>set meta-flag on
+set convert-meta off
+set input-meta on
+set output-meta on</code></pre>
+
+<p>第二個則是<strong>.profile</strong>（好像也有是<strong>.bash_profile</strong>），加入以下內容</p>
+
+<pre><code>export LANG=zh_TW.UTF-8
+alias ls='ls -w'</code></pre>
+
+<p>第二部就算完成了，最後第三部則是終端機的設定，進入<strong>視窗設定</strong>，選擇模擬，<strong>反勾選跳脫非ASCII字元</strong>，然後到監視器的字元集編碼，選擇UTF-8，這樣就OK了。</p>
+
+<p>參考網址：<br />
+<a href="http://n00.be/archives/202"><span class="caps">OSX</span> Terminal <span class="caps">UTF</span>-8 woes solved</a></p>
+
+<p>最後附圖一張:P</p>
+
+<p><a href="http://blog.othree.net/log/2006/03/02/osx_terminal_utf8_fix/screenshot.png"><img src="http://blog.othree.net/log/2006/03/02/osx_terminal_utf8_fix/screenshot-thumb.png" alt="正在輸入中文哩" height="251" width="355" /></a></p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000310" baseName="about-the-firefox-memory-leak">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-02-17</b:date>
+				<b:time>16:40:03</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Firefox吃記憶體的原因</b:title>
+			<b:content>
+				<b:summary>一直以來都有人抱怨Firefox吃太多記憶體，前幾天Inside Firefox發表一篇文章About the Firefox "memory leak"提到了這個問題，他做出的解釋是：一般人認為的Firefox吃記憶體可能不是Firefox的Bug，而是他的一項功能造成的，歷史頁面的暫存檔，預設的狀況下Firefox會根據電腦的RAM來判斷要做多少頁的cache，當然這功能也可以關掉。 看完這篇我也做了點測試，看起來我用tab瀏覽還會增加不少記憶體用量，而且Cache的記憶體大小似乎也不是網頁的大小，我猜可能是因為他存的是render過的內容吧。不過因為我覺得有cache其實也不錯，所以我沒有關掉來比較，如果想要關掉測試的，在網址列輸入"about:config"，然後把"browser.sessionhistory.max_total_viewers"這個值設為0，預設值是-1。...</b:summary>
+				<b:mainContent><p>一直以來都有人抱怨Firefox吃太多記憶體，前幾天Inside Firefox發表一篇文章<a href="http://weblogs.mozillazine.org/ben/archives/009749.html">About the Firefox "memory leak"</a>提到了這個問題，他做出的解釋是：一般人認為的Firefox吃記憶體可能不是Firefox的Bug，而是他的一項功能造成的，歷史頁面的暫存檔，預設的狀況下Firefox會根據電腦的RAM來判斷要做多少頁的cache，當然這功能也可以關掉。</p>
+
+<p>看完這篇我也做了點測試，看起來我用tab瀏覽還會增加不少記憶體用量，而且Cache的記憶體大小似乎也不是網頁的大小，我猜可能是因為他存的是render過的內容吧。不過因為我覺得有cache其實也不錯，所以我沒有關掉來比較，如果想要關掉測試的，在網址列輸入"<strong>about:config</strong>"，然後把"<strong>browser.sessionhistory.max_total_viewers</strong>"這個值設為0，預設值是-1。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000309" baseName="google-on-taiwan">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-02-16</b:date>
+				<b:time>21:28:33</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Google3月登台</b:title>
+			<b:content>
+				<b:summary>Google3月登台 雅虎奇摩備戰 Google已經正式在台灣登記公司了，不知道接下來會有甚麼動作，不過其實不管怎樣台灣市場都很小啦。...</b:summary>
+				<b:mainContent><p><a href="http://news.chinatimes.com/Chinatimes/newslist/newslist-content/0,3546,120501+122006021600420,00.html">Google3月登台 雅虎奇摩備戰</a></p>
+
+<p>Google已經正式在台灣登記公司了，不知道接下來會有甚麼動作，不過其實不管怎樣台灣市場都很小啦。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000308" baseName="mt-textile-patch-for-lightbox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-02-10</b:date>
+				<b:time>23:30:14</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>MT Textile patch for lightbox</b:title>
+			<b:content>
+				<b:summary>前幾天看到lightbox這個js覺得很棒，就套用到我的blog上了，不過舊文章都要修改才能讓效果也出現，因為我是用Textile在寫文章的，後來想一想就乾脆把Textile修改一下，讓他自動偵測連結的網址是不是圖片，是的會就加上rel="lightbox"屬性，檔案只有改到Textile.pm這個檔案，目前只會偵測jpg、png、gif三種副檔名，而且都要小寫，也想要用的只要把修改過的檔案抓回去覆蓋掉原來的就可以了，位置在extlib/Text/。...</b:summary>
+				<b:mainContent><p>前幾天看到<a href="http://www.huddletogether.com/projects/lightbox/">lightbox</a>這個js覺得很棒，就套用到我的blog上了，不過舊文章都要修改才能讓效果也出現，因為我是用<a href="http://bradchoate.com/mt-plugins/textile">Textile</a>在寫文章的，後來想一想就乾脆把Textile修改一下，讓他自動偵測連結的網址是不是圖片，是的會就加上<strong>rel="lightbox"</strong>屬性，檔案只有改到<strong>Textile.pm</strong>這個檔案，目前只會偵測jpg、png、gif三種副檔名，而且都要小寫，也想要用的只要把<a href="http://blog.othree.net/log/2006/02/10/mt_textile_patch_for_lightbox/Textile.pm">修改過的檔案</a>抓回去覆蓋掉原來的就可以了，位置在<strong>extlib/Text/</strong>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000307" baseName="opera-9-preview-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-02-07</b:date>
+				<b:time>20:56:34</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Opera 9 Preview 2</b:title>
+			<b:content>
+				<b:summary> Opera 9 Preview 2出來了，想嘗鮮的可以到Opera Beta Testing下載，Arve Bersvendsen有一篇蠻詳細的測試報告，我覺得這版幾個重點新功能有兩個：widget和bt支援，後者比較實際啦，widget功能我實在不知道為甚麼要建在瀏覽器裡面。 除了Opera 9之外，Internet Explorer 7 beta 2也公開了，另外就是SeaMonkey 1.0 final（原Mozilla）也正式推出了，...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/02/07/opera_9_preview_2/opera9p2.png" class="left" title="Opera 9 Preview 2的介面"><img src="http://blog.othree.net/log/2006/02/07/opera_9_preview_2/opera9p2-thumb.png" alt="Opera 9 Preview 2 介面和之前差不多" height="249" width="387" /></a></p>
+
+<p class="clear">Opera 9 Preview 2出來了，想嘗鮮的可以到<a href="http://snapshot.opera.com/">Opera Beta Testing</a>下載，<a href="http://virtuelvis.com/">Arve Bersvendsen</a>有一篇蠻詳細的<a href="http://virtuelvis.com/archives/2006/02/opera-9-tp-2">測試報告</a>，我覺得這版幾個重點新功能有兩個：widget和bt支援，後者比較實際啦，widget功能我實在不知道為甚麼要建在瀏覽器裡面。</p>
+
+<p>除了Opera 9之外，Internet Explorer 7 beta 2也<a href="http://www.microsoft.com/windows/ie/ie7/default.mspx">公開</a>了，另外就是SeaMonkey 1.0 final（原Mozilla）也<a href="http://www.mozilla.org/projects/seamonkey/">正式推出</a>了，</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000306" baseName="work-begins">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-02-07</b:date>
+				<b:time>14:49:13</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>開工了</b:title>
+			<b:content>
+				<b:summary>年假終於放完了，今年年假一直在打電動，主要是BIO HAZARD 4(生化浩劫)和アルトネリコ(魔塔大陸)兩款，另外還買了DIRGE OF CERBERUS - FINAL FANTASY Ⅶ -，不過因為時間關係只玩了一點，接下來還要買女忍和METAL GEAR SOLID 3，果然我事情一多就會猛玩遊戲..orz。另外最近買了新鍵盤，有機會再拍照介紹介紹:P。...</b:summary>
+				<b:mainContent><p>年假終於放完了，今年年假一直在打電動，主要是<a href="http://www3.capcom.co.jp/ps2_bio4/"><span class="caps">BIO HAZARD</span> 4</a>(生化浩劫)和<a href="http://game.salburg.com/ar-tonelico/index.htm">アルトネリコ</a>(魔塔大陸)兩款，另外還買了<a href="http://www.square-enix.co.jp/dcff7/"><span class="caps">DIRGE</span> OF <span class="caps">CERBERUS </span>- <span class="caps">FINAL FANTASY </span>Ⅶ -</a>，不過因為時間關係只玩了一點，接下來還要買女忍和<a href="http://www.konami.jp/gs/game/mgs3_sub/japanese/index.html"><span class="caps">METAL GEAR SOLID</span> 3</a>，果然我事情一多就會猛玩遊戲..orz。另外最近買了新鍵盤，有機會再拍照介紹介紹:P。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000305" baseName="group-meeting-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-23</b:date>
+				<b:time>23:17:55</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>今天上台報告</b:title>
+			<b:content>
+				<b:summary>有不少問題，希望能在畢業前解決，首先是我報告完才發現我幾乎都是看著投影片而不是看觀眾（當然位置也有一點影響到），再來是有點緊張就講太快了，最後是投影機效果沒事先確認，有些圖片線條都看不到，也沒順利開成雙螢幕模式。...</b:summary>
+				<b:mainContent><p>有不少問題，希望能在畢業前解決，首先是我報告完才發現我幾乎都是看著投影片而不是看觀眾（當然位置也有一點影響到），再來是有點緊張就講太快了，最後是投影機效果沒事先確認，有些圖片線條都看不到，也沒順利開成雙螢幕模式。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000304" baseName="internet-explorer-7-build">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-21</b:date>
+				<b:time>11:21:25</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Internet Explorer 7 build 5299 測試</b:title>
+			<b:content>
+				<b:summary> 昨天不小心弄到，理所當然的拿來做些測試，以下用條列的方式說明目前的測試結果 可以設定多個Homepage 新增tab快照的功能，可以看小圖選 搜尋引擎不能排序，但是可以移除 可以匯入匯出OPML Tab最少一定會留下一個 只有一個時快照按鈕就消失了 背景圖fix正常了 pure css menu會有東西popup出來，不過定位還不太正確 box model預設（沒Doctype時）只修一半，padding向內算，border向外算 加上&lt;?xml version="1.0" encoding="UTF-8"?&gt;也可以進入標準模式 application/xml+xhtml還是不正常，不是render得很慘就是會要下載 有像Opera的放大縮小功能（連圖一起）...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/01/21/internet_explorer_7_build/ie7build5299.png" class="left"><img src="http://blog.othree.net/log/2006/01/21/internet_explorer_7_build/ie7build5299-thumb.png" alt="新的build5299畫面漂亮多了" height="300" width="400" /></a></p>
+
+<p class="clear">昨天不小心弄到，理所當然的拿來做些測試，以下用條列的方式說明目前的測試結果</p>
+
+
+<ul>
+<li>可以設定多個Homepage</li>
+<li>新增tab快照的功能，可以看小圖選</li>
+<li>搜尋引擎不能排序，但是可以移除</li>
+<li>可以匯入匯出OPML</li>
+<li>Tab最少一定會留下一個</li>
+<li>只有一個時快照按鈕就消失了</li>
+<li>背景圖fix正常了</li>
+<li><a href="http://www.meyerweb.com/eric/css/edge/menus/demo.html">pure css menu</a>會有東西popup出來，不過定位還不太正確</li>
+<li>box model預設（沒Doctype時）只修一半，padding向內算，border向外算</li>
+<li>加上<strong>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</strong>也可以進入標準模式</li>
+<li>application/xml+xhtml還是不正常，不是render得很慘就是會要下載</li>
+<li>有像<a href="http://www.opera.com">Opera</a>的放大縮小功能（連圖一起）</li>
+</ul>
+
+
+
+<p><a href="http://blog.othree.net/log/2006/01/21/internet_explorer_7_build/ie7build5299_tabshot.png" class="left"><img src="http://blog.othree.net/log/2006/01/21/internet_explorer_7_build/ie7build5299_tabshot-thumb.png" alt="新的標籤頁快照功能" height="300" width="400" /></a></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000303" baseName="using-half-transparent-png">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-20</b:date>
+				<b:time>21:55:04</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>慶祝300篇，開始使用半透明PNG</b:title>
+			<b:content>
+				<b:summary> 因為一些狀況我開始使用半透明的PNG在sidebar上，出來的效果還不錯，Firefox、Opera和Safari都可以正常顯示，Internet Explorer 7 beta 1也OK，6就不正常了，不過我是不太在意啦:P，另外我本來是用一張1px乘1px的半透明圖當底圖，沒想到Safari會出問題，後來發現圖片大小大一點就不會這樣了，真怪。 順便慶祝300篇！...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/01/20/using_half_transparent_png/half_trans.png" alt="半透明PNG的效果蠻漂亮的" height="146" width="160" /></p>
+
+<p>因為一些狀況我開始使用半透明的PNG在sidebar上，出來的效果還不錯，Firefox、Opera和Safari都可以正常顯示，Internet Explorer 7 beta 1也OK，6就不正常了，不過我是不太在意啦:P，另外我本來是用一張1px乘1px的半透明圖當底圖，沒想到Safari會出問題，後來發現圖片大小大一點就不會這樣了，真怪。</p>
+
+<p><strong>順便慶祝300篇！</strong></p></b:mainContent>
+				<b:extendContent><p>最後附上Safari上的錯誤圖：</p>
+
+<p><img src="http://blog.othree.net/log/2006/01/20/using_half_transparent_png/half_trans_safari.png" alt="Safari上1*1的圖會有錯誤" height="145" width="159" /></p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000302" baseName="new-screenshot-for-ie7">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-19</b:date>
+				<b:time>22:17:41</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Internet Eplorer 7 新圖</b:title>
+			<b:content>
+				<b:summary> 這兩天在網路上傳出了幾張新的IE7的畫面，我覺得看起來比之前的beta 1漂亮許多，不過來源完全不知道是哪。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/01/19/new_screenshot_for_ie7/ie7b2.jpg"><img src="http://blog.othree.net/log/2006/01/19/new_screenshot_for_ie7/ie7b2-thumb.jpg" alt="looks good" height="369" width="512" /></a></p>
+
+
+<p>這兩天在網路上<a href="http://www.jcxp.net/news.php?newsid=1070">傳出</a>了幾張新的IE7的畫面，我覺得看起來比之前的<a href="http://blog.othree.net/log/2005/07/28/little_test_of_ie7_beta1/">beta 1</a>漂亮許多，不過來源完全不知道是哪。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000301" baseName="macworld-expo-06">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-16</b:date>
+				<b:time>20:10:32</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>MacWorld Expo 06</b:title>
+			<b:content>
+				<b:summary> 這次的KeyNote我到今天才看完，大部分訊息這幾天已經傳得很廣了，我就不再覆述，只提幾個我覺得比較有趣的，首先是Intel版的OSX會有一個叫Rosetta的程式，用來在應用軟體完全轉換成Universal Binary（PowerPC和Intel CPU都可以執行的binary檔）之前，讓Intel CPU的Mac可以執行以前PowerPC用的應用軟體，在會場Steve就展示了Word和PhotoShop，的確都可以正常執行，效能看起來普普就是，不過有這個軟體，我想對於升級到Intel版mac的應用軟體支援問題都一掃而空了。 另外就是Steve Jobs真不愧是presetation之神，看了幾場KeyNote下來，每次串場的人（例如這次在講Office的那位）講起來感覺都差好多，我下週也有要上台講東西，不知道表現會如何XD。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2006/01/16/macworld_expo_06/macbookpro.png" alt="MacBook Pro" height="360" width="576" /></p>
+
+<p>這次的KeyNote我到今天才看完，大部分訊息這幾天已經傳得很廣了，我就不再覆述，只提幾個我覺得比較有趣的，首先是Intel版的OSX會有一個叫<a href="http://www.apple.com/rosetta/">Rosetta</a>的程式，用來在應用軟體完全轉換成Universal Binary（PowerPC和Intel <span class="caps">CPU</span>都可以執行的binary檔）之前，讓Intel <span class="caps">CPU</span>的Mac可以執行以前PowerPC用的應用軟體，在會場Steve就展示了Word和PhotoShop，的確都可以正常執行，效能看起來普普就是，不過有這個軟體，我想對於升級到Intel版mac的應用軟體支援問題都一掃而空了。</p>
+
+<p>另外就是Steve Jobs真不愧是<strong>presetation之神</strong>，看了幾場KeyNote下來，每次串場的人（例如這次在講Office的那位）講起來感覺都差好多，我下週也有要上台講東西，不知道表現會如何XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000300" baseName="desktop-at-20060114">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-14</b:date>
+				<b:time>00:31:11</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>20060114桌面</b:title>
+			<b:content>
+				<b:summary> 很久沒貼的桌片圖，這張其實用一個月有了。至於iBook，現在是用幾張圖片自動換，所以也沒固定的桌面。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/01/14/desktop_at_20060114/DESKTOP20060114.png" title="應該算是魔女吧"><img src="http://blog.othree.net/log/2006/01/14/desktop_at_20060114/DESKTOP20060114-thumb.png" alt="黑色佈景加黑色魔女桌布" height="384" width="512" /></a></p>
+
+<p class="clear">很久沒貼的桌片圖，這張其實用一個月有了。至於iBook，現在是用幾張圖片自動換，所以也沒固定的桌面。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000299" baseName="2006-first-post">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-01-06</b:date>
+				<b:time>00:21:25</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>2006第一PO</b:title>
+			<b:content>
+				<b:summary>祝大家新年快樂，我今年依照前幾年慣例去朋友家看HD的紅白:P。...</b:summary>
+				<b:mainContent><p><strong>祝大家新年快樂</strong>，我今年依照前幾年慣例去朋友家看<acronym title="High Definition">HD</acronym>的<a href="http://www3.nhk.or.jp/kouhaku/">紅白</a>:P。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

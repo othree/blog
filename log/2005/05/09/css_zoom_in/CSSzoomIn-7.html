@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW">
+<head>
+
+<title>利用CSS製造放大效果 其它</title>
+
+    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="prev" title="step 6" href="/log/2005/05/09/CSSzoomIn/CSSzoomIn-6.html" />
+    <link rel="first" title="CSS zoom in" href="/log/2005/05/09/CSSzoomIn/CSSzoomIn-1.html" />
+    <link rel="up" title="利用CSS製造放大效果" href="/log/2005/05/09/CSSzoomIn/" />
+
+    <link rel="top" title="O3noBLOG" href="/" />
+
+
+<style>
+<![CDATA[
+
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+	
+	li {
+		float: left;
+		display: block;
+		width: 30px;
+		height: 30px;
+		border: 1px solid black;
+		border-width: 1px 0 1px 1px;
+		text-align: center;
+		vertical-align: middle;
+		font-family: verdana;
+		padding: 10px;
+	}
+
+	li:last-child {
+		border-width: 1px;
+	}
+
+	li+li, li+li+li+li, li+li+li+li+li+li {
+		background-color: #cff;
+	}
+
+	li, li+li+li, li+li+li+li+li {
+		background-color: #ffe;
+	}
+
+	ul:hover > li {
+		position: relative;
+	}
+	
+	ul:hover > li+li, ul:hover > li+li+li+li, ul:hover > li+li+li+li+li+li {
+		left: -51px;
+	}
+
+	ul:hover > li, ul:hover > li+li+li, ul:hover > li+li+li+li+li {
+		left: 51px;
+		border-left-width: 1px;
+	}
+
+	ul:hover > li+li+li+li+li {
+		border-right-width: 1px;
+	}
+
+	ul:hover > li:last-child {
+		left: -52px;
+	}
+
+]]>
+</style>
+</head>
+
+<body>
+
+<ul>
+	<li>A</li>
+	<li>B</li>
+	<li>C</li>
+	<li>D</li>
+	<li>E</li>
+	<li>F</li>
+</ul>
+
+</body>
+
+</html>

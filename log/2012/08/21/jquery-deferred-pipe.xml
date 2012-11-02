@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000706" baseName="jquery-deferred-pipe">jQuery.Deferred.pipe</b:listData>
+
+			<b:previous>
+				<b:mTitle>COSCUP 2012 slides</b:mTitle>
+				<b:mDate>2012-08-20</b:mDate>
+				<b:mBase>coscup-2012-slides</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>iPad 的照片管理</b:mTitle>
+				<b:mDate>2012-08-24</b:mDate>
+				<b:mBase>ipad-photo-manager</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000706" baseName="jquery-deferred-pipe">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-21</b:date>
+				<b:time>18:41:56</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>jQuery.Deferred.pipe</b:title>
+			<b:content>
+				<b:summary>這次的 COSCUP 有介紹到 jQuery 的 deferred，當時沒講到的 pipe，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 when 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。 先舉一個簡單的例子，要做一個登入頁面，然後要支援 one time password(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼： $.post('/api/login', idpw, function...</b:summary>
+				<b:mainContent><p>這次的 COSCUP 有<a href="http://blog.othree.net/log/2012/08/20/coscup-2012-slides/">介紹</a>到 <a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/category/deferred-object/">deferred</a>，當時沒講到的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a>，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 <a href="http://api.jquery.com/jQuery.when/">when</a> 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。</p>
+
+<p>先舉一個簡單的例子，要做一個登入頁面，然後要支援 <a href="http://en.wikipedia.org/wiki/One-time_password">one time password</a>(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼：</p>
+
+<pre><code>$.post('/api/login', idpw, function (res) {
+    if (res.requireOTP) {
+        showOTPUI();
+    } else {
+        loginSuccess();
+    }
+}, loginFail);
+</code></pre>
+
+<p>然後接著使用者輸入認證碼後的部份：</p>
+
+<pre><code>$.post('/api/', otp, loginSuccess, loginFai);
+</code></pre>
+
+<p>這兩段程式碼的流程其實很簡單，就是如果帳號密碼錯，執行 loginFail，如果對的話，看有沒有需要 OTP 驗證，沒需要的話執行 loginSuccess，需要的話再跟使用者要 OTP，然後送去 server 做驗證，結果正確的話執行 loginSuccess，不正確的話執行 loginFail，可以畫成流程圖如下：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7786699632/" title="Flickr 上 othree 的 no pipe"><img src="http://farm9.staticflickr.com/8289/7786699632_be23a7d0fa_o.png" width="761" height="172" alt="no pipe"/></a></p>
+
+<p>這個流程基本上沒問題，可是身為一個程式設計師，看到重複的東西出現，就會想要把它拿掉，在這張流程圖中什麼東西重複出現了呢，就是最後的終點，Success 和 Fail 分別出現兩次，看到這種終點出現兩次就會很想修改掉，這時候 pipe 就派上用場了。</p>
+
+<p>Pipe 顧名思義就是管路，和 linux 作業系統命令列介面的 <a href="http://en.wikipedia.org/wiki/Pipeline_(Unix)">pipeline</a> 很像，一樣是一個程式處理完，結果丟到下一個程式繼續處理，一個接一個這樣，只不過 deferred 的 pipe 處理的是非同步的流程，如果使用 jQuery 的 pipe 來處理這個問題，程式碼大概會變成：</p>
+
+<pre><code>$.post('/api/login', idpw).pipe(function (res) {
+    _dfd = $.Deferred();
+    if (res.requireOTP) {
+        showOTPUI(_dfd);
+    } else {
+        _dfd.resolve();
+    }
+    return _dfd;
+}).then(loginSuccess, loginFail);
+</code></pre>
+
+<p>showOTPUI 那邊則要處理使用者輸入認證碼後的行為：</p>
+
+<pre><code>$.post('/api/', otp, _dfd.resolve, _dfd.reject);
+</code></pre>
+
+<p>這樣的程式碼就可以看到重複的 loginSuccess 和 loginFail 消失了，流程圖則變成像是下面這樣：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7793084172/" title="Flickr 上 othree 的 pipe"><img src="http://farm8.staticflickr.com/7261/7793084172_6b3bcbf282_o.png" width="761" height="212" alt="pipe"/></a></p>
+
+<p>再舉一個例子，假設某個網路服務的使用者資料更新，要同時在前端處理上傳頭像、加密資料等，流程可能會是：</p>
+
+<ol>
+<li>檢查欄位</li>
+<li>上傳頭像</li>
+<li>跟 server 要求加密用的 key</li>
+<li>加密資料</li>
+<li>把資料上傳</li>
+</ol>
+
+<p>這樣的流程中，有三個動作是跟 server 作溝通的非同步工作，分別是上傳頭像、跟 server 要 key 和最後的把資料上傳，但是這五個動作又要照順序作，這種情形就非常適合使用 pipe，下面是一個大概的範例，先定義三個後面 pipe 裡面會用到函數：</p>
+
+<pre><code>var validator = function ($form) {
+    return $.Deferred()[_validate($form)? 'resolve' : 'reject']();
+};
+
+var upload = function ($file) {
+    var prepared = prepare($file);
+    return $.post(prepared);
+};
+
+var encrypt = function (data, key) {
+    var crypt_data = _encrypt(data, key);
+    return $.Deferred().resolve(crypt_data);
+};
+</code></pre>
+
+<p>這些函數在寫的時候要注意到，他們回傳的最好都是 deferred 物件，根據情況可以直接決定它的狀態，接著是重點的，表單的送出事件：</p>
+
+<pre><code>$('#profile-form').on('submit', function () {
+    var $form = $(this),
+        data = $form.serialize();
+
+    validate($form).pipe(function () {
+        return upload($form.find('[name=avatar]'));
+    }).pipe(function (avatar_id) {
+        data.avatar_id = avatar_id;
+    }).pipe(function () {
+        return $.get('/api/key');
+    }).pipe(function (key) {
+        return encrypt(data, key);
+    }).pipe(function (crypt_data) {
+        return $.post('/api/profile', crypt_data);
+    }).done(function () {
+        //Do some response to user
+    });
+});
+</code></pre>
+
+<p>而除了這類的應用外，還有一個用途，就是處理複雜的動畫效果，在 COSCUP 的 queue 的那部分，最後的例子，要把 #A, #B, #C 照順序 fade out，其實也是可以用 pipe 來處理，而這要多虧 jQuery 的 <a href="http://api.jquery.com/promise/">.promise</a> 讓 <a href="http://api.jquery.com/queue/">queue</a> 和 deferred 可以接在一起，程式碼如下：</p>
+
+<pre><code>$('#A').fadeOut().promise().pipe(function () {
+    return $('#B').fadeOut().promise();
+}).pipe(function () {
+    return $('#C').fadeOut().promise();
+});
+</code></pre>
+
+<p>如果單純只是作動畫，那這樣寫並沒有比較好，不過要是你的動畫會和一些其他的 deferred 物件整合、串接，那這功能就很好用了。</p>
+
+<p>最後下個小結論，deferred 是用來代表非同步的變數，when 是平行處理非同步變數，也可以說是並聯的狀態，pipe 則是處理序列的非同步變數，也可以說是串聯的狀態，並聯和串聯當然可以在自己任意連接，所以就可以兼顧到各種狀況了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/704">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

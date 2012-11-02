@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000391" baseName="tips-of-document-write">document.write()的五四三</b:listData>
+
+			<b:previous>
+				<b:mTitle>一千零一網</b:mTitle>
+				<b:mDate>2007-03-01</b:mDate>
+				<b:mBase>weaving-the-web</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>新杯子</b:mTitle>
+				<b:mDate>2007-03-03</b:mDate>
+				<b:mBase>new-cup</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000391" baseName="tips-of-document-write">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-02</b:date>
+				<b:time>11:11:55</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>document.write()的五四三</b:title>
+			<b:content>
+				<b:summary>ppk on javascript上看到的，我終於快把這本看完了，不過這個還是先紀錄一下。...</b:summary>
+				<b:mainContent><p><a href="http://www.quirksmode.org/book/">ppk on javascript</a>上看到的，我終於快把這本看完了，不過這個還是先紀錄一下。</p></b:mainContent>
+				<b:extendContent><p>首先，標準狂人大概不會想用<code>document.write()</code>，他們大概是全部都用W3C <span class="caps">DOM</span>來新增資料到網頁裡面，事實上我也很偏好這樣，不過這邊的特殊情況是在新增外部連結的CSS檔案的時候，如果你用W3C <span class="caps">DOM</span>的<code>insertBefore()</code>或是<code>appendChild()</code>，你不能在網頁還沒完全讀取完成的時候就進行這樣的動作，因為head物件（因為是在講DOM，所以這裡我用物件）可能還沒出現，必須要等到head的結束標籤被瀏覽器讀到之後head物件才算是完整，也才能用DOM進行操作，因此要進行這種動作時，通常都會利用onload來觸發事件，可以確保script在執行時，物件都已經完整了。但是這樣會有些小問題，因為是在新增外部連結的CSS檔案，新增的樣式設定可能會把某些東西藏起來，而使用者瀏覽網頁時可能會看到這些東西一閃而過，這樣會對他們造成困擾，因此要盡量避免，所以在這種情況下，就會建議使用<strong><code>document.write()</code></strong>這個函式。</p>
+
+<p><code>document.write()</code>可以讓script在head標籤還沒讀完的時候就在其內部加入新的標籤，包括連結外部CSS檔案的link標籤，因此該套用的樣式在瀏覽器開始讀body標籤之前就都有了，瀏覽器就可以直接照該樣式來繪製網頁，而不會有前面的東西一閃即逝的狀況。另外<code>document.write()</code>這個函式在使用上有一點要注意的是，如果網頁已經讀取完成才執行這個函式，瀏覽器並不是把內容新增到網頁裡面，而是製作一個包含新插入內容的網頁，把原來的取代掉，在這種情況下，使用者也可能會看到網頁會有瞬間變白畫面（一閃）的狀況。</p>
+
+<p>以上是ppk on javascript提出的，我基本上都認同，不過想補充的是<a href="http://www.w3.org/TR/html4/interact/scripts.html#edef-SCRIPT">script</a>標籤可以插入在head或是body內的任何地方，所以在body內才使用W3C <span class="caps">DOM</span>修改head內的東西也是可行的，只是感覺上東西放錯地方就是了。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/390">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

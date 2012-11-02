@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000676" baseName="default-font-style">預設字型樣式</b:listData>
+
+			<b:previous>
+				<b:mTitle>RevCanonical and rel-shortlink</b:mTitle>
+				<b:mDate>2011-03-05</b:mDate>
+				<b:mBase>revcanonical-and-relshortlink</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>狀況更新</b:mTitle>
+				<b:mDate>2011-03-07</b:mDate>
+				<b:mBase>update</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000676" baseName="default-font-style">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-06</b:date>
+				<b:time>11:44:53</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>預設字型樣式</b:title>
+			<b:content>
+				<b:summary>前兩天介紹 TypeHelper.js 時，有提供了我現在用的字型樣式設定， Ethan 則提出了它的 建議 ， Ethan 的建議如下： html { font-family: sans-serif; } html.hasFontSmoothing-false { font-family: "新細明體", PMingLiU, serif; } Ethan 的想法應該是在確定沒支援 Clear Type 的話，就改用新細明體為預設字型，不然就用系統內建的黑體（sans-serif），他的建議給我不少想法，讓我重新確認了一下我的需求： 如果系統支援 Clear Type，那就用微軟正黑體做預設字型（sans-serif） 不支援的話，用新細明體（serif） 假如無法判斷就當成沒有 Clear Type 不支援 JavaScript 的情形當成沒有 Clear Type 然後考慮到系統環境，事實上只有 Windows...</b:summary>
+				<b:mainContent><p>前兩天介紹 TypeHelper.js 時，有提供了我現在用的字型樣式設定， <a href="http://ethantw.net/">Ethan</a> 則提出了它的<a href="http://blog.othree.net/log/2011/03/04/detect-clear-type/#comment111723"> 建議</a> ， Ethan 的建議如下：</p>
+
+<pre><code>html {
+    font-family: sans-serif;
+}
+
+html.hasFontSmoothing-false {
+    font-family: "新細明體", PMingLiU, serif;
+}
+</code></pre>
+
+<p>Ethan 的想法應該是在確定沒支援 Clear Type 的話，就改用新細明體為預設字型，不然就用系統內建的黑體（sans-serif），他的建議給我不少想法，讓我重新確認了一下我的需求：</p>
+
+<ul>
+<li>如果系統支援 Clear Type，那就用微軟正黑體做預設字型（sans-serif）</li>
+<li>不支援的話，用新細明體（serif）</li>
+<li>假如無法判斷就當成沒有 Clear Type</li>
+<li>不支援 JavaScript 的情形當成沒有 Clear Type</li>
+</ul>
+
+<p>然後考慮到系統環境，事實上只有 Windows 需要做這個判斷，OSX 不用說自然是都有，Linux 雖然不一定，但是它並沒有新細明體和微軟正黑體的選擇問題，所以只要考慮 Windows 的情形，有沒有 Clear Type 和有沒有安裝微軟正黑體，最後其實只有改一行就是了：</p>
+
+<pre><code>html {
+    font-family: serif;
+}
+
+html.hasFontSmoothing-true {
+    font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+}
+</code></pre>
+
+<p>我的和 Ethan 的差別在於，分別是對於 JavaScript 有無的像下相容方式和他使用瀏覽器設定的黑體字型，或是強迫指定新細明體，我則是使用瀏覽器預設的明體字型，或是強迫指定微軟正黑體，我想選擇用哪個，就變成是網站主人的決定了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="111814" entryID="000676">
+					<b:author>
+						<b:authorName>Ethan</b:authorName>
+						<b:authorEmail>chief@ethantw.net</b:authorEmail>
+						<b:authorUrl>http://ethantw.net/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-08</b:date>
+						<b:time>07:01:50</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>您好，我在自己寫的一個（漢字網頁專用的）<a href="http://ethantw.net/projects/han" rel="nofollow">CSS框架</a>中加入了這個<a href="http://ethantw.net/projects/han/#ziti_yuanhua_jishu" rel="nofollow">判斷字體圓滑技術</a>的功能。</p>
+
+<p>有興趣的話可以看看。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111827" entryID="000676">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-08</b:date>
+						<b:time>23:06:55</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>Hi Ethan 
+我有注意到你的這個專案，現在翻譯中的 Markdown 語法說明已經套上去測試了:P，雖然等整個完成才會公開，不過你可以先私下跟我要網址XD</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/675">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

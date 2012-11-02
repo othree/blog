@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000188" baseName="refer-dexclude">refer 2.1 的dexclude</b:listData>
+
+			<b:previous>
+				<b:mTitle>讓你的iPod Shuffle變成三腳獸</b:mTitle>
+				<b:mDate>2005-06-18</b:mDate>
+				<b:mBase>ipod-shuffle-to-3-leg-monster</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>接下來？</b:mTitle>
+				<b:mDate>2005-06-19</b:mDate>
+				<b:mBase>then</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000188" baseName="refer-dexclude">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-06-18</b:date>
+				<b:time>20:42:35</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>refer 2.1 的dexclude</b:title>
+			<b:content>
+				<b:summary>我有利用Textism的refer 2.1在觀察訪客從哪來，不過因為會被referer spam攻擊，所以連結拿掉了。 用了一段時間一直發現一個問題，就是設定裡面的dexclude（不紀錄的目錄）似乎沒有用，因為referer spam直接攻擊我的refer/index.php，所以我一直想把refer目錄排除在記錄之外，不過設定來設定去都沒效果，最後我研究了一下程式碼，發現好像有問題，把他修改過後似乎正常了。...</b:summary>
+				<b:mainContent><p>我有利用<a href="http://www.textism.com/tools/">Textism</a>的<a href="http://www.textism.com/tools/refer/">refer 2.1</a>在觀察訪客從哪來，不過因為會被referer spam攻擊，所以連結拿掉了。</p>
+
+<p>用了一段時間一直發現一個問題，就是設定裡面的<strong>dexclude</strong>（不紀錄的目錄）似乎沒有用，因為referer spam直接攻擊我的<strong>refer/index.php</strong>，所以我一直想把refer目錄排除在記錄之外，不過設定來設定去都沒效果，最後我研究了一下程式碼，發現好像有問題，把他修改過後似乎正常了。</p></b:mainContent>
+				<b:extendContent><p>我有寫信告知原作者，目前正在等候回信，還是先把我修改的地方說一下，找到下面這段code：</p>
+
+
+
+<pre><code>		if(is_array($pexclude)) {
+			foreach($pexclude as $a) {
+				$uri=preg_match(&quot;/&quot;.preg_quote($a).&quot;/i&quot;,$uri)?'':$uri;
+			}
+		}</code></pre>
+
+
+
+<p>大約是在123行的位置，在他的後面加上下面的code：</p>
+
+
+
+<pre><code>// fix code
+		if(is_array($dexclude)) {
+			foreach($dexclude as $a) {
+				$uri=preg_match(&quot;/&quot;.preg_quote($a).&quot;/i&quot;,$uri)?'':$uri;
+			}
+		}
+//
+</code></pre>
+
+
+
+<p>這樣應該就可以了。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/187">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

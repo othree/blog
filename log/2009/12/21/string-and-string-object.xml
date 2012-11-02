@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000597" baseName="string-and-string-object">String and String Object</b:listData>
+
+			<b:previous>
+				<b:mTitle>JavaScript 二三事</b:mTitle>
+				<b:mDate>2009-12-08</b:mDate>
+				<b:mBase>javascript-trivials</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Zen Coding on vim</b:mTitle>
+				<b:mDate>2009-12-25</b:mDate>
+				<b:mBase>zen-coding-on-vim</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000597" baseName="string-and-string-object">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-21</b:date>
+				<b:time>11:05:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>String and String Object</b:title>
+			<b:content>
+				<b:summary>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例： var sv = &quot;1234567890&quot;; var so = new String(&quot;1234567890&quot;); 以前我一直以為兩種是等價的，不過在看 Efficient JavaScript 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下： var s = &quot;1234567890&quot;; //var s = new String(&quot;1234567890&quot;); var start = (new Date()).getTime(); for(...</b:summary>
+				<b:mainContent><p>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例：</p>
+
+
+
+<pre><code>var sv = &quot;1234567890&quot;;
+var so = new String(&quot;1234567890&quot;);</code></pre>
+
+
+
+<p>以前我一直以為兩種是等價的，不過在看 <a href="http://dev.opera.com/articles/view/efficient-javascript/">Efficient JavaScript</a> 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下：</p>
+
+
+
+<pre><code>var s = &quot;1234567890&quot;;
+//var s = new String(&quot;1234567890&quot;);
+
+var start = (new Date()).getTime();
+for( var j = 0; j &lt; 10000; j++ ) {
+  for( var i = 0; i &lt; s.length; i++ ) {
+    s.charAt(i);
+  }
+}
+var end = (new Date()).getTime();
+alert(end-start);</code></pre>
+
+
+
+<p>結果如下：</p>
+
+<style type="text/css">
+#content table {
+  margin:1em 290px 1em 4em;
+}
+#content table th, #content table td {
+  padding: 4px;
+  margin: 1em;
+}
+</style>
+
+<table>
+        <tr>
+            <th></th>
+            <th>Opera</th>
+            <th>Firefox</th>
+            <th>IE</th>
+        </tr>
+        <tr>
+            <th>"blah"</th>
+            <td>234</td>
+            <td>313</td>
+            <td>344</td>
+        </tr>
+        <tr>
+            <th>new String()</th>
+            <td>156</td>
+            <td>381</td>
+            <td>266</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;">unit: micro seconds</td>
+        </tr>
+</table>
+
+<p>可以發現 Opera 用 new String() 時有比較快， IE 雖然也有，不過我在某些電腦上測試結果是和 Firefox 差不多，沒列出來的 safari 其實表現也和 Firefox 差不多，至於 Google Chrome 在編譯的時候有最佳化過，結果都是超快，無法作為參考。所以結論是，還是繼續用普通的方法就好了XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/595">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000569" baseName="cjk-fulltext-index">日文全文搜尋</b:listData>
+
+			<b:previous>
+				<b:mTitle>多欄位搜尋時的排序問題</b:mTitle>
+				<b:mDate>2009-01-25</b:mDate>
+				<b:mBase>order-while-search-multiple-fields</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Safari 的 re 支援</b:mTitle>
+				<b:mDate>2009-02-03</b:mDate>
+				<b:mBase>safari-re-support</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000569" baseName="cjk-fulltext-index">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-02-02</b:date>
+				<b:time>01:36:27</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>日文全文搜尋</b:title>
+			<b:content>
+				<b:summary>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。 MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。 轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上： ft_min_word_len=1 這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 MATCH, AGAINST 的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 LIKE 時要忽略平假名片假名可是很辛苦的～＿～。...</b:summary>
+				<b:mainContent><p>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。</p>
+
+<p>MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。</p>
+
+<p>轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上：</p>
+
+<pre><code>ft_min_word_len=1</code></pre>
+
+<p>這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 <span>MATCH, AGAINST </span>的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 <span>LIKE </span>時要忽略平假名片假名可是很辛苦的～＿～。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/567">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

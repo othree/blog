@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2011-06">June 2011</b:listData>
+
+			<b:previous>
+				<b:mTitle>May 2011</b:mTitle>
+				<b:mDate>2011/05</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>July 2011</b:mTitle>
+				<b:mDate>2011/07</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000686" baseName="vundle">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-06-05</b:date>
+				<b:time>08:14:33</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vundle, Bundler for Vim</b:title>
+			<b:content>
+				<b:summary>Vim 雖然本身功能就很強大，但是要讓它好用，支援更多的功能，那不可缺少的就是安裝外掛 (plugin) 了，不過 Vim 的外掛安裝和尋找本身對新手來說就是一道不小的門檻，Vim 自己的網站雖然有 scripts 這塊讓人上傳外掛的地方，不過基本上不太好用，所以有些開發者不會把東西丟到這，取而代之的，這幾年最主流的方式反而是用 github 來放 Vim 外掛，然後配上 pathogen 來安裝和管理，不但讓外掛安裝時互相不干擾，用 git 管理的外掛也可以直接更新，要反安裝也不用怕不乾淨，和以前壓縮檔、Vimball 時期比起來真的是好太多了。 gmarik 受到 pathogen 和 Ruby 的 bundler 的啟發，開發了 Vundle 這個 Vim 外掛，除了可以像 pathogen 那樣把外掛分到不同目錄管理，更厲害的是你可以很簡單的新增要安裝的外掛，然後透過指令簡單的安裝和更新。 set rtp+=~/.vim/bundle/vundle/ call vundle#rc() " let Vundle manage...</b:summary>
+				<b:mainContent><p><a href="http://www.vim.org/">Vim</a> 雖然本身功能就很強大，但是要讓它好用，支援更多的功能，那不可缺少的就是安裝外掛 (plugin) 了，不過 Vim 的外掛安裝和尋找本身對新手來說就是一道不小的門檻，Vim 自己的網站雖然有 <a href="http://www.vim.org/scripts/index.php">scripts</a> 這塊讓人上傳外掛的地方，不過基本上不太好用，所以有些開發者不會把東西丟到這，取而代之的，這幾年最主流的方式反而是用 <a href="https://github.com">github</a> 來放 Vim 外掛，然後配上 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 來安裝和管理，不但讓外掛安裝時互相不干擾，用 git 管理的外掛也可以直接更新，要反安裝也不用怕不乾淨，和以前壓縮檔、<a href="http://www.vim.org/scripts/script.php?script_id=1502">Vimball</a> 時期比起來真的是好太多了。</p>
+
+<p><a href="http://gmarik.info">gmarik</a> 受到 pathogen 和 Ruby 的 <a href="http://gembundler.com/">bundler</a> 的啟發，開發了 <a href="https://github.com/gmarik/vundle">Vundle</a> 這個 Vim 外掛，除了可以像 pathogen 那樣把外掛分到不同目錄管理，更厲害的是你可以很簡單的新增要安裝的外掛，然後透過指令簡單的安裝和更新。</p>
+
+<pre><code>set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+Bundle 'gmarik/vundle'
+
+Bundle 'YankRing.vim'
+Bundle 'VisIncr'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-surround'
+Bundle 'Align'
+Bundle 'othree/eregex.vim'
+Bundle 'mru.vim'
+Bundle 'sjl/gundo.vim'
+
+filetype plugin indent on
+</code></pre>
+
+<p>節錄一段我現在的 <a href="https://github.com/othree/rc/blob/master/home/.vimrc">.vimrc</a> 設定，要新增外掛，就只要加上一行，然後進入 Vim 執行 <code>:BundleInstall</code> ，如果要更新就是 <code>:BundleInstall!</code> ，非常簡單，Bundle 支援的參數有三種，第一種是直接一個普通字串，會去找 Vim Script 裡面的外掛，第二種是中間有個 <code>/</code> 的，前面是 github 帳號，後面則是他的 Vim 外掛專案路徑，其實也就是 github 專案頁面路徑的後面那段，第三種就是 git repository 的位置了，基本上這樣就很夠用了，如果有遇到外掛沒有上述三種地方可以裝，或是想要自己修改的話怎麼辦？</p>
+
+<p>舉例來說， <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 我就自己改成用 Douglas Crockford 的 <a href="https://github.com/douglascrockford/JSLint">JSLint repo</a> 下的最新版 jslint.js ，這種情形，我會自己 <a href="https://github.com/othree/jslint.vim">fork 一份 jslint.vim</a> 下來修改，然後安裝就裝自己的那份。使用 Vundle 之後，把 plugin 裝回來的過程比以前要簡單上數百倍，所以只要備份 .vimrc 就可以了，整個 <a href="https://github.com/othree/rc/tree/master/home">目錄</a> 看起來清爽太多了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

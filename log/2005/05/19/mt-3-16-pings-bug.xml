@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000157" baseName="mt-3-16-pings-bug">MT 3.16 Pings模版問題</b:listData>
+
+			<b:previous>
+				<b:mTitle>次世代主機大車拼</b:mTitle>
+				<b:mDate>2005-05-18</b:mDate>
+				<b:mBase>next-gen-game</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Netscape 8 正式版</b:mTitle>
+				<b:mDate>2005-05-20</b:mDate>
+				<b:mBase>netscape-8</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000157" baseName="mt-3-16-pings-bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-05-19</b:date>
+				<b:time>00:56:56</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>MT 3.16 Pings模版問題</b:title>
+			<b:content>
+				<b:summary>在MovableType 3.16後，nofollow這個plug-in變成是預設裝好的了，不過這個plug-in可能會造成&lt;MTPings&gt;這個標籤裡面的&lt;、&gt;兩個標籤內的東西全部都不見，根據3.16 Known Issues所說，在引用的模版中，要避免這種狀況可以加上sanitize=&quot;0&quot;，如果拿預設模版來改的話，就變成下面的樣子： &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;DTD/xhtml1-transitional.dtd&quot;&gt; &lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt; &lt;head&gt; &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=&lt;$MTPublishCharset$&gt;&quot; /&gt; &lt;meta name=&quot;generator&quot; content=&quot;http://www.movabletype.org/&quot; /&gt; &lt;title&gt;&lt;$MTBlogName encode_html=&quot;1&quot;$&gt;: Discussion on &lt;$MTEntryTitle$&gt;&lt;/title&gt; &lt;link rel=&quot;stylesheet&quot; href=&quot;&lt;$MTBlogURL$&gt;styles-site.css&quot; type=&quot;text/css&quot; /&gt; &lt;/head&gt; &lt;body onload=&quot;window.focus()&quot;&gt; &lt;div id=&quot;banner&quot;&gt; &lt;h1&gt;Continuing...</b:summary>
+				<b:mainContent><p>在MovableType 3.16後，nofollow這個plug-in變成是預設裝好的了，不過這個plug-in可能會造成<strong>&lt;MTPings&gt;</strong>這個標籤裡面的<strong>&lt;</strong>、<strong>&gt;</strong>兩個標籤內的東西全部都不見，根據<a href="http://www.sixapart.com/movabletype/docs/known-issues.html">3.16 Known Issues</a>所說，在引用的模版中，要避免這種狀況可以加上<code>sanitize=&quot;0&quot;</code>，如果拿預設模版來改的話，就變成下面的樣子：</p>
+
+
+
+<pre><code>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;DTD/xhtml1-transitional.dtd&quot;&gt;
+
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=&lt;$MTPublishCharset$&gt;&quot; /&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;http://www.movabletype.org/&quot; /&gt;
+
+&lt;title&gt;&lt;$MTBlogName encode_html=&quot;1&quot;$&gt;: Discussion on &lt;$MTEntryTitle$&gt;&lt;/title&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;&lt;$MTBlogURL$&gt;styles-site.css&quot; type=&quot;text/css&quot; /&gt;
+
+&lt;/head&gt;
+
+&lt;body onload=&quot;window.focus()&quot;&gt;
+
+&lt;div id=&quot;banner&quot;&gt;
+&lt;h1&gt;Continuing the discussion...&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;content&quot;&gt;
+
+&lt;p&gt;TrackBack URL for this entry:&lt;br /&gt;
+&lt;$MTEntryTrackbackLink$&gt;&lt;/p&gt;
+
+&lt;p&gt;Listed below are links to weblogs that reference &lt;a href=&quot;&lt;$MTEntryPermalink$&gt;&quot;&gt;'&lt;$MTEntryTitle$&gt;'&lt;/a&gt; from &lt;a href=&quot;&lt;$MTBlogURL$&gt;&quot;&gt;&lt;$MTBlogName encode_html=&quot;1&quot;$&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;MTPings sanitize=&quot;0&quot;&gt;
+&lt;p id=&quot;p&lt;$MTPingID$&gt;&quot;&gt;
+» &lt;a href=&quot;&lt;$MTPingURL$&gt;&quot;&gt;&lt;$MTPingTitle$&gt;&lt;/a&gt; from &lt;$MTPingBlogName encode_html=&quot;1&quot;$&gt;&lt;br /&gt;
+&lt;$MTPingExcerpt$&gt; &lt;a href=&quot;&lt;$MTPingURL$&gt;&quot;&gt;[Read More]&lt;/a&gt;
+&lt;/p&gt;
+&lt;p class=&quot;posted&quot;&gt;Tracked on &lt;$MTPingDate$&gt;&lt;/p&gt;
+&lt;/MTPings&gt;
+
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/155">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

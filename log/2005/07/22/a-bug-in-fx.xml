@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000208" baseName="a-bug-in-fx">Firefox的一個Bug</b:listData>
+
+			<b:previous>
+				<b:mTitle>MT 3.2 beta1 試用中</b:mTitle>
+				<b:mDate>2005-07-21</b:mDate>
+				<b:mBase>trying-mt-3-2-beta1</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>vertical-align不是valign</b:mTitle>
+				<b:mDate>2005-07-23</b:mDate>
+				<b:mBase>vertical-align-is-not-valign</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000208" baseName="a-bug-in-fx">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-07-22</b:date>
+				<b:time>13:58:01</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Firefox的一個Bug</b:title>
+			<b:content>
+				<b:summary>我想應該是Bug吧，因為我用Safari和Opera都沒這問題，會發現這問題是SixApart的yDSF那裡來的構想，想利用:before和:after兩個物件的背景圖來製造圓角，沒想到在一些狀況下，:after沒辦法貼齊底端，會有±1px的誤差。...</b:summary>
+				<b:mainContent><p>我想應該是Bug吧，因為我用Safari和Opera都沒這問題，會發現這問題是<a href="http://www.sixapart.com">SixApart</a>的<a href="http://www.sixapart.com/pronet/articles/ydsf_-_robust_c.html">yDSF</a>那裡來的構想，想利用<strong>:before</strong>和<strong>:after</strong>兩個物件的背景圖來製造圓角，沒想到在一些狀況下，:after沒辦法貼齊底端，會有±1px的誤差。</p></b:mainContent>
+				<b:extendContent><p><img src="http://blog.othree.net/log/2005/07/22/a_bug_in_fx/firefoxBug_1.png" alt="ex1" height="450" width="200" class="left" />
+<img src="http://blog.othree.net/log/2005/07/22/a_bug_in_fx/firefoxBug_2.png" alt="ex2" height="450" width="200" class="left" style="clear: none;" /></p>
+
+<p class="clear">上面兩個例子分別是+1px和-1px的狀況，我把出問題的地方放大抓圖下來，Mac版上雖然看不出問題，不過其實也是會發生的，HTML code如下：</p>
+
+
+
+<pre><code>&lt;div&gt;
+&lt;p&gt;A&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+&lt;p&gt;B&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+&lt;p&gt;C&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+
+
+<p><span class="caps">CSS </span>code如下：</p>
+
+
+<pre><code>html, body
+{
+	background: #66f;
+}
+
+div
+{
+	color: #fff;
+	background: #000;
+	border: 1px solid #fff;
+	margin: 0.5em 0;
+}
+
+div:before, div:after
+{
+	display: block;
+	content: &quot; &quot;;
+	background: #f99;
+	height: 10px;
+	width: 100%;
+}
+
+p
+{
+	margin: 0.72em 0;
+	color: #fff;
+	font-size: 90%;
+}
+</code></pre>
+
+
+
+<p>兩個例子的差異只有p標籤的margin而已，想親自看看的可以點下面的連結：<a href="http://blog.othree.net/log/2005/07/22/a_bug_in_fx/test1.html">範例一</a>、<a href="http://blog.othree.net/log/2005/07/22/a_bug_in_fx/test2.html">範例二</a>。</p>
+
+<p>補充：經<a href="http://moztw.org">moztw</a>的<a href="http://forum.moztw.org/viewtopic.php?p=47046%2347046">網友告知</a>，用了Deep Park Alpha2做測試，問題似乎已經修正了。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="000729" entryID="000208">
+					<b:author>
+						<b:authorName>bcse</b:authorName>
+						<b:authorEmail>elohim@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.bcse.info/1</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-07-22</b:date>
+						<b:time>19:41:34</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>最近在你的 blog 發現過幾次 XML not well form ，然後 Firefox render 不出來的情況，可是這裡的預設版本應該是 XHTML 吧？怎麼會有 XML 的錯誤訊息&#8230; 是因為 application/xhtml+xml 嗎？</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000730" entryID="000208">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-07-22</b:date>
+						<b:time>20:33:24</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>是因為php錯誤訊息@_@，偶爾會有讀不到遠端資料的狀況（bloglines、del.icio.us），現在是先把錯誤訊息完全隱藏，還在思考要怎樣改程式比較好&#8230;orz。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/207">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

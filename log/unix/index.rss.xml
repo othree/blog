@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>O3noBLOG - unix</title>
+<link>http://blog.othree.net//log/ unix/</link>
+<description></description>
+<copyright>Copyright 2012</copyright>
+<lastBuildDate>2012-05-14 23:51</lastBuildDate>
+<generator>http://www.movabletype.org/?v=4.38</generator>
+<docs>http://blogs.law.harvard.edu/tech/rss</docs> 
+
+
+<item>
+<title>Build v8</title>
+<description><![CDATA[<p>平常是使用 Google V8 引擎的 command line 來做自己工作機的 js console，最主要的用途是跑 jslint，不過這需要自己來編譯，<a href="http://blog.othree.net/log/2011/01/28/osx-v8-js-command/">以前</a>是用 scons 來編譯，剛剛想要編譯新版發現 Google 又換了自動化工具，從 <a href="http://www.scons.org/">scons</a> 換成 <a href="http://code.google.com/p/gyp/">gyp</a>，安裝流程其實比較簡單，先安裝好 svn，然後執行：</p>
+
+<pre><code>make dependencies
+make console=readline native
+</code></pre>
+
+<p>產生的 d8 執行檔會在 out/native/ 下面，官方說明有提到可以用 clang 編譯，不過我嘗試後會有錯誤，還在看要怎樣處理。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2012/05/14/build-v8/</link>
+<guid>http://blog.othree.net/log/2012/05/14/build-v8/</guid>
+<category>unix</category>
+<pubDate>2012-05-14 23:51</pubDate>
+</item>
+
+<item>
+<title>automjump</title>
+<description><![CDATA[<p>今天發現的有趣的命令列工具 <a href="http://github.com/joelthelion/autojump">autojump</a> ，它會記錄你常用的目錄位置，然後之後就可以用簡單的關鍵字跳到路徑符合關鍵字，又最常用的目錄，以我為例，我最近常常會跑到某個位置的 vim-plugins 目錄，然後我又沒有其它目錄名稱和 plugin 相似，那不論我在哪，我都可以執行下面的指令跳到 vim-plugins：</p>
+
+<pre><code>j plugin
+</code></pre>
+
+<p>我目前使用上是都沒什麼大問題，不過 <a href="http://iamhlb.com">hlb</a> 說他的 vim 檔名自動完成會爛掉，可能要在研究看看問題在哪了。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2010/10/19/automjump/</link>
+<guid>http://blog.othree.net/log/2010/10/19/automjump/</guid>
+<category>unix</category>
+<pubDate>2010-10-19 22:27</pubDate>
+</item>
+
+<item>
+<title>彩色 man page</title>
+<description><![CDATA[<p>忘了哪裡看到的設定了，用的是 zsh</p>
+
+<pre><code># colorful man page
+export PAGER="`which less` -s"
+export BROWSER="$PAGER"
+export LESS_TERMCAP_mb=$'\E[38;5;167m'
+export LESS_TERMCAP_md=$'\E[38;5;39m'
+export LESS_TERMCAP_me=$'\E[38;5;231m'
+export LESS_TERMCAP_se=$'\E[38;5;231m'
+export LESS_TERMCAP_so=$'\E[38;5;167m'
+export LESS_TERMCAP_ue=$'\E[38;5;231m'
+export LESS_TERMCAP_us=$'\E[38;5;167m'
+</code></pre>
+
+<p>效果預覽：</p>
+
+<p><a href="http://www.flickr.com/photos/othree/5046170237/" title="Flickr 上 othree 的 colorful man page"><img src="http://farm5.static.flickr.com/4087/5046170237_01e76043f9.jpg" width="500" height="346" alt="colorful man page" /></a></p>
+
+<ul>
+<li><a href="http://gist.github.com/608425">Mirror on gist</a></li>
+</ul>
+]]>
+</description>
+<link>http://blog.othree.net/log/2010/10/03/colorful-man-page/</link>
+<guid>http://blog.othree.net/log/2010/10/03/colorful-man-page/</guid>
+<category>unix</category>
+<pubDate>2010-10-03 15:42</pubDate>
+</item>
+
+<item>
+<title>命令列安裝 Dropbox</title>
+<description><![CDATA[<p>剛剛試著在命令列安裝 <a href="https://www.dropbox.com/">Dropbox</a> ，發現超簡單的，不過還是記錄一下，我安裝的流程是跟著 <a href="http://www.ubuntugeek.com/howto-install-dropbox-in-ubuntu-9-10karmic9-04jaunty8-10intrepid8-04hardy.html">howto-install-dropbox-in-ubuntu</a> 走的，不過我剛發現 <a href="https://www.dropbox.com/downloading?os=lnx">官方的安裝說明</a> 是沒說到要修改套件庫的來源檔，只要執行以下指令：</p>
+
+<pre><code>sudo apt-get update;sudo apt-get upgrade nautilus-dropbox
+</code></pre>
+
+<p>如果有金鑰問題的話，加入套件庫金鑰的指令如下：</p>
+
+<pre><code> sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
+</code></pre>
+
+<p>接著如果有用 nautilus 的話要把相關的程序全部關掉</p>
+
+<pre><code>nautilus --quit
+</code></pre>
+
+<p>然後安裝 Dropbox daemon</p>
+
+<pre><code>dropbox start -i
+</code></pre>
+
+<p>啟動 Dropbox </p>
+
+<pre><code>dropbox start
+</code></pre>
+
+<p>第一次啟動會看到下面的說明和連結</p>
+
+<pre><code>To link this computer to a dropbox account, visit the following url:
+https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
+</code></pre>
+
+<p>用瀏覽器開一下那個連結把帳號連結建立起來後就完成了，預設的目錄位置會在 ~/Dropbox 裡面，也可以執行 man dropbox 來看其它使用說明。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2010/10/03/commandline-install-dropbox/</link>
+<guid>http://blog.othree.net/log/2010/10/03/commandline-install-dropbox/</guid>
+<category>unix</category>
+<pubDate>2010-10-03 11:28</pubDate>
+</item>
+
+<item>
+<title>easygit</title>
+<description><![CDATA[<p>前陣子為了找 tinymce 某個 bug 是在哪個 commit 產生的，用上了 <a href="http://people.gnome.org/~newren/eg/">easygit</a> 因為照原來一直 revert 回去的作法實在弄到會吐血， easygit 可以這樣下命令：</p>
+
+
+
+<pre><code>eg revert -since a326cfb0ff21c928fe69f9f18d62ece31b95c47e</code></pre>
+
+
+
+<p>這樣可以直接回去那個版本了，而不是只 revert 那個 commit 。</p>]]></description>
+<link>http://blog.othree.net/log/2010/04/03/easygit/</link>
+<guid>http://blog.othree.net/log/2010/04/03/easygit/</guid>
+<category>unix</category>
+<pubDate>2010-04-03 14:09</pubDate>
+</item>
+
+<item>
+<title>用 :wq 送出 BBS 文章</title>
+<description><![CDATA[<p>因為在 <span class="caps">BBS </span>想要用 :wq 發文章的次數不算少，剛剛就用 expect 弄起來了，只要加一行到 interact 裡面就可以：</p>
+
+
+
+<pre><code>\033:wq\r { send \030; send &quot;\r&quot; }</code></pre>
+
+
+
+<p>實際操作是要 &lt;ESC&gt; :wq &lt;ENTER&gt; ，會直接把文章發表，如果不想跳過發文前的確認選單，那就把最後的 \r 拿掉。</p>]]></description>
+<link>http://blog.othree.net/log/2010/01/07/wq-post-bbs-article/</link>
+<guid>http://blog.othree.net/log/2010/01/07/wq-post-bbs-article/</guid>
+<category>unix</category>
+<pubDate>2010-01-07 20:25</pubDate>
+</item>
+
+<item>
+<title>在 screen windows 裡開一個比較小的 terminal</title>
+<description><![CDATA[<p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
+
+
+
+<pre><code>width -d 80 24</code></pre>
+
+
+
+<p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p>]]></description>
+<link>http://blog.othree.net/log/2010/01/05/_screen_windows_terminal/</link>
+<guid>http://blog.othree.net/log/2010/01/05/_screen_windows_terminal/</guid>
+<category>unix</category>
+<pubDate>2010-01-05 21:18</pubDate>
+</item>
+
+<item>
+<title>closure-compiler on OSX</title>
+<description><![CDATA[<p>Google 的 <a href="http://code.google.com/intl/en/closure/compiler/">Closure Cmpiler</a> 要 Java 1.6 ，蘋果雖然有提供 1.6 的 <a href="http://www.apple.com/downloads/macosx/apple/application_updates/javaformacosx105update1.html">更新</a> ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在</p>
+
+
+
+<pre><code>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java</code></pre>
+
+
+
+<p>如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。</p>]]></description>
+<link>http://blog.othree.net/log/2009/12/29/closure-compiler-osx/</link>
+<guid>http://blog.othree.net/log/2009/12/29/closure-compiler-osx/</guid>
+<category>unix</category>
+<pubDate>2009-12-29 23:16</pubDate>
+</item>
+
+<item>
+<title>spidermonkey 的 UTF-8 支援</title>
+<description><![CDATA[<p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
+
+<p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
+
+<p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p>]]></description>
+<link>http://blog.othree.net/log/2009/12/27/spidermonkey-utf-8/</link>
+<guid>http://blog.othree.net/log/2009/12/27/spidermonkey-utf-8/</guid>
+<category>unix</category>
+<pubDate>2009-12-27 16:01</pubDate>
+</item>
+
+<item>
+<title>kakasi</title>
+<description><![CDATA[<p><a target="_blank" href="http://kakasi.namazu.org/">kakasi</a> 並不是火影忍者那位卡卡西，他的全名是 <strong>Kanji Kana Simple Inverter</strong>，用來轉換日文漢字、平假名、片假名和羅馬拼音的。</p>
+
+<p>最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 <span>IRC </span>上問人，在 <a target="_blank" href="http://zonble.twbbs.org/">zonble</a> 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 <code>apt-get install kakasi</code> 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 <span>UTF</span>-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例：</p>
+
+<pre><code>
+echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK | iconv -f sjis -t utf8
+</code></pre>
+
+<p>就可以看到 <strong>マジンエイユウデン</strong> ，這樣我就可以在 python script 裡面呼叫一下命令列來轉字串，處理資料庫的資料，不過要放上網路的程式這樣呼叫其實蠻危險的，所以我又找了一下 <span>PHP </span>有沒有這東西可以用，沒想到還真的有，在 <a target="_blank" href="http://pecl.php.net/"><span>PECL</span></a> 裡面有人有 port，不過網站上看不到，我是從 google 搜尋到 mail list 的 <a target="_blank" href="http://marc.info/?l=php-i18n&amp;m=105914120819128&amp;w=2">舊文章</a> 才找到的，所以就照文內的安裝步驟抓下來 compile，ubuntu 記得要先 <code>apt-get install php5-dev</code> 才有辦法執行 <code>phpize</code> 初始化編譯環境，裝好後就可以在 phpinfo 裡面看到 kakasi 這個模組。</p>
+
+<p>然後測試的結果發現他也只能吃 sjis 字串，所以還是要用 iconv 轉一下碼，使用範例如下：</p>
+
+<pre><code>$roma = kakasi(iconv("UTF-8", "sjis", $qs[0]), array("-Hj", "-Jj", "-Kj"));
+</code></pre>
+
+<p>這串因為是轉成羅馬拼音的，所以最後沒在用一次 iconv 轉回 <span>UTF</span>-8，至於各種轉換的設定請參考 <code>kakasi -help</code>。</p>]]></description>
+<link>http://blog.othree.net/log/2009/01/20/kakasi/</link>
+<guid>http://blog.othree.net/log/2009/01/20/kakasi/</guid>
+<category>unix</category>
+<pubDate>2009-01-20 01:30</pubDate>
+</item>
+
+<item>
+<title>在ubuntu上套件安裝yuicompressor  </title>
+<description><![CDATA[<p><a target="_blank" href="http://blog.othree.net/log/2008/10/11/yuicompressor/">很久之前DK長輩跟我說過FreeBSD上有人port好的</a>，所以裝起來很方便，我自己放在學校的主機是用ubuntu，最近又搜尋一次發現也有人有編譯好提供套件安裝，是第三方的套件來源，又花了點時間查要怎樣用命令列新增第三方套件來源並加入public key，所以記錄一下。</p>
+
+<p>首先把下面兩行用root權限加入 <strong>/etc/apt/sources.list</strong> 檔案裡：</p>
+
+<pre><code>deb http://ppa.launchpad.net/launchpad/ubuntu intrepid main
+deb-src http://ppa.launchpad.net/launchpad/ubuntu intrepid main</code></pre>
+
+<p>接著一樣用root權限執行下面兩行指令來把public key加入apt裡面：</p>
+
+<pre><code>gpg --keyserver keyserver.ubuntu.com --recv-keys 0A5174AF
+gpg --armor --export 0A5174AF | apt-key add -</code></pre>
+
+<p>然後用 <code>apt-get update; apt-get install yuicompressor</code> 就可以把 yuicompressor 裝好了，不過我這台P4 2.4的跑起來還有點慢。</p>
+
+<ul>
+<li><a target="_blank" href="https://launchpad.net/%7Elaunchpad/+archive"><span>PPA </span>for Canonical Launchpad Developers</a></li>
+<li><a target="_blank" href="http://wiki.scribus.net/index.php/Getting_Scribus_on_Ubuntu/Kubuntu_up_and_running">Getting Scribus on Ubuntu/Kubuntu up and running</a></li>
+</ul>]]></description>
+<link>http://blog.othree.net/log/2009/01/15/ubuntu-yuicompressor/</link>
+<guid>http://blog.othree.net/log/2009/01/15/ubuntu-yuicompressor/</guid>
+<category>unix</category>
+<pubDate>2009-01-15 01:28</pubDate>
+</item>
+
+
+</channel>
+</rss>

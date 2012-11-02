@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2007-04">April 2007</b:listData>
+
+			<b:previous>
+				<b:mTitle>March 2007</b:mTitle>
+				<b:mDate>2007/03</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>May 2007</b:mTitle>
+				<b:mDate>2007/05</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000411" baseName="the-one">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-29</b:date>
+				<b:time>00:37:03</b:time>
+			</b:datetime>
+			<b:category>others</b:category>
+			<b:title>天將降大任於斯人也</b:title>
+			<b:content>
+				<b:summary>天將降大任於斯人也，必先苦其心志，勞其筋骨，餓其體膚，斷其網路，空乏其身，行拂亂其所為，所以動心忍性，增益其所不能...</b:summary>
+				<b:mainContent><blockquote><p>天將降大任於斯人也，必先苦其心志，勞其筋骨，餓其體膚，斷其網路，空乏其身，行拂亂其所為，所以動心忍性，增益其所不能</p></blockquote></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="7"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000410" baseName="javascript-cross-domain">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-28</b:date>
+				<b:time>21:01:40</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>如何用 JavaScript 執行不同網域的 script</b:title>
+			<b:content>
+				<b:summary>因為XSS的安全性問題，所以不能使用XMLHttpRequest的抓不同網域的資料，這限制了部份 mashup 的發展，不過經過測試，加上Ajax Patterns的佐證，發現實際上還是有方法的。...</b:summary>
+				<b:mainContent><p>因為<abbr title="Cross Site Script">XSS</abbr>的安全性問題，所以不能使用XMLHttpRequest的抓不同網域的資料，這限制了部份 mashup 的發展，不過經過測試，加上<a href="http://ajaxpatterns.org/wiki/index.php?title=Main_Page">Ajax Patterns</a>的佐證，發現實際上還是有方法的。</p></b:mainContent>
+				<b:extendContent><p>其實方法很簡單，就是用 JavaScript 來新增script標籤，像是支援度最高的<code>document.write</code>法：</p>
+
+<pre><code>document.write("&lt;script type=\"text/javascript\" src=\"http://othree.net/tmp/test.js\"&gt;&lt;\/script&gt;");</code></pre>
+
+<p>或是標準的DOM方法（如果使用<strong>application/xhtml+xml</strong>的mime type就不得不用這種方法了）：</p>
+
+<pre><code>var z1 = document.createElement("script");
+z1.type = "text/javascript";
+z1.src = "http://othree.net/tmp/test.js";
+document.getElementsByTagName("head")[0].appendChild(z1);</code></pre>
+
+<p>不過這和抓資料有什麼關係呢？重點在遠端的那個 JavaScript 內容，它可以把需要的資料存到一個變數內，像是：</p>
+
+<pre><code>testvar = "You got me !";</code></pre>
+
+<p>這時問題又來了，一般web service就是直接提供JSON字串或是XML字串，並不會像上面轉成變數，這確實是最大的問題，目前我的解決方法還是需要透過一個自己可以動的server把web service回傳的字串包裝成上面的樣子再傳給網頁，不過這樣速度還蠻慢的，而且也不是每個人都有辦法弄出支援PHP、Perl等server side script的空間，而且要是有作這種東西的話就不會有跨網域的問題了吧，不過這我目前也沒辦法啦&gt;&lt;。</p>
+
+<p>還有一個問題，要怎樣抓到遠端script完整執行完的事件呢？這我試驗了很久，目前的作法如下：</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;
+document.write("&lt;script type=\"text/javascript\" src=\"http://othree.net/tmp/test.js\"&gt;&lt;\/script&gt;");
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+alert(testvar);
+&lt;/script&gt;</code></pre>
+
+<p>沒錯，你需要兩個script標籤才能確保下面的alert事件會等到遠端script執行完才會動作，這當然是很爛的作法，因為是hard code，而且要把script寫在html原始碼裡面，有違行為、內容樣式分開的原則，加上不能包在function裡面，不過為了IE、Safari兩個瀏覽器的支援，不得不這樣寫......好吧，其實還有個方法，僅限於你能決定web service回傳的檔案內容是什麼時，當然為了解決前一個問題所作的web service proxy也是可以辦得到的，就是把遠端script的內容改成：</p>
+
+<pre><code>testvar = "You got me !";alert(testvar);</code></pre>
+
+<p>就是遠端script的最後自己呼叫該執行的function，恩，還是很不好看，不過至少是我目前找的唯一方法。</p>
+
+<p>補充：根據這兩天的測試，Firefox和Opera在script的執行順序很合直覺，IE在一個script區塊裡面一定會先把本地端的執行完才執行遠端的，Safari則是同時跑兩邊。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000409" baseName="google-taiwan-maps">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-25</b:date>
+				<b:time>13:27:16</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Google Maps 台灣地圖</b:title>
+			<b:content>
+				<b:summary>Google Maps終於提供了台灣的地圖，而且文字清楚又漂亮，不過還有些缺點，像是搜尋地標搜尋不到，地圖和衛星圖重合有些失準，不過看到終於有台灣地圖的Google Maps還是很感動啦。...</b:summary>
+				<b:mainContent><p><a href="http://maps.google.com/">Google Maps</a>終於提供了台灣的地圖，而且文字清楚又漂亮，不過還有些缺點，像是搜尋地標搜尋不到，地圖和衛星圖重合有些失準，不過看到終於有台灣地圖的Google Maps還是很感動啦。</p>
+
+<p><img alt="gmap.png" src="http://blog.othree.net/log/2007/04/25/google-taiwan-maps/gmap.png" width="400" height="300" /></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="8"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000408" baseName="offline-web-application">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-24</b:date>
+				<b:time>22:45:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>離線網路應用程式的時代</b:title>
+			<b:content>
+				<b:summary>今天Dojo公開了他們的offline toolkit，雖然還只是測試版，不過我想這已經可以算是網路應用程式的一個里程碑了，如果我的認知沒錯的話，這應該是第一個離線的網路應用程式開發工具，基本的原理是使用者如果希望能夠離線使用該網路應用程式，則需要下載一個小程式安裝，這樣也算是取得使用者同意，所以就不會有javascript不能存取本地端檔案的問題了，現在Dojo提供了一個簡單的範例，還有一段screen cast教你如何使用Dojo offline toolkit，不過將近要一個小時長，所以我還沒看。 雖然終於有一個offline toolkit出來了，不過我反而因此產生些問題，Firefox 3也說要支援離線網路應用程式，照現在的情勢看來，顯然和Dojo的實做方法會不一樣，那會不會程式開發者又要再面臨一次平台大戰啊，我們需要標準啊～～。...</b:summary>
+				<b:mainContent><p>今天Dojo公開了他們的<a href="http://www.dojotoolkit.org/offline">offline toolkit</a>，雖然還只是測試版，不過我想這已經可以算是網路應用程式的一個里程碑了，如果我的認知沒錯的話，這應該是第一個離線的網路應用程式開發工具，基本的原理是使用者如果希望能夠離線使用該網路應用程式，則需要下載一個小程式安裝，這樣也算是取得使用者同意，所以就不會有javascript不能存取本地端檔案的問題了，現在<a href="http://www.dojotoolkit.org/">Dojo</a>提供了一個簡單的<a href="http://codinginparadise.org/projects/dojo_offline/working/demos/offline/moxie/editor.html">範例</a>，還有<a href="http://video.yahoo.com/video/play?vid=427145%23">一段screen cast</a>教你如何使用Dojo offline toolkit，不過將近要一個小時長，所以我還沒看。</p>
+
+<p>雖然終於有一個offline toolkit出來了，不過我反而因此產生些問題，Firefox 3也說要支援離線網路應用程式，照現在的情勢看來，顯然和Dojo的實做方法會不一樣，那會不會程式開發者又要再面臨一次平台大戰啊，我們需要標準啊～～。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000406" baseName="slyvester-keyboard-shortcuts">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-20</b:date>
+				<b:time>00:33:00</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Slyvester與Keyboard Shortcuts</b:title>
+			<b:content>
+				<b:summary>這兩天看到兩個應該蠻有用的Javascript函式庫，簡單介紹一下，首先是Slyvester，這是一個Javacript的向量與矩陣的函式庫，他會新增兩種物件$v和$m，分別代表向量和矩陣，然後就可以進行一些常見的矩陣運算。矩陣和向量在一般網路應用可能很少，不過一些進階的電腦功能，像是3D繪圖、統計等等都很需要向量和矩陣的運算，進階的統計可能比較難用Javascript來作，但是我想用Canvas或是SVG處理3D圖形的時候，有這個library應該會方便許多。 第二個Library目前應該還沒有名字，先叫他HKSJ好了，他是鍵盤事件的處理器，以往要透過event物件的keycode來判斷使用者按了哪個鍵，HKSJ反過來先用一個物件抓取所有的鍵盤事件，然後開發者在根據需要對不同的案件組合加上觸發的function，範例如下： shortcut(&quot;Ctrl+Shift+X&quot;,function() { alert(&quot;Hi there!&quot;); }); 這樣就可以處理Ctrl+Shift+X的鍵盤事件了，比起純手工code來說方便許多，擴充性也提昇不少。...</b:summary>
+				<b:mainContent><p>這兩天看到兩個應該蠻有用的Javascript函式庫，簡單介紹一下，首先是<a href="http://sylvester.jcoglan.com/">Slyvester</a>，這是一個Javacript的向量與矩陣的函式庫，他會新增兩種物件<code>$v</code>和<code>$m</code>，分別代表向量和矩陣，然後就可以進行一些常見的矩陣運算。矩陣和向量在一般網路應用可能很少，不過一些進階的電腦功能，像是3D繪圖、統計等等都很需要向量和矩陣的運算，進階的統計可能比較難用Javascript來作，但是我想用Canvas或是SVG處理3D圖形的時候，有這個library應該會方便許多。</p>
+
+<p>第二個Library目前應該還沒有名字，先叫他<a href="http://www.openjs.com/scripts/events/keyboard_shortcuts/" title="Handling Keyboard Shortcuts in JavaScript"><span class="caps">HKSJ</span></a>好了，他是鍵盤事件的處理器，以往要透過event物件的keycode來判斷使用者按了哪個鍵，HKSJ反過來先用一個物件抓取所有的鍵盤事件，然後開發者在根據需要對不同的案件組合加上觸發的function，範例如下：</p>
+
+
+
+<pre><code>shortcut(&quot;Ctrl+Shift+X&quot;,function() {
+	alert(&quot;Hi there!&quot;);
+});</code></pre>
+
+
+
+<p>這樣就可以處理Ctrl+Shift+X的鍵盤事件了，比起純手工code來說方便許多，擴充性也提昇不少。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000405" baseName="google-reader-theme">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-17</b:date>
+				<b:time>10:43:34</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Google Reader Theme</b:title>
+			<b:content>
+				<b:summary>hickdesign又放出新的網站樣式表了，繼上次的Bloglines後，這次是Google Reader，其實我個人最希望有漂亮的Gmail Theme啦，有興趣的人請到Google Reader Theme // hickdesign下載。...</b:summary>
+				<b:mainContent><p><a href="http://www.hicksdesign.co.uk/">hickdesign</a>又放出新的網站樣式表了，繼上次的<a href="http://www.hicksdesign.co.uk/journal/bloglines-skin-142">Bloglines</a>後，這次是Google Reader，其實我個人最希望有漂亮的Gmail Theme啦，有興趣的人請到<a href="http://www.hicksdesign.co.uk/journal/google-reader-theme">Google Reader Theme // hickdesign</a>下載。</p>
+
+<p><img alt="和之前的bloglines theme一樣的設計風格" src="http://blog.othree.net/log/2007/04/17/google-reader-theme/257.jpg" width="420" height="259" /></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000404" baseName="codejam-bof-osdc">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-16</b:date>
+				<b:time>23:14:05</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>黑客松、BOF、OSDC</b:title>
+			<b:content>
+				<b:summary>上週接連五六日，我參加了黑客鬆、BOF、OSDC三場活動，過了很充實的三天，也因此本週末都沒休息到～～。...</b:summary>
+				<b:mainContent><p>上週接連五六日，我參加了<a href="http://hackathon.blogspot.com/index.html">黑客鬆</a>、<a href="http://blog.bof.tw/">BOF</a>、<a href="http://osdc.tw/">OSDC</a>三場活動，過了很充實的三天，也因此本週末都沒休息到～～。</p></b:mainContent>
+				<b:extendContent><h4>黑客鬆</h4>
+<p>黑客鬆(hackathon)，是黑客(hacking)和馬拉松(marathon)的組合字，有別於以往的研討會和社群聚會，黑客鬆不一樣的地方就是要在短短的聚會時間內直接產生程式，這次<a href="http://lukhnos.org/">lukhnos</a>和<a href="http://b6s.blogspot.com/">b6s</a>所策劃的黑客鬆活動名稱叫<a href="http://taipedia.selfip.info/mediawiki/index.php/TaiwanHackathon/zh-hant">Taiwan Code Jam</a>，主題是Web API，這主題以我的程度還可以去參個一腳，不過因為事情很多，所以第二天的下午（最後一個時段）我才到，於是就在那邊重新研究怎樣新增script標籤好抓不同網域的javascript來執行，結果我自己的test case不知道為甚麼弄半天連body物件都抓不到，更不用說插入新標籤了。幸好b6s抓我以前用的code來還可以跑，就花了些時間作後續資料的處理，勉強弄出一個還算ok的blogger widget，然後，當天晚上就有safari不能用的回報，隔天發現IE似乎也不太正常，所以我打算這兩天花些時間在重新寫一個可以跨瀏覽器的版本，希望做的出來啦，畢竟這其實是<acronym title="Cross Site Script">XSS</acronym>領域的東西，搞不好有瀏覽器已經把這種作法也鎖住了。</p>
+<p><a href="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3145.JPG" class="thickbox"><img alt="黑客鬆會場" src="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3145-thumb-400x300.jpg" width="400" height="300" /></a></p>
+<p>就在我問題處理的差不多後，閒晃來閒晃去時，<a href="http://gugod.org/blog/">gugod</a>對我展示了他做的<a href="http://blog.handlino.com/2007/04/asynapse.html">Asynapse</a>，他對我的說法是他把Active Record port到javascript和perl上了，簡單的說就是可以在javascript上用很簡潔的方法對server端的資料庫作動作，像是新增、抓取、修改、刪除，這樣有什麼好處呢？這樣可以讓程式的前端和後端更分開，其實我覺得這算是一種<acronym title="Service Oriented Architecture">SOA</acronym>架構，我對這還蠻有興趣的，有想把後端的部份用PHP來實做。</p>
+<p>黑客鬆的活動本身也還算很輕鬆，不過這我講不準就是了，因為我最後一個時段才參加，剛好b6s有遇到javascript的問題我才有事情作，不然其實大部分活動開發的東西在六日的OSDC都要馬上展示的。不過對我而言在那邊蠻輕鬆的，又有飲料喝，每個人好像都在作有趣的東西（像是hack FON AP、flickr emulator...等等），如果能在這樣的工作環境上班就好了，不過我知道台灣很難啦。</p>
+<h4>BOF</h4>
+<p>週六的BOF我主要是早上和<a href="http://blog.bobchao.net/index.html">柏強</a>去自強負責的panel 5協助Seth Spitzer介紹<a href="http://microformats.org">microformats</a>，剛好我也需要接觸一下<acronym title="content managemt system">CMS</acronym>，另外就是和Mozilla這次來的兩位Seth和Gen打聲招呼（雖然我是到場才知道有三位來），關於幾個CMS的部份，我主要是想比較<a href="http://drupaltaiwan.org/">Drupal</a>和<a href="http://www.joomla.org.tw/">Joomla!</a>，不過因為晚到，Drupal的部份沒聽完整，結果就是完全沒辦法比較，這個我還需要花時間研究就是了。協助Seth的部份，其實我是第一次作現場口譯的工作～～，我自己認為我的英文成應該是完全不能勝任現場口譯的工作才是，不過還好是我熟悉的領域，不然幾次還在思考上一句時漏掉下一句的狀況真是會嚇死人，也因此我沒辦法做到每一句話同步口譯就是，雖然翻譯品質不好，不過我想重要的東西我都還是有講到，這還要感謝在場的各位聽眾能包容我的翻譯品質，而且我覺得後來發問的兩位英文都比我好～。</p>
+<p><a href="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3157.JPG" class="thickbox"><img alt="BoF Panel 5 會場" src="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3157-thumb-400x300.jpg" width="400" height="300" /></a></p>
+<p>下午的時間我就跑去參加OSDC了，本來計畫晚上要回來看看有沒有Wii的比賽的，不過OSDC結束後就很疲倦了，而且週日還有一整天的活動，所以後來沒有繞回去，OSDC結束後就直接回家，結果因為早上行程比較趕，晚上又沒回去，我一件BoF紀念品都沒拿到^^b。</p>
+<h4>OSDC</h4>
+<p>在這三天的活動，OSDC佔了我一半的行程，也是我第二次參加台灣Open Source的研討會，上一次是<a href="http://coscup.tossug.org/">COSCUP 06</a>，這兩年因為Web 2.0的關係，Open Source研討會的講題有不少和網路應用程式相關的，所以還不少題目我會有興趣的，我聽了以下幾個主題：</p>
+<ul>
+  <li>clkao: svk: version control without the headaches then pushmi</li>
+  <li>Joseph：Yahoo! UI API</li>
+  <li>Seth Spitzer：Current State of Firefox 3 Portable software</li>
+  <li>hlb：Microformats (1040-1130 AM)</li>
+  <li>Hung-ying Tyan：Google Calendar API (1130-1200 AM)</li>
+  <li>Ingy：Perldoc, Kwiki 2.0 and Zhingy döt Net</li>
+  <li>Gugod：Asynase - The missing links between servers and clients</li>
+  <li>Lightening talk</li>
+</ul>
+<p>clkao的<a href="http://svk.bestpractical.com/view/HomePage">svk</a>我其實還沒用過，主要是因為目前還沒GUI，而且我並沒有在做什麼大型程式專案，所以現在用的<a href="http://subversion.tigris.org/">subversion</a>就已經很足夠了，不過對於要怎樣節省空間，合併、分支其實我還算有興趣，不過都沒實際作過這些操作就是。<a href="http://developer.yahoo.com/yui/">YUI</a>的部份比較有趣的是，Joseph直接就用YUI做了投影片系統，而且還可以直接在投影片裡demo YUI的一些功能。Firefox 3的部份，簡單說要先經過6個Alpha版把功能做完，然後兩個Beta，之後才會放出正式版。hlb講的Microformats就比較偏應用，他還做了ケロロ的hCard送到Technorati，另外不得不提的就是那隻ケロロ幾乎每場都會講一兩句話。<a href="http://code.google.com/apis/calendar/overview.html">Google Calnedar API</a>的話，不知道為甚麼實際講的是<a href="http://code.google.com/apis/gdata/index.html">Google Data API</a>耶XD。Ingy döt Net的<a href="http://www.kwiki.org/">Kwiki 2.0</a>看起來很不錯，不過不知道可不可以掛在Apache下面，Gugod的Asynase就是他週五展示給我看的Active Record port到javascript和perl那個，也是我這次覺得最有興趣的東西。</p>
+<p><a href="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3171.JPG" class="thickbox"><img alt="ケロロ" src="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3171-thumb-300x400.jpg" width="300" height="400" /></a></p>
+<p>最後的Lighting Talk則是最歡樂的時段了，還有神秘來賓<a href="http://www.rubycolor.org/takahashi/">高橋征義</a>，沒想到我竟然有機會看到本人，講話真是超快的，上台講的英文都超快，不知道日文到底講多快，我想這點哞姐<a href="http://momizi.z6i.org/archives/005698.html">最了解</a>吧。</p>
+<p><a href="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3180.JPG" class="thickbox"><img alt="高橋流！！" src="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3180-thumb-400x300.jpg" width="400" height="300" /></a></p>
+<h4>會後</h4>
+<p>週日的OSDC結束後，我和柏強、自強、喬敬一起陪Mozilla的<a href="http://blog.mozilla.com/gen/">Gen Kanai</a>、Seth Spitzer、<a href="http://blog.mozilla.com/seth">Seth Bindernagel</a>吃晚餐，到鼎泰豐，先不說外國人幾乎都會想來這間店的情形，到了那邊我才發現美國、日本、香港、新加坡的分店竟然都比台灣多，我還發現旁邊的阿瘦皮鞋特別做了一個日文的跑馬燈在宣傳，雖然我想效果不是很大吧。飯後又找了個地方談了關於協會的一些事，於是結束一整天的行程，不過我回到家還是在IRC上到處晃，到了兩點左右才睡，本來想說至少最後一天晚上可以睡熟一點，今天好好來寫這篇文章的，沒想到被兩隻蚊子騷擾，結果今天還是睡眠不足。</p>
+<p><a href="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3196.JPG" class="thickbox"><img alt="阿瘦皮鞋的日文跑馬燈" src="http://blog.othree.net/log/2007/04/16/codejam-bof-osdc/DSCF3196-thumb-400x300.jpg" width="400" height="300" /></a></p>
+<p>最後，這三天對我來說有點像是祭典一般，如果我的記憶沒錯的話，我沒有這麼密集參加活動的經驗，未來還會不會有這樣的機會其實也不知道，不過我想BoF、OSDC我想都還是會繼續辦下去的，或許過幾年之後又會撞期一次吧，不過還需要一個code jam在前面增加密度XD。</p>
+<p class="update">補充，<a href="http://d.hatena.ne.jp/miyagawa/" title="宮川達彦">miyagawa</a>さん錄的<a href="http://www.youtube.com/watch?v=Vor6Yul7CMg&amp;NR=1">高橋メソッド in 中文</a>。另外OSDC第二天有遇到閃恩和葛力，還差點被認出來，還好只記得我很面熟，他們現在正在招募新人喔。</p></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000403" baseName="microformats-tag">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-15</b:date>
+				<b:time>11:29:30</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>microformat的rel-tag</b:title>
+			<b:content>
+				<b:summary>microformat中有一個用來標示tag（標籤）的格式，叫rel-tag，範例如下： &lt;a href=&quot;http://del.icio.us/tag/firefox&quot; rel=&quot;tag&quot;&gt;firefox&lt;/a&gt; 這樣就等於在頁面內標上firefox這個標籤，不過一個很容易造成誤解的是，指定標籤為firefox的是連結網址的最後一個部份，也就是說如果我把code改成下面的樣子，標籤還是firefox。 &lt;a href=&quot;http://del.icio.us/tag/firefox&quot; rel=&quot;tag&quot;&gt;相關文章&lt;/a&gt; 如果有?key=val或是#anchor這樣的資訊在網址後面，則parser應該要忽略些部份，只讀實際request的頁面位址的最後一段詞。 rel-tag - Microformats...</b:summary>
+				<b:mainContent><p>microformat中有一個用來標示tag（標籤）的格式，叫rel-tag，範例如下：</p>
+
+
+
+<pre><code>&lt;a href=&quot;http://del.icio.us/tag/firefox&quot; rel=&quot;tag&quot;&gt;firefox&lt;/a&gt;</code></pre>
+
+
+
+<p>這樣就等於在頁面內標上firefox這個標籤，不過一個很容易造成誤解的是，指定標籤為firefox的是連結網址的最後一個部份，也就是說如果我把code改成下面的樣子，標籤還是firefox。</p>
+
+
+
+<pre><code>&lt;a href=&quot;http://del.icio.us/tag/firefox&quot; rel=&quot;tag&quot;&gt;相關文章&lt;/a&gt;</code></pre>
+
+
+
+<p>如果有<code>?key=val</code>或是<code>#anchor</code>這樣的資訊在網址後面，則parser應該要忽略些部份，只讀實際request的頁面位址的最後一段詞。</p>
+
+
+<ul>
+<li><a href="http://microformats.org/wiki/rel-tag#Tag_Spaces">rel-tag - Microformats</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000402" baseName="opera-92-speed-dial">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-12</b:date>
+				<b:time>21:17:30</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Opera 9.2 新功能，Speed Dial</b:title>
+			<b:content>
+				<b:summary>Wii的Opera正式版今天公開了，而且在六月之前下載都是免費的，和之前的測試版相比介面改善不少，不過我現在更想為各位介紹的是同樣在今天公開的9.2版的Speed Dial這個新功能。我想，一圖勝千言： 在新增標籤頁時，畫面上會出現9個大大的格子，每個格子你都可以放一個網站進去，作為書籤快速鍵，Opera還會自動抓圖讓人更好辨識，這9個網站當然就是放最常去的網站，或許會有人覺得9個太少，書籤有上百個，不過我認為在現在RSS Reader盛行，瀏覽器都內建搜尋列的時代，我想9個應該是很夠用了，而這樣的功能也比起放一個空白頁面（Firefox）或是告訴使用者你開了一個新標籤頁（IE 7）來的聰明許多。除此之外，9.2版還有其他不少新功能，程式依然是短小精幹，安裝檔只比9.1版多了0.11MB而已～～。...</b:summary>
+				<b:mainContent><p>Wii的Opera正式版今天公開了，而且在六月之前下載都是免費的，和之前的測試版相比介面改善不少，不過我現在更想為各位介紹的是同樣在今天公開的9.2版的Speed Dial這個新功能。我想，一圖勝千言：</p>
+
+<p><a href="http://blog.othree.net/log/2007/04/12/opera-92-speed-dial/speed-dial.png" class="thickbox"><img alt="開新分頁時會出現9個大大的方格" src="http://blog.othree.net/log/2007/04/12/opera-92-speed-dial/speed-dial-thumb-400x299.png" width="400" height="299" /></a></p>
+
+<p>在新增標籤頁時，畫面上會出現9個大大的格子，每個格子你都可以放一個網站進去，作為書籤快速鍵，Opera還會自動抓圖讓人更好辨識，這9個網站當然就是放最常去的網站，或許會有人覺得9個太少，書籤有上百個，不過我認為在現在RSS Reader盛行，瀏覽器都內建搜尋列的時代，我想9個應該是很夠用了，而這樣的功能也比起放一個空白頁面（Firefox）或是告訴使用者你開了一個新標籤頁（IE 7）來的聰明許多。除此之外，9.2版還有其他不少新功能，程式依然是短小精幹，安裝檔只比9.1版多了0.11MB而已～～。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000401" baseName="feifeiyangyang">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-12</b:date>
+				<b:time>00:57:21</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>沸沸揚揚</b:title>
+			<b:content>
+				<b:summary>沸沸揚揚在Google有1,740,000筆資料，也不是什麼大事，不過狒狒揚揚、狒狒洋洋、沸沸洋洋竟然也都搜尋的到不少筆資料，最後一個也就算了，用到狒狒兩個字不會覺得奇怪嗎@@a。...</b:summary>
+				<b:mainContent><p>沸沸揚揚在Google有1,740,000筆資料，也不是什麼大事，不過<strong>狒狒揚揚</strong>、<strong>狒狒洋洋</strong>、<strong>沸沸洋洋</strong>竟然也都搜尋的到不少筆資料，最後一個也就算了，用到<strong>狒狒</strong>兩個字不會覺得奇怪嗎@@a。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000400" baseName="html5-to-w3c">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-12</b:date>
+				<b:time>00:37:49</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>WHATWG準備建議W3C採納HTML5？</b:title>
+			<b:content>
+				<b:summary>詳見Proposal to Adopt HTML5，這兩天在網路鬧的沸沸揚揚的消息，正反面意見都有，還看到有人說WHATWG是Opera用來把他們的東西推回W3C用的～～。...</b:summary>
+				<b:mainContent><p>詳見<a href="http://lists.w3.org/Archives/Public/public-html/2007Apr/0429.html">Proposal to Adopt <span class="caps">HTML5</span></a>，這兩天在網路鬧的沸沸揚揚的消息，正反面意見都有，還看到有人說WHATWG是Opera用來把他們的東西推回W3C用的～～。</p></b:mainContent>
+				<b:extendContent><p>以下是提案書</p>
+
+<blockquote>Dear <span class="caps">HTML</span> Working Group,
+
+<p><span class="caps">HTML5, </span>comprising the Web Apps 1.0 and Web Forms 2.0 specifications,  <br />
+is the product of many years of collaborative effort. It specifies  <br />
+existing <span class="caps">HTML4 </span>markup and <span class="caps">API</span>s with much clearer conformance criteria  <br />
+for both implementations and documents. It specifies many useful  <br />
+additions, in many cases drawing on features that have existed in  <br />
+browser-based implementations for a long time. And it actively draws  <br />
+on feedback from implementors and content authors. Therefore, we the  <br />
+undersigned propose the following:</p>
+
+<p>- that the <span class="caps">W3C HTML</span> Working Group adops the <span class="caps">WHAT</span> Working Group's  <br />
+<span class="caps">HTML5 </span>as the starting point for further <span class="caps">HTML </span>development<br />
+- that the <span class="caps">W3C'</span>s next-generation <span class="caps">HTML </span>specification is officially  <br />
+named "HTML 5"<br />
+- that Ian Hickson is named as editor for the <span class="caps">W3C'</span>s <span class="caps">HTML</span> 5  <br />
+specification, to preserve continuity with the existing <span class="caps">WHATWG </span>effort</p>
+
+<p>If <span class="caps">HTML5 </span>is adopted as a starting point, the contents of the document  <br />
+would still be up for review and revision, but we would start with  <br />
+the existing text. A suitable next step might be a high-level review  <br />
+of functionality added and removed relative to <span class="caps">HTML4.01, </span>followed by  <br />
+focused discussion and review of individual topic areas, including  <br />
+both content already in the spec and proposed new features.  <br />
+Discussions should be guided by common principles along the lines of  <br />
+<a href="http://esw.w3.org/topic/HTML/ProposedDesignPrinciples">http://esw.w3.org/topic/HTML/ProposedDesignPrinciples</a></p>
+
+<p>If the group is agreeable to these proposals, Apple, Mozilla and  <br />
+Opera will agree to arrange a non-exclusive copyright assignment to  <br />
+the W3 Consortium for <span class="caps">HTML5 </span>specifications.</p>
+
+
+L. David Baron, Mozilla Foundation<br />
+Lars Erik Bolstad, Opera Software <span class="caps">ASA</span><br />
+Brendan Eich, Mozilla Foundation<br />
+Dave Hyatt, Apple Inc.<br />
+Håkon Wium Lie, Opera Software <span class="caps">ASA</span><br />
+Maciej Stachowiak, Apple Inc.</blockquote></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000399" baseName="coca-cola-zero">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-10</b:date>
+				<b:time>21:39:55</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>可口可樂zero</b:title>
+			<b:content>
+				<b:summary> 新的可口可樂，黑色為主的包裝，加上zero字樣，硬是比以往的版本帥上許多。不過其實就是健怡可口可樂的新包裝，喝起來都一樣。...</b:summary>
+				<b:mainContent><!--a href="http://blog.othree.net/log/2007/04/10/coca_cola_zero/cola%20zero.JPG" class="thickbox"><img alt="全黑色的包裝" src="http://blog.othree.net/log/2007/04/10/coca_cola_zero/cola%20zero-thumb.JPG" width="300" height="400" /></a-->
+
+<p>新的可口可樂，黑色為主的包裝，加上zero字樣，硬是比以往的版本帥上許多。不過其實就是健怡可口可樂的新包裝，喝起來都一樣。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000398" baseName="css-naked-day-07">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-05</b:date>
+				<b:time>01:02:32</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS Naked Day</b:title>
+			<b:content>
+				<b:summary>又到了CSS Naked Day，在每年的四月五日這一天，本網站所有的樣式都會被移除，不過因為使用良好的HTML結構，所以不會影響到網站內容的可讀性，你會發現即使把網站的樣式拿掉，還是可以正常的閱讀文章。...</b:summary>
+				<b:mainContent><p>又到了<a href="http://naked.dustindiaz.com/"><span class="caps">CSS</span> Naked Day</a>，在每年的四月五日這一天，本網站所有的樣式都會被移除，不過因為使用良好的HTML結構，所以不會影響到網站內容的可讀性，你會發現即使把網站的樣式拿掉，還是可以正常的閱讀文章。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000397" baseName="wii-sports-boxing-3124">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-04</b:date>
+				<b:time>23:32:19</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>Wii Sports 拳擊3124分</b:title>
+			<b:content>
+				<b:summary>終於達到傳說中的最高分，3124分了！...</b:summary>
+				<b:mainContent><p>終於達到傳說中的最高分，3124分了！</p>
+
+<p><a href="http://blog.othree.net/log/2007/04/04/wii-sports-boxing-3124/boxing3124.JPG" class="thickbox"><img alt="" src="http://blog.othree.net/log/2007/04/04/wii-sports-boxing-3124/boxing3124-thumb-400x300.jpg" width="400" height="300" /></a></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

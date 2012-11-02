@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000671" baseName="jquery-deferred-object">jQuery Deferred Object</b:listData>
+
+			<b:previous>
+				<b:mTitle>Gundo.vim</b:mTitle>
+				<b:mDate>2011-02-27</b:mDate>
+				<b:mBase>gundovim</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Canonical URL</b:mTitle>
+				<b:mDate>2011-03-03</b:mDate>
+				<b:mBase>canonical-url</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000671" baseName="jquery-deferred-object">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-02-27</b:date>
+				<b:time>12:09:36</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>jQuery Deferred Object</b:title>
+			<b:content>
+				<b:summary>jQuery 的 .ready() 有兩個特性，一是可以丟多個函式進去，它會照順序執行，第二個就是如果文件已經讀完，還丟函式進去的話，變成會馬上執行，這兩個特性讓 .ready() 變得非常好用，寫程式寫到有需要在頁面讀完才執行的東西，隨時都可以丟個函式進去，不過同樣是讀取資料下來，ajax 的 request 卻沒辦法做到一樣的事情，只能使用 callback ，所有要做的事情都要一次指定好，侷限了程式的結構設計。 jQuery 1.5 的幾個新功能中，有一項特別吸引人注目的，就是 deferred 物件 這個新的物件兼行為，我剛開始看文件時，一直不能了解為什麼要設計這個物件和設計它這樣的行為，直到我遇到前一段的問題時才整個豁然開朗， jQuery 1.5 把 ajax 改寫，其中一項變化就是回傳的值從 XMLHttpRequest 變成 jqXHR 物件，而這個 jqXHR 物件其實就是個 deferred 物件，deferred 物件用來代表某件事情，我們可以用來設定該事情的結果是否成功，並且根據不同的結果要做哪些事情，程式執行到可以判斷這個 deferred 物件代表的事件是成功的話就執行 resolve()，deferred 物件會把它所知道，事情成功的話要做的事情照順序做過，失敗的話就執行 reject()，一樣 deferred 物件會把失敗時要做的事情做一遍。而在事件結果確定之後，deferred 物件還是可以繼續接收函式，只是就像 .ready()...</b:summary>
+				<b:mainContent><p>jQuery 的 <a href="http://api.jquery.com/ready/">.ready()</a> 有兩個特性，一是可以丟多個函式進去，它會照順序執行，第二個就是如果文件已經讀完，還丟函式進去的話，變成會馬上執行，這兩個特性讓 .ready() 變得非常好用，寫程式寫到有需要在頁面讀完才執行的東西，隨時都可以丟個函式進去，不過同樣是讀取資料下來，ajax 的 request 卻沒辦法做到一樣的事情，只能使用 callback ，所有要做的事情都要一次指定好，侷限了程式的結構設計。</p>
+
+<p><a href="http://api.jquery.com/category/version/1.5/">jQuery 1.5</a> 的幾個新功能中，有一項特別吸引人注目的，就是 <a href="http://api.jquery.com/category/deferred-object">deferred 物件</a> 這個新的物件兼行為，我剛開始看文件時，一直不能了解為什麼要設計這個物件和設計它這樣的行為，直到我遇到前一段的問題時才整個豁然開朗， jQuery 1.5 把 ajax 改寫，其中一項變化就是回傳的值從 XMLHttpRequest 變成 <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> 物件，而這個 jqXHR 物件其實就是個 deferred 物件，deferred 物件用來代表某件事情，我們可以用來設定該事情的結果是否成功，並且根據不同的結果要做哪些事情，程式執行到可以判斷這個 deferred 物件代表的事件是成功的話就執行 <a href="http://api.jquery.com/deferred.resolve/">resolve()</a>，deferred 物件會把它所知道，事情成功的話要做的事情照順序做過，失敗的話就執行 <a href="http://api.jquery.com/deferred.resolve/">reject()</a>，一樣 deferred 物件會把失敗時要做的事情做一遍。而在事件結果確定之後，deferred 物件還是可以繼續接收函式，只是就像 <code>.ready()</code> 一樣，會變成馬上執行（或是直接丟掉不裡）。而 jqXHR 物件本身就代表 XMLHttpRequest 這件事情，request 的結果就是 jqXHR 的結果，它會在 request 成功的時候 resolve，失敗的時候 reject，換成這樣的架構後，做 ajax 變成可以在任何時間丟入複數的 callback，再也不用在建立 request 的時候就把需要的 callback 都準備好，使用上整個方便很多，程式的架構也因此可以變得更自由。</p>
+
+<p>而除了 ajax 相關的函式之外， jQuery 也提供函式可以產生空白的 deferred 物件，然後程式設計師可以自己設計它代表的事件以及其行為，相信這個新的設計可以讓 jQuery 的 plugin 開發變得更簡單，基本上非同步的東西都可以使用 deferred 物件，我想應該不少的使用者行為可以用 deferred 物件來重新設計並且有更好的架構才是。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/670">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

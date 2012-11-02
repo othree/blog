@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW">
+  <head>
+    <title>O3noBLOG radio2select sample</title>
+    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="prev" title="step 7" href="/log/2005/01/25/radio2select/radio2select-7.html" />
+    <link rel="next" title="show" href="/log/2005/01/25/radio2select/radio2select-show.html" />
+    <link rel="first" title="radio2select" href="/log/2005/01/25/radio2select/radio2select.html" />
+    <link rel="up" title="O3noBLOG radio2select" href="/log/2005/01/25/radio2select/" />
+    <link rel="top" title="O3noBLOG" href="/" />
+<script type="text/javascript">
+function submit_form (f) {
+    var m = '';
+    if (f.r1.checked) m = f.r1.value;
+    if (f.r2.checked) m = f.r2.value;
+    if (f.r3.checked) m = f.r3.value;
+    if (f.r4.checked) m = f.r4.value;
+    if (f.r5.checked) m = f.r5.value;
+    if (m != '') m = "You selected \"" + m +"\".";
+    else m = "You didn't select anything";
+    alert(m);
+    return false;
+}
+</script>
+<style type="text/css">
+* {
+    font-family: Tahoma, sans-serif;
+}
+fieldset {
+    margin: 0;
+    border: 0;
+    padding: 0.5em 0;
+}
+span.code_name {
+    display: block;
+    clear: left;
+    float: left;
+    padding: 0.1em 0.5em;
+    color: #fff;
+    background-color: #999;
+}
+div.code {
+    clear: left;
+    border: 2px solid #999;
+    padding: 0 0.3em;
+    background-color: #eee;
+}
+form {
+    border: 0px solid black;
+}
+input[type='radio'] {
+    opacity: 0;
+    margin-bottom: -2em;
+    float: left;
+    clear: left;
+}
+input[type='radio']+label {
+    float: left;
+    clear: left;
+    display: none;
+    padding: 1px 0.5em 1px 1em;
+    border: 1px solid #666;
+    width: 3em;
+    background-color: #fff;
+}
+input[type='radio']:checked+label {
+    display: block;
+    margin: 0;
+    background-color: #aa5;
+    color: #fff;
+}
+input[type='radio']+label:hover {
+    background-color: #ccc;
+}
+input[type='radio']:focus+label {
+    display: block;
+    border-width: 1px;
+    margin: 1px 0;
+    background-color: #ccc;
+}
+input[type='radio']:focus+label:after {
+    content: '?';
+}
+input[type='radio']:focus:checked+label {
+    margin: 0;
+}
+input[type='radio']:focus:checked+label:after {
+    content: '';
+}
+span.select:hover label {
+    display: block;
+    border-width: 1px 1px 0;
+    margin: 0;
+}
+span.select:hover label:last-child {
+    border-bottom: 1px solid #666;
+    -moz-border-radius: 0 0 15px 15px;
+}
+span.select>span {
+    display: block;
+    margin-bottom: -100%;
+    position: relative;
+}
+span.select {
+    display: block;
+    float: left;
+    height: 1px;
+}
+span.label {
+    float: left;
+    line-height: ;
+    padding: 2px 0.3em 2px 0;
+}
+</style>
+</head>
+<body>
+    <form method="post" action="radio2select.html" onsubmit="return submit_form(this);">
+        <span class="label">SELECT:</span>
+        <span class="select">
+            <span>
+                <input id="r1" name="test" value="1" checked="checked" type="radio" /><label for="r1">111</label>
+                <input id="r2" name="test" value="2" type="radio" /><label for="r2">222</label>
+                <input id="r3" name="test" value="3" type="radio" /><label for="r3">333</label>
+                <input id="r4" name="test" value="4" type="radio" /><label for="r4">444</label>
+                <input id="r5" name="test" value="5" type="radio" /><label for="r5">555</label>
+            </span>
+        </span>
+        <input value="GO" type="submit" />
+     <div style="color: green;">Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. Text for test. </div>
+    </form>
+    <span class="code_name">HTML CODE :</span>
+    <div class="code"><pre>
+&lt;span class="label"&gt;SELECT:&lt;/span&gt;
+&lt;span class="select"&gt;
+&lt;input id="r1" name="test" value="1" checked="checked" type="radio" /&gt;&lt;label for="r1"&gt;111&lt;/label&gt;
+&lt;input id="r2" name="test" value="2" type="radio" /&gt;&lt;label for="r2"&gt;222&lt;/label&gt;
+&lt;input id="r3" name="test" value="3" type="radio" /&gt;&lt;label for="r3"&gt;333&lt;/label&gt;
+&lt;input id="r4" name="test" value="4" type="radio" /&gt;&lt;label for="r4"&gt;444&lt;/label&gt;
+&lt;input id="r5" name="test" value="5" type="radio" /&gt;&lt;label for="r5"&gt;555&lt;/label&gt;
+&lt;/span&gt;
+&lt;/span&gt;</pre></div>
+    <span class="code_name">CSS CODE :</span>
+    <div class="code"><pre>
+input[type='radio'] {
+    opacity: 0;
+    margin-bottom: -2em;
+    float: left;
+    clear: left;
+}
+input[type='radio']+label {
+    float: left;
+    clear: left;
+    display: none;
+    padding: 1px 0.5em 1px 1em;
+    border: 1px solid #666;
+    width: 3em;
+    background-color: #fff;
+}
+input[type='radio']:checked+label {
+    display: block;
+    margin: 0;
+    background-color: #aa5;
+    color: #fff;
+}
+input[type='radio']+label:hover {
+    background-color: #ccc;
+}
+input[type='radio']:focus+label {
+    display: block;
+    border-width: 1px;
+    margin: 1px 0;
+    background-color: #ccc;
+}
+input[type='radio']:focus+label:after {
+    content: '?';
+}
+input[type='radio']:focus:checked+label {
+    margin: 0;
+}
+input[type='radio']:focus:checked+label:after {
+    content: '';
+}
+span.select:hover label {
+    display: block;
+    border-width: 1px 1px 0;
+    margin: 0;
+}
+span.select:hover label:last-child {
+    border-bottom: 1px solid #666;
+    -moz-border-radius: 0 0 15px 15px;
+}
+span.select>span {
+    display: block;
+    margin-bottom: -100%;
+    position: relative;
+}
+span.select {
+    display: block;
+    float: left;
+    height: 1px;
+}
+span.label {
+    float: left;
+    line-height: ;
+    padding: 2px 0.3em 2px 0;
+}</pre></div>
+</body>
+</html>

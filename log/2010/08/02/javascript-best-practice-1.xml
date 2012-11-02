@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000623" baseName="javascript-best-practice-1">JavaScript Best Practice Part.1: JSLint</b:listData>
+
+			<b:previous>
+				<b:mTitle>TOSSUG HTML5 分享補充</b:mTitle>
+				<b:mDate>2010-07-24</b:mDate>
+				<b:mBase>tossug-html5-talk</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>YUICompressor vs Closure-Compiler</b:mTitle>
+				<b:mDate>2010-08-08</b:mDate>
+				<b:mBase>yuicompressor-vs-closure-</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000623" baseName="javascript-best-practice-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-08-02</b:date>
+				<b:time>22:26:18</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript Best Practice Part.1: JSLint</b:title>
+			<b:content>
+				<b:summary>前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。 那天被問到的時候我一時只想的到先過 JSLint 再說，所以第一篇就先從 JSLint 開始講起，JSLint 是 Douglas Crockford 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 JSLint 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。...</b:summary>
+				<b:mainContent><p>前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。</p>
+
+<p>那天被問到的時候我一時只想的到先過 <a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 再說，所以第一篇就先從 <span class="caps">JSL</span>int 開始講起，JSLint 是 <a href="http://www.crockford.com/">Douglas Crockford</a> 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 <span class="caps">JSL</span>int 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。</p></b:mainContent>
+				<b:extendContent><h4>全域變數</h4>
+
+<p>全域變數很危險，因為這些變數可能會和其他的程式碼產生衝突，畢竟你可以控制自己的程式不用全域變數，但是你無法控制其他人的，甚至是其他人惡意 code，再加上 JavaScript 中只要變數使用前沒有先用 <code>var</code> 宣告過，該變數就會是全域變數，所以在 JavaScript 中是很容易誤用全域變數的，一般的作法是把自己的 code 全部放到同一個 namespace （物件）之下，這樣就可以讓程式使用到的全域變數最小化到只剩一個，或是把你的程式碼整個用 closure 包起來。JSLint 限制全域變數的使用，沒有宣告的全域變數都會被視為錯誤而跑出警告，宣告的方法是寫在註解裡面如下：</p>
+
+
+
+<pre><code>/*global myApp:true, myApp2:true */</code></pre>
+
+
+
+<h4>結尾分號</h4>
+
+<p>每行結尾都要有分號，沒寫雖然程式碼也可以跑，但是寫了比較沒事，尤其是在使用簡單的 JavaScript 壓縮工具時很有差。不過有時候程式敘述沒完，到下一行還要繼續，像是太長的字串要分兩行，然後用 + 接起來時該怎麼辦？ <span class="caps">JSL</span>int 其實也是可以接受，只是加號要放在行尾，不是行首。</p>
+
+<p>另外有有嚴格要求函數結尾的分號使用，分成兩種：</p>
+
+
+
+<pre><code>var f1 = function () {};
+function f2() {}
+</code></pre>
+
+
+
+<p>f1 這種宣告會要求要有分號結尾，f2 的方式則要求不可以加上多餘的分號。</p>
+
+<h4>if, for 一定要大括號</h4>
+
+<p>當然不寫大括號會有一行被認定是在該條件之內需要被執行的程式碼，不過為了保險不誤判起見（容易發生在修改程式碼時）， <span class="caps">JSL</span>int 強制要求一定要大括號。</p>
+
+<h4>for in 要檢查該屬性是否屬於該物件直接擁有</h4>
+
+<p>簡單說就是要這樣的寫法：</p>
+
+
+
+<pre><code>for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+        ....
+    }
+}</code></pre>
+
+
+
+<p>這是為了確保不會存取到不想存取的屬性，舉例來說，像是 prototype 這套 JavaScript 函式庫會對原生的陣列物件加上一些新的 method 到它的 prototype 裡面，這時如果想用 for in 寫法來跑這個陣列就會把這些新增的 method 也一起抓出來，所以需要用 <code>hasOwnProperty</code> 來檢查一下，不過我個人的建議是，不要用 for in 寫法，一來它效率比較慢，二來可能會遇到這種問題，還要一個一個檢查，所以能不用就不用最好，尤其是跑陣列時。</p>
+
+<h4>不要用 with</h4>
+
+<p>總之就是不要用 with，因為會讓你產生混淆，不知道你存取到的變數到底是哪個 scope 來的，而且還有效能問題， with 會多產生一層 scope chain ，本來直接可以存取到的變數反而跑到第二層去了。</p>
+
+<h4><code>===</code> and <code>!==</code></h4>
+
+<p>和 null, 0, undefined, true, false 這些值比較時，一定要用 <code>===</code> 和 <code>!==</code> ，因為 JavaScript 有神祕的型別轉換，讓你的 null <code>==</code> undefined 但是 null != false ，當然還有其他各種有趣的比較，總之你確定是要判斷是否是以上列舉值的其中任一種時，就用 <code>===</code> 和 <code>!==</code> 吧，如果只是要 true/false 判斷，可以用 !! 來把值轉成 boolean。</p>
+
+<h4>eval is evil</h4>
+
+<p>不要用 eval ，或是丟程式碼到 setTimeout、setInterval、Function 裡（和 eval 等價），雖然少數時候會需要 eval，不過大部分的程式應用可以不使用 eval， 它有安全性的問題和效率的問題，如果需要處理 <span class="caps">JSON </span>格式的資料，那大部分的 Library 都有函數可以處理，沒的話也可以使用 Crockford 的 <a href="http://www.json.org/js.html">json2.js</a> ，它相容於現在新瀏覽器內建的 <span class="caps">JSON </span>物件，可以安心使用。</p>
+
+<p>說到 <span class="caps">JSON </span>就不得不提一下，其實它的字串只允許使用雙括號 " ，而且物件屬性名稱有要求一定要用字串形式，用雙括號包起來，不是只有字串值才需要，詳細可以看看 <a href="http://www.json.org/"><span class="caps">JSON </span>官網</a> 的鐵路圖，只是因為很多人使用 eval 來讀 <span class="caps">JSON </span>資料，才會產生誤解以為 <span class="caps">JSON </span>和 JavaScript 語法完全一樣，嚴格說來只是子集而已，這邊衍生的問題是，錯誤的 <span class="caps">JSON </span>格式在用原生 <span class="caps">JSON </span>或是 json2.js 時會過不了。</p>
+
+<h4>使用 {} 建立物件， [] 建立陣列</h4>
+
+<p>不要用 new Object() 和 new Array() 了，直接用 {} 和 [] 吧，還可以同時給初始值，速度也比較快。當然 <code>newString()</code> 、 <code>new Number()</code> 、 <code>new Boolean()</code> 也別用...</p>
+
+<h4>parseInt </h4>
+
+<p>parseInt 可以指定要是幾進位的整數形式，不過第二個參數也可以省略，只是預設值不是固定的，如果你的字串是 0 開頭的話，它會幫你當成 8 進位，如果是 0x 開頭的話會當成 16 進位，不過後者的問題比較小，問題是前者，如果你想要把 09 轉成整數，你本來預期是 9 ，但是因為被當成 8 進位，09 不存在，所以他會回傳 0 ，因此 <span class="caps">JSL</span>int 要求使用 parseInt 時一定要加上第二個參數，指定字串顯示的數值是幾進位的形式。</p>
+
+<h4>使用 obj.name 取代 obj["name"]</h4>
+
+<p>可以的話就使用前者的方法，速度比較快，也比較省程式碼。</p>
+
+<h4>變數只能宣告一次</h4>
+
+<p>在同一個 scope 下，同樣的變數名稱只允許宣告一次，當然也是為了錯誤認知。</p>
+
+<h4>設定</h4>
+
+<p>其實 <span class="caps">JSL</span>int 有不少選項可以設定，甚至可以允許 eval ，畢竟有時候會有需要，和全域變數一樣是寫在註解裡面，我自己現在的設定如下：</p>
+
+
+
+<pre><code>/*jslint browser: true, forin: true, onevar: true, white: true*/
+</code></pre>
+
+
+
+<p>第一個 browser 選項是會提供部分瀏覽器內建的全域變數和函數，我不知道為什麼有些函數反而會關掉，像是 <code>escape</code> 有使用到的話還要自己加到 global 裡面。</p>
+
+<p>第二個 forin 是前面提到的 hasOwnProperty 檢查，我通常是關掉不檢查的（設成 true），因為我很少需要物件繼承的複雜資料結構，所以比較不會有使用 for in 的需要，加上陣列也不會用 for in 來跑，所以就省去這項檢查了。</p>
+
+<p>第三個 onevar 是限制每個 function 只能有一次 var 宣告，這也是一個效率問題，後面的文章會再詳細介紹。</p>
+
+<p>第四個則是嚴格的縮排檢查，預設是四個空白，另外在有名稱的 function 宣告時會要求名稱後面直接接 () 中間不留空白， anonymous function 則否，當然主要目的是為了讓兩者區隔比較明顯，不會把 "function" 看成函數名稱。</p>
+
+
+
+<pre><code>var f1 = function () {};
+function f2() {}
+</code></pre>
+
+
+
+<p>像是前面舉過的例子，f1 後面的函數在宣告時是屬於匿名的，他的 () 就要和前面的 "function" 間留一個空白，f2 就要求函數名稱和後面的 () 接在一起。</p>
+
+<h4>其他</h4>
+
+<p>還有不少設定和檢查說明我這篇文章沒有提到，可以參考 <a href="http://www.jslint.com/lint.html"><span class="caps">JSL</span>int Instruction</a> ，而除了這些其實還有不少細部檢查沒列出的，就要等遇到時才知道了（要翻 <a href="http://www.jslint.com/fulljslint.js">原始碼</a> 也是可以的）。</p>
+
+<p>下一篇文章會講一些和效能有關的東西，這兩篇應該都還很偏 coding style XD。</p>
+
+<p class="update">補充：查了一下發現 escape/upescape 已經不推薦使用了，以後請用 encodeURI/decodeURI 。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="3">
+
+				<b:comment commentID="108319" entryID="000623">
+					<b:author>
+						<b:authorName>TonyQ</b:authorName>
+						<b:authorEmail>tonylovejava@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-08-08</b:date>
+						<b:time>14:54:14</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>這篇講得東西的參考資料，可以推薦去看 javascript 優良部份，
+整本書幾乎都是再講這些rule  。XD</p>
+
+<p>而且還有詳細的原因！</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="108320" entryID="000623">
+					<b:author>
+						<b:authorName>tonyq</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-08-08</b:date>
+						<b:time>14:57:35</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>至於browser為什麼可以設定開關，
+我也很困惑，後來猜想是為了用在一些非 web 上的環境吧。</p>
+
+<p>ex. ms 的 jscript ，或者是 node.js 這類的環境。</p>
+
+<p>不過這問題可能還是要問作者才知道了。XD</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="108327" entryID="000623">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-08-08</b:date>
+						<b:time>23:43:59</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>@TonyQ Good Part 還講了不少其他東西，不過說到這本，大陸那邊書名比較棒啊「語言精粹」，然後 browser 那個選項確實是如此，不過我的問題是不清楚內建 function 為什麼不加一加，過陣子寫信問問好了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/622">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

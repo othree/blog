@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000601" baseName="javascript-on-vim">JavaScript on vim</b:listData>
+
+			<b:previous>
+				<b:mTitle>htmlcomplete#CompleteTags 的 bug</b:mTitle>
+				<b:mDate>2009-12-25</b:mDate>
+				<b:mBase>bug-of-html-complete</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>spidermonkey 的 UTF-8 支援</b:mTitle>
+				<b:mDate>2009-12-27</b:mDate>
+				<b:mBase>spidermonkey-utf-8</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000601" baseName="javascript-on-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-26</b:date>
+				<b:time>20:10:45</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript on vim</b:title>
+			<b:content>
+				<b:summary>因為現在主要都是在寫 javascript 為主，所以這兩天調整 Vim 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。 syntax/indent Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的： JavaScript syntax : Better JavaScrirpt syntax support Javascript Indentation : Indentation for Javascript 照說明把檔案放到正確的位置即可，另外雖然有 jQuery 的 syntax ，不過我安裝後發現會和 The NERD Commenter 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 vim-taiwan 上的...</b:summary>
+				<b:mainContent><p>因為現在主要都是在寫 javascript 為主，所以這兩天調整 <a href="http://www.vim.org" target="_blank">Vim</a> 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。</p>
+
+<h4>syntax/indent</h4>
+
+<p>Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的：</p>
+
+
+<ul>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=1491" target="_blank">JavaScript syntax : Better JavaScrirpt syntax support</a></li>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=1840" target="_blank">Javascript Indentation : Indentation for Javascript</a></li>
+</ul>
+
+
+
+<p>照說明把檔案放到正確的位置即可，另外雖然有 <a href="http://www.vim.org/scripts/script.php?script_id=2416" target="_blank">jQuery 的 syntax</a> ，不過我安裝後發現會和 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 <a href="http://groups.google.com/group/vim-taiwan" target="_blank">vim-taiwan</a> 上的 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/a371c30000e3138e" target="_blank">討論</a> ，我目前是還沒覺得有需求。</p></b:mainContent>
+				<b:extendContent><h4>自動完成</h4>
+
+<p>這部份就比較麻煩了，在自動完成我使用了 <a href="http://www.vim.org/scripts/script.php?script_id=2540" target="_blank">snipMate</a> （ <a href="http://blog.othree.net/log/2008/03/23/auto-complete-on-vim/" target="_blank">以前</a> 用 <a href="http://www.vim.org/scripts/script.php?script_id=1318" target="_blank">snippetsEmu</a> ，不過都沒更新了，而且內建的 snippets 少很多），還有 <a href="http://www.vim.org/scripts/script.php?script_id=1879" target="_blank">autocomplpop</a> ，兩者安裝都很簡單，就解到 .vim 目錄下，或是用 c9s 大大寫的 <a href="http://github.com/c9s/Vimana" target="_blank">Vimana</a> ，snipMate 別忘了先 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/55c11ab0438dfeb9" target="_blank">hack 一下</a> 讓它支援 autocomplpop ，autocomplpop 雖然新版已經有幫不少檔案格式設定好預設的行為了，包括 html 和 css，但是卻不包含 javascript，所以還要自己設定一下，在 vimrc 裡面加上以下的設定：</p>
+
+
+
+<pre><code>let g:acp_enableAtStartup = 1
+let g:acp_completeOption = '.,w,b,u,t,i,k'
+let g:acp_behaviorSnipmateLength = 1
+let g:acp_behaviorKeywordCommand = "\&lt;C-n&gt;"
+
+let jsbehavs = { 'javascript': [] }
+    call add(jsbehavs.javascript, {
+        \   'command'      : "\&lt;C-x&gt;\&lt;C-u&gt;",
+        \   'completefunc' : 'acp#completeSnipmate',
+        \   'meets'        : 'acp#meetsForSnipmate',
+        \   'onPopupClose' : 'acp#onPopupCloseSnipmate',
+        \   'repeat'       : 0,
+    \})
+    call add(jsbehavs.javascript, {
+        \   'command' : g:acp_behaviorKeywordCommand,
+        \   'meets'   : 'acp#meetsForKeyword',
+        \   'repeat'  : 0,
+        \ })
+    call add(jsbehavs.javascript, {
+        \    'command'  : "\&lt;C-x&gt;\&lt;C-o&gt;",
+        \    'meets'   : 'acp#meetsForKeyword',
+        \    'repeat'   : 0,
+    \})
+
+let g:acp_behavior = {}
+call extend(g:acp_behavior, jsbehavs, 'keep')
+</code></pre>
+
+
+
+<p>這樣編輯 javascript 時應該就會做正確的跑出自動完成的候選選項，包括 snipMate、關鍵字自動完成、和 omni 自動完成（好像有翻成全補完的），順便提一下，Vim 7.2 大部分檔案格式不用去設定 omnifunc ，幾乎都會指到自己的預設函式，不過 html 卻沒有，還要自己加下面這行到 vimrc ：</p>
+
+
+
+<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
+
+
+
+<p>而且最好依照我 <a href="http://blog.othree.net/log/2009/12/25/bug-of-html-complete/" target="_blank">上一篇的建議</a> 修改一下。</p>
+
+<h4>code 檢查</h4>
+
+<p>再來是設定讓 <a href="http://www.jslint.com/" target="_blank">jslint</a> 檢查 javascript 程式碼，用的是 <a href="http://github.com/hallettj/jslint.vim" target="_blank">jslint.vim</a> ，要記得先安裝 <a href="http://www.mozilla.org/js/spidermonkey/" target="_blank">spidermonkey</a> ，然後照說明把檔案移動到 ~/.vim 裡面，這樣就可以執行 :JSLint 來檢查程式碼了，不過一開始一定會發現它對所有的全域變數都發出錯誤訊息，這時可以加上一些設定參數放到 ~/.jslintrc ，我的設定檔內容（其實就是 jslint.vim 提供的範例）：</p>
+
+
+
+<pre><code>/*jslint browser: true*/
+/*global jQuery $ */
+</code></pre>
+
+
+
+<p>第一行是說這些 code 是網路用的，用瀏覽器來執行，所以在這種環境下會出現的全域變數就不會被當成錯誤，第二行則是你自己定義會使用到的全域變數，這個範例是加上了 jQuery 的兩個全域變數，這些設定也可以加在 js 檔案裡面，其他的設定參數請看 <a href="http://www.jslint.com/lint.html" target="_blank">官方說明</a> 。不過每次都要執行 :JSLint 也是蠻麻煩的，所以可以設一下快速鍵，另外也可以設定存檔時自動檢查：</p>
+
+
+
+<pre><code>map &lt;F12&gt; :JSLintLight&lt;CR&gt;
+map &lt;F11&gt; :JSLint&lt;CR&gt;
+
+autocmd FileWritePost,BufWritePost *.js :JSLint</code></pre>
+
+
+
+<h4>壓縮</h4>
+
+<p>最後就是壓縮了， <a href="http://blog.othree.net/log/2009/09/08/vim-js-yuicompressor/" target="_blank">以前有寫過個 function</a> ，因應 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 的出現和建議，現在有作些修改：</p>
+
+
+
+<pre><code>function Yuic ()
+    let cwd = expand('&lt;afile&gt;:p:h')
+    let nam = expand('&lt;afile&gt;:t:r')
+    let ext = expand('&lt;afile&gt;:e')
+    if -1 == match(nam, "[\._]src$")
+        let minfname = nam.".min.".ext
+    else
+        let minfname = substitute(nam, "[\._]src$", "", "g").".".ext
+    endif
+    if filewritable(cwd.'/'.minfname)
+        if ext == 'js' &amp;&amp; executable('closure-compiler')
+            cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+        elseif executable('yuicompressor')
+            cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+        endif
+    endif
+endfunction
+
+autocmd FileWritePost,BufWritePost *.js :call Yuic()
+autocmd FileWritePost,BufWritePost *.css :call Yuic()
+</code></pre>
+
+
+
+<p>至於怎麼裝 <a href="http://developer.yahoo.com/yui/compressor/" target="_blank">yuicompressor</a> 和 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 就因系統而異了。</p>
+
+<h4>其他</h4>
+
+<p>其他還有兩個不是針對 javascript 的 plugin ，不過寫程式時蠻有用的，分別是 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=294" target="_blank">Align</a> ，The <span>NERD</span> Commenter 是快速註解用，Align 則是對齊用，例如一連串的變數初值指定，可以用 :Align = 來把等號左右兩邊的程式碼對齊，美觀不少。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="4">
+
+				<b:comment commentID="109495" entryID="000601">
+					<b:author>
+						<b:authorName>lcmtwn</b:authorName>
+						<b:authorEmail>lcmtwn@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-11-30</b:date>
+						<b:time>13:28:00</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>這篇的顯示壞掉了@@
+整個文字都亂了&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="109499" entryID="000601">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-11-30</b:date>
+						<b:time>19:59:33</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>@lcmtwn 感謝通知，還好 Google Reader 裡面還有 Cache</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="117220" entryID="000601">
+					<b:author>
+						<b:authorName>LIN</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-08-16</b:date>
+						<b:time>18:58:10</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>處理 /root/.vim/plugin/acp.vim 時發生錯誤:
+行   11:
+AutoComplPop does not support this version of vim (700).</p>
+
+<p>出現這種情況不知道如何解決? 網路上好像很少人有遇到同樣情況</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="118225" entryID="000601">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-10-06</b:date>
+						<b:time>23:30:12</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>這是你 Vim 版本不夠新的意思～</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/600">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+	<title>resiable textarea</title>
+	<link rev="made" href="mailto:othree@gmail.com" />
+	<link rel="up" title="O3noBLOG resiable textarea" href="/log/2005/10/15/resizable_textarea/" />
+	<link rel="top" title="O3noBLOG HOME" href="/" />
+
+<style type="text/css">
+
+#content
+{
+	margin: 0 0 1px;
+	overflow: auto;
+}
+
+#exArea
+{
+	font-family: Verdana;
+	text-align: center;
+	background: #ccc;
+	font-size: 0px;
+	padding: 1px 0;
+	height: 1px;
+	cursor: n-resize;
+}
+
+</style>
+
+</head>
+<body>
+
+<textarea cols="50" rows="10" id="content"></textarea>
+
+<p>TEXT</p>
+</body>
+<script type="text/javascript">
+
+if(!document.createElementNS)
+{
+	document.createElementNS = function(ns,elt)
+	{
+		return document.createElement(elt);
+	}
+}
+
+var Hs = Ys = 0,Ymin = 60,Ymax = 0,body;
+var XHTMLNS = "http://www.w3.org/1999/xhtml";
+var browser = new Browser();
+
+addEvent(this, "load", etInitial);
+
+function etInitial ()
+{
+	if (!document.createElementNS || !document.getElementById) return;
+	body = document.getElementsByTagName("body")[0];
+	t = document.getElementById("content");
+	tA = document.createElementNS(XHTMLNS, 'div');
+	tA.id = "exArea";
+	tA.style.width = t.offsetWidth+"px";
+	addEvent(tA, "mousedown", exMouseDown);
+	insertAfter(t.parentNode, tA, t);
+}
+
+function exMouseDown(evt)
+{
+	pos = getMousePosition(evt);
+	Ys = pos[1];
+	Hs = t.offsetHeight;
+	t.parentNode.style.cursor = "n-resize";
+	t.style.cursor = "n-resize";
+	addEvent(body, "mousemove", exMouseMove);
+	addEvent(body, "mouseup", exMouseUp);
+}
+
+function exMouseUp()
+{
+	t.parentNode.style.cursor = "auto";
+	t.style.cursor = "auto";
+	delEvent(body, "mousemove", exMouseMove);
+	delEvent(body, "mouseup", exMouseUp);
+}
+
+function exMouseMove (evt)
+{
+	pos = getMousePosition(evt);
+	Y = Hs + pos[1] - Ys;
+	if ((Ymin == 0 || Y > Ymin ) && (Ymax == 0 || Y < Ymax )) t.style.height = Y + "px";
+}
+function getMousePosition (event)
+{
+	if (browser.isIE)
+	{
+		x = window.event.clientX + document.documentElement.scrollLeft + document.body.scrollLeft;
+		y = window.event.clientY + document.documentElement.scrollTop + document.body.scrollTop;
+	}
+	if (browser.isNS)
+	{
+		x = event.clientX + window.scrollX;
+		y = event.clientY + window.scrollY;
+	}
+	return [x,y];
+}
+
+// Determine browser and version.
+
+function Browser ()
+{
+// blah, browser detect, but mouse-position stuff doesn't work any other way
+	var ua, s, i;
+
+	this.isIE = false;
+	this.isNS = false;
+	this.version = null;
+
+	ua = navigator.userAgent;
+
+	s = "MSIE";
+	if ((i = ua.indexOf(s)) >= 0)
+	{
+		this.isIE = true;
+		this.version = parseFloat(ua.substr(i + s.length));
+		return;
+	}
+	s = "Netscape6/";
+	if ((i = ua.indexOf(s)) >= 0)
+	{
+		this.isNS = true;
+		this.version = parseFloat(ua.substr(i + s.length));
+		return;
+	}
+	// Treat any other "Gecko" browser as NS 6.1.
+	s = "Gecko";
+	if ((i = ua.indexOf(s)) >= 0)
+	{
+		this.isNS = true;
+		this.version = 6.1;
+		return;
+	}
+}
+
+// Add an eventListener to browsers that can do it somehow.
+// Originally by the amazing Scott Andrew.
+function addEvent (obj, evType, fn)
+{
+	if (obj.addEventListener)
+	{
+		obj.addEventListener(evType, fn, false);
+		return true;
+	}
+	else if (obj.attachEvent)
+	{
+		var r = obj.attachEvent("on"+evType, fn);
+		return r;
+	}
+	else return false;
+}
+
+function delEvent (obj, evType, fn)
+{
+	if (obj.removeEventListener)
+	{
+		obj.removeEventListener(evType, fn, false);
+		return true;
+	}
+	else if (obj.detachEvent)
+	{
+		var r = obj.detachEvent("on"+evType, fn);
+		return r;
+	}
+	else return false;
+}
+
+function insertAfter(parent, node, referenceNode) {
+    if(referenceNode.nextSibling) {
+        parent.insertBefore(node, referenceNode.nextSibling);
+    } else {
+        parent.appendChild(node);
+    }
+}
+
+</script>
+</html>

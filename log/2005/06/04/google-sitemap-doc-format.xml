@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000176" baseName="google-sitemap-doc-format">Google Sitemap文件格式</b:listData>
+
+			<b:previous>
+				<b:mTitle>MT template : Google Sitemap</b:mTitle>
+				<b:mDate>2005-06-03</b:mDate>
+				<b:mBase>google-sitemap-template-for-mt</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Browsershots</b:mTitle>
+				<b:mDate>2005-06-07</b:mDate>
+				<b:mBase>browsershots</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000176" baseName="google-sitemap-doc-format">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-06-04</b:date>
+				<b:time>21:01:29</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Google Sitemap文件格式</b:title>
+			<b:content>
+				<b:summary>昨天作的sitemap樣版是依照我自己的想法下去弄的，我想或許有人會有不同的想法，所以乾脆來說明一下Google Sitemap的文件格式，也是因為他實在很簡單啦（比RSS還簡單），如果有能力的人就可以自己修改樣版了，另外，昨天的樣版有更新過了^^。...</b:summary>
+				<b:mainContent><p>昨天作的<a href="http://blog.othree.net/log/2005/06/03/google_sitemap_template_for_mt/">sitemap樣版</a>是依照我自己的想法下去弄的，我想或許有人會有不同的想法，所以乾脆來說明一下Google Sitemap的文件格式，也是因為他實在很簡單啦（比RSS還簡單），如果有能力的人就可以自己修改樣版了，另外，昨天的樣版有更新過了^^。</p></b:mainContent>
+				<b:extendContent><p>以我的網站為例，最簡單的Google Sitemap長的像下面這樣：</p>
+
+
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;urlset xmlns=&quot;http://www.google.com/schemas/sitemap/0.84&quot;&gt;
+	&lt;url&gt;
+		&lt;loc&gt;http://blog.othree.net&lt;/loc&gt;
+	&lt;/url&gt;
+&lt;/urlset&gt;</code></pre>
+
+
+
+<p>可以看到東西非常的少，一個&lt;url /&gt;標籤代表一個頁面（<strong>注意：頁面而已，並沒有連結或是網站結構的資訊，所以理論上有多少網頁就要幾個&lt;url /&gt;標籤</strong>），可以發現，除了<strong>&lt;loc /&gt;</strong>標籤外，其他的幾個&lt;priority /&gt;、&lt;lastmod /&gt;、&lt;changefreq /&gt;都是可以不用的。</p>
+
+
+<ul>
+<li>&lt;priority /&gt;是優先度，值從0.0到1.0，1.0代表最高。</li>
+<li>&lt;lastmod /&gt;是最後更新時間，格式是用<a href="http://www.w3.org/TR/NOTE-datetime"><span class="caps">ISO</span> 8601</a>的標準，有兩種支援的格式，分別是只有日期（ex:1997-07-16）和日期加上完整時間（ex:1997-07-16T19:20:30+01:00，包含時區），我之前的樣版是只有日期的，如果想用完整加上時間的，可以改成<code>format=&quot;%Y-%m-%dT%H:%M:%SZ&quot;</code>，參考自<a href="http://www.niallkennedy.com/blog/">Niall Kennedy's Weblog</a>:<a href="http://www.niallkennedy.com/blog/archives/2005/06/google_sitemaps.html">Google Sitemaps using Movable Type</a>。</li>
+<li>&lt;changefreq /&gt;則是代表更新頻率，可以用的值有很多：always、hourly、daily、weekly、monthly、yearly、never，都是字面上的意思，我的樣版除了首頁是always外，單篇彙整都是用<strong>never</strong>，因為我認為blog的特性是過去的文章很少會再更新了，所以我都用never，如果覺得不適當的人也可以改掉。另外這個標籤有一個要注意的是，他不具命令效力，搜尋引擎並不會真的照上面的設定的頻率來作資料更新。</li>
+</ul>
+
+
+
+<p>可以調整的三個元素敘述如上，沒講到的&lt;loc /&gt;當然就是網頁的<acronym title="Uniform Resource Locator">URL</acronym>，一個&lt;url /&gt;標籤裡面就包含一個網頁的資訊，網站有多少網頁就應該有多少個&lt;url /&gt;標籤，不過有些網頁是不需要被瀏覽器搜尋的，像是blog裡的彙整頁面，所以我就只有放上單篇彙整的資訊而已。&lt;urlset /&gt;則是root element，基本上就是不會變的，至於裡面的屬性直和我昨天用的不太一樣，這就不用太在意，只是差在有沒有給這個sitemap指定<a href="http://www.w3.org/XML/Schema"><span class="caps">XML</span> Schema</a>而已。</p>
+
+<p>另外還有就是一個sitemap文件可以有多個站台的資訊，這部分我就不解說了，blog應該是用不上的，有興趣的可以去參考<a href="https://www.google.com/webmasters/sitemaps/docs/en/protocol.html#sitemapFileRequirements">Sitemap Protocol :  Provide Multiple Sitemap Files</a>。最後需要注意的是，一個sitemap文件最多只能有50000個&lt;url /&gt;標籤，而且檔案大小需小於10MB，我想都很難碰到吧。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/175">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

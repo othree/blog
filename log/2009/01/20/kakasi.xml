@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000566" baseName="kakasi">kakasi</b:listData>
+
+			<b:previous>
+				<b:mTitle>在ubuntu上套件安裝yuicompressor  </b:mTitle>
+				<b:mDate>2009-01-15</b:mDate>
+				<b:mBase>ubuntu-yuicompressor</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>iTerm 用 alt + 數字鍵切換視窗</b:mTitle>
+				<b:mDate>2009-01-23</b:mDate>
+				<b:mBase>iterm-alt-key-to-change-irssi-window</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000566" baseName="kakasi">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-20</b:date>
+				<b:time>01:30:27</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>kakasi</b:title>
+			<b:content>
+				<b:summary>kakasi 並不是火影忍者那位卡卡西，他的全名是 Kanji Kana Simple Inverter，用來轉換日文漢字、平假名、片假名和羅馬拼音的。 最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 IRC 上問人，在 zonble 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 apt-get install kakasi 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 UTF-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例： echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://kakasi.namazu.org/">kakasi</a> 並不是火影忍者那位卡卡西，他的全名是 <strong>Kanji Kana Simple Inverter</strong>，用來轉換日文漢字、平假名、片假名和羅馬拼音的。</p>
+
+<p>最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 <span>IRC </span>上問人，在 <a target="_blank" href="http://zonble.twbbs.org/">zonble</a> 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 <code>apt-get install kakasi</code> 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 <span>UTF</span>-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例：</p>
+
+<pre><code>
+echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK | iconv -f sjis -t utf8
+</code></pre>
+
+<p>就可以看到 <strong>マジンエイユウデン</strong> ，這樣我就可以在 python script 裡面呼叫一下命令列來轉字串，處理資料庫的資料，不過要放上網路的程式這樣呼叫其實蠻危險的，所以我又找了一下 <span>PHP </span>有沒有這東西可以用，沒想到還真的有，在 <a target="_blank" href="http://pecl.php.net/"><span>PECL</span></a> 裡面有人有 port，不過網站上看不到，我是從 google 搜尋到 mail list 的 <a target="_blank" href="http://marc.info/?l=php-i18n&amp;m=105914120819128&amp;w=2">舊文章</a> 才找到的，所以就照文內的安裝步驟抓下來 compile，ubuntu 記得要先 <code>apt-get install php5-dev</code> 才有辦法執行 <code>phpize</code> 初始化編譯環境，裝好後就可以在 phpinfo 裡面看到 kakasi 這個模組。</p>
+
+<p>然後測試的結果發現他也只能吃 sjis 字串，所以還是要用 iconv 轉一下碼，使用範例如下：</p>
+
+<pre><code>$roma = kakasi(iconv("UTF-8", "sjis", $qs[0]), array("-Hj", "-Jj", "-Kj"));
+</code></pre>
+
+<p>這串因為是轉成羅馬拼音的，所以最後沒在用一次 iconv 轉回 <span>UTF</span>-8，至於各種轉換的設定請參考 <code>kakasi -help</code>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/564">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

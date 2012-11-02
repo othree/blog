@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000386" baseName="third-argument-of-addeventlistener">addEventListener的第三個參數</b:listData>
+
+			<b:previous>
+				<b:mTitle>2007台北國際書展</b:mTitle>
+				<b:mDate>2007-02-04</b:mDate>
+				<b:mBase>tibe2007</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>尖端的書沒有ISBN？</b:mTitle>
+				<b:mDate>2007-02-11</b:mDate>
+				<b:mBase>books-from-sharp-point-have-no-isbn</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000386" baseName="third-argument-of-addeventlistener">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-02-06</b:date>
+				<b:time>23:17:49</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>addEventListener的第三個參數</b:title>
+			<b:content>
+				<b:summary>W3C DOM裡用來新增觸發事件的函數叫AddEventListener，不過我一直不知道這個函數的第三個參數是要做什麼用的，總是隨便設，也沒發現差異再哪，前兩天看ppk on javascript終於看到說明了，至於很久以前就有的DOM的標準文件，我其實根本沒去找過這個參數的資訊。...</b:summary>
+				<b:mainContent><p><span class="caps">W3C </span><a href="http://www.w3.org/DOM/"><span class="caps">DOM</span></a>裡用來新增觸發事件的函數叫<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener">AddEventListener</a>，不過我一直不知道這個函數的第三個參數是要做什麼用的，總是隨便設，也沒發現差異再哪，前兩天看<a href="http://www.quirksmode.org/book/">ppk on javascript</a>終於看到說明了，至於很久以前就有的DOM的標準文件，我其實根本沒去找過這個參數的資訊。</p></b:mainContent>
+				<b:extendContent><p>這個參數叫做<strong>useCapture</strong>，是一個boolean值，就是true or false，如果送出true的話就是瀏覽器會使用Capture方式，false的話是Bubbling，只有在特定狀況下才會有影響，通常建議是false，而會有影響的情形是目標元素(target element)有祖先元素(ancestor element)，而且也有同樣的事件對應函數，我想，看圖會比較清楚。</p>
+
+<p><img alt="範例有兩層的div方塊" src="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/ex.png" width="280" height="100" /></p>
+
+<p>像這張圖所顯示的，我的範例有兩層div元素，而且都設定有click事件，一般來說，如果我在內層藍色的元素上click不只會觸發藍色元素的click事件，還會同時觸發紅色元素的click事件，而useCapture這個參數就是在控制這時候兩個click事件的先後順序。如果是false，那就會使用bubbling，他是從內而外的流程，所以會先執行藍色元素的click事件再執行紅色元素的click事件，如果是true，那就是capture，和bubbling相反是由外而內，會先執行紅色元素的click事件才執行藍色元素的click事件。附上兩個範例，<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/useCapture.html">capture</a>和<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/notUseCapture.html">bubbling</a>，兩個檔案只有差在此一參數不同，可以發現事件的發生順序不一樣了。</p>
+
+<p>那如果不同層的元素使用的useCapture不同呢？就是會先從最外層元素往目標元素尋找設定為capture的事件，到達目標元素執行目標元素的事件後，再尋原路往外尋找設定為bubbling的事件。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="12">
+
+				<b:comment commentID="023662" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-07-12</b:date>
+						<b:time>21:24:54</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>正解</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="031757" entryID="000386">
+					<b:author>
+						<b:authorName>阿志</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-11-07</b:date>
+						<b:time>15:10:30</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>最近在學習  JavaScript
+剛好對事件處理理器 addEventListener 有些不明白
+看了你的解說
+豁然開朗</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="033049" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-12-16</b:date>
+						<b:time>12:15:48</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>讲解的非常明了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="033050" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-12-16</b:date>
+						<b:time>12:16:03</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>讲解的非常明了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="038565" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-03-20</b:date>
+						<b:time>20:47:19</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>很和谐</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="040888" entryID="000386">
+					<b:author>
+						<b:authorName>sliuqin</b:authorName>
+						<b:authorEmail>sliuqin@qq.com</b:authorEmail>
+						<b:authorUrl>http://link-to.cn</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-04-07</b:date>
+						<b:time>17:21:15</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>受益</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="046167" entryID="000386">
+					<b:author>
+						<b:authorName>去也来来</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-05-04</b:date>
+						<b:time>15:30:28</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>十分感谢，讲解的太好了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="054801" entryID="000386">
+					<b:author>
+						<b:authorName>过客</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-06-06</b:date>
+						<b:time>14:39:25</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>非常好，谢谢！</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="067457" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-07-14</b:date>
+						<b:time>11:48:54</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>谢谢.</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="094781" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-10-23</b:date>
+						<b:time>12:38:52</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>顶</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="095415" entryID="000386">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-11-21</b:date>
+						<b:time>16:22:45</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>谢谢</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="099250" entryID="000386">
+					<b:author>
+						<b:authorName>风柏杨</b:authorName>
+						<b:authorEmail>mars7389122@sina.com</b:authorEmail>
+						<b:authorUrl>http://blog.sina.com.cn</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-07-28</b:date>
+						<b:time>16:11:54</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>正疑惑中呢,看了你的文章让我茅塞顿开啊.讲解得非常详尽细致,真的非常感谢&#8230;&#8230;.</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/385">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

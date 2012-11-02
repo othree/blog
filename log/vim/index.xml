@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>c</b:listType>
+			<b:listData listID="vim">vim</b:listData>
+		</b:entriesMeta>
+
+		<b:entry entryID="000696" baseName="coffee-check-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-23</b:date>
+				<b:time>00:00:13</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>coffee-check.vim</b:title>
+			<b:content>
+				<b:summary>上一篇文章提到使用 RequireJS 的 CoffeeScript plugin 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 jslint.vim 的行為一樣，上網搜尋了一下 Vim 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 coffee -c 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 coffee-check.vim。 安裝還算簡單，先確定系統已經有安裝 node，然後只要用 pathogen 或是 Vundle 把套件裝起來，接著在 vimrc 內加上一行： au BufRead,BufNewFile *.coffee set...</b:summary>
+				<b:mainContent><p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a> <a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
+
+<p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
+
+<pre><code>au BufRead,BufNewFile *.coffee set ft=coffee
+</code></pre>
+
+<p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
+
+<ol>
+<li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
+<li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
+<li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
+</ol>
+
+<p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
+
+<p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
+
+<pre><code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
+</code></pre>
+
+<p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000691" baseName="vim-plugin-deployment">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-10-12</b:date>
+				<b:time>02:16:23</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim Plugin Deployment</b:title>
+			<b:content>
+				<b:summary> /* A_A */ Vim-Taiwan 第一次聚會我的分享題目：「Vim Plugin Deployment」，內容是在介紹怎樣發佈自己寫的 Vim Plugin，不是 Plugin Developer 才需要知道的東西，不論是偶爾會修改別人的 plugin，抑或是會在 vimrc 裡面寫 function 的人都可以了解一下的。...</b:summary>
+				<b:mainContent><p>
+<script async="async" class="speakerdeck-embed" data-id="4e9480b51c29c60051017171" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<p><a href="https://groups.google.com/forum/?hl=zh-TW_US#!forum/vim-taiwan">Vim-Taiwan</a> 第一次聚會我的分享題目：「Vim Plugin Deployment」，內容是在介紹怎樣發佈自己寫的 Vim Plugin，不是 Plugin Developer 才需要知道的東西，不論是偶爾會修改別人的 plugin，抑或是會在 vimrc 裡面寫 function 的人都可以了解一下的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000686" baseName="vundle">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-06-05</b:date>
+				<b:time>08:14:33</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vundle, Bundler for Vim</b:title>
+			<b:content>
+				<b:summary>Vim 雖然本身功能就很強大，但是要讓它好用，支援更多的功能，那不可缺少的就是安裝外掛 (plugin) 了，不過 Vim 的外掛安裝和尋找本身對新手來說就是一道不小的門檻，Vim 自己的網站雖然有 scripts 這塊讓人上傳外掛的地方，不過基本上不太好用，所以有些開發者不會把東西丟到這，取而代之的，這幾年最主流的方式反而是用 github 來放 Vim 外掛，然後配上 pathogen 來安裝和管理，不但讓外掛安裝時互相不干擾，用 git 管理的外掛也可以直接更新，要反安裝也不用怕不乾淨，和以前壓縮檔、Vimball 時期比起來真的是好太多了。 gmarik 受到 pathogen 和 Ruby 的 bundler 的啟發，開發了 Vundle 這個 Vim 外掛，除了可以像 pathogen 那樣把外掛分到不同目錄管理，更厲害的是你可以很簡單的新增要安裝的外掛，然後透過指令簡單的安裝和更新。 set rtp+=~/.vim/bundle/vundle/ call vundle#rc() " let Vundle manage...</b:summary>
+				<b:mainContent><p><a href="http://www.vim.org/">Vim</a> 雖然本身功能就很強大，但是要讓它好用，支援更多的功能，那不可缺少的就是安裝外掛 (plugin) 了，不過 Vim 的外掛安裝和尋找本身對新手來說就是一道不小的門檻，Vim 自己的網站雖然有 <a href="http://www.vim.org/scripts/index.php">scripts</a> 這塊讓人上傳外掛的地方，不過基本上不太好用，所以有些開發者不會把東西丟到這，取而代之的，這幾年最主流的方式反而是用 <a href="https://github.com">github</a> 來放 Vim 外掛，然後配上 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 來安裝和管理，不但讓外掛安裝時互相不干擾，用 git 管理的外掛也可以直接更新，要反安裝也不用怕不乾淨，和以前壓縮檔、<a href="http://www.vim.org/scripts/script.php?script_id=1502">Vimball</a> 時期比起來真的是好太多了。</p>
+
+<p><a href="http://gmarik.info">gmarik</a> 受到 pathogen 和 Ruby 的 <a href="http://gembundler.com/">bundler</a> 的啟發，開發了 <a href="https://github.com/gmarik/vundle">Vundle</a> 這個 Vim 外掛，除了可以像 pathogen 那樣把外掛分到不同目錄管理，更厲害的是你可以很簡單的新增要安裝的外掛，然後透過指令簡單的安裝和更新。</p>
+
+<pre><code>set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+Bundle 'gmarik/vundle'
+
+Bundle 'YankRing.vim'
+Bundle 'VisIncr'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-surround'
+Bundle 'Align'
+Bundle 'othree/eregex.vim'
+Bundle 'mru.vim'
+Bundle 'sjl/gundo.vim'
+
+filetype plugin indent on
+</code></pre>
+
+<p>節錄一段我現在的 <a href="https://github.com/othree/rc/blob/master/home/.vimrc">.vimrc</a> 設定，要新增外掛，就只要加上一行，然後進入 Vim 執行 <code>:BundleInstall</code> ，如果要更新就是 <code>:BundleInstall!</code> ，非常簡單，Bundle 支援的參數有三種，第一種是直接一個普通字串，會去找 Vim Script 裡面的外掛，第二種是中間有個 <code>/</code> 的，前面是 github 帳號，後面則是他的 Vim 外掛專案路徑，其實也就是 github 專案頁面路徑的後面那段，第三種就是 git repository 的位置了，基本上這樣就很夠用了，如果有遇到外掛沒有上述三種地方可以裝，或是想要自己修改的話怎麼辦？</p>
+
+<p>舉例來說， <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 我就自己改成用 Douglas Crockford 的 <a href="https://github.com/douglascrockford/JSLint">JSLint repo</a> 下的最新版 jslint.js ，這種情形，我會自己 <a href="https://github.com/othree/jslint.vim">fork 一份 jslint.vim</a> 下來修改，然後安裝就裝自己的那份。使用 Vundle 之後，把 plugin 裝回來的過程比以前要簡單上數百倍，所以只要備份 .vimrc 就可以了，整個 <a href="https://github.com/othree/rc/tree/master/home">目錄</a> 看起來清爽太多了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000670" baseName="gundovim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-02-27</b:date>
+				<b:time>00:01:32</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Gundo.vim</b:title>
+			<b:content>
+				<b:summary> 詳細可以看 Vimcast 最新的一期：Undo branching and Gundo.vim，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此 Steve Losh 做了個 Gundo ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5478866289/" title="Gundo 的 undo branch 圖"><img src="http://farm6.static.flickr.com/5260/5478866289_5f64b4da86.jpg" width="500" height="490" alt="Gundo 的 undo branch 圖" /></a></p>
+
+<p>詳細可以看 Vimcast 最新的一期：<a href="http://vimcasts.org/episodes/undo-branching-and-gundo-vim/">Undo branching and Gundo.vim</a>，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此  <a href="http://stevelosh.com/">Steve Losh</a> 做了個 <a href="http://sjl.bitbucket.org/gundo.vim/">Gundo</a> ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000658" baseName="vim-for-python">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-11-22</b:date>
+				<b:time>11:00:33</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim for Python</b:title>
+			<b:content>
+				<b:summary> 昨天去參加了 OpenFoundry 辦的 Python 3 初學者課程，請到 Mosky 來介紹，結果我大概只聽了一半內容，一半的時間花在弄環境和調 Vim ，主要是參考 Python and vim: Make your own IDE 這篇，因為我沒有很常寫 Python ，所以只是大概裝一下， Syntax 和 縮排 和 自動完成 ，而且大部分時間是花在自動完成套件，因為他要 Vim 編譯出 +python ，我之前編的一直是 +python/dyn +python3/dyn ，差別在動態讀取，而且事實上我不知道怎樣動態讀取，所以實際上是沒有讀到 python library 的，後來經過不斷嘗試，暫時是先把 +python3 拿掉，就可以編出 +python...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5198373889/" title="Flickr 上 othree 的 pythoncomplete"><img src="http://farm5.static.flickr.com/4131/5198373889_10fbb7c65a.jpg" width="500" height="347" alt="pythoncomplete" /></a></p>
+
+<p>昨天去參加了 <a href="http://www.openfoundry.org/">OpenFoundry</a> 辦的 Python 3 初學者課程，請到 <a href="http://www.plurk.com/mosky">Mosky</a> 來介紹，結果我大概只聽了一半內容，一半的時間花在弄環境和調 Vim ，主要是參考 <a href="http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/">Python and vim: Make your own IDE</a> 這篇，因為我沒有很常寫 Python ，所以只是大概裝一下， <a href="http://www.vim.org/scripts/script.php?script_id=790">Syntax</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=974">縮排</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=1542">自動完成</a> ，而且大部分時間是花在自動完成套件，因為他要 Vim 編譯出 +python ，我之前編的一直是 +python/dyn +python3/dyn ，差別在動態讀取，而且事實上我不知道怎樣動態讀取，所以實際上是沒有讀到 python library 的，後來經過不斷嘗試，暫時是先把 +python3 拿掉，就可以編出 +python -python3 的版本，雖然沒有 pytohn3 ，不過這樣就夠執行 pythoncomplete 了，再配合像是 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 這個 plugin 就很方便了。</p>
+
+<p><a href="http://www.vim.org/scripts/script.php?script_id=1542">pythoncomplete</a> 實在是很厲害，因為它會實際用 python 執行，所以 class 屬性這種實際執行下去才會知道的項目都能自動完成，這種功能在 Vim 下其實不太容易做出來，都還是要整合完整的 IDE 才有，我就很希望 JavaScript 也能做到這樣。雖然說 <a href="http://www.vim.org/scripts/script.php?script_id=1542">pythoncomplete</a> 沒做到很完美， function 回傳的值就無法判斷型別，算是小可惜，不過也還是很厲害了。</p>
+
+<p><a href="http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/">Python and vim: Make your own IDE</a> 這篇文章還有不少和 Python 相關的設定，像是 <a href="http://www.vim.org/scripts/script.php?script_id=910">pydoc</a> 和 <a href="http://www.logilab.org/857">pylint</a> 的整合等等，有興趣的還可以在深入看看，我接下來要研究 Ruby 的部份了:P。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000646" baseName="eregex-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-10-19</b:date>
+				<b:time>17:58:45</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>eregex.vim</b:title>
+			<b:content>
+				<b:summary>新開始維護的 eregex.vim，一開始的動機是因為我有小東西要修改，然後就開了 git repo，後來覺得乾脆就自己維護，順便推廣，所以目前主要貢獻幾乎都是在翻譯說明文件。 簡單介紹，eregex.vim 是讓 Vim 可以使用 Perl/Ruby 形式的正規表示式，因為實在是很不習慣 Vim 的正規表示式寫法，安裝後，把以下兩行加到 .vimrc 檔案裡： nnoremap / :M/ nnoremap ,/ / 這樣就可以用 / 和 Perl 形式的表示式進行搜尋了，如果要取代可以用 :S (大寫S)，不過這頂多是平常編輯文件時使用，要開發 plugin 的話還是只能用內建的語法寫。...</b:summary>
+				<b:mainContent><p>新開始維護的 <a href="http://www.vim.org/scripts/script.php?script_id=3282">eregex.vim</a>，一開始的動機是因為我有小東西要修改，然後就開了 <a href="http://github.com/othree/eregex.vim">git repo</a>，後來覺得乾脆就自己維護，順便推廣，所以目前主要貢獻幾乎都是在翻譯說明文件。</p>
+
+<p>簡單介紹，eregex.vim 是讓 Vim 可以使用 Perl/Ruby 形式的正規表示式，因為實在是很不習慣 Vim 的正規表示式寫法，安裝後，把以下兩行加到 .vimrc 檔案裡：</p>
+
+<pre><code>nnoremap / :M/
+nnoremap ,/ /
+</code></pre>
+
+<p>這樣就可以用 <kbd>/</kbd> 和 Perl 形式的表示式進行搜尋了，如果要取代可以用 :S (大寫S)，不過這頂多是平常編輯文件時使用，要開發 plugin 的話還是只能用內建的語法寫。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000628" baseName="html5vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-09-16</b:date>
+				<b:time>21:30:12</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>html5.vim</b:title>
+			<b:content>
+				<b:summary>上週花了約三四天時間搞出來的 html5.vim ，目前主要功能是 HTML5 syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 WAI-ARIA 和一些其他規範的支援，之後有考慮加上 MathML 和 SVG ，如果有任何意見歡迎到 github repo 上提出 issue。...</b:summary>
+				<b:mainContent><p>上週花了約三四天時間搞出來的 <a href="http://www.vim.org/scripts/script.php?script_id=3236">html5.vim</a> ，目前主要功能是 <span class="caps">HTML5 </span>syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 <a href="http://www.w3.org/TR/wai-aria/"><span class="caps">WAI</span>-ARIA</a> 和一些其他規範的支援，之後有考慮加上 MathML 和 <span class="caps">SVG </span>，如果有任何意見歡迎到 <a href="http://github.com/othree/html5.vim/">github repo</a> 上提出 issue。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000617" baseName="vimrc-onload">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-02-28</b:date>
+				<b:time>21:14:50</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>vimrc 的 onload</b:title>
+			<b:content>
+				<b:summary>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如： if exists(&quot;:Align&quot;) com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;) endif 這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 VimEnter 這個 auto command 的事件執行： function AfterStart () &quot;...</b:summary>
+				<b:mainContent><p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
+
+
+
+<pre><code>if exists(&quot;:Align&quot;)
+    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
+endif</code></pre>
+
+
+
+<p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
+
+
+
+<pre><code>function AfterStart ()
+
+&quot; plugin commands
+if exists(&quot;:Align&quot;)
+    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
+endif
+
+endfunction
+autocmd VimEnter * :call AfterStart()
+</code></pre></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000611" baseName="perl-style-regexp-for-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-01-08</b:date>
+				<b:time>01:41:44</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Perl Style RegExp for Vim</b:title>
+			<b:content>
+				<b:summary>今天下午在尋找能讓 Vim 的 Regular Expression 變得好看一點的方法，因為實在太多斜線了，當然直接就把目標鎖定在 perl 的語法，一開始找到一個 vim tip 有建議用 perldo ，不過編譯時要把 +perl 弄起來，使用上也不是很好用，而且不能搜尋，只能做取代，雖然 有人寫了 function 來搜尋，不過實際測試之後離方便使用還有些距離。 c9s 還有建議我用 very magic 看看，結果還是不夠滿意，後來換成找日本那邊，終於找到 eregex.vim 這個 plugin ，他的作法是把 perl/ruby 的 regexp 語法用 function 轉成 vim 的 regexp 語法，所以問題少很多，預設會把 S（大寫S）替換成用 perl/ruby 的...</b:summary>
+				<b:mainContent><p>今天下午在尋找能讓 Vim 的 Regular Expression 變得好看一點的方法，因為實在太多斜線了，當然直接就把目標鎖定在 perl 的語法，一開始找到一個 <a href="http://vim.wikia.com/wiki/Perl_compatible_regular_expressions">vim tip</a> 有建議用 <a href="http://vimdoc.sourceforge.net/htmldoc/if_perl.html#:perldo">perldo</a> ，不過編譯時要把 <a href="http://vimdoc.sourceforge.net/htmldoc/various.html#+perl">+perl</a> 弄起來，使用上也不是很好用，而且不能搜尋，只能做取代，雖然 <a href="http://tech.groups.yahoo.com/group/vim/message/49561">有人寫了 function</a> 來搜尋，不過實際測試之後離方便使用還有些距離。 <a href="http://c9s.blogspot.com/">c9s</a> 還有建議我用 <a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html#/\v">very magic</a> 看看，結果還是不夠滿意，後來換成找日本那邊，終於找到 <a href="http://www.vector.co.jp/soft/unix/writing/se265654.html">eregex.vim</a> 這個 plugin ，他的作法是把 perl/ruby 的 regexp 語法用 function 轉成 vim 的 regexp 語法，所以問題少很多，預設會把 S（大寫S）替換成用 perl/ruby 的 regexp 語法來搜尋搜尋取代的指令，使用方法和原來 s（小寫S）的都一樣，另外單純搜尋的部分有 :M/ 這個命令，也可以 map 到原來的 / 上：</p>
+
+
+
+<pre><code>nnoremap / :M/</code></pre>
+
+
+
+<p>使用上就和原來幾乎完全一樣了，超棒的～</p>
+
+<p>順帶一提， <a href="http://www.ubuntu.com/">Ubuntu</a> 上要編譯出 +perl 的功能要 <a href="http://www.tfug.org/pipermail/tfug/2006-May/011262.html">確定一下 libperl.so 在不在</a> ，像我的系統就只有 libperl.so.5.8，還要自己做個鏈結。</p>
+
+<p class="update">由於作者聯絡不上，我已經接起 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 的維護工作了，放在 github 上。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000610" baseName="screen_vim_f1f4_map">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-01-07</b:date>
+				<b:time>22:41:26</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Screen 下 Vim F1~F4 沒辦法正常 map</b:title>
+			<b:content>
+				<b:summary>剛剛遇到的問題，好像是我的環境才會，不過如果有遇到的話就把下面這段 code 加到 vimrc 裡面吧，記得放在 map 前。 &quot; Screen fix if &amp;term =~ '^screen' set t_k1=^[[11~ set t_k2=^[[12~ set t_k3=^[[13~ set t_k4=^[[14~ endif...</b:summary>
+				<b:mainContent><p>剛剛遇到的問題，好像是我的環境才會，不過如果有遇到的話就把下面這段 code 加到 vimrc 裡面吧，記得放在 map 前。</p>
+
+
+
+<pre><code>&quot; Screen fix
+if &amp;term =~ '^screen'
+    set t_k1=^[[11~
+    set t_k2=^[[12~
+    set t_k3=^[[13~
+    set t_k4=^[[14~
+endif
+</code></pre></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

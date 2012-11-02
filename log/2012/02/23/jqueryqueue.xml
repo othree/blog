@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000697" baseName="jqueryqueue">jQuery.queue</b:listData>
+
+			<b:previous>
+				<b:mTitle>coffee-check.vim</b:mTitle>
+				<b:mDate>2012-01-23</b:mDate>
+				<b:mBase>coffee-check-vim</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>武陵櫻花季</b:mTitle>
+				<b:mDate>2012-02-28</b:mDate>
+				<b:mBase>wuling-sakura</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000697" baseName="jqueryqueue">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-02-23</b:date>
+				<b:time>00:45:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>jQuery.queue</b:title>
+			<b:content>
+				<b:summary>jQuery 的 queue 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 animate ，這些特效的動作都會丟到一個叫 fx 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形： $('#id').fadeIn().fadeOut(); 也不用寫成 callback function 的方式： $('#id').fadeIn(function () { $(this).fadeOut(); }); 如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成： $('#id').fadeOut(function ()...</b:summary>
+				<b:mainContent><p><a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/queue/">queue</a> 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 <a href="http://api.jquery.com/animate/">animate</a> ，這些特效的動作都會丟到一個叫 <em>fx</em> 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形：</p>
+
+<pre><code>$('#id').fadeIn().fadeOut();
+</code></pre>
+
+<p>也不用寫成 callback function 的方式：</p>
+
+<pre><code>$('#id').fadeIn(function () {
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>但是好一點的作法應該善用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn();
+</code></pre>
+
+<p>這樣不知道看不看的出好在哪？讓我來把要做的動作複雜一點好了，我要淡出，改內容，淡入，然後接著右移 500px、加上 active 的 class，再移動回來，然後再把內容改變一次，用 callback 的寫法：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeIn(function () {
+        $(this).animate({left: '+=500'}, function () {
+            $(this).addClass('active');
+            $(this).animate({left: '-=500'}, function () {
+                $(this).html('even new content');
+            });
+        });
+    });
+});
+</code></pre>
+
+<p>如果用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn()
+    .animate({left: '+=500'})
+    .queue(function () {
+        $(this).addClass('active');
+        $(this).dequeue();
+    })
+    .animate({left: '-=500'})
+    .queue(function () {
+        $(this).html('even new content');
+        $(this).dequeue();
+    });
+</code></pre>
+
+<p>眼尖的人大概馬上就可以發現，用 queue 程式碼變多了！不過這其實不是重點，重點其實是縮排的階層減少了，而且使用 queue 的程式碼，看起來就是一個步驟接著一個步驟，和使用 callback 的階層的關係不一樣，而且除了看起來比較好之外其實還有不少優點，首先是如果要修改連續動作的順序或是內容，使用 queue 的顯然比較簡單，二是還可以配合 <a href="http://api.jquery.com/delay/">delay</a> 來讓動作之間有個暫停，三是可以用 clearQueue 來把整串動作清掉，用 callback 的話，因為執行到各個 animate 的時間不是同步的，所以用 <a href="http://api.jquery.com/clearQueue/">clearQueue</a> 可能會清不乾淨。所以在使用 jQuery 動畫效果時，正確的配合 queue 來做，會讓程式碼的可維護度提昇許多，大家都應該來用一下～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="3">
+
+				<b:comment commentID="176007" entryID="000697">
+					<b:author>
+						<b:authorName>Joe</b:authorName>
+						<b:authorEmail>nikejaycn@gmail.com</b:authorEmail>
+						<b:authorUrl>http://parazzi.me</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-02-23</b:date>
+						<b:time>10:10:06</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>赞，学习了。一直不知道可以这样用～</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="176010" entryID="000697">
+					<b:author>
+						<b:authorName>jazztao</b:authorName>
+						<b:authorEmail>jazztaosu@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-02-23</b:date>
+						<b:time>10:16:59</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>第三個Code block的最後一行似乎該是
+    $(this).fadeIn();</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="176064" entryID="000697">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-02-24</b:date>
+						<b:time>00:56:52</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>@jazztao 感謝告知，已經修正了</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

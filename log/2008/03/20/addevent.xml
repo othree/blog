@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000498" baseName="addevent">addEvent()</b:listData>
+
+			<b:previous>
+				<b:mTitle>tfoot</b:mTitle>
+				<b:mDate>2008-03-17</b:mDate>
+				<b:mBase>tfoot</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Hello Windows</b:mTitle>
+				<b:mDate>2008-03-21</b:mDate>
+				<b:mBase>hello-windows</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000498" baseName="addevent">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-03-20</b:date>
+				<b:time>23:27:21</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>addEvent()</b:title>
+			<b:content>
+				<b:summary>Dean Edwards寫的這個函式一直是我愛用的檔案，可以在各種瀏覽器上都正常的處理事件的指派，一般而言，事件的指派除了IE的attachEvent和W3C的addEventListenr外，還有一個最傳統的方法就是直接設定該elementNode的屬性，要指派click事件就可以寫成elem.onclick = func;，不過這個方法有個缺點是一個element的同一種事件只能指定一個function，因此一般而言都還是會使用attachEvent和addEventListener。...</b:summary>
+				<b:mainContent><p><a href="http://dean.edwards.name/">Dean Edwards</a>寫的這個函式一直是我愛用的檔案，可以在各種瀏覽器上都正常的處理事件的指派，一般而言，事件的指派除了IE的attachEvent和W3C的addEventListenr外，還有一個最傳統的方法就是直接設定該elementNode的屬性，要指派click事件就可以寫成<code>elem.onclick = func;</code>，不過這個方法有個缺點是一個element的同一種事件只能指定一個function，因此一般而言都還是會使用attachEvent和addEventListener。</p></b:mainContent>
+				<b:extendContent><p>不過在2005年八月的時候Peter-Paul Koch發現attachEvent的兩個問題，發表在<a href="http://www.quirksmode.org/blog/archives/2005/08/addevent_consid.html">addEvent() considered harmful</a>這篇文章裡，他發現的兩個問題分別是可能會造成記憶體缺漏和<code>this</code>這個關鍵字的錯誤定義，正常來說this應該是指事件指派的element，但是attachEvent卻會讓他變成window這個物件，而在這篇文章之後，他就舉辦了一次比賽希望有人能解決這個問題。</p>
+
+<p>Dean Edwards就是在這時候寫了<a href="
+http://dean.edwards.name/my/events.js">events.js</a>這個檔案的，其實我一直以為Dean Edwards就是這次比賽的勝者了，直到昨天我才發現勝者其實是John Resig，jQuery的開發者，同時也是Pro Javascript Technique的作者，他寫出來的code非常精簡，只有15行，不過有些小缺憾，Koch還有簡單修改過，放在<a href="http://www.quirksmode.org/blog/archives/2005/10/_and_the_winner_1.html">... and the winner is ...</a>這篇文章裡，他的script可以解決上面提到的問題，但是他至少要瀏覽器支援addEventListener或attachEvent其中一個function，像是Mac版的IE5就剛好兩邊都不支援，用這個script就會沒反應，因此我還是比較喜歡Dean Edwards的版本，他的版本則是addEventListener和傳統方法擇一，因此即使兩個function都不支援，還是可以正常運作，根據測試，連IE4和NN4都可以用，唯一的問題是還有多少人會用這兩款瀏覽器了XD。</p>
+
+<p>其他補充一下：IE7正式版還是沒支援addEventListener。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/496">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000476" baseName="google-analytic-and-xhtml-11">Google Analytic更新、XHTML 1.1對應方法</b:listData>
+
+			<b:previous>
+				<b:mTitle>黑暗元素三部曲</b:mTitle>
+				<b:mDate>2007-12-10</b:mDate>
+				<b:mBase>his-dark-materials</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>對岸的金盾工程</b:mTitle>
+				<b:mDate>2007-12-21</b:mDate>
+				<b:mBase>gfw</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000476" baseName="google-analytic-and-xhtml-11">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-12-15</b:date>
+				<b:time>01:31:57</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Google Analytic更新、XHTML 1.1對應方法</b:title>
+			<b:content>
+				<b:summary>今天一早就看到消息，gslin那也提供了兩個比較重要的連結，一個官方新聞稿，另一個是Google Blogscoped直接介紹如何修改頁面中的script，我看了一下發現到在第一個script標籤內使用了document.write這個方法來修改頁面，不過我這用的是嚴謹到不知所謂的XHTML 1.1，只能使用DOM來做文件樹的修改，所以我研究了一下，了解到他其實只是在判斷網站是不是用ssl連線的，如果是用ssl連線的網站，就使用ssl連線來取得遠端的analytic程式碼，這樣可以避免瀏覽器跑出訊息問訪客是不是要存取非ssl連線的物件。當然我這沒有用到ssl連線，所以我可以直接把他指定成一般連線的位置，變成下面這樣： &lt;script src="http://www.google-analytics.com/ga.js" type="text/javascript"&gt;&lt;/script&gt; &lt;script type="text/javascript"&gt; &lt;![CDATA[ var pageTracker = _gat._getTracker("UA-YOURNUMBER-1"); pageTracker._initData(); pageTracker._trackPageview(); ]]&gt; &lt;/script&gt;...</b:summary>
+				<b:mainContent><p>今天一早就看到消息，<a href="http://blog.gslin.org/archives/2007/12/14/1385/">gslin</a>那也提供了兩個比較重要的連結，一個官方新聞稿，另一個是<a href="http://blogoscoped.com/archive/2007-12-13-n83.html">Google Blogscoped</a>直接介紹如何修改頁面中的script，我看了一下發現到在第一個script標籤內使用了<strong>document.write</strong>這個方法來修改頁面，不過我這用的是嚴謹到不知所謂的XHTML 1.1，只能使用DOM來做文件樹的修改，所以我研究了一下，了解到他其實只是在判斷網站是不是用ssl連線的，如果是用ssl連線的網站，就使用ssl連線來取得遠端的analytic程式碼，這樣可以避免瀏覽器跑出訊息問訪客是不是要存取非ssl連線的物件。當然我這沒有用到ssl連線，所以我可以直接把他指定成一般連線的位置，變成下面這樣：</p>
+
+<pre><code>&lt;script src="http://www.google-analytics.com/ga.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+&lt;![CDATA[
+var pageTracker = _gat._getTracker("UA-YOURNUMBER-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+]]&gt;
+&lt;/script&gt;</code></pre></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="039089" entryID="000476">
+					<b:author>
+						<b:authorName>Alica</b:authorName>
+						<b:authorEmail>alicaccs@gn.tpemail.net.tw</b:authorEmail>
+						<b:authorUrl>http://www.alica.idv.tw/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-03-27</b:date>
+						<b:time>02:39:09</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>有的瀏覽器CDATA還要用註解框起來，變成：</p>
+
+<p>//</p>
+
+<p>不然JS好像還是跑不動。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="039090" entryID="000476">
+					<b:author>
+						<b:authorName>Alica</b:authorName>
+						<b:authorEmail>alicaccs@gn.tpemail.net.tw</b:authorEmail>
+						<b:authorUrl>http://www.alica.idv.tw/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-03-27</b:date>
+						<b:time>02:41:17</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>被吃掉了 囧</p>
+
+<p>／／＜！－－〔ＣＤＡＴＡ〔
+&#8230;..
+／／〕〕－－＞</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/475">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

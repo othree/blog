@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000591" baseName="vim-js-yuicompressor">Vim 儲存完 JavaScript 檔案後自動用 yuicompressor</b:listData>
+
+			<b:previous>
+				<b:mTitle>TinyMCE Compressor 的 bug</b:mTitle>
+				<b:mDate>2009-09-01</b:mDate>
+				<b:mBase>tinymce-compressor-bug</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>新相機</b:mTitle>
+				<b:mDate>2009-09-17</b:mDate>
+				<b:mBase>new-camera</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000591" baseName="vim-js-yuicompressor">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-08</b:date>
+				<b:time>22:57:51</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Vim 儲存完 JavaScript 檔案後自動用 yuicompressor</b:title>
+			<b:content>
+				<b:summary>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了 function Js_css_compress () let cwd = expand('&lt;afile&gt;:p:h') let nam = expand('&lt;afile&gt;:t:r') let ext = expand('&lt;afile&gt;:e') if -1 == match(nam, &quot;[\._]src$&quot;) let minfname = nam.&quot;.min.&quot;.ext else let minfname =...</b:summary>
+				<b:mainContent><p>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了</p>
+
+
+
+<pre><code>function Js_css_compress ()
+    let cwd = expand('&lt;afile&gt;:p:h')
+    let nam = expand('&lt;afile&gt;:t:r')
+    let ext = expand('&lt;afile&gt;:e')
+    if -1 == match(nam, &quot;[\._]src$&quot;)
+        let minfname = nam.&quot;.min.&quot;.ext
+    else
+        let minfname = substitute(nam, &quot;[\._]src$&quot;, &quot;&quot;, &quot;g&quot;).&quot;.&quot;.ext
+    endif
+    if ext == 'less'
+        if executable('lessc')
+            cal system( 'lessc '.cwd.'/'.nam.'.'.ext.' &amp;')
+        endif
+    else
+        if filewritable(cwd.'/'.minfname)
+            if ext == 'js' &amp;&amp; executable('closure-compiler')
+                cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            elseif executable('yuicompressor')
+                cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            endif
+        endif
+    endif
+endfunction
+autocmd FileWritePost,BufWritePost *.js :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.css :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.less :call Js_css_compress()
+</code></pre>
+
+
+
+<p><del>把上面的指令加到 vimrc 檔裡面就可以了，前兩個分別是會把 blah.src.js, blah_src.js 轉成 blah.js 用的，第三行則是會把 blah.js 檔轉成 blah.min.js ，慎用之～～</del></p>
+
+<p class="update"><del>加上第四行，會先檢查 blah.min.js 存不存在，存在的話才用 yuicompressor ，另外 code 在 gist 也貼了 <a href="http://gist.github.com/182971">一份</a> 。</del></p>
+
+<p class="update">改版成 function 形式了~~</p>
+
+<p class="update">更新：支援 less，有 Google Closure 的話會先用它壓縮 js 檔。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="5">
+
+				<b:comment commentID="100584" entryID="000591">
+					<b:author>
+						<b:authorName>網頁設計</b:authorName>
+						<b:authorEmail>kay@eztrust.com.tw</b:authorEmail>
+						<b:authorUrl>http://www.eztrust.com.tw</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-09-16</b:date>
+						<b:time>15:00:53</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>PageRank的值很高耶，表示你的內容對google的搜尋來說，是具知識性的~~~</p>
+
+<p>你有表示說你是非營利，純個人空間，所以就不可能提供text link的欄位就是了?! 如果有其他想法請跟我聯繫。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102412" entryID="000591">
+					<b:author>
+						<b:authorName>c9s</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-11-25</b:date>
+						<b:time>16:17:23</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>如果改用 system() 會好很多
+而且可以加上 &#8216;&amp;&#8217; 號來丟到背景執行 ^^</p>
+
+<p>cal system(cmd . &#8217; &amp;&#8217;)</p>
+
+<p>像這樣。 :-)</p>
+
+<p>minifilename 可以用 matchstr 來取得，會比 substitute 方便的多 :-)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102417" entryID="000591">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-11-25</b:date>
+						<b:time>17:06:37</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>剛剛改用 system 丟背景果然舒服很多XD，感謝感謝</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102563" entryID="000591">
+					<b:author>
+						<b:authorName>c9s</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-12-07</b:date>
+						<b:time>23:17:01</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我在想說你要不要順便弄成 plugin .. :p</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="102749" entryID="000591">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2009-12-23</b:date>
+						<b:time>00:04:47</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我想說才這幾行好像也不用弄成 plugin 吧:P</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/589">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

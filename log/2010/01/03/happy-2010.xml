@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000607" baseName="happy-2010">新年快樂</b:listData>
+
+			<b:previous>
+				<b:mTitle>簡單的 JavaScript 自動單元測試</b:mTitle>
+				<b:mDate>2009-12-31</b:mDate>
+				<b:mBase>basic-javascript-auto-unit-test</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>在 screen windows 裡開一個比較小的 terminal</b:mTitle>
+				<b:mDate>2010-01-05</b:mDate>
+				<b:mBase>_screen_windows_terminal</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000607" baseName="happy-2010">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-01-03</b:date>
+				<b:time>22:45:04</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>新年快樂</b:title>
+			<b:content>
+				<b:summary>新年快樂！ 今年因為腳包著石膏，所以三天假期都沒出門，31號回到家後就等著看 紅白 ，這是我第一次有從一開始就看到啊，話說我每年12/31都會想著明年一定要裝 BSD ，然後一年一年一直過去....，算了，等電視升級時在一起好了。今年紅白有 水樹奈奈 登場，對我來說算是比較有特別意義，到不是特別迷她，而是史上第一位聲優登上紅白，總覺得要見證一下，加上今年是第 60 屆，感覺就是不能錯過～～ 話說這三天我竟然沒有很墮落的睡覺看動畫，第一天整理了 irc logs，把部落格內的文章又掃過一次，檢查有沒有圖片連結錯誤，然後重新編譯了我機器上的 vim ，之前忘了 patch ，加上沒把 gettext 功能弄上，所以介面一直是中文的，另外就是搞定了 tcsh 的 Home,、End、PageUp 等案件的功能，因為和 bash 用 inputrc 的設定不一樣，一直到這天才找到設定方法， bash 下的 inputrc 是這樣寫： &quot;\e[1~&quot;: beginning-of-line &quot;\e[2~&quot;: yank &quot;\e[3~&quot;: delete-char &quot;\e[4~&quot;: end-of-line &quot;\e[5~&quot;:...</b:summary>
+				<b:mainContent><p><strong>新年快樂！</strong></p>
+
+<p>今年因為腳包著石膏，所以三天假期都沒出門，31號回到家後就等著看 <a href="http://www9.nhk.or.jp/kouhaku/">紅白</a> ，這是我第一次有從一開始就看到啊，話說我每年12/31都會想著明年一定要裝 <a href="http://www.nhk.or.jp/bs/"><span class="caps">BSD</span></a> ，然後一年一年一直過去....，算了，等電視升級時在一起好了。今年紅白有 <a href="http://www.mizukinana.jp/">水樹奈奈</a> 登場，對我來說算是比較有特別意義，到不是特別迷她，而是史上第一位聲優登上紅白，總覺得要見證一下，加上今年是第 60 屆，感覺就是不能錯過～～</p>
+
+<p>話說這三天我竟然沒有很墮落的睡覺看動畫，第一天整理了 irc logs，把部落格內的文章又掃過一次，檢查有沒有圖片連結錯誤，然後重新編譯了我機器上的 <a href="http://www.vim.org/">vim</a> ，之前忘了 patch ，加上沒把 <a href="http://vimdoc.sourceforge.net/htmldoc/various.html#+gettext">gettext</a> 功能弄上，所以介面一直是中文的，另外就是搞定了 <a href="http://www.tcsh.org/Welcome">tcsh</a> 的 Home,、End、PageUp 等案件的功能，因為和 <a href="http://www.gnu.org/software/bash/">bash</a> 用 inputrc 的設定不一樣，一直到這天才找到設定方法， bash 下的 inputrc 是這樣寫：</p>
+
+
+
+<pre><code>&quot;\e[1~&quot;: beginning-of-line
+&quot;\e[2~&quot;: yank
+&quot;\e[3~&quot;: delete-char
+&quot;\e[4~&quot;: end-of-line
+&quot;\e[5~&quot;: history-search-backward
+&quot;\e[6~&quot;: history-search-forward</code></pre>
+
+
+
+<p>tcsh 則是寫在 cshrc 裡面：</p>
+
+
+
+<pre><code>bindkey &quot;\e[1~&quot; beginning-of-line
+bindkey &quot;\e[2~&quot; overwrite-mode
+bindkey &quot;\e[3~&quot; delete-char
+bindkey &quot;\e[4~&quot; end-of-line
+bindkey &quot;\e[5~&quot; history-search-backward
+bindkey &quot;\e[6~&quot; history-search-forward</code></pre>
+
+
+
+<p>第三天玩的 zsh 也和 tcsh 一樣。</p>
+
+<p>第二天都在看 javascript 的 <a href="http://www.nczonline.net/blog/tag/javascript/">文章</a> 和 <a href="http://www.designfollow.com/javascript/17-hours-of-javascript-from-the-masters/">影片</a> ，其中有一篇 <a href="http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/">Rendering: repaint, reflow/relayout, restyle</a> 蠻不錯的，介紹了 render tree 的概念，是以前沒接觸過的，另外還看了不少 performance 相關的文章，希望 Nicolas 的 <a href="http://www.amazon.com/dp/059680279X">High Performance JavaScript</a> 能快點出。</p>
+
+<p>第三天早上則是弄拖了很久的 <a href="http://jedi.org/p4/Opera/pub/">Opera 三太子</a> Mac 版，因為這部份動力不大所以一直都沒什麼動，不過這次算是蠻有進度的，幾乎大部分的設定都有套上去了，該改的檔案要放哪也大概都確定了，應該過陣子會有個測試版吧，接著因為噗浪上 <a href="http://www.zsh.org/">zsh</a> 正夯，所以我也玩起來了，zsh 是真的厲害不少，自動完成的功能，git 後面的指令也會自動完成，還會列出參考，cd 可以直接切換父層目錄，例如要從 「 <code>xx/2.1/blah/blah/blah</code> 」 跑到 「 <code>xx/2.2/blah/blah/blah</code> 」 只要輸入 cd 2.1 2.2 就可以了，另外我發現他除了 <a href="http://zsh.sourceforge.net/Doc/Release/Parameters.html#IDX248"><span class="caps">PROMPT</span></a> 可以設定外，還有一個 <a href="http://zsh.sourceforge.net/Doc/Release/Parameters.html#IDX264"><span class="caps">RPROMPT</span></a> ，是會放在最右邊的，而且指令打太長時還會自動消失，不過因為在 freebsd 下設定顏色的方法找很久才找到，所以整個幾乎下午剩下的時間都在弄，我的 zsh 現在變這樣了。</p>
+
+<p><a href="http://www.flickr.com/photos/othree/4240326365/" title="Flickr 上 othree 的 zsh"><img src="http://farm3.static.flickr.com/2531/4240326365_3ca467f0c9_o.png" width="498" height="216" alt="zsh" /></a></p>
+
+<p>最後就是今天晚上開始用 <a href="https://github.com/">github</a> 備份我的 <a href="http://github.com/othree/rc">rc 檔</a> 了，現在比較整齊的只有 zshrc 吧XD。</p>
+
+<p>至於動畫，不知道為什麼把 <a href="http://zh.wikipedia.org/wiki/%E5%A4%A7%E9%81%8B%E5%8B%95%E6%9C%83">大運動會</a> <span class="caps">OVA </span>版重看一遍了，其實 TV 版也在重看，只是 <span class="caps">OVA </span>比較好看，TV 最後面太超展開了，所以越看越慢，日本年假期間都沒新動畫啊&gt;&lt;。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="1">
+
+				<b:comment commentID="102962" entryID="000607">
+					<b:author>
+						<b:authorName>鳥毅</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.tenyi.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-01-04</b:date>
+						<b:time>13:26:02</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>剛才找到 <a href="http://stuff.mit.edu/~jdong/misc/zshrc" rel="nofollow">http://stuff.mit.edu/~jdong/misc/zshrc</a> ，效果也不錯</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/606">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>O3noBLOG: Microfeed for "short-amazon"</title>
+    <link>http://blog.othree.net/log/2008/12/19/short-amazon/</link>
+    <description>Comments for the entry "short-amazon"</description>
+    <language>zh-tw</language>
+    <generator>Movable Type v4.38</generator>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+
+
+    <lastBuildDate>Fri, 19 Dec 2008 10:28:09 +08:00</lastBuildDate>
+
+     <item>
+      <title>Comment from Jacky</title>
+      <description><![CDATA[<p>我會這樣寫 regexp:</p>
+
+<p>var url = &#8216;http://www.amazon.com/Complete-Star-Wars-Encyclopedia/dp/0345477634/ref=pd<em>bbs</em>sr_1?ie=UTF8&amp;s=books&amp;qid=1229625244&amp;sr=8-1&#8217;;
+var re = /^(http:\/\/www.amazon.[\w.]{2,6})\/.<em>(\/(dp|gp\/product)\/\d</em>\/).*/;
+if(re.test(url)) {
+    url = url.replace(re,&#8217;$1$2&#8217;); <br />
+}</p>
+
+<p>當然這樣做 readability 不太好 :p</p>
+]]></description>
+      <guid isPermaLink="false">561@http://blog.othree.net/#c98243</guid>
+      <pubDate>Fri, 19 Dec 2008 10:28:09 +08:00</pubDate>
+    </item>
+
+
+     <item>
+      <title>Comment from Jacky</title>
+      <description><![CDATA[<p>剛剛留了言，但好像發不了？</p>
+
+<p>我會這樣寫: <a href="http://jsbin.com/aqoli" rel="nofollow">http://jsbin.com/aqoli</a>
+當然這樣 readability 會不太好 :p</p>
+]]></description>
+      <guid isPermaLink="false">561@http://blog.othree.net/#c98247</guid>
+      <pubDate>Fri, 19 Dec 2008 10:44:52 +08:00</pubDate>
+    </item>
+
+
+     <item>
+      <title>Comment from othree.net</title>
+      <description><![CDATA[<p>@Jacky</p>
+
+<p>其實還有一些比較特別的網址會沒顧慮到喔，像是有 ASIN 後面是問號而不是斜線的，還有 ASIN 前面沒 dp 或 gp 的例子，不過昨天測試好像是只要找到 ASIN ，然後前面加 dp 就可以了，不管原來是什麼形式，還在測試中。（長輩說似乎有遇過不行的）</p>
+]]></description>
+      <guid isPermaLink="false">561@http://blog.othree.net/#c98252</guid>
+      <pubDate>Fri, 19 Dec 2008 11:35:45 +08:00</pubDate>
+    </item>
+
+
+     <item>
+      <title>Comment from Jacky</title>
+      <description><![CDATA[<p>我也跟據你的改動修改了，asin 改成 [a-z0-9] 判定，和尾綴是 / 或 ? 也可以，見： <a href="http://jsbin.com/umiki" rel="nofollow">http://jsbin.com/umiki</a></p>
+
+<p>(可以到 <a href="http://jsbin.com/umiki/edit" rel="nofollow">http://jsbin.com/umiki/edit</a> 修改測試，很方便)</p>
+]]></description>
+      <guid isPermaLink="false">561@http://blog.othree.net/#c98263</guid>
+      <pubDate>Fri, 19 Dec 2008 12:37:22 +08:00</pubDate>
+    </item>
+
+  </channel>
+</rss>

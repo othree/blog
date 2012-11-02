@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2004-01">January 2004</b:listData>
+
+			<b:previous>
+				<b:mTitle>December 2003</b:mTitle>
+				<b:mDate>2003/12</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>February 2004</b:mTitle>
+				<b:mDate>2004/02</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000048" baseName="2chf-template">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-30</b:date>
+				<b:time>16:33:29</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>2 column + header + footer 樣版</b:title>
+			<b:content>
+				<b:summary>從開始做網頁，我就喜歡這樣的版面配置了，以前是利用frame來達到我理像的樣式，後來越來越深入CSS後，就開始想用CSS來達到目標，我的目標其實很間單，就像大部分的同樣型式的網頁一樣，一個header在網頁頂端，一個footer在尾端，sidebar靠一邊，就像現在您看到的這個網頁一樣，只不過我還有另一個要求，那就是當主要內容和sidebar的高度都不及視窗高度時，footer不是緊接在較長那邊的下面，而是貼在視窗尾端。為了達到這樣的目標，我不知嘗試了多少次，不過每次都不成功。...</b:summary>
+				<b:mainContent><p>從開始做網頁，我就喜歡這樣的版面配置了，以前是利用frame來達到我理像的樣式，後來越來越深入CSS後，就開始想用CSS來達到目標，我的目標其實很間單，就像大部分的同樣型式的網頁一樣，一個header在網頁頂端，一個footer在尾端，sidebar靠一邊，就像現在您看到的這個網頁一樣，只不過我還有另一個要求，那就是當主要內容和sidebar的高度都不及視窗高度時，footer不是緊接在較長那邊的下面，而是貼在視窗尾端。為了達到這樣的目標，我不知嘗試了多少次，不過每次都不成功。</p></b:mainContent>
+				<b:extendContent><p>不過前兩天看到<a href="http://www.mezzoblue.com/">mezzoblue</a>那篇<a href="http://www.mezzoblue.com/archives/2004/01/23/friday_chall/">Friday Challenge</a>後，我重新研究了一下box model的margin值，也才真正瞭解它在各種設定值下的不同狀況，尤其是負值時的狀況，以前我只是知道大概會怎樣，不過不是真正瞭解該如何用，而且事實上以前的認知也有些錯誤，過兩天我會針對margin值的使用法另外寫一篇文章介紹吧。</p>
+
+<p>於是我根據新學得的知識和網路上找到的一些樣版為基礎，自己設計了一個能符合我需求的樣版，並且在IE(Internet Explorer) 6/WIN和FB(Mozilla FireBird) 0.7/WIN下測試都正常，樣版如下。</p>
+
+<pre><code>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-TW"&gt;
+&lt;head&gt;
+&lt;title&gt;2 column + header + footer 樣版&lt;/title&gt;
+
+&lt;style&gt;
+
+body, html
+{
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+}
+
+#outer
+{
+        width: 100%;
+        height: 100%;
+        margin-bottom: -100px; /* footer height */
+        background-color: #ffc;
+}
+
+#top
+{
+        width: 100%;
+        height: 50px;
+        background-color: #f00;
+}
+
+#container
+{
+        width: 100%;
+        margin-right: -100px; /* sidebar width */
+        float: left;
+}
+#content
+{
+        margin-right: 100px; /* sidebar width */
+        height: 700px;
+        background-color:  #606;
+}
+
+#sidebar
+{
+        width: 100px; /* sidebar width */
+        height: 500px;
+        float: right;
+        background-color:  #006;
+}
+
+#bottom
+{
+        height: 100px; /* footer height */
+        width: 100%;
+        clear: both;
+        background-color:  #f66;
+}
+
+#b
+{
+        height: 100px; /* footer height */
+        width: 100%;
+        clear: both;
+        background-color:  #00f;
+}
+
+&lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div id="outer"&gt;
+
+        &lt;div id="top"&gt;header content here&lt;/div&gt;
+
+        &lt;div id="container"&gt;
+                &lt;div id="content"&gt;main content here&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id="sidebar"&gt;sidebar content here&lt;/div&gt;
+
+        &lt;div id="b"&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div id="bottom"&gt;&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>不過有我個人認為還有幾個缺點，一是有一個空元素，<code>id=b</code>的那個，基本上我是不希望有這種情形的，不過它是讓IE和FB展現出來結果一樣的重要功臣，移走不可，所以我最後是在裡面加上&lt;hr /&gt;。再來是footer的高度一定要先設定好，不能讓它自動決定（雖然說header也是這樣，不過對我來說footer裏的資料變動性會比較大）。除以上兩點外，我都很滿意，不過目前只有在上述的兩個環境下測試過，如果有人有其他環境的測試結果還請告知。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000047" baseName="smoker">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-28</b:date>
+				<b:time>13:24:01</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>抽煙者中老菸槍的比例</b:title>
+			<b:content>
+				<b:summary>昨天補完習回家在捷運上看到的門診戒菸的廣告，其中有兩句話：「有81%的陽痿患者是老煙槍」、「每100位陽痿患者就有65位是吸煙者」。 我得到的結論：「每65位吸煙者中就有81位是老煙槍，比例高達124.6%。」...</b:summary>
+				<b:mainContent><p>昨天補完習回家在捷運上看到的門診戒菸的廣告，其中有兩句話：「有81%的陽痿患者是老煙槍」、「每100位陽痿患者就有65位是吸煙者」。</p>
+
+<p>我得到的結論：「<strong>每65位吸煙者中就有81位是老煙槍，比例高達124.6%。</strong>」</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000046" baseName="textile">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-25</b:date>
+				<b:time>19:32:11</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>Textile</b:title>
+			<b:content>
+				<b:summary>這兩天做升級時除了安裝MT 2.661和寫出簡單的關於這頁面，最直得一題的就是安裝了Textile 2.0b和smartpants了，這Textile主要的目的是幫助我在寫文章時能夠更簡單的產生想要的html碼，例如只要輸入「*strong*」就會變成「strong」，文字會被&lt;strong&gt;標籤包起來。smartpants則主要是用來把「"」轉換成「&amp;quot;」的，當然還有其他字元可以做轉換，不過我後來發現我沒裝好，所以還沒有效果出現，也還好還沒效果出現，不然PHP的XSLT Parser遇到&amp;amp;、&amp;lt;、&amp;gt;以外的entity可是會給錯誤訊息的，看起來應該是可以調，不過不知怎麼調就是。 Textile我最早是在Textpattern這個網頁編輯程式中看到的，而MT的plug-in則是在hlb's article看到的，不過hlb用當時用的是textile 1.1，textile 1.1的功能還不能讓我滿意，剛好這兩天發現了2.0b，發現我的需求幾乎只差definition list沒有而已，不過現在有用到&lt;dl&gt;的文章也才一兩篇而已，應該以後就盡量避免使用它，不然就自己手動打HTML標籤。安裝後，也順手把幾篇舊文章改成Textile format，不過應該還有幾篇有用到&lt;blockquote&gt;標籤的文章沒改到，有發現的話也會改的。...</b:summary>
+				<b:mainContent><p>這兩天做升級時除了安裝MT 2.661和寫出簡單的<a href="/about/">關於這</a>頁面，最直得一題的就是安裝了<a href="http://bradchoate.com/weblog/2003/07/08/mttextile">Textile 2.0b</a>和<a href="http://daringfireball.net/projects/smartypants/">smartpants</a>了，這Textile主要的目的是幫助我在寫文章時能夠更簡單的產生想要的html碼，例如只要輸入「<code>*strong*</code>」就會變成「<strong>strong</strong>」，文字會被&lt;strong&gt;標籤包起來。smartpants則主要是用來把「"」轉換成「&amp;quot;」的，當然還有其他字元可以做轉換，不過我後來發現我沒裝好，所以還沒有效果出現，也還好還沒效果出現，不然PHP的XSLT Parser遇到<strong>&amp;amp;</strong>、<strong>&amp;lt;</strong>、<strong>&amp;gt;</strong>以外的entity可是會給錯誤訊息的，看起來應該是可以調，不過不知怎麼調就是。</p>
+
+<p><a href="http://www.textism.com/tools/textile/">Textile</a>我最早是在<a href="http://www.textpattern.com/">Textpattern</a>這個網頁編輯程式中看到的，而MT的plug-in則是在<a href="http://ccca.nctu.edu.tw/~hlb/articles/archives/000033.php" title="hlb's article - slug+textile">hlb's article</a>看到的，不過hlb用當時用的是<a href="http://bradchoate.com/weblog/2003/02/13/textile">textile 1.1</a>，textile 1.1的功能還不能讓我滿意，剛好這兩天發現了2.0b，發現我的需求幾乎只差<strong>definition list</strong>沒有而已，不過現在有用到&lt;dl&gt;的文章也才一兩篇而已，應該以後就盡量避免使用它，不然就自己手動打HTML標籤。安裝後，也順手把幾篇舊文章改成Textile format，不過應該還有幾篇有用到<strong>&lt;blockquote&gt;</strong>標籤的文章沒改到，有發現的話也會改的。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000045" baseName="right-sidebar">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-22</b:date>
+				<b:time>23:30:33</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>靠右的sidebar</b:title>
+			<b:content>
+				<b:summary>要用CSS製造一個sidebar靠在右邊，不是什麼困難的事，而且方法很多，這裡的右邊的sidebar就是用CSS弄出來的，不過雖然方法很多，卻因為我的一些小龜毛，加上IE的bug，害我花了不少時間才弄到滿意。...</b:summary>
+				<b:mainContent><p>要用CSS製造一個sidebar靠在右邊，不是什麼困難的事，而且方法很多，這裡的右邊的sidebar就是用CSS弄出來的，不過雖然方法很多，卻因為我的一些小龜毛，加上IE的bug，害我花了不少時間才弄到滿意。</p></b:mainContent>
+				<b:extendContent><p>首先要解釋一下何謂我的龜毛。分為兩點，一是我希望HTML原始碼中，sidebar的資訊在主要內容之後，這樣不支援CSS的瀏覽器就可以不必理會sidebar而可以先看到主要內容。二是我不希望對主要內容的位置或是float做設定，也就是保持預設的狀態，因為怕對CSS支援不完整或不正確的瀏覽器會把主要內容搞不見。這兩點其實單獨存在都還好，不過一起出現就殺掉了許多種可以用的方法，例如把sidebar內容放在主要內容前，然後讓sidebar的float屬性是right，這樣就可以做出靠右的sidebar，而且後面要提的IE的bug也不會出現。</p>
+
+<p>一開始我是參考<a href="http://www.stopdesign.com/" title="stopdesign">stopdesign</a>的做法，把sidebar的position設成absolute，top和right設成0，本來一切OK的，直到用IE看了之後，發現到sidebar最右邊多了1px的空隙，這是不正確的，應該是IE的bug。我做了很多試驗後，發現問題在「right: 0;」上，如果是靠左「left: 0;」的話不會有這問題，又如果是用float來讓它靠右也不會有這問題，不過因為上面提過的原因，所以我不打算用float來處理，而且IE處理float似乎有問題，雖然我還不清楚是怎樣的bug。</p>
+
+<p>為了處理這個問題，我測試了好久，最後終於成功了，不過不是真正的靠右，而是讓margin-left和width的值加起來是100%，當然margin-right和padding都是0，這種做法有個缺點是只能用百分比值來設定sidebar的寬度，其他像是em,px等等都不能用了，就算用了也只能對一種解析度做到真的是靠右的sidebar。下面是我的sidebar部分的css</p>
+
+<pre><code>#sidebar
+{
+	position: absolute;
+	top: 3em;
+	width: 32%;
+	margin-left: 68%;
+	padding: 0.5em 0;
+	background-color: #933;
+}</code></pre>
+
+<p><code>position: absolute;</code>還是必要的，<code>top: 3em</code>是爲了保留最上面banner的空間，其實也可以設成0，然後用一個<code>position: relative;</code>的div標籤包起來，不過因為我不想要那麼多層div，就用現在這種方法了。在來就是主角，width和margin-left加起來剛好是100%。padding這樣設定是表示上下0.5em，左右0的意思，最後一行就是背景色了。再來是主要內容部份的css。</p>
+
+<pre><code>#content
+{
+	margin-right: 32%;
+	padding: 0.5em;
+}</code></pre>
+
+<p>要說明的只有第一行，<code>margin-right: 32%;</code>，這是爲了保留sidebar的空間，因為我的sidebar不是用float指派，所以必須要幫它保留好空間，不然會造成重疊的狀況，而這裡的margin-right的值和sidebar的width的一樣，當然也可以自己做調整，故意造成重疊的狀況，或是留些空白。</p>
+
+<p>補充：發表完這篇過沒多久，我就在<a href="http://www.mezzoblue.com/">mezzoblue</a>看到他最新的文章<a href="http://www.mezzoblue.com/archives/2004/01/23/friday_chall/">Friday Challenge</a>，剛好就是討論同樣的問題，後面也有人提供了很有趣的處理方法，不過迴響部分我還沒看完。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000044" baseName="new-year-eve">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-21</b:date>
+				<b:time>12:13:31</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>除夕</b:title>
+			<b:content>
+				<b:summary>今天是農曆新年前一天，也就是除夕，是要回家團圓吃年夜飯的日子，我當然也要。另外讓人很高興的，今天總算停雨了，下午應該會去學校把機車騎回來吧，晚上還有撥我沒看過的無間道，想看蠻久了，也因此，跨年那時候我大概在看無間道，所以就先在這裡跟大家說句：「新年快樂！」。...</b:summary>
+				<b:mainContent><p>今天是農曆新年前一天，也就是除夕，是要回家團圓吃年夜飯的日子，我當然也要。另外讓人很高興的，今天總算停雨了，下午應該會去學校把機車騎回來吧，晚上還有撥我沒看過的無間道，想看蠻久了，也因此，跨年那時候我大概在看無間道，所以就先在這裡跟大家說句：「新年快樂！」。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000043" baseName="mind-transfer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-19</b:date>
+				<b:time>10:58:46</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>心情轉換</b:title>
+			<b:content>
+				<b:summary>昨天和某p的電話裡，因為一些事被她唸了好一陣子，結果本來還不錯的心情就變差了。其實事情沒這麼嚴重的，可是有些時候我就是會這樣，即使知道她並不是真的在生氣，心情還是回不來，不過還好後來找些其他事做，把注意力移開後，心情好了不少，也寫了封信去給她，雖然他還要過好一陣子才看的到。...</b:summary>
+				<b:mainContent><p>昨天和某p的電話裡，因為一些事被她唸了好一陣子，結果本來還不錯的心情就變差了。其實事情沒這麼嚴重的，可是有些時候我就是會這樣，即使知道她並不是真的在生氣，心情還是回不來，不過還好後來找些其他事做，把注意力移開後，心情好了不少，也寫了封信去給她，雖然他還要過好一陣子才看的到。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000042" baseName="weekend">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-16</b:date>
+				<b:time>00:46:27</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>期末週間</b:title>
+			<b:content>
+				<b:summary>最近是期末，是期末考和期末報告的地獄，但是我總共只有三科，一科通識期末考早在三週前就考完了，剩下兩顆期末報告，一科是「網路資訊交換」，我把這裡給xml化後交了出去，而且也是兩週前的事了，最後剩下的這週五要上台報告的「航空運輸管理」，感覺上我應該是很輕鬆，不過我卻覺得最近實在是很忙，行程排的滿滿，幾乎沒時間呆在家裡。當然一週三天的補習也是一大因素，因為這補習的關係，我的一週可以說是只剩四天，最空閒的日子大概是週四了，因為週五要上課，週六日要做接下來要交的東西，就連下學期的選課也是在期限最後一天發現，趕快上網選的。而今天，是學期的最後一天，我一早就要上台做這學期最後的報告，雖然是分組的，不過還是小緊張，不知老師會如何看待我做的東西。今天早上順利結束的話，下午要去公司拜訪，明天中午和某p有約，剛好明天又是巴哈姆特站聚（不過因為感覺很累，不太想去），後天則是部落格隨便聚（我最不會交流了XD），下週一二都還要補習。其實，除夕前都還是很忙的。 這陣子也在逃避現實時，對這做了不少更新，首先是發現了Another HTML-lint這個網站，它可以檢查html的結構，並且對其評分，而且檢查的很完善，包括一些親合力的問題都有檢查，有錯的地方他也會有蠻詳細的解釋，雖然都是日文:P，整個網站的內容也很多。我好不容易弄到全部的頁面都有100分，不過有幾頁還是有不被扣分的錯誤在（要有next之類的link），過幾天會處理吧，然後就可以把貼紙放上了:P。接著是按月彙整的頁面，新增了月曆上去，月曆部份的xslt是直接抓網路上的來修改，不過作者有說可以任意修改，我想應該沒著作權的問題了，而且作者的註記我都有留著，到時候在about頁面也會把下載處都寫上。mod_rewrite的規則也改寫過，只剩下兩行，也同時把index.php改寫了，現在各頁面靜態鏈結位置和之前不一樣了，不過我想應該沒什麼人有在看這，所以應該沒什麼影響，還順便把主彙整頁面也擺上了，不過xsl相對應的部分還沒弄好。 寫到這，就覺得離完成之路還好遠，真希望有時間徹底把他弄到一個段落，偏偏過年後要用功唸研究所的書了，反而更沒時間。...</b:summary>
+				<b:mainContent><p>最近是期末，是期末考和期末報告的地獄，但是我總共只有三科，一科通識期末考早在三週前就考完了，剩下兩顆期末報告，一科是「網路資訊交換」，我把這裡給xml化後交了出去，而且也是兩週前的事了，最後剩下的這週五要上台報告的「航空運輸管理」，感覺上我應該是很輕鬆，不過我卻覺得最近實在是很忙，行程排的滿滿，幾乎沒時間呆在家裡。當然一週三天的補習也是一大因素，因為這補習的關係，我的一週可以說是只剩四天，最空閒的日子大概是週四了，因為週五要上課，週六日要做接下來要交的東西，就連下學期的選課也是在期限最後一天發現，趕快上網選的。而今天，是學期的最後一天，我一早就要上台做這學期最後的報告，雖然是分組的，不過還是小緊張，不知老師會如何看待我做的東西。今天早上順利結束的話，下午要去公司拜訪，明天中午和某p有約，剛好明天又是巴哈姆特站聚（不過因為感覺很累，不太想去），後天則是部落格隨便聚（我最不會交流了XD），下週一二都還要補習。其實，除夕前都還是很忙的。</p>
+
+<p>這陣子也在逃避現實時，對這做了不少更新，首先是發現了<a href="http://openlab.ring.gr.jp/k16/htmllint/index.html">Another <span class="caps">HTML</span>-lint</a>這個網站，它可以檢查html的結構，並且對其評分，而且檢查的很完善，包括一些親合力的問題都有檢查，有錯的地方他也會有蠻詳細的解釋，雖然都是日文:P，整個網站的內容也很多。我好不容易弄到全部的頁面都有100分，不過有幾頁還是有不被扣分的錯誤在（要有next之類的link），過幾天會處理吧，然後就可以把貼紙放上了:P。接著是按月彙整的頁面，新增了月曆上去，月曆部份的xslt是直接抓網路上的來修改，不過作者有說可以任意修改，我想應該沒著作權的問題了，而且作者的註記我都有留著，到時候在about頁面也會把下載處都寫上。mod_rewrite的規則也改寫過，只剩下兩行，也同時把index.php改寫了，現在各頁面靜態鏈結位置和之前不一樣了，不過我想應該沒什麼人有在看這，所以應該沒什麼影響，還順便把主彙整頁面也擺上了，不過xsl相對應的部分還沒弄好。</p>
+
+<p>寫到這，就覺得離完成之路還好遠，真希望有時間徹底把他弄到一個段落，偏偏過年後要用功唸研究所的書了，反而更沒時間。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000041" baseName="information-architecture">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-10</b:date>
+				<b:time>23:52:23</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>購入新書 資訊架構學</b:title>
+			<b:content>
+				<b:summary>「designing with web standards」只剩一點就看完了，所以今天買了O'REILLY的「資訊架構學 網站應用 第二版」，原文書名是「Information Architecture for the World Wide Web」，回來後有看了一下，內容似乎比較難讀，大概會看好一陣子吧，不過應該才看一點就會買「Eric Meyer on CSS」就是，講到Eric Meyer就不得不提一下，昨天在Amazon看到了「Cascading Style Sheets: The Definitive Guide, 2nd Edition」，不過本來的預計發售日是1月1日，結果到了今天也還沒發售，去O'REILLY網站上看也沒消息，後來是在O'REILLY的德國網站才看到該書的介紹，不過，與其說是介紹，不如說只是要確定是不是真的要出第二版了(汗)。 另外還要介紹一本儒林的「多元化網頁設計」，原文書名是「Effective Web Design」，雖然我還沒買下來，不過前兩天有在書店稍微看一下內容，很不錯，像是CSS、親合力問題、還有XHTML 1.1和1.0的差異等等都有講，有興趣的可以連到該書的介紹網頁看看目錄，不過因為是儒林出的，書的質感不太好就是，我目前是有考慮購入啦。...</b:summary>
+				<b:mainContent><p>「designing with web standards」只剩一點就看完了，所以今天買了O'REILLY的「<a href="http://www.oreilly.com.tw/chinese/design/infotecture2.html" title="資訊架構學 網站應用 at oreilly.com.tw">資訊架構學 網站應用 第二版</a>」，原文書名是「Information Architecture for the World Wide Web」，回來後有看了一下，內容似乎比較難讀，大概會看好一陣子吧，不過應該才看一點就會買「Eric Meyer on <span class="caps">CSS</span>」就是，講到Eric Meyer就不得不提一下，昨天在Amazon看到了「<a href="http://www.amazon.com/exec/obidos/tg/detail/-/0596005253/104-5384550-2379909" title="Cascading Style Sheets: The Definitive Guide, 2nd Edition at Amazon.com">Cascading Style Sheets: The Definitive Guide, 2nd Edition</a>」，不過本來的預計發售日是1月1日，結果到了今天也還沒發售，去O'REILLY網站上看也沒消息，後來是在O'REILLY的德國網站才看到<a href="http://www.oreilly.de/catalog/css2/" title="Cascading Style Sheets: The Definitive Guide, 2nd Edition at oreilly.de">該書的介紹</a>，不過，與其說是介紹，不如說只是要確定是不是真的要出第二版了(汗)。</p>
+
+<p>另外還要介紹一本儒林的「<a href="http://www.scholars.com.tw/book/SIM-822.htm" title="多元化網頁設計 at 儒林網站">多元化網頁設計</a>」，原文書名是「<a href="http://www.amazon.com/exec/obidos/tg/detail/-/0782128491" title="Effective Web Design at Amazon.com">Effective Web Design</a>」，雖然我還沒買下來，不過前兩天有在書店稍微看一下內容，很不錯，像是CSS、親合力問題、還有XHTML 1.1和1.0的差異等等都有講，有興趣的可以連到該書的介紹網頁看看目錄，不過因為是儒林出的，書的質感不太好就是，我目前是有考慮購入啦。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000040" baseName="boku-doraemon">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-09</b:date>
+				<b:time>22:25:13</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>ドラえもん的雜誌</b:title>
+			<b:content>
+				<b:summary>「ぼくドラえもん」，半月刊，總共25期，創刊號2月20號，特價500日圓，之後每期650日圓。定價不貴，附錄感覺也不錯，我應該會去訂。...</b:summary>
+				<b:mainContent><p>「<a href="http://dora-world.com/news/bokudora/bokudora.html">ぼくドラえもん</a>」，半月刊，總共25期，創刊號2月20號，特價500日圓，之後每期650日圓。定價不貴，附錄感覺也不錯，我應該會去訂。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000039" baseName="central-union-office">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-06</b:date>
+				<b:time>11:58:58</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>中央聯合辦公大樓</b:title>
+			<b:content>
+				<b:summary>昨天下午為了期末報告，到了陸委會的研究中心（就圖書館啦）查資料，該中心位於中央聯合辦公大樓北棟18樓內，一進大樓的大門，就看到兩邊各有位警察在轉角前站崗，然後眼睛看的見的地方沒電梯，心裡就想「大概要豋記吧，電梯應該是在轉角後」，去櫃檯一問，果然是要登記，還要換證件。我就拿了駕照給它，開始寫登記簿，沒想到寫到一半聽到櫃檯小姐打電話到樓上說：「有一位OOO先生要上去查資料」(抖抖...)，登記完，拿到訪客證一看，上面還有寫是圖書館用的，管的真多~_~。 然後就要坐電梯上去啦（果真在轉角後），那邊有三台電梯，一台是VIP專用，不過應該沒差吧，另外兩台一台到奇數層，一台到偶數層，我要到18樓自然是偶數層那台，不過那邊的電梯系統顯然很不聰明，因為奇數層那台已經在1樓了，所以我在外面按要上樓，奇數層那台就會開門迎接我，然後偶數層那台就一直繼續在上面悠遊~_~，後來是樓上有人把奇數層那台叫走，我才得以順利搭到電梯的。 到了18樓圖書館，一進去小姐就叫我背包要放外面置物櫃，然後還要再做一次訪客登記~_~，而且比一樓的更詳細，算了，反正規定是這樣，總之這是最後一次的管制了，之後就可以自由的在圖書館查資料，除了我的影印卡他的影印機不吃和可用的資料沒想像多外，都還蠻順利的。最後是找到一個以前人算的東西，打算用他的方法加去年的資料再算一次。於是我買了張影印卡把資料印一印（回來總覺得可能少印一些，或許週三還要去一趟），趕在5點關門前離開。...</b:summary>
+				<b:mainContent><p>昨天下午為了期末報告，到了陸委會的研究中心（就圖書館啦）查資料，該中心位於中央聯合辦公大樓北棟18樓內，一進大樓的大門，就看到兩邊各有位警察在轉角前站崗，然後眼睛看的見的地方沒電梯，心裡就想「大概要豋記吧，電梯應該是在轉角後」，去櫃檯一問，果然是要登記，還要換證件。我就拿了駕照給它，開始寫登記簿，沒想到寫到一半聽到櫃檯小姐打電話到樓上說：「有一位OOO先生要上去查資料」(抖抖...)，登記完，拿到訪客證一看，上面還有寫是圖書館用的，管的真多~_~。</p>
+
+<p>然後就要坐電梯上去啦（果真在轉角後），那邊有三台電梯，一台是VIP專用，不過應該沒差吧，另外兩台一台到奇數層，一台到偶數層，我要到18樓自然是偶數層那台，不過那邊的電梯系統顯然很不聰明，因為奇數層那台已經在1樓了，所以我在外面按要上樓，奇數層那台就會開門迎接我，然後偶數層那台就一直繼續在上面悠遊~_~，後來是樓上有人把奇數層那台叫走，我才得以順利搭到電梯的。</p>
+
+<p>到了18樓圖書館，一進去小姐就叫我背包要放外面置物櫃，然後還要再做一次訪客登記~_~，而且比一樓的更詳細，算了，反正規定是這樣，總之這是最後一次的管制了，之後就可以自由的在圖書館查資料，除了我的影印卡他的影印機不吃和可用的資料沒想像多外，都還蠻順利的。最後是找到一個以前人算的東西，打算用他的方法加去年的資料再算一次。於是我買了張影印卡把資料印一印（回來總覺得可能少印一些，或許週三還要去一趟），趕在5點關門前離開。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000038" baseName="fix-a-little-bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-03</b:date>
+				<b:time>17:56:35</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>修正一點小BUG</b:title>
+			<b:content>
+				<b:summary>之前剛XML化完成時，似乎沒辦法正常發表迴響，主要是entry id的值造成的問題，我常用的都是用0填滿六位數的形式，像是「000071」，不過迴響表單送出的值必須是沒有多加0的形式，也就是「71」，所以就出問題了，不過已經用&lt;xsl:number&gt;把問題解決掉了，結果發現，發表完迴響會跑到設定的單篇彙整位置，這是xml檔的位置，而且和用mod_rewrite做出來的短路徑完全不同，目前還在看有沒有辦法處理。...</b:summary>
+				<b:mainContent><p>之前剛XML化完成時，似乎沒辦法正常發表迴響，主要是entry id的值造成的問題，我常用的都是用0填滿六位數的形式，像是「000071」，不過迴響表單送出的值必須是沒有多加0的形式，也就是「71」，所以就出問題了，不過已經用&lt;xsl:number&gt;把問題解決掉了，結果發現，發表完迴響會跑到設定的單篇彙整位置，這是xml檔的位置，而且和用mod_rewrite做出來的短路徑完全不同，目前還在看有沒有辦法處理。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000037" baseName="animax-asia">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-02</b:date>
+				<b:time>23:37:55</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>ANIMAX亞洲台開撥</b:title>
+			<b:content>
+				<b:summary>ANIMAX在日本已經有一段時間了，是一個全動畫的頻道，今年的1月1日台灣台開撥了，台灣網站也幾乎同時公開了，裡面有一月份節目表可供下載，看過之後感覺節目還不錯，像是灰羽聯盟、TEXHNOLYZE，這兩部都是超出我想像之外（灰羽聯盟是我很推薦的），不過除了這兩部外，其他幾乎都是國內有代理出片的，所以其實我推測這兩部國內也有代理商了，只是不知道是誰哪家而已。不過節目再好，我家的大安文山還是沒有ANIMAX啊Q_Q。...</b:summary>
+				<b:mainContent><p>ANIMAX在日本已經有一段時間了，是一個全動畫的頻道，今年的1月1日台灣台開撥了，<a href="http://www.animax-taiwan.com/" title="ANIMAX台灣">台灣網站</a>也幾乎同時公開了，裡面有一月份節目表可供下載，看過之後感覺節目還不錯，像是灰羽聯盟、TEXHNOLYZE，這兩部都是超出我想像之外（灰羽聯盟是我很推薦的），不過除了這兩部外，其他幾乎都是國內有代理出片的，所以其實我推測這兩部國內也有代理商了，只是不知道是誰哪家而已。不過節目再好，我家的大安文山還是沒有ANIMAX啊Q_Q。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000036" baseName="day2-of-new-year">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-02</b:date>
+				<b:time>20:40:37</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>新年的第二天...</b:title>
+			<b:content>
+				<b:summary>本來是很期待這天的活動的，結果卻因為我的愚蠢，搞的我現在好內疚Q_Q...</b:summary>
+				<b:mainContent><p>本來是很期待這天的活動的，結果卻因為我的愚蠢，搞的我現在好內疚Q_Q</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000035" baseName="to-xml-reoport-final">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-01</b:date>
+				<b:time>01:27:38</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>XML化狀況報告 FINAL?</b:title>
+			<b:content>
+				<b:summary>基本上就如現在看到的，幾乎都已經完成了，不過還有點小東西要修改，像是Previous和Next的link忘了加上，導致Mozilla的導覽按鈕會沒用，還有Other Version的XML版是錯誤的位置（那是還在修改時的位置），也會把with XSLT版的位置也加上去吧，另外就是data.xml的連結也會放上，不過還沒想到好位置，照我的一些原則來看的話，他應該是要在最上面，瀏覽者不需要捲動頁面就可以看的到，就像搜尋列一樣，然後他應該要放在右邊的sidebar上，因為該檔案是儲存sidebar資訊用的，不過現在實在找不到好位置～＿～。...</b:summary>
+				<b:mainContent><p>基本上就如現在看到的，幾乎都已經完成了，不過還有點小東西要修改，像是Previous和Next的link忘了加上，導致Mozilla的導覽按鈕會沒用，還有Other Version的XML版是錯誤的位置（那是還在修改時的位置），也會把with XSLT版的位置也加上去吧，另外就是data.xml的連結也會放上，不過還沒想到好位置，照我的一些原則來看的話，他應該是要在最上面，瀏覽者不需要捲動頁面就可以看的到，就像搜尋列一樣，然後他應該要放在右邊的sidebar上，因為該檔案是儲存sidebar資訊用的，不過現在實在找不到好位置～＿～。</p></b:mainContent>
+				<b:extendContent><p>另外就是一些版面的文字敘述，像是「最新文章」之類的，不同會整頁面會不同，這些文字目前是各自用&lt;xsl:if&gt;標籤判斷頁面類別，然後在顯示相對的文字，整份xsl裡面有兩個地方用到，兩個地方都有很接近的判斷式，最近會想想要如何把他改掉，其實至少應該用&lt;xsl:when&gt;的，不然可能要用&lt;xsl:key&gt;，然後另外加一個xml檔，不過實在不想在多加一個blooog.xsd格式以外的xml檔案，不然就要把這份xml的格式也在blooog.xsd定義，不過感覺是很constant的東西...</p>
+
+<p>剩下的就是menu（LOGO下面淡藍色的地方）想再做些調整，現在按月彙整和分類彙整會有明顯的紅色來顯示這頁面的標題，不過單篇彙整和首頁卻沒有，首頁其實我也不打算加，不過單篇彙整的部份就蠻想加的，但是這樣就和下面的標題重複了，暫時也沒其他方法，應該還是會維持這樣吧</p>
+
+<p>然後除了XML化的部份外，還會找時間弄個列印用CSS語法吧，主要也只是把sidebar隱藏起來吧:P</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000383" baseName="cwtex-on-windows">cwTeX on Windows</b:listData>
+
+			<b:previous>
+				<b:mTitle>大人買</b:mTitle>
+				<b:mDate>2007-01-27</b:mDate>
+				<b:mBase>adult-buy</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>跳躍吧!時空少女串聯活動</b:mTitle>
+				<b:mDate>2007-02-04</b:mDate>
+				<b:mBase>toki-event</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000383" baseName="cwtex-on-windows">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-02-02</b:date>
+				<b:time>23:08:55</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>cwTeX on Windows</b:title>
+			<b:content>
+				<b:summary>最近因為想要用PHP產生PDF，最後選擇了用PHP產生LaTeX檔案，然後使用exec()來呼叫外部程式轉成PDF的方案，這裡紀錄一下我的安裝過程。...</b:summary>
+				<b:mainContent><p>最近因為想要用PHP產生PDF，最後選擇了用PHP產生LaTeX檔案，然後使用<code>exec()</code>來呼叫外部程式轉成PDF的方案，這裡紀錄一下我的安裝過程。</p></b:mainContent>
+				<b:extendContent><p>首先安裝<a href="http://www.miktex.org/">MikTeX</a>，到官網下載最新的穩定版本(stable)回來安裝即可，接下來安裝<a href="http://homepage.ntu.edu.tw/~ntut019/cwtex/cwtex.html">cwTeX</a>，官網提供的下載站都是很多檔案可以抓，如果不知道要抓哪個，那就抓<strong>cwtex-basic.exe</strong>這個檔案即可，執行安裝最後會你要不要裝其他的東西，像是GhostScript，Acrobat Reader之類的，我都選否，因為這些程式都可以分別去各自的官方網站下載最新的版本，裝好cwTeX後我又安裝了<a href="http://www.cs.wisc.edu/~ghost/">GhostScript</a>和<a href="http://www.cs.wisc.edu/~ghost/"><span class="caps">GSV</span>iew</a>，不過我不確定這兩者是否需要，過兩天我還會在別台電腦上作測試，到時在告訴大家結果，其中GhostScript我是選擇AFPL版的，這樣就安裝完成了。</p>
+
+<p>進命令列測試，因為我對TeX語法還很不熟悉，所以先抓了個範例來測試，裝好cwTeX後期實在安裝目錄裡就有很多範例擋了，如果安裝時選擇的是預設安裝路徑的話，檔案就在<strong>C:\Program Files\MiKTeX 2.5\cwtex\examples</strong>，隨便一個ctx檔都可以用，把他複製出來，以test.ctx為例，我放到C碟根目錄下，然後用命令列執行以下指令：</p>
+
+
+
+<pre><code>cwtex test.ctx test.tex
+bg5latex test.tex
+dvips -t a4 -Ppdf -G0 test
+ps2pdf13 test.ps</code></pre>
+
+
+
+<p>就會在同目錄產生test.pdf這個檔案，執行第一行指令時如果系統說找不到cwtex這執行檔的話，那你可能需要重該機好更新Path的設定，不然就使用絕對位置來執行該程式，預設的位置是<strong>C:\Program Files\MiKTeX 2.5\cwtex\</strong>。如果需要加密，我是使用<a href="http://www.pdfhacks.com/pdftk/">pdftk</a>來處理，指令如下：</p>
+
+
+
+<pre><code>pdftk test.pdf output test.e.pdf owner_pw foopass</code></pre>
+
+
+
+<p>執行後就會產生test.e.pdf這個不可直接更改內容的pdf檔案，要注意的是，預設是只有觀看權限，連列印都不可以的。這個工具程式還可以合併pdf，設定相關參數等等，有興趣的可以去官網上看看。</p>
+
+
+<ul>
+<li><a href="https://dirty.csie.org/mt/archives/000118.html">TeX installation</a></li>
+<li><a href="http://www.study-area.org/tips/latex/chpdf.html">由 TeX/LaTeX 製作中文 <span class="caps">PDF </span>檔</a></li>
+</ul>
+
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="3">
+
+				<b:comment commentID="010302" entryID="000383">
+					<b:author>
+						<b:authorName>cash</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-02-05</b:date>
+						<b:time>18:01:27</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>不用安裝GhostScript和GSView即可轉pdf檔，我有試過了~~~~</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="010454" entryID="000383">
+					<b:author>
+						<b:authorName>CASH</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-02-06</b:date>
+						<b:time>17:15:51</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我終於找到轉pdf時為什麼不能顯示中文的原因了。因為呀，要先經過cwtex裡bg5的轉換，也就是說，要把原始檔從*.ctx開始實作。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="010763" entryID="000383">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-02-08</b:date>
+						<b:time>22:54:56</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>多謝測試啦:P。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/382">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

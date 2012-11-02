@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW">
+<head>
+	<title>Hidden Links test page</title>
+    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="up" title="O3noBLOG Hidden Links 1.5" href="/log/2005/07/26/hiddenLinks1_5/" />
+    <link rel="top" title="O3noBLOG" href="/" />
+<link rel="stylesheet" type="text/css" href="/stylesheets/ydsf.css" media="screen" />
+
+<style type="text/css">
+<![CDATA[
+
+html, body
+{
+	background: #069;
+}
+
+div
+{
+	font: 100% Verdana;
+}
+
+#hlArea
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	background-color: transparent;
+}
+
+#hlShadow
+{
+	position: absolute;
+	right: 14px;
+	opacity: 0;
+	width: 104px;
+}
+
+#hlDiv
+{
+	border: 1px solid black;
+	background: #fff;
+}
+
+#hlDiv ul
+{
+	list-style: none;
+	padding: 1px;
+	margin: 0;	
+}
+
+#hlDiv li
+{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	text-align: center; 
+}
+
+#hlDiv a
+{
+	color: #000;
+	font: 12px Verdana;
+	text-decoration: none;
+	display: block;
+	height: 25px;
+	line-height: 25px;
+	width: 100px;
+}
+#hlDiv a:link
+{
+	color: #000;
+}
+#hlDiv a:visited
+{
+	color: #000;
+}
+#hlDiv a:hover
+{
+	color: #fff;
+	background: #999;
+}
+
+]]>
+</style>
+
+<script type="text/javascript">
+<![CDATA[
+
+// HideLinks //
+
+addEvent(this, "load", hlInitial);
+
+var hllinks = new Array(
+Array("主控台", "http://othree.net/mt/mt.cgi"),
+Array("反向連結", "/refer/"),
+Array("WIKI", "http://othree.net/wiki/")
+);
+
+    if(!document.createElementNS)
+    {
+        document.createElementNS = function(ns,elt) {
+            return document.createElement(elt);
+        }
+    }
+
+
+var body;
+var hlDiv;
+var hlShadow;
+
+var hlWidth;
+var hlHeight;
+
+var hlFlag = false;
+var hlZoomFlag = false;
+var hlZoomingFlag = false;
+
+var XHTMLNS = "http://www.w3.org/1999/xhtml";
+var browser = new Browser();
+
+function hlInitial()
+{
+    if (!document.createElementNS || !document.getElementsByTagName) return;
+	body = document.getElementsByTagName("body")[0];
+	theArea = document.createElementNS(XHTMLNS, 'div');
+
+	theArea.setAttribute("id", "hlArea");
+	addEvent(theArea, "mouseover", hlMouseIn);
+	addEvent(theArea, "mouseout", hlMouseOut);
+	body.appendChild(theArea);
+
+	var theList = document.createElementNS(XHTMLNS, 'ul');
+	theList.setAttribute("id", "hlList");
+
+	for (i=0;i<hllinks.length;i++)
+	{
+		var theLink = document.createElementNS(XHTMLNS, 'a');
+		theLink.setAttribute("href", hllinks[i][1]);
+		var theLinkText = document.createTextNode(hllinks[i][0]);
+		theLink.appendChild(theLinkText);
+		var theListItem = document.createElementNS(XHTMLNS, 'li');
+		theListItem.appendChild(theLink);
+		theList.appendChild(theListItem);
+	}
+
+	var theDiv = document.createElementNS(XHTMLNS, 'div');
+	theDiv.setAttribute("id", "hlDiv");
+	theDiv.className = "inner";
+	theDiv.appendChild(theList);
+
+	var theShadow = document.createElementNS(XHTMLNS, 'div');
+	theShadow.setAttribute("id", "hlShadow");
+	theShadow.className = "ydsf";
+	theShadow.appendChild(theDiv);
+	body.appendChild(theShadow);
+
+	hlDiv = document.getElementById('hlDiv');
+	hlShadow = document.getElementById('hlShadow');
+	hlWidth = parseInt(hlShadow.offsetWidth);
+	hlHeight = parseInt(hlShadow.offsetHeight);
+	hlShadow.style.display = "none";
+	hlShadow.style.opacity = "0";
+	hlShadow.style.top = (-hlHeight)+"px";
+}
+
+function hlMouseMove (evt)
+{
+	pos = getMousePosition(evt);
+	if (pos[0] < body.clientWidth - hlWidth - 10 || pos[1] > hlHeight + 25)
+	{
+		setTimeout("hlMenuHide();", 800);
+		hlFlag = false;
+	}
+	else
+	{
+		hlFlag = true;
+	}
+}
+
+function hlMouseIn ()
+{
+	if (hlZoomingFlag == false)
+	{
+		hlFlag = true;
+		setTimeout("hlShow();", 1000);
+	}
+}
+function hlMouseOut ()
+{
+	if (hlZoomingFlag == false)
+	{
+		hlFlag = false;
+	}
+}
+function hlMenuHide ()
+{
+	if (hlZoomingFlag == false && hlFlag == false)
+	{
+		hlHide();
+	}
+}
+function hlShow ()
+{
+	if (hlFlag == true)
+	{
+		hlMovingFlag = true;
+		hlShadow.style.display = "block";
+		hlMoveIn();
+		hlFadeIn();
+	}
+}
+function hlHide ()
+{
+	if (hlZoomingFlag == false && hlMovingFlag == false)
+	{
+		delEvent(body, "mousemove", hlMouseMove);
+		hlMovingFlag = true;
+		hlMoveOut();
+		hlFadeOut();
+	}
+}
+
+function hlMoveIn ()
+{
+		Y = parseInt(hlShadow.style.top) + 5;
+		hlShadow.style.top = ((Y > 10)?10:Y) + "px";
+		if (Y < 10)
+		{
+			setTimeout("hlMoveIn();", 25);
+		}
+		else
+		{
+			hlMovingFlag = false;
+			addEvent(body, "mousemove", hlMouseMove);
+		}
+}
+
+function hlMoveOut ()
+{
+		Y = parseInt(hlShadow.style.top) - 5;
+		hlShadow.style.top = ((Y < (-hlHeight-10))?(-hlHeight-10):Y) + "px";
+		if (Y > (-hlHeight-10))
+		{
+			setTimeout("hlMoveOut();", 25);
+		}
+		else
+		{
+			hlMovingFlag = false;
+			hlShadow.style.display = "none";
+		}
+}
+
+function hlFadeIn ()
+{
+		O = parseFloat(hlShadow.style.opacity)+0.04;
+		hlShadow.style.opacity = (O < 0.95)?O:0.95;
+		if ( O < 0.95 )
+		{
+			setTimeout("hlFadeIn();", 25);
+		}
+}
+
+function hlFadeOut ()
+{
+		O = parseFloat(hlShadow.style.opacity)-0.04;
+		hlShadow.style.opacity = (O > 0)?O:0;
+		if ( O > 0 )
+		{
+			setTimeout("hlFadeOut();", 25);
+		}
+}
+
+function getMousePosition(event) {
+  if (browser.isIE) {
+    x = window.event.clientX + document.documentElement.scrollLeft
+      + document.body.scrollLeft;
+    y = window.event.clientY + document.documentElement.scrollTop
+      + document.body.scrollTop;
+  }
+  if (browser.isNS) {
+    x = event.clientX + window.scrollX;
+    y = event.clientY + window.scrollY;
+  }
+  return [x,y];
+}
+
+// Determine browser and version.
+
+function Browser() {
+// blah, browser detect, but mouse-position stuff doesn't work any other way
+  var ua, s, i;
+
+  this.isIE    = false;
+  this.isNS    = false;
+  this.version = null;
+
+  ua = navigator.userAgent;
+
+  s = "MSIE";
+  if ((i = ua.indexOf(s)) >= 0) {
+    this.isIE = true;
+    this.version = parseFloat(ua.substr(i + s.length));
+    return;
+  }
+
+  s = "Netscape6/";
+  if ((i = ua.indexOf(s)) >= 0) {
+    this.isNS = true;
+    this.version = parseFloat(ua.substr(i + s.length));
+    return;
+  }
+
+  // Treat any other "Gecko" browser as NS 6.1.
+
+  s = "Gecko";
+  if ((i = ua.indexOf(s)) >= 0) {
+    this.isNS = true;
+    this.version = 6.1;
+    return;
+  }
+}
+
+// Add an eventListener to browsers that can do it somehow.
+// Originally by the amazing Scott Andrew.
+function addEvent(obj, evType, fn){
+  if (obj.addEventListener){
+    obj.addEventListener(evType, fn, false);
+    return true;
+  } else if (obj.attachEvent){
+	var r = obj.attachEvent("on"+evType, fn);
+    return r;
+  } else {
+	return false;
+  }
+}
+
+function delEvent(obj, evType, fn){
+  if (obj.removeEventListener){
+    obj.removeEventListener(evType, fn, false);
+    return true;
+  } else if (obj.detachEvent){
+	var r = obj.detachEvent("on"+evType, fn);
+    return r;
+  } else {
+	return false;
+  }
+}
+
+]]>
+</script>
+
+</head>
+<body>
+
+<div style="height: 200px;">
+
+TEST
+
+</div>
+
+</body>
+
+</html>

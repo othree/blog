@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>O3noBLOG</title>
+<link>http://blog.othree.net/ script</link>
+<description></description>
+<copyright>Copyright 2008</copyright>
+<lastBuildDate>2008-11-22 16:44</lastBuildDate>
+<generator>http://www.movabletype.org/?v=4.21-en</generator>
+<docs>http://blogs.law.harvard.edu/tech/rss</docs> 
+
+
+<item>
+<title>keroro.js</title>
+<description><![CDATA[<p><a href="http://othree.net/projects/keroro/">keroro.js</a></p>
+
+<p>在寫 <span class="caps">HTML</span> 5 投影片時寫的小 script，可以讓網頁跟著ケロロ一起共鳴，不過還算很測試的階段，有一些想改善的地方就看以後有沒有時間了～～</p>]]></description>
+<link>http://blog.othree.net/log/2008/11/22/keroro-js/</link>
+<guid>http://blog.othree.net/log/2008/11/22/keroro-js/</guid>
+<category>script</category>
+<pubDate>2008-11-22 16:44</pubDate>
+</item>
+
+<item>
+<title>CSSHttpRequest</title>
+<description><![CDATA[<p>上週<a href="http://blog.gslin.org/archives/2008/10/24/1800/">DK長輩</a>看到的東西，<a href="http://nb.io/hacks/csshttprequest/"><span class="caps">CSSH</span>ttpRequest</a>是個新的跨domain <span class="caps">XHR</span>技巧，利用CSS檔案不會有跨站存取限制和 <strong>about:</strong> <span class="caps">URI</span>來達成跨domain的js存取，當然要做跨domain最簡單還是用W3C的<a href="http://www.w3.org/TR/access-control/">access control</a>，當然IE還沒支援，目前看來要等到IE8才有機會，順便題一下，W3C開始制訂起<a href="http://www.w3.org/TR/XMLHttpRequest2/"><span class="caps">XMLHTTPR</span>equest Level 2</a>了，簡單看一下是多了些新功能的樣子。</p>]]></description>
+<link>http://blog.othree.net/log/2008/10/27/csshttprequest/</link>
+<guid>http://blog.othree.net/log/2008/10/27/csshttprequest/</guid>
+<category>script</category>
+<pubDate>2008-10-27 00:06</pubDate>
+</item>
+
+<item>
+<title>Peppy: 超快的CSS選擇器</title>
+<description><![CDATA[<p>前天發現到<a href="http://jamesdonaghue.com/?p=40">Peppy</a>這個新的CSS選擇器，號稱速度比<a href="http://github.com/jeresig/sizzle/tree/master">Sizzle</a>還快，跑了他的speed test也確實有不凡的表現，而且code也蠻乾淨漂亮的，和大部分的library一樣，如果瀏覽器已經支援<a href="http://www.w3.org/TR/selectors-api/#documentselector">querySelectorAll</a>的話也會直接用，像是Safari 3就有支援（windows版也有）。</p>
+
+<p>順便一提，Eric Meyer現在覺得<a href="http://meyerweb.com/eric/thoughts/2008/10/22/javascript-will-save-us-all/">靠javascript來實做標準</a>也不錯。</p>]]></description>
+<link>http://blog.othree.net/log/2008/10/23/peppy/</link>
+<guid>http://blog.othree.net/log/2008/10/23/peppy/</guid>
+<category>script</category>
+<pubDate>2008-10-23 01:10</pubDate>
+</item>
+
+<item>
+<title>YUI Compressor</title>
+<description><![CDATA[<p><a href="http://developer.yahoo.com/yui/compressor/">這東西</a>好像很久以前有看過一次，那時不知道為什麼沒深入接觸（或許是看到java就逃跑了），期間還有試過<a href="http://dean.edwards.name/packer/">perl的javascript compressor</a>，不過用起來都不是很方便，直到前陣子看到<a href="http://blog.gslin.org/archives/2008/09/22/1705/">DK示範了一下</a>才又提起興趣，可惜我的blog剛搬離研究室的電腦，而且linux上也不像FreeBSD上有port好的，所以就變成需要在windows下使用，用命令列操控是還算方便，不過因為是包成jar檔，檔名又蠻長的，打命令的時候還蠻辛苦的，所以就寫了個batch檔案來處理：</p>
+
+
+
+<pre><code>SET PP=D:\tools\yuicompressor\
+java -jar %PP%yuicompressor.jar --charset utf-8 %1 %2 %3 %4 %5 %6 %7 %8 %9</code></pre>
+
+
+
+<p>確定檔案路徑和基本的選項之後，把這個batch檔丟到path下的目錄，以後就可以用這個指令來壓縮js和css檔了，不過在我自己的電腦上還有遇到別的問題，就是.bat檔不會真的執行，不知道做了什麼事才變成這樣，總之又去找了<a href="http://www.programmersheaven.com/download/14524/download.aspx">bat2exec</a>把bat檔轉成com檔，不過這個小程式出處不明，希望沒有什麼木馬在裡面@@。</p>
+
+<p>事後感想是windows的命令列能不能好用一點啊Q_Q。</p>]]></description>
+<link>http://blog.othree.net/log/2008/10/11/yuicompressor/</link>
+<guid>http://blog.othree.net/log/2008/10/11/yuicompressor/</guid>
+<category>script</category>
+<pubDate>2008-10-11 20:45</pubDate>
+</item>
+
+<item>
+<title>JavaScript Closure</title>
+<description><![CDATA[<p>這篇想寫很久了，test case的檔案也寫好超過一個月了，這次用了3(?)個case來說明，以下每個test-case都有三個h2標籤，然後透過getElementsByTagName來取得這三個h2，接著用for迴圈來對每個h2加上click事件，click後會alert i的值出來，i是for迴圈的索引值。首先來看一下<a href="http://othree.net/projects/test-case/closure/test1.html">第一個case</a>的script：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads[i].onclick = function () {
+        alert(i);
+    };
+}</code></pre>
+
+
+
+<p>這個case中，使用非常直觀的想法，不過他的結果是每個h2 click下去都會alert "3"出來，實際上每個click都是執行一個function，這個function會執行alert function，並且送 <strong>i</strong> 這個變數作為輸入值，不過實際上使用者click動作發生時，迴圈已經跑過一遍，而且 i 的值已經變成3了，所以你不管click哪一個h2，實際上都是做 alert(3) 這個動作。</p>]]><![CDATA[<p>要解決這個問題，有兩個方法可以處理，第一個是利用function來做closure把變數的scope獨立出來，另一個方法是用eval來做function，首先來看<a href="http://othree.net/projects/test-case/closure/test2.html">第一個作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    (function () {
+        var ii = i;
+        subHeads[i].onclick = function () {
+            alert(ii);
+        };
+    })();
+}</code></pre>
+
+
+
+<p>這個方法是用匿名function把 <strong>ii</strong> 這個變數的scope獨立起來，而 ii 的值就是在這個匿名function執行時 i 的值，這樣每個click function裡面的 ii 就都各自獨立，不會互相影響到。再來看<a href="http://othree.net/projects/test-case/closure/test3.html">第二個作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    eval(&quot;subHeads[i].onclick = function () {&quot; +
+         &quot;    alert(&quot;+i+&quot;);&quot; +
+         &quot;};&quot;);
+}</code></pre>
+
+
+
+<p>可以看到整個event function的指派都是用eval來達成的，比較特別的是要用 <strong>i</strong> 時，我是跳脫字串，直接用 i變數 的值，這個作法其實是讓每個click function的內容都不太一樣（alert的輸入值不同）。而除了這兩個方法之外，我還蠻喜歡把屬性加到DOM的elementNode上的，所以來看看<a href="http://othree.net/projects/test-case/closure/test4.html">我習慣的作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads[i].attr_i = i;
+    subHeads[i].onclick = function () {
+        alert(this.attr_i);
+    };
+}</code></pre>
+
+
+
+<p>在這個範例理，我先在 h2 node 下面加上 attr_i 這個屬性，值就是 i 當時的值，而click function內就是送 attr_i 給alert function，這樣結果也可以如我們所預期。不過如果是用jQuery的話就要注意了，來看看最後這個<a href="http://jquery.com/">jQuery</a>的<a href="http://othree.net/projects/test-case/closure/test5.html">例子</a>：</p>
+
+
+
+<pre><code>var subHeads = $('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads.eq(i).attr_i = i;
+    subHeads.eq(i).click(function () {
+        alert($(this).attr_i);
+    });
+}</code></pre>
+
+
+
+<p>因為jQuery沒有cache機制，所以上面這個例子會發生錯誤， $(this).attr_i 會不存在，會alert出 'undefined' ，要新增屬性的話要直接加到最基本的 <span class="caps">DOM</span> Node 上，不可以放在jQuery物件上，要存取DOM Node可以用 <code>subHead.get(0)</code> 或是 <code>subHead[0]</code> ，後者我沒測試過就是。</p>]]></description>
+<link>http://blog.othree.net/log/2008/09/27/javascript-closure-issue/</link>
+<guid>http://blog.othree.net/log/2008/09/27/javascript-closure-issue/</guid>
+<category>script</category>
+<pubDate>2008-09-27 02:21</pubDate>
+</item>
+
+<item>
+<title>Konami Command</title>
+<description><![CDATA[<p><strong>↑ ↑ ↓ ↓ ← → ← → B A</strong></p>
+
+<p>這有名的秘技相信大家都有印象，前陣子Google Reader還拿了這個指令來用，最近突然很想把它寫出來，今天下午終於花了些時間弄出來，在這個js檔案裡面定義了一個konami的自定函式，只要把輸入命令後想要做的動作寫成function作為參數來呼叫這個函式即可，以執行一個alert動作為例：</p>
+
+
+
+<pre><code>konami(function(){alert('You got 30 lifes.')});</code></pre>
+
+
+
+
+<ul>
+<li><a href="http://othree.net/projects/konami/">Konami Command Script</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Konami_Command">Konami Code(Command)</a></li>
+</ul>
+
+]]></description>
+<link>http://blog.othree.net/log/2008/09/20/konami-command/</link>
+<guid>http://blog.othree.net/log/2008/09/20/konami-command/</guid>
+<category>script</category>
+<pubDate>2008-09-20 21:59</pubDate>
+</item>
+
+<item>
+<title>PHP Session</title>
+<description><![CDATA[<pre><code>
+session_start();
+session_register('id');
+$_SESSION['id'] = 1234;
+</code></pre>
+
+
+
+<p>本來查文件是說直接用$_SESSION這個變數就可以，不過測試過後還是要用session_register註冊一下變數名稱，不然會沒辦法把session傳到其他頁面。</p>]]></description>
+<link>http://blog.othree.net/log/2008/09/11/php-session/</link>
+<guid>http://blog.othree.net/log/2008/09/11/php-session/</guid>
+<category>script</category>
+<pubDate>2008-09-11 02:21</pubDate>
+</item>
+
+<item>
+<title>輸入出生日期～</title>
+<description><![CDATA[<p>因為每次要在網路上輸入出生日期都覺得很麻煩，尤其是遇到用下拉式選單來選出生年和出生日的時候，所以我思考一陣子後設計了一個<a href="http://othree.net/projects/birthday/">使用者介面</a>來輸入出生日期，只要用滑鼠點個三四下就可以了^^，基本上這是做給<a href="http://st.handlino.com/hdc/index.cgi?jformino">jFormino</a>的，所以在jFormino未來釋出的版本裡面會包含這個輸入元件，不過我作的雛形已經很好套用了，等不及的可以研究一下code自己拿去用。</p>
+
+<p><a href="http://blog.othree.net/log/2008/05/30/birthday-ui/birthday.png"><img alt="" src="http://blog.othree.net/log/2008/05/30/birthday-ui/birthday-thumb-400x288.png" width="400" height="288" /></a></p>
+
+<p class="update">補充：現在這個Style是<a href="http://hlb.yichi.org/blog/">hlb</a>修改過的。</p>]]></description>
+<link>http://blog.othree.net/log/2008/05/30/birthday-ui/</link>
+<guid>http://blog.othree.net/log/2008/05/30/birthday-ui/</guid>
+<category>script</category>
+<pubDate>2008-05-30 00:54</pubDate>
+</item>
+
+<item>
+<title>除錯與測試 JavaScript</title>
+<description><![CDATA[<p>有多麻煩，一圖勝千言啊！</p>
+
+<p><a href="http://blog.othree.net/log/2008/04/06/javascript-debug-test/debug-js.png"><img alt="為了測試和除錯開了五個瀏覽器" src="http://blog.othree.net/log/2008/04/06/javascript-debug-test/debug-js-thumb-400x250.png" width="400" height="250" /></a></p>
+
+<p>我同時開了Firefox、Safari、Opera、IE*2共五個瀏覽器視窗，每次修改完五個都要測試，因為已經過了開發階段，不能只看一個瀏覽器的結果了。</p>]]></description>
+<link>http://blog.othree.net/log/2008/04/06/javascript-debug-test/</link>
+<guid>http://blog.othree.net/log/2008/04/06/javascript-debug-test/</guid>
+<category>script</category>
+<pubDate>2008-04-06 22:27</pubDate>
+</item>
+
+<item>
+<title>lightlightbox</title>
+<description><![CDATA[<p>好一陣子沒寫新東西了，前陣子其實在把一些舊的Script重新寫過，像是<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hiddenlinks</a>（想到新名字後才會放出:P）和這裡的表單檢查等等，主要是想脫離<a href="http://jquery.com">jQuery</a>，當然不是嫌它不好，而是覺得自己blog的東西不用特別用jQuery來縮減開發時間，而且寫好的東西大部分都還會公開出來。其中最後要處理的就是lightbox特效，我之前是用<a href="http://jquery.com/demo/thickbox/">thickbox</a>這個套件，本來是想改用<a href="http://www.cabel.name/2008/02/fancyzoom-10.html">FancyZoom</a>，不過他的縮放特效遇到一些特定情況時會變很慢，最早的<a href="http://www.huddletogether.com/projects/lightbox/">lightbox</a>又不是用DOM方法來處理，在XHTML 1.1下無用武之地，更不用說2.0用了prototype，最後我決定自己寫一個lightbox，完成後我把它取名為lightlightbox，因為真的很輕量，程式碼不到100行XD。</p>
+
+<p>想看效果的可以直接點<a href="http://othree.net/projects/lightlightbox/DSCF5940.JPG">這</a>，如果不想開在lightbox裡面，可以壓著ctrl或alt鍵再點擊。全部是三個檔案，一個js檔，一個讀取中的gif動畫檔，一個關閉按鈕的圖檔，讀取中的gif動畫我是用<a href="http://www.ajaxload.info/">Ajax Loading Gif Generator</a>做的，關閉按鈕的圖則是先用FancyZoom的那張，和蘋果網站上用的很像，因為權利問題我不直接提供連結。在功能上預設是把所有連到jpg、jpeg、gif、png這四種檔案的連結都套上lightbox特效，另外也可以設定classFilter來判斷class，變成可以用class來決定哪些連結要有lightbox，哪些不要，檔案下載：</p>
+
+
+<ul>
+<li><a href="http://othree.net/projects/lightlightbox/llbox.js">llbox.js</a></li>
+<li><a href="http://othree.net/projects/lightlightbox/loading.gif">loading.gif</a></li>
+</ul>
+
+
+
+<p>另外有一個fade in/out版的：</p>
+
+
+<ul>
+<li><a href="http://othree.net/projects/lightlightbox-fade/llbox.js">llbox.js</a></li>
+</ul>
+
+
+
+<p>使用前先記得修改llbox.js裡面的讀取中動畫和關閉按鈕的圖檔位置，目前版本在IE7、Firefox 3 beta5、Safari 3.1、Opera 9.26上測試過都沒問題。<del>有兩個已知問題，一是png圖在IE6以前的版本會有透明色的問題，另一個是鍵盤控制沒有處理</del>，等修正後會放出1.1版。</p>
+
+<p class="update">更新：結果今天就花時間把兩個問題都處理完了，更新版的檔案在原位置。</p>]]></description>
+<link>http://blog.othree.net/log/2008/04/06/lightlightbox/</link>
+<guid>http://blog.othree.net/log/2008/04/06/lightlightbox/</guid>
+<category>script</category>
+<pubDate>2008-04-06 11:40</pubDate>
+</item>
+
+<item>
+<title>addEvent()</title>
+<description><![CDATA[<p><a href="http://dean.edwards.name/">Dean Edwards</a>寫的這個函式一直是我愛用的檔案，可以在各種瀏覽器上都正常的處理事件的指派，一般而言，事件的指派除了IE的attachEvent和W3C的addEventListenr外，還有一個最傳統的方法就是直接設定該elementNode的屬性，要指派click事件就可以寫成<code>elem.onclick = func;</code>，不過這個方法有個缺點是一個element的同一種事件只能指定一個function，因此一般而言都還是會使用attachEvent和addEventListener。</p>]]><![CDATA[<p>不過在2005年八月的時候Peter-Paul Koch發現attachEvent的兩個問題，發表在<a href="http://www.quirksmode.org/blog/archives/2005/08/addevent_consid.html">addEvent() considered harmful</a>這篇文章裡，他發現的兩個問題分別是可能會造成記憶體缺漏和<code>this</code>這個關鍵字的錯誤定義，正常來說this應該是指事件指派的element，但是attachEvent卻會讓他變成window這個物件，而在這篇文章之後，他就舉辦了一次比賽希望有人能解決這個問題。</p>
+
+<p>Dean Edwards就是在這時候寫了<a href="
+http://dean.edwards.name/my/events.js">events.js</a>這個檔案的，其實我一直以為Dean Edwards就是這次比賽的勝者了，直到昨天我才發現勝者其實是John Resig，jQuery的開發者，同時也是Pro Javascript Technique的作者，他寫出來的code非常精簡，只有15行，不過有些小缺憾，Koch還有簡單修改過，放在<a href="http://www.quirksmode.org/blog/archives/2005/10/_and_the_winner_1.html">... and the winner is ...</a>這篇文章裡，他的script可以解決上面提到的問題，但是他至少要瀏覽器支援addEventListener或attachEvent其中一個function，像是Mac版的IE5就剛好兩邊都不支援，用這個script就會沒反應，因此我還是比較喜歡Dean Edwards的版本，他的版本則是addEventListener和傳統方法擇一，因此即使兩個function都不支援，還是可以正常運作，根據測試，連IE4和NN4都可以用，唯一的問題是還有多少人會用這兩款瀏覽器了XD。</p>
+
+<p>其他補充一下：IE7正式版還是沒支援addEventListener。</p>]]></description>
+<link>http://blog.othree.net/log/2008/03/20/addevent/</link>
+<guid>http://blog.othree.net/log/2008/03/20/addevent/</guid>
+<category>script</category>
+<pubDate>2008-03-20 23:27</pubDate>
+</item>
+
+<item>
+<title>讓你的特效更平順之二</title>
+<description><![CDATA[<p>之前我曾經發表過一篇<a href="http://blog.othree.net/log/2005/09/26/move-smoothly/">如何讓你的特效更平順</a>，那時候用的方法是每次function內檢查時間變化，然後決定這時候應該在哪個位置，那時候這方法效果大概已經不錯了，不過我這兩天看Pro JavaScript Techniques，裡面的範例使用的方法看起來會更順暢，他的原理是一開始就把每個時間點要做的動作一口氣設定好，接下來就沒有interval的問題，也不用檢查時間變化，當然也不會有配合setTimeout使用遞迴時的延遲問題，重點部份範例如下：</p>
+
+
+
+<pre><code>
+for ( var i = 0; i &lt;= 100; i += 5 ) {
+    (function () {
+        var pos = i;
+        setTimeout(function () {
+            elem.style.height = ( ( pos / 100) * h ) + &quot;px&quot;;
+        }, ( pos +1 ) * 10 );
+    })();
+}
+</code></pre>
+
+
+
+<p>這是一個slide down的效果，直接設定好分21次調整元素高度，每次間隔50微秒，這樣子就可以產生順暢的動畫效果了。</p>]]></description>
+<link>http://blog.othree.net/log/2008/01/18/move-smoothly-2/</link>
+<guid>http://blog.othree.net/log/2008/01/18/move-smoothly-2/</guid>
+<category>script</category>
+<pubDate>2008-01-18 01:41</pubDate>
+</item>
+
+<item>
+<title>IE7 2.0</title>
+<description><![CDATA[<p><a href="http://dean.edwards.name/weblog/2008/01/ie7-2/"><span class="caps">IE7</span></a>前陣子推出了新版了，這次變成有兩個js檔案，<strong><span class="caps">IE7.</span>js</strong>和<strong><span class="caps">IE8.</span>js</strong>，我一開始還以為IE7.js是加強Internet Explorer 7 的功能，然後就在想IE8.js是幹麻用的，結果其實IE7.js是補強Internet Explorer 5.5和6.0用的檔案，IE8.js則是提供一些Internet Explorer 7也還沒實作的功能，大部分是CSS相關的，詳細的功能清單可以在<a href="http://ie7-js.googlecode.com/svn/test/index.html">Demo頁面</a>看到，其中我比較注意到的是min-height和max-height似乎也成功弄好了，這可是之前唯一被標上沒辦法做到的項目啊。另外半透明png則變成只會對檔名是<strong>-trans.png</strong>結尾的才會修正，還可以直接連接google code上的檔案，更新點不少。</p>
+
+<p>而分成兩個檔案的好處是可以使用condition commet把不同版本的Internet Explorer分開，Internet Explorer 7就不需要去讀取IE7.js，只執行他需要的部份，而且程式排除一些很少用到的功能後變得更小，加上換了新的query engine，整體的速度應該提昇了不少，不過我還沒針對這點測試過，之前有在使用的可以更新看看。</p>]]></description>
+<link>http://blog.othree.net/log/2008/01/09/ie7-20-beta/</link>
+<guid>http://blog.othree.net/log/2008/01/09/ie7-20-beta/</guid>
+<category>script</category>
+<pubDate>2008-01-09 15:39</pubDate>
+</item>
+
+<item>
+<title>Google Analytic更新、XHTML 1.1對應方法</title>
+<description><![CDATA[<p>今天一早就看到消息，<a href="http://blog.gslin.org/archives/2007/12/14/1385/">gslin</a>那也提供了兩個比較重要的連結，一個官方新聞稿，另一個是<a href="http://blogoscoped.com/archive/2007-12-13-n83.html">Google Blogscoped</a>直接介紹如何修改頁面中的script，我看了一下發現到在第一個script標籤內使用了<strong>document.write</strong>這個方法來修改頁面，不過我這用的是嚴謹到不知所謂的XHTML 1.1，只能使用DOM來做文件樹的修改，所以我研究了一下，了解到他其實只是在判斷網站是不是用ssl連線的，如果是用ssl連線的網站，就使用ssl連線來取得遠端的analytic程式碼，這樣可以避免瀏覽器跑出訊息問訪客是不是要存取非ssl連線的物件。當然我這沒有用到ssl連線，所以我可以直接把他指定成一般連線的位置，變成下面這樣：</p>
+
+<pre><code>&lt;script src="http://www.google-analytics.com/ga.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+&lt;![CDATA[
+var pageTracker = _gat._getTracker("UA-YOURNUMBER-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+]]&gt;
+&lt;/script&gt;</code></pre>]]></description>
+<link>http://blog.othree.net/log/2007/12/15/google-analytic-and-xhtml-11/</link>
+<guid>http://blog.othree.net/log/2007/12/15/google-analytic-and-xhtml-11/</guid>
+<category>script</category>
+<pubDate>2007-12-15 01:31</pubDate>
+</item>
+
+<item>
+<title>不亂入的javascript</title>
+<description><![CDATA[<p>在Web Accessibility第十章裡談的是JavaScript的親和力問題，我看之前其實就在懷疑JavaScript要如製造親和力，果不其然，這章主要是在說JavaScript套用到網頁時，要注意哪些地方，避免影響到親和力，例如彈出式視窗的連結目標不要用<code>javascript://</code>，而是開啟網頁的真正位置，而考量到各種狀況，其中很重要的一部份是unobtrusive JavaScript（譯做不亂入的JavaScript），不過要先強調的是這只是其中一部分，還有一些觀念和思考方向本文沒說。</p>
+
+<p>Unobtrusive JavaScript不是什麼新的語言，而是JavaScript的一種撰寫風格（coding style），最大的特色是在HTML的原始碼內你看不到JavaScript程式碼，不會有像是<code>&lt;a href=&quot;#&quot; onclick=&quot;return popup();&quot;/&gt;</code>這樣的東西出現，取而代之的，如果要對特定物件指定事件，那就用DOM來尋找你的目標物件，整個HTML文件保持在沒有JavaScript也是功能完整的狀況。</p>
+
+<p>這樣的撰寫風格可以確保不會影響到使用不支援JavasSript瀏覽器的訪客，也可以讓HTML文件和JavaScript分的更徹底，方便更新維護，好處不少，不過相對的要能完全寫到不亂入，也會需要較多的學習。</p>]]></description>
+<link>http://blog.othree.net/log/2007/10/10/unobtrusive-javascript/</link>
+<guid>http://blog.othree.net/log/2007/10/10/unobtrusive-javascript/</guid>
+<category>script</category>
+<pubDate>2007-10-10 22:08</pubDate>
+</item>
+
+
+</channel>
+</rss>

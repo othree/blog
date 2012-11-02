@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000463" baseName="president-sites">總統候選人網站比較</b:listData>
+
+			<b:previous>
+				<b:mTitle>Google 簡報</b:mTitle>
+				<b:mDate>2007-09-18</b:mDate>
+				<b:mBase>google-presentation</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>nice boat</b:mTitle>
+				<b:mDate>2007-09-28</b:mDate>
+				<b:mBase>nice-boat</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000463" baseName="president-sites">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-09-21</b:date>
+				<b:time>20:08:20</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>總統候選人網站比較</b:title>
+			<b:content>
+				<b:summary>昨天有個朋友在他BBS個人版上比較起兩位總統候選人的網站，我也順便點過去看看，結果就促成了現在寫的這篇文章。...</b:summary>
+				<b:mainContent><p>昨天有個朋友在他BBS個人版上比較起兩位總統候選人的網站，我也順便點過去看看，結果就促成了現在寫的這篇文章。</p></b:mainContent>
+				<b:extendContent><p>如同大家所知道的，明年的總統候選人目前有兩位，分別是<a href="http://www.ma19.net/">馬英九</a>和<a href="http://www.frankhsieh.org/">謝長廷</a>，兩個陣營應該都有專門的部門負責網站建置，不過就我看來兩邊的成果其實差距不小，雖然我不認為所有的網站都要顧慮到網路標準、親和力、使用性等等，但是至少總統候選人的需要吧。</p>
+
+<h4>謝長廷</h4>
+
+<p><a href="http://blog.othree.net/log/2007/09/21/president-sites/frankhsieh.png"><img alt="謝長廷的網站很傳統" src="http://blog.othree.net/log/2007/09/21/president-sites/frankhsieh-thumb-400x311.png" width="400" height="311"/></a></p>
+
+<p>謝長廷的網站使用的是上個世紀的表格排版，從頭到尾看不到一個head標籤（h1～h6），從網頁標題和頁面主體我都沒辦法第一時間判斷是不是謝長廷的競選網站，雖然在Google上搜尋<strong>謝長廷</strong>時這個網站還是排第一，但是這些設計都是對SEO和親和力很不好的，而我覺得最糟糕的一點是<a href="http://www.frankhsieh.org/mod/person/index.php?REQUEST_ID=cGFnZT1zYWdh">政績</a>，昨天進去看竟然是空的，今天看已經有些資料了，可能是某處的討論傳開了所以趕快放些東西上來吧，不過<a href="http://www.frankhsieh.org/mod/news/index.php?REQUEST_ID=cGFnZT1tb3ZpZQ==">活動紀實</a>還是空的，像這樣需要形象良好的網站放空頁面上去是很要不得的，就算放一個<strong>施工中</strong>頁面也是不好，最好是沒完成的部份就不要讓人可以連結進來看，把連結先disable掉才是比較好的作法，這樣訪客才不會有白跑一趟的感覺，尤其像是政績的介紹，竟然寫著「抱歉，目前尚無資料！！」搞不好會有人想說其實是沒有政績吧。</p>
+
+<p>再來，HTML沒有通過W3C檢測，沒有指定DTD，並且首頁尾端在Firefox上有排版不正確的情形，圖片也沒設定替代文字，我想有接觸過親和力資訊的人都知道螢幕閱讀器(screen reader)在遇到沒有替代的文字的圖片時，會把圖片網址念出來吧，而這些圖片還包括導覽列的那些項目，所以會看到一個連結的code如下：</p>
+
+
+
+<pre><code>&lt;a href=&quot;http://www.frankhsieh.org/mod/news/index.php?REQUEST_ID=cGFnZT1tb3ZpZQ==&quot;&gt;
+  &lt;img width=&quot;75&quot; height=&quot;41&quot; src=&quot;http://www.frankhsieh.org/images/mod2.gif&quot;/&gt;
+&lt;/a&gt;</code></pre>
+
+
+
+<p>加上連結的URI本身也不具有意義，看不到圖片的人真的沒辦法知道這連結的內容是什麼。說到URI，它的網址路徑很像使用架站套件來建置的感覺，但是從頭到尾都找不到相關資訊，當然這只是我推測的，如果不是自己開發的系統，還把使用系統的相關資訊都刪除掉似乎不太好。</p>
+
+<p>謝長廷的部份就先在這裡打住吧，其實要找問題真是找不完，感覺就像是台灣大部分的網站製作公司做出來的水準，而且有些頁面資訊還是空的，我逛了沒多久就沒興趣逛下去了，反觀馬英九的真是好很多。</p>
+
+<h4>馬英九</h4>
+
+<p><a href="http://blog.othree.net/log/2007/09/21/president-sites/ma19.png"><img alt="馬英九網站首頁排版和配色都很大膽" src="http://blog.othree.net/log/2007/09/21/president-sites/ma19-thumb-400x617.png" width="400" height="617"/></a></p>
+
+<p>由於我是先看到謝長廷的網站，才看到馬英九的，所以一開始真是有點嚇到了，覺得怎麼差距會這麼大，讓我再次覺得找對的人做對的事真是很重要。不過花了一個晚上慢慢比較、檢查，就發現馬英九的網站還是有很多可以改進的地方，不過還是先來講講他的優點吧。</p>
+
+<p>首先，網站的主題明確，一進來在頁面左上角最顯眼的地方就看得到<strong>馬英九</strong>三個字，加上其他顯眼的資訊，訪客一點都不會懷疑這是馬英九的競選網站，再來服務條款、內容政策、隱私權說明、著作權說明每項資訊都有，而且連結位置明顯，像這類資訊雖然大部分訪客都不會去看，但是其實是很重要的，使用<a href="http://drupal.org/">Drupal</a>系統也有註明。除此之外，整個網站也使用了不少網路服務，像是<a href="http://www.flickr.com/">flickr</a>、<a href="http://www.google.com/maps">Google Maps</a>、<a href="http://video.google.com/">Google Video</a>，行事曆還可以匯出給<a href="http://www.apple.com/macosx/features/ical/">iCal</a>（我想開發人員是Mac使用者吧），也因為使用Drupal，所以本身就支援資料來源(feed)，而且還有用<a href="http://www.feedburner.com/">feed burner</a>燒過，不過feed burner因為還沒有中文介面，其實並不一定是好事。</p>
+
+<p>簡單講完優點，再來說說馬英九的網站有什麼問題吧，其中最大的就是沒有考慮網站親和力，像是他的下拉式導覽列雖然Firefox也能正常使用，但是其實是完全用javascript產生的，所以像純文字瀏覽器和搜尋引擎的機器人就看不到導覽列，SEO就會變差，再來圖片也沒有替代文字，不過至少沒有排版用圖片，但是幾乎每個分區的標題都是用圖片。有不少贅餘標籤和class，雖然DTD指定是使用XHTML，卻有不少標籤沒有正確結束，當然也因此沒通過W3C檢測，而且錯誤還比謝長廷的多（不過謝長廷的網站因為沒有指定DTD，所以是用HTML 4的規範做檢測），以贅餘標籤和class為例，在<a href="http://www.ma19.net/schedule">行程</a>的側邊欄的每一個項目的HTML code看起來都像下面這樣：</p>
+
+<pre><code>&lt;li&gt;
+  &lt;div class='view-item view-item-schedule-block'&gt;
+    &lt;div class='view-field view-data-node-title'&gt;
+      &lt;a href=&quot;/schedule/2007-09-22t09%3A00%3A00/554&quot;&gt;蕭萬長--國民黨執政縣市長協調會報&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class='view-field view-data-node-data-field-date-field-date-value'&gt;
+      &lt;span class=&quot;date-display-start&quot;&gt;2007/09/22 - 09:00&lt;/span&gt;
+      &lt;span class=&quot;date-display-separator&quot;&gt; - &lt;/span&gt;
+      &lt;span class=&quot;date-display-end&quot;&gt;2007/09/22 - 10:30&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/li&gt;</code></pre>
+
+<p>不過這很有可能是Drupal系統自動產生的，而除此之外，網頁內還有些舊時代的餘毒，例如首頁最上面的</p>
+
+<pre><code>&lt;a name=&quot;top&quot;&gt;&lt;/a&gt;</code></pre>
+
+<p>就是一例，另外還有一些奇怪的錯誤，像是style放在body裡面、不同區塊的頁內script有的用HTML註解有的用CDATA，而大部分是都沒有的，在SEO、文件結構和使用性三者還有一個共通的錯誤，就是開發人員自己把頁頂的h1標籤兼回首頁連結砍掉了，結果在header裡面沒有文字的網站標題、使用者按網站頂端的標題也不會回到首頁，沒第一級的標題造成文件結構不完整，網站標題不能回首頁是破壞使用者依循的經驗。</p>
+
+<h4>美國總統候選人的網站</h4>
+
+<p>昨天在<a href="http://happydesigner.org/">HappyDesigner</a>的IRC上提出一些討論時，<a href="http://lukhnos.org/blog/zh/">lukhnos</a>很快就找了很多對照組，我拿了美國總統候選人的其中三個網站來作對照：</p>
+
+
+<ul>
+<li><a href="http://www.hillaryclinton.com/">Hillary</a></li>
+<li><a href="http://www.barackobama.com/">Obama</a></li>
+<li><a href="http://www.joinrudy2008.com/">Rudy</a></li>
+</ul>
+
+
+
+<p>三者在視覺呈現以外的部份其實都是比國內兩位候選人的網站還要來的好，不過不知道為什麼大家都不喜歡h1標籤，扣除這點，以上三個網站的圖片都有替代文字、不是表格排版、有使用h1~h6標籤（這可以讓螢幕閱讀器的使用者很容易的穿梭於各段內容）、沒有使用純javascript導覽列、而且也都使用了不少網路服務。至於視覺呈現，像是排版、配色等非我專長，所以我就都不做評論了。</p>
+
+<p>另外本文中總共五個網站中有四個有使用<a href="http://www.google.com/analytics/">Google Analytics</a>，這是很不錯的方法，可以知道訪客究竟對什麼有興趣、流量、瀏覽方式等等，對於內容調整和網站更新都很有幫助，不過這也表示Google掌握了很多資訊XD。</p>
+
+<h4>結論</h4>
+
+<p>最後結論：「兩位候選人網址都沒有tw，都不愛台灣啦（投下廢票）！！」</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="11">
+
+				<b:comment commentID="029943" entryID="000463">
+					<b:author>
+						<b:authorName>毛豆</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-21</b:date>
+						<b:time>23:15:03</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>謝長廷的網頁…
+用firefox一讀，頁尾都彼此覆蓋住了 @@&#8221;</p>
+
+<p>不過我覺得他的網頁美工設計比較好看就是
+至少很舒服(因為是綠色嗎 哈哈)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="029946" entryID="000463">
+					<b:author>
+						<b:authorName>EvenWu</b:authorName>
+						<b:authorEmail>evendesign@gmail.com</b:authorEmail>
+						<b:authorUrl>http://1pxcare.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-22</b:date>
+						<b:time>01:12:55</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我也覺得馬團隊那邊，比較會利用web2.0的服務。但奇怪的是，以我目前常逛的web2.0服務網站來看，馬的支持率應該不到5%，甚至更低。</p>
+
+<p>排除網頁技術，以ie為主的排版的美感來說，謝的整體比較統一，而馬的字型跟圖片、配色比較骯髒、混亂、歪斜。以這方面來說，雙方都表達出各自想要的東西了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="029956" entryID="000463">
+					<b:author>
+						<b:authorName>MilchFlasche</b:authorName>
+						<b:authorEmail>Robertus0617@gmail.com</b:authorEmail>
+						<b:authorUrl>http://milchflasche.byethost31.com/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-22</b:date>
+						<b:time>10:00:28</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>結論那句也蠻有笑點的:p</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="029969" entryID="000463">
+					<b:author>
+						<b:authorName>Hipfox</b:authorName>
+						<b:authorEmail>harry@ap247.net</b:authorEmail>
+						<b:authorUrl>http://drupaltaiwan.org/forum/20070921/1533</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-22</b:date>
+						<b:time>18:35:00</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>hn,,, <br />
+看了你的文章，我也有小小看法，主要是「創意、內容資訊、功能目的、版面設計」的面向。</p>
+
+<p>我的部落格壞掉了 ~ 就貼在 Drupal Taiwan 的討論區 - <a href="http://drupaltaiwan.org/forum/20070921/1533" rel="nofollow">http://drupaltaiwan.org/forum/20070921/1533</a></p>
+
+<p>多多交流討論，有助網站應用的發展&#8230; </p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="029979" entryID="000463">
+					<b:author>
+						<b:authorName>Snosrap</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-22</b:date>
+						<b:time>23:03:18</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>沒讀這篇我還不知道謝長廷有競選網站
+我還以為他只有個人部落格而已
+<a href="http://www.wretch.cc/blog/FrankCTHsieh" rel="nofollow">http://www.wretch.cc/blog/FrankCTHsieh</a>
+大概是因為他的所有更新及最新動態都在部落格上找得到
+所以也就沒有去找他的競選網站了吧</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="030009" entryID="000463">
+					<b:author>
+						<b:authorName>ooo</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-23</b:date>
+						<b:time>14:03:09</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>馬英九也有個blog，不過似乎不是本人在寫。
+<a href="http://city.udn.com/v1/blog/index.jsp?uid=maying9" rel="nofollow">http://city.udn.com/v1/blog/index.jsp?uid=maying9</a></p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="030019" entryID="000463">
+					<b:author>
+						<b:authorName>charlesc</b:authorName>
+						<b:authorEmail>yeouhsin@gmail.com</b:authorEmail>
+						<b:authorUrl>http://www.ma19.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-23</b:date>
+						<b:time>21:37:52</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>ma19.net的工作人員的電腦，mac vs. windows的比例是2:1 :)</p>
+
+<p>雖然資源有限，但的確有許多地方要改進，謝謝指教!!</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="030052" entryID="000463">
+					<b:author>
+						<b:authorName>蓋凡</b:authorName>
+						<b:authorEmail>guyfan@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-24</b:date>
+						<b:time>19:43:57</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>由國際觀的不會限制自己在.tw,有網路經驗的會訂下所有相似的網址, park all domains. 網站呈現給讀者的結果比較重要. 程式科技,撰寫方式是學術性的評判,只要有時間,都可以背後更改. 自己寫的,就不會受wretch或drupaltaiwan的限制. </p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="030058" entryID="000463">
+					<b:author>
+						<b:authorName>ooo</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-25</b:date>
+						<b:time>01:26:58</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>charlesc：
+不會，這方面要是有人肯做努力我都會樂觀其程。</p>
+
+<p>蓋凡：
+親和力直接就會影響身心障礙人士瀏覽網路實的方便度啦。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="030145" entryID="000463">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-09-27</b:date>
+						<b:time>16:22:13</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>不好意思，無關網路技術的政治討論不歡迎。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="042400" entryID="000463">
+					<b:author>
+						<b:authorName>魔兽世界私服</b:authorName>
+						<b:authorEmail>yaoyaobu@163.com</b:authorEmail>
+						<b:authorUrl>http://www.aotwow.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-04-14</b:date>
+						<b:time>23:39:14</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>靠，两个就去闹吧</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/462">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

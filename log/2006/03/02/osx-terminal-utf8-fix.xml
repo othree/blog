@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000311" baseName="osx-terminal-utf8-fix">OSX的終端機的UTF-8問題解決辦法</b:listData>
+
+			<b:previous>
+				<b:mTitle>Firefox吃記憶體的原因</b:mTitle>
+				<b:mDate>2006-02-17</b:mDate>
+				<b:mBase>about-the-firefox-memory-leak</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>CSS的百分比減像素</b:mTitle>
+				<b:mDate>2006-03-07</b:mDate>
+				<b:mBase>css-percentage-minus-pixels</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000311" baseName="osx-terminal-utf8-fix">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-02</b:date>
+				<b:time>20:29:22</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>OSX的終端機的UTF-8問題解決辦法</b:title>
+			<b:content>
+				<b:summary>前兩天終於搞定我的iBook的終端機了，之前跑上掛站的主機輸入文字總是變亂碼，昨天才解決，原來之前已經改到只差一步了。...</b:summary>
+				<b:mainContent><p>前兩天終於搞定我的iBook的終端機了，之前跑上掛站的主機輸入文字總是變亂碼，昨天才解決，原來之前已經改到只差一步了。</p></b:mainContent>
+				<b:extendContent><p>首先是更新Bash，不過其實這不在夠新的還靜下是不用做的，因為還要透過<a href="http://www.darwinports.org/">DarwinPorts</a>更新，步驟我也忘了，所以就先跳過，bash版本在2.0.4以上的都不需要更新（最新的是3.1.1），想知道版本的只要執行<code>bash --version</code>即可。</p>
+
+<p>第二步則是要編輯或修改兩個rc檔，第一個是<strong>.inputrc</strong>，內容如下：</p>
+
+<pre><code>set meta-flag on
+set convert-meta off
+set input-meta on
+set output-meta on</code></pre>
+
+<p>第二個則是<strong>.profile</strong>（好像也有是<strong>.bash_profile</strong>），加入以下內容</p>
+
+<pre><code>export LANG=zh_TW.UTF-8
+alias ls='ls -w'</code></pre>
+
+<p>第二部就算完成了，最後第三部則是終端機的設定，進入<strong>視窗設定</strong>，選擇模擬，<strong>反勾選跳脫非ASCII字元</strong>，然後到監視器的字元集編碼，選擇UTF-8，這樣就OK了。</p>
+
+<p>參考網址：<br />
+<a href="http://n00.be/archives/202"><span class="caps">OSX</span> Terminal <span class="caps">UTF</span>-8 woes solved</a></p>
+
+<p>最後附圖一張:P</p>
+
+<p><a href="http://blog.othree.net/log/2006/03/02/osx_terminal_utf8_fix/screenshot.png"><img src="http://blog.othree.net/log/2006/03/02/osx_terminal_utf8_fix/screenshot-thumb.png" alt="正在輸入中文哩" height="251" width="355" /></a></p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/310">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>c</b:listType>
+			<b:listData listID="script">script</b:listData>
+		</b:entriesMeta>
+
+		<b:entry entryID="000714" baseName="device-pixel-ratio">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-10-28</b:date>
+				<b:time>22:42:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Device Pixel Ratio</b:title>
+			<b:content>
+				<b:summary> 這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8128174518/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" width="500" height="333" alt="2x compare to 1x"/></a></p>
+
+<p>這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的 width 是 1024px，而其實際的螢幕點數有 2048 點，除上 Device Pixel Ratio 是 2，結果會剛好回到 1024，對於網頁製作上來說，直接當程式 1024px 寬的畫面來處理基本上就沒問題了。</p>
+
+<p>雖然說好像瀏覽器都幫你把東西解決了，不過其實還會有一個問題需要處理，那就是圖片 asset 的問題，原來的圖片在這些高 DPI 的螢幕上顯示，解析度不夠，結果都會有鉅齒出現，而這裡出現的就是 Device Pixel Ratio 了，要得到 Device Pixel Ratio 的方法目前有兩種，一個是 CSS 用 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">media query</a>：</p>
+
+<pre><code>@media (-webkit-min-device-pixel-ratio: 2),
+       (min--moz-device-pixel-ratio: 2),
+       (min-resolution: 2dppx)
+</code></pre>
+
+<p>這個 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">MDN 提供的範例</a>中，共有三行，第一行是 WebKit Based 瀏覽器用的，像是 iOS 內建的瀏覽器就是用這行，第二行則是給比較舊的 Firefox （&lt; 16）用的，第三行則是 <a href="http://www.w3.org/TR/css3-mediaqueries/#resolution">W3C 提出的標準</a>，W3C 的應該還是會是以後的主流，dppx 代表的是 dots per pixel，除了這個單位外其實還可以用 dpi, dpcm 等密度單位，考量的比較全面，CSS 那邊管的圖片像是元件背景之類的，透過這個 media query 就可以順利的在需要的時候換成不同品質的圖片，另外還有一種圖片來源是動態從 JavaScript 那邊插入的，這目前也有個方法可以支援：</p>
+
+<pre><code>window.devicePixelRatio
+</code></pre>
+
+<p>直接讀取這個值就可以知道現在的 device pixel ratio 了，然後根據讀到的值來選擇適當的圖片，不過講到網頁的圖片，其實最先應該想到的是 img 標籤才是，偏偏這兩個方法都不直接適用，而且實際上目前也還沒有針對這個問題，可直接使用的新機制，有人有寫 jQuery plugin 來把圖片換掉，我的作法則是第一次瀏覽不管，不過同時就把 device pixel ratio 數值寫進 cookie，這樣下次使用者來訪，或是他點到其他頁時，server 端就可以知道他用的 device pixel ratio，然後先一步把 img 要丟出的圖片網址處理好，以 flickr 的圖片為例，我平常貼的都是 500px 寬的縮圖，要給 ratio 2 的裝置看則需要 1000px 以上，flickr 最大的縮圖是 1024px，剛好很接近 1000px，又很幸運的兩者檔案路徑只有在檔名最後面差一個 _b ，所以我就很開心的拿來用了，在 XSLT parse 時把 img 標籤，src 是 flickrfarm 來的，檔名結尾不是 _o 的（代表原始檔）的圖片路徑都加上 _b ，結果的差異就是上面第一張圖那樣，其他還抓了不少比較圖，不過都要到 flickr 那去開原始檔比較才看得出差異。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8128147819/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8043/8128147819_45f5f33352.jpg" width="500" height="333" alt="2x compare to 1x"/></a>
+<figcaption>比較圖原始大小</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127784377/" title="Flickr 上 othree 的 Support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8052/8127784377_5db2831fb7.jpg" width="375" height="500" alt="Support device pixel ratio 2x"/></a>
+<figcaption>2x 圖片</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127811546/" title="Flickr 上 othree 的 Not support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8336/8127811546_4e62af122b.jpg" width="375" height="500" alt="Not support device pixel ratio 2x"/></a>
+<figcaption>1x 圖片</figcaption>
+</figure></p>
+
+<p>這支寫 device pixel ratio cookie 的程式很簡單，我也放上 github 了，就叫 <a href="https://github.com/othree/dpr-cookie">dpr-cookie</a>，完全 stand alone，不需要其他 Library，有需要的歡迎使用，還沒放上 License 宣告，不過會用 MIT License。</p>
+
+<p>最後提一下 img 標籤的問題，WHATWG 目前是有<a href="http://www.w3.org/community/respimg/2012/05/11/respimg-proposal/">候選方案</a>的，不過我覺得各方意見還很多，要有個定案應該不會太快，看起來會像是這樣：</p>
+
+<pre><code>&lt;img src="face-600-200@1.jpg" alt=""
+    set="face-600-200@1.jpg 600w 200h 1x, face-600-200@2.jpg 600w 200h 2x, face-icon.png 200w 200h"&gt;
+</code></pre>
+
+<p>或是：</p>
+
+<pre><code>&lt;picture alt=""&gt;
+    &lt;source src="mobile.jpg" /&gt;
+    &lt;source src="large.jpg" media="min-width: 600px" /&gt;
+    &lt;source src="large_1.5x-res.jpg" media="min-width: 600px, min-device-pixel-ratio: 1.5" /&gt;
+    &lt;img src="mobile.jpg" /&gt;
+&lt;/picture&gt;
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000709" baseName="ie_bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-09-06</b:date>
+				<b:time>00:30:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>我找過最...的 bug</b:title>
+			<b:content>
+				<b:summary> 最近因為總總原因，工作上在弄的東西要開始處理 IE 的相容問題，讓我想起我寫 JavaScript 以來，找過最難找的一個 bug，當然不意外的，這是一個 IE 上發生的錯誤，因為已經有兩年以上的時間了，所以一些細節其實已經不記得了。 一開始我看到的是有個 JavaScript 錯誤，以前 IE 的 JavaScript 錯誤是只會說有錯誤，錯誤訊息沒什麼幫助，好一點你會看到是哪一行（不過沒說是哪個檔案喔～），於是，我看到了一個不記得是六位數還是七位數的數字，總之是個大到全站的程式碼加起來都沒這麼多的數字... 要定位錯誤發生的位置還有個方法，就是用除錯工具，那時候就是用 Script Debugger，然後就會比較接近現在除錯工具那樣用法，不過想當然，那神祕行號的錯誤自然是用 Script Debugger 也定位不到。 到這種情形就只省下最後一招了，排除法，一步一步的把網頁內用到的 script 拿掉，然後看錯誤什麼時候消失，理論上就可以找到錯誤發生的位置了，理應當是這樣的，我一直是這樣相信的，直到我發現頁面上已經被我砍到沒有 script 了，而錯誤訊息依舊。 最後還好我沒放棄，繼續移除其他東西，結果發現這其實是一個 CSS pseudo-class 造成的 JavaScript 錯誤訊息，當下實在是不知道要說什麼好啊～～...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7827733700/" title="Flickr 上 othree 的 IE &gt;_&lt;"><img src="http://farm8.staticflickr.com/7113/7827733700_a217d1b314.jpg" width="500" height="333" alt="IE &gt;_&lt;"/></a></p>
+
+<p>最近因為總總原因，工作上在弄的東西要開始處理 IE 的相容問題，讓我想起我寫 JavaScript 以來，找過最難找的一個 bug，當然不意外的，這是一個 IE 上發生的錯誤，因為已經有兩年以上的時間了，所以一些細節其實已經不記得了。</p>
+
+<p>一開始我看到的是有個 JavaScript 錯誤，以前 IE 的 JavaScript 錯誤是只會說有錯誤，錯誤訊息沒什麼幫助，好一點你會看到是哪一行（不過沒說是哪個檔案喔～），於是，我看到了一個不記得是六位數還是七位數的數字，總之是個大到全站的程式碼加起來都沒這麼多的數字...</p>
+
+<p>要定位錯誤發生的位置還有個方法，就是用除錯工具，那時候就是用 <a href="http://www.microsoft.com/en-us/download/details.aspx?id=22185">Script Debugger</a>，然後就會比較接近現在除錯工具那樣用法，不過想當然，那神祕行號的錯誤自然是用 Script Debugger 也定位不到。</p>
+
+<p>到這種情形就只省下最後一招了，排除法，一步一步的把網頁內用到的 script 拿掉，然後看錯誤什麼時候消失，理論上就可以找到錯誤發生的位置了，理應當是這樣的，我一直是這樣相信的，直到我發現頁面上已經被我砍到沒有 script 了，而錯誤訊息依舊。</p>
+
+<p>最後還好我沒放棄，繼續移除其他東西，結果發現這其實是一個 CSS pseudo-class 造成的 JavaScript 錯誤訊息，當下實在是不知道要說什麼好啊～～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000706" baseName="jquery-deferred-pipe">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-21</b:date>
+				<b:time>18:41:56</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery.Deferred.pipe</b:title>
+			<b:content>
+				<b:summary>這次的 COSCUP 有介紹到 jQuery 的 deferred，當時沒講到的 pipe，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 when 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。 先舉一個簡單的例子，要做一個登入頁面，然後要支援 one time password(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼： $.post('/api/login', idpw, function...</b:summary>
+				<b:mainContent><p>這次的 COSCUP 有<a href="http://blog.othree.net/log/2012/08/20/coscup-2012-slides/">介紹</a>到 <a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/category/deferred-object/">deferred</a>，當時沒講到的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a>，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 <a href="http://api.jquery.com/jQuery.when/">when</a> 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。</p>
+
+<p>先舉一個簡單的例子，要做一個登入頁面，然後要支援 <a href="http://en.wikipedia.org/wiki/One-time_password">one time password</a>(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼：</p>
+
+<pre><code>$.post('/api/login', idpw, function (res) {
+    if (res.requireOTP) {
+        showOTPUI();
+    } else {
+        loginSuccess();
+    }
+}, loginFail);
+</code></pre>
+
+<p>然後接著使用者輸入認證碼後的部份：</p>
+
+<pre><code>$.post('/api/', otp, loginSuccess, loginFai);
+</code></pre>
+
+<p>這兩段程式碼的流程其實很簡單，就是如果帳號密碼錯，執行 loginFail，如果對的話，看有沒有需要 OTP 驗證，沒需要的話執行 loginSuccess，需要的話再跟使用者要 OTP，然後送去 server 做驗證，結果正確的話執行 loginSuccess，不正確的話執行 loginFail，可以畫成流程圖如下：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7786699632/" title="Flickr 上 othree 的 no pipe"><img src="http://farm9.staticflickr.com/8289/7786699632_be23a7d0fa_o.png" width="761" height="172" alt="no pipe"/></a></p>
+
+<p>這個流程基本上沒問題，可是身為一個程式設計師，看到重複的東西出現，就會想要把它拿掉，在這張流程圖中什麼東西重複出現了呢，就是最後的終點，Success 和 Fail 分別出現兩次，看到這種終點出現兩次就會很想修改掉，這時候 pipe 就派上用場了。</p>
+
+<p>Pipe 顧名思義就是管路，和 linux 作業系統命令列介面的 <a href="http://en.wikipedia.org/wiki/Pipeline_(Unix)">pipeline</a> 很像，一樣是一個程式處理完，結果丟到下一個程式繼續處理，一個接一個這樣，只不過 deferred 的 pipe 處理的是非同步的流程，如果使用 jQuery 的 pipe 來處理這個問題，程式碼大概會變成：</p>
+
+<pre><code>$.post('/api/login', idpw).pipe(function (res) {
+    _dfd = $.Deferred();
+    if (res.requireOTP) {
+        showOTPUI(_dfd);
+    } else {
+        _dfd.resolve();
+    }
+    return _dfd;
+}).then(loginSuccess, loginFail);
+</code></pre>
+
+<p>showOTPUI 那邊則要處理使用者輸入認證碼後的行為：</p>
+
+<pre><code>$.post('/api/', otp, _dfd.resolve, _dfd.reject);
+</code></pre>
+
+<p>這樣的程式碼就可以看到重複的 loginSuccess 和 loginFail 消失了，流程圖則變成像是下面這樣：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7793084172/" title="Flickr 上 othree 的 pipe"><img src="http://farm8.staticflickr.com/7261/7793084172_6b3bcbf282_o.png" width="761" height="212" alt="pipe"/></a></p>
+
+<p>再舉一個例子，假設某個網路服務的使用者資料更新，要同時在前端處理上傳頭像、加密資料等，流程可能會是：</p>
+
+<ol>
+<li>檢查欄位</li>
+<li>上傳頭像</li>
+<li>跟 server 要求加密用的 key</li>
+<li>加密資料</li>
+<li>把資料上傳</li>
+</ol>
+
+<p>這樣的流程中，有三個動作是跟 server 作溝通的非同步工作，分別是上傳頭像、跟 server 要 key 和最後的把資料上傳，但是這五個動作又要照順序作，這種情形就非常適合使用 pipe，下面是一個大概的範例，先定義三個後面 pipe 裡面會用到函數：</p>
+
+<pre><code>var validator = function ($form) {
+    return $.Deferred()[_validate($form)? 'resolve' : 'reject']();
+};
+
+var upload = function ($file) {
+    var prepared = prepare($file);
+    return $.post(prepared);
+};
+
+var encrypt = function (data, key) {
+    var crypt_data = _encrypt(data, key);
+    return $.Deferred().resolve(crypt_data);
+};
+</code></pre>
+
+<p>這些函數在寫的時候要注意到，他們回傳的最好都是 deferred 物件，根據情況可以直接決定它的狀態，接著是重點的，表單的送出事件：</p>
+
+<pre><code>$('#profile-form').on('submit', function () {
+    var $form = $(this),
+        data = $form.serialize();
+
+    validate($form).pipe(function () {
+        return upload($form.find('[name=avatar]'));
+    }).pipe(function (avatar_id) {
+        data.avatar_id = avatar_id;
+    }).pipe(function () {
+        return $.get('/api/key');
+    }).pipe(function (key) {
+        return encrypt(data, key);
+    }).pipe(function (crypt_data) {
+        return $.post('/api/profile', crypt_data);
+    }).done(function () {
+        //Do some response to user
+    });
+});
+</code></pre>
+
+<p>而除了這類的應用外，還有一個用途，就是處理複雜的動畫效果，在 COSCUP 的 queue 的那部分，最後的例子，要把 #A, #B, #C 照順序 fade out，其實也是可以用 pipe 來處理，而這要多虧 jQuery 的 <a href="http://api.jquery.com/promise/">.promise</a> 讓 <a href="http://api.jquery.com/queue/">queue</a> 和 deferred 可以接在一起，程式碼如下：</p>
+
+<pre><code>$('#A').fadeOut().promise().pipe(function () {
+    return $('#B').fadeOut().promise();
+}).pipe(function () {
+    return $('#C').fadeOut().promise();
+});
+</code></pre>
+
+<p>如果單純只是作動畫，那這樣寫並沒有比較好，不過要是你的動畫會和一些其他的 deferred 物件整合、串接，那這功能就很好用了。</p>
+
+<p>最後下個小結論，deferred 是用來代表非同步的變數，when 是平行處理非同步變數，也可以說是並聯的狀態，pipe 則是處理序列的非同步變數，也可以說是串聯的狀態，並聯和串聯當然可以在自己任意連接，所以就可以兼顧到各種狀況了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000707" baseName="coscup-2012-slides">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-20</b:date>
+				<b:time>00:51:42</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>COSCUP 2012 slides</b:title>
+			<b:content>
+				<b:summary> /* A_A */ /* A_A */ 說好的 deferred.pipe 文章應該明天就可以貼出了～...</b:summary>
+				<b:mainContent><p>
+<script async="async" class="speakerdeck-embed" data-id="502fb1b39a533c000203951d" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<p>
+<script async="async" class="speakerdeck-embed" data-id="503108129c9652000203d80a" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<p>說好的 deferred.pipe 文章應該明天就可以貼出了～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000704" baseName="side-effect-free-function">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-06</b:date>
+				<b:time>01:26:10</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Side Effect Free Function</b:title>
+			<b:content>
+				<b:summary> 在 Functional Programming 裡面，有個名詞叫做 pure function，要稱為 pure function 要滿足兩個條件： 不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。 執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。 哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。 再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。 要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用： var neko = { meow: function () { console.log(this); }...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/shereen84/2511071028/" title="俄羅斯娃娃"><img src="http://farm3.staticflickr.com/2087/2511071028_98ed598b90.jpg" width="500" height="333" alt="" /></a></p>
+
+<p>在 Functional Programming 裡面，有個名詞叫做 <strong>pure function</strong>，要稱為 pure function 要滿足兩個條件：</p>
+
+<ol>
+<li>不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。</li>
+<li>執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。</li>
+</ol>
+
+<p>哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。</p>
+
+<p>再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。</p>
+
+<p>要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用：</p>
+
+<pre><code>var neko = {
+    meow: function () {
+        console.log(this);
+    }
+};
+
+neko.meow(); // neko
+
+var func = neko.meow;
+func(); // window
+</code></pre>
+
+<p>上面的範例中，我定義了一個物件，並且給了它一個 function 作為 method，接著用兩種不同的方法來執行這個 method，然後會發現兩種執行方式會讓 function 內的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/this">this</a> 是不一樣的，而且很不巧的，this 在物件導向程式設計上，其實還蠻常會需要它的，因為你會需要存取該物件的屬性，最簡單的方法就是用 this 來代表該物件，設計上合理，語意上也合理，可是物件的 method 的執行方法的不同卻會讓它存取到不同的 this，結果就是會有意外的副作用，JavaScript 的這種特性其實也不全然是壞處，有種稱為 "borrowing method" （或是 <a href="https://github.com/shichuan/javascript-patterns/blob/master/code-reuse-patterns/borrowing-methods.html">code reuse</a>）的 pattern 就可以利用這個特性，現在最可靠的判斷某變數是否是陣列的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray#See_also">方法</a>，也是一種 "borrowing method" 的應用。</p>
+
+<p>要確保 this 不變，有不少方法，像是多包一層用 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">apply</a>、<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">call</a> 來執行，或是用新的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind">bind</a> 來指定好 this 的值，一些 JavaScript Library 也有對應的功能可以利用，像是 jQuery 的 <a href="http://api.jquery.com/jQuery.proxy/">proxy</a>，不過用 apply 或是 call 來執行其實效率上會比較差，所以我想介紹的是另一種方法，利用 JavaScript 的另外一種特性：<strong>closure</strong>，closure 指的是，在多層的 variable scope 環境下，內層的 scope 可以去存取外層 scope 的變數，一個簡單例子：</p>
+
+<pre><code>var Dog = function () {
+    var gender = 'male';
+
+    this.getGender = function () {
+        return gender;
+    };
+};
+
+dog = new Dog();
+dog.getGender(); // male
+</code></pre>
+
+<p>dog 這個物件會得到一個 method 叫做 getGender，而它會回傳在這個 method 外一層，也就是 dog 物件的建構函式裡面定義的 gender 變數，這個 method 並不會因為他的 scope 內沒有 gender 變數就噴出錯誤訊息，取而代之的，它會往上一層的 variable scope 找同樣名稱的變數，一直找到最外層，也就是 root 物件那層，以網頁應用的話，root 物件就是 window 了，如果還是找不到才有機會出現錯誤訊息，利用這個特性，就可以完全的避免使用到 this 這個關鍵字來建立物件，不使用 this 的話自然就沒有我上面說的副作用了，這樣該物件的 method 不管是怎樣執行的，都不會影響到內部去存取的變數。</p>
+
+<p>jQuery 裡面也有使用到這種技巧， jQuery 的 <a href="http://api.jquery.com/category/callbacks-object/">Callbacks</a> 就是這樣子設計的物件，所以你可以在使用 Callbacks 的 <a href="http://api.jquery.com/category/deferred-object/">Deferred</a> 裡面看到這樣的<a href="https://github.com/jquery/jquery/blob/master/src/deferred.js#L74">程式碼</a>：</p>
+
+<pre><code>deferred[ tuple[0] ] = list.fire;
+deferred[ tuple[0] + "With" ] = list.fireWith;
+</code></pre>
+
+<p>前面的 tuple[0] 是 'resolve', 'reject' 或 'notify'，而 list 就是相對應的 Callbacks 物件，這段程式碼實際上就是在定義 Deferred 物件的 resolve, resolveWith, reject, rejectWith... 等屬性，可以看到他的指派方法就是直接把 Callbacks 物件的 fire 和 fireWith method 借給 Deferred 物件，所以執行 Deferred.resolve 其實就等同於執行對應 Callbacks 物件的 fire 方法，而由於 Callback 內部沒有使用到 this ，所以這樣的使用完全是沒有問題的。</p>
+
+<p>這樣子的用法有什麼好處呢？我們可以先反過來看看要確保 this 正確的話，程式碼要改成怎樣：</p>
+
+<pre><code>deferred[ tuple[0] ] = function () {
+    list.fire();
+};
+deferred[ tuple[0] + "With" ] =  function () {
+    list.fireWith();
+};
+</code></pre>
+
+<p>這樣子寫可以確保 list 裡面方法的 this 就是 Callbacks 物件本身，不過其實這樣改會造成 jQuery 的 Chain Ability 爛掉，請不要真的去改。這樣的寫法有兩個缺點：</p>
+
+<ol>
+<li>多了一層 scope，雖然現在瀏覽器的 JavaScript 引擎讓 scope 層數和 performance 之間的影響比以前小很多了，不過還是能少就少。</li>
+<li>程式碼變得比較不漂亮，程式碼漂不漂亮和好不好讀、好不好維護息息相關。</li>
+</ol>
+
+<p>Side effect free 的 function 還有哪些地方可以用呢，除了像 jQuery 這樣供物件之間呼叫執行，最多的還是作為 callback function 了吧，不管是事件的 callback function 還是 XHR 的 callback function，都可以利用到這些好處，讓程式碼更好看，也減少 scope chain 的層數。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000701" baseName="module-amd-requirejs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-05-21</b:date>
+				<b:time>11:00:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Module, AMD, RequireJS</b:title>
+			<b:content>
+				<b:summary>今年第一屆 JSDC 的分享投影片上線哩～ /* A_A */...</b:summary>
+				<b:mainContent><p>今年第一屆 JSDC  的分享投影片上線哩～</p>
+
+<p>
+<script async="async" class="speakerdeck-embed" data-id="4fb7c12dd1170e0022022a54" data-ratio="1.3333333333333333" src="http://speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<!--p>
+    <iframe class="speakerdeck-iframe" style="border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border: 0px; background-color: transparent; margin: 0px; padding: 0px; width: 498px; height: 436px; background-position: initial initial; background-repeat: initial initial; " frameborder="0" src="//speakerdeck.com/embed/4fb7c12dd1170e0022022a54?" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+</p-->
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000699" baseName="javascript-essential-patt">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-04-16</b:date>
+				<b:time>21:58:43</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript Essential Patterns</b:title>
+			<b:content>
+				<b:summary> /* A_A */...</b:summary>
+				<b:mainContent><p>
+<script async="async" class="speakerdeck-embed" data-id="4f8b8e20b204f6002200912f" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000697" baseName="jqueryqueue">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-02-23</b:date>
+				<b:time>00:45:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery.queue</b:title>
+			<b:content>
+				<b:summary>jQuery 的 queue 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 animate ，這些特效的動作都會丟到一個叫 fx 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形： $('#id').fadeIn().fadeOut(); 也不用寫成 callback function 的方式： $('#id').fadeIn(function () { $(this).fadeOut(); }); 如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成： $('#id').fadeOut(function ()...</b:summary>
+				<b:mainContent><p><a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/queue/">queue</a> 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 <a href="http://api.jquery.com/animate/">animate</a> ，這些特效的動作都會丟到一個叫 <em>fx</em> 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形：</p>
+
+<pre><code>$('#id').fadeIn().fadeOut();
+</code></pre>
+
+<p>也不用寫成 callback function 的方式：</p>
+
+<pre><code>$('#id').fadeIn(function () {
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>但是好一點的作法應該善用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn();
+</code></pre>
+
+<p>這樣不知道看不看的出好在哪？讓我來把要做的動作複雜一點好了，我要淡出，改內容，淡入，然後接著右移 500px、加上 active 的 class，再移動回來，然後再把內容改變一次，用 callback 的寫法：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeIn(function () {
+        $(this).animate({left: '+=500'}, function () {
+            $(this).addClass('active');
+            $(this).animate({left: '-=500'}, function () {
+                $(this).html('even new content');
+            });
+        });
+    });
+});
+</code></pre>
+
+<p>如果用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn()
+    .animate({left: '+=500'})
+    .queue(function () {
+        $(this).addClass('active');
+        $(this).dequeue();
+    })
+    .animate({left: '-=500'})
+    .queue(function () {
+        $(this).html('even new content');
+        $(this).dequeue();
+    });
+</code></pre>
+
+<p>眼尖的人大概馬上就可以發現，用 queue 程式碼變多了！不過這其實不是重點，重點其實是縮排的階層減少了，而且使用 queue 的程式碼，看起來就是一個步驟接著一個步驟，和使用 callback 的階層的關係不一樣，而且除了看起來比較好之外其實還有不少優點，首先是如果要修改連續動作的順序或是內容，使用 queue 的顯然比較簡單，二是還可以配合 <a href="http://api.jquery.com/delay/">delay</a> 來讓動作之間有個暫停，三是可以用 clearQueue 來把整串動作清掉，用 callback 的話，因為執行到各個 animate 的時間不是同步的，所以用 <a href="http://api.jquery.com/clearQueue/">clearQueue</a> 可能會清不乾淨。所以在使用 jQuery 動畫效果時，正確的配合 queue 來做，會讓程式碼的可維護度提昇許多，大家都應該來用一下～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000695" baseName="module-amd-requirejs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-22</b:date>
+				<b:time>00:48:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Module, AMD, RequireJS</b:title>
+			<b:content>
+				<b:summary>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 Module Pattern，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下： function Person(age, gender) { var _age = age || 16, _gender = gender || 1; return { getAge: function () { return _age; } }; } 這個範例中，age 和 gender 就是私有屬性，在 Person...</b:summary>
+				<b:mainContent><p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
+
+<pre><code>function Person(age, gender) {
+    var _age = age || 16,
+        _gender = gender || 1;
+
+    return {
+        getAge: function () {
+            return _age;
+        }
+    };
+}
+</code></pre>
+
+<p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
+
+<p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
+
+<pre><code>define('moduleA', [dep1, dep2], function (export1, export2) {
+    //do something..
+    return {
+        method1: function () {},
+        method2: function () {},
+    };
+});
+</code></pre>
+
+<p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
+
+<p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000687" baseName="getelementbyid-not-on-element">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-07-31</b:date>
+				<b:time>11:46:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>getElementById </b:title>
+			<b:content>
+				<b:summary>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 getElementById 這個函式其實只有 document 物件 才有，element 物件 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 mootools 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。 於是我改用 jQuery ，更精確的一點說我是用 Sizzle，結果我發現用 find 狀況依舊，因為 Sizzle...</b:summary>
+				<b:mainContent><p>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 <a href="https://developer.mozilla.org/en/DOM/document.getElementById">getElementById</a> 這個函式其實只有 <a href="https://developer.mozilla.org/en/DOM/document#Methods">document 物件</a> 才有，<a href="https://developer.mozilla.org/en/DOM/element#Methods">element 物件</a> 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 <a href="http://mootools.net/">mootools</a> 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。</p>
+
+<p>於是我改用 <a href="http://jquery.com/">jQuery</a> ，更精確的一點說我是用 <a href="http://sizzlejs.com/">Sizzle</a>，結果我發現用 find 狀況依舊，因為 Sizzle 引擎有對選擇器做一些最佳化，如果看到是 <code>"#id"</code> 這樣的形式，就會直接用 <code>document.getElementById()</code> ，然後就悲劇重演了～</p>
+
+<p>結果目前這種狀況我是只能先用 <code>*#id</code> 這樣的寫法來給 Sizzle 處理，應該會去報 jQuery 和 mootools 的 bug。這問題我也有在 W3C <a href="http://www.w3.org/html/ig/zh/">中文興趣小組</a>的討論群組裡面 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Jul/0030.html">提出</a>，目前還沒空回文，有興趣的可以一起來參與討論啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

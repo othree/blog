@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2005-01">January 2005</b:listData>
+
+			<b:previous>
+				<b:mTitle>December 2004</b:mTitle>
+				<b:mDate>2004/12</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>February 2005</b:mTitle>
+				<b:mDate>2005/02</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000111" baseName="radio2select">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-25</b:date>
+				<b:time>12:41:57</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>radio模仿單選select</b:title>
+			<b:content>
+				<b:summary> 為什麼要用radio模仿select呢，因為select標籤也是沒辦法完全依照自己希望設定樣式的物件之一，舉例來說，他的邊框我就沒辦法設定。因此我一直在尋找方法來處理這個問題，直到想到之前的:checked應用的方法之後，才似乎出現了一絲署光，不過一直拖到最近才有座法的構想，沒想到實際做起來還是遇到不少問題，但還是做出了一個可以用的版本，雖然還有些問題。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2005/01/25/radio2select/radio2select.png" alt="radio2select抓圖" height="180" width="359" class="right" /></p>
+
+<p>為什麼要用<strong>radio模仿select</strong>呢，因為select標籤也是沒辦法完全依照自己希望設定樣式的物件之一，舉例來說，他的邊框我就沒辦法設定。因此我一直在尋找方法來處理這個問題，直到想到之前的<a href="http://blog.othree.net/log/2004/11/08/checked-example/">:checked應用</a>的方法之後，才似乎出現了一絲署光，不過一直拖到最近才有座法的構想，沒想到實際做起來還是遇到不少問題，但還是做出了一個<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select.html">可以用的版本</a>，雖然還有些問題。</p></b:mainContent>
+				<b:extendContent><p>接著我們來看看這是怎麼做到的，為了模仿select標籤，我們的要求有幾個：</p>
+
+
+<ol>
+<li>滑鼠移過去時選項會垂直展開（很可惜做不到點選式的）。</li>
+<li>展開時會浮在下方物件的上面，不會因此而把物件往下推。</li>
+<li>可以只用鍵盤做到選擇選項（親合力）。</li>
+<li>inline物件。</li>
+</ol>
+
+
+
+<p>首先簡單的把radio物件和label標籤列出來，如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-1.html">範例一</a>，接著我們要把radio隱藏起來，讓label垂直條列，隱藏radio用的方法和以前一樣，讓label垂直條列我是用<strong>float+clear</strong>的方法來達成，當然，還是要配合<strong>+</strong>選擇子，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.html">範例二</a>，其中radio的style需要特別說明一下：</p>
+
+
+
+<pre><code>input[type='radio']
+{
+	opacity: 0;
+	margin-bottom: -2em;
+	float: left;
+	clear: left;
+}
+</code></pre>
+
+
+
+<p>和之前的:checked應用不一樣，因為float和clear的設定，radio和label會一個一個交錯的疊在一起，看起來就像<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.1.html">範例二之一</a>一樣，接著設定margin-bottom為"-2em"，目的是為了讓radio物件下方的東西能和他完全重疊，就變成<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.2.html">範例二之二</a>的樣子，，在這個範例裡我把label的底色改成透明，好讓大家能看到現在radio的位置。接著設定opacity就可以讓radio隱藏起來。</p>
+
+<p>再來我們設定一下:hover和:checked的樣式，好讓我們能清楚判斷現在選項的狀況，這部分主要是選擇子的設定，就不詳細說明，詳見<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-3.html">範例三</a>。在來是要求之ㄧ的展開效果了，在範例一的HTML碼裡面可以看到radio和label外面有一層span標籤，基本上我們就是利用它來針對我們要處理的label標籤做選擇的，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-4.html">範例四</a>，這時候已經有展開動作了，但是還會把下面的東西推開，所以接下來我們就針對這點來做修改，而範例四中其他關於border的設定，是為了把兩個label間較粗的邊框改成和旁邊一樣細的邊框。</p>
+
+<p>要讓label可以浮在其他物件的上面，我們要更改的就是他的margin值，我的想法是把class=select的那個span物件的margin-bottom設成<strong>-100%</strong>，我們先來看看這樣子會發生什麼事，請見<a href="http://blog.othree.net/log/2006/05/11//log/2005/01/25/radio2select/radio2select-5.1.html">範例五之一</a>，可以見到，之前會影響到下方排版的問題已經解決了，但是select物件卻和後面的按鈕重疊在一起了，這是因為我的<strong>margin: -100%;</strong>的設定讓select物件在版面中不佔任何空間，所以本來應該排在後面的按鈕就往前移動了，為了解決這個問題，我必須被迫增加一層span標籤（這是我不滿的第一點），或許有人會說可以設定動態的margin值，讓它剛好有點高度，但是問題是我不知道會有幾個選項，如果選項數固定的話，確實可以這樣做，但是這樣對於未來的維護實在不方便，所以我不採用這個方法。<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-5.html">範例五</a>，是我多加一層span並且已經把該有的css設定都弄上了，結果完全OK，CSS <span class="caps">CODE</span>如下。</p>
+
+
+
+<pre><code>span.select&gt;span
+{
+	display: block;
+	margin-bottom: -100%;
+	position: relative;
+}
+span.select
+{
+	display: block;
+	float: left;
+	height: 1px;
+}
+</code></pre>
+
+
+
+
+<p>我指定外層的span的<strong>height=1px</strong>，然後之前對於select物件的設定全部給內層的span，結果就是一個1px高的block物件裡面包著一個0px高的block物件，外層是用來製造寬度，內層是用來讓它的高度等於0。於是四個目標達成了兩個，接著便是鍵盤的控制了。</p>
+
+<p>要讓鍵盤能操控，只要用上focus，讓tab鍵移動游標到該選項時使用者能知道，不過我再配合:after虛擬選擇器和content屬性質，增加一點提示，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-6.html">範例六</a>，這時大家可以試試看用tab和空白鍵更換選擇看看，不過唯一需要注意的是這裡新增的CSS值必須要放在範例四的<strong>span.select:hover label</strong>的設定前面，不然margin值會有錯誤，當然你也可以選擇不要修改margin，這樣要放哪都可以(吧XD)。</p>
+
+<p>終於，只剩下最後一個目標了，讓它是inline物件，放在它後面的東西看起來沒問題，但是放在它前面的呢？就先來看看會怎樣吧，<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-7.1.html">範例七之ㄧ</a>，果然，變亂了...orz，這個問題，我想了很久要如何解決，最後，只能讓它前面的文字也是<strong>float:left;</strong>（這是第二個我不滿的地方），於是我新增了一個class叫label，<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-7.html">範例七</a>。</p>
+
+<p>終於，四個目標都達到了，完整的HTML和CSS見<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-final.html">最後一個範例</a>，雖然還有些覺得還可以改進的地方，而且Opera會亂掉，不過因為用了一些蠻有趣的技巧，所以還是把它寫出來了，延伸的用法，可以看看<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-show.html">應用</a>。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000110" baseName="keroro-shojun">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-23</b:date>
+				<b:time>12:40:29</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>ケロロ將軍</b:title>
+			<b:content>
+				<b:summary> 恭賀ケロロ將軍榮獲第50屆小學館漫畫賞兒童部門，小學館漫畫賞，和抓圖紀念 ，最後附上吉崎觀音的網站XD。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2005/01/23/KEROROshojun/IMAGES/keroro.syogun.png" class="left"><img src="http://blog.othree.net/log/2005/01/23/KEROROshojun/keroro.syogun-thumb.png" alt="吉崎觀音的感謝圖" /></a></p>
+
+<p class="left">恭賀<strong>ケロロ將軍</strong>榮獲第50屆小學館漫畫賞兒童部門，<a href="http://blog.othree.nethttp://www.shogakukan.co.jp/mangasho/">小學館漫畫賞</a>，和<a href="http://blog.othree.net/log/2005/01/23/KEROROshojun/shogakukan.mangasho.png">抓圖紀念</a> ，最後附上<a href="http://mnet.nicomi.com/index2.html">吉崎觀音的網站</a>XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000109" baseName="the-eye-speaks">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-22</b:date>
+				<b:time>23:22:59</b:time>
+			</b:datetime>
+			<b:category>others</b:category>
+			<b:title>讓眼睛說話</b:title>
+			<b:content>
+				<b:summary>讓眼睛說話，藉由研究人眼睛的動態，來判斷人看網站或是報章雜誌所注目的地方和不同的設計會造成什麼效果，蠻有趣的實驗，而且其結果對於網站的框架設計很有幫助^^，上面的聯結是簡要的中文翻譯，詳細內容要上英文的官方網站：Eyetrack III。...</b:summary>
+				<b:mainContent><p><a href="http://www.brainnew.com.tw/Article/na2004/n_111004.asp">讓眼睛說話</a>，藉由研究人眼睛的動態，來判斷人看網站或是報章雜誌所注目的地方和不同的設計會造成什麼效果，蠻有趣的實驗，而且其結果對於網站的框架設計很有幫助^^，上面的聯結是簡要的中文翻譯，詳細內容要上英文的官方網站：<a href="http://www.poynterextra.org/eyetrack2004/index.htm">Eyetrack <span class="caps">III</span></a>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000108" baseName="css-design">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-22</b:date>
+				<b:time>00:14:11</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS設計理念?</b:title>
+			<b:content>
+				<b:summary>最後一份報告也交出了，接下來就要開始準備做計劃了，其實這陣子對一些CSS+HTML的用法改變不少，最糟糕的是我開始不太想理會IE上的狀況了，一開始只是我資料庫的期末計畫（S5後台，很陽春，而且還沒上傳檔案的功能），因為時間緊迫所以就只考慮Firefox，沒想到現在，我的Blog的Style在IE下會出現錯誤的問題我都懶的修正了。...</b:summary>
+				<b:mainContent><p>最後一份報告也交出了，接下來就要開始準備做計劃了，其實這陣子對一些CSS+HTML的用法改變不少，最糟糕的是我開始不太想理會IE上的狀況了，一開始只是我資料庫的期末計畫（<a href="http://xd.othree.net/s5backstage/index.php">S5後台</a>，很陽春，而且還沒上傳檔案的功能），因為時間緊迫所以就只考慮Firefox，沒想到現在，我的Blog的Style在IE下會出現錯誤的問題我都懶的修正了。</p></b:mainContent>
+				<b:extendContent><p>最早的我也是只會寫IE only的網頁，因為個性的關係，就特別去找了HTML和CSS的規格書在研究，也不是那時候就通了，了解標準的重要，只是因為會想要從根本開始自己弄，網路上相關的教學資料也一直在找，不過和標準有關的中文資料實在很少，只能一直使用試誤法和走旁門的方式讓IE和Firefox看起來盡量一樣，於是我第一個轉型後的<a href="http://www.prowaremedia.com.tw/forum/">成品</a>出來了，到最後我還是必須在Firefox多加兩個CSS設定，而且現在來看應該還可以減少不少標籤。</p>
+
+<p>之後，我就在幾個有限的英文網站（其中我記憶最深刻的是<a href="http://www.mezzoblue.com/">mezzoblue</a>，我覺得Dave Shea的網站做的真是超棒）中游走，某一天不小心逛到了<a href="http://ccca.nctu.edu.tw/~hlb/articles/">hlb</a>的<a href="http://ccca.nctu.edu.tw/~hlb/tavi/WelcomeVisitors">WikiWay</a>，我才發現原來台灣也有一群人有在為了網路標準而努力。在hlb的blog看到<a href="http://www.zeldman.com/dwws/">Designing with Web Standard</a>（中譯:<a href="http://www.flag.com.tw/book_info/F8545.htm">跨平台網頁設計--使用Web標準技術</a>，旗標代理）這本書的一點介紹，我就去買了，現在實在想不起來我那時候會花上17xx買一本還不確定內容是什麼的原文書來看，不過，我還真是蠻慶幸我先買了這本書來看，事實上我覺得有意專職設計網頁的人都該看看這本書，我還會另外發一篇文章來介紹這本書。</p>
+
+<p>邊看Designing with Web Standard，我邊設計自己的部落格樣板，還參加了幾場部落格隨便聚（目前停止舉辦了的樣子），不過那時候我卻覺得網路上似乎沒地方討論遵循網頁標準的問題，#elixus那邊的人其實不適合討論技術的東西（我覺得那邊人文思想比較重，其實也蠻讓我羨慕的啊XD），hlb又去當兵，他的部落格和網站都被Spam強烈入侵@_@。不知又晃蕩多久，才發現<a href="http://moztw.org/">moztw</a>的討論區有（對不起我都用英文版的），雖然主題稍微和我的目標不一樣，不過還是OK啦，之後也順便參加了mozParty和Firefox 1.0發表的研討會，對我來說都是不錯的體驗，其中，印象最深刻的是研討會的第二場葉平教授的演講。</p>
+
+<p>嚴格說來，讓我印象深刻的是Tim Berners-Lee（WWW和W3C的創始人）的理念，他認為WWW不該為任意人或任意公司所獨占，應該是大家都平等共享的，所以網路標準才會這麼重要。我覺得他<a href="http://www.w3.org/2004/07/timbl_knighted">受封</a>真的是受之無餽。而在那時候，我製作網頁都還是會努力讓IE和Firefox瀏覽都沒問題的，沒想到今天我看到IE那邊顯示上有問題卻不想理會它。</p>
+
+<p>我認為，IE造成標準混亂，但是錯不在使用IE的使用者，所以我會讓用IE來我的網頁的人也能正確的看到我想展示的內容（包含style），當然也可以像<a href="http://virtuelvis.com/">Virtuelvis</a>那樣，<a href="http://virtuelvis.com/archives/2004/12/makeover">讓IE使用者的style簡化</a>並附上說明，建議使用者使用其他瀏覽器，不過很可惜Virtuelvis現在用IE看還是幾乎沒樣式。我認為只是有些效果出不來，而且那些效果沒出現也不會造成排版錯亂或影響閱讀，但不是完全沒有style，這樣的設計方式應該是目前最適合的，在下一代IE出來前我應該都會照著這個原則做設計，至於下一代IE會是怎麼樣，會對WWW和我的設計理念產生怎樣的影響，那都是到時候在說了。</p>
+
+<p>這篇文章從開始到打完隔了將近一天，而在文章完成時，IE上大部分的顯示問題我都已經修正了，不過有一個小問題還找不到原因。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000107" baseName="rel-nofollow">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-21</b:date>
+				<b:time>23:28:53</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>rel=&quot;nofollow&quot;</b:title>
+			<b:content>
+				<b:summary>Fight to Spam，幾家大型Blog系統供應公司和搜尋軟引擎公司合作（包括微軟、Google、Yahoo、SixApart...etc）對抗Spam，只要在迴響裡面的連結加上「rel="nofollow"」的屬性值，則該連結的網頁不會因為有人連過去而提升PageRank，降低Spam的效果，藉此達到防堵Spam的功能，其中MT的Plug-in在此。 Google Blog的文章有更詳細的說明，我是對各家公司此次合作有很高度的期待，只不過我還沒裝上該plug-in^^b（快好了，快好了）。...</b:summary>
+				<b:mainContent><p>Fight to Spam，幾家大型Blog系統供應公司和搜尋軟引擎公司合作（包括微軟、Google、Yahoo、SixApart...etc）對抗Spam，只要在迴響裡面的連結加上「<strong>rel="nofollow"</strong>」的屬性值，則該連結的網頁不會因為有人連過去而提升PageRank，降低Spam的效果，藉此達到防堵Spam的功能，其中<a href="http://www.movabletype.org/news/2005/01/movable_type_nofollow_p.shtml">MT的Plug-in在此</a>。</p>
+
+<p><a href="http://www.google.com/googleblog/2005/01/preventing-comment-spam.html">Google Blog的文章</a>有更詳細的說明，我是對各家公司此次合作有很高度的期待，只不過我還沒裝上該plug-in^^b（快好了，快好了）。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000106" baseName="ibook-g5">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-18</b:date>
+				<b:time>23:04:44</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>iBook G5、PowerBook G5</b:title>
+			<b:content>
+				<b:summary>今年第二季會上市的樣子，在這則新聞下面的地方看到的，不過沒圖片和介紹很可惜:P，總之，這一切都符合我的計畫，接下來就等研究的獎學金啦。...</b:summary>
+				<b:mainContent><p>今年第二季會上市的樣子，在<a href="http://www.digitimes.com/systems/a20050114A7040.html">這則新聞</a>下面的地方看到的，不過沒圖片和介紹很可惜:P，總之，這一切都符合我的計畫，接下來就等研究的獎學金啦。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000105" baseName="who-created-css">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-14</b:date>
+				<b:time>23:28:34</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Who created CSS? CSS Early History</b:title>
+			<b:content>
+				<b:summary>Who created CSS? CSS Early History，蠻有趣的一篇文章，介紹了一些CSS正式問世前的style language，對於CSS的學習沒什麼幫助就是^^b。在柏強的城市歷險記看到的。...</b:summary>
+				<b:mainContent><p><a href="http://www.virtuelvis.com/archives/473.html">Who created <span class="caps">CSS</span>? <span class="caps">CSS</span> Early History</a>，蠻有趣的一篇文章，介紹了一些CSS正式問世前的style language，對於CSS的學習沒什麼幫助就是^^b。在<a href="http://leolo.ath.cx/~bobchao/">柏強的城市歷險記</a>看到的。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000104" baseName="wantsu-blog">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-14</b:date>
+				<b:time>16:31:34</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>ウホ！だめのいい男日記本</b:title>
+			<b:content>
+				<b:summary>ウホ！だめのいい男日記本是Wantsu的blog，主要都是ACG的內容，最近新開張，有興趣的人可以去逛逛喔^^。...</b:summary>
+				<b:mainContent><p><a href="http://blog.livedoor.jp/wantsu/">ウホ！だめのいい男日記本</a>是Wantsu的blog，主要都是ACG的內容，最近新開張，有興趣的人可以去逛逛喔^^。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000103" baseName="ipod-shuffle">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-14</b:date>
+				<b:time>14:12:23</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>iPod Shuffle</b:title>
+			<b:content>
+				<b:summary> Apple的官方網頁、日本watch impress的介紹、台灣蘋果的官方網頁。 購入預訂，不過512MB和1GB價錢差了約快一倍耶@_@，然後台灣蘋果還沒看到消息，台灣蘋果在新產品的推出速度上似乎都是慢一步，真是有點小不滿，不過我到目前還沒買過蘋果的東西啦XD。 蘋果還同時發布了Mac mini(台灣頻果官方網頁)的消息，看起來就像是超小的準系統，不過我打算存錢買它的laptop，所以這台就不太考慮了，而且比起來我比較喜歡iMac G5 :P，其實我一直很好奇Apple的藍芽無線滑鼠，要是附近有兩台以上有藍芽的Mac都把它裝上去會變成怎樣，好像會互相干擾耶@_@，牽一髮而動全身啊。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2005/01/14/iPodShuffle//images/ipodsf.jpg" class="right"><img src="http://blog.othree.net/log/2005/01/14/iPodShuffle/ipodsf-thumb.jpg" alt="iPod Shuffle是長條型的" height="249" width="200" /></a></p>
+
+<p><a href="http://www.apple.com/ipodshuffle/">Apple的官方網頁</a>、<a href="http://www.watch.impress.co.jp/av/docs/20050112/apple1.htm">日本watch impress的介紹</a>、<a href="http://www.apple.com.tw/ipodshuffle/">台灣蘋果的官方網頁</a>。</p>
+
+<p>購入預訂，不過512MB和1GB價錢差了約快一倍耶@_@，然後台灣蘋果還沒看到消息，台灣蘋果在新產品的推出速度上似乎都是慢一步，真是有點小不滿，不過我到目前還沒買過蘋果的東西啦XD。</p>
+
+<p>蘋果還同時發布了<a href="http://www.apple.com/macmini/">Mac mini</a>(<a href="http://www.apple.com.tw/macmini/">台灣頻果官方網頁</a>)的消息，看起來就像是超小的準系統，不過我打算存錢買它的laptop，所以這台就不太考慮了，而且比起來我比較喜歡iMac G5 :P，其實我一直很好奇Apple的藍芽無線滑鼠，要是附近有兩台以上有藍芽的Mac都把它裝上去會變成怎樣，好像會互相干擾耶@_@，牽一髮而動全身啊。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="8"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000102" baseName="ostan-fan-book">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-09</b:date>
+				<b:time>11:00:24</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>OS娘 FAN BOOK</b:title>
+			<b:content>
+				<b:summary></b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2005/01/09/OStanFanBook/os-tan.jpg" alt="OS娘 TAN BOOK宣傳DM" height="477" width="350" /></p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000101" baseName="visual-style-in-xp">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-01-07</b:date>
+				<b:time>10:38:03</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>更換Windows XP的Visual Style</b:title>
+			<b:content>
+				<b:summary>這個style，而且用了很久。最近則是把研究室的電腦和家裡的電腦換成不同的tyle，研究室的一開始是用黑色的Longhorn Alternative GuiKit 雖然不是第一次了，不過這兩天在期末的壓力幫助之下，我又花了不少時間再找新的visual style，我本來用的是wurp，因為是kit，所以其實它裡面不止msstyle，還有很多程式用的skin，其中比較重要的是Y'z toolbar用的skin，要配合Y'z toolbar這套主題才算完整。 不過黑色的用一段時間發現一些問題，因為底色是黑的，所以字是白的，有些程式自己有skin，底色剛好是白的，結果就什麽都看不到了，只好換成白色的，當然白的也很漂亮，只是我比較喜歡黑的^^b。 至於家裡則是用HmmXP 這個Style，它基本的設計和傳統的windows介面很像，但是就是不一樣，看起來漂亮多了，而且有很多色調可以選擇，不顧我還是選傳統的藍色啦^^。 這些Style我都是從neowin的討論區（ Customizing Windows &gt; Customizing Windows XP &gt; Completed Visual Styles）找的，其實還有一些專站，不過品質差異都很大，所以我後來是在這裡找，至於其他的專站，有空我在列出來吧。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20040807.png" class="right clear"><img src="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20040807-thumb.png" alt="wurp是以灰色為主的style" height="192" width="256" /></a>這個style，而且用了很久。最近則是把研究室的電腦和家裡的電腦換成不同的tyle，研究室的一開始是用黑色的<a href="http://www.enhancedlabs.com/main/lha/">Longhorn Alternative GuiKit</a><br />
+<a href="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050103.png" class="right clear"><img src="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050103-thumb.png" alt="Longhorn Alternative GuiKit Dark，很有質感的黑色style" height="192" width="256" /></a>
+<a href="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050107.png" class="right clear"><img src="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050107-thumb.png" alt="很像傳統windows介面的style" height="192" width="256" /></a>
+<a href="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050104.png" class="right clear"><img src="http://blog.othree.net/log/2005/01/07/visualStyleInXP/desktop20050104-thumb.png" alt="Longhorn Alternative GuiKit Light，白的也很漂亮style" height="192" width="256" /></a></p>
+
+<p>雖然不是第一次了，不過這兩天在期末的壓力幫助之下，我又花了不少時間再找新的visual style，我本來用的是wurp，因為是kit，所以其實它裡面不止msstyle，還有很多程式用的skin，其中比較重要的是Y'z toolbar用的skin，要配合Y'z toolbar這套主題才算完整。</p>
+
+<p>不過黑色的用一段時間發現一些問題，因為底色是黑的，所以字是白的，有些程式自己有skin，底色剛好是白的，結果就什麽都看不到了，只好換成白色的，當然白的也很漂亮，只是我比較喜歡黑的^^b。</p>
+
+<p>至於家裡則是用HmmXP  這個Style，它基本的設計和傳統的windows介面很像，但是就是不一樣，看起來漂亮多了，而且有很多色調可以選擇，不顧我還是選傳統的藍色啦^^。</p>
+
+<p>這些Style我都是從<a href="http://www.neowin.net/">neowin</a>的討論區（ Customizing Windows &gt; Customizing Windows XP &gt; Completed Visual Styles）找的，其實還有一些專站，不過品質差異都很大，所以我後來是在這裡找，至於其他的專站，有空我在列出來吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

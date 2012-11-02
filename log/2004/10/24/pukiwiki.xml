@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000080" baseName="pukiwiki">PukiWiki</b:listData>
+
+			<b:previous>
+				<b:mTitle>本站CSS樣板的問題</b:mTitle>
+				<b:mDate>2004-10-16</b:mDate>
+				<b:mBase>css-bug</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>ptt.cc @ Google</b:mTitle>
+				<b:mDate>2004-10-24</b:mDate>
+				<b:mBase>ptt-at-google</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000080" baseName="pukiwiki">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-10-24</b:date>
+				<b:time>16:24:41</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>PukiWiki</b:title>
+			<b:content>
+				<b:summary>PukiWiki，這幾天都在努力想要架設這個wiki系統，都是在解決編碼的問題，就這樣花掉了至少兩個晚上，而且都熬夜到兩三點。雖然已經有人做了繁體中文版，不過他稍微改了些東西我不是很喜歡，所以決定自己動手弄一次看看。...</b:summary>
+				<b:mainContent><p><a href="http://pukiwiki.org/">PukiWiki</a>，這幾天都在努力想要架設這個wiki系統，都是在解決編碼的問題，就這樣花掉了至少兩個晚上，而且都熬夜到兩三點。雖然已經有人做了<a href="http://pukiwiki.idv.tw/">繁體中文版</a>，不過他稍微改了些東西我不是很喜歡，所以決定自己動手弄一次看看。</p></b:mainContent>
+				<b:extendContent><p>PukiWiki的語言編碼是EUC-JP，為了要中文化，我要把它的檔案全部轉成UTF-8，並且把程式碼內關於輸出encoding設定也修成UTF-8，改設定是小問題，到是轉碼花了我不少時間。一開始先找了<a href="http://alf-li.tripod.com/c_convertz.html">ConvertZ</a>這個免費的內碼轉換工具，用起來很順利，一下子就轉換完了，不過跑起來卻有問題，會有找不到文章的狀況發生，試了兩三次都是這樣，我只好去PukiWiki的網站找資料，結果在<a href="http://pukiwiki.sourceforge.jp/dev/">DevPukiWiki</a>找到一篇關於把<a href="http://pukiwiki.sourceforge.jp/dev/?cmd=read&amp;page=PukiWiki%2F1.4%2FUTF-8%B2%BD&amp;word=utf-8">PukiWiki <span class="caps">UTF</span>-8化</a>的文章，照著裡面的方法，不過convert程式就是不跑，問題似乎是出在密碼不正確，改了幾次管理密碼也沒用，最後是把檢查密碼那段程式碼直接刪掉才跑成功的，結果，「†」變成了「&amp;dagger;」，看來只是單純的轉碼問題，想說找到設定的地方改一下就好了，結果在找的時候發現轉碼程式似乎沒有把全部的檔案都轉成UTF-8，於是我決定還是用其他程式手動轉好了。</p>
+
+<p>找不到文章的問題，也差不多在這時候發現原因了，因為資料檔的檔名是照標題的字碼決定的，而UTF-8的字碼比EUC的還長，也就造成了檔名不一樣的狀況，而我手動用其他程式轉碼會忽略這個步驟，結果就會找不到該篇文章，這個問題是ConvertZ解決不了的，必須要靠PukiWiki的開發團隊提供的轉碼程式才有辦法處理，最後，我終於想到處理的方法了。先用ConvertZ轉一份出來，再用PukiWikiDev提供的轉碼程式轉一份，最後把PikiWikiDev轉出來的資料檔案移到ConvertZ轉出來的那份裡面，結果，成功了，完全OK，接下來就是一些頁面和介面中文化的步驟了，現在架出來的位置在<a href="http://wiki.othree.net">O3noWIKI</a>，以後會被我拿來當雜記用的地方吧。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/64">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

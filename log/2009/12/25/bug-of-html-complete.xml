@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000599" baseName="bug-of-html-complete">htmlcomplete#CompleteTags 的 bug</b:listData>
+
+			<b:previous>
+				<b:mTitle>Zen Coding on vim</b:mTitle>
+				<b:mDate>2009-12-25</b:mDate>
+				<b:mBase>zen-coding-on-vim</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>JavaScript on vim</b:mTitle>
+				<b:mDate>2009-12-26</b:mDate>
+				<b:mBase>javascript-on-vim</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000599" baseName="bug-of-html-complete">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-25</b:date>
+				<b:time>23:58:29</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>htmlcomplete#CompleteTags 的 bug</b:title>
+			<b:content>
+				<b:summary>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 autocomplpop 時，游標放到 class=" or id=" 這兩個字串後會有錯誤訊息 （line 304, E121: Undefined variable :classlines）。網路上找到有人 回報給 acp.vim 作者 ，日本那邊也有人 hack acp.vim 來避開這個問題 ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。...</b:summary>
+				<b:mainContent><p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p></b:mainContent>
+				<b:extendContent><p>這個錯誤訊息的發生條件其實很特別，首先 html 的 omnifunc 要設成 htmlcomplete#CompleteTags，就是說你的 vimrc 裡面應該會有一行長成</p>
+
+
+
+<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
+
+
+
+<p>再來你正在編輯的 html 文件裡面要有 &lt;link rel="stylesheet" /&gt; 這種外連 <span class="caps">CSS </span>檔案的標籤，而關鍵是 href 指到的位置沒有一個可以用的檔案（不存在、無權限讀取都可），然後接下來你在 class=" 或是 id=" 的位置裡面執行了 omni complete (&lt;C-x&gt;, &lt;C-o&gt;) ，當然如果有裝 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 的話，這時就會自動幫你跑（2.7 版以後），錯誤訊息也就會自動冒出。</p>
+
+<p>問題發生的原因是，這個 html 自動完成函式會去檢查你的 <span class="caps">CSS </span>，包括外連的檔案，去裡面把 class name, id name 抽出送回作自動完成的選項，不過他有一個動作應該是要檔案可讀才要跑的，卻放到 if 的外面，所以只要把它移過去就好了，錯誤那行 code 是 310 行：</p>
+
+
+
+<pre><code>308        endif
+309    &quot; We gathered classes definitions from all external files
+310    let classes += classlines
+</code></pre>
+
+
+
+<p>把它移到 308 行的 endif 前面就好了：</p>
+
+
+
+<pre><code>308        &quot; We gathered classes definitions from all external files
+309        let classes += classlines
+310    endif
+</code></pre></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="105002" entryID="000599">
+					<b:author>
+						<b:authorName>yulei</b:authorName>
+						<b:authorEmail>yuleicc@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-03-30</b:date>
+						<b:time>18:27:24</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>真的不错， 我也是遇到在这个问题  ，我按照你的方法改了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111798" entryID="000599">
+					<b:author>
+						<b:authorName>brooky</b:authorName>
+						<b:authorEmail>cchaha.yen@gmai.com</b:authorEmail>
+						<b:authorUrl>http://blog.brooky.tw</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-07</b:date>
+						<b:time>15:49:47</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>這個問題困擾了我好一陣子，今天正好看到您的解答，謝謝分享 :)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/597">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

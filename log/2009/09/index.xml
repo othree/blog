@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2009-09">September 2009</b:listData>
+
+			<b:previous>
+				<b:mTitle>August 2009</b:mTitle>
+				<b:mDate>2009/08</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>December 2009</b:mTitle>
+				<b:mDate>2009/12</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000595" baseName="json2js-and-tojson">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-30</b:date>
+				<b:time>20:51:45</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>json2.js 和 toJSON()</b:title>
+			<b:content>
+				<b:summary>對 JSON 有認識加上有寫過 JavaScript 來處理 JSON 的人或許都知道 json2.js 這個 Douglas Crockford 寫的 JSON 處理器，他可以安全的轉換 JSON 和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 {"a":3} 會被轉成 "{\"a\":3}" ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 一個 function 來包 json2.js，用法可以參考 test 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function...</b:summary>
+				<b:mainContent><p>對 <a href="http://www.json.org/"><span class="caps">JSON</span></a> 有認識加上有寫過 JavaScript 來處理 <span class="caps">JSON </span>的人或許都知道 <a href="http://www.json.org/js.html">json2.js</a> 這個 <a href="http://www.crockford.com/">Douglas Crockford</a> 寫的 <span class="caps">JSON </span>處理器，他可以安全的轉換 <span class="caps">JSON </span>和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 {"a":3} 會被轉成 "{\"a\":3}" ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 <a href="http://orz.othree.net/lib/tojson/tojson.js">一個 function</a> 來包 json2.js，用法可以參考 <a href="http://orz.othree.net/lib/tojson/test.html">test</a> 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function 就會得到 <span class="caps">JSON </span>格式字串，當然子物件有 toJSON 的話就會先用它，沒的話才會用 <span class="caps">JSON.</span>stringify 。</p>
+
+<p>不過使用上有個小小的安全性問題要注意，我是假設 toJSON 傳回的字串是安全的，當然這樣假設很危險，所以我自己的物件實作 toJSON 時也是把想要傳回的物件先建立起來，然後丟給 <span class="caps">JSON.</span>stringify ，如果考慮到自己的子物件也有實作 toJSON 的話，那丟給我寫的 toJSON 也是可以的。</p>
+
+<p class="update">查了一下  <a href="http://developer.yahoo.com/yui/json/#toJSON"><span class="caps">YUI </span>的文件</a> ，發現原來 <span class="caps">JSON2.</span>js 的設計裡，物件自己作 toJSON 的方法是傳新的物件，而不是傳已經轉成 string 的。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000593" baseName="screen-256colors">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-21</b:date>
+				<b:time>11:26:03</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Screen 支援 256 色</b:title>
+			<b:content>
+				<b:summary>之前把 256色終端機環境弄好後 一直還有個問題，就是跑 screen 的話，screen 裡面的 bash 還是沒有 256 色，本來一直以為是 $TERM 和設定的問題，結果剛剛又花時間找資料才發現是我編譯 screen 的時候根本沒開256色的支援編譯前要先 ./configure --enable-colors256...</b:summary>
+				<b:mainContent><p>之前把 <a href="http://blog.othree.net/log/2008/10/19/256-color-terminal/">256色終端機環境弄好後</a> 一直還有個問題，就是跑 screen 的話，screen 裡面的 bash 還是沒有 256 色，本來一直以為是 $TERM 和設定的問題，結果剛剛又花時間找資料才發現是我編譯 screen 的時候根本沒開256色的支援編譯前要先 ./configure --enable-colors256</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000592" baseName="new-camera">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-17</b:date>
+				<b:time>23:32:37</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>新相機</b:title>
+			<b:content>
+				<b:summary> 前陣子入手我的新相機了，我的第一台數位相機是 Fujifilm F30，不過某天弄丟了，事後回想應該是拿出來放忘了放回去，F30 不見後就趕快買了 Fujifilm F100，基本上就當傻瓜相機開自動模式用，手上大部分的照片也都是用它拍的，直到最近才更新到 Olympus E-P1，其實我一直都蠻喜歡亂拍照的，對於玩相機也是一直小有興趣，不過都沒有真的踏進來，一來是因為覺得數位單眼都太大台了，二來是應該很花錢，買了 E-P1 後，真的，很花錢，我本來只是買一棵 14-42 鏡頭組，不過沒多久又買了 17mm 定焦鏡， FL-20 閃燈，還有 Panasonic 的 14-45 kit 鏡，算了一下，多花的錢已經快要可以買第二台了，不過買了這種價位的機器才真的會開始研究和思考怎樣拍的照片才會比較好，順便，當然一定要玩的就是大光圈淺景深啦～～...</b:summary>
+				<b:mainContent><p><a href="http://www.flickr.com/photos/othree/3929252762/" title="Flickr 上 othree 的 My E-P1"><img src="http://farm4.static.flickr.com/3509/3929252762_abc6883575.jpg" width="500" height="375" alt="My E-P1" /></a></p>
+
+<p>前陣子入手我的新相機了，我的第一台數位相機是 Fujifilm <span class="caps">F30</span>，不過某天弄丟了，事後回想應該是拿出來放忘了放回去，F30 不見後就趕快買了 Fujifilm <span class="caps">F100</span>，基本上就當傻瓜相機開自動模式用，手上大部分的照片也都是用它拍的，直到最近才更新到 Olympus E-P1，其實我一直都蠻喜歡亂拍照的，對於玩相機也是一直小有興趣，不過都沒有真的踏進來，一來是因為覺得數位單眼都太大台了，二來是應該很花錢，買了 E-P1 後，真的，很花錢，我本來只是買一棵 14-42 鏡頭組，不過沒多久又買了 17mm 定焦鏡， FL-20 閃燈，還有 Panasonic 的 14-45 kit 鏡，算了一下，多花的錢已經快要可以買第二台了，不過買了這種價位的機器才真的會開始研究和思考怎樣拍的照片才會比較好，順便，當然一定要玩的就是大光圈淺景深啦～～</p></b:mainContent>
+				<b:extendContent><p><a href="http://www.flickr.com/photos/othree/3720559299/" title="Flickr 上 othree 的 Gothic Saber"><img src="http://farm3.static.flickr.com/2550/3720559299_f70c714f3d.jpg" width="375" height="500" alt="Gothic Saber" /></a></p>
+
+<p>很幸運的，我爸有台 Canon 的 FD 系統底片相機，兩顆鏡頭都可以轉接到 E-P1 ，其中 50mm 這棵光圈有到 1.8 ，1開頭超爽的，而且手動對焦也別有樂趣，只是轉接起來太大了，雖然如此，COSCUP 時我還是用 17mm 和這棵 50mm 拍完兩天，現在想想還真是拼，以後應該會買轉接環轉接 Leica M 接環的手動鏡吧，活動的話還是希望弄顆標準焦段大光圈的鏡頭來用，而且仔細思考過我最常拍的是室內活動，加上我又不喜歡開閃燈閃人，這種情況還真是需要大光圈啊（看著 f0.95 的鏡頭照片）。</p>
+
+<p><a href="http://www.flickr.com/photos/othree/3701494464/" title="Flickr 上 othree 的 50mm f1.8"><img src="http://farm4.static.flickr.com/3604/3701494464_3e85cc24f5.jpg" width="500" height="375" alt="50mm f1.8" /></a></p>
+
+<p><a href="http://www.flickr.com/photos/othree/3823545174/" title="Flickr 上 othree 的 我宅，我色，我舒服"><img src="http://farm4.static.flickr.com/3590/3823545174_469a19f2eb.jpg" width="500" height="375" alt="我宅，我色，我舒服" /></a></p>
+
+<p>總之，雖然有些缺點， E-P1 目前用的還蠻舒服的，我也踏上了一條新的學習（灑錢）道路，像是閃燈的使用、腳架配小光圈等等我都還很不熟悉，雖然也不強求，不過還是希望能夠慢慢有些成長和進步，希望以後拍的照片能夠更賞心悅目。</p>
+
+<p>btw. 我以前不太拍人的，不過最近倒是蠻喜歡拍人笑的 :)</p>
+
+<p><a href="http://www.flickr.com/photos/othree/3823969736/" title="Flickr 上 othree 的 P8151261"><img src="http://farm3.static.flickr.com/2579/3823969736_7997f1d021.jpg" width="375" height="500" alt="P8151261" /></a></p>
+
+<p><a href="http://www.flickr.com/photos/othree/3826791148/" title="Flickr 上 othree 的 P8161463"><img src="http://farm3.static.flickr.com/2613/3826791148_01706d1b76.jpg" width="500" height="375" alt="P8161463" /></a></p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000591" baseName="vim-js-yuicompressor">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-08</b:date>
+				<b:time>22:57:51</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim 儲存完 JavaScript 檔案後自動用 yuicompressor</b:title>
+			<b:content>
+				<b:summary>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了 function Js_css_compress () let cwd = expand('&lt;afile&gt;:p:h') let nam = expand('&lt;afile&gt;:t:r') let ext = expand('&lt;afile&gt;:e') if -1 == match(nam, &quot;[\._]src$&quot;) let minfname = nam.&quot;.min.&quot;.ext else let minfname =...</b:summary>
+				<b:mainContent><p>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了</p>
+
+
+
+<pre><code>function Js_css_compress ()
+    let cwd = expand('&lt;afile&gt;:p:h')
+    let nam = expand('&lt;afile&gt;:t:r')
+    let ext = expand('&lt;afile&gt;:e')
+    if -1 == match(nam, &quot;[\._]src$&quot;)
+        let minfname = nam.&quot;.min.&quot;.ext
+    else
+        let minfname = substitute(nam, &quot;[\._]src$&quot;, &quot;&quot;, &quot;g&quot;).&quot;.&quot;.ext
+    endif
+    if ext == 'less'
+        if executable('lessc')
+            cal system( 'lessc '.cwd.'/'.nam.'.'.ext.' &amp;')
+        endif
+    else
+        if filewritable(cwd.'/'.minfname)
+            if ext == 'js' &amp;&amp; executable('closure-compiler')
+                cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            elseif executable('yuicompressor')
+                cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            endif
+        endif
+    endif
+endfunction
+autocmd FileWritePost,BufWritePost *.js :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.css :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.less :call Js_css_compress()
+</code></pre>
+
+
+
+<p><del>把上面的指令加到 vimrc 檔裡面就可以了，前兩個分別是會把 blah.src.js, blah_src.js 轉成 blah.js 用的，第三行則是會把 blah.js 檔轉成 blah.min.js ，慎用之～～</del></p>
+
+<p class="update"><del>加上第四行，會先檢查 blah.min.js 存不存在，存在的話才用 yuicompressor ，另外 code 在 gist 也貼了 <a href="http://gist.github.com/182971">一份</a> 。</del></p>
+
+<p class="update">改版成 function 形式了~~</p>
+
+<p class="update">更新：支援 less，有 Google Closure 的話會先用它壓縮 js 檔。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000590" baseName="tinymce-compressor-bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-01</b:date>
+				<b:time>00:46:06</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>TinyMCE Compressor 的 bug</b:title>
+			<b:content>
+				<b:summary>有在 Twitter follow 我的人大概上週五會看到 這篇 ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 HTTP Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 HTTP Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 幹，split 完要 trim 一下啊！！ 」這句肺腑之言啊。 狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：...</b:summary>
+				<b:mainContent><p>有在 Twitter follow 我的人大概上週五會看到 <a href="http://twitter.com/othree/status/3599802673">這篇</a> ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 <span class="caps">HTTP</span> Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 <span class="caps">HTTP</span> Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 <strong>幹，split 完要 trim 一下啊！！</strong> 」這句肺腑之言啊。</p>
+
+<p>狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：</p>
+
+
+
+<pre><code>tinyMCE_GZ.init({
+	plugins : 'style, layer, table, save'
+});</code></pre>
+
+
+
+<p>每個逗點後面都有個空白，我覺得這樣的 coding style 也比較好，結果 TinyMCE Compressor 在做 plugin 呼叫註記的時候，沒把空白去掉（不過 php 端可以正確把 plugin 包進來），接著到了正式初始 TinyMCE 時用一樣的 pluing 設定：</p>
+
+
+
+<pre><code>tinyMCE.init({
+	plugins : 'style, layer, table, save'
+});</code></pre>
+
+
+
+<p>這裡卻有把空白去掉，結果它自己認為這些 plugin 沒呼叫過，就重新呼叫了一次...orz，目前是有去回報 bug ，不過不知道會不會受理，總之有要用 TinyMCE 的就小心逗點後面不要加空白吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

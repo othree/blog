@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000568" baseName="order-while-search-multiple-fields">多欄位搜尋時的排序問題</b:listData>
+
+			<b:previous>
+				<b:mTitle>iTerm 用 alt + 數字鍵切換視窗</b:mTitle>
+				<b:mDate>2009-01-23</b:mDate>
+				<b:mBase>iterm-alt-key-to-change-irssi-window</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>日文全文搜尋</b:mTitle>
+				<b:mDate>2009-02-02</b:mDate>
+				<b:mBase>cjk-fulltext-index</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000568" baseName="order-while-search-multiple-fields">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-25</b:date>
+				<b:time>01:33:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>多欄位搜尋時的排序問題</b:title>
+			<b:content>
+				<b:summary>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。 問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 SQL 的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法： SELECT DISTINCT id, title, artist, artist_id, program FROM ( SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION SELECT *, 2 AS o FROM...</b:summary>
+				<b:mainContent><p>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。</p>
+
+<p>問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 <span>SQL </span>的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法：</p>
+
+<pre><code>SELECT DISTINCT id, title, artist, artist_id, program FROM (
+    SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION
+    SELECT *, 2 AS o FROM songs WHERE title LIKE 'keyword' UNION
+    SELECT *, 3 AS o FROM songs WHERE artist LIKE '%keyword%' UNION
+    SELECT *, 4 AS o FROM songs WHERE program LIKE '%keyword%' UNION
+    SELECT *, 5 AS o FROM songs WHERE utaidasi LIKE '%keyword%'
+) s ORDER BY o
+</code></pre>
+
+<p>大量的子查詢，還好我的資料庫小，使用人數也少，不然應該一下系統就撐不下去了吧，而且這個方法還有個問題，就是只能處理一個關鍵字，如果有兩個以上的關鍵字，似乎就沒辦法只用 <span>SQL </span>來做處理了，因為不同的關鍵字可能在不同欄位符合，要計算結果的優先順序會隨著關鍵字增加而變得越來越複雜，純用 <span>SQL </span>來寫感覺就是會整個慢到，不知道 Amazon 是怎麼處理這個問題的架構的，我想應該是自己開發或修改過的資料庫系統吧XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/566">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

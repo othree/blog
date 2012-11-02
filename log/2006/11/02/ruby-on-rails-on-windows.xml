@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000344" baseName="ruby-on-rails-on-windows">Ruby On Rails on Windows with Apache</b:listData>
+
+			<b:previous>
+				<b:mTitle>高速開發的好處</b:mTitle>
+				<b:mDate>2006-10-29</b:mDate>
+				<b:mBase>high-performance</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>ppk on javascript</b:mTitle>
+				<b:mDate>2006-11-02</b:mDate>
+				<b:mBase>ppk-on-javascript</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000344" baseName="ruby-on-rails-on-windows">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-11-02</b:date>
+				<b:time>10:45:40</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Ruby On Rails on Windows with Apache</b:title>
+			<b:content>
+				<b:summary>昨天花了整天的時間在安裝RoR的環境，除了Windows還想辦法在ubuntu上裝，我覺得RoR有一個問題是在上手困難，其一是安裝問題，安裝方法太多了，再來是他強項的MVC架構，和一般的伺服器語言的概念不同，兩者都是需要瞭解過後才能正確的生產程式吧，事實上我現在的RoR程度只在裝好server而已XD。這篇先介紹Windows上使用Mongrel service的安裝方法，其實網路上現在也一堆安裝教學，但是幾乎都是用virtual host的，沒有自己的domain name做起來蠻麻煩的，所以我一直想作成在不同子目錄下跑不同的RoR應用程式，昨天最後是找到這個方法。...</b:summary>
+				<b:mainContent><p>昨天花了整天的時間在安裝<acronym title="Ruby on Rails">RoR</acronym>的環境，除了Windows還想辦法在ubuntu上裝，我覺得RoR有一個問題是在上手困難，其一是安裝問題，安裝方法太多了，再來是他強項的<acronym title="model view controller">MVC</acronym>架構，和一般的伺服器語言的概念不同，兩者都是需要瞭解過後才能正確的生產程式吧，事實上我現在的RoR程度只在裝好server而已XD。這篇先介紹Windows上使用Mongrel service的安裝方法，其實網路上現在也一堆安裝教學，但是幾乎都是用virtual host的，沒有自己的domain name做起來蠻麻煩的，所以我一直想作成在不同子目錄下跑不同的RoR應用程式，昨天最後是找到這個方法。</p></b:mainContent>
+				<b:extendContent><p>首先到<a href="http://rubyforge.org/">Rubyforge</a>下載<a href="http://rubyforge.org/frs/?group_id=167">Windows版的Ruby</a>回來安裝，安裝時記得要勾選<strong>RubyGems</strong>，安裝完成後開啟命令列（DOS視窗），輸入以下指令安裝需要的套件：</p>
+
+
+
+<pre><code>gem install rails
+gem install win32-service
+gem install mongrel
+gem install mongrel_service</code></pre>
+
+
+
+<p>途中會問你要不要安裝其他需要的套件，都回答要，直接按下enter預設就是要安裝了，安裝mongrel時選擇最新的win32版。接下來隨便產生一個RoR app，假設產生的app名稱叫myapp，位置在C:\myapp下，那就是在C:\輸入以下指令：</p>
+
+
+
+<pre><code>rails myapp
+cd myapp
+ruby script/service</code></pre>
+
+
+
+<p>這時候連到 http://127.0.0.1:3000/ 看看，如果有看到東西就表示Rails server有跑起來，回到命令列那按Ctrl+C停止server，繼續輸入以下命令：</p>
+
+
+
+<pre><code>mongrel_rails service::install -N myapp -c c:\myapp -p 4000 -e production
+mongrel_rails service::start -N myapp</code></pre>
+
+
+
+<p>第一行的目的在安裝service，其中的-p 4000代表開在port 4000的位置，如果之要要增加其他應用程式的話集得要改成其他數字，第二行則是開啟service，如果要關閉此服務則是輸入以下命令：</p>
+
+
+
+<pre><code>mongrel_rails service::stop -N myapp</code></pre>
+
+
+
+<p>做到這一步就把RoR端都搞定了，mongrel service就讓他保持開啟的狀態，接下來要修改Apache端的設定了，修改httpd.conf檔，首先要開啟proxy module，其實我不確定這裡開啟哪幾格，不過我最後是開了三個如下：</p>
+
+
+
+<pre><code>LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_connect_module modules/mod_proxy_connect.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+</code></pre>
+
+
+
+<p>然後在檔案最下面加上proxy pass的設定：</p>
+
+
+
+<pre><code>ProxyPass /myapp http://127.0.0.1:4000/
+ProxyPassReverse /myapp http://127.0.0.1:4000/
+</code></pre>
+
+
+
+<p>表示連到/myapp這個位置的連線會被轉到http://127.0.0.1:4000/的位置，也就是mongrel service的位置，設定好後，重新啟動Apache然後連到<strong>http://127.0.0.1/myapp/</strong>看看，有看到RoR起始頁就是安裝成功了，如果想測試看看有沒有正確的運作，可以自己建立一個controller連線看看，這部份我就不詳述了:P。</p>
+
+
+<ul>
+<li><a href="http://www.onlamp.com/pub/a/onlamp/2005/01/20/rails.html">Rolling with Ruby on Rails</a></li>
+<li><a href="http://mongrel.rubyforge.org/docs/win32.html">Mongrel win32 How to</a></li>
+<li><a href="http://lightyror.blogspot.com/index.html">lighty ror</a></li>
+</ul>
+
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="008909" entryID="000344">
+					<b:author>
+						<b:authorName>JellyCatz果凍喵</b:authorName>
+						<b:authorEmail>livte@yahoo.com.tw</b:authorEmail>
+						<b:authorUrl>http://catz.no-ip.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-01-23</b:date>
+						<b:time>21:04:19</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>:) 這篇讓我很受用，but其中有個小小的錯誤的地方，不支倒是不是我用的版本的關係哩</p>
+
+<p>ruby script/service
+應該為
+ruby script/server</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="008914" entryID="000344">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-01-24</b:date>
+						<b:time>00:13:25</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我也不確定哪個是對的耶，可能版本差異是主要原因吧，如果對ROR有興趣的話，推薦你去看thegiive的blog，他那裡主要就是RoR的消息和心得，有一篇再這篇之後出來的文章就是再講RoR on windows: <a href="http://lightyror.thegiive.net/2007/01/windows-apache-22-mongrel.html" rel="nofollow">http://lightyror.thegiive.net/2007/01/windows-apache-22-mongrel.html</a> 。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/343">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

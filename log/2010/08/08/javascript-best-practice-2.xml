@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000624" baseName="javascript-best-practice-2">JavaScript Best Practice Part.2: Performance</b:listData>
+
+			<b:previous>
+				<b:mTitle>YUICompressor vs Closure-Compiler</b:mTitle>
+				<b:mDate>2010-08-08</b:mDate>
+				<b:mBase>yuicompressor-vs-closure-</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>今敏監督過世</b:mTitle>
+				<b:mDate>2010-08-26</b:mDate>
+				<b:mBase>satoshi-kon-passed-away</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000624" baseName="javascript-best-practice-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-08-08</b:date>
+				<b:time>16:26:44</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript Best Practice Part.2: Performance</b:title>
+			<b:content>
+				<b:summary>目前 JavaScript Best Practice 想了四個主題，不過後面兩個主題的東西還有點少，雖然預計一週一篇，可能還會再看看吧，這篇主要是在效能增進的一些作法，下一篇應該會是一點安全性的東西，第四篇應該是 Loose Coupling (Special Event)。總之所以就開始吧～...</b:summary>
+				<b:mainContent><p>目前 JavaScript Best Practice 想了四個主題，不過後面兩個主題的東西還有點少，雖然預計一週一篇，可能還會再看看吧，這篇主要是在效能增進的一些作法，下一篇應該會是一點安全性的東西，第四篇應該是 Loose Coupling (Special Event)。總之所以就開始吧～</p></b:mainContent>
+				<b:extendContent><h4>陣列與迴圈</h4>
+
+<p>通常用 for 迴圈處理陣列時會這樣寫：</p>
+
+
+
+<pre><code>for (i=0; i &lt; arr.length; i++) {
+    arr[i] = blah...
+}
+</code></pre>
+
+
+
+<p>不過這樣效率比較差，每次都要去看陣列的長度，所以建議寫成：</p>
+
+
+
+<pre><code>for (i=0, len=arr.length; i &lt; arr.len; i++) {
+    arr[i] = blah...
+}
+</code></pre>
+
+
+
+<p>這樣就只有一開始去存取陣列長度而已，其實還有其他寫法可以更快，像是反過來存取，或是改用 while，不過程式碼比較不淺顯好懂，就比較不推薦使用。</p>
+
+<p>如果不是陣列而是 <span class="caps">DOM</span> NodeList 的話差距會更明顯，DOM NodeList 雖然行為和陣列有些相似，不過效率上一直都比較差，所以像 <a href="http://sizzlejs.com/">sizzle</a> 還會把找到的節點丟到陣列才回傳，又不過其實現在大部分的新瀏覽器在 <span class="caps">DOM</span> NodeList 存取和陣列存取的效率差距越來越小了。</p>
+
+<h4>One var</h4>
+
+<p>宣告多個變數時：</p>
+
+
+
+<pre><code>var a = 1;
+var b = 2;
+var c = 3;
+</code></pre>
+
+
+
+<p>改成</p>
+
+
+
+<pre><code>var a = 1,
+    b = 2,
+    c = 3;
+</code></pre>
+
+
+
+<p>試著讓每個 function 一開始就用一個 var 把所有需要的變數的宣告好，包括 for 迴圈要用到的 i, j, k, len 等變數，因為 JavaScript 只有 function 有 scope 的效果，所以在 <code>for (var i = 0; i &lt; arr.length; i++)</code> 這裡面宣告的 i 和在外面宣告的一樣，所以就統一移到前面去宣告吧，這在 <a href="http://blog.othree.net/log/2010/08/02/javascript-best-practice-1/">前一篇的文章</a> 有提到 <span class="caps">JSL</span>int 的 onevar 這個選項可以使用，所以可以交給 <span class="caps">JSL</span>int 檢查。</p>
+
+<h4>字串串接</h4>
+
+<p>如果有需要大量使用到字串串接，像是下面的程式碼：</p>
+
+
+
+<pre><code>str = '';
+for (i=0, len=arr.length; i &lt; len; i++) {
+    str += arr[i].text;
+}</code></pre>
+
+
+
+<p>那改成先丟進陣列，最後用 join 一口氣接起來會快很多：</p>
+
+
+
+<pre><code>strarr = [];
+for (i=0, len=arr.length; i &lt; len; i++) {
+    strarr.push(arr[i].text);
+}
+str = strarr.join('');</code></pre>
+
+
+
+<h4>使用 innerHTML 還是 <span class="caps">DOM</span></h4>
+
+<p>在我曾經還是標準狂信者的時候，我是很討厭使用 <a href="https://developer.mozilla.org/en/dom:element.innerhtml">innerHTML</a> 的，不過後來我脫離了這個階段，innerHTML 就再也不是我的禁忌了，畢竟它速度快、相容性又高，不過需要注意的是在 IE 下使用標籤語法要正確，像是標籤沒有結束的話，其他瀏覽器會產生空的標籤，IE 可能就什麼都沒產生了，不過使用上要注意，把需要的 <span class="caps">HTML </span>字串都生好了一口氣丟進去，不然速度還是會很慢，另外比較特別的是其實 webkit 瀏覽器使用 <span class="caps">DOM </span>會比較快。</p>
+
+<h4>Scope Chain</h4>
+
+<p>JavaScript 的 scope 是要用 function 來建立，每多一層 function scope 就會讓 scope chain 多一層，scope chain 指的尋找變數、函數時的搜尋路徑，越多層 function scope 的東西要存取起來速度就會越慢，前一篇也有提到不要使用 with，其中一個原因就是會讓本來直接可以存取的東西跑到上一層去，所以考慮到這個問題，所有會存取到兩次以上的，不同層的東西都盡量在這層存起來，舉例來說：</p>
+
+
+
+<pre><code>function test() {
+    if (/baga/.test(document.getElementById('id1').className) {
+        document.getElementById('id1').style.color = 'red';
+    }
+}</code></pre>
+
+
+
+<p>就可以改成下面這樣，程式碼看起來也比較精簡：</p>
+
+
+
+<pre><code>function test() {
+    var id1 = document.getElementById('id1');
+    if (/baga/.test(id1.className) {
+        id1.style.color = 'red';
+    }
+}</code></pre>
+
+
+
+<p>有些人可能會習慣用一個匿名函數把自己的 code 包起來，避免污染到其他的 script，如下：</p>
+
+
+
+<pre><code>(function () {
+    // blah...
+})();</code></pre>
+
+
+
+<p>實際上這樣寫，會讓 global scope 的東西變得遠一層，所以像是 document 這種常用到的物件存取時間就會增加，有一個從 <a href="http://paulirish.com/2010/10-things-i-learned-from-the-jquery-source/">10 Things I Learned from the jQuery Source</a> 看到的方法如下：</p>
+
+
+
+<pre><code>(function (window, document, undefined) {
+    // blah...
+})(window, document);</code></pre>
+
+
+
+<p>這種寫法有兩個好處，一個是剛剛提到的，把 document 抓回到同一層， <a href="http://gugod.org/">gugod</a> 說這樣在 IE 下會快不少，另一個好處是使用壓縮工具時，可以把 window, document 這些變數名稱也壓縮起來。至於輸入參數的第三個 undefined 是故意的，這樣的用途是確保 undefined 沒被人覆寫過，不過 undefined 沒辦法過 <span class="caps">JSL</span>int，我是建議看自己的情形來決定需不需要，當然有的話比較安全。</p>
+
+<h4>Reflow and Repaint</h4>
+
+<p>當你對文件結構或是文件樣式做修改時，瀏覽器需要重新畫一次頁面，這些工作能盡量減少就盡量減少，大概有幾個方向可以做到：</p>
+
+
+<ul>
+<li>減少對文件樹的修改：修改文件樹會需要 reflow (當然接著 repaint)，所以要盡量減少文件樹的改動次數，如果需要插入大量的節點，可以先用 <a href="http://ejohn.org/blog/dom-documentfragments/">documentFragment</a> 包起來，再一次放進來。</li>
+<li>避免直接修改 style 屬性：因為無法一次修改 style 的不同屬性，所以建議是用 class 來預先寫好不同狀況的樣式，然後改 class ，這樣就可以一口氣讓節點的樣式改好，而不會因為需要改三個屬性就讓能瀏覽器重畫了三次。</li>
+<li>減少存取顯示相關的屬性：瀏覽器本身會做一些最佳化和排程來減少 reflow/repaint 工作，不過如果你需要存取這些顯示相關的資料（例如：寬、高、位置等），瀏覽器就會被迫馬上重畫，所以可以不存取就不要存取，例如做移動效果時，先把路徑設計好，然後看時間決定位置，而不要根據現在位置和函數執行的次數來移動。</li>
+</ul>
+
+
+
+<p>關於 reflow/repaint ， phpied 有篇文章 <a href="http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/">Rendering: repaint, reflow/relayout, restyle</a> 講的很詳細，有興趣深入的可以看看。</p>
+
+<h4>Event Delegation</h4>
+
+<p>如果你有大量的東西要加上同樣的事件，像是文件清單，要給每個文件都放上 click 事件來產生選取效果，那建議使用 event delegation 方式，而不要真的給每個元件都綁定事件，一來綁事件本身就很花時間了，二來也會吃記憶體，event delegation 的作法是把事件把在目標節點共同的祖先層，然後再用 event.target 來判斷實際上是按到哪個元素，程式碼看起來如下：</p>
+
+
+
+<pre><code>document.getElementById('#file-list').addEventListener('click', function (e) {
+    var target = e.target,
+        tclass = target.className;
+    if (target.nodeName.toLowerCase() == 'li') {
+        tclass = tclass == 'selected' ? '' : 'selected' ;
+    }
+}, false);
+</code></pre>
+
+
+
+<p>這段 code 在 IE 上不能運作。Delegation 除了速度和記憶體的好處外，還有一個好處是因為事件綁在上面一層，所以內容（檔案清單）的增減都不用再去處理事件的增減，可以讓你的程式的 coupling 更鬆一點。</p>
+
+<p>一些函式庫像是 jQuery 有提供 delegation ，讓你寫起來比較方便，除此之外它還有 live/dead，差別是 live/dead 是把事件綁在最外層，也就是 document 本身，不過這樣做有些缺點，一是綁太多時，效率會變差，因為要做太多的 target 判斷，加上一些事件可能會發生的太頻繁，整個就會卡住，二是有些事件不會跑到最上層。</p>
+
+<h4>函數名稱和 profiling 工具</h4>
+
+<p>匿名函數很好用，不過建議還是給它個名字，這樣在 profiling 的時候才知道是哪個函數，以下面這段程式碼為範例，用了兩種方法綁定事件，分別給了有名稱的函數和沒名稱的函數：</p>
+
+
+
+<pre><code>function call() {
+}
+document.getElementById('b1').onclick = function () {
+    call();
+};
+document.getElementById('b2').onclick = function b2() {
+    call();
+};
+document.getElementById('b3').addEventListener('click', function () {
+    call();
+}, false);
+document.getElementById('b4').addEventListener('click', function b4() {
+    call();
+}, false);
+</code></pre>
+
+
+
+<p>接著我依序點了四個目標，用 Firebug 記錄事件，結果如下圖：</p>
+
+<p><a href="http://www.flickr.com/photos/othree/4869179392/" title="Flickr 上 othree 的 profiling"><img src="http://farm5.static.flickr.com/4138/4869179392_24f190df95_o.png" width="602" height="168" alt="profiling" /></a></p>
+
+<p>可以看到沒有名字的兩個函數會難以分別，都叫 onclick，另外有自己取名的 b2、b4 就好辨認多了，當你的程式大起來時，會使用到匿名函數的地方可能會越來越多，如果沒有取名稱的話，到後來幾乎就無法判斷誰是誰了，因此建議函數都給它個名字吧。不過這頂多是開發時有用，正式上線程式碼過壓縮之後，YUICompressor 會把函數改名，Closure Compiler 會把不需要的函數名稱砍掉～～。</p>
+
+<p>我最早看到這個問題是在 <a href="http://www.alertdebugging.com/2009/04/29/building-a-better-javascript-profiler-with-webkit/">Building a Better JavaScript Profiler with WebKit</a> 這篇文章，主要是在講新(當時)的 Webkit  開發工具的改變。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="108321" entryID="000624">
+					<b:author>
+						<b:authorName>Anonymous</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-08-08</b:date>
+						<b:time>15:15:40</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>for (i=0, len=arr.length; i &lt; arr.len; i++) {
+    arr[i] = blah&#8230;
+}
+看起來應該原意是
+for (i=0, len=arr.length; i &lt; len; i++) {
+    arr[i] = blah&#8230;
+}</p>
+
+<p>另外 live/die 在 jQuery 1.4 後，有提供 event context ，
+已經不再是只有綁在 document root 上的選項了，
+詳情參考 <a href="http://api.jquery.com/live/" rel="nofollow">http://api.jquery.com/live/</a>  Event Context 一節。
+所以還是可以看狀況選用delegate 或 live就是了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="108328" entryID="000624">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-08-08</b:date>
+						<b:time>23:44:24</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>感謝，確實是我寫錯了</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/623">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

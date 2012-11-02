@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<title>scroll radio</title>
+<script src="jquery-1.2.1.min.js"></script>
+<script src="ui/ui.mouse.js"></script>
+<script src="ui/ui.draggable.js"></script>
+<script src="ui/ui.draggable.ext.js"></script>
+<script>
+
+$.ui.plugin.add("draggable", "start", "scrollRadio", function(e,ui) {
+	$(this).css("z-index", 1).html("").parent().css("z-index", 2);
+});
+
+$.ui.plugin.add("draggable", "stop", "scrollRadio", function(e,ui) {
+	var fset = $(this).parent();
+	var fs = $(this);
+	var ww = fset.get(0).ww;
+	var which = parseInt((fs.offset().left - fset.offset().left) / ww + 0.5);
+	fset.children("input[type=radio]").eq(which).attr("checked", "true");
+	fs.animate({left: which*ww+"px"}, 200, function(){
+		fs.html(fset.css("z-index", 1).get(0).data[which]).css("z-index", 2);
+	});
+});
+
+$(document).ready(function(){
+	
+	$(".scroll-radio").each(function(){
+		$(this).append("<div class=\"scroll-radio-container\"></div>").children(".scroll-radio-container").append($(this).children("input[type=radio]")).append("<div class=\"scroll-block\"></div>");
+	});
+
+	$(".scroll-radio-container").each(function(){
+		var fset = $(this);
+		var ff = fset.children("input[type=radio]");
+		var fs = fset.children(".scroll-block"); //field scroll block
+		var ww = this.ww = fs.get(0).offsetWidth;
+		var dd = false;
+		var data = this.data = {};
+		fset.css("width", ff.size()*ww+"px").children("input[type=radio]").hide().each(function(){
+			var i = fset.children("span.field").size();
+			data[i] = $(this).val();
+			fset.append("<span class=\"field\" style=\"left: "+i*ww+"px;\">"+data[i]+"</span>");
+			if ($(this).attr("checked") && (dd = $(this).attr("checked")))
+				fs.html(data[i]).css("left", i*ww+"px");
+		});
+		if (!dd)
+			fs.html(ff.eq(0).attr("checked", "true").val());
+	});
+	
+	
+	$(".scroll-radio span.field").click(function(){
+		var fset = $(this).parent();
+		var ff = fset.children("input[type=radio]");
+		which = ff.index($("input[value="+$(this).html()+"]")[0]);
+		ff.eq(which).attr("checked", "true");
+		fset.css("z-index", 2).children(".scroll-block").css("z-index", 1).html("").animate({left: which*fset.get(0).ww+"px"}, 200, function(){
+			$(this).html(fset.css("z-index", 1).get(0).data[which]).css("z-index", 2);
+		});
+	});
+	
+	$(".scroll-block").draggable({containment:'parent', scrollRadio: 'true', axis: 'x'});
+
+	$("#check").click(function(){
+		$(":radio").each( function(){
+			if ($(this).attr("checked") == true) alert($(this).attr("name")+":"+$(this).val());
+		});
+	});
+	
+});
+</script>
+
+<style>
+.scroll-radio-container {
+	position: relative;
+	padding-bottom: 2px;
+	height: 34px;
+	width: 400px;
+	text-align: center;
+	line-height: 34px;
+	background: url('scroll-radio-container.gif') bottom left repeat-x;
+}
+.scroll-radio-container .scroll-block {
+	position: absolute;
+	background: url('scroll-radio-block.png');
+	width: 100px; 
+	height: 34px;
+	z-index: 2;
+	line-height: 34px;
+	cursor: pointer;
+}
+.scroll-radio-container span.field {
+	position: absolute;
+	width: 100px; 
+	height: 34px;
+	float: left;  
+	z-index: 1;
+	text-align: center;
+	line-height: 34px;
+	cursor: pointer;
+}
+
+#check {
+	color: #00f;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+</style>
+
+<fieldset class="scroll-radio">
+ <legend>xx</legend>
+  <input type="radio" name="xx" value="0">
+  <input type="radio" name="xx" value="1">
+  <input type="radio" name="xx" value="2" checked>
+  <input type="radio" name="xx" value="3">
+  <input type="radio" name="xx" value="4">
+</fieldset>
+
+<fieldset class="scroll-radio">
+ <legend>oo</legend>
+  <input type="radio" name="oo" value="a">
+  <input type="radio" name="oo" value="b">
+  <input type="radio" name="oo" value="c">
+  <input type="radio" name="oo" value="d">
+</fieldset>
+
+<span id="check">which is selected</span>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW">
+  <head>
+    <title>O3noBLOG radio2select sample</title>
+    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="prev" title="final" href="/log/2005/01/25/radio2select/radio2select-final.html" />
+    <link rel="first" title="radio2select" href="/log/2005/01/25/radio2select/radio2select.html" />
+    <link rel="up" title="O3noBLOG radio2select" href="/log/2005/01/25/radio2select/" />
+    <link rel="top" title="O3noBLOG" href="/" />
+<script type="text/javascript">
+function submit_form (f) {
+    var y = '';
+    var m = '';
+    var d = '';
+    i=1;
+    while (document.getElementById('r'+i)) {
+        if (document.getElementById('r'+i).checked == true) {
+            y = document.getElementById('r'+i).value;
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (document.getElementById('rr'+i)) {
+        if (document.getElementById('rr'+i).checked == true) {
+            m = document.getElementById('rr'+i).value;
+            break;
+        }
+        i++;
+    }
+    i=1;
+    while (document.getElementById('rrr'+i)) {
+        if (document.getElementById('rrr'+i).checked == true) {
+            d = document.getElementById('rrr'+i).value;
+            break;
+        }
+        i++;
+    }
+    if (y != '') m = "You selected \"" + y +"/" + m +"/" + d +"\".";
+    else y = "You didn't select anything";
+    alert(m);
+    return false;
+}
+</script>
+<style type="text/css">
+* {
+    font-family: Tahoma, sans-serif;
+}
+fieldset {
+    margin: 0;
+    border: 0;
+    padding: 0.5em 0;
+}
+span.code_name {
+    display: block;
+    clear: left;
+    float: left;
+    padding: 0.1em 0.5em;
+    color: #fff;
+    background-color: #999;
+}
+div.code {
+    clear: left;
+    border: 2px solid #999;
+    padding: 0 0.3em;
+    background-color: #eee;
+}
+form {
+    border: 0px solid black;
+}
+input[type='radio'] {
+    opacity: 0;
+    margin-bottom: -2em;
+    float: left;
+    clear: left;
+}
+input[type='radio']+label {
+    float: left;
+    clear: left;
+    display: none;
+    padding: 1px 0.5em 1px 1em;
+    border: 1px solid #666;
+    width: 2.5em;
+    background-color: #fff;
+}
+input[type='radio']+label:hover {
+    color: #000;
+    background: #fff url('0050_pfeil.png') no-repeat left center;
+}
+input[type='radio']:checked+label:hover {
+    background: #5aa;
+    color: #fff;
+}
+input[type='radio']:focus+label {
+    display: block;
+    border-width: 1px;
+    margin: 1px 0;
+    color: #000;
+    background: #fff url('0050_pfeil.png') no-repeat left center;
+}
+input[type='radio']:checked+label {
+    display: block;
+    margin: 0;
+    background-color: #5aa;
+    color: #fff;
+}
+input[type='radio']:focus+label:after {
+    content: '?';
+}
+input[type='radio']:focus:checked+label {
+    margin: 0;
+}
+input[type='radio']:focus:checked+label:after {
+    content: '';
+}
+span.select:hover label {
+    display: block;
+    border-width: 0 1px 1px;
+    margin: 0;
+}
+span.select:hover label:last-child {
+    border-bottom: 0px;
+}
+span.select>span {
+    display: block;
+    margin-bottom: -100%;
+    position: relative;
+    overflow: auto;
+    max-height: 10em;
+    min-height: 5em; /* keep some space for :focus */
+    width: 5.2em;
+    border: 1px solid transparent;
+    border-width: 1px 1px 1px 0;
+}
+span.select:hover>span {
+    background-color: #fff;
+    border: 1px solid black;
+    border-width: 1px 1px 1px 0;
+}
+span.select>span input[type='radio']:focus+label {
+    background-image: none;
+}
+span.select {
+    display: block;
+    float: left;
+    height: 1px;
+    margin-right: -1em;
+}
+span.label {
+    float: left;
+    line-height: ;
+    padding: 2px 1em 2px 0.3em;
+}
+span.select.small {
+    margin-right: -1em;
+}
+span.select.small>span {
+    width: 3.7em;
+}
+span.select.small label {
+    text-align: right;
+    width: 1em;
+}
+</style>
+</head>
+<body>
+    <form method="post" action="radio2select.html" onsubmit="return submit_form(this);">
+        <span class="label">Birthday：</span>
+        <span class="select">
+            <span>
+            <input id="r1" name="year" value="1970" checked="checked" type="radio" /><label for="r1">1970</label>
+            <input id="r2" name="year" value="1971" type="radio" /><label for="r2">1971</label>
+            <input id="r3" name="year" value="1972" type="radio" /><label for="r3">1972</label>
+            <input id="r4" name="year" value="1973" type="radio" /><label for="r4">1973</label>
+            <input id="r5" name="year" value="1974" type="radio" /><label for="r5">1974</label>
+            <input id="r6" name="year" value="1975" type="radio" /><label for="r6">1975</label>
+            <input id="r7" name="year" value="1976" type="radio" /><label for="r7">1976</label>
+            <input id="r8" name="year" value="1977" type="radio" /><label for="r8">1977</label>
+            <input id="r9" name="year" value="1978" type="radio" /><label for="r9">1978</label>
+            <input id="r10" name="year" value="1979" type="radio" /><label for="r10">1979</label>
+            <input id="r11" name="year" value="1980" type="radio" /><label for="r11">1980</label>
+            <input id="r12" name="year" value="1981" type="radio" /><label for="r12">1981</label>
+            <input id="r13" name="year" value="1982" type="radio" /><label for="r13">1982</label>
+            <input id="r14" name="year" value="1983" type="radio" /><label for="r14">1983</label>
+            <input id="r15" name="year" value="1984" type="radio" /><label for="r15">1984</label>
+            <input id="r16" name="year" value="1985" type="radio" /><label for="r16">1985</label>
+            <input id="r17" name="year" value="1986" type="radio" /><label for="r17">1986</label>
+            <input id="r18" name="year" value="1987" type="radio" /><label for="r18">1987</label>
+            <input id="r19" name="year" value="1988" type="radio" /><label for="r19">1988</label>
+            <input id="r20" name="year" value="1989" type="radio" /><label for="r20">1989</label>
+            <input id="r21" name="year" value="1990" type="radio" /><label for="r21">1990</label>
+            <input id="r22" name="year" value="1991" type="radio" /><label for="r22">1991</label>
+            <input id="r23" name="year" value="1992" type="radio" /><label for="r23">1992</label>
+            <input id="r24" name="year" value="1993" type="radio" /><label for="r24">1993</label>
+            <input id="r25" name="year" value="1994" type="radio" /><label for="r25">1994</label>
+            </span>
+        </span>
+        <span class="label">年</span>
+        <span class="select small">
+        <span>
+            <input id="rr1" name="month" value="1" checked="checked" type="radio" /><label for="rr1">1</label>
+            <input id="rr2" name="month" value="2" type="radio" /><label for="rr2">2</label>
+            <input id="rr3" name="month" value="3" type="radio" /><label for="rr3">3</label>
+            <input id="rr4" name="month" value="4" type="radio" /><label for="rr4">4</label>
+            <input id="rr5" name="month" value="5" type="radio" /><label for="rr5">5</label>
+            <input id="rr6" name="month" value="6" type="radio" /><label for="rr6">6</label>
+            <input id="rr7" name="month" value="7" type="radio" /><label for="rr7">7</label>
+            <input id="rr8" name="month" value="8" type="radio" /><label for="rr8">8</label>
+            <input id="rr9" name="month" value="9" type="radio" /><label for="rr9">9</label>
+            <input id="rr10" name="month" value="10" type="radio" /><label for="rr10">10</label>
+            <input id="rr11" name="month" value="11" type="radio" /><label for="rr11">11</label>
+            <input id="rr12" name="month" value="12" type="radio" /><label for="rr12">12</label>
+        </span>
+        </span>
+        <span class="label">月</span>
+        <span class="select small">
+            <span>
+                <input id="rrr1" name="day" value="1" checked="checked" type="radio" /><label for="rrr1">1</label>
+                <input id="rrr2" name="day" value="2" type="radio" /><label for="rrr2">2</label>
+                <input id="rrr3" name="day" value="3" type="radio" /><label for="rrr3">3</label>
+                <input id="rrr4" name="day" value="4" type="radio" /><label for="rrr4">4</label>
+                <input id="rrr5" name="day" value="5" type="radio" /><label for="rrr5">5</label>
+                <input id="rrr6" name="day" value="6" type="radio" /><label for="rrr6">6</label>
+                <input id="rrr7" name="day" value="7" type="radio" /><label for="rrr7">7</label>
+                <input id="rrr8" name="day" value="8" type="radio" /><label for="rrr8">8</label>
+                <input id="rrr9" name="day" value="9" type="radio" /><label for="rrr9">9</label>
+                <input id="rrr10" name="day" value="10" type="radio" /><label for="rrr10">10</label>
+                <input id="rrr11" name="day" value="11" type="radio" /><label for="rrr11">11</label>
+                <input id="rrr12" name="day" value="12" type="radio" /><label for="rrr12">12</label>
+                <input id="rrr13" name="day" value="13" type="radio" /><label for="rrr13">13</label>
+                <input id="rrr14" name="day" value="14" type="radio" /><label for="rrr14">14</label>
+                <input id="rrr15" name="day" value="15" type="radio" /><label for="rrr15">15</label>
+                <input id="rrr16" name="day" value="16" type="radio" /><label for="rrr16">16</label>
+                <input id="rrr17" name="day" value="17" type="radio" /><label for="rrr17">17</label>
+                <input id="rrr18" name="day" value="18" type="radio" /><label for="rrr18">18</label>
+                <input id="rrr19" name="day" value="19" type="radio" /><label for="rrr19">19</label>
+                <input id="rrr20" name="day" value="20" type="radio" /><label for="rrr20">20</label>
+                <input id="rrr21" name="day" value="21" type="radio" /><label for="rrr21">21</label>
+                <input id="rrr22" name="day" value="22" type="radio" /><label for="rrr22">22</label>
+                <input id="rrr23" name="day" value="23" type="radio" /><label for="rrr23">23</label>
+                <input id="rrr24" name="day" value="24" type="radio" /><label for="rrr24">24</label>
+                <input id="rrr25" name="day" value="25" type="radio" /><label for="rrr25">25</label>
+                <input id="rrr26" name="day" value="26" type="radio" /><label for="rrr26">26</label>
+                <input id="rrr27" name="day" value="27" type="radio" /><label for="rrr27">27</label>
+                <input id="rrr28" name="day" value="28" type="radio" /><label for="rrr28">28</label>
+                <input id="rrr29" name="day" value="29" type="radio" /><label for="rrr29">29</label>
+                <input id="rrr30" name="day" value="30" type="radio" /><label for="rrr30">30</label>
+                <input id="rrr31" name="day" value="31" type="radio" /><label for="rrr31">31</label>
+            </span>
+        </span>
+        <span class="label">日</span>
+        <input value="GO" type="submit" />
+        <div style="color: green;">Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. Text for month. </div>
+    </form>
+</body>
+</html>

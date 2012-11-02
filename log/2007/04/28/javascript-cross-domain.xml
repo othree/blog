@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000410" baseName="javascript-cross-domain">如何用 JavaScript 執行不同網域的 script</b:listData>
+
+			<b:previous>
+				<b:mTitle>Google Maps 台灣地圖</b:mTitle>
+				<b:mDate>2007-04-25</b:mDate>
+				<b:mBase>google-taiwan-maps</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>天將降大任於斯人也</b:mTitle>
+				<b:mDate>2007-04-29</b:mDate>
+				<b:mBase>the-one</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000410" baseName="javascript-cross-domain">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-04-28</b:date>
+				<b:time>21:01:40</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>如何用 JavaScript 執行不同網域的 script</b:title>
+			<b:content>
+				<b:summary>因為XSS的安全性問題，所以不能使用XMLHttpRequest的抓不同網域的資料，這限制了部份 mashup 的發展，不過經過測試，加上Ajax Patterns的佐證，發現實際上還是有方法的。...</b:summary>
+				<b:mainContent><p>因為<abbr title="Cross Site Script">XSS</abbr>的安全性問題，所以不能使用XMLHttpRequest的抓不同網域的資料，這限制了部份 mashup 的發展，不過經過測試，加上<a href="http://ajaxpatterns.org/wiki/index.php?title=Main_Page">Ajax Patterns</a>的佐證，發現實際上還是有方法的。</p></b:mainContent>
+				<b:extendContent><p>其實方法很簡單，就是用 JavaScript 來新增script標籤，像是支援度最高的<code>document.write</code>法：</p>
+
+<pre><code>document.write("&lt;script type=\"text/javascript\" src=\"http://othree.net/tmp/test.js\"&gt;&lt;\/script&gt;");</code></pre>
+
+<p>或是標準的DOM方法（如果使用<strong>application/xhtml+xml</strong>的mime type就不得不用這種方法了）：</p>
+
+<pre><code>var z1 = document.createElement("script");
+z1.type = "text/javascript";
+z1.src = "http://othree.net/tmp/test.js";
+document.getElementsByTagName("head")[0].appendChild(z1);</code></pre>
+
+<p>不過這和抓資料有什麼關係呢？重點在遠端的那個 JavaScript 內容，它可以把需要的資料存到一個變數內，像是：</p>
+
+<pre><code>testvar = "You got me !";</code></pre>
+
+<p>這時問題又來了，一般web service就是直接提供JSON字串或是XML字串，並不會像上面轉成變數，這確實是最大的問題，目前我的解決方法還是需要透過一個自己可以動的server把web service回傳的字串包裝成上面的樣子再傳給網頁，不過這樣速度還蠻慢的，而且也不是每個人都有辦法弄出支援PHP、Perl等server side script的空間，而且要是有作這種東西的話就不會有跨網域的問題了吧，不過這我目前也沒辦法啦&gt;&lt;。</p>
+
+<p>還有一個問題，要怎樣抓到遠端script完整執行完的事件呢？這我試驗了很久，目前的作法如下：</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;
+document.write("&lt;script type=\"text/javascript\" src=\"http://othree.net/tmp/test.js\"&gt;&lt;\/script&gt;");
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+alert(testvar);
+&lt;/script&gt;</code></pre>
+
+<p>沒錯，你需要兩個script標籤才能確保下面的alert事件會等到遠端script執行完才會動作，這當然是很爛的作法，因為是hard code，而且要把script寫在html原始碼裡面，有違行為、內容樣式分開的原則，加上不能包在function裡面，不過為了IE、Safari兩個瀏覽器的支援，不得不這樣寫......好吧，其實還有個方法，僅限於你能決定web service回傳的檔案內容是什麼時，當然為了解決前一個問題所作的web service proxy也是可以辦得到的，就是把遠端script的內容改成：</p>
+
+<pre><code>testvar = "You got me !";alert(testvar);</code></pre>
+
+<p>就是遠端script的最後自己呼叫該執行的function，恩，還是很不好看，不過至少是我目前找的唯一方法。</p>
+
+<p>補充：根據這兩天的測試，Firefox和Opera在script的執行順序很合直覺，IE在一個script區塊裡面一定會先把本地端的執行完才執行遠端的，Safari則是同時跑兩邊。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/409">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

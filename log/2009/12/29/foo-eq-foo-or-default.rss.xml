@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>O3noBLOG: Microfeed for "var foo = foo || {};"</title>
+    <link>http://blog.othree.net/log/2009/12/29/foo-eq-foo-or-default/</link>
+    <description>Comments for the entry "var foo = foo || {};"</description>
+    <language>zh-tw</language>
+    <generator>Movable Type v4.38</generator>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+
+
+    <lastBuildDate>Wed, 30 Dec 2009 02:41:17 +08:00</lastBuildDate>
+
+     <item>
+      <title>Comment from Clydewu</title>
+      <description><![CDATA[<p>我猜是不會，實際上好像也是不會
+原因是foo = undefined時，由於是&#8221;給值&#8221;的動作
+所以js會自動替不存在的值宣告並給值undefined，在把我們指定的undefined給值一次。
+所以foo=foo||{}時第二個foo不會不存在。</p>
+
+<p>如果直接執行foo=foo||{}，由於是判斷，而不是給值動作所以不會有上述的自動宣告</p>
+
+<p>這樣說對嘛?</p>
+]]></description>
+      <guid isPermaLink="false">603@http://blog.othree.net/#c102887</guid>
+      <pubDate>Wed, 30 Dec 2009 02:41:17 +08:00</pubDate>
+    </item>
+
+
+     <item>
+      <title>Comment from 怿飞</title>
+      <description><![CDATA[<p>其实对于未定义变量只可写入，但不可读取。对于读操作，如果一直追溯到全局执行环境的 scriptObject 上都找不到，就会产生运行期错误。</p>
+]]></description>
+      <guid isPermaLink="false">603@http://blog.othree.net/#c102899</guid>
+      <pubDate>Wed, 30 Dec 2009 13:24:27 +08:00</pubDate>
+    </item>
+
+
+     <item>
+      <title>Comment from othree.net</title>
+      <description><![CDATA[<p>@Clydewu 有趣的是，這樣給值下去，變得無法判斷他是不是真的 undefined ，雖然實際上不一樣。</p>
+
+<p>@怿飞 我的問題是，為什麼前面加上 var 宣告就不會有錯誤了。</p>
+]]></description>
+      <guid isPermaLink="false">603@http://blog.othree.net/#c102917</guid>
+      <pubDate>Thu, 31 Dec 2009 10:05:44 +08:00</pubDate>
+    </item>
+
+  </channel>
+</rss>

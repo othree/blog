@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2005-09">September 2005</b:listData>
+
+			<b:previous>
+				<b:mTitle>August 2005</b:mTitle>
+				<b:mDate>2005/08</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>October 2005</b:mTitle>
+				<b:mDate>2005/10</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000268" baseName="irc-port-banned">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-29</b:date>
+				<b:time>22:54:54</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>學校檔了IRC的port</b:title>
+			<b:content>
+				<b:summary>前兩天想從學校上IRC才發現連不上，經過多次測試後確定不行，今天問了電算中心後，說是因為6667這個port很容易被用來入侵，所以前幾個月已經鎖起來了，後來經過elixus的朋友們（其實我都還不熟）的指點，提到IRC Server通常是開6667～6669三個port，於是我趕快測試一下，學校只檔了6667，然後我就可以快樂的在學校上IRC了XD。...</b:summary>
+				<b:mainContent><p>前兩天想從學校上IRC才發現連不上，經過多次測試後確定不行，今天問了電算中心後，說是因為6667這個port很容易被用來入侵，所以前幾個月已經鎖起來了，後來經過elixus的朋友們（其實我都還不熟）的指點，提到IRC Server通常是開6667～6669三個port，於是我趕快測試一下，學校只檔了6667，然後我就可以快樂的在學校上IRC了XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000267" baseName="move-smoothly">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-26</b:date>
+				<b:time>20:13:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>讓你的特效更平順</b:title>
+			<b:content>
+				<b:summary>前幾天在改hidden links時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用時間來決定要移動到哪。...</b:summary>
+				<b:mainContent><p>前幾天在改<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hidden links</a>時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用<strong>時間</strong>來決定要移動到哪。</p></b:mainContent>
+				<b:extendContent><p>我以前的方法有兩個缺點，一就是移動可能很不順，二則是可能會因為重複的觸發起動條件而造成速度倍增，但是改用時間來作判斷的話就沒有這個問題。在javascript中要取得時間很簡單，應該是每個瀏覽器的方法都一樣（Safari、IE、Opera、Firefox這幾個我測試過都OK）：</p>
+
+
+
+<pre><code>timestamp = new Date().getTime();</code></pre>
+
+
+
+<p>這樣就可以取得unix time stamp了（從1970年1月1日開始計算的時間戳記），只不過比較特別的是單位是1/1000秒，而要使用這個時間戳記，你還需要另外一個時間戳記記錄你的特效開始的時間。有了這兩個時間戳記後，要讓效果能跑，還需要幾個東西，一是物件的起迄點，二是特效要花多久時間（週期），三是移動的方式（ex: 要減速效果。也可以說是位置的時間函數）。</p>
+
+<p>以上幾樣東西都設定好了之後，我們就可以寫主要的script了，假設我的時間戳記變數名稱是<code>ts</code>、開始的時間戳記是<code>st</code>、物件要從<code>sp</code>處移動到<code>ep</code>處、移動要花一秒鐘，用等速度移動，那我可以寫成下面這樣：</p>
+
+
+
+<pre><code>ts = new Date().getTime();
+p = (ts - ss) / 1000;
+p = (p&gt;1)1:p;
+target.style.top = sp + (ep - sp) * p + &quot;px&quot;;
+if (p == 1)
+{
+	clearInterval(Interval);
+}</code></pre>
+
+
+
+<p>第一行在取得現在的時間，第二行則是算現在是進行到整個動作的那個部分（幾個週期），第三行則是避免移動過頭，第四行才是指定新的位置給物件，接下來的if回圈則是動作結束的處理，大概的流程就是這樣，我把我的hidden links的這部份的code貼在下面，可以看的更完整：</p>
+
+
+
+<pre><code>function hlGo (type)
+{
+	if (!ts &amp;&amp; !(type ^ hlFlag))
+	{
+		(type)?(tS.display = &quot;block&quot;,delEvent(tA, &quot;mouseover&quot;, hlMouseIn)):delEvent(body, &quot;mousemove&quot;, hlMouseMove);
+		ss = ts = new Date().getTime();
+		this.Interval = setInterval(&quot;hlMove(&quot;+type+&quot;);&quot;, 20);
+	}
+}
+
+function hlMove (type)
+{
+	ts = new Date().getTime();
+	p = (ts-ss)/period;
+	p = (p&gt;1)?1:p;
+	p = (type)?p:1-p;
+	tS.top = iP+Math.sin(p*Math.PI/2)*tH+&quot;px&quot;;
+	if (isO) tS.opacity = p*0.96;
+	if (!(p - type))
+	{
+		if (type &amp;&amp; autofocus) tList.firstChild.firstChild.focus();
+		ts = 0;
+		clearInterval(this.Interval);
+		(type)?addEvent(body, &quot;mousemove&quot;, hlMouseMove):(tS.display = &quot;none&quot;,addEvent(tA, &quot;mouseover&quot;, hlMouseIn));
+	}
+}</code></pre>
+
+
+
+<p>要觸發事件只要呼叫<code>hlGo</code>這個function就好了，有多的判斷都是針對hidden links的需要放上的，除了<code>hlGo</code>裡面會先判斷<code>ts</code>受否不存在才繼續，這是為了避免重複觸發動作，當然事件結束就要把<code>ts</code>給清除掉（設為0）。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000266" baseName="opera-9-coming">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-24</b:date>
+				<b:time>20:40:07</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Opera 9 coming</b:title>
+			<b:content>
+				<b:summary>隨著Opera 8.5變成免費，Opera 9也呼之欲出了，除了render引擎重新編寫過，變的更快之外，還新加入了XSLT、一些CSS 3選擇器的支援、WebForms 2等等，除此之外，還加入了Rich Text Editing的功能，MAIL的部分則新支援了IMAP。雖然不少人對於之前被騙E-mail一事耿耿於懷，不過我個人還是很期待啦。 Enter Merlin...</b:summary>
+				<b:mainContent><p>隨著<a href="http://www.opera.com/">Opera 8.5變成免費</a>，Opera 9也呼之欲出了，除了render引擎重新編寫過，變的更快之外，還新加入了XSLT、一些CSS 3選擇器的支援、<a href="http://whatwg.org/specs/web-forms/current-work/">WebForms 2</a>等等，除此之外，還加入了Rich Text Editing的功能，MAIL的部分則新支援了IMAP。雖然不少人對於之前被<a href="http://blog.othree.net/log/2005/08/31/opera-10-year/">騙E-mail</a>一事耿耿於懷，不過我個人還是很期待啦。</p>
+
+
+<ul>
+<li><a href="http://my.opera.com/olli/blog/show.dml/22674">Enter Merlin</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000265" baseName="hiddenlinks-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-19</b:date>
+				<b:time>23:08:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>hidden links 2.0</b:title>
+			<b:content>
+				<b:summary>終於改好了，目前支援Opera 8、Firefox 1、IE 6、Safari 2，其他除了IE 5.5確定不支援外，都沒測試過，想看效果的話只要把滑鼠移到右上角，等一下子就會跑出來了。這次主要作兩個修改，一是淡入淡出的效果改成獨立設定，不支援opacity的瀏覽器自動關閉。二是改變位置的計算方法，本來在Firefox上跑得不太順，現在就正常多了。下載位置： JavaScript StyleSheet 更新：依照柏強大大的建議加上了tabindex屬性，不過還有點小問題，詳見留言3，如果不需要此功能也可以抓新版的，程式碼又精簡了一點點。...</b:summary>
+				<b:mainContent><p>終於改好了，目前支援Opera 8、Firefox 1、IE 6、Safari 2，其他除了IE 5.5確定不支援外，都沒測試過，想看效果的話只要把滑鼠移到右上角，等一下子就會跑出來了。這次主要作兩個修改，一是淡入淡出的效果改成獨立設定，不支援opacity的瀏覽器自動關閉。二是改變位置的計算方法，本來在Firefox上跑得不太順，現在就正常多了。下載位置：</p>
+
+
+<ul>
+<li><a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/hiddenlinks.js">JavaScript</a></li>
+<li><a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/hiddenlinks.css">StyleSheet</a></li>
+</ul>
+
+
+
+<p>更新：依照柏強大大的建議加上了tabindex屬性，不過還有點小問題，詳見<a href="http://blog.othree.net/log/2005/09/19/hiddenLinks_2/#comment000867">留言3</a>，如果不需要此功能也可以抓新版的，程式碼又精簡了一點點。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000264" baseName="safari-and-style-switcher">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-17</b:date>
+				<b:time>00:53:59</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Safari不支援StyleSwitcher.js</b:title>
+			<b:content>
+				<b:summary>本來想用A List Apart之前提到的方法，不過在safari上測試時卻失敗，不但會造成不同的樣式混在一起，還會讓程式當掉，稍微搜尋一下，一部份原因似乎是safari對onunload的支援不佳，不過樣式混在一起的原因我就不知道了。所以現在變成用PHP來作樣式切換的處理。...</b:summary>
+				<b:mainContent><p>本來想用<a href="http://www.alistapart.com/">A List Apart</a>之前提到的<a href="http://www.alistapart.com/articles/alternate/">方法</a>，不過在safari上測試時卻失敗，不但會造成不同的樣式混在一起，還會讓程式當掉，稍微搜尋一下，一部份原因似乎是safari對onunload的支援不佳，不過樣式混在一起的原因我就不知道了。所以現在變成用PHP來作<a href="/about/styles/">樣式切換</a>的處理。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000263" baseName="ffviiac">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-14</b:date>
+				<b:time>21:19:40</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>FINAL FANTASY Ⅶ ADVENT CHILDREN</b:title>
+			<b:content>
+				<b:summary></b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2005/09/14/ffviiac/ffviiac.png" width="400" height="235" alt="" /></p></b:mainContent>
+				<b:extendContent><blockquote><p>かつて、この世界を愛し<br />
+この世界の仲間たちと共に過ごした人々へ、<br />
+再び集いしこの時を捧ぐ──。</p></blockquote>
+
+<p>獻給曾經愛過這個世界<br />
+並和這個世界的夥伴一起生活過的人們<br />
+再次聚集在此，並奉獻這個時刻──。</p>
+
+<ul><li><a href="http://www.square-enix.co.jp/dvd/ff7ac/">FIONAL FANTASY Ⅶ ADVENT CHILDREN</a></li></ul></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000262" baseName="css-test-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-10</b:date>
+				<b:time>01:30:23</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS小測試二</b:title>
+			<b:content>
+				<b:summary>接著以前的小測試一，剛剛整理到這篇文章時，看到柏強大大的回文，就想說來做做看，成功了XD，見範例，當然還是純CSS，因為還忙著更新就不解說了XD。...</b:summary>
+				<b:mainContent><p>接著以前的<a href="http://blog.othree.net/log/2005/05/03/css-test-1/">小測試一</a>，剛剛整理到這篇文章時，看到<a href="http://leolo.ath.cx/~bobchao/">柏強</a>大大的<a href="http://blog.othree.net/log/2005/05/03/CSStest1/#comment000634">回文</a>，就想說來做做看，成功了XD，見<a href="http://blog.othree.net/log/2005/09/10/css-test-2/cssTest2.html">範例</a>，當然還是純CSS，因為還忙著更新就不解說了XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000261" baseName="updating">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-07</b:date>
+				<b:time>10:31:26</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>更新進度</b:title>
+			<b:content>
+				<b:summary>我之前似乎忘了說，更新期間文章會很少，現在是把文件結構弄得差不多了，正在搬移檔案，接下來還要對彙整頁面作改造，把javasceipt整理好（包括hiddenLinks）...etc，還真的蠻多東西要弄，而且我已經決定要把CSS也重新設計了，看到新的MT相簿也好想裝一個，弄完應該要好一段時間吧@_@。...</b:summary>
+				<b:mainContent><p>我之前似乎忘了說，更新期間文章會很少，現在是把文件結構弄得差不多了，正在搬移檔案，接下來還要對彙整頁面作改造，把javasceipt整理好（包括hiddenLinks）...etc，還真的蠻多東西要弄，而且我已經決定要把CSS也重新設計了，看到新的<a href="http://www.oui-blog.com/archives/2005/09/stopdesign_mt_based_gallery.php">MT相簿</a>也好想裝一個，弄完應該要好一段時間吧@_@。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000260" baseName="opera-eq-firefox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-03</b:date>
+				<b:time>16:03:33</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Opera eq Firefox</b:title>
+			<b:content>
+				<b:summary>前幾天的Opera 10週年紀念活動相信不少人拿到了完整序號，開始試用Opera了吧，我剛好發現Virtuelvis上面有兩篇文章在介紹Opera的功能，當然是和Firefox的功能來作對照，而且大部分是擴充套件的功能，對於新接觸Opera的人來說是很不錯的文章。 Opera equivalents to Firefox extensions Opera equivalents to Firefox extensions II...</b:summary>
+				<b:mainContent><p>前幾天的Opera 10週年紀念活動相信不少人拿到了完整序號，開始試用Opera了吧，我剛好發現<a href="http://virtuelvis.com/">Virtuelvis</a>上面有兩篇文章在介紹Opera的功能，當然是和Firefox的功能來作對照，而且大部分是擴充套件的功能，對於新接觸Opera的人來說是很不錯的文章。</p>
+
+
+<ul>
+<li><a href="http://virtuelvis.com/archives/2005/01/opera-and-firefox-extensions">Opera equivalents to Firefox extensions</a></li>
+<li><a href="http://virtuelvis.com/archives/2005/09/opera-and-firefox-extensions-ii">Opera equivalents to Firefox extensions II</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

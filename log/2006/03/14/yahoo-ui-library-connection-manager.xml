@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000313" baseName="yahoo-ui-library-connection-manager">Yahoo! UI Library: Connection Manager</b:listData>
+
+			<b:previous>
+				<b:mTitle>CSS的百分比減像素</b:mTitle>
+				<b:mDate>2006-03-07</b:mDate>
+				<b:mBase>css-percentage-minus-pixels</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>戰國策？</b:mTitle>
+				<b:mDate>2006-03-16</b:mDate>
+				<b:mBase>web-host-accusation-customer</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000313" baseName="yahoo-ui-library-connection-manager">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-03-14</b:date>
+				<b:time>22:11:40</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Yahoo! UI Library: Connection Manager</b:title>
+			<b:content>
+				<b:summary>Yahoo!最近放出了他的UI Library（以後簡稱YUI），一開始我還沒特別在意，直到看了Forget addEvent, use Yahoo!’s Event Utility，才覺得好像很方便用，而且甚麼瀏覽器間的問題都處理好了，真是好XD。所以最近寫的東西就拿來用了，現在已經研究了Connection Manager和Event，其中Event的部份已經有Forget addEvent, use Yahoo!’s Event Utility這篇文章介紹了，所以這篇先介紹Connection Manager吧。...</b:summary>
+				<b:mainContent><p>Yahoo!最近放出了他的<a href="http://developer.yahoo.net/yui/">UI Library</a>（以後簡稱YUI），一開始我還沒特別在意，直到看了<a href="http://www.dustindiaz.com/yahoo-event-utility/">Forget addEvent, use Yahoo!’s Event Utility</a>，才覺得好像很方便用，而且甚麼瀏覽器間的問題都處理好了，真是好XD。所以最近寫的東西就拿來用了，現在已經研究了<a href="http://developer.yahoo.net/yui/connection/index.html">Connection Manager</a>和<a href="http://developer.yahoo.net/yui/event/index.html">Event</a>，其中Event的部份已經有<a href="http://www.dustindiaz.com/yahoo-event-utility/">Forget addEvent, use Yahoo!’s Event Utility</a>這篇文章介紹了，所以這篇先介紹<strong>Connection Manager</strong>吧。</p></b:mainContent>
+				<b:extendContent><p>其實，<strong>Connection Manager</strong>就是Ajax技術用到的XMLHttpRequest的library。IE不支援XMLHttpRequest，他是用ActiveX來達到HttpRequest的功能（不過最早可以做到這件事的也是IE），當然程式碼也會不一樣，YUI的Connection Manager就可以迴避掉這個問題，以下大部分範例都是用YUI的<a href="http://developer.yahoo.net/yui/connection/index.html#docs">文件</a>的範例。</p>
+
+<p>首先要使用YUI先要把程式碼include進來，檔案在官方網頁有得抓：</p>
+
+<pre><code>&lt;!-- Namespace source file --&gt;
+&lt;script src = "http://yourwebsite.com/util/YAHOO.js" &gt;&lt;/script&gt;
+
+&lt;!-- Connection Manager source file --&gt;
+&lt;script src = "http://yourwebsite.com/util/connection.js" &gt;&lt;/script&gt;</code></pre>
+
+
+
+<p>其中第一個<strong>YAHOO.js</strong>是不管哪一個library都需要的，不過也只需要include一次，如果有同時用到兩個以上的YUI，記得YAHOO.js只需要一次喔。接下來我們就可以建立連線做出HttpRequest了：</p>
+
+<pre><code>var cObj = YAHOO.util.Connect.asyncRequest('GET','http://www.yahoo.com',callback,null);</code></pre>
+
+<p>這樣就做出連線了，這邊要稍微解釋一下<code>asyncRequest</code>裡面的幾個參數，基本上就是如上所示的四個：</p>
+
+
+<ol>
+<li>就是傳資料的method，就只有GET和POST可用，不過我還不會用POST。</li>
+<li>是RequestUri，如果使用GET method，要傳遞的資料就要字幾家在網址後面。</li>
+<li>則是伺服器回傳後負責處理的function。</li>
+<li>最後則是使用POST method時要送出的資料，我不會用POST就是因為這裡看不懂，似乎是需要用實際的HTML表單來作傳出的資料，而不能自己用javascript產生，有時間測試再說。</li>
+</ol>
+
+
+
+<p>如果只是要偷偷上傳資料，那這樣就可以了，不過Ajax的精華在於背後傳遞資料的互動模式，所以伺服器回傳後的動作一定是要的，因此接下來要介紹<strong>callback</strong>這個function的形式。</p>
+
+<p>到這我要改口了，<strong>callback</strong>（名稱可以自取）其實是個物件，裡面至少要指定成功回傳和失敗時負責處理的兩個function，另外還有兩個屬性，argument、scope：長相如下：</p>
+
+
+
+<pre><code>var responseSuccess = function(o){ //transaction success case logic }
+var responseFailure = function(o){ //transaction failure case logic }
+
+var callback =
+{
+    success:responseSuccess,
+    failure:responseFailure,
+    argument: arguments ,
+    scope: this
+}</code></pre>
+
+
+
+<p><code>argument</code>用途不明，似乎不論是成功還是失敗function都會收到的樣子，可以不加，scope只有在function要用到this的時候需要。至於一開始的兩個則是一定要的。一開始定義functiong時的<code>function(o)</code>裡面的o就是代表回傳的物件，如果成功，裡面會包含回傳的網頁內容，可能是XML或是string，不過為了有效利用當然是要回傳XML啦。如果是失敗的狀況，則會包含相關錯誤訊息。至於XML的資料使用方法當然就是DOM了，以上面的function為例，回傳的XML文件就是<code>o.responseXML</code>，可以直接對他套用DOM的function。以下提供一個我前兩天寫的回傳成功的處理function給各位做參考：</p>
+
+<pre><code>var updateS = function (o) {
+    var strDocument = o.responseText; 
+    var xmlDocument = o.responseXML;
+    if(!xmlDocument || xmlDocument.childNodes.length==0) {
+           xmlDocument = (new DOMParser()).parseFromString(strDocument, &quot;text/xml&quot;);
+    }
+    sselect = document.createElement(&quot;select&quot;);
+    sselect.name = &quot;s&quot;;
+    sselect.id = &quot;s&quot;;
+    YAHOO.util.Event.addListener(sselect, &quot;change&quot;, getList, 's');
+    YAHOO.util.Event.addListener(sselect, &quot;keydown&quot;, getList, 's');
+    var options = xmlDocument.getElementsByTagName('option');
+	soption = document.createElement(&quot;option&quot;);
+	soption.value = &quot;-1&quot;;
+	soption.id = &quot;fb&quot;;
+	text = document.createTextNode(&quot;學校&quot;);
+	soption.appendChild(text);
+	sselect.appendChild(soption);
+	for (i = 0; i &lt; options.length; i++) {
+		soption = document.createElement(&quot;option&quot;);
+		soption.value = options[i].getAttribute('value');
+		text = document.createTextNode(options[i].firstChild.nodeValue);
+		soption.appendChild(text);
+		sselect.appendChild(soption);
+	}
+	remove(null, 's');
+	remove(null, 'b');
+	document.getElementById('form').insertBefore(sselect, document.getElementById('sub'));
+}</code></pre>
+
+不過這個function有另外用到別的function IE可能不支援，所以還有如下的code：
+
+<pre><code>if (typeof DOMParser == "undefined") { DOMParser = function (){}
+  DOMParser.prototype.parseFromString = function (str, contentType) {
+    if (typeof ActiveXObject != "undefined") { 
+      var d = new ActiveXObject("MSXML.DomDocument"); 
+      d.loadXML(str); 
+      return d; 
+    } 
+    else if (typeof XMLHttpRequest != "undefined") {
+      var req = new XMLHttpRequest; 
+      req.open("GET", "data:" + (contentType || "application/xml") +  
+                                 ";charset=Big-5," + encodeURIComponent(str), false); 
+      if (req.overrideMimeType) { 
+        req.overrideMimeType(contentType); 
+      } 
+      req.send(null); 
+      return req.responseXML; 
+    } 
+  } 
+}</code></pre>
+
+如果大家發現IE不能正常的取得回傳的XML的話，可以參考我的作法，上面這段code也是找來的，出處會再補上。</b:extendContent>
+			</b:content>
+			<b:comments commentCount="4">
+
+				<b:comment commentID="001022" entryID="000313">
+					<b:author>
+						<b:authorName>Alex Huang</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://forum.hastars.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2006-04-16</b:date>
+						<b:time>13:51:22</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>有一些小小的心得，請您指教。</p>
+
+<p>1.要用POST傳資料時，YAHOO.util.Connect.asyncRequest 的第一個參數設為 &#8220;POST&#8221;，第四個參數則傳入一般URL STRING的參數，例如 &#8220;a=123&amp;b=456&#8221;，即可將 a 與 b 以 POST 的方式傳送。</p>
+
+<p>2.還有一個 YAHOO.util.Connect.setForm() 很好用，用法為
+先 YAHOO.util.Connect.setForm(指定FORM之NAME) ;
+再 YAHOO.util.Connect.asyncRequest(&#8230;);
+此時就會自動把指定 FORM 的所有欄位值直接傳送，而不需要自己一個一個用 JS 從 FORM 中取出來再組合。</p>
+
+<p>3.callback 的 argument 是看使用上的需求，我常用的情形是，因為有時候我們可能向不同的位置抓東西回來，但是由同一個接收函式來處理，這時可以把一些區別用的資訊寫在 argument 中，就可以在成功或失敗的處理函式中叫用。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="001024" entryID="000313">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2006-04-18</b:date>
+						<b:time>22:20:42</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>先說聲抱歉你的排版亂了，這問題我還修不好。用POST或是GET其實是取決於你要存的資料，例如即時的拖拉排序就沒辦法用上POST。至於argument我最近才確定用法，有想寫一小篇說明一下^^。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="022703" entryID="000313">
+					<b:author>
+						<b:authorName>在线代理</b:authorName>
+						<b:authorEmail>amao@amao.com</b:authorEmail>
+						<b:authorUrl>http://proxy.flyy.info</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-07-02</b:date>
+						<b:time>07:11:23</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>最近VBB也开始使用YUI了，看来很有前途啊</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="035486" entryID="000313">
+					<b:author>
+						<b:authorName>khw</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-02-18</b:date>
+						<b:time>11:19:33</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>能否对于argument的用法稍加说明呢？
+感谢。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/312">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

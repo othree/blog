@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000048" baseName="2chf-template">2 column + header + footer 樣版</b:listData>
+
+			<b:previous>
+				<b:mTitle>抽煙者中老菸槍的比例</b:mTitle>
+				<b:mDate>2004-01-28</b:mDate>
+				<b:mBase>smoker</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>MMS簡訊</b:mTitle>
+				<b:mDate>2004-02-02</b:mDate>
+				<b:mBase>mms</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000048" baseName="2chf-template">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-01-30</b:date>
+				<b:time>16:33:29</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>2 column + header + footer 樣版</b:title>
+			<b:content>
+				<b:summary>從開始做網頁，我就喜歡這樣的版面配置了，以前是利用frame來達到我理像的樣式，後來越來越深入CSS後，就開始想用CSS來達到目標，我的目標其實很間單，就像大部分的同樣型式的網頁一樣，一個header在網頁頂端，一個footer在尾端，sidebar靠一邊，就像現在您看到的這個網頁一樣，只不過我還有另一個要求，那就是當主要內容和sidebar的高度都不及視窗高度時，footer不是緊接在較長那邊的下面，而是貼在視窗尾端。為了達到這樣的目標，我不知嘗試了多少次，不過每次都不成功。...</b:summary>
+				<b:mainContent><p>從開始做網頁，我就喜歡這樣的版面配置了，以前是利用frame來達到我理像的樣式，後來越來越深入CSS後，就開始想用CSS來達到目標，我的目標其實很間單，就像大部分的同樣型式的網頁一樣，一個header在網頁頂端，一個footer在尾端，sidebar靠一邊，就像現在您看到的這個網頁一樣，只不過我還有另一個要求，那就是當主要內容和sidebar的高度都不及視窗高度時，footer不是緊接在較長那邊的下面，而是貼在視窗尾端。為了達到這樣的目標，我不知嘗試了多少次，不過每次都不成功。</p></b:mainContent>
+				<b:extendContent><p>不過前兩天看到<a href="http://www.mezzoblue.com/">mezzoblue</a>那篇<a href="http://www.mezzoblue.com/archives/2004/01/23/friday_chall/">Friday Challenge</a>後，我重新研究了一下box model的margin值，也才真正瞭解它在各種設定值下的不同狀況，尤其是負值時的狀況，以前我只是知道大概會怎樣，不過不是真正瞭解該如何用，而且事實上以前的認知也有些錯誤，過兩天我會針對margin值的使用法另外寫一篇文章介紹吧。</p>
+
+<p>於是我根據新學得的知識和網路上找到的一些樣版為基礎，自己設計了一個能符合我需求的樣版，並且在IE(Internet Explorer) 6/WIN和FB(Mozilla FireBird) 0.7/WIN下測試都正常，樣版如下。</p>
+
+<pre><code>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-TW"&gt;
+&lt;head&gt;
+&lt;title&gt;2 column + header + footer 樣版&lt;/title&gt;
+
+&lt;style&gt;
+
+body, html
+{
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+}
+
+#outer
+{
+        width: 100%;
+        height: 100%;
+        margin-bottom: -100px; /* footer height */
+        background-color: #ffc;
+}
+
+#top
+{
+        width: 100%;
+        height: 50px;
+        background-color: #f00;
+}
+
+#container
+{
+        width: 100%;
+        margin-right: -100px; /* sidebar width */
+        float: left;
+}
+#content
+{
+        margin-right: 100px; /* sidebar width */
+        height: 700px;
+        background-color:  #606;
+}
+
+#sidebar
+{
+        width: 100px; /* sidebar width */
+        height: 500px;
+        float: right;
+        background-color:  #006;
+}
+
+#bottom
+{
+        height: 100px; /* footer height */
+        width: 100%;
+        clear: both;
+        background-color:  #f66;
+}
+
+#b
+{
+        height: 100px; /* footer height */
+        width: 100%;
+        clear: both;
+        background-color:  #00f;
+}
+
+&lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div id="outer"&gt;
+
+        &lt;div id="top"&gt;header content here&lt;/div&gt;
+
+        &lt;div id="container"&gt;
+                &lt;div id="content"&gt;main content here&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id="sidebar"&gt;sidebar content here&lt;/div&gt;
+
+        &lt;div id="b"&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div id="bottom"&gt;&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>不過有我個人認為還有幾個缺點，一是有一個空元素，<code>id=b</code>的那個，基本上我是不希望有這種情形的，不過它是讓IE和FB展現出來結果一樣的重要功臣，移走不可，所以我最後是在裡面加上&lt;hr /&gt;。再來是footer的高度一定要先設定好，不能讓它自動決定（雖然說header也是這樣，不過對我來說footer裏的資料變動性會比較大）。除以上兩點外，我都很滿意，不過目前只有在上述的兩個環境下測試過，如果有人有其他環境的測試結果還請告知。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="6">
+
+				<b:comment commentID="000093" entryID="000048">
+					<b:author>
+						<b:authorName>bcse</b:authorName>
+						<b:authorEmail>elohim@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.bcse.info/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-18</b:date>
+						<b:time>13:56:09</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我發現你這頁如果用 IE 看，右邊會掉下去耶~</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000094" entryID="000048">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-18</b:date>
+						<b:time>15:02:14</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>感謝，問題已經修正了，原來IE不明確的給他width，還是可能被不斷行的文字撐大。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000095" entryID="000048">
+					<b:author>
+						<b:authorName>bcse</b:authorName>
+						<b:authorEmail>elohim@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.bcse.info/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-20</b:date>
+						<b:time>10:58:44</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>可以請教是怎麼修正的嗎?</p>
+
+<p>因為我的也有類似的問題，還更慘&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000096" entryID="000048">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-21</b:date>
+						<b:time>10:26:51</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>這個嗎，我也不確定確切的問題點是在哪裡，不過IE好像不給確定的寬度，物件就很容易被不斷行文字撐大。我有加上overflow: auto;，這個性質理論上兩邊都支援(事實上IE還支援x、y分開設定，是CSS3的，不過FF還不支援)，但是我的狀況下IE就是不會跑出scroll bar。由於我為了避開IE的box model的問題，所以除了框架外的元素都沒有指定寬度，而是用margin來算間距，我就在想會不會是因為我這樣設定的關係，於是我把pre加上width: 100%;的性質（事實上在FF下這是無意義的設定，block物件如果不是float的話，width就是最大），結果IE下它就不會被撐大了，詳細你可以看看CSS檔案裡面pre和code的部份。另外我不知道你那邊有問題的頁面是哪一個^^b。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000110" entryID="000048">
+					<b:author>
+						<b:authorName>bcse</b:authorName>
+						<b:authorEmail>elohim@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.bcse.info/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-25</b:date>
+						<b:time>18:16:03</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>謝謝! 我想我是遇到了 box model 問題。</p>
+
+<p>另外你這邊的搜尋結果頁面是 Plain Text ，這是故意的嗎?</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000111" entryID="000048">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-25</b:date>
+						<b:time>21:56:05</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>那是因為我沒時間去弄搜尋的樣板&#8230;orz，本來有計劃要統一的。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/96">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

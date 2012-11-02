@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000484" baseName="move-smoothly-2">讓你的特效更平順之二</b:listData>
+
+			<b:previous>
+				<b:mTitle>Eric Meyer 更新 style resetting</b:mTitle>
+				<b:mDate>2008-01-17</b:mDate>
+				<b:mBase>eric-meyer-renew-style-reset</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>網址各部份名稱</b:mTitle>
+				<b:mDate>2008-01-18</b:mDate>
+				<b:mBase>parts-of-uri</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000484" baseName="move-smoothly-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-01-18</b:date>
+				<b:time>01:41:27</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>讓你的特效更平順之二</b:title>
+			<b:content>
+				<b:summary>之前我曾經發表過一篇如何讓你的特效更平順，那時候用的方法是每次function內檢查時間變化，然後決定這時候應該在哪個位置，那時候這方法效果大概已經不錯了，不過我這兩天看Pro JavaScript Techniques，裡面的範例使用的方法看起來會更順暢，他的原理是一開始就把每個時間點要做的動作一口氣設定好，接下來就沒有interval的問題，也不用檢查時間變化，當然也不會有配合setTimeout使用遞迴時的延遲問題，重點部份範例如下： for ( var i = 0; i &lt;= 100; i += 5 ) { (function () { var pos = i; setTimeout(function () { elem.style.height = ( ( pos / 100) * h ) + &quot;px&quot;; },...</b:summary>
+				<b:mainContent><p>之前我曾經發表過一篇<a href="http://blog.othree.net/log/2005/09/26/move-smoothly/">如何讓你的特效更平順</a>，那時候用的方法是每次function內檢查時間變化，然後決定這時候應該在哪個位置，那時候這方法效果大概已經不錯了，不過我這兩天看Pro JavaScript Techniques，裡面的範例使用的方法看起來會更順暢，他的原理是一開始就把每個時間點要做的動作一口氣設定好，接下來就沒有interval的問題，也不用檢查時間變化，當然也不會有配合setTimeout使用遞迴時的延遲問題，重點部份範例如下：</p>
+
+
+
+<pre><code>
+for ( var i = 0; i &lt;= 100; i += 5 ) {
+    (function () {
+        var pos = i;
+        setTimeout(function () {
+            elem.style.height = ( ( pos / 100) * h ) + &quot;px&quot;;
+        }, ( pos +1 ) * 10 );
+    })();
+}
+</code></pre>
+
+
+
+<p>這是一個slide down的效果，直接設定好分21次調整元素高度，每次間隔50微秒，這樣子就可以產生順暢的動畫效果了。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/482">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

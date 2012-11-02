@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000637" baseName="jquery-code-style">jQuery Code Style</b:listData>
+
+			<b:previous>
+				<b:mTitle>WAI-ARIA 介紹之二</b:mTitle>
+				<b:mDate>2010-10-13</b:mDate>
+				<b:mBase>introduction-to-wai-aria-2</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>WAI-ARIA 介紹之三</b:mTitle>
+				<b:mDate>2010-10-17</b:mDate>
+				<b:mBase>introduction-to-wai-aria-3</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000637" baseName="jquery-code-style">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-10-17</b:date>
+				<b:time>00:15:46</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>jQuery Code Style</b:title>
+			<b:content>
+				<b:summary>隨著 jQuery 1.4.3 發佈，還有一份 jQuery Code Style 文件也一起公開了，相較於 Google 的 JavaScript Code Guide，我覺得 jQuery 的 code style 比較有趣可以講:P。 jQuery 在某個版本開始有注意 coding style ，而使用的檢查工具就是 JSLint ，不過直到這次新版才公開講，使用上其實有故意忽略了幾個錯誤訊息，其中特別有趣的是 "Expected an identifier and instead saw 'undefined' (a reserved word)." 這個。 在 JavaScript 中 undefined...</b:summary>
+				<b:mainContent><p>隨著 <a href="http://blog.jquery.com/2010/10/16/jquery-143-released/">jQuery 1.4.3 發佈</a>，還有一份 <a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines">jQuery Code Style</a> 文件也一起公開了，相較於 Google 的 <a href="http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml">JavaScript Code Guide</a>，我覺得 jQuery 的 code style 比較有趣可以講:P。</p>
+
+<p>jQuery 在某個版本開始有注意 coding style ，而使用的檢查工具就是 <a href="http://jslint.com/">JSLint</a> ，不過直到這次新版才公開講，使用上其實有故意忽略了幾個錯誤訊息，其中特別有趣的是 "Expected an identifier and instead saw 'undefined' (a reserved word)." 這個。</p>
+
+<p>在 JavaScript 中 undefined 不是保留關鍵字，而且它是全域的，所以任何 script 都可以把它覆寫掉，然後下面這樣判斷變數是否宣告過的方法就會爛掉了：</p>
+
+<pre><code>if (foo === undefined) {
+    // ....blah....
+}
+</code></pre>
+
+<p>有一個作法可以解決這問題，我以前也有提過，就是把自己的程式碼用一個 closure 包起來，然後故意少傳一個參數：</p>
+
+<pre><code>(function (document, undefined) {
+    // ....blah....
+})(document);
+</code></pre>
+
+<p>這樣 closure 內部的 undefined 就不用怕被其他地方的程式覆寫過了，不過 JSLint 會告訴你第一行的 undefined 不該使用來作為變數名稱，而應該要作為保留字，所以才會忽略這項錯誤訊息。</p>
+
+<p>那既然 undefined 的問題解決了，在下面的 <a href="http://docs.jquery.com/JQuery_Core_Style_Guidelines#Type_Checks">TYPE CHECKS</a> 的 undefined 檢查中的全域變數還要用 typeof 來檢查呢？</p>
+
+<pre><code>typeof variable === "undefined"
+</code></pre>
+
+<p>那是因為只要一存取到沒定義的全域變數就會噴出錯誤訊息，所以必須要用 typeof 來判斷它的類別。</p>
+
+<p>還有一個被忽略的錯誤訊息是 "Use '===' to compare with 'null' ，如果有看過一些關於 JavaScript 的 == (equal) 、 === (strict equal) 和 null 、 undefined 等行為的文章，就會知道它們的行為實在不好搞清楚，所以都會建議盡量使用 === 和 !== 取代 == 和 != ， JSLint 則是只有在空字串、0、null、undefined 等數值的比對上才會強迫你使用 === 和 !== ，不過 jQuery 的 lint 檢查卻故意忽略 null 的部份，主要是因為可以用下面的方法來判斷一個變數使否有值，或著是根本還未定義：</p>
+
+<pre><code>if (foo == null) {
+    // ....blah....
+}
+</code></pre>
+
+<p>這樣檢查的話，0 或是空字串是會當成有值，如果只是用驚嘆號做 true/false 判斷的話那就會誤判了。所以可以知道，jQuery 現在的程式碼裡面 == (equal) 和 === (strict equal) 的使用應該都是有考慮過的，話雖如此，其實也只有一種情形會使用到 == 就是。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/636">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

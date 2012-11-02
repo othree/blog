@@ -1,0 +1,1171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>y</b:listType>
+			<b:listData listID="2012">2012</b:listData>
+
+			<b:previous>
+				<b:mTitle>2011</b:mTitle>
+				<b:mDate>2011</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000715" baseName="opengraph-protocol-twitter-card">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-11-02</b:date>
+				<b:time>11:07:11</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Open Graph Protocol, Twitter Card</b:title>
+			<b:content>
+				<b:summary> 大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 Open Graph Protocol，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下： &lt;meta property="og:title" content="Device Pixel Ratio" /&gt; &lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt; &lt;meta property="og:type" content="article" /&gt; &lt;meta property="og:description" content="...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146654174/" title="Flickr 上 othree 的 Twitter Card from 影像紀錄區"><img src="http://farm9.staticflickr.com/8332/8146654174_48699279f9.jpg" width="422" height="500" alt="Twitter Card from 影像紀錄區" /></a></p>
+
+<p>大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 <a href="http://ogp.me/">Open Graph Protocol</a>，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下：</p>
+
+<pre><code>&lt;meta property="og:title" content="Device Pixel Ratio" /&gt;
+&lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
+&lt;meta property="og:type" content="article" /&gt;
+&lt;meta property="og:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
+&lt;meta property="og:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
+</code></pre>
+
+<p>這組標籤放在你的 head 裡面，如果有人在分享的 facebook 上分享的話，看起來就如下圖：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146662104/" title="Flickr 上 othree 的 Facebook Open Graph Protocol"><img src="http://farm9.staticflickr.com/8191/8146662104_50ff447a3b.jpg" width="500" height="183" alt="Facebook Open Graph Protocol" /></a></p>
+
+<p>Open Graph Protocol 定義的標籤很好理解，也沒有複雜的結構，所以對於開發人員是非常友善，不過其實我是不太樂觀其成的，主要原因是我覺得它是個被 Facebook 控制的封閉標準，網路標準的發展最不希望發生的就是某個標準受至於特定的人或公司，不過其實一年過後的今天，我對 Open Graph Protocol 有改觀不少，也讓我願意在自己的網站上加入這樣的標籤，會讓我改觀的原因有兩個，一是雖然 Facebook 沒有明說過，不過 Open Graph Protocol 的網站上其實是一點 Facebook 的色彩都沒有的，如果不知道前因後果的話，其實不容易發現這套格式是由他們家提出，這讓我覺得他們有希望把這個格式推出去，而不是只限於 Facebook 使用，當然這一切可能都是商業陰謀，所以直到 Twitter 推出了 <a href="https://dev.twitter.com/docs/cards">Twitter Cards</a> 之前，我都還是不敢貿然進場。</p>
+
+<p>今年 Twitter 推出一項新的 API 規格，叫做 Twitter Cards，可以把他想成是 Open Graph Protocol 的 Twitter 版，meta 標籤的部分看起來就像：</p>
+
+<pre><code>&lt;meta name="twitter:card" content="summary" /&gt;
+&lt;meta name="twitter:title" content="Device Pixel Ratio" /&gt;
+&lt;meta name="twitter:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
+&lt;meta name="twitter:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
+&lt;meta name="twitter:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
+</code></pre>
+
+<p>這張 Twitter Card 結果會在 Twitter 呈現成如下圖的樣子：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146619231/" title="Flickr 上 othree 的 Twitter Card Preview"><img src="http://farm9.staticflickr.com/8193/8146619231_4c368a50d9.jpg" width="464" height="500" alt="Twitter Card Preview" /></a></p>
+
+<p>Twitter Cards 基本上也和 Open Graph Ptotocol 一樣定義了整套相近的標籤屬性，像是 title, desciption, url, image 等就是兩種規格都有的屬性，而最讓我意外的一件事情是，Twitter Card 相容於 Open Graph Protocol，大部分兩種規格都有的屬性，Twitter Cards 都可以支援 Open Graph Protocol 已經寫好的 meta 標籤，所以我如果要同時支援 Twitter 和 Open Graph 不用兩套重複的內容都寫出來，只要先寫 Open Graph Protocol，然後再把 Twitter 不足的部分補上去就可以了：</p>
+
+<pre><code>&lt;meta name="twitter:card" content="summary" /&gt;
+&lt;meta property="og:title" content="Device Pixel Ratio" /&gt;
+&lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
+&lt;meta property="og:type" content="article" /&gt;
+&lt;meta property="og:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
+&lt;meta property="og:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
+</code></pre>
+
+<p>其實這樣的相容是可以用語意網的觀念來解釋的，在語意網的世界中，描述事物的框架和事物本身的說明與資訊兩者是分開的，前者基本上是 RDF 標準，在這篇文章的例子就只是簡單的 meta 標籤，而後者也稱為知識本體（ontology），兩者基本上是完全獨立，而知識本體包括了語彙以及語彙之間的關係，在 Open Graph Protocol 中，像是 <em>og:title</em>, <em>og:type</em>, <em>og:decrition</em> 等都是屬於知識本體的語彙，分別有著標題、類別和敘述的意義，而 Twitter Cards 則是瞭解兩者間語彙的關係，建立了像是 <code>og:title = twitter:title</code>, <code>og:description = twitter:description</code> 這樣的關係，因此兩種屬性就是等價的存在。</p>
+
+<p>語意網的部分就先到這部分暫停，下一篇繼續介紹些新東西，回到 Open Graph Protocol，其實我對他有些不滿意的地方，就是 title, description 和 url 這三個屬性，其實在 HTML 裡已經早就有定義好的地方會記錄了，title 當然就是 title 標籤， description 就是 meta description，url 則是 <a href="http://blog.othree.net/log/2011/03/03/canonical-url/">canonical url</a>，不瞭解是什麼原因才讓他們捨棄使用既有的資訊，結果是雖然 Twitter Cards 相容 Open Graph Protocol，但是網頁的 meta data 還是會有重複的資料，實在很可惜，當然我想到一個可能性，就是語意網的支援。</p>
+
+<p>另外一個要提的就是兩個規範都有開發用的預覽工具，分別是 <a href="https://developers.facebook.com/tools/debug">Facebook Object Debugger</a> 和 <a href="https://dev.twitter.com/docs/cards/preview">Twitter Cards Preview Tool</a>，Facebook 對 Open Graph Protocol 的支援是完全開放的，不過 Twitter Cards 目前是白名單機制，似乎是有計畫要完全開放，不過沒有時程，目前是要先申請，台灣我目前只知道 <a href="https://twitter.com/toomore">@Toomore</a> 的 <a href="http://pi.isuphoto.org/">影像紀錄區</a> 申請有過，所以如果有人分享影像紀錄區的作品的話，在 Twitter 上就可以直接預覽到照片了！</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000714" baseName="device-pixel-ratio">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-10-28</b:date>
+				<b:time>22:42:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Device Pixel Ratio</b:title>
+			<b:content>
+				<b:summary> 這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8128174518/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" width="500" height="333" alt="2x compare to 1x"/></a></p>
+
+<p>這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的 width 是 1024px，而其實際的螢幕點數有 2048 點，除上 Device Pixel Ratio 是 2，結果會剛好回到 1024，對於網頁製作上來說，直接當程式 1024px 寬的畫面來處理基本上就沒問題了。</p>
+
+<p>雖然說好像瀏覽器都幫你把東西解決了，不過其實還會有一個問題需要處理，那就是圖片 asset 的問題，原來的圖片在這些高 DPI 的螢幕上顯示，解析度不夠，結果都會有鉅齒出現，而這裡出現的就是 Device Pixel Ratio 了，要得到 Device Pixel Ratio 的方法目前有兩種，一個是 CSS 用 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">media query</a>：</p>
+
+<pre><code>@media (-webkit-min-device-pixel-ratio: 2),
+       (min--moz-device-pixel-ratio: 2),
+       (min-resolution: 2dppx)
+</code></pre>
+
+<p>這個 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">MDN 提供的範例</a>中，共有三行，第一行是 WebKit Based 瀏覽器用的，像是 iOS 內建的瀏覽器就是用這行，第二行則是給比較舊的 Firefox （&lt; 16）用的，第三行則是 <a href="http://www.w3.org/TR/css3-mediaqueries/#resolution">W3C 提出的標準</a>，W3C 的應該還是會是以後的主流，dppx 代表的是 dots per pixel，除了這個單位外其實還可以用 dpi, dpcm 等密度單位，考量的比較全面，CSS 那邊管的圖片像是元件背景之類的，透過這個 media query 就可以順利的在需要的時候換成不同品質的圖片，另外還有一種圖片來源是動態從 JavaScript 那邊插入的，這目前也有個方法可以支援：</p>
+
+<pre><code>window.devicePixelRatio
+</code></pre>
+
+<p>直接讀取這個值就可以知道現在的 device pixel ratio 了，然後根據讀到的值來選擇適當的圖片，不過講到網頁的圖片，其實最先應該想到的是 img 標籤才是，偏偏這兩個方法都不直接適用，而且實際上目前也還沒有針對這個問題，可直接使用的新機制，有人有寫 jQuery plugin 來把圖片換掉，我的作法則是第一次瀏覽不管，不過同時就把 device pixel ratio 數值寫進 cookie，這樣下次使用者來訪，或是他點到其他頁時，server 端就可以知道他用的 device pixel ratio，然後先一步把 img 要丟出的圖片網址處理好，以 flickr 的圖片為例，我平常貼的都是 500px 寬的縮圖，要給 ratio 2 的裝置看則需要 1000px 以上，flickr 最大的縮圖是 1024px，剛好很接近 1000px，又很幸運的兩者檔案路徑只有在檔名最後面差一個 _b ，所以我就很開心的拿來用了，在 XSLT parse 時把 img 標籤，src 是 flickrfarm 來的，檔名結尾不是 _o 的（代表原始檔）的圖片路徑都加上 _b ，結果的差異就是上面第一張圖那樣，其他還抓了不少比較圖，不過都要到 flickr 那去開原始檔比較才看得出差異。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8128147819/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8043/8128147819_45f5f33352.jpg" width="500" height="333" alt="2x compare to 1x"/></a>
+<figcaption>比較圖原始大小</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127784377/" title="Flickr 上 othree 的 Support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8052/8127784377_5db2831fb7.jpg" width="375" height="500" alt="Support device pixel ratio 2x"/></a>
+<figcaption>2x 圖片</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127811546/" title="Flickr 上 othree 的 Not support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8336/8127811546_4e62af122b.jpg" width="375" height="500" alt="Not support device pixel ratio 2x"/></a>
+<figcaption>1x 圖片</figcaption>
+</figure></p>
+
+<p>這支寫 device pixel ratio cookie 的程式很簡單，我也放上 github 了，就叫 <a href="https://github.com/othree/dpr-cookie">dpr-cookie</a>，完全 stand alone，不需要其他 Library，有需要的歡迎使用，還沒放上 License 宣告，不過會用 MIT License。</p>
+
+<p>最後提一下 img 標籤的問題，WHATWG 目前是有<a href="http://www.w3.org/community/respimg/2012/05/11/respimg-proposal/">候選方案</a>的，不過我覺得各方意見還很多，要有個定案應該不會太快，看起來會像是這樣：</p>
+
+<pre><code>&lt;img src="face-600-200@1.jpg" alt=""
+    set="face-600-200@1.jpg 600w 200h 1x, face-600-200@2.jpg 600w 200h 2x, face-icon.png 200w 200h"&gt;
+</code></pre>
+
+<p>或是：</p>
+
+<pre><code>&lt;picture alt=""&gt;
+    &lt;source src="mobile.jpg" /&gt;
+    &lt;source src="large.jpg" media="min-width: 600px" /&gt;
+    &lt;source src="large_1.5x-res.jpg" media="min-width: 600px, min-device-pixel-ratio: 1.5" /&gt;
+    &lt;img src="mobile.jpg" /&gt;
+&lt;/picture&gt;
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000713" baseName="seiko-standard">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-10-23</b:date>
+				<b:time>00:52:51</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>SEIKO STANDARD</b:title>
+			<b:content>
+				<b:summary> 大約上個月發現鬧鐘的電池接點已經氧化了，剛好一直有想花錢的衝動，所以就下單買了肖想很久的 SEIKO STANDARD 電子鬧鐘，這系列雖然稱為 STANDARD，會讓人覺得是所謂的標準款，不過其實是只有日本才有，而且不是一直量產的。這個 STANDARD 系列其實除了電子鐘外，還有類比的指針式掛鐘，是 SEIKO 2006 年的 Power Design Project 中，由 深澤直人 設計的，似乎是在 2010 年才開始販賣，設計的主題就是 STANDARD ，標準，看著這系列的時鐘，就會覺得這是一個最基本的電子鐘的樣子，好像每個人都知道的造型一般，可是實際上你會發現，除了這系列外，根本買不到這個造型的時鐘，雖然有廠牌有出些相近的，可是看起來就是元素太多，感覺不對，也因此即使定價不便宜，我還是一口氣買了黑和白兩種顏色，一個放家裡，一個放在辦公室，比較可惜的是現在只買的到最小的，M 和 L 都已經買不到了，使用了幾天感覺都還不差，主要缺點就是液晶面板的對比不夠明顯而已。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8102801682/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8475/8102801682_bf4f3d28b7.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+
+<p>大約上個月發現鬧鐘的電池接點已經氧化了，剛好一直有想花錢的衝動，所以就下單買了肖想很久的 <a href="http://www.seiko-clock.co.jp/power_design_project/standard/index.html">SEIKO STANDARD</a> 電子鬧鐘，這系列雖然稱為 STANDARD，會讓人覺得是所謂的標準款，不過其實是只有日本才有，而且不是一直量產的。這個 STANDARD 系列其實除了電子鐘外，還有類比的指針式掛鐘，是 SEIKO 2006 年的 Power Design Project 中，由 <a href="http://www.plusminuszero.jp/">深澤直人</a> 設計的，似乎是在 2010 年才開始販賣，設計的主題就是 <strong>STANDARD</strong> ，標準，看著這系列的時鐘，就會覺得這是一個最基本的電子鐘的樣子，好像每個人都知道的造型一般，可是實際上你會發現，除了這系列外，根本買不到這個造型的時鐘，雖然有廠牌有出些相近的，可是看起來就是元素太多，感覺不對，也因此即使定價不便宜，我還是一口氣買了黑和白兩種顏色，一個放家裡，一個放在辦公室，比較可惜的是現在只買的到最小的，M 和 L 都已經買不到了，使用了幾天感覺都還不差，主要缺點就是液晶面板的對比不夠明顯而已。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8100150468/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8331/8100150468_36382df05e.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8100146341/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8043/8100146341_1e12d5a248.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8100147393/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8190/8100147393_6de7470720.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8100147955/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8185/8100147955_f4e202c10c.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8112728924/" title="Flickr 上 othree 的 SEIKO STANDARD"><img src="http://farm9.staticflickr.com/8332/8112728924_1384041de2.jpg" width="500" height="333" alt="SEIKO STANDARD"/></a></p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000712" baseName="source-code-pro">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-09-27</b:date>
+				<b:time>19:55:02</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>Source Code Pro</b:title>
+			<b:content>
+				<b:summary>Adobe 昨天發表了新的等寬字形，叫做 Source Code Pro，從名稱上就知道這設計的目標就是 coding 用，coding 用的字形有幾個需求，像是等寬，數字 1、小寫 l、大寫 I 這些形體上很接近的字母都要可以一眼就能分辨等，目前我使用的是 Inconsolata。 Inconsolata 14 這套字形非常受歡迎，使用的人很多，我也用了很久，每次有新的 coding 字形出來我都還是會嘗試一下，不過大部分時候都只是切過去看一下，沒辦法滿意後就又換回 Inconsolata，不過這次 Adobe 的 Source Code Pro 我有打算用了一陣子看看。 Source Code Pro 14 Regular 直接比較這兩套字形，第一印象就是 Inconsolata 的字寬和字高都比較小，所以同樣面積的畫面其實它是可以顯示比較多東西的，這樣當然是會有缺點，就是畫面比較擁擠，不過這缺點其實沒很嚴重，因為沒有對照組出來其實沒什麼這樣的感覺，不過由於同樣都是 14 字級，Source Code Pro 實在大上不少，所以我決定降一級看看。 Source Code...</b:summary>
+				<b:mainContent><p>Adobe 昨天發表了新的等寬字形，叫做 <a href="http://blogs.adobe.com/typblography/2012/09/source-code-pro.html">Source Code Pro</a>，從名稱上就知道這設計的目標就是 coding 用，coding 用的字形有幾個需求，像是等寬，數字 1、小寫 l、大寫 I 這些形體上很接近的字母都要可以一眼就能分辨等，目前我使用的是 <a href="http://levien.com/type/myfonts/inconsolata.html">Inconsolata</a>。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8028810367/" title="Flickr 上 othree 的 Inconsolata 14"><img src="http://farm9.staticflickr.com/8450/8028810367_271ba86417.jpg" width="500" height="275" alt="Inconsolata 14"/></a>
+<figcaption>Inconsolata 14</figcaption>
+</figure></p>
+
+<p>這套字形非常受歡迎，使用的人很多，我也用了很久，每次有新的 coding 字形出來我都還是會嘗試一下，不過大部分時候都只是切過去看一下，沒辦法滿意後就又換回 Inconsolata，不過這次 Adobe 的 Source Code Pro 我有打算用了一陣子看看。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8028806742/" title="Flickr 上 othree 的 Source Code Pro 14 Regular"><img src="http://farm9.staticflickr.com/8450/8028806742_5b2cd588c1.jpg" width="500" height="275" alt="Source Code Pro 14 Regular"/></a>
+<figcaption>Source Code Pro 14 Regular</figcaption>
+</figure></p>
+
+<p>直接比較這兩套字形，第一印象就是 Inconsolata 的字寬和字高都比較小，所以同樣面積的畫面其實它是可以顯示比較多東西的，這樣當然是會有缺點，就是畫面比較擁擠，不過這缺點其實沒很嚴重，因為沒有對照組出來其實沒什麼這樣的感覺，不過由於同樣都是 14 字級，Source Code Pro 實在大上不少，所以我決定降一級看看。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8028806772/" title="Flickr 上 othree 的 Source Code Pro 13 Regular"><img src="http://farm9.staticflickr.com/8181/8028806772_3c3db65638.jpg" width="500" height="275" alt="Source Code Pro 13 Regular"/></a>
+<figcaption>Source Code Pro 13 Regular</figcaption>
+</figure></p>
+
+<p>Source Code Pro 的 14 和 13 實在很接近，基本上只有高度有點差異，不過總之這樣又會覺得字體線條有些太粗，所以最後我是選擇 Light 的 13 字級來使用一陣子，和 Inconsolata 比基本上就是我的字間比較不會那麼擁擠，不過還好我螢幕大，所以也不用擔心可以顯示的程式碼太少的問題。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8029038525/" title="Flickr 上 othree 的 Source Code Pro 13 Light"><img src="http://farm9.staticflickr.com/8319/8029038525_9f60c646f3.jpg" width="500" height="275" alt="Source Code Pro 13 Light"/></a>
+<figcaption>Source Code Pro 13 Light</figcaption>
+</figure></p>
+
+<p>Source Code Pro 除了在 <a href="http://sourceforge.net/projects/sourcesans.adobe/">Source Forege</a> 和 <a href="https://github.com/adobe/Source-Code-Pro">Github</a> 上發布外，還一起在 <a href="http://www.google.com/webfonts#UsePlace:use/Collection:Source+Code+Pro">Google Web Font</a>、<a href="http://html.adobe.com/edge/webfonts/">Adobe Edge Fonts</a> 等免費的 web font 服務上提供，而且六種粗細等級全部都有，所以我也趁機把我 blog 的程式碼用的字形換過去，本來是用 <a href="http://www.google.com/webfonts#UsePlace:use/Collection:Droid+Sans+Mono">Droid Sans Mono</a> 的，下面可以看到兩者之間的比較：</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8028811136/" title="Flickr 上 othree 的 droid sans vs source code pro"><img src="http://farm9.staticflickr.com/8319/8028811136_bc3326f7b2_o.png" width="640" height="160" alt="droid sans vs source code pro"/></a>
+<figcaption>Doird Sans vs Source Code Pro (weight: 600)</figcaption>
+</figure></p>
+
+<p>這邊我選的是字重 600 的 Semi Bold Source Code Pro，因為 Regular 的在網頁上看起來實在太細，所以選了粗一點的，其實很難說哪個好，Droid Sans Mono 其實看起來還是不錯的，不過總之就先這樣試用一陣子吧～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000711" baseName="apple-earpods">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-09-23</b:date>
+				<b:time>23:46:31</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>Apple EarPods</b:title>
+			<b:content>
+				<b:summary> 這次 Apple 的發表會，當天的主角算是有三樣吧，新的 iPod 產品，iPhone 5，還有一個比較意外的就是新耳機 EarPods，不過其實講到這耳機時，我已經撐不住睡著了，所以我看到消息已經是隔天早上醒來了，一開始也沒很注意，不過看到一些介紹吸引了我的注意，Apple 設計這隻耳機是其中一個目標是可以符合所有人的耳朵，他們還掃描了上百人的耳朵來做為設計的參考，事實上，我就是一個找不到適合的耳塞式耳機的人，因為我的耳朵比較小，所以一般耳塞耳機都會有點擠，然後大約戴個半小時就會開始不舒服，耳朵痛了，所以我要是要買耳機都會考慮耳掛式或是耳罩式，不過這兩種耳機還會有其他的問題需要考慮，總之，看到這點就讓我很想嘗試看看這款新耳機了，後來又聽到網路上其他長輩評價說聲音表現也不錯，可以打死其他同價位的耳機，就更讓我堅定信心，於是昨天我聽說台灣蘋果專賣店已經有現貨，就特別跑了一趟去買了一隻回來。 這次包裝也是依然維持一段簡潔，不過他這繞線真的是講究，我敢保證線條長度是和包裝盒一起決定的，這也是第一次我沒有信心可以還原的蘋果產品包裝，不過包裝畢竟不是重點，重點還是他到底有沒說的這麼神，可以適合這麼多人的耳朵，所以來看一下他新的神祕造型： 令人意外的是，這造型真的很厲害，我戴上去兩三個小時一點都沒有不舒服，真的就只像是放在耳朵那邊，完全沒有壓迫到我的耳朵，而且聲音品質還不錯，至少和我印象中前代耳機差很多（不過我上次使用是很久以前了），低音和空間感都有出來，聲音完整很多，玩 Zoo Keeper Battle 馬上就七連勝，不過今天又一直輸 :'(...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015602105/" title="Flickr 上 othree 的 Apple EarPod"><img src="http://farm9.staticflickr.com/8456/8015602105_b161872e4b.jpg" width="333" height="500" alt="Apple EarPods"/></a></p>
+
+<p>這次 Apple 的發表會，當天的主角算是有三樣吧，新的 iPod 產品，iPhone 5，還有一個比較意外的就是新耳機 <a href="http://www.apple.com/iphone/design/#earpods">EarPods</a>，不過其實講到這耳機時，我已經撐不住睡著了，所以我看到消息已經是隔天早上醒來了，一開始也沒很注意，不過看到一些介紹吸引了我的注意，Apple 設計這隻耳機是其中一個目標是可以符合所有人的耳朵，他們還掃描了上百人的耳朵來做為設計的參考，事實上，我就是一個找不到適合的耳塞式耳機的人，因為我的耳朵比較小，所以一般耳塞耳機都會有點擠，然後大約戴個半小時就會開始不舒服，耳朵痛了，所以我要是要買耳機都會考慮耳掛式或是耳罩式，不過這兩種耳機還會有其他的問題需要考慮，總之，看到這點就讓我很想嘗試看看這款新耳機了，後來又聽到網路上其他長輩評價說聲音表現也不錯，可以打死其他同價位的耳機，就更讓我堅定信心，於是昨天我聽說台灣蘋果專賣店已經有現貨，就特別跑了一趟去買了一隻回來。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015603167/" title="Flickr 上 othree 的 Apple EarPod"><img src="http://farm9.staticflickr.com/8459/8015603167_e6e2e0a8eb.jpg" width="500" height="333" alt="Apple EarPods"/></a></p>
+
+<p>這次包裝也是依然維持一段簡潔，不過他這繞線真的是講究，我敢保證線條長度是和包裝盒一起決定的，這也是第一次我沒有信心可以還原的蘋果產品包裝，不過包裝畢竟不是重點，重點還是他到底有沒說的這麼神，可以適合這麼多人的耳朵，所以來看一下他新的神祕造型：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015604005/" title="Flickr 上 othree 的 Apple EarPods"><img src="http://farm9.staticflickr.com/8173/8015604005_6ddf3b9dce.jpg" width="500" height="333" alt="Apple EarPod"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015604585/" title="Flickr 上 othree 的 Apple EarPods"><img src="http://farm9.staticflickr.com/8296/8015604585_88a4434775.jpg" width="500" height="333" alt="Apple EarPod"/></a></p>
+
+<p>令人意外的是，這造型真的很厲害，我戴上去兩三個小時一點都沒有不舒服，真的就只像是放在耳朵那邊，完全沒有壓迫到我的耳朵，而且聲音品質還不錯，至少和我印象中前代耳機差很多（不過我上次使用是很久以前了），低音和空間感都有出來，聲音完整很多，玩 Zoo Keeper Battle 馬上就七連勝，不過今天又一直輸 :'(</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000710" baseName="hokkaido">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-09-16</b:date>
+				<b:time>18:49:26</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>北海道</b:title>
+			<b:content>
+				<b:summary>上上週去了一趟北海道，一路上運氣都不錯，五天行程大約有兩三天是下雨的，不過剛好都是比較不會被下雨影響的後兩天的行程，函館夜景更是幸運，我們下山時看到大量的日本學生證要上去，而且接著就開始下雨了，另外在北海道神宮還抽到大吉，現場還看到日本新人在神宮拍婚紗，回想起來真是運氣不錯，最後挑了12張照片放上來。...</b:summary>
+				<b:mainContent><p>上上週去了一趟北海道，一路上運氣都不錯，五天行程大約有兩三天是下雨的，不過剛好都是比較不會被下雨影響的後兩天的行程，函館夜景更是幸運，我們下山時看到大量的日本學生證要上去，而且接著就開始下雨了，另外在北海道神宮還抽到大吉，現場還看到日本新人在神宮拍婚紗，回想起來真是運氣不錯，最後挑了12張照片放上來。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7979247409/" title="Flickr 上 othree 的 美瑛"><img src="http://farm9.staticflickr.com/8441/7979247409_18355fcabe.jpg" width="500" height="333" alt="美瑛"/></a></p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7979251757/" title="Flickr 上 othree 的 北海道"><img src="http://farm9.staticflickr.com/8443/7979251757_9c740af13b.jpg" width="500" height="333" alt="北海道"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7979273752/" title="Flickr 上 othree 的 四季彩之丘"><img src="http://farm9.staticflickr.com/8171/7979273752_ea49906e7a.jpg" width="500" height="333" alt="四季彩之丘"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7979494116/" title="Flickr 上 othree 的 北海道 Flower Land"><img src="http://farm9.staticflickr.com/8437/7979494116_e95e7cfe7d.jpg" width="500" height="333" alt="北海道 Flower Land"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7982386148/" title="Flickr 上 othree 的 小樽運河"><img src="http://farm9.staticflickr.com/8032/7982386148_367292c092.jpg" width="500" height="333" alt="小樽運河"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7982545860/" title="Flickr 上 othree 的 北海道神宮"><img src="http://farm9.staticflickr.com/8297/7982545860_34497c4591.jpg" width="500" height="333" alt="北海道神宮"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7982674965/" title="Flickr 上 othree 的 洞爺湖"><img src="http://farm9.staticflickr.com/8041/7982674965_7ea202588c.jpg" width="500" height="333" alt="洞爺湖"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7982818549/" title="Flickr 上 othree 的 洞爺湖煙火"><img src="http://farm9.staticflickr.com/8040/7982818549_647dca53ff.jpg" width="500" height="333" alt="洞爺湖煙火"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7985805971/" title="Flickr 上 othree 的 大沼國定公園"><img src="http://farm9.staticflickr.com/8042/7985805971_c5b2f8d5a7.jpg" width="500" height="333" alt="大沼國定公園"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7985871129/" title="Flickr 上 othree 的 金森紅磚倉庫群"><img src="http://farm9.staticflickr.com/8460/7985871129_2c0b1a2bbf.jpg" width="500" height="333" alt="金森紅磚倉庫群"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7985933181/" title="Flickr 上 othree 的 函館夜景"><img src="http://farm9.staticflickr.com/8306/7985933181_64ce7d1c1d.jpg" width="500" height="333" alt="函館夜景"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7986033206/" title="Flickr 上 othree 的 聖女修道院"><img src="http://farm9.staticflickr.com/8298/7986033206_7ae0ae76a5.jpg" width="500" height="333" alt="聖女修道院"/></a></p>
+
+<p>最後 bonus 一張飛機上拍的好像是富士山</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7987271604/" title="Flickr 上 othree 的 富士山？"><img src="http://farm9.staticflickr.com/8318/7987271604_0353131b77.jpg" width="500" height="333" alt="富士山？"/></a></p>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000709" baseName="ie_bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-09-06</b:date>
+				<b:time>00:30:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>我找過最...的 bug</b:title>
+			<b:content>
+				<b:summary> 最近因為總總原因，工作上在弄的東西要開始處理 IE 的相容問題，讓我想起我寫 JavaScript 以來，找過最難找的一個 bug，當然不意外的，這是一個 IE 上發生的錯誤，因為已經有兩年以上的時間了，所以一些細節其實已經不記得了。 一開始我看到的是有個 JavaScript 錯誤，以前 IE 的 JavaScript 錯誤是只會說有錯誤，錯誤訊息沒什麼幫助，好一點你會看到是哪一行（不過沒說是哪個檔案喔～），於是，我看到了一個不記得是六位數還是七位數的數字，總之是個大到全站的程式碼加起來都沒這麼多的數字... 要定位錯誤發生的位置還有個方法，就是用除錯工具，那時候就是用 Script Debugger，然後就會比較接近現在除錯工具那樣用法，不過想當然，那神祕行號的錯誤自然是用 Script Debugger 也定位不到。 到這種情形就只省下最後一招了，排除法，一步一步的把網頁內用到的 script 拿掉，然後看錯誤什麼時候消失，理論上就可以找到錯誤發生的位置了，理應當是這樣的，我一直是這樣相信的，直到我發現頁面上已經被我砍到沒有 script 了，而錯誤訊息依舊。 最後還好我沒放棄，繼續移除其他東西，結果發現這其實是一個 CSS pseudo-class 造成的 JavaScript 錯誤訊息，當下實在是不知道要說什麼好啊～～...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7827733700/" title="Flickr 上 othree 的 IE &gt;_&lt;"><img src="http://farm8.staticflickr.com/7113/7827733700_a217d1b314.jpg" width="500" height="333" alt="IE &gt;_&lt;"/></a></p>
+
+<p>最近因為總總原因，工作上在弄的東西要開始處理 IE 的相容問題，讓我想起我寫 JavaScript 以來，找過最難找的一個 bug，當然不意外的，這是一個 IE 上發生的錯誤，因為已經有兩年以上的時間了，所以一些細節其實已經不記得了。</p>
+
+<p>一開始我看到的是有個 JavaScript 錯誤，以前 IE 的 JavaScript 錯誤是只會說有錯誤，錯誤訊息沒什麼幫助，好一點你會看到是哪一行（不過沒說是哪個檔案喔～），於是，我看到了一個不記得是六位數還是七位數的數字，總之是個大到全站的程式碼加起來都沒這麼多的數字...</p>
+
+<p>要定位錯誤發生的位置還有個方法，就是用除錯工具，那時候就是用 <a href="http://www.microsoft.com/en-us/download/details.aspx?id=22185">Script Debugger</a>，然後就會比較接近現在除錯工具那樣用法，不過想當然，那神祕行號的錯誤自然是用 Script Debugger 也定位不到。</p>
+
+<p>到這種情形就只省下最後一招了，排除法，一步一步的把網頁內用到的 script 拿掉，然後看錯誤什麼時候消失，理論上就可以找到錯誤發生的位置了，理應當是這樣的，我一直是這樣相信的，直到我發現頁面上已經被我砍到沒有 script 了，而錯誤訊息依舊。</p>
+
+<p>最後還好我沒放棄，繼續移除其他東西，結果發現這其實是一個 CSS pseudo-class 造成的 JavaScript 錯誤訊息，當下實在是不知道要說什麼好啊～～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000708" baseName="ipad-photo-manager">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-24</b:date>
+				<b:time>23:55:00</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>iPad 的照片管理</b:title>
+			<b:content>
+				<b:summary> 現在已經很多人會用 iPad 來看照片了，個人覺得拿一台 iPad 當電子相框其實也還蠻划算的，尤其是 new iPad 的視網模螢幕，看起照片感覺真的是很棒，可是我還是必須要說，iPad 的相片管理真是一團混亂。 先不考慮 iCloud 的 photostream，iPad 內的相片來源有兩種，一種是你從電腦用 iTunes 設定同步 iPhoto 相簿上來，另外一種是直接用相機拍或是用 camera kit 傳進去的，這篇文章要說的第一個問題就是這兩種來源的差異，前者，從電腦同步來的，沒辦法在 iPad 上刪除！你只能接回電腦來處理這種相片，我甚至不能在 iPad 上說我要取消同步這個相簿。 第二個問題是 camera kit 來的相片，如果你是拍 RAW+JPG 的話，用 camera kit 只能把兩種檔案都抓進 iPad，你不能選擇只匯入 RAW 或是只要 JPG，這就算了，匯進 iPad...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7851498758/" title="Flickr 上 othree 的 iPad 看照片"><img src="http://farm9.staticflickr.com/8290/7851498758_3d96884dd5.jpg" width="500" height="333" alt="iPad 看照片"/></a></p>
+
+<p>現在已經很多人會用 iPad 來看照片了，個人覺得拿一台 iPad 當電子相框其實也還蠻划算的，尤其是 new iPad 的視網模螢幕，看起照片感覺真的是很棒，可是我還是必須要說，iPad 的相片管理真是一團混亂。</p>
+
+<p>先不考慮 iCloud 的 photostream，iPad 內的相片來源有兩種，一種是你從電腦用 iTunes 設定同步 iPhoto 相簿上來，另外一種是直接用相機拍或是用 camera kit 傳進去的，這篇文章要說的第一個問題就是這兩種來源的差異，前者，從電腦同步來的，沒辦法在 iPad 上刪除！你只能接回電腦來處理這種相片，我甚至不能在 iPad 上說我要取消同步這個相簿。</p>
+
+<p>第二個問題是 camera kit 來的相片，如果你是拍 RAW+JPG 的話，用 camera kit 只能把兩種檔案都抓進 iPad，你不能選擇只匯入 RAW 或是只要 JPG，這就算了，匯進 iPad 的 RAW 是完全用不到的，基本上就是佔空間，而且你也不能透過任何方法只刪除 RAW 或 JPG，整個就是無法理解的設計啊，我覺得要是 iPad 只支援匯入 JPG 也非常合理，但是就做成要就全要，不要拉倒的狀況...</p>
+
+<p>第三個問題是，本來我以為買了 iPhoto 就可以把內建的那個<strong>照片</strong>丟到一邊了，結果我發現，iPhoto 不能刪除照片，而且更鳥的事情是，照片裡面不能作範圍選取，所以我要刪除大量照片就要一張一張點，100 張要點 100 次，還不支援 multitouch 連點，真是非常不親切，不知道這些操作上的不方便什麼時候才會修正，至少我在 iOS 6 上測試過還是一樣就是了。</p>
+
+<p>PS: iPhoto 是可以作範圍選取的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000706" baseName="jquery-deferred-pipe">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-21</b:date>
+				<b:time>18:41:56</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery.Deferred.pipe</b:title>
+			<b:content>
+				<b:summary>這次的 COSCUP 有介紹到 jQuery 的 deferred，當時沒講到的 pipe，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 when 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。 先舉一個簡單的例子，要做一個登入頁面，然後要支援 one time password(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼： $.post('/api/login', idpw, function...</b:summary>
+				<b:mainContent><p>這次的 COSCUP 有<a href="http://blog.othree.net/log/2012/08/20/coscup-2012-slides/">介紹</a>到 <a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/category/deferred-object/">deferred</a>，當時沒講到的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a>，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 <a href="http://api.jquery.com/jQuery.when/">when</a> 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。</p>
+
+<p>先舉一個簡單的例子，要做一個登入頁面，然後要支援 <a href="http://en.wikipedia.org/wiki/One-time_password">one time password</a>(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼：</p>
+
+<pre><code>$.post('/api/login', idpw, function (res) {
+    if (res.requireOTP) {
+        showOTPUI();
+    } else {
+        loginSuccess();
+    }
+}, loginFail);
+</code></pre>
+
+<p>然後接著使用者輸入認證碼後的部份：</p>
+
+<pre><code>$.post('/api/', otp, loginSuccess, loginFai);
+</code></pre>
+
+<p>這兩段程式碼的流程其實很簡單，就是如果帳號密碼錯，執行 loginFail，如果對的話，看有沒有需要 OTP 驗證，沒需要的話執行 loginSuccess，需要的話再跟使用者要 OTP，然後送去 server 做驗證，結果正確的話執行 loginSuccess，不正確的話執行 loginFail，可以畫成流程圖如下：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7786699632/" title="Flickr 上 othree 的 no pipe"><img src="http://farm9.staticflickr.com/8289/7786699632_be23a7d0fa_o.png" width="761" height="172" alt="no pipe"/></a></p>
+
+<p>這個流程基本上沒問題，可是身為一個程式設計師，看到重複的東西出現，就會想要把它拿掉，在這張流程圖中什麼東西重複出現了呢，就是最後的終點，Success 和 Fail 分別出現兩次，看到這種終點出現兩次就會很想修改掉，這時候 pipe 就派上用場了。</p>
+
+<p>Pipe 顧名思義就是管路，和 linux 作業系統命令列介面的 <a href="http://en.wikipedia.org/wiki/Pipeline_(Unix)">pipeline</a> 很像，一樣是一個程式處理完，結果丟到下一個程式繼續處理，一個接一個這樣，只不過 deferred 的 pipe 處理的是非同步的流程，如果使用 jQuery 的 pipe 來處理這個問題，程式碼大概會變成：</p>
+
+<pre><code>$.post('/api/login', idpw).pipe(function (res) {
+    _dfd = $.Deferred();
+    if (res.requireOTP) {
+        showOTPUI(_dfd);
+    } else {
+        _dfd.resolve();
+    }
+    return _dfd;
+}).then(loginSuccess, loginFail);
+</code></pre>
+
+<p>showOTPUI 那邊則要處理使用者輸入認證碼後的行為：</p>
+
+<pre><code>$.post('/api/', otp, _dfd.resolve, _dfd.reject);
+</code></pre>
+
+<p>這樣的程式碼就可以看到重複的 loginSuccess 和 loginFail 消失了，流程圖則變成像是下面這樣：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7793084172/" title="Flickr 上 othree 的 pipe"><img src="http://farm8.staticflickr.com/7261/7793084172_6b3bcbf282_o.png" width="761" height="212" alt="pipe"/></a></p>
+
+<p>再舉一個例子，假設某個網路服務的使用者資料更新，要同時在前端處理上傳頭像、加密資料等，流程可能會是：</p>
+
+<ol>
+<li>檢查欄位</li>
+<li>上傳頭像</li>
+<li>跟 server 要求加密用的 key</li>
+<li>加密資料</li>
+<li>把資料上傳</li>
+</ol>
+
+<p>這樣的流程中，有三個動作是跟 server 作溝通的非同步工作，分別是上傳頭像、跟 server 要 key 和最後的把資料上傳，但是這五個動作又要照順序作，這種情形就非常適合使用 pipe，下面是一個大概的範例，先定義三個後面 pipe 裡面會用到函數：</p>
+
+<pre><code>var validator = function ($form) {
+    return $.Deferred()[_validate($form)? 'resolve' : 'reject']();
+};
+
+var upload = function ($file) {
+    var prepared = prepare($file);
+    return $.post(prepared);
+};
+
+var encrypt = function (data, key) {
+    var crypt_data = _encrypt(data, key);
+    return $.Deferred().resolve(crypt_data);
+};
+</code></pre>
+
+<p>這些函數在寫的時候要注意到，他們回傳的最好都是 deferred 物件，根據情況可以直接決定它的狀態，接著是重點的，表單的送出事件：</p>
+
+<pre><code>$('#profile-form').on('submit', function () {
+    var $form = $(this),
+        data = $form.serialize();
+
+    validate($form).pipe(function () {
+        return upload($form.find('[name=avatar]'));
+    }).pipe(function (avatar_id) {
+        data.avatar_id = avatar_id;
+    }).pipe(function () {
+        return $.get('/api/key');
+    }).pipe(function (key) {
+        return encrypt(data, key);
+    }).pipe(function (crypt_data) {
+        return $.post('/api/profile', crypt_data);
+    }).done(function () {
+        //Do some response to user
+    });
+});
+</code></pre>
+
+<p>而除了這類的應用外，還有一個用途，就是處理複雜的動畫效果，在 COSCUP 的 queue 的那部分，最後的例子，要把 #A, #B, #C 照順序 fade out，其實也是可以用 pipe 來處理，而這要多虧 jQuery 的 <a href="http://api.jquery.com/promise/">.promise</a> 讓 <a href="http://api.jquery.com/queue/">queue</a> 和 deferred 可以接在一起，程式碼如下：</p>
+
+<pre><code>$('#A').fadeOut().promise().pipe(function () {
+    return $('#B').fadeOut().promise();
+}).pipe(function () {
+    return $('#C').fadeOut().promise();
+});
+</code></pre>
+
+<p>如果單純只是作動畫，那這樣寫並沒有比較好，不過要是你的動畫會和一些其他的 deferred 物件整合、串接，那這功能就很好用了。</p>
+
+<p>最後下個小結論，deferred 是用來代表非同步的變數，when 是平行處理非同步變數，也可以說是並聯的狀態，pipe 則是處理序列的非同步變數，也可以說是串聯的狀態，並聯和串聯當然可以在自己任意連接，所以就可以兼顧到各種狀況了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000707" baseName="coscup-2012-slides">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-20</b:date>
+				<b:time>00:51:42</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>COSCUP 2012 slides</b:title>
+			<b:content>
+				<b:summary> /* A_A */ /* A_A */ 說好的 deferred.pipe 文章應該明天就可以貼出了～...</b:summary>
+				<b:mainContent><p>
+<script async="async" class="speakerdeck-embed" data-id="502fb1b39a533c000203951d" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<p>
+<script async="async" class="speakerdeck-embed" data-id="503108129c9652000203d80a" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<p>說好的 deferred.pipe 文章應該明天就可以貼出了～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000705" baseName="top-keyboard">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-13</b:date>
+				<b:time>23:54:05</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>鍵盤攻頂這檔事</b:title>
+			<b:content>
+				<b:summary>認識我的大概多少都會知道我用的鍵盤不太便宜，基本款是 Cherry 的機械軸，通常要價三千左右，想我玩機械式鍵盤其實已經也好幾年了，最初是從鳥窩的團購消息聽聞到 Cherry 鍵盤，之後託親戚朋友從日本買回我第一隻 Cherry G80-3000 青軸，之後又陸陸續續買了好幾隻，整個算是發散期，什麼鍵盤都想弄一隻玩玩看，中間也見證了 PTT 鍵鼠版版的興起，到後來，卻反而收斂了起來，大概是找到最適合自己的鍵盤了，開始出清很多沒在用的鍵盤，最初買的那隻 G80-3000 也送給一位特別的朋友，最後我自己只留了兩隻 Cherry G80-3484 和一隻 Realforce 103。 不過即使收斂至此，我心中卻一直有一隻想要的夢幻規格鍵盤，沒有上市過，我想要的是 Realforce 全 30g 版的標準英文配置，一般的 Realforce 鍵盤其實是有看指位來決定按鍵配重的，分別有 30g、45g、55g，只有非常少的部份是用 30g 配重，我非常想要全 30g 配重的鍵盤，不過卻只有一隻 108 鍵日本語配置的是所有按鍵都是 30g，我因為嘗試過日語配置鍵盤，了解到我用不來，所以一直不敢貿然出手。因為已經有點淡出鍵盤市場，所以直到前陣子我才注意到我想要的夢幻規格竟然有了，是只有在大陸上市的 Realforce Pro。 看到這東西後，幾乎是沒什麼考慮就決定要買一隻了，花了一些時間總算是從淘寶買到，買的時候發現，全 30g 版本的數量比較少，價錢也比較貴，果然是稀少價值～ 拿到這隻鍵盤的感想，不考慮到花了多少錢的話，我覺得實在是很棒，放在公司用一陣子後，回家用普通的 Realforce 都開始覺得按鍵有些重了，而且黑灰配色還蠻耐看的，小缺點是...</b:summary>
+				<b:mainContent><p>認識我的大概多少都會知道我用的鍵盤不太便宜，基本款是 Cherry 的機械軸，通常要價三千左右，想我玩機械式鍵盤其實已經也好幾年了，最初是從鳥窩的團購消息聽聞到 Cherry 鍵盤，之後託親戚朋友從日本買回我第一隻 Cherry G80-3000 青軸，之後又陸陸續續買了好幾隻，整個算是發散期，什麼鍵盤都想弄一隻玩玩看，中間也見證了 PTT 鍵鼠版版的興起，到後來，卻反而收斂了起來，大概是找到最適合自己的鍵盤了，開始出清很多沒在用的鍵盤，最初買的那隻 G80-3000 也送給一位特別的朋友，最後我自己只留了兩隻 Cherry G80-3484 和一隻 Realforce 103。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/3375491732/" title="Flickr 上 othree 的 五百多"><img src="http://farm4.staticflickr.com/3615/3375491732_3708ea06a6.jpg" width="500" height="375" alt="五百多" /></a></p>
+
+<p>不過即使收斂至此，我心中卻一直有一隻想要的夢幻規格鍵盤，沒有上市過，我想要的是 Realforce 全 30g 版的標準英文配置，一般的 Realforce 鍵盤其實是有看指位來決定按鍵配重的，分別有 30g、45g、55g，只有非常少的部份是用 30g 配重，我非常想要全 30g 配重的鍵盤，不過卻只有一隻 108 鍵日本語配置的是所有按鍵都是 30g，我因為嘗試過日語配置鍵盤，了解到我用不來，所以一直不敢貿然出手。因為已經有點淡出鍵盤市場，所以直到前陣子我才注意到我想要的夢幻規格竟然有了，是只有在大陸上市的 Realforce Pro。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7241722138/" title="Flickr 上 othree 的 Realforce Pro"><img src="http://farm9.staticflickr.com/8021/7241722138_72a37a2d48.jpg" width="500" height="333" alt="Realforce Pro"/></a></p>
+
+<p>看到這東西後，幾乎是沒什麼考慮就決定要買一隻了，花了一些時間總算是從淘寶買到，買的時候發現，全 30g 版本的數量比較少，價錢也比較貴，果然是稀少價值～</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7241724670/" title="Flickr 上 othree 的 Realforce Pro"><img src="http://farm9.staticflickr.com/8147/7241724670_dd93456bd4.jpg" width="500" height="333" alt="Realforce Pro"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7774379948/" title="Flickr 上 othree 的 Realforce Pro"><img src="http://farm9.staticflickr.com/8301/7774379948_6639499646.jpg" width="500" height="281" alt="Realforce Pro"/></a></p>
+
+<p>拿到這隻鍵盤的感想，不考慮到花了多少錢的話，我覺得實在是很棒，放在公司用一陣子後，回家用普通的 Realforce 都開始覺得按鍵有些重了，而且黑灰配色還蠻耐看的，小缺點是 Pro 鍵對我來說沒什麼用了。</p>
+
+<p>Realforce Pro 對我來說，應該就是最後的一把鍵盤了吧。</p>
+
+<p>btw. 這把鍵盤也是我所知道有量產的鍵盤中第二貴的，第一貴的是 <a href="http://www.artlebedev.com/everything/optimus/">Optimus Keyboard</a></p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000704" baseName="side-effect-free-function">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-06</b:date>
+				<b:time>01:26:10</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Side Effect Free Function</b:title>
+			<b:content>
+				<b:summary> 在 Functional Programming 裡面，有個名詞叫做 pure function，要稱為 pure function 要滿足兩個條件： 不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。 執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。 哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。 再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。 要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用： var neko = { meow: function () { console.log(this); }...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/shereen84/2511071028/" title="俄羅斯娃娃"><img src="http://farm3.staticflickr.com/2087/2511071028_98ed598b90.jpg" width="500" height="333" alt="" /></a></p>
+
+<p>在 Functional Programming 裡面，有個名詞叫做 <strong>pure function</strong>，要稱為 pure function 要滿足兩個條件：</p>
+
+<ol>
+<li>不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。</li>
+<li>執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。</li>
+</ol>
+
+<p>哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。</p>
+
+<p>再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。</p>
+
+<p>要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用：</p>
+
+<pre><code>var neko = {
+    meow: function () {
+        console.log(this);
+    }
+};
+
+neko.meow(); // neko
+
+var func = neko.meow;
+func(); // window
+</code></pre>
+
+<p>上面的範例中，我定義了一個物件，並且給了它一個 function 作為 method，接著用兩種不同的方法來執行這個 method，然後會發現兩種執行方式會讓 function 內的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/this">this</a> 是不一樣的，而且很不巧的，this 在物件導向程式設計上，其實還蠻常會需要它的，因為你會需要存取該物件的屬性，最簡單的方法就是用 this 來代表該物件，設計上合理，語意上也合理，可是物件的 method 的執行方法的不同卻會讓它存取到不同的 this，結果就是會有意外的副作用，JavaScript 的這種特性其實也不全然是壞處，有種稱為 "borrowing method" （或是 <a href="https://github.com/shichuan/javascript-patterns/blob/master/code-reuse-patterns/borrowing-methods.html">code reuse</a>）的 pattern 就可以利用這個特性，現在最可靠的判斷某變數是否是陣列的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray#See_also">方法</a>，也是一種 "borrowing method" 的應用。</p>
+
+<p>要確保 this 不變，有不少方法，像是多包一層用 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">apply</a>、<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">call</a> 來執行，或是用新的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind">bind</a> 來指定好 this 的值，一些 JavaScript Library 也有對應的功能可以利用，像是 jQuery 的 <a href="http://api.jquery.com/jQuery.proxy/">proxy</a>，不過用 apply 或是 call 來執行其實效率上會比較差，所以我想介紹的是另一種方法，利用 JavaScript 的另外一種特性：<strong>closure</strong>，closure 指的是，在多層的 variable scope 環境下，內層的 scope 可以去存取外層 scope 的變數，一個簡單例子：</p>
+
+<pre><code>var Dog = function () {
+    var gender = 'male';
+
+    this.getGender = function () {
+        return gender;
+    };
+};
+
+dog = new Dog();
+dog.getGender(); // male
+</code></pre>
+
+<p>dog 這個物件會得到一個 method 叫做 getGender，而它會回傳在這個 method 外一層，也就是 dog 物件的建構函式裡面定義的 gender 變數，這個 method 並不會因為他的 scope 內沒有 gender 變數就噴出錯誤訊息，取而代之的，它會往上一層的 variable scope 找同樣名稱的變數，一直找到最外層，也就是 root 物件那層，以網頁應用的話，root 物件就是 window 了，如果還是找不到才有機會出現錯誤訊息，利用這個特性，就可以完全的避免使用到 this 這個關鍵字來建立物件，不使用 this 的話自然就沒有我上面說的副作用了，這樣該物件的 method 不管是怎樣執行的，都不會影響到內部去存取的變數。</p>
+
+<p>jQuery 裡面也有使用到這種技巧， jQuery 的 <a href="http://api.jquery.com/category/callbacks-object/">Callbacks</a> 就是這樣子設計的物件，所以你可以在使用 Callbacks 的 <a href="http://api.jquery.com/category/deferred-object/">Deferred</a> 裡面看到這樣的<a href="https://github.com/jquery/jquery/blob/master/src/deferred.js#L74">程式碼</a>：</p>
+
+<pre><code>deferred[ tuple[0] ] = list.fire;
+deferred[ tuple[0] + "With" ] = list.fireWith;
+</code></pre>
+
+<p>前面的 tuple[0] 是 'resolve', 'reject' 或 'notify'，而 list 就是相對應的 Callbacks 物件，這段程式碼實際上就是在定義 Deferred 物件的 resolve, resolveWith, reject, rejectWith... 等屬性，可以看到他的指派方法就是直接把 Callbacks 物件的 fire 和 fireWith method 借給 Deferred 物件，所以執行 Deferred.resolve 其實就等同於執行對應 Callbacks 物件的 fire 方法，而由於 Callback 內部沒有使用到 this ，所以這樣的使用完全是沒有問題的。</p>
+
+<p>這樣子的用法有什麼好處呢？我們可以先反過來看看要確保 this 正確的話，程式碼要改成怎樣：</p>
+
+<pre><code>deferred[ tuple[0] ] = function () {
+    list.fire();
+};
+deferred[ tuple[0] + "With" ] =  function () {
+    list.fireWith();
+};
+</code></pre>
+
+<p>這樣子寫可以確保 list 裡面方法的 this 就是 Callbacks 物件本身，不過其實這樣改會造成 jQuery 的 Chain Ability 爛掉，請不要真的去改。這樣的寫法有兩個缺點：</p>
+
+<ol>
+<li>多了一層 scope，雖然現在瀏覽器的 JavaScript 引擎讓 scope 層數和 performance 之間的影響比以前小很多了，不過還是能少就少。</li>
+<li>程式碼變得比較不漂亮，程式碼漂不漂亮和好不好讀、好不好維護息息相關。</li>
+</ol>
+
+<p>Side effect free 的 function 還有哪些地方可以用呢，除了像 jQuery 這樣供物件之間呼叫執行，最多的還是作為 callback function 了吧，不管是事件的 callback function 還是 XHR 的 callback function，都可以利用到這些好處，讓程式碼更好看，也減少 scope chain 的層數。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000703" baseName="whatwg-and-w3c-html5">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-05</b:date>
+				<b:time>10:23:09</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>WHATWG and W3C 版 HTML5 分家</b:title>
+			<b:content>
+				<b:summary>WHATWG Blog 兩週前發出的 文章 正式宣告 WHATWG 和 W3C 的 HTML5 分家了，主編 Ian Hickson 有在 mainling list 發出一篇比較完整的 說明 ，主要還是兩邊方向不一樣，不過這篇文章也把一些過去的事情說的比較清楚，像是 WHATWG 的標準以前正式名稱是 Web Application，HTML5 只是別名，而現在的本版正式名稱則改成 HTML Living Standard ，還有把裡面一些標準拆分成子標準則是 W3C 那邊這樣做，WHATWG 則是一直維持全部東西塞在一起的作法，而最重要的差異，當然還是 WHATWG 不會讓 HTML 標準穩定下來，未來會有一個確定版本的 HTML5 會是 W3C 的， WHATWG...</b:summary>
+				<b:mainContent><p>WHATWG Blog 兩週前發出的 <a href="http://blog.whatwg.org/html-and-html5">文章</a> 正式宣告 WHATWG 和 W3C 的 HTML5 分家了，主編 Ian Hickson 有在 mainling list 發出一篇比較完整的 <a href="http://lists.w3.org/Archives/Public/public-whatwg-archive/2012Jul/0119.html">說明</a> ，主要還是兩邊方向不一樣，不過這篇文章也把一些過去的事情說的比較清楚，像是 WHATWG 的標準以前正式名稱是 Web Application，HTML5 只是別名，而現在的本版正式名稱則改成 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML Living Standard</a> ，還有把裡面一些標準拆分成子標準則是 W3C 那邊這樣做，WHATWG 則是一直維持全部東西塞在一起的作法，而最重要的差異，當然還是 WHATWG 不會讓 HTML 標準穩定下來，未來會有一個確定版本的 HTML5 會是 W3C 的， WHATWG 版的會隨時更新，只要有新需求，有錯誤。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000702" baseName="new-theme">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-08-02</b:date>
+				<b:time>23:59:29</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>改版</b:title>
+			<b:content>
+				<b:summary> 改版算是一個段落了吧，這次主要是套用 Twitter Bootstrap ，然後直接用它來排版，同時也支援 responsive design ，所以用手機、平板電腦看這邊的效果也比以前好很多，同時拿掉很多畫面上的元件，一些 JavaScript 不是那麼必要的也都拿掉了，搜尋也改成用 Google 搜尋，越來越單純化了吧～...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7698344300/" title="Flickr 上 othree 的 Responsive"><img src="http://farm9.staticflickr.com/8285/7698344300_c5d4593157.jpg" width="259" height="500" alt="Responsive"/></a></p>
+
+<p>改版算是一個段落了吧，這次主要是套用 <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> ，然後直接用它來排版，同時也支援 responsive design ，所以用手機、平板電腦看這邊的效果也比以前好很多，同時拿掉很多畫面上的元件，一些 JavaScript 不是那麼必要的也都拿掉了，搜尋也改成用 Google 搜尋，越來越單純化了吧～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000701" baseName="module-amd-requirejs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-05-21</b:date>
+				<b:time>11:00:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Module, AMD, RequireJS</b:title>
+			<b:content>
+				<b:summary>今年第一屆 JSDC 的分享投影片上線哩～ /* A_A */...</b:summary>
+				<b:mainContent><p>今年第一屆 JSDC  的分享投影片上線哩～</p>
+
+<p>
+<script async="async" class="speakerdeck-embed" data-id="4fb7c12dd1170e0022022a54" data-ratio="1.3333333333333333" src="http://speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p>
+
+<!--p>
+    <iframe class="speakerdeck-iframe" style="border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border: 0px; background-color: transparent; margin: 0px; padding: 0px; width: 498px; height: 436px; background-position: initial initial; background-repeat: initial initial; " frameborder="0" src="//speakerdeck.com/embed/4fb7c12dd1170e0022022a54?" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+</p-->
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000700" baseName="build-v8">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-05-14</b:date>
+				<b:time>23:51:22</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>Build v8</b:title>
+			<b:content>
+				<b:summary>平常是使用 Google V8 引擎的 command line 來做自己工作機的 js console，最主要的用途是跑 jslint，不過這需要自己來編譯，以前是用 scons 來編譯，剛剛想要編譯新版發現 Google 又換了自動化工具，從 scons 換成 gyp，安裝流程其實比較簡單，先安裝好 svn，然後執行： make dependencies make console=readline native 產生的 d8 執行檔會在 out/native/ 下面，官方說明有提到可以用 clang 編譯，不過我嘗試後會有錯誤，還在看要怎樣處理。...</b:summary>
+				<b:mainContent><p>平常是使用 Google V8 引擎的 command line 來做自己工作機的 js console，最主要的用途是跑 jslint，不過這需要自己來編譯，<a href="http://blog.othree.net/log/2011/01/28/osx-v8-js-command/">以前</a>是用 scons 來編譯，剛剛想要編譯新版發現 Google 又換了自動化工具，從 <a href="http://www.scons.org/">scons</a> 換成 <a href="http://code.google.com/p/gyp/">gyp</a>，安裝流程其實比較簡單，先安裝好 svn，然後執行：</p>
+
+<pre><code>make dependencies
+make console=readline native
+</code></pre>
+
+<p>產生的 d8 執行檔會在 out/native/ 下面，官方說明有提到可以用 clang 編譯，不過我嘗試後會有錯誤，還在看要怎樣處理。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000699" baseName="javascript-essential-patt">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-04-16</b:date>
+				<b:time>21:58:43</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript Essential Patterns</b:title>
+			<b:content>
+				<b:summary> /* A_A */...</b:summary>
+				<b:mainContent><p>
+<script async="async" class="speakerdeck-embed" data-id="4f8b8e20b204f6002200912f" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000698" baseName="wuling-sakura">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-02-28</b:date>
+				<b:time>20:19:18</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>武陵櫻花季</b:title>
+			<b:content>
+				<b:summary>由於今年花況似乎很棒，所以很臨時的被耿長輩約去看，考量種種情形之後，決定週六晚上十二點就出發，一路上還算順暢，不過快到的時候就塞起來了，慢慢前進了快要一小時才知道原因，是買票入場的關口，等輪到我們時往後看是這樣的光景。 山路上全部都是車，進去以後首先就是找停車位了，想當然正常的停車格早就沒了，不過以往都會開放停草地，所以基本上就是找不太會影響交通的路邊停下去，結果沒停在太前面入口處，不過倒是找到一個位子意外還不錯的點，停好車後大約已經四點半了吧，由於有段櫻花道有打光的夜櫻可以看，所以先過去那邊看看，沒想到才看一下子就下起雨，所以也沒拍到什麼好照片，就回去車上等天亮了，沒想到這雨一下下整晚，我們就只好邊睡邊等雨停，大約等到九點雨好像停了才醒來開始移動，這時運氣不錯，太陽公公還出來露臉幾下。 看了一下地圖後，我們決定先過橋到離我們最近的茶園看看，我說的停車位子不錯的原因之一就是離茶園很近，那邊由於要走路過橋，所以完全不會有車子礙眼，個人覺的是武陵農場前半段最漂亮的地方了。 在茶園那邊就逛了一個多小時，接著去到入口那附近，那邊基本上就是人人人，車車車，櫻花的狀況也沒有茶園好，不過還是拍到一張不錯的照片，剛好有陽光出來一下子，所以櫻花看起來都在發光一樣，邊邊都有一圈白框。 當然人多的話，就會看到一些有趣的場景，像是有人來拍婚紗： 還有人用 iPad 拍照： 不過總之前半段其實沒中後段漂亮，所以也沒待很久，就往最後一個目標，雪山登山口移動了，不過沒想到路上還有兩處櫻花狀況不錯，而且花況比前面看到的還好，當然也有不少情侶～～ 最後開車到了雪山登山口，路上的景色蠻漂亮的，不過最後那段路的路況超差的，車子開起來真是心驚： 這次行程可惜處之一當然是天氣，不過有些畫面也是要下完雨，放晴那時才看的到，一直都是藍天白雲的天氣也不一定就是好，第二當然是花況已經比較差了，要找到完整的櫻花其實不太容易，不過也托福可以看到櫻吹雪，還有一些滿地花瓣的畫面可以看，明年可能會開始總量管制，變成自己的小汽車不能開上去，這樣要上雪山登山口就會很困難，也很慶幸這次有上去看看，雖然天氣不好沒有去看日出就是（半夜開車上去應該超恐怖）。...</b:summary>
+				<b:mainContent><p>由於今年花況似乎很棒，所以很臨時的被耿長輩約去看，考量種種情形之後，決定週六晚上十二點就出發，一路上還算順暢，不過快到的時候就塞起來了，慢慢前進了快要一小時才知道原因，是買票入場的關口，等輪到我們時往後看是這樣的光景。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6930509979/" title="Flickr 上 othree 的 武陵農場"><img src="http://farm8.staticflickr.com/7041/6930509979_2a500757f3.jpg" width="500" height="333" alt="武陵農場" /></a></p>
+
+<p>山路上全部都是車，進去以後首先就是找停車位了，想當然正常的停車格早就沒了，不過以往都會開放停草地，所以基本上就是找不太會影響交通的路邊停下去，結果沒停在太前面入口處，不過倒是找到一個位子意外還不錯的點，停好車後大約已經四點半了吧，由於有段櫻花道有打光的夜櫻可以看，所以先過去那邊看看，沒想到才看一下子就下起雨，所以也沒拍到什麼好照片，就回去車上等天亮了，沒想到這雨一下下整晚，我們就只好邊睡邊等雨停，大約等到九點雨好像停了才醒來開始移動，這時運氣不錯，太陽公公還出來露臉幾下。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6785072786/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7205/6785072786_6ae751f779.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6931195831/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7206/6931195831_e92318e211.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p>看了一下地圖後，我們決定先過橋到離我們最近的茶園看看，我說的停車位子不錯的原因之一就是離茶園很近，那邊由於要走路過橋，所以完全不會有車子礙眼，個人覺的是武陵農場前半段最漂亮的地方了。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6931954831/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7184/6931954831_362ba1e264.jpg" width="500" height="333" alt="武陵櫻花"/></a>
+<a class="thumbnail" href="http://www.flickr.com/photos/othree/6931966335/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7204/6931966335_93f1868428.jpg" width="333" height="500" alt="武陵櫻花"/></a>
+<a class="thumbnail" href="http://www.flickr.com/photos/othree/6931969109/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7048/6931969109_cb3afd26ae.jpg" width="500" height="333" alt="武陵櫻花"/></a>
+<a class="thumbnail" href="http://www.flickr.com/photos/othree/6931976139/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7200/6931976139_0af8d0d08b.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p>在茶園那邊就逛了一個多小時，接著去到入口那附近，那邊基本上就是人人人，車車車，櫻花的狀況也沒有茶園好，不過還是拍到一張不錯的照片，剛好有陽光出來一下子，所以櫻花看起來都在發光一樣，邊邊都有一圈白框。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6934844627/" title="Flickr 上 othree 的 武陵"><img src="http://farm8.staticflickr.com/7048/6934844627_ba2c5c2c69.jpg" width="500" height="333" alt="武陵"/></a></p>
+
+<p>當然人多的話，就會看到一些有趣的場景，像是有人來拍婚紗：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6788733038/" title="Flickr 上 othree 的 武陵"><img src="http://farm8.staticflickr.com/7069/6788733038_6080c1a0b9.jpg" width="291" height="500" alt="武陵"/></a></p>
+
+<p>還有人用 iPad 拍照：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6788731414/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7053/6788731414_5bdd0484b9.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p>不過總之前半段其實沒中後段漂亮，所以也沒待很久，就往最後一個目標，雪山登山口移動了，不過沒想到路上還有兩處櫻花狀況不錯，而且花況比前面看到的還好，當然也有不少情侶～～</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6788770320/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7176/6788770320_c15f6e54d8.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6934882459/" title="Flickr 上 othree 的 武陵櫻花"><img src="http://farm8.staticflickr.com/7059/6934882459_a271dd4981.jpg" width="500" height="333" alt="武陵櫻花"/></a></p>
+
+<p>最後開車到了雪山登山口，路上的景色蠻漂亮的，不過最後那段路的路況超差的，車子開起來真是心驚：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6934887425/" title="Flickr 上 othree 的 雪山登山口"><img src="http://farm8.staticflickr.com/7183/6934887425_3cb8482af0.jpg" width="500" height="333" alt="雪山登山口"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6788777644/" title="Flickr 上 othree 的 雪山登山口"><img src="http://farm8.staticflickr.com/7068/6788777644_0fe27e7e3c.jpg" width="500" height="333" alt="雪山登山口"/></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6788775298/" title="Flickr 上 othree 的 雪山登山口"><img src="http://farm8.staticflickr.com/7176/6788775298_a5a1f3ffc3.jpg" width="500" height="333" alt="雪山登山口"/></a></p>
+
+<p>這次行程可惜處之一當然是天氣，不過有些畫面也是要下完雨，放晴那時才看的到，一直都是藍天白雲的天氣也不一定就是好，第二當然是花況已經比較差了，要找到完整的櫻花其實不太容易，不過也托福可以看到櫻吹雪，還有一些滿地花瓣的畫面可以看，明年可能會開始總量管制，變成自己的小汽車不能開上去，這樣要上雪山登山口就會很困難，也很慶幸這次有上去看看，雖然天氣不好沒有去看日出就是（半夜開車上去應該超恐怖）。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000697" baseName="jqueryqueue">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-02-23</b:date>
+				<b:time>00:45:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery.queue</b:title>
+			<b:content>
+				<b:summary>jQuery 的 queue 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 animate ，這些特效的動作都會丟到一個叫 fx 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形： $('#id').fadeIn().fadeOut(); 也不用寫成 callback function 的方式： $('#id').fadeIn(function () { $(this).fadeOut(); }); 如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成： $('#id').fadeOut(function ()...</b:summary>
+				<b:mainContent><p><a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/queue/">queue</a> 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 <a href="http://api.jquery.com/animate/">animate</a> ，這些特效的動作都會丟到一個叫 <em>fx</em> 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形：</p>
+
+<pre><code>$('#id').fadeIn().fadeOut();
+</code></pre>
+
+<p>也不用寫成 callback function 的方式：</p>
+
+<pre><code>$('#id').fadeIn(function () {
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeOut();
+});
+</code></pre>
+
+<p>但是好一點的作法應該善用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn();
+</code></pre>
+
+<p>這樣不知道看不看的出好在哪？讓我來把要做的動作複雜一點好了，我要淡出，改內容，淡入，然後接著右移 500px、加上 active 的 class，再移動回來，然後再把內容改變一次，用 callback 的寫法：</p>
+
+<pre><code>$('#id').fadeOut(function () {
+    $(this).html('new content');
+    $(this).fadeIn(function () {
+        $(this).animate({left: '+=500'}, function () {
+            $(this).addClass('active');
+            $(this).animate({left: '-=500'}, function () {
+                $(this).html('even new content');
+            });
+        });
+    });
+});
+</code></pre>
+
+<p>如果用 queue：</p>
+
+<pre><code>$('#id')
+    .fadeOut()
+    .queue(function () {
+        $(this).html('new content');
+        $(this).dequeue();
+    })
+    .fadeIn()
+    .animate({left: '+=500'})
+    .queue(function () {
+        $(this).addClass('active');
+        $(this).dequeue();
+    })
+    .animate({left: '-=500'})
+    .queue(function () {
+        $(this).html('even new content');
+        $(this).dequeue();
+    });
+</code></pre>
+
+<p>眼尖的人大概馬上就可以發現，用 queue 程式碼變多了！不過這其實不是重點，重點其實是縮排的階層減少了，而且使用 queue 的程式碼，看起來就是一個步驟接著一個步驟，和使用 callback 的階層的關係不一樣，而且除了看起來比較好之外其實還有不少優點，首先是如果要修改連續動作的順序或是內容，使用 queue 的顯然比較簡單，二是還可以配合 <a href="http://api.jquery.com/delay/">delay</a> 來讓動作之間有個暫停，三是可以用 clearQueue 來把整串動作清掉，用 callback 的話，因為執行到各個 animate 的時間不是同步的，所以用 <a href="http://api.jquery.com/clearQueue/">clearQueue</a> 可能會清不乾淨。所以在使用 jQuery 動畫效果時，正確的配合 queue 來做，會讓程式碼的可維護度提昇許多，大家都應該來用一下～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000696" baseName="coffee-check-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-23</b:date>
+				<b:time>00:00:13</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>coffee-check.vim</b:title>
+			<b:content>
+				<b:summary>上一篇文章提到使用 RequireJS 的 CoffeeScript plugin 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 jslint.vim 的行為一樣，上網搜尋了一下 Vim 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 coffee -c 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 coffee-check.vim。 安裝還算簡單，先確定系統已經有安裝 node，然後只要用 pathogen 或是 Vundle 把套件裝起來，接著在 vimrc 內加上一行： au BufRead,BufNewFile *.coffee set...</b:summary>
+				<b:mainContent><p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a> <a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
+
+<p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
+
+<pre><code>au BufRead,BufNewFile *.coffee set ft=coffee
+</code></pre>
+
+<p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
+
+<ol>
+<li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
+<li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
+<li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
+</ol>
+
+<p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
+
+<p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
+
+<pre><code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
+</code></pre>
+
+<p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000695" baseName="module-amd-requirejs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-22</b:date>
+				<b:time>00:48:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Module, AMD, RequireJS</b:title>
+			<b:content>
+				<b:summary>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 Module Pattern，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下： function Person(age, gender) { var _age = age || 16, _gender = gender || 1; return { getAge: function () { return _age; } }; } 這個範例中，age 和 gender 就是私有屬性，在 Person...</b:summary>
+				<b:mainContent><p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
+
+<pre><code>function Person(age, gender) {
+    var _age = age || 16,
+        _gender = gender || 1;
+
+    return {
+        getAge: function () {
+            return _age;
+        }
+    };
+}
+</code></pre>
+
+<p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
+
+<p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
+
+<pre><code>define('moduleA', [dep1, dep2], function (export1, export2) {
+    //do something..
+    return {
+        method1: function () {},
+        method2: function () {},
+    };
+});
+</code></pre>
+
+<p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
+
+<p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000694" baseName="2011">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-11</b:date>
+				<b:time>00:00:08</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>2011</b:title>
+			<b:content>
+				<b:summary>每個月挑了一張照片...</b:summary>
+				<b:mainContent><p>每個月挑了一張照片</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5365746768/" title="Flickr 上 othree 的 20110117 morning"><img src="http://farm6.staticflickr.com/5126/5365746768_c2d0b20015.jpg" width="375" height="500" alt="20110117 morning" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5433630228/" title="Flickr 上 othree 的 P2086946"><img src="http://farm6.staticflickr.com/5175/5433630228_c7d67ca9ce.jpg" width="500" height="375" alt="P2086946" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5502324004/" title="Flickr 上 othree 的 E61 咖啡"><img src="http://farm6.staticflickr.com/5211/5502324004_c6f3139d40.jpg" width="500" height="375" alt="E61 咖啡" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5648432817/" title="Flickr 上 othree 的 大大～"><img src="http://farm6.staticflickr.com/5301/5648432817_c4bb9340e3.jpg" width="375" height="500" alt="大大～" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5777914827/" title="Flickr 上 othree 的 San Luis Obispo"><img src="http://farm3.staticflickr.com/2156/5777914827_5b7925e938.jpg" width="500" height="375" alt="San Luis Obispo" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5868396835/" title="Flickr 上 othree 的 日星鑄字行"><img src="http://farm4.staticflickr.com/3158/5868396835_c6ae8a67bc.jpg" width="500" height="375" alt="日星鑄字行" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5924220024/" title="Flickr 上 othree 的 華盛頓大學"><img src="http://farm7.staticflickr.com/6021/5924220024_2a6e15a4a2.jpg" width="500" height="375" alt="華盛頓大學" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6097360188/" title="Flickr 上 othree 的 工作人員們"><img src="http://farm7.staticflickr.com/6148/6097360188_f20d97e8e7.jpg" width="333" height="500" alt="工作人員們" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6155207113/" title="Flickr 上 othree 的 Foxmosa"><img src="http://farm7.staticflickr.com/6189/6155207113_cb5c64b4df.jpg" width="333" height="500" alt="Foxmosa" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6270922439/" title="Flickr 上 othree 的 九族文化村 海賊王"><img src="http://farm7.staticflickr.com/6226/6270922439_62df09918d.jpg" width="500" height="333" alt="九族文化村 海賊王" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6316696955/" title="Flickr 上 othree 的 貓村"><img src="http://farm7.staticflickr.com/6053/6316696955_fbcca71ba4.jpg" width="500" height="333" alt="貓村" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/6610157129/" title="Flickr 上 othree 的 二年坂"><img src="http://farm8.staticflickr.com/7153/6610157129_0365b94329.jpg" width="333" height="500" alt="二年坂" /></a></p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

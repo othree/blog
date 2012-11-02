@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW">
+  <head>
+    <title>blockBlock</title>
+    <link rev="made" href="mailto:othree@gmail.com" />
+    <link rel="first" title="avoid box model bug" href="/log/2005/07/24/twoLevelOfDiv/blockBlock1.html" />
+    <link rel="last" title="ydsf" href="/log/2005/07/24/twoLevelOfDiv/blockBlock4.html" />
+    <link rel="next" title="round border" href="/log/2005/07/24/twoLevelOfDiv/blockBlock3.html" />
+    <link rel="prev" title="avoid box model bug" href="/log/2005/07/24/twoLevelOfDiv/blockBlock1.html" />
+    <link rel="up" title="O3noBLOG blockBlock" href="/log/2005/07/24/twoLevelOfDiv/" />
+    <link rel="top" title="O3noBLOG" href="/" />
+
+<style type="text/css">
+<![CDATA[
+
+*
+{
+	font-family: Tahoma, sans-serif;
+}
+
+.bb
+{
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	padding: 20px;
+	color: #fff;
+	background: #000;
+}
+.bb div
+{
+	width: 100px;
+}
+
+.bb:before, .bb:after, .bb div:before, .bb div:after
+{
+	content: " ";
+	height: 20px;
+	display: block;
+}
+.bb:before
+{
+	background: url(rLT.png) no-repeat left top;
+	margin: -20px 0 0 -20px;
+}
+.bb:after
+{
+	background: url(rLB.png) no-repeat left bottom;
+	margin: 0 0 -20px -20px;
+}
+
+.bb div:before
+{
+	background: url(rRT.png) no-repeat right top;
+	margin: -20px -20px 0 0;
+}
+.bb div:after
+{
+	background: url(rRB.png) no-repeat right bottom;
+	margin: 0 -20px -20px 0;
+}
+
+
+]]>
+</style>
+
+</head>
+
+<body>
+
+<div class="bb">
+<div>
+
+TEXT
+
+</div>
+</div>
+
+</body>
+</html>

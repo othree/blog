@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>O3noBLOG</title>
+<link>http://blog.othree.net/ css-html</link>
+<description></description>
+<copyright>Copyright 2008</copyright>
+<lastBuildDate>2008-11-22 16:12</lastBuildDate>
+<generator>http://www.movabletype.org/?v=4.21-en</generator>
+<docs>http://blogs.law.harvard.edu/tech/rss</docs> 
+
+
+<item>
+<title>HTML 5 投影片</title>
+<description><![CDATA[<p><a href="http://othree.net/projects/slides/html5/">第五世代型超越式文本標記語言</a></p>
+
+<p>在 <a href="http://meetup.happydesigner.org/happydesigner-meetup-no-4">HappyDesigner Meetup 4</a> 和<a href="http://wiki.moztw.org/index.php/摩茲連續聚第3集">摩茲連續聚 第三集</a>用的投影片，由於是用 <span class="caps">HTML </span>+ JavaScript 寫的，背景圖有點大，暫時還沒有 <span class="caps">PDF </span>版，處理完之後會有比較小的 <span class="caps">PDF</span>，也會丟到 <a href="http://www.slideshare.net/">slideshare</a> 上。另外有些我沒介紹到的東西應該會在之後發文章介紹吧～～</p>]]></description>
+<link>http://blog.othree.net/log/2008/11/22/html-5-slide/</link>
+<guid>http://blog.othree.net/log/2008/11/22/html-5-slide/</guid>
+<category>css-html</category>
+<pubDate>2008-11-22 16:12</pubDate>
+</item>
+
+<item>
+<title>IE8標準模式將不支援CSS expression</title>
+<description><![CDATA[<p><span class="caps">IEB</span>log的<a href="http://blogs.msdn.com/ie/archive/2008/10/16/ending-expressions.aspx">消息</a>，CSS expression就是可以在CSS value裡面進行一些簡單運算，像是「10%+4px」這樣的長度設定，雖然記憶中W3C也曾經有過草稿，不過總之這就是不太有人使用的東西，所以一直以來也只有IE支援，然後這次IE Team終於決定要把它拿掉了，不過Ajaxian上的<a href="http://ajaxian.com/archives/css-expressions-are-no-more-in-ie-8">第一篇回文</a>很XD：</p>
+
+<blockquote cite="http://ajaxian.com/archives/css-expressions-are-no-more-in-ie-8"><p>I can't believe they're doing such big changes and don't want to rename their <span class="caps">XMLH</span>ttpRequest object... pff...</p></blockquote>]]></description>
+<link>http://blog.othree.net/log/2008/10/22/ie8-dont-support-css-expression/</link>
+<guid>http://blog.othree.net/log/2008/10/22/ie8-dont-support-css-expression/</guid>
+<category>css-html</category>
+<pubDate>2008-10-22 01:22</pubDate>
+</item>
+
+<item>
+<title>YUI Compressor</title>
+<description><![CDATA[<p><a href="http://developer.yahoo.com/yui/compressor/">這東西</a>好像很久以前有看過一次，那時不知道為什麼沒深入接觸（或許是看到java就逃跑了），期間還有試過<a href="http://dean.edwards.name/packer/">perl的javascript compressor</a>，不過用起來都不是很方便，直到前陣子看到<a href="http://blog.gslin.org/archives/2008/09/22/1705/">DK示範了一下</a>才又提起興趣，可惜我的blog剛搬離研究室的電腦，而且linux上也不像FreeBSD上有port好的，所以就變成需要在windows下使用，用命令列操控是還算方便，不過因為是包成jar檔，檔名又蠻長的，打命令的時候還蠻辛苦的，所以就寫了個batch檔案來處理：</p>
+
+
+
+<pre><code>SET PP=D:\tools\yuicompressor\
+java -jar %PP%yuicompressor.jar --charset utf-8 %1 %2 %3 %4 %5 %6 %7 %8 %9</code></pre>
+
+
+
+<p>確定檔案路徑和基本的選項之後，把這個batch檔丟到path下的目錄，以後就可以用這個指令來壓縮js和css檔了，不過在我自己的電腦上還有遇到別的問題，就是.bat檔不會真的執行，不知道做了什麼事才變成這樣，總之又去找了<a href="http://www.programmersheaven.com/download/14524/download.aspx">bat2exec</a>把bat檔轉成com檔，不過這個小程式出處不明，希望沒有什麼木馬在裡面@@。</p>
+
+<p>事後感想是windows的命令列能不能好用一點啊Q_Q。</p>]]></description>
+<link>http://blog.othree.net/log/2008/10/11/yuicompressor/</link>
+<guid>http://blog.othree.net/log/2008/10/11/yuicompressor/</guid>
+<category>script</category>
+<pubDate>2008-10-11 20:45</pubDate>
+</item>
+
+<item>
+<title>CSS TIP - 縮排和文字垂直置中</title>
+<description><![CDATA[<p>今天要來介紹的這個CSS <span class="caps">TIP</span>，一部分是為了應付IE的box model才出現的。</p>
+
+<p>首先，我有一個固定寬高的頁首區塊，也就是我接下來要介紹的CSS <span class="caps">TIP</span>所可以應用的地方，這種頁首區塊內的文字通常只有一行，其他類似的物件還有各種標題（h1~h6）、導覽列清單（li）等。這些區塊物件在還沒有任何設定的時候，裡面的文字通常都是貼齊左上角的，這邊舉一個 <strong>h1標題</strong> 的例子，它的 <span class="caps">CSS</span> Code 如下：</p>
+
+
+
+<pre><code>h1 {
+    font-size: 200%;
+    color: #fff;
+    background: #000;
+    height: 100px;
+}
+</code></pre>
+
+
+
+<p>顯示結果如下：</p>
+
+<p><img src="http://blog.othree.net/log/2008/09/13/css-indent-and-middle-text/first.png" alt="" height="130" width="300" /></p>]]><![CDATA[<p>這通常不是我們想要的效果，我們可能想要有一點內距、文字水平置中、垂直置中、或是把文字藏起來，用背景圖來代替，不過隨便設定padding，可能就會遇到IE的box model問題，雖然IE 7已經可以用標準模式，但是IE 6的使用者還很多，目前還不能忽略這個問題。除了垂直置中以外，其他幾種要求大概都可以簡單達成，如果是用表格排版的話連垂直置中也不是問題，不過基本上我不考慮表格排版就是，一般的作法有CSS hack和多層div兩種，我要介紹的則是用line-height和text-indent兩種屬性來達到我們的需求，不用CSS hack和多層div。首先就來把文字垂直置中吧，這邊我用的是line-height（行高）這個屬性，只要設定的高度和區塊高度一樣（此例為100px），這單一行的文字就會垂直置中了，結果如下圖：</p>
+
+<p><img src="http://blog.othree.net/log/2008/09/13/css-indent-and-middle-text/second.png" alt="" height="130" width="300" /></p>
+
+<p>如果想要文字水平也置中，只要加上 <code>text-align: center;</code> 就可以了，不過我比較喜歡讓文字靠左，然後留一點邊距，讓文字不要這麼貼齊邊緣，這時可以用text-indent（首行縮排）這個屬性，因為內文只有一行，所以可以偷偷用這個屬性來做出padding-left的效果，如果文字是多行的話，大概上個行高設定就讓你的內文爆炸了吧XD。加上15px縮排的結果如下圖：</p>
+
+<p><img src="http://blog.othree.net/log/2008/09/13/css-indent-and-middle-text/third.png" alt="" height="130" width="300" /></p>
+
+<p>text-indent除了可以製造內距的效果之外，還可以用來把文字隱藏，免得檔到背景圖，只要把值設成負的，例如<strong>-1000000px</strong>，文字就會跑到視窗可視範圍之外，要保險一點還可以加上 <code>overflow: hidden;</code> 的設定，讓超出區塊範圍的東西隱藏起來。以上就是本次的CSS <span class="caps">TIP</span>內容，希望能幫到大家，下篇應該會說javascript的東西吧。</p>
+
+<p class="update">補充：考量到親和力的情況下，還是比較推薦使用img標籤配合alt屬性的替代文字的，這樣在圖片讀取不到的狀況下，也還是看得到文字內容。</p>]]></description>
+<link>http://blog.othree.net/log/2008/09/13/css-indent-and-middle-text/</link>
+<guid>http://blog.othree.net/log/2008/09/13/css-indent-and-middle-text/</guid>
+<category>css-html</category>
+<pubDate>2008-09-13 09:39</pubDate>
+</item>
+
+<item>
+<title>CSS大師的10條原則</title>
+<description><![CDATA[<p>原文：<a href="http://nettuts.com/html-css-techniques/10-principles-of-the-css-masters/">10 Principles of the <span class="caps">CSS</span> Masters</a></p>
+
+<h4>1. 保持CSS簡單乾淨 - Peter-Paul Koch</h4>
+
+<p>少用CSS hack。</p>
+
+<h4>2. <span class="caps">CSS</span>宣告盡量放進一行 - Jonathan Snook</h4>
+
+<p>舉例來說：</p>
+
+
+
+<pre><code>body {margin: 0; padding: 0; background: #fff;}</code></pre>
+
+
+
+<p>不過這工作我覺得交給機器來做比較好。</p>
+
+<h4>3.使用簡化的寫法 - Roger Johansson</h4>
+
+<p>使用如下的簡化寫法：</p>
+
+
+
+<pre><code>border-width: 0 1px 2px 3px;</code></pre>
+
+
+
+<p>而不是用border-top-width、border-right-width、border-bottom-width、border-left-width分開設訂定。</p>
+
+<h4>4.讓區塊元素自己填滿空間 - Jonathan</h4>
+
+<p>設定width的話，就不設定margin、padding，設定margin、padding的話，就不設定width，這樣可以迴避掉IE的box model錯誤。</p>
+
+<h4>5.用float元素自己clear float - Trevor Davis</h4>
+
+<p>其實是利用 <code>:after { clear: both; }</code>來做啦。</p>
+
+<h4>6.使用負的邊界直 - Dan Cederholm</h4>
+
+<p>讓物件突出更顯眼。</p>
+
+<h4>7.使用CSS把版面置中 - Dan Cederholm</h4>
+
+<p>固定寬度的版面配置，盡量使用CSS把內容置中。</p>
+
+<h4>8.使用正確的DOCTYPE - Jeffrey Zeldman</h4>
+
+<p>好處多多。</p>
+
+<h4>9.使用CSS把物件置中 - Wolfgang Bartelme</h4>
+
+<p>雖然不是指整個版面而是指所有想要置中的東西，不過原文的例子還是把網頁主內容來置中，結果和第七點蠻容易混淆的。</p>
+
+<h4>10.善用大小寫轉換 - Trenton Moss</h4>
+
+<p>和中文語系使用者關係不大。</p>
+
+<p>最後看下來，扣掉第10點，9點中我有7點有做到吧...</p>]]></description>
+<link>http://blog.othree.net/log/2008/08/28/10-principles-of-the-css-masters/</link>
+<guid>http://blog.othree.net/log/2008/08/28/10-principles-of-the-css-masters/</guid>
+<category>css-html</category>
+<pubDate>2008-08-28 00:40</pubDate>
+</item>
+
+<item>
+<title>tfoot</title>
+<description><![CDATA[<p><a href="http://www.w3.org/TR/html401/struct/tables.html#h-11.2.3">tfoot</a>是table裡面用來把表格列群組化用的標籤之一，專門用在表格底端的表格列，不過要注意的是他不能放在tbody之後，而是要用thead、tfoot、tbody這樣的順序才對。</p>]]></description>
+<link>http://blog.othree.net/log/2008/03/17/tfoot/</link>
+<guid>http://blog.othree.net/log/2008/03/17/tfoot/</guid>
+<category>css-html</category>
+<pubDate>2008-03-17 00:25</pubDate>
+</item>
+
+<item>
+<title>W3C發佈HTML 5 Working Draft</title>
+<description><![CDATA[<p><span class="caps">W3C</span>剛發佈的<a href="http://www.w3.org/TR/2008/WD-html5-20080122/"><span class="caps">HTML</span> 5 Working Draft</a>，正熱，不過太晚了，我已經沒力看改了什麼東西，明天醒來應該也可以看到不少評論了吧。</p>
+
+<p>不過我其實還是快速看過目錄，nl(navigation list)和h(heading)好像不見了。</p>]]></description>
+<link>http://blog.othree.net/log/2008/01/23/w3c-publish-html-5-wd/</link>
+<guid>http://blog.othree.net/log/2008/01/23/w3c-publish-html-5-wd/</guid>
+<category>css-html</category>
+<pubDate>2008-01-23 01:59</pubDate>
+</item>
+
+<item>
+<title>Eric Meyer 更新 style resetting</title>
+<description><![CDATA[<p>在<a href="http://meyerweb.com/eric/thoughts/2008/01/15/resetting-again/">Resetting Again</a>這篇文章中，Eric Meyer更新了好幾個月沒修改過的style resetting（好像一直沒正式的名稱），真的改的地方其實不多，主要的修改是原來是設定為<strong>繼承</strong>的幾個地方，其他還有一些小變動，以下是完整code：</p>
+
+
+
+<pre><code>html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing=&quot;0&quot;' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}</code></pre>
+
+
+
+<h4>給不知道這是什麼的人</h4>
+
+<p>這段CSS是用來把各種瀏覽器的預設樣式覆蓋掉，把整個網頁變成沒有樣式的狀態，h1、h2、p等標籤都會是一樣大小的字體、字集，使用方法就是在任何你自己的CSS之前先在網頁上套用這段CSS。</p>]]></description>
+<link>http://blog.othree.net/log/2008/01/17/eric-meyer-renew-style-reset/</link>
+<guid>http://blog.othree.net/log/2008/01/17/eric-meyer-renew-style-reset/</guid>
+<category>css-html</category>
+<pubDate>2008-01-17 23:39</pubDate>
+</item>
+
+<item>
+<title>HTML 4 10年了</title>
+<description><![CDATA[<p>就在前兩週的18號，<a href="http://www.w3.org/TR/REC-html40-971218/"><span class="caps">HTML</span> 4</a>堂堂邁入第10年，這10年過去了，後續的規格也推出不少，像是<a href="http://www.w3.org/TR/html401/"><span class="caps">HTML</span> 4.01</a>、<a href="http://www.w3.org/TR/2002/REC-xhtml1-20020801/"><span class="caps">XHTML</span> 1.0</a>、<a href="http://www.w3.org/TR/2001/REC-xhtml11-20010531/"><span class="caps">XHTML</span> 1.1</a>，不過現在比較被推薦來使用的卻還是1999年推出的<strong><span class="caps">HTML</span> 4.01</strong>，10年過去只增加了0.1版，還真是有股淡淡的哀傷啊，不過這也沒辦法，網路標準的制定和普及與一般程式語言不一樣，不只是W3C制定好就好，瀏覽器還要支援，接著還要等普羅大眾都有更新，網頁開發人員願意用，每個新標準制定出來到普及都有好長一段路要走（想像還要10年才制定的完的CSS3普及的那一天），在這條路上有個地方過不去，基本上就是失敗了，XHTML就是這樣，以Tim Bernes Lee理想的語意網來說，讓文件的語意結構完整是必要的，不過XHTML卻一口氣跑的太多步，先不看XHTML 2.0草案的改動程度，光是XHTML 1.1就已經讓網頁開發人員叫苦連篇，真正的XHTML 1.1要修改mime/type，也因此只要有一點錯誤，網頁就呈現不出來，語法又要求很嚴謹，可以用的entity只有三個，這三個符號不是做標籤使用時就一定要用entity表示之，不然網頁也會掛掉...etc，實在是麻煩一堆，然後看著XHTML 2.0更可怕的草案，終於瀏覽器開發者決定自己跑出來制定<a href="http://www.whatwg.org/specs/web-apps/current-work/"><span class="caps">HTML</span> 5</a>，還有強化版的<a href="http://www.whatwg.org/specs/web-forms/current-work/">Web Forms 2.0</a>，在一千零一網中，Tim Bernes Lee就提到他認為網際網路上的流通資訊和標準不應該為任意單一企業或組織所壟斷，即使是W3C也一樣，所以，最後W3C終於決定重組HTML Working Group，接納HTML 5進入，讓下一版功能更完整，編寫也容易的HTML標準的出現，露出曙光！</p>
+
+<p>我想，大概再等個10年就可以用了吧。</p>]]></description>
+<link>http://blog.othree.net/log/2007/12/30/html-4-10years/</link>
+<guid>http://blog.othree.net/log/2007/12/30/html-4-10years/</guid>
+<category>css-html</category>
+<pubDate>2007-12-30 16:00</pubDate>
+</item>
+
+<item>
+<title>divitis</title>
+<description><![CDATA[<p><strong>Divitis</strong>，指在編寫網頁原始碼時，過度使用div標籤的人，剛好看到個範例，就是<a href="http://www.gamer.com.tw/">巴哈姆特</a>，打開原始碼來看，在body內，不看script標籤，一開始就是：</p>
+
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+&lt;div class=&quot;mainOut&quot;&gt;
+&lt;div class=&quot;main&quot;&gt;
+&lt;div class=&quot;left&quot;&gt;</code></pre>
+
+<p>然後最後面則是：</p>
+
+<pre><code>&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</code></pre>]]></description>
+<link>http://blog.othree.net/log/2007/10/11/divitis/</link>
+<guid>http://blog.othree.net/log/2007/10/11/divitis/</guid>
+<category>css-html</category>
+<pubDate>2007-10-11 15:33</pubDate>
+</item>
+
+<item>
+<title>web-kit支援網路字型</title>
+<description><![CDATA[<p>今天的<a href="http://webkit.org/blog/124/downloadable-fonts/">消息</a>，web-kit已經可以支援之前在<a href="http://blog.othree.net/log/2007/08/30/web-fonts/">web fonts</a>這篇文章提到的<strong>網路字型</strong>，剛剛測試過後中文也支援，繪圖速度比較慢，另外字型下載完之前字都不會畫出來，而中文字型檔案果然大，我的螢幕黑掉一次才抓完，目前看來在有漢字的語系還是不實用。</p>]]></description>
+<link>http://blog.othree.net/log/2007/10/05/web-kit-support-web-fonts/</link>
+<guid>http://blog.othree.net/log/2007/10/05/web-kit-support-web-fonts/</guid>
+<category>css-html</category>
+<pubDate>2007-10-05 01:25</pubDate>
+</item>
+
+<item>
+<title>web fonts</title>
+<description><![CDATA[<p><a href="http://www.alistapart.com/">A List Apart</a>最新一期裡的<a href="http://www.alistapart.com/articles/cssatten"><span class="caps">CSS </span>@ Ten: The Next Big Thing</a>這篇文章裡面，提到接下來CSS會發展的一個主要方向，就是網路字型(web fonts)，這其實也不是新東西，早在1998年的CSS2裡面就有<a href="http://www.w3.org/TR/1998/REC-CSS2-19980512/fonts.html#font-descriptions">font-face</a>，不過很不幸的，IE和Netscape都不支援truetype字型，結果網頁設計師都沒在使用，然後到了<a href="http://www.w3.org/TR/CSS21/"><span class="caps">CSS2.1</span></a>這功能也被屏棄了，現在這功能有希望回來了，不過其實我不是很樂觀啦，或許web fonts會回到CSS，不過等CSS 3制定出來不知道還要多久（個人推測10年），而且更大的問題是中文字型和歐美語系字型的大小差很多，如果做到像PDF可以只包含需要的部份，那變成伺服器端要支援，想起來就是一整個很難實行，中日文這些有漢字的地方大概還是只能繼續用系統有內建的字型和圖片吧。</p>]]></description>
+<link>http://blog.othree.net/log/2007/08/30/web_fonts/</link>
+<guid>http://blog.othree.net/log/2007/08/30/web_fonts/</guid>
+<category>css-html</category>
+<pubDate>2007-08-30 17:21</pubDate>
+</item>
+
+<item>
+<title>CSS設定背景時</title>
+<description><![CDATA[<p>最近逛網站時比較常發現的小問題，很多人在設計版面時，為了質感或是排版會使用背景圖，而使用了背景圖，不過使用了背景圖，卻沒設定背景色，這樣會有什麼問題呢？</p>]]><![CDATA[<p>這邊先拿<a href="http://b-oo-k.net/blog/">老貓學出版</a>為例，我在頁面讀取到一半時就抓了一張圖，可以發現到在背景圖還沒讀完時，內文和最外層的背景色會混在一起，老貓學出版的狀況還算好，對比還夠，不過有不少網站最外層背景的顏色更深，這時候就會造成對比不足無法閱讀的狀況。</p>
+
+<p><a href="http://blog.othree.net/log/2007/08/29/setting-background/b-oo-k.png" class="thickbox"><img alt="圖片還沒出來時，背景色和文字的對比可能不夠" src="http://blog.othree.net/log/2007/08/29/setting-background/b-oo-k-thumb-400x300.png" width="400" height="300" /></a></p>
+
+<p>不過有人會認為「這是讀取到一半的時候啊，不能這樣說。」而我要說的是，訪客都是不想等的，如果文字已經先讀取完了，為什麼不讓訪客可以先開始看內容呢？再來，雖然現在可能沒什麼人因為網路速度問題預設關閉讀取圖片，但是如果真的遇到了，那他就會看不清楚文字了，內容才是網站的主體，如果因為一些小疏忽讓傳達的過程出現障礙，那真是很可惜。</p>
+
+<p class="update">更新：老貓學出版那已經修改過了，所以現在看不到上面所描述的狀況摟^^。</p>]]></description>
+<link>http://blog.othree.net/log/2007/08/29/setting-background/</link>
+<guid>http://blog.othree.net/log/2007/08/29/setting-background/</guid>
+<category>css-html</category>
+<pubDate>2007-08-29 11:08</pubDate>
+</item>
+
+<item>
+<title>襯線字/無襯線字</title>
+<description><![CDATA[<p><img alt="Firefox的字型設定有比例字型、襯線字型、無襯線字型和等寬字型四種可以分別設定" src="http://blog.othree.net/log/2007/07/24/serif-sans-serif/fx-serif.png" width="436" height="378" /></p>
+
+<p>在調整瀏覽器、設定網頁字型的時候，我常常會看到<strong>襯線字</strong>和<strong>非襯線字</strong>這兩個名詞，不過一直不了解差異在哪裡，直到前陣子看完<a href="http://www.anobii.com/books/001b4f1a416c416677/">寫給大家的平面設計書</a>後才終於了解。</p>]]><![CDATA[<p><img alt="襯線字體在筆劃末端會有裝飾線條" src="http://blog.othree.net/log/2007/07/24/serif-sans-serif/serif.png" width="400" height="300" /></p>
+
+<p>在上圖中有兩個不同的<strong>b</strong>，左邊的是Arial字型，非襯線字，右邊的則是Times New Roman這個襯線字型，襯線字和非襯線字最主要的差異就是在我用紅色圈圈起來的地方，襯線字會有裝飾用的線條出現，非襯線字則完全沒有，當然這只是一個簡單的字型分法，實際上在書中是分成古典體、現代體、方塊襯線體、無襯線體、書寫體和裝飾體這幾種，而中文字型分法又不太一樣，基本上可以分為明體、黑體、原體、書寫體和美工體幾種，不過其實我不知道這個分法正不正確，尤其是英文字型的部份。</p>]]></description>
+<link>http://blog.othree.net/log/2007/07/24/serif-sans-serif/</link>
+<guid>http://blog.othree.net/log/2007/07/24/serif-sans-serif/</guid>
+<category>css-html</category>
+<pubDate>2007-07-24 22:20</pubDate>
+</item>
+
+<item>
+<title>用圖片製作文字輸入框</title>
+<description><![CDATA[<p>理論上是可行的，最近有想重新設計搜尋欄位的樣子，所以就先做了一個範例，不過因為還沒畫出漂亮的圖，所以看來很陽春，目前這版還有些缺點，主要是不能自動調整長度，如果說要調整字體大小也能自動縮放的話，目前似乎還辦不到就是，基本原理就是用背景圖。</p>]]></description>
+<link>http://blog.othree.net/log/2007/07/10/input-with-image/</link>
+<guid>http://blog.othree.net/log/2007/07/10/input-with-image/</guid>
+<category>css-html</category>
+<pubDate>2007-07-10 22:20</pubDate>
+</item>
+
+
+</channel>
+</rss>

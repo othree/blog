@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000086" baseName="checked-example">:checked應用</b:listData>
+
+			<b:previous>
+				<b:mTitle>史萊姆造型控制器</b:mTitle>
+				<b:mDate>2004-11-06</b:mDate>
+				<b:mBase>slime-game-pad</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>台灣 Firefox Party 推廣週</b:mTitle>
+				<b:mDate>2004-11-09</b:mDate>
+				<b:mBase>firefox-party-taiwan</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000086" baseName="checked-example">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-11-08</b:date>
+				<b:time>20:41:53</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>:checked應用</b:title>
+			<b:content>
+				<b:summary> 長久以來，我一直有的問題，就是表單裡面的radio和checkbox在樣式上難道就只能那樣嗎？在IE裡雖然可以給他加上border、background-color這一些性質，但是出來的效果卻是...，唉，不說也罷，有興趣的人可以自己試試看，沒看過的可能會嚇一跳吧。不過這個問題，終於在這兩天有了初步的解決的，雖然和我最初的希望不一樣，不過事實上自由度更大了，而且我很滿意這個效果，效果就像是現在本站發表迴響那，「記錄個人資訊?」那裡一樣。這都要歸功於強大的CSS和&lt;label /&gt;標籤，CSS3的:checked擬類別（Pseudo-Classes）配合+這個CSS2就有的氏族選擇器（Asjacent Sibling Selector）和&lt;label /&gt;標籤就可以達到我要的效果了，如果要效果更完整，還可以加上opacity（透明度）這個性質（property）。當然，因為是歸功於CSS3，所以IE使用者就無緣看到這有趣的效果了。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2004/11/08/checked_example/checked.png" alt="效果抓圖" height="30" width="230" class="right" /></p>
+
+<p>長久以來，我一直有的問題，就是表單裡面的<strong>radio</strong>和<strong>checkbox</strong>在樣式上難道就只能那樣嗎？在<abbr title="Internet Explorer">IE</abbr>裡雖然可以給他加上border、background-color這一些性質，但是出來的效果卻是...，唉，不說也罷，有興趣的人可以自己試試看，沒看過的可能會嚇一跳吧。不過這個問題，終於在這兩天有了初步的解決的，雖然和我最初的希望不一樣，不過事實上自由度更大了，而且我很滿意這個效果，效果就像是現在本站發表迴響那，「記錄個人資訊?」那裡一樣。這都要歸功於強大的CSS和<strong>&lt;label /&gt;</strong>標籤，CSS3的<strong>:checked</strong>擬類別（Pseudo-Classes）配合<strong>+</strong>這個CSS2就有的氏族選擇器（Asjacent Sibling Selector）和&lt;label /&gt;標籤就可以達到我要的效果了，如果要效果更完整，還可以加上<strong>opacity</strong>（透明度）這個性質（property）。當然，因為是歸功於CSS3，所以IE使用者就無緣看到這有趣的效果了。</p></b:mainContent>
+				<b:extendContent><p>接下來，就來一步一步的設計吧，如果想用在checkbox上面也可以如法泡製。首先先做出一個form物件和裡面的radio物件，以及配合radio的label，當然為了能讓label指向，每個radio都要有獨立的id，詳見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-01.html">範例一</a>，如果沒用過<strong>&lt;label /&gt;</strong>標籤的人，可以趁這機會測試一下<strong>&lt;label /&gt;</strong>的功用，你只要在<strong>First Selection</strong>、<strong>Second Selection</strong>、<strong>Third Selection</strong>三個文字上用滑鼠點選，對應的選項就會直接被選取了，當然，你要確定radio的id和label的for一樣，事實上&lt;label /&gt;並沒有限定它能指向的元素型態，基本上是任意物件都可以，只要你有給它指定獨立的id，只是有些物件你指定了也沒什麼用，HTML的部分在這裡就已經確定成型了，接下來我們只會針對CSS的部份作修改。</p>
+
+<p>再下來一步，我們要來替label標籤加上樣式，不過為了和其他非指向radio的label做區別，我們在這裡要上用<strong>+</strong>這個選擇器還有CSS 2已經有的屬性選擇器，CSS碼長的像下面這樣。</p>
+
+
+
+<pre><code>input[type=&quot;radio&quot;]+label
+{
+   border: 2px solid #66f;
+   padding: 1px 3px;
+
+   background-color: #ffe;
+}
+</code></pre>
+
+
+
+<p>我們把第一行的部分單獨抓出來解釋，<code>input[type=&quot;radio&quot;]+label</code>，這行的意思是：「<strong>選擇接在input物件後面的label物件，其中，input物件的type屬性值要等於<q>radio</q>。</strong>」，如果能瞭解是最好，不能瞭解的話也沒關係，以後慢慢弄清楚<a href="http://www.w3.org/DOM/" title="Document Object Model"><span class="caps">DOM</span></a>就可以了，現在照著用就沒問題。再來一樣是為label上style，不過這次我們要讓被選取的選項能辨識出來，這裡我們用到了checked這個擬類別，只看選擇物件的部份，<code>input[type=&quot;radio&quot;]:checked+label</code>，這就表示只選擇被選取的radio後面的label物件。詳細請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-02.html">範例二</a>，你可以任意選取選項看看，選取的選項的&lt;label /&gt;馬上就會變色了。</p>
+
+<p>接下來是重點了，我們要把radio物件給隱藏起來，用的方法很簡單，只是margin性質，只不過是比較少用的負margin值，順便也為了讓使用者知道&lt;label /&gt;是可以選取的，所以加上:hover的效果，要特別注意的是設定hover的地方有兩個，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-03.html">範例三</a>。為什麼input的長度是3em，它的margin-right卻是-3.3em，為什麼多了0.3em，我也不知道 orz，我測試的結果是設剛剛好3em會無法把radio蓋住，所以加到3.3em。</p>
+
+<p>光是以上的設計還會有些問題，要是label的背景色是透明怎麼辦，被蓋在後面的radio不是就會冒出來了嗎？請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-04.html">範例四</a>。所以我們還要把radio給隱藏起來，可以用的方法有三種，<code>display: none;</code>、<code>visibility: hidden;</code>、<code>opacity: 0;</code>，在這裡我選擇了第三種，因為親合力的問題，如果我選擇了前兩種，即使我設定tabindex給他，我都無法用Tab鍵把focus移到該選項上，要是又沒有設定accesskey，那狀況就會變的不太好，使用者只要無法控制滑鼠，就沒辦法對你的radio和checkbox做選擇，因此我把它隱藏起來的方法選擇讓他完全透明。而為了讓使用者能知道他的游標移到哪個選項，所以我們利用<code>:focus</code>這個擬類別來對label作樣式的變化，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-05.html">範例五</a>，在這個範例裡你會發現即使底色都是透明的，input物件也都看不到了，不過你仍然可以用Tab來切換選項。</p>
+
+<p>作到這邊，我們就完成了，你可以看到<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-final.html">最後的結果</a>，下面列出了完整的HTML和全部的CSS碼，最後要提醒的就是&lt;label /&gt;裡面可以放的不只是文字，只是你必須要注意到一件事，就是使用者能夠一眼看到就知道它可以選，我的方法是先勾選一個預設值，讓他能和其他選項明顯不同，使用者能一眼就注意到，不過這方法比較適用於radio，如果是checkbox我就沒還沒有想到簡單的方法了，不過也是可以配合background-image之類的性質。如果有誤還請指正，或是有更好的方案也歡迎討論。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="10">
+
+				<b:comment commentID="000090" entryID="000086">
+					<b:author>
+						<b:authorName>MilchFlasche</b:authorName>
+						<b:authorEmail>robertus_0617@yahoo.com.tw</b:authorEmail>
+						<b:authorUrl>http://linshi.twbbs.org/blog/MilchFlasche</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-15</b:date>
+						<b:time>20:22:02</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我是從Moztw.org過來看的，你的部落格好漂亮！真是強者啊:)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000092" entryID="000086">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-11-16</b:date>
+						<b:time>11:21:02</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>謝謝，不過裡面還是有點小問題尚待解決（話雖如此，我還在調配另一種配置呢@_@）。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000119" entryID="000086">
+					<b:author>
+						<b:authorName>EvenWu</b:authorName>
+						<b:authorEmail>evendesign@gmail.com</b:authorEmail>
+						<b:authorUrl>http://1pxcare.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2004-12-08</b:date>
+						<b:time>00:15:46</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>天阿，好恐怖的神技
+好想拿來用用看可以搞到什麼地步&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000690" entryID="000086">
+					<b:author>
+						<b:authorName>Bob</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-06-04</b:date>
+						<b:time>21:04:34</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>有興趣再把這篇翻出來改寫嗎？範例抓個圖、加個比較能吸引人的圖片版？ (我想可以用 background-image &amp; position 做什麼變化?)</p>
+
+<p>對啊我想把這篇文章偷到 養樂多/webdev 去&#8230; ^^; 如果有興趣的話或許我們可以 MSN 討論一下。我是不想從頭開始建個教學網站啦，不過希望能拿些不見得那麼多人知道的站／點子出來重新包裝一下，然後稍微用點力來推&#8230; 或者，大家有個集中的地方用風格相近的手法分享彼此的(惡?)趣味也不錯 :P</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000691" entryID="000086">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-06-04</b:date>
+						<b:time>21:56:52</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>大概也要過完期末吧，其實我當初就有想過用背景圖加padding來作效果，但是不會畫圖XD。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000926" entryID="000086">
+					<b:author>
+						<b:authorName>dreclo</b:authorName>
+						<b:authorEmail>dreclo@hotmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2006-01-20</b:date>
+						<b:time>16:39:03</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>IE似乎看不到效果，我用NETscape看到了，谢谢</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="002306" entryID="000086">
+					<b:author>
+						<b:authorName>Amauds</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://amauds-firefox.blogspot.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2006-09-09</b:date>
+						<b:time>19:42:36</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>範例五可以用 TAB 鍵切換,
+最後結果的那一頁不能用 TAB 鍵切換耶.</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="002323" entryID="000086">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2006-09-09</b:date>
+						<b:time>22:58:11</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>Amauds，那是因為Firefox改變radio的行為模式的關係，你試著再範例五隨便選一個選項，就會變成後最後結果一樣，現在Firefox變成用上下左右來切換選項了，和IE一樣。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="023645" entryID="000086">
+					<b:author>
+						<b:authorName>sdcgf</b:authorName>
+						<b:authorEmail>sdcgf@hotmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-07-12</b:date>
+						<b:time>12:27:57</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>不好意思 您有一個地方寫錯了</p>
+
+<p>display:none;</p>
+
+<p>您寫成 displa: none;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="023647" entryID="000086">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-07-12</b:date>
+						<b:time>14:41:42</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>樓上的多謝，我的blog裡面一定是到處充滿了小錯誤&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/59">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

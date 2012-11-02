@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000602" baseName="spidermonkey-utf-8">spidermonkey 的 UTF-8 支援</b:listData>
+
+			<b:previous>
+				<b:mTitle>JavaScript on vim</b:mTitle>
+				<b:mDate>2009-12-26</b:mDate>
+				<b:mBase>javascript-on-vim</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>var foo = foo || {};</b:mTitle>
+				<b:mDate>2009-12-29</b:mDate>
+				<b:mBase>foo-eq-foo-or-default</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000602" baseName="spidermonkey-utf-8">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-27</b:date>
+				<b:time>16:01:39</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>spidermonkey 的 UTF-8 支援</b:title>
+			<b:content>
+				<b:summary>JSLint 其實是用 javascript 寫的 javascript 語法檢查工具， jslint.vim 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 JSLint ，最好找的 JS 引擎就是 mozilla 的 spidermonkey ，很多 linux 有包好的套件，FreeBSD 也有 port ，不過實際上用的時候發現有個問題，就是不支援 UTF-8 字串，結果就是在 JSLint 的字元檢查時會把一些中文當成不安全字元，例如：「下」。 其實要 spidermonkey 支援 UTF-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 MacPorts...</b:summary>
+				<b:mainContent><p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
+
+<p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
+
+<p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/601">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

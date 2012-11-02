@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000494" baseName="firefox-3-memory-usage">Firefox 3的記憶體管理</b:listData>
+
+			<b:previous>
+				<b:mTitle>Acid3 Test</b:mTitle>
+				<b:mDate>2008-03-06</b:mDate>
+				<b:mBase>acid3_test</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>老貓學出版</b:mTitle>
+				<b:mDate>2008-03-14</b:mDate>
+				<b:mBase>old-cat-and-publish</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000494" baseName="firefox-3-memory-usage">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-03-12</b:date>
+				<b:time>23:35:18</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Firefox 3的記憶體管理</b:title>
+			<b:content>
+				<b:summary>Firefox 3是我第一次作為一個網路使用者期待的瀏覽器，其中很大的因素是它在效能和記憶體管理上有很大的改善，在我之前翻譯的Firefox 3 終極特色：效能這篇文章就有提到相關資訊，而Pavlov今天則發表了一篇Firefox 3 Memory Usage，專門介紹Firefox 3中記憶體管理相關的改進，以下簡要說一下文章內容。...</b:summary>
+				<b:mainContent><p>Firefox 3是我第一次作為一個網路使用者期待的瀏覽器，其中很大的因素是它在效能和記憶體管理上有很大的改善，在我之前翻譯的<a href="http://mozlinks-zh.blogspot.com/2008/03/firefox-3.html">Firefox 3 終極特色：效能</a>這篇文章就有提到相關資訊，而<a href="http://blog.pavlov.net/">Pavlov</a>今天則發表了一篇<a href="http://blog.pavlov.net/2008/03/11/firefox-3-memory-usage/">Firefox 3 Memory Usage</a>，專門介紹Firefox 3中記憶體管理相關的改進，以下簡要說一下文章內容。</p></b:mainContent>
+				<b:extendContent><h4>減少破碎記憶體</h4>
+
+<p>除了減少產生破碎的記憶體空位，現在的版本記憶體用量只有之前的2/3。</p>
+
+<h4>Fixed cycles with the Cycle collector</h4>
+
+<p>Cycle我不知道該怎樣翻，不過它指的是兩個物件互有對方的指標（或參考）這種情形，要人工正確的判斷何時該刪除這些cycle並不容易，現在工作團隊建立了一個cycle collector可以自動收集並管理cycle的記憶體狀況，並在需要時自動刪除他們。</p>
+
+<h4>暫存機制的調整</h4>
+
+<p>現在程式會判斷使用者的使用狀況來管理暫存的網頁和圖片，以網頁本身來說，上一頁的內容通常都會放在暫存記憶體內，不過要是超過30分沒有動到，這些內容就會清除掉。而圖片則不再暫存未壓縮的圖檔，本來的話，圖片會以未壓縮的形式放進記憶體內暫存，未壓縮的圖片大小有多大相信大家都知道。</p>
+
+<h4>找出記憶體遺漏（Memory leak）</h4>
+
+<p>現在才發現Memory leak好像沒個比較通用的譯名。工作團隊已經修正了400多個關於記憶體遺漏的錯誤回報了，這要多虧了新發展的偵測工具。</p>
+
+<h4>測試結果</h4>
+
+<p>Pavlov設計了一套測試流程，最後顯示記憶體用量比Firefox 2和IE 7都要低上許多。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/492">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

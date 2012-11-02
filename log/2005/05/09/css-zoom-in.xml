@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000146" baseName="css-zoom-in">利用CSS製造放大效果</b:listData>
+
+			<b:previous>
+				<b:mTitle>Firefox 1.1的一些新功能</b:mTitle>
+				<b:mDate>2005-05-05</b:mDate>
+				<b:mBase>fx-1-1-new-feature</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>聯播對於我的影響</b:mTitle>
+				<b:mDate>2005-05-11</b:mDate>
+				<b:mBase>oui-blog-to-me</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000146" baseName="css-zoom-in">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-05-09</b:date>
+				<b:time>22:32:52</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>利用CSS製造放大效果</b:title>
+			<b:content>
+				<b:summary> 這篇已經說好久，今天總算生出來了，不過沒弄的很詳盡就是。基本上我這次的範例是比較適合用在固定的東西，例如導覽列，或是選單目錄之類的東西，我的範例本身是套在導覽列上很方便啦^^，如果是行內物件的話（可以用在連結之類的），我還要做些測試。 廢話不多說，要製造一個mouseover的放大效果，基本的作法很簡單，就是利用:hover這個選擇子來把元素放大，讓我們來看看光這樣子會是怎樣，範例一。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2005/05/09/css_zoom_in/css_zoom_in.png" alt="CSS zoom in" height="108" width="223" class="right" /></p>
+
+<p>這篇已經說好久，今天總算生出來了，不過沒弄的很詳盡就是。基本上我這次的範例是比較適合用在固定的東西，例如導覽列，或是選單目錄之類的東西，我的範例本身是套在導覽列上很方便啦^^，如果是行內物件的話（可以用在連結之類的），我還要做些測試。</p>
+
+<p>廢話不多說，要製造一個mouseover的放大效果，基本的作法很簡單，就是利用<strong>:hover</strong>這個選擇子來把元素放大，讓我們來看看光這樣子會是怎樣，<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-1.html">範例一</a>。</p></b:mainContent>
+				<b:extendContent><p>我製造了四個常寬都是50px的元素（我用標準的算法，是加上paddin值的長寬），雖然是span標籤，但是因為我用了<strong>display: block;</strong>這個屬性，所以他們現在都是block物件了，也因此我需要用<strong>float: left;</strong>才能讓他們並排，並且我設定他們在滑鼠移過去時會讓長寬都變成100px。這樣就完成最基本的設定了，不過還有幾個問題，第一是下面的內容會隨著放大的效果上下移動，第二是元素之間的左右位置也會因為放大而跑來跑去，第三則是框線的問題，中間三條線特別粗。</p>
+
+<p>我們先來解決第一個問題，要處理這個問題很間單，只要指定<strong>margin-bottom: -50px;</strong>就可以了，結果見<a href="http://blog.othree.net/log/2006/05/11//log/2005/05/09/css_zoom_in/CSSzoomIn-2.html">範例二</a>。同樣的原理，我們也可以讓放大的效果變成往上放大，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-3.html">範例三</a>。不過我想最多人會希望置中放大，所以就見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-4.html">範例四</a>。在範例四裡面，我是設定span的<strong>margin: -25px 0 -25px;</strong>，只有三個值的狀況下，依順序分別是top、left and right、bottom，事實上我也可以改成，<strong>margin: -25px 0;</strong>，這樣就變成top and bottom、left and right了。</p>
+
+<p>如果第一個問題的處理方法了解的話，事實上第二個問題也是一樣的方法處理，我們直接拿範例四的置中放大來做修改，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-5.html">範例五</a>，在這裡我做了些改變，就是本來放大成100*100的方塊，我改成75*75了，這樣改的原因是如果放太大的話，會造成移到旁邊的方塊變的不容易，想像個極端的例子，你滑鼠移到的方塊如果大到蓋住旁邊的物件，不就選不到了嗎XD。講那麼多，都沒講到重點，在這個範例中我把<strong>margin</strong>改成左右都是<strong>-12.5px</strong>。</p>
+
+<p>接下來要處理第三個問題了，中間的幾條線會比較粗的原因是因為左右物件都有左右框線，雖然設定是1px，但是兩條放在一起就變兩倍粗了。為了處理這個問題，我用了<strong>:last-child</strong>這個選擇器，然後除了最後一個物件以外，右邊的框線都設成0，結果就是<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-6.html">範例六</a>，事實上這個範例還不只修改框線的設定而已，因為用上:last-child這個選擇子，我必須要一物件把這四個span包起來，不然在:last-child的使用上會有困難（他會認為後面的<strong>p</strong>才是最後一個物件）。基於這點，我乾脆改成list，不過實際上用div標籤包一下就可以了。另外就是margin我改成了<strong>-13px</strong>，因為本來沒放大的物件少了一邊的框線，但是放大後又復原了，所以必須要增加margin的負值，把多出來的框線的空間補回來。就這樣，完成了這次的目標了，我想我沒漏掉什麼沒修改到才是。</p>
+
+<p>最後附上一個突然想到的<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-7.html">東西</a>，本來是想用<strong>:nth-child()</strong>來做的，不過Firefox都還不支援，所以用了其他方法，也造成CSS比較難看，而且比較難擴充@_@。我是覺得這可能可以配合圖片玩些東西啦:P。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="4">
+
+				<b:comment commentID="000656" entryID="000146">
+					<b:author>
+						<b:authorName>風痕影</b:authorName>
+						<b:authorEmail>hit1205@ms70.url.com.tw</b:authorEmail>
+						<b:authorUrl>http://www.wretch.cc/blog/renyoh</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-22</b:date>
+						<b:time>01:55:44</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我有試過，用:hover讓圖片可以在滑鼠移動到縮小的圖片上時顯示原吋圖片
+可是，可惡的IE，竟然不支援超連結以外的元素使用:hover
+只好寫一個JavaScript來做出這種效果了&#8230;[泣]</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000657" entryID="000146">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-05-22</b:date>
+						<b:time>20:35:19</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>你可以試著用IE7喔:P，http://dean.edwards.name/IE7/ 。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000682" entryID="000146">
+					<b:author>
+						<b:authorName>Bob</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-06-01</b:date>
+						<b:time>11:53:53</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我又來了&#8230; 幫忙 Review 一下&#8230; ^^;
+<a href="http://blog.yam.com/webdev/archives/161699.html" rel="nofollow">http://blog.yam.com/webdev/archives/161699.html</a></p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="078010" entryID="000146">
+					<b:author>
+						<b:authorName>无名</b:authorName>
+						<b:authorEmail>tian_lan123@tom.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-08-20</b:date>
+						<b:time>10:31:16</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>这种做法，在firefox下似乎不可用。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/144">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

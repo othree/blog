@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000376" baseName="checkbox">checkbox</b:listData>
+
+			<b:previous>
+				<b:mTitle>jQuery 1.1</b:mTitle>
+				<b:mDate>2007-01-15</b:mDate>
+				<b:mBase>jquery-11</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>CSSOM</b:mTitle>
+				<b:mDate>2007-01-17</b:mDate>
+				<b:mBase>cssom</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000376" baseName="checkbox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-01-16</b:date>
+				<b:time>20:53:36</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>checkbox</b:title>
+			<b:content>
+				<b:summary>昨天發表了一篇很沒誠意的jQuery 1.1發佈的文章，是因為在研究checkbox的行為，因為想要用jQuery來抓checkbox和radio的值，radio還算簡單： $(&quot;input[@name=fieldname][@checked]&quot;).val(); 這樣一行就可以了，checkbox基本上也可以如法炮製，不過會遇到問題，可能有複數個checkbox的name屬性一樣，像是：...</b:summary>
+				<b:mainContent><p>昨天發表了一篇很沒誠意的<a href="http://blog.othree.net/log/2007/01/15/jquery-11/">jQuery 1.1發佈的文章</a>，是因為在研究checkbox的行為，因為想要用jQuery來抓checkbox和radio的值，radio還算簡單：</p>
+
+<pre><code>$(&quot;input[@name=fieldname][@checked]&quot;).val();</code></pre>
+
+<p>這樣一行就可以了，checkbox基本上也可以如法炮製，不過會遇到問題，可能有複數個checkbox的name屬性一樣，像是：</p></b:mainContent>
+				<b:extendContent><pre><code>&lt;input type=&quot;checkbox&quot; name=&quot;pet&quot; value=&quot;1&quot;/&gt;
+&lt;input type=&quot;checkbox&quot; name=&quot;pet&quot; value=&quot;2&quot;/&gt;
+&lt;input type=&quot;checkbox&quot; name=&quot;pet&quot; value=&quot;4&quot;/&gt;</code></pre>
+
+<p>這段HTML裡面有三個checkbox，他們的欄位名稱都是pet，但是值不一樣。假設全部都勾選，送出之後在HTTP header裡面會像是：</p>
+
+<pre><code>pet: 1
+pet: 2
+pet: 3</code></pre>
+
+<p>眼尖的人就會發現，在大部分的程式語言中，這樣會變成是重複宣告變數，後宣告的值會取代先宣告的值，以PHP為例，在後端程式收到的事實上等於只有<code>$_POST['pet'] = 4;</code>這個值，所以通常PHP程式設計師都會把checkbox的欄位名稱改成<code>pet[]</code>，變成：</p>
+
+<pre><code>&lt;input type=&quot;checkbox&quot; name=&quot;pet[]&quot; value=&quot;1&quot;/&gt;
+&lt;input type=&quot;checkbox&quot; name=&quot;pet[]&quot; value=&quot;2&quot;/&gt;
+&lt;input type=&quot;checkbox&quot; name=&quot;pet[]&quot; value=&quot;4&quot;/&gt;</code></pre>
+
+<p>這樣後端程式會變成收到一個陣列<code>$_POST['pet'] = array(1,2,4);</code>，其他後端程式語言會變成怎樣我比較不清楚，不過別忘了我是想用jQuery來取值，我努力了一個晚上，結果還是只能用一個function來處理，還沒辦法縮成一行直接在程式碼裡使用：</p>
+
+<pre><code>function getCheckbox (name) {
+	var val = [];
+	$(&quot;input[@name=&quot;+name+&quot;][@checked]&quot;).each(function(){val.push($(this).val());});
+	return val;
+}</code></pre>
+
+<p>至於這樣做的原因？是要用來作ajax的資料傳輸用，透過jQuery來傳送表單可以使用<a href="http://www.json.org/"><span class="caps">JSON</span></a>作為參數的格式，並不影響後端程式。ajax的form serialize和deserialize加PHP的<a href="http://www.aurore.net/projects/php-json/">php-json</a>加上<a href="http://adodb.sourceforge.net/"><span class="caps">ADO</span>db</a>的<a href="http://phplens.com/lens/adodb/docs-adodb.htm#autoexecute">AutoExcute</a>，整個合起來超方便的:P。</p>
+
+<p>最後補充，據說jQuery 1.1的選擇器（selector）的速度有大幅度的進步，快了10～20倍。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="008895" entryID="000376">
+					<b:author>
+						<b:authorName>Rack Lin</b:authorName>
+						<b:authorEmail>racklin@gmail.com</b:authorEmail>
+						<b:authorUrl>http://racklin.blogspot.com/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-01-23</b:date>
+						<b:time>12:10:58</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>在 google 查詢 jQuery 發現了您，看來站長也是個 Chainability 的愛好者。凡事都想一行串到底。呵呵。</p>
+
+<p>在 jQuery plugins 中有個 form.js 的 plugin，pack 完後只有 4K，可以讓 field 的求值表現的更加美麗，同上的例子，可以統一改變如下, 無論是 radio, checkbox, multi-select:</p>
+
+<p>$(&#8220;input:checkbox[@name=fieldname&#8221;).fieldValue();</p>
+
+<p>會自動回覆 String or Array of String.</p>
+
+<p>小弟有寫篇心得在此:
+<a href="http://racklin.blogspot.com/2007/01/jquery-plugins1-formjs.html" rel="nofollow">http://racklin.blogspot.com/2007/01/jquery-plugins1-formjs.html</a></p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="008906" entryID="000376">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2007-01-23</b:date>
+						<b:time>18:49:19</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>感謝，看起來方便很多:P。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/375">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

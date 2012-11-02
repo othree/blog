@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000028" baseName="first-time-fix-mt">第一次修改MT</b:listData>
+
+			<b:previous>
+				<b:mTitle>CSS 3 Selectors</b:mTitle>
+				<b:mDate>2003-12-23</b:mDate>
+				<b:mBase>css-3-selectors</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>white-space: pre;之IE不支援</b:mTitle>
+				<b:mDate>2003-12-23</b:mDate>
+				<b:mBase>whitespace-pre-ie</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000028" baseName="first-time-fix-mt">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2003-12-23</b:date>
+				<b:time>10:18:12</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>第一次修改MT</b:title>
+			<b:content>
+				<b:summary>因為上一篇文章再內文用到了&lt;dl&gt;標籤，結果發現即使在這標籤前後加上兩個斷行，還會被當成一般段落處理，所以不得已只好修改點程式碼了，還好沒找多就就找到要改的檔案了「lib\MT\Util.pm」，要改的地方在182行，長成這樣： if ($p !~ m/^&amp;lt;(?:table|ol|ul|pre|select|form|blockquote|div|q)/) { $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g; $p = &quot;&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;&quot;; } 我把他修改成下面這樣： if ($p !~ m/^&amp;lt;(?:table|ol|ul|dl|pre|select|form|blockquote|div|q)/) { $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g; $p = &quot;&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;&quot;; }&gt; 修改的地方只有第一行那串標籤中多加了「dl|」，這樣就達到我的目標了。事實上原始的狀況下，兩個斷行後開始&lt;table&gt;、&lt;ol&gt;、&lt;ul&gt;、&lt;pre&gt;、&lt;select&gt;、&lt;form&gt;、&lt;blockquote&gt;、&lt;div&gt;、&lt;q&gt;這幾個標籤，MT都不會針對其內容作修改的。...</b:summary>
+				<b:mainContent><p>因為上一篇文章再內文用到了&lt;dl&gt;標籤，結果發現即使在這標籤前後加上兩個斷行，還會被當成一般段落處理，所以不得已只好修改點程式碼了，還好沒找多就就找到要改的檔案了「lib\MT\Util.pm」，要改的地方在182行，長成這樣：</p>
+
+<pre><code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|pre|select|form|blockquote|div|q)/) {
+            $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g;
+            $p = &quot;&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;&quot;;
+        }</code></pre>
+
+<p>我把他修改成下面這樣：</p>
+
+<pre><code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|dl|pre|select|form|blockquote|div|q)/) {
+            $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g;
+            $p = &quot;&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;&quot;;
+        }&gt;</code></pre>
+
+<p>修改的地方只有第一行那串標籤中多加了「<strong>dl|</strong>」，這樣就達到我的目標了。事實上原始的狀況下，兩個斷行後開始&lt;table&gt;、&lt;ol&gt;、&lt;ul&gt;、&lt;pre&gt;、&lt;select&gt;、&lt;form&gt;、&lt;blockquote&gt;、&lt;div&gt;、&lt;q&gt;這幾個標籤，MT都不會針對其內容作修改的。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/116">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

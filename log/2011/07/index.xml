@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2011-07">July 2011</b:listData>
+
+			<b:previous>
+				<b:mTitle>June 2011</b:mTitle>
+				<b:mDate>2011/06</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>August 2011</b:mTitle>
+				<b:mDate>2011/08</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000687" baseName="getelementbyid-not-on-element">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-07-31</b:date>
+				<b:time>11:46:54</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>getElementById </b:title>
+			<b:content>
+				<b:summary>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 getElementById 這個函式其實只有 document 物件 才有，element 物件 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 mootools 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。 於是我改用 jQuery ，更精確的一點說我是用 Sizzle，結果我發現用 find 狀況依舊，因為 Sizzle...</b:summary>
+				<b:mainContent><p>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 <a href="https://developer.mozilla.org/en/DOM/document.getElementById">getElementById</a> 這個函式其實只有 <a href="https://developer.mozilla.org/en/DOM/document#Methods">document 物件</a> 才有，<a href="https://developer.mozilla.org/en/DOM/element#Methods">element 物件</a> 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 <a href="http://mootools.net/">mootools</a> 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。</p>
+
+<p>於是我改用 <a href="http://jquery.com/">jQuery</a> ，更精確的一點說我是用 <a href="http://sizzlejs.com/">Sizzle</a>，結果我發現用 find 狀況依舊，因為 Sizzle 引擎有對選擇器做一些最佳化，如果看到是 <code>"#id"</code> 這樣的形式，就會直接用 <code>document.getElementById()</code> ，然後就悲劇重演了～</p>
+
+<p>結果目前這種狀況我是只能先用 <code>*#id</code> 這樣的寫法來給 Sizzle 處理，應該會去報 jQuery 和 mootools 的 bug。這問題我也有在 W3C <a href="http://www.w3.org/html/ig/zh/">中文興趣小組</a>的討論群組裡面 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Jul/0030.html">提出</a>，目前還沒空回文，有興趣的可以一起來參與討論啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

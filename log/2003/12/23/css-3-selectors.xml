@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000027" baseName="css-3-selectors">CSS 3 Selectors</b:listData>
+
+			<b:previous>
+				<b:mTitle>PHP 5.0 Beta 3</b:mTitle>
+				<b:mDate>2003-12-23</b:mDate>
+				<b:mBase>php-5-beta3</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>第一次修改MT</b:mTitle>
+				<b:mDate>2003-12-23</b:mDate>
+				<b:mBase>first-time-fix-mt</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000027" baseName="css-3-selectors">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2003-12-23</b:date>
+				<b:time>01:43:47</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>CSS 3 Selectors</b:title>
+			<b:content>
+				<b:summary>熟析CSS語法的應該都知道CSS selector這東西，前兩天在XML.com看到一篇文章CSS 3 Selectors，介紹了從CSS 1、CSS 2到還在制定中的CSS 3的selectors，於是我又順便去W3C的TR裡找到現在最新版的CSS 3 selectors文件，其中的第二章有個表格把所有的selector都列了出來，真的是非常多。...</b:summary>
+				<b:mainContent><p>熟析CSS語法的應該都知道CSS selector這東西，前兩天在<a href="http://www.xml.com" title="XML.com">XML.com</a>看到一篇文章<a href="http://www.xml.com/pub/a/2003/06/18/css3-selectors.html?page=1" title="XML.com - CSS 3 Selectors">CSS 3 Selectors</a>，介紹了從CSS 1、CSS 2到還在制定中的CSS 3的selectors，於是我又順便去<a href="http://www.w3.org" title="W3C">W3C</a>的<a href="http://www.w3.org/TR/" title="W3C - Technical Reports">TR</a>裡找到現在最新版的<a href="http://www.w3.org/TR/css3-selectors/" title="W3C - TR - CSS3 - selectors">CSS 3 selectors文件</a>，其中的第二章有個表格把所有的selector都列了出來，真的是非常多。</p></b:mainContent>
+				<b:extendContent><p>從最早CSS 1只有標籤、class、ID和簡單的文件結構，到CSS2，加入了萬用符號、屬性、還有如::befotre、::after、::first-letter...等等，變化已經非常多了，現在CSS 3還加入針對屬性值做搜尋的動作，一時間還真是難以想像未來要如何利用這麼多變化的功能。在目前可用但是比較少人用的selectors中，我最喜歡的就是屬性selector，我一直很想把他用在表單上，因為&lt;input&gt;標籤的關係。</p>
+
+<p>因為&lt;input&gt;標籤，只要控制type屬性，他呈現在網路上的樣子就變的完全不一樣，主要可分成text、button、file、checkbox、radio五種狀況，在以前，我如果要針對各種type分別做CSS設計，那我最好的方法是給每個type一個class，對不同的type還要再設定其class name，但是有了屬性selector後，我可以直接在CSS的地方就選擇我是針對哪種type的&lt;input&gt;標籤，現在這個站用的CSS就有用到一個，像下面這樣：</p>
+
+<pre><code>#post_comment input[type=submit]
+{
+	width: 7em;
+}</code></pre>
+
+<p>這是指我在發表迴響處的兩個submit按鈕的寬度要7em長，測試過的感覺真是很有趣，不過問題是IE不支援，關於這點我也不想再多說什麼了～＿～，事實上我認為將來IE對CSS 3 selector也不太樂觀，然而Mozilla早已經開始在測試CSS 3 selector了。</p>
+
+<p>差點變成SUCK IE文了，還是回歸本題，介紹點CSS 3的selector吧。首先是<a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors" title="W3C - TR - CSS3 - selectors - attribute selectors">attribute selectors</a>，也就是屬性，CSS 3比2還要多出了三種的選擇方法，都是針對屬性值做選擇的，條列如下：</p>
+
+<dl>
+<dt>E[foo^="bar"]</dt>
+<dd>代表E這個標籤，有foo這個屬性，並且他的foo屬性值是「<strong>bar</strong>」開頭的。</dd>
+<dt>E[foo$="bar"]</dt>
+<dd>代表E這個標籤，有foo這個屬性，並且他的foo屬性值是「<strong>bar</strong>」結尾的。</dd>
+<dt>E[foo*="bar"]</dt>
+<dd>代表E這個標籤，有foo這個屬性，並且他的foo屬性值裡有「<strong>bar</strong>」。</dd>
+</dl>
+
+<p>同於CSS2的「E[foo="bar"]」和「E[foo~="bar"]」，這次加入了更多的正規表示式概念，不知道在更遙遠的未來會不會有可能真的用正規表示是來做選擇，甚至套用在選擇標籤上。</p>
+
+<p>再來是<a href="http://www.w3.org/TR/css3-selectors/#structural-pseudos" title="W3C - TR- CSS 3 - selectors - Structural pseudo">Structural pseudo-classes</a>了，這裡就很精采了，重頭戲在:nth-child，以前要用class指配到死的東西，以後用這個就可以輕鬆簡單的作好處理了：</p>
+
+<dl>
+<dt>E:nth-child(n)</dt>
+<dd>代表E這個標籤的父標籤下面的第n個子標籤。（簡單說是第幾個E標籤的意思）</dd>
+<dt>E:nth-last-child(n)</dt>
+<dd>代表E這個標籤的父標籤下面的第n個子標籤，不過是從後面開始算。</dd>
+</dl>
+
+<p>最精采的在於他的<strong>第n個子標籤</strong>，正確的值應該是「<strong>an+b</strong>」，a、b是我們自己指定的數字，n則是任意數，所以如果你設定為「2n」那就是代表偶數個，「2n+1」就會成為奇數個，這最常用的地方就是表格了，以前如果要針對一個表格的奇數行和偶數行分開做CSS設定，一定要設兩個class，並且每行都要設class屬性，現在就不用了，只要用如下的語法就可以達到希望的效果了，不用再設一堆class屬性。</p>
+
+<pre><code>tr:nth-child(2n+1)
+{
+	background-color: red;
+}
+tr:nth-child(2n)
+{
+	background-color: blue;
+}</code></pre>
+
+<p>Structural pseudo-classes裡新增的還有:root、:nth-of-type()等，其中「:root」是針對文件的第一個標籤做選擇，至於「:nth-of-type()」我則看不太懂他的意思，不過似乎可以和「:nth-child」配合的樣子。</p>
+
+<p>最後要介紹的是<a href="http://www.w3.org/TR/css3-selectors/#adjacent-i-combinators" title="W3c - TR- CSS 3 - selectors - Indirect adjacent combinator">Indirect adjacent combinator</a>，範例如下：</p>
+
+<dl>
+<dt>E ~ F</dt>
+<dd>代表一個不是直接接在E元素後面的F元素。</dd>
+</dl>
+
+<p>這是和之前就有的「E + F」相對的，其實我覺得「E + F」這種Direct adjacent combinators蠻有用的，本來這站台的CSS有要用到他的，不過因為IE不支援，所以我後來想了其他方法來代替，也算是小有缺憾^^b</p>
+
+<p>基本上就介紹上面幾個，那個「nth-of-type」看不懂實在是很抱歉&gt;&lt;，不過比較具代表性的都有了。感覺上以後CSS2的發展會不再單純只是配合HTML或是XHMTL了，當然最主要的原因是「<strong>:root</strong>」的出現，不然它的出現我也想不到其他解釋，或許是有什麼神妙的用法我沒想到也說不定吧。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/117">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

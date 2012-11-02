@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000608" baseName="_screen_windows_terminal">在 screen windows 裡開一個比較小的 terminal</b:listData>
+
+			<b:previous>
+				<b:mTitle>新年快樂</b:mTitle>
+				<b:mDate>2010-01-03</b:mDate>
+				<b:mBase>happy-2010</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>用 :wq 送出 BBS 文章</b:mTitle>
+				<b:mDate>2010-01-07</b:mDate>
+				<b:mBase>wq-post-bbs-article</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000608" baseName="_screen_windows_terminal">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-01-05</b:date>
+				<b:time>21:18:28</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>在 screen windows 裡開一個比較小的 terminal</b:title>
+			<b:content>
+				<b:summary>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 BBS 和 IRC，BBS 的標準視窗大小是 80*24，但是這個大小對於 IRC 來說又太小了，好在現在很多 BBS 系統已經已經支援大於 80*24 的終端機了，但是有一個 bahamut 自從商業化後 BBS 系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 下 ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上： width -d 80 24 重點在那個 -d 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。...</b:summary>
+				<b:mainContent><p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
+
+
+
+<pre><code>width -d 80 24</code></pre>
+
+
+
+<p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/607">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

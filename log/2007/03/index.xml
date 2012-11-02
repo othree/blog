@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2007-03">March 2007</b:listData>
+
+			<b:previous>
+				<b:mTitle>February 2007</b:mTitle>
+				<b:mDate>2007/02</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>April 2007</b:mTitle>
+				<b:mDate>2007/04</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000396" baseName="base2-dom">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-27</b:date>
+				<b:time>00:39:07</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>base2.DOM</b:title>
+			<b:content>
+				<b:summary>base2.DOM是Dean Edwards最近放出來的javascript library，與其說是javascript library，我到覺得比較像是瀏覽器的DOM bug fix，他不像jQuery那樣好用，也沒YUI那樣多功能，取而代之的是一些標準的實做，像是W3C Selectors API裡面的matchAll()、matchSingle()，還有W3C DOM裡面的addEventListener()、dispatchEvent()、removeEventLister()等等，修正加新增的函式一共有20個，而且因為各個函式都是取自標準，所以這個library並沒有說明文件，Dean Edwards還故意把發佈文章的標題取為Yet Another JavaScript Library Without Documentation。...</b:summary>
+				<b:mainContent><p><a href="http://dean.edwards.name/weblog/2007/03/yet-another/">base2.DOM</a>是<a href="http://dean.edwards.name/">Dean Edwards</a>最近放出來的javascript library，與其說是javascript library，我到覺得比較像是瀏覽器的DOM bug fix，他不像<a href="http://jquery.com/">jQuery</a>那樣好用，也沒<a href="http://developer.yahoo.com/yui/"><span class="caps">YUI</span></a>那樣多功能，取而代之的是一些標準的實做，像是<a href="http://www.w3.org/TR/selectors-api/"><span class="caps">W3C</span> Selectors <span class="caps">API</span></a>裡面的<a href="http://www.w3.org/TR/selectors-api/#matchall"><code>matchAll()</code></a>、<a href="http://www.w3.org/TR/selectors-api/#matchsingle"><code>matchSingle()</code></a>，還有<a href="http://www.w3.org/DOM/"><span class="caps">W3C DOM</span></a>裡面的<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-addEventListener"><code>addEventListener()</code></a>、<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-dispatchEvent"><code>dispatchEvent()</code></a>、<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-removeEventListener"><code>removeEventLister()</code></a>等等，修正加新增的函式一共有20個，而且因為各個函式都是取自標準，所以這個library並沒有說明文件，Dean Edwards還故意把發佈文章的標題取為<strong>Yet Another JavaScript Library Without Documentation</strong>。</p></b:mainContent>
+				<b:extendContent><p>另外Dean Edwards還發表了一篇<a href="http://dean.edwards.name/weblog/2007/03/rules/">Rules For JavaScript Library Authors</a>，講了11個設計Javascript Library的原則。</p>
+
+<p>如果有人真的很想看說明文件的話，我整理如下：</p>
+
+
+<ul>
+<li><a href="http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html#Node3-compareDocumentPosition"><code>node.compareDocumentPosition()</code></a></li>
+<li><a href="http://www.whatwg.org/specs/web-apps/current-work/#activeelement"><code>document.activeElement</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-DocumentEvent-createEvent"><code>document.createEvent()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-addEventListener"><code>document|element.addEventListener()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-removeEventListener"><code>document|element.removeEventListener()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-dispatchEvent"><code>document|element.dispatchEvent()</code></a></li>
+<li><a href="http://www.w3.org/TR/selectors-api/#matchall"><code>document|element.matchAll()</code></a></li>
+<li><a href="http://www.w3.org/TR/selectors-api/#matchsingle"><code>document|element.matchSingle()</code></a></li>
+<li><a href="http://www.whatwg.org/specs/web-apps/current-work/#getelementsbyclassname"><code>document|element.getElementsByClassName()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#node-ownerDoc"><code>element.ownerDocument</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-666EE0F9"><code>element.getAttribute()</code></a></li>
+<li><a href="http://lists.w3.org/Archives/Public/www-archive/2007Jan/0010.html"><code>element.matchesSelector()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-F68F082"><code>element.setAttribute()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-Event-target"><code>event.target</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-3-Events/events.html#Events-Event-initEvent"><code>event.initEvent()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-Event-preventDefault"><code>event.preventDefault()</code></a></li>
+<li><a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-Event-stopPropagation"><code>event.stopPropagation()</code></a></li>
+</ul>
+
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000395" baseName="usability-max">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-25</b:date>
+				<b:time>12:17:28</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>使用者最大</b:title>
+			<b:content>
+				<b:summary> 「使用者最大，從優使性（Usability）出發的網站設計原則」這本書是國內少數的usability書籍，作者是魏澤群，我蠻早就注意到這本書了，不過拖了很久才買，大概上一週把他看完。內容蠻全面的，相對的來說每個主題也不會太深入，所以我覺得這本書比較偏向入門書，事實上國內之前也沒相關領域的書，不出入門書直接出進階書也沒什麼用。 雖然是我第一次看usability的書籍，不過裡面蠻多概念我在相關領域已經看過了，像是資訊架構上(Information Architecture)的卡片分類法，還有幾種常見的網站架構，網站親和力(Accessibility)探討的配色上的注意事項、搜尋功能的必要性等等。對我來說比較新鮮的是後面的幾個首頁的修改範例，我覺得對於了解怎樣的設計usability比較好很有幫助，雖然有些地方的修改我不是很認同，不過這領域本來就是沒有絕對正確的解答，所以才會需要作使用者測試。 就結論來說，以前我曾經說過要作大型網站的人都應該先去看過資訊架構學（不過我找不到我寫在哪了），現在我可以改成說：「至少要看過 使用者最大，從優使性（Usability）出發的網站設計原則。」...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2007/03/25/usability-max/EK50300_b.jpg" class="thickbox"><img alt="" src="http://blog.othree.net/log/2007/03/25/usability-max/EK50300_b-thumb-300x406.jpg" width="300" height="406" /></a></p>
+
+<p>「<a href="http://www.habook.com.tw/Detail.asp?BookNo=EK50300">使用者最大，從優使性（Usability）出發的網站設計原則</a>」這本書是國內少數的usability書籍，作者是<a href="http://www.usabilitymax.com/">魏澤群</a>，我蠻早就注意到這本書了，不過拖了很久才買，大概上一週把他看完。內容蠻全面的，相對的來說每個主題也不會太深入，所以我覺得這本書比較偏向入門書，事實上國內之前也沒相關領域的書，不出入門書直接出進階書也沒什麼用。</p>
+
+<p>雖然是我第一次看usability的書籍，不過裡面蠻多概念我在相關領域已經看過了，像是資訊架構上(Information Architecture)的卡片分類法，還有幾種常見的網站架構，網站親和力(Accessibility)探討的配色上的注意事項、搜尋功能的必要性等等。對我來說比較新鮮的是後面的幾個首頁的修改範例，我覺得對於了解怎樣的設計usability比較好很有幫助，雖然有些地方的修改我不是很認同，不過這領域本來就是沒有絕對正確的解答，所以才會需要作使用者測試。</p>
+
+<p>就結論來說，以前我曾經說過要作大型網站的人都應該先去看過<a href="http://www.oreilly.com.tw/product_web.php?id=a123">資訊架構學</a>（不過我找不到我寫在哪了），現在我可以改成說：「至少要看過 使用者最大，從優使性（Usability）出發的網站設計原則。」</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000394" baseName="multitasking">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-16</b:date>
+				<b:time>01:09:10</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>多頭馬車</b:title>
+			<b:content>
+				<b:summary>上博士班後開始覺得人生苦短，已經有種少壯不努力，老大徒傷悲的感慨，之前的人生似乎浪費了不少時間，所以看起不少書想充實充實自己，當然原來要看的動畫、網頁設計相關的書也還是要看，只不過每天還是只有晚上的幾個小時可以自由使用，總是拿兩三本書各看一段過後就12點了，好像什麼都沒做好，有種多頭馬車的感覺。 PS：想找張多頭馬車的圖竟然找不到～～。...</b:summary>
+				<b:mainContent><p>上博士班後開始覺得人生苦短，已經有種少壯不努力，老大徒傷悲的感慨，之前的人生似乎浪費了不少時間，所以看起不少書想充實充實自己，當然原來要看的動畫、網頁設計相關的書也還是要看，只不過每天還是只有晚上的幾個小時可以自由使用，總是拿兩三本書各看一段過後就12點了，好像什麼都沒做好，有種多頭馬車的感覺。</p>
+
+<p>PS：想找張多頭馬車的圖竟然找不到～～。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000393" baseName="ppk-on-javascript-comment">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-11</b:date>
+				<b:time>21:07:51</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>ppk on javascript 書評</b:title>
+			<b:content>
+				<b:summary> 看了4個月總算看完了，感覺增加了一甲子javascript功力（轉頭用jQuery），這本書其實是入門javascript的書，透過幾個範例，把基本的javascript知識都講到了，從變數、物件到最近熱門的XMLHttpRequest都有，內容很充實，但是他缺少的是更進階的語法，像是物件雖然有提到，但是卻沒有進一步講到物件導向的javascript設計，我覺得在進入物件導向的設計之前，大概都還只能算是普通的javascript programmer吧。...</b:summary>
+				<b:mainContent><p><img alt="" src="http://blog.othree.net/log/2007/03/11/ppk-on-javascript-comment/ppk.jpg" width="125" height="155" /></p>
+
+<p>看了4個月總算看完了，感覺增加了一甲子javascript功力（轉頭用<a href="http://jquery.com/">jQuery</a>），這本書其實是入門javascript的書，透過幾個範例，把基本的javascript知識都講到了，從變數、物件到最近熱門的XMLHttpRequest都有，內容很充實，但是他缺少的是更進階的語法，像是物件雖然有提到，但是卻沒有進一步講到物件導向的javascript設計，我覺得在進入物件導向的設計之前，大概都還只能算是普通的javascript programmer吧。</p></b:mainContent>
+				<b:extendContent><p>因為作者經驗的關係，書中只要是有瀏覽器相容性問題的東西，都會註記並在文中加以說明，這點是我以前（7年前左右吧）看的一般javascript書所缺少的，或是有卻講的不清楚，更行況那時候網路標準還沒盛行起來，主要談的都還是IE和Netscape Navigator，而現在是IE、Firefox、Safari為主的狀況了。</p>
+
+<p>還有那時候我感受到最缺乏的內容，莫過於<acronym title="Browser Object Model">BOM</acronym>、<acronym title="Document Object Model">DOM</acronym>了，像是怎麼存取瀏覽器的一些元件、網頁文件的內容、還有新視窗的控制等等，<a href="http://www.quirksmode.org/book/">ppk on javascript</a>都講的很清楚，我初學javascript時，花最多時間就是這些東西，搞到我後來就是幾乎不碰視窗元件，文件存取都用DOM的getElementByID()和getElementsByTagName()兩個函式。</p>
+
+<p>總而言之，想學javascript，能看英文書的話，我絕對是推薦先看這本的啦。至於我接下來要去看<a href="http://www.jspro.org/">Pro JavaScript Techniques</a>了，飄～～</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000392" baseName="new-cup">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-03</b:date>
+				<b:time>00:48:45</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>新杯子</b:title>
+			<b:content>
+				<b:summary> 今天去無印良品買點東西，都是看了好幾次後才決定要買的，結果一號目標，裝CD用的PP箱缺貨還要從新竹調，而另外一個主要的目標就是這個，中間真空的玻璃杯，其實這不是新東西啦，只是平常也不太容易看到，簡單說就是退流行，這種杯子的好處就是保溫效果比較好，比較美觀，就這兩點而已:P。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2007/03/03/new-cup/cup.jpg" class="thickbox"><img alt="中間真空的玻璃部底部很特別，會有懸空的感覺" src="http://blog.othree.net/log/2007/03/03/new-cup/cup-thumb-300x400.jpg" width="300" height="400" /></a></p>
+
+<p>今天去無印良品買點東西，都是看了好幾次後才決定要買的，結果一號目標，裝CD用的PP箱缺貨還要從新竹調，而另外一個主要的目標就是這個，中間真空的玻璃杯，其實這不是新東西啦，只是平常也不太容易看到，簡單說就是退流行，這種杯子的好處就是保溫效果比較好，比較美觀，就這兩點而已:P。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000391" baseName="tips-of-document-write">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-02</b:date>
+				<b:time>11:11:55</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>document.write()的五四三</b:title>
+			<b:content>
+				<b:summary>ppk on javascript上看到的，我終於快把這本看完了，不過這個還是先紀錄一下。...</b:summary>
+				<b:mainContent><p><a href="http://www.quirksmode.org/book/">ppk on javascript</a>上看到的，我終於快把這本看完了，不過這個還是先紀錄一下。</p></b:mainContent>
+				<b:extendContent><p>首先，標準狂人大概不會想用<code>document.write()</code>，他們大概是全部都用W3C <span class="caps">DOM</span>來新增資料到網頁裡面，事實上我也很偏好這樣，不過這邊的特殊情況是在新增外部連結的CSS檔案的時候，如果你用W3C <span class="caps">DOM</span>的<code>insertBefore()</code>或是<code>appendChild()</code>，你不能在網頁還沒完全讀取完成的時候就進行這樣的動作，因為head物件（因為是在講DOM，所以這裡我用物件）可能還沒出現，必須要等到head的結束標籤被瀏覽器讀到之後head物件才算是完整，也才能用DOM進行操作，因此要進行這種動作時，通常都會利用onload來觸發事件，可以確保script在執行時，物件都已經完整了。但是這樣會有些小問題，因為是在新增外部連結的CSS檔案，新增的樣式設定可能會把某些東西藏起來，而使用者瀏覽網頁時可能會看到這些東西一閃而過，這樣會對他們造成困擾，因此要盡量避免，所以在這種情況下，就會建議使用<strong><code>document.write()</code></strong>這個函式。</p>
+
+<p><code>document.write()</code>可以讓script在head標籤還沒讀完的時候就在其內部加入新的標籤，包括連結外部CSS檔案的link標籤，因此該套用的樣式在瀏覽器開始讀body標籤之前就都有了，瀏覽器就可以直接照該樣式來繪製網頁，而不會有前面的東西一閃即逝的狀況。另外<code>document.write()</code>這個函式在使用上有一點要注意的是，如果網頁已經讀取完成才執行這個函式，瀏覽器並不是把內容新增到網頁裡面，而是製作一個包含新插入內容的網頁，把原來的取代掉，在這種情況下，使用者也可能會看到網頁會有瞬間變白畫面（一閃）的狀況。</p>
+
+<p>以上是ppk on javascript提出的，我基本上都認同，不過想補充的是<a href="http://www.w3.org/TR/html4/interact/scripts.html#edef-SCRIPT">script</a>標籤可以插入在head或是body內的任何地方，所以在body內才使用W3C <span class="caps">DOM</span>修改head內的東西也是可行的，只是感覺上東西放錯地方就是了。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000390" baseName="weaving-the-web">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2007-03-01</b:date>
+				<b:time>21:50:05</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>一千零一網</b:title>
+			<b:content>
+				<b:summary> 這本書是1999的書了（原文是1997），不過我卻是在今年的國際書展才買下來，然後直到前兩天才把他看完，大概得到一些和以前不同的認識，就如Tim Berners-Lee說的一樣，網際網路不是某一天突然出現的，而是經過一段辛苦的耕耘才得已有現在的樣子。而和我想像不太一樣的是，因為當初設計的構想，Tim Berners-Lee才努力的不讓它被任何企業掌控，甚至是自己，而我自己的認知是認為網際網路是世界性的公共財，所以不應該被任何企業控制。未避免誤會，我必須強調一下這兩種論點只是因果的差異，Tim Berners-Lee設計出的東西超出了CERN所需要的文件管理系統，而這個系統的本質使的它必須成為我現在眼中的網際網路，不應該受任何企業或個人所掌控。 PS：剛剛才發現Tim Berners-Lee連他家的經緯度都放在網頁上耶。...</b:summary>
+				<b:mainContent><p><a href="http://www.w3.org/People/Berners-Lee/Weaving/"><img alt="" src="http://blog.othree.net/log/2007/03/01/weaving-the-web/weaving-the-web.jpg" width="150" height="200" /></a></p>
+
+<p>這本書是1999的書了（原文是1997），不過我卻是在今年的國際書展才買下來，然後直到前兩天才把他看完，大概得到一些和以前不同的認識，就如<a href="http://www.w3.org/People/Berners-Lee/">Tim Berners-Lee</a>說的一樣，網際網路不是某一天突然出現的，而是經過一段辛苦的耕耘才得已有現在的樣子。而和我想像不太一樣的是，因為當初設計的構想，Tim Berners-Lee才努力的不讓它被任何企業掌控，甚至是自己，而我自己的認知是認為網際網路是世界性的公共財，所以不應該被任何企業控制。未避免誤會，我必須強調一下這兩種論點只是因果的差異，Tim Berners-Lee設計出的東西超出了<a href="http://public.web.cern.ch/Public/Welcome.html"><span class="caps">CERN</span></a>所需要的文件管理系統，而這個系統的本質使的它必須成為我現在眼中的網際網路，不應該受任何企業或個人所掌控。</p>
+
+<p>PS：剛剛才發現Tim Berners-Lee連他家的經緯度都放在網頁上耶。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

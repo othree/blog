@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000648" baseName="google-page-speed-module">Google Page Speed Module for Apache</b:listData>
+
+			<b:previous>
+				<b:mTitle>automjump</b:mTitle>
+				<b:mDate>2010-10-19</b:mDate>
+				<b:mBase>automjump</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>高雄 Day 1</b:mTitle>
+				<b:mDate>2010-11-06</b:mDate>
+				<b:mBase>kaohsiung-day-1</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000648" baseName="google-page-speed-module">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2010-11-04</b:date>
+				<b:time>14:28:00</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Google Page Speed Module for Apache</b:title>
+			<b:content>
+				<b:summary>Google 推出 Page Speed 很久沒有動作後，今天突然出了 mod_pagespeed ，藉由 Apache Module 的方式來直接實作許多 Page Speed 的建議準則，讓開發者可以減少花費在最佳化網站速度的時間，mod_pagespeed 所做的都是前端的最佳化工作，基本上架構在 rewrite, minify, cache 三件事上，rewrite 是指重寫檔案內容，而不是 mod_rewrite ，根據設定，它可以修改你的網頁原始碼，刪除多餘的空白字元、甚至合併多個 CSS 檔案、最小化 CSS/JS 檔案等，安裝和基本設定都很簡單，不過實際使用時發現如果送出網頁 header 為 application/xhtml+xml 的話就不會動，還有我本來有自己設定 .htaccess 檔案內的 deflate 設定，也造成 mod_pagespeed 不會動，還好目前都有排除解決問題，只剩下 fastcgi 的部份還在測試。 實際佈署的時候還有一些小地方需要注意，像是要合併的 CSS 檔案要在同一個路徑下，不然不會合併（而且其實我目前還沒測試合併成功），JS...</b:summary>
+				<b:mainContent><p>Google 推出 <a href="http://code.google.com/intl/zh-TW/speed/page-speed/index.html">Page Speed</a> 很久沒有動作後，今天突然出了 <a href="http://code.google.com/intl/zh-TW/speed/page-speed/docs/module.html">mod_pagespeed</a> ，藉由 Apache Module 的方式來直接實作許多 Page Speed 的建議準則，讓開發者可以減少花費在最佳化網站速度的時間，mod_pagespeed 所做的都是前端的最佳化工作，基本上架構在 rewrite, minify, cache 三件事上，rewrite 是指重寫檔案內容，而不是 mod_rewrite ，根據設定，它可以修改你的網頁原始碼，刪除多餘的空白字元、甚至合併多個 CSS 檔案、最小化 CSS/JS 檔案等，安裝和基本設定都很簡單，不過實際使用時發現如果送出網頁 header 為 application/xhtml+xml 的話就不會動，還有我本來有自己設定 .htaccess 檔案內的 deflate 設定，也造成 mod_pagespeed 不會動，還好目前都有排除解決問題，只剩下 fastcgi 的部份還在測試。</p>
+
+<p>實際佈署的時候還有一些小地方需要注意，像是要合併的 CSS 檔案要在同一個路徑下，不然不會合併（而且其實我目前還沒測試合併成功），JS 如果要用 <a href="http://code.google.com/intl/zh-TW/closure/compiler/">closure compiler</a> 的進階壓縮模式，那還是要自己處理，總之就是，它給了一個不錯的基本加速設定，不過如果你要更進一步強化，那一些東西還是要自己來。</p>
+
+<p>話說 mod_pagespeed 裡面用來 minify JS 檔案用的是 <a href="http://www.crockford.com/javascript/jsmin.html">JSMin</a> ，我想原因可能是他是 C 寫的而且有原始碼吧，不過 <a href="http://code.google.com/intl/zh-TW/closure/compiler/">closure compiler</a> 即使是簡單模式壓縮效果也比較好，所以還是可以自己壓縮。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="1">
+
+				<b:comment commentID="109486" entryID="000648">
+					<b:author>
+						<b:authorName>小擎</b:authorName>
+						<b:authorEmail>chin@pycz.com</b:authorEmail>
+						<b:authorUrl>http://freemobiletv.org</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2010-11-30</b:date>
+						<b:time>04:52:43</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>感覺也是一種快取的模組, 有實測數據嗎?</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/647">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

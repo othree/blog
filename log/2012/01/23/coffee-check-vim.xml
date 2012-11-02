@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000696" baseName="coffee-check-vim">coffee-check.vim</b:listData>
+
+			<b:previous>
+				<b:mTitle>Module, AMD, RequireJS</b:mTitle>
+				<b:mDate>2012-01-22</b:mDate>
+				<b:mBase>module-amd-requirejs</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>jQuery.queue</b:mTitle>
+				<b:mDate>2012-02-23</b:mDate>
+				<b:mBase>jqueryqueue</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000696" baseName="coffee-check-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-01-23</b:date>
+				<b:time>00:00:13</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>coffee-check.vim</b:title>
+			<b:content>
+				<b:summary>上一篇文章提到使用 RequireJS 的 CoffeeScript plugin 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 jslint.vim 的行為一樣，上網搜尋了一下 Vim 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 coffee -c 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 coffee-check.vim。 安裝還算簡單，先確定系統已經有安裝 node，然後只要用 pathogen 或是 Vundle 把套件裝起來，接著在 vimrc 內加上一行： au BufRead,BufNewFile *.coffee set...</b:summary>
+				<b:mainContent><p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a> <a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
+
+<p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
+
+<pre><code>au BufRead,BufNewFile *.coffee set ft=coffee
+</code></pre>
+
+<p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
+
+<ol>
+<li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
+<li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
+<li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
+</ol>
+
+<p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
+
+<p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
+
+<pre><code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
+</code></pre>
+
+<p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/695">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>y</b:listType>
+			<b:listData listID="2009">2009</b:listData>
+
+			<b:previous>
+				<b:mTitle>2008</b:mTitle>
+				<b:mDate>2008</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>2010</b:mTitle>
+				<b:mDate>2010</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000606" baseName="basic-javascript-auto-unit-test">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-31</b:date>
+				<b:time>10:18:41</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>簡單的 JavaScript 自動單元測試</b:title>
+			<b:content>
+				<b:summary>前幾天弄完 JSLint.vim 後，就對 server side JavaScript 產生了一些興趣，還抓了 v8 引擎 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 QUnit ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 DOM 和 BOM，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 env.js 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 Rhino 下，因為他是 java based ，可以在 JavaScript 裡面寫...</b:summary>
+				<b:mainContent><p>前幾天弄完 <a href="http://github.com/hallettj/jslint.vim"><span class="caps">JSL</span>int.vim</a> 後，就對 server side JavaScript 產生了一些興趣，還抓了 <a href="http://code.google.com/p/v8/">v8 引擎</a> 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 <a href="http://docs.jquery.com/QUnit">QUnit</a> ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 <span class="caps">DOM </span>和 <span class="caps">BOM</span>，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 <a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">env.js</a> 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 <a href="http://www.mozilla.org/rhino/">Rhino</a> 下，因為他是 java based ，可以在 JavaScript 裡面寫 Java ，所以可以做很多壞事，但是其他的 js shell 沒辦法這樣跑， John Resig 好像有想要 port 成 python + v8 的版本，不過不知道有沒有成功，因為也 <a href="http://groups.google.com/group/envjs/browse_thread/thread/132617236878676b#">沒放出</a> 。</p></b:mainContent>
+				<b:extendContent><p>剛好最近有點紅的 <a href="http://nodejs.org/">node.js</a> ，似乎可以拿來做一樣的事情（要做 http request、開檔案、DOM），於是也調查了一下，結果缺少了重要的 <span class="caps">DOM </span>，這樣也跑不起 Qunit，傷心難過之餘只好把方向改成尋找簡單的 JavaScript Unit Test Framework，希望能找到不會存取到 <span class="caps">BOM </span>和 <span class="caps">DOM </span>的版本，結果找到 <a href="http://github.com/jeresig/env-js/blob/master/test/testrunner.js">這個</a> ，雖然沒完全符合需求，不過裡面要改的地方很少，所以改了一下就拿來用了（還不知道授權所以不敢丟出來），把幾個要用到 jQuery, <span class="caps">DOM </span>的地方註解掉，還有 log 改成有錯誤才輸出，然後 ~/.vimrc 加上：</p>
+
+
+
+<pre><code>function Jsunit ()
+    let ut = 'unit.test.js'
+    let fn = expand('&lt;afile&gt;:t')
+    if fn != ut
+        let cwd = expand('&lt;afile&gt;:p:h')
+        if filereadable(cwd.'/unit.test.js')
+            let has_error = 0
+            let cmd = 'js '. ut
+            let output = system(cmd)
+            for error in split(output, &quot;\n&quot;)
+                let has_error = 1
+                caddexpr expand(&quot;%&quot;) . fn . &quot;:0:0:&quot; . error
+            endfor
+            if has_error == 1
+                copen
+            else
+                echo 'Unit  : All OK.'
+            endif
+        endif
+    endif
+endfunction
+
+autocmd FileWritePost,BufWritePost *.js :call Jsunit()
+</code></pre>
+
+
+
+<p>存檔的時候會自動找 unit.test.js ，如果存在的話就會執行它，unit.test.js 裡面長得像這樣：</p>
+
+
+
+<pre><code>load('testrunner.js');
+load('lib.js');
+
+test('all', function () {
+    ok(libFunc(true) == 530, 'send true');
+    isObj(libFunc(false), {a:'1'}, 'send false');
+});
+</code></pre>
+
+
+
+<p>不過這個 testrunner 不能做任何和 html 文件、瀏覽器有關的測試，只能做很核心部份的測試。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000605" baseName="closure-compiler-osx">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-29</b:date>
+				<b:time>23:16:50</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>closure-compiler on OSX</b:title>
+			<b:content>
+				<b:summary>Google 的 Closure Cmpiler 要 Java 1.6 ，蘋果雖然有提供 1.6 的 更新 ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在 /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java 如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。...</b:summary>
+				<b:mainContent><p>Google 的 <a href="http://code.google.com/intl/en/closure/compiler/">Closure Cmpiler</a> 要 Java 1.6 ，蘋果雖然有提供 1.6 的 <a href="http://www.apple.com/downloads/macosx/apple/application_updates/javaformacosx105update1.html">更新</a> ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在</p>
+
+
+
+<pre><code>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java</code></pre>
+
+
+
+<p>如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000603" baseName="foo-eq-foo-or-default">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-29</b:date>
+				<b:time>12:42:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>var foo = foo || {};</b:title>
+			<b:content>
+				<b:summary>foo = foo || {}; 這樣的寫法大家一定不陌生，如果 ab 有值的話就繼續用，不然就讓他成為空物件。通常會用到的地方有兩種，函式設定參數預設值，或是跨檔案的公用函式庫，這種時候會把變數放在 global scope 下，也就是全域變數，要宣告全域變數的話不用 var，直接變數名稱就可以了，就像上面那段 code，不過實際上，這樣寫是會出錯的，沒寫 var 的話，第二個 foo 會跑出 foo 尚未定義的錯誤，所以寫成標題那樣是比較沒問題的，不過有時候，程式碼會全部包在一個 function scope 裡面，避免安全的問題，但是在這個 scope 裡面用 var 宣告變數的話，變數又不會是全域的，這時其實加上 window 就可以了： (function () { foo = window.foo || {}; })(); 也可以用 if 判斷：...</b:summary>
+				<b:mainContent><pre><code>foo = foo || {};</code></pre>
+
+
+
+<p>這樣的寫法大家一定不陌生，如果 ab 有值的話就繼續用，不然就讓他成為空物件。通常會用到的地方有兩種，函式設定參數預設值，或是跨檔案的公用函式庫，這種時候會把變數放在 global scope 下，也就是全域變數，要宣告全域變數的話不用 var，直接變數名稱就可以了，就像上面那段 code，不過實際上，這樣寫是會出錯的，沒寫 var 的話，第二個 foo 會跑出 foo 尚未定義的錯誤，所以寫成標題那樣是比較沒問題的，不過有時候，程式碼會全部包在一個 function scope 裡面，避免安全的問題，但是在這個 scope 裡面用 var 宣告變數的話，變數又不會是全域的，這時其實加上 window 就可以了：</p>
+
+
+
+<pre><code>(function () {
+foo = window.foo || {};
+})();</code></pre>
+
+
+
+<p>也可以用 if 判斷：</p>
+
+
+
+<pre><code>(function () {
+if (! window.foo ) { window.foo = {} }
+})();</code></pre>
+
+
+
+<p>最後我還發現一件趣事，大家可以猜猜看下面的 code 會不會有錯誤：</p>
+
+
+
+<pre><code>(function () {
+foo = undefined;
+foo = foo || {};
+})()</code></pre></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000602" baseName="spidermonkey-utf-8">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-27</b:date>
+				<b:time>16:01:39</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>spidermonkey 的 UTF-8 支援</b:title>
+			<b:content>
+				<b:summary>JSLint 其實是用 javascript 寫的 javascript 語法檢查工具， jslint.vim 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 JSLint ，最好找的 JS 引擎就是 mozilla 的 spidermonkey ，很多 linux 有包好的套件，FreeBSD 也有 port ，不過實際上用的時候發現有個問題，就是不支援 UTF-8 字串，結果就是在 JSLint 的字元檢查時會把一些中文當成不安全字元，例如：「下」。 其實要 spidermonkey 支援 UTF-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 MacPorts...</b:summary>
+				<b:mainContent><p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
+
+<p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
+
+<p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000601" baseName="javascript-on-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-26</b:date>
+				<b:time>20:10:45</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>JavaScript on vim</b:title>
+			<b:content>
+				<b:summary>因為現在主要都是在寫 javascript 為主，所以這兩天調整 Vim 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。 syntax/indent Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的： JavaScript syntax : Better JavaScrirpt syntax support Javascript Indentation : Indentation for Javascript 照說明把檔案放到正確的位置即可，另外雖然有 jQuery 的 syntax ，不過我安裝後發現會和 The NERD Commenter 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 vim-taiwan 上的...</b:summary>
+				<b:mainContent><p>因為現在主要都是在寫 javascript 為主，所以這兩天調整 <a href="http://www.vim.org" target="_blank">Vim</a> 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。</p>
+
+<h4>syntax/indent</h4>
+
+<p>Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的：</p>
+
+
+<ul>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=1491" target="_blank">JavaScript syntax : Better JavaScrirpt syntax support</a></li>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=1840" target="_blank">Javascript Indentation : Indentation for Javascript</a></li>
+</ul>
+
+
+
+<p>照說明把檔案放到正確的位置即可，另外雖然有 <a href="http://www.vim.org/scripts/script.php?script_id=2416" target="_blank">jQuery 的 syntax</a> ，不過我安裝後發現會和 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 <a href="http://groups.google.com/group/vim-taiwan" target="_blank">vim-taiwan</a> 上的 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/a371c30000e3138e" target="_blank">討論</a> ，我目前是還沒覺得有需求。</p></b:mainContent>
+				<b:extendContent><h4>自動完成</h4>
+
+<p>這部份就比較麻煩了，在自動完成我使用了 <a href="http://www.vim.org/scripts/script.php?script_id=2540" target="_blank">snipMate</a> （ <a href="http://blog.othree.net/log/2008/03/23/auto-complete-on-vim/" target="_blank">以前</a> 用 <a href="http://www.vim.org/scripts/script.php?script_id=1318" target="_blank">snippetsEmu</a> ，不過都沒更新了，而且內建的 snippets 少很多），還有 <a href="http://www.vim.org/scripts/script.php?script_id=1879" target="_blank">autocomplpop</a> ，兩者安裝都很簡單，就解到 .vim 目錄下，或是用 c9s 大大寫的 <a href="http://github.com/c9s/Vimana" target="_blank">Vimana</a> ，snipMate 別忘了先 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/55c11ab0438dfeb9" target="_blank">hack 一下</a> 讓它支援 autocomplpop ，autocomplpop 雖然新版已經有幫不少檔案格式設定好預設的行為了，包括 html 和 css，但是卻不包含 javascript，所以還要自己設定一下，在 vimrc 裡面加上以下的設定：</p>
+
+
+
+<pre><code>let g:acp_enableAtStartup = 1
+let g:acp_completeOption = '.,w,b,u,t,i,k'
+let g:acp_behaviorSnipmateLength = 1
+let g:acp_behaviorKeywordCommand = "\&lt;C-n&gt;"
+
+let jsbehavs = { 'javascript': [] }
+    call add(jsbehavs.javascript, {
+        \   'command'      : "\&lt;C-x&gt;\&lt;C-u&gt;",
+        \   'completefunc' : 'acp#completeSnipmate',
+        \   'meets'        : 'acp#meetsForSnipmate',
+        \   'onPopupClose' : 'acp#onPopupCloseSnipmate',
+        \   'repeat'       : 0,
+    \})
+    call add(jsbehavs.javascript, {
+        \   'command' : g:acp_behaviorKeywordCommand,
+        \   'meets'   : 'acp#meetsForKeyword',
+        \   'repeat'  : 0,
+        \ })
+    call add(jsbehavs.javascript, {
+        \    'command'  : "\&lt;C-x&gt;\&lt;C-o&gt;",
+        \    'meets'   : 'acp#meetsForKeyword',
+        \    'repeat'   : 0,
+    \})
+
+let g:acp_behavior = {}
+call extend(g:acp_behavior, jsbehavs, 'keep')
+</code></pre>
+
+
+
+<p>這樣編輯 javascript 時應該就會做正確的跑出自動完成的候選選項，包括 snipMate、關鍵字自動完成、和 omni 自動完成（好像有翻成全補完的），順便提一下，Vim 7.2 大部分檔案格式不用去設定 omnifunc ，幾乎都會指到自己的預設函式，不過 html 卻沒有，還要自己加下面這行到 vimrc ：</p>
+
+
+
+<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
+
+
+
+<p>而且最好依照我 <a href="http://blog.othree.net/log/2009/12/25/bug-of-html-complete/" target="_blank">上一篇的建議</a> 修改一下。</p>
+
+<h4>code 檢查</h4>
+
+<p>再來是設定讓 <a href="http://www.jslint.com/" target="_blank">jslint</a> 檢查 javascript 程式碼，用的是 <a href="http://github.com/hallettj/jslint.vim" target="_blank">jslint.vim</a> ，要記得先安裝 <a href="http://www.mozilla.org/js/spidermonkey/" target="_blank">spidermonkey</a> ，然後照說明把檔案移動到 ~/.vim 裡面，這樣就可以執行 :JSLint 來檢查程式碼了，不過一開始一定會發現它對所有的全域變數都發出錯誤訊息，這時可以加上一些設定參數放到 ~/.jslintrc ，我的設定檔內容（其實就是 jslint.vim 提供的範例）：</p>
+
+
+
+<pre><code>/*jslint browser: true*/
+/*global jQuery $ */
+</code></pre>
+
+
+
+<p>第一行是說這些 code 是網路用的，用瀏覽器來執行，所以在這種環境下會出現的全域變數就不會被當成錯誤，第二行則是你自己定義會使用到的全域變數，這個範例是加上了 jQuery 的兩個全域變數，這些設定也可以加在 js 檔案裡面，其他的設定參數請看 <a href="http://www.jslint.com/lint.html" target="_blank">官方說明</a> 。不過每次都要執行 :JSLint 也是蠻麻煩的，所以可以設一下快速鍵，另外也可以設定存檔時自動檢查：</p>
+
+
+
+<pre><code>map &lt;F12&gt; :JSLintLight&lt;CR&gt;
+map &lt;F11&gt; :JSLint&lt;CR&gt;
+
+autocmd FileWritePost,BufWritePost *.js :JSLint</code></pre>
+
+
+
+<h4>壓縮</h4>
+
+<p>最後就是壓縮了， <a href="http://blog.othree.net/log/2009/09/08/vim-js-yuicompressor/" target="_blank">以前有寫過個 function</a> ，因應 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 的出現和建議，現在有作些修改：</p>
+
+
+
+<pre><code>function Yuic ()
+    let cwd = expand('&lt;afile&gt;:p:h')
+    let nam = expand('&lt;afile&gt;:t:r')
+    let ext = expand('&lt;afile&gt;:e')
+    if -1 == match(nam, "[\._]src$")
+        let minfname = nam.".min.".ext
+    else
+        let minfname = substitute(nam, "[\._]src$", "", "g").".".ext
+    endif
+    if filewritable(cwd.'/'.minfname)
+        if ext == 'js' &amp;&amp; executable('closure-compiler')
+            cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+        elseif executable('yuicompressor')
+            cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+        endif
+    endif
+endfunction
+
+autocmd FileWritePost,BufWritePost *.js :call Yuic()
+autocmd FileWritePost,BufWritePost *.css :call Yuic()
+</code></pre>
+
+
+
+<p>至於怎麼裝 <a href="http://developer.yahoo.com/yui/compressor/" target="_blank">yuicompressor</a> 和 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 就因系統而異了。</p>
+
+<h4>其他</h4>
+
+<p>其他還有兩個不是針對 javascript 的 plugin ，不過寫程式時蠻有用的，分別是 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=294" target="_blank">Align</a> ，The <span>NERD</span> Commenter 是快速註解用，Align 則是對齊用，例如一連串的變數初值指定，可以用 :Align = 來把等號左右兩邊的程式碼對齊，美觀不少。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000599" baseName="bug-of-html-complete">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-25</b:date>
+				<b:time>23:58:29</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>htmlcomplete#CompleteTags 的 bug</b:title>
+			<b:content>
+				<b:summary>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 autocomplpop 時，游標放到 class=" or id=" 這兩個字串後會有錯誤訊息 （line 304, E121: Undefined variable :classlines）。網路上找到有人 回報給 acp.vim 作者 ，日本那邊也有人 hack acp.vim 來避開這個問題 ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。...</b:summary>
+				<b:mainContent><p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p></b:mainContent>
+				<b:extendContent><p>這個錯誤訊息的發生條件其實很特別，首先 html 的 omnifunc 要設成 htmlcomplete#CompleteTags，就是說你的 vimrc 裡面應該會有一行長成</p>
+
+
+
+<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
+
+
+
+<p>再來你正在編輯的 html 文件裡面要有 &lt;link rel="stylesheet" /&gt; 這種外連 <span class="caps">CSS </span>檔案的標籤，而關鍵是 href 指到的位置沒有一個可以用的檔案（不存在、無權限讀取都可），然後接下來你在 class=" 或是 id=" 的位置裡面執行了 omni complete (&lt;C-x&gt;, &lt;C-o&gt;) ，當然如果有裝 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 的話，這時就會自動幫你跑（2.7 版以後），錯誤訊息也就會自動冒出。</p>
+
+<p>問題發生的原因是，這個 html 自動完成函式會去檢查你的 <span class="caps">CSS </span>，包括外連的檔案，去裡面把 class name, id name 抽出送回作自動完成的選項，不過他有一個動作應該是要檔案可讀才要跑的，卻放到 if 的外面，所以只要把它移過去就好了，錯誤那行 code 是 310 行：</p>
+
+
+
+<pre><code>308        endif
+309    &quot; We gathered classes definitions from all external files
+310    let classes += classlines
+</code></pre>
+
+
+
+<p>把它移到 308 行的 endif 前面就好了：</p>
+
+
+
+<pre><code>308        &quot; We gathered classes definitions from all external files
+309        let classes += classlines
+310    endif
+</code></pre></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000598" baseName="zen-coding-on-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-25</b:date>
+				<b:time>11:18:41</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Zen Coding on vim</b:title>
+			<b:content>
+				<b:summary>前兩天試了一下，還蠻厲害的，不過不知道是不是我現在的設定有點亂，所以沒辦法 tab 觸發自動完成，一定要按 Ctrl + E，另外就是目前只支援 HTML 的樣子，我看原始碼發現判斷檔案格式的函式直接回傳 "HTML"，不過這也還好，因為 CSS 有其他自動完成可以用，zen-coding 在 CSS 處理上沒特別強，但是 HTML 要到這樣厲害目前沒其他方案，下面記錄一下安裝方法。 先到 這串討論 抓最下面的 zencoding.vim 和 zencoding_vim.py 兩個檔案，放到 ~/.vim/plugin/ 裡，再來到 zen-coding 下載頁 抓 Zen Coding for TextMate v0.3.1.zip, TextMate.Zen.HTML.1.3.1.zip, TextMate.Zen.CSS.1.3.1.zip 三個檔案一樣解開放到 ~/.vim/plugin/ 裡面，這樣就可以了，測試方法就是隨便打個 css selector...</b:summary>
+				<b:mainContent><p>前兩天試了一下，還蠻厲害的，不過不知道是不是我現在的設定有點亂，所以沒辦法 tab 觸發自動完成，一定要按 Ctrl + E，另外就是目前只支援 <span class="caps">HTML </span>的樣子，我看原始碼發現判斷檔案格式的函式直接回傳 "HTML"，不過這也還好，因為 <span class="caps">CSS </span>有其他自動完成可以用，zen-coding 在 <span class="caps">CSS </span>處理上沒特別強，但是 <span class="caps">HTML </span>要到這樣厲害目前沒其他方案，下面記錄一下安裝方法。</p>
+
+<p>先到 <a href="http://code.google.com/p/zen-coding/issues/detail?id=16">這串討論</a> 抓最下面的 	zencoding.vim 和 zencoding_vim.py 兩個檔案，放到 ~/.vim/plugin/ 裡，再來到 <a href="http://code.google.com/p/zen-coding/downloads/list">zen-coding 下載頁</a> 抓 Zen Coding for TextMate v0.3.1.zip, TextMate.Zen.HTML.1.3.1.zip, TextMate.Zen.CSS.1.3.1.zip 三個檔案一樣解開放到 ~/.vim/plugin/ 裡面，這樣就可以了，測試方法就是隨便打個 css selector 然後按 Ctrl+E ，另外記得 selector 裡面不要有空白，這個 plugin 其實是用 Vim 跑 python ，所以 Vim 要先支援執行 Python Script ，我的就是裝完就可以，所以沒對這部份下去研究，如果有人跑不起來可以看看是不是這方面的問題。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000597" baseName="string-and-string-object">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-21</b:date>
+				<b:time>11:05:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>String and String Object</b:title>
+			<b:content>
+				<b:summary>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例： var sv = &quot;1234567890&quot;; var so = new String(&quot;1234567890&quot;); 以前我一直以為兩種是等價的，不過在看 Efficient JavaScript 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下： var s = &quot;1234567890&quot;; //var s = new String(&quot;1234567890&quot;); var start = (new Date()).getTime(); for(...</b:summary>
+				<b:mainContent><p>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例：</p>
+
+
+
+<pre><code>var sv = &quot;1234567890&quot;;
+var so = new String(&quot;1234567890&quot;);</code></pre>
+
+
+
+<p>以前我一直以為兩種是等價的，不過在看 <a href="http://dev.opera.com/articles/view/efficient-javascript/">Efficient JavaScript</a> 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下：</p>
+
+
+
+<pre><code>var s = &quot;1234567890&quot;;
+//var s = new String(&quot;1234567890&quot;);
+
+var start = (new Date()).getTime();
+for( var j = 0; j &lt; 10000; j++ ) {
+  for( var i = 0; i &lt; s.length; i++ ) {
+    s.charAt(i);
+  }
+}
+var end = (new Date()).getTime();
+alert(end-start);</code></pre>
+
+
+
+<p>結果如下：</p>
+
+<style type="text/css">
+#content table {
+  margin:1em 290px 1em 4em;
+}
+#content table th, #content table td {
+  padding: 4px;
+  margin: 1em;
+}
+</style>
+
+<table>
+        <tr>
+            <th></th>
+            <th>Opera</th>
+            <th>Firefox</th>
+            <th>IE</th>
+        </tr>
+        <tr>
+            <th>"blah"</th>
+            <td>234</td>
+            <td>313</td>
+            <td>344</td>
+        </tr>
+        <tr>
+            <th>new String()</th>
+            <td>156</td>
+            <td>381</td>
+            <td>266</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;">unit: micro seconds</td>
+        </tr>
+</table>
+
+<p>可以發現 Opera 用 new String() 時有比較快， IE 雖然也有，不過我在某些電腦上測試結果是和 Firefox 差不多，沒列出來的 safari 其實表現也和 Firefox 差不多，至於 Google Chrome 在編譯的時候有最佳化過，結果都是超快，無法作為參考。所以結論是，還是繼續用普通的方法就好了XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000596" baseName="javascript-trivials">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-08</b:date>
+				<b:time>17:20:53</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript 二三事</b:title>
+			<b:content>
+				<b:summary>好久沒寫 blog 了，來記錄一下最近和 JavaScript 有關的消息，首先是新書， High Performance JavaScript ，是除了 JavaScript Ninja 外我最近比較期待的新書，不過兩本都是明年才會出，JavaScript Ninja 是 John Resig 寫的，目標讀者是開發 JavaScript Framework 的開發者，所以內容相當深，我有先買預覽的電子版，裡面的 code 就常常看到暈頭， High Performance 那本則是 YUI 的開發者之一 Zakas Nicholas 寫的，之前也寫過不少書，不過我都沒看過就是，目前期待主要是書名的關係。 第二個則是 Loading JavaScript as strings 這篇文章，提到如果先把 js 程式碼先用字串形式讀進來，再用 eval() 來執行速度反而會比直接邊讀邊執行還要快，這項技巧可以用在...</b:summary>
+				<b:mainContent><p>好久沒寫 blog 了，來記錄一下最近和 JavaScript 有關的消息，首先是新書， <a href="http://www.amazon.com/dp/059680279X/">High Performance JavaScript</a> ，是除了 <a href="http://jsninja.com/">JavaScript Ninja</a> 外我最近比較期待的新書，不過兩本都是明年才會出，JavaScript Ninja 是 <a href="http://ejohn.org/">John Resig</a> 寫的，目標讀者是開發 JavaScript Framework 的開發者，所以內容相當深，我有先買預覽的電子版，裡面的 code 就常常看到暈頭， High Performance 那本則是 <span class="caps">YUI </span>的開發者之一 <a href="http://www.nczonline.net/">Zakas Nicholas</a> 寫的，之前也寫過不少書，不過我都沒看過就是，目前期待主要是書名的關係。</p>
+
+<p>第二個則是 <a href="http://www.stevesouders.com/blog/2009/12/07/downloading-javascript-as-strings/">Loading JavaScript as strings</a> 這篇文章，提到如果先把 js 程式碼先用字串形式讀進來，再用 eval() 來執行速度反而會比直接邊讀邊執行還要快，這項技巧可以用在 js 量大的 web application，對於之後才要用的 code 就用這種方法讀，讓頁面的生成可以快一點，詳細的內容在 12/8 的 <a href="http://en.oreilly.com/velocityfall09#faster-load-times"><span class="caps">O'R</span>eilly Velocity Online Conference</a> 會介紹並 demo ，換算成台灣時間好像是週三凌晨一點多開始。</p>
+
+<p>最後一個不是新東西，其實是 <a href="http://code.google.com/speed/articles/optimizing-javascript.html">Google 的文章</a> ，裡面有講到會造成 memory leak 的原因，第一種是 IE 的 event function 可能會造成記憶體浪費（其實原因和下面的很像），解法是自己寫一個 event dispatcher ，像是 jQuery 就是這樣，第二種就是把資料附加在 <span class="caps">DOM </span>元件上，例如：</p>
+
+
+
+<pre><code>var node = document.getElementById('getMe');
+node.myData = 123;
+</code></pre>
+
+
+
+<p>像這樣可以把資料付在 <span class="caps">DOM </span>node 物件上，再某些情況下很有用，但是如果這些附加的資料包含其他 <span class="caps">DOM </span>node 的話，就會造成 memory leak ，建議的處理方法是完全不用這種特性，至於 jQuery 則是有個 <a href="http://docs.jquery.com/Data">data</a> 可以用，用法就像是 key, value 的資料型態。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000595" baseName="json2js-and-tojson">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-30</b:date>
+				<b:time>20:51:45</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>json2.js 和 toJSON()</b:title>
+			<b:content>
+				<b:summary>對 JSON 有認識加上有寫過 JavaScript 來處理 JSON 的人或許都知道 json2.js 這個 Douglas Crockford 寫的 JSON 處理器，他可以安全的轉換 JSON 和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 {"a":3} 會被轉成 "{\"a\":3}" ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 一個 function 來包 json2.js，用法可以參考 test 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function...</b:summary>
+				<b:mainContent><p>對 <a href="http://www.json.org/"><span class="caps">JSON</span></a> 有認識加上有寫過 JavaScript 來處理 <span class="caps">JSON </span>的人或許都知道 <a href="http://www.json.org/js.html">json2.js</a> 這個 <a href="http://www.crockford.com/">Douglas Crockford</a> 寫的 <span class="caps">JSON </span>處理器，他可以安全的轉換 <span class="caps">JSON </span>和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 {"a":3} 會被轉成 "{\"a\":3}" ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 <a href="http://orz.othree.net/lib/tojson/tojson.js">一個 function</a> 來包 json2.js，用法可以參考 <a href="http://orz.othree.net/lib/tojson/test.html">test</a> 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function 就會得到 <span class="caps">JSON </span>格式字串，當然子物件有 toJSON 的話就會先用它，沒的話才會用 <span class="caps">JSON.</span>stringify 。</p>
+
+<p>不過使用上有個小小的安全性問題要注意，我是假設 toJSON 傳回的字串是安全的，當然這樣假設很危險，所以我自己的物件實作 toJSON 時也是把想要傳回的物件先建立起來，然後丟給 <span class="caps">JSON.</span>stringify ，如果考慮到自己的子物件也有實作 toJSON 的話，那丟給我寫的 toJSON 也是可以的。</p>
+
+<p class="update">查了一下  <a href="http://developer.yahoo.com/yui/json/#toJSON"><span class="caps">YUI </span>的文件</a> ，發現原來 <span class="caps">JSON2.</span>js 的設計裡，物件自己作 toJSON 的方法是傳新的物件，而不是傳已經轉成 string 的。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000593" baseName="screen-256colors">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-21</b:date>
+				<b:time>11:26:03</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Screen 支援 256 色</b:title>
+			<b:content>
+				<b:summary>之前把 256色終端機環境弄好後 一直還有個問題，就是跑 screen 的話，screen 裡面的 bash 還是沒有 256 色，本來一直以為是 $TERM 和設定的問題，結果剛剛又花時間找資料才發現是我編譯 screen 的時候根本沒開256色的支援編譯前要先 ./configure --enable-colors256...</b:summary>
+				<b:mainContent><p>之前把 <a href="http://blog.othree.net/log/2008/10/19/256-color-terminal/">256色終端機環境弄好後</a> 一直還有個問題，就是跑 screen 的話，screen 裡面的 bash 還是沒有 256 色，本來一直以為是 $TERM 和設定的問題，結果剛剛又花時間找資料才發現是我編譯 screen 的時候根本沒開256色的支援編譯前要先 ./configure --enable-colors256</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000592" baseName="new-camera">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-17</b:date>
+				<b:time>23:32:37</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>新相機</b:title>
+			<b:content>
+				<b:summary> 前陣子入手我的新相機了，我的第一台數位相機是 Fujifilm F30，不過某天弄丟了，事後回想應該是拿出來放忘了放回去，F30 不見後就趕快買了 Fujifilm F100，基本上就當傻瓜相機開自動模式用，手上大部分的照片也都是用它拍的，直到最近才更新到 Olympus E-P1，其實我一直都蠻喜歡亂拍照的，對於玩相機也是一直小有興趣，不過都沒有真的踏進來，一來是因為覺得數位單眼都太大台了，二來是應該很花錢，買了 E-P1 後，真的，很花錢，我本來只是買一棵 14-42 鏡頭組，不過沒多久又買了 17mm 定焦鏡， FL-20 閃燈，還有 Panasonic 的 14-45 kit 鏡，算了一下，多花的錢已經快要可以買第二台了，不過買了這種價位的機器才真的會開始研究和思考怎樣拍的照片才會比較好，順便，當然一定要玩的就是大光圈淺景深啦～～...</b:summary>
+				<b:mainContent><p><a href="http://www.flickr.com/photos/othree/3929252762/" title="Flickr 上 othree 的 My E-P1"><img src="http://farm4.static.flickr.com/3509/3929252762_abc6883575.jpg" width="500" height="375" alt="My E-P1" /></a></p>
+
+<p>前陣子入手我的新相機了，我的第一台數位相機是 Fujifilm <span class="caps">F30</span>，不過某天弄丟了，事後回想應該是拿出來放忘了放回去，F30 不見後就趕快買了 Fujifilm <span class="caps">F100</span>，基本上就當傻瓜相機開自動模式用，手上大部分的照片也都是用它拍的，直到最近才更新到 Olympus E-P1，其實我一直都蠻喜歡亂拍照的，對於玩相機也是一直小有興趣，不過都沒有真的踏進來，一來是因為覺得數位單眼都太大台了，二來是應該很花錢，買了 E-P1 後，真的，很花錢，我本來只是買一棵 14-42 鏡頭組，不過沒多久又買了 17mm 定焦鏡， FL-20 閃燈，還有 Panasonic 的 14-45 kit 鏡，算了一下，多花的錢已經快要可以買第二台了，不過買了這種價位的機器才真的會開始研究和思考怎樣拍的照片才會比較好，順便，當然一定要玩的就是大光圈淺景深啦～～</p></b:mainContent>
+				<b:extendContent><p><a href="http://www.flickr.com/photos/othree/3720559299/" title="Flickr 上 othree 的 Gothic Saber"><img src="http://farm3.static.flickr.com/2550/3720559299_f70c714f3d.jpg" width="375" height="500" alt="Gothic Saber" /></a></p>
+
+<p>很幸運的，我爸有台 Canon 的 FD 系統底片相機，兩顆鏡頭都可以轉接到 E-P1 ，其中 50mm 這棵光圈有到 1.8 ，1開頭超爽的，而且手動對焦也別有樂趣，只是轉接起來太大了，雖然如此，COSCUP 時我還是用 17mm 和這棵 50mm 拍完兩天，現在想想還真是拼，以後應該會買轉接環轉接 Leica M 接環的手動鏡吧，活動的話還是希望弄顆標準焦段大光圈的鏡頭來用，而且仔細思考過我最常拍的是室內活動，加上我又不喜歡開閃燈閃人，這種情況還真是需要大光圈啊（看著 f0.95 的鏡頭照片）。</p>
+
+<p><a href="http://www.flickr.com/photos/othree/3701494464/" title="Flickr 上 othree 的 50mm f1.8"><img src="http://farm4.static.flickr.com/3604/3701494464_3e85cc24f5.jpg" width="500" height="375" alt="50mm f1.8" /></a></p>
+
+<p><a href="http://www.flickr.com/photos/othree/3823545174/" title="Flickr 上 othree 的 我宅，我色，我舒服"><img src="http://farm4.static.flickr.com/3590/3823545174_469a19f2eb.jpg" width="500" height="375" alt="我宅，我色，我舒服" /></a></p>
+
+<p>總之，雖然有些缺點， E-P1 目前用的還蠻舒服的，我也踏上了一條新的學習（灑錢）道路，像是閃燈的使用、腳架配小光圈等等我都還很不熟悉，雖然也不強求，不過還是希望能夠慢慢有些成長和進步，希望以後拍的照片能夠更賞心悅目。</p>
+
+<p>btw. 我以前不太拍人的，不過最近倒是蠻喜歡拍人笑的 :)</p>
+
+<p><a href="http://www.flickr.com/photos/othree/3823969736/" title="Flickr 上 othree 的 P8151261"><img src="http://farm3.static.flickr.com/2579/3823969736_7997f1d021.jpg" width="375" height="500" alt="P8151261" /></a></p>
+
+<p><a href="http://www.flickr.com/photos/othree/3826791148/" title="Flickr 上 othree 的 P8161463"><img src="http://farm3.static.flickr.com/2613/3826791148_01706d1b76.jpg" width="500" height="375" alt="P8161463" /></a></p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000591" baseName="vim-js-yuicompressor">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-08</b:date>
+				<b:time>22:57:51</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim 儲存完 JavaScript 檔案後自動用 yuicompressor</b:title>
+			<b:content>
+				<b:summary>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了 function Js_css_compress () let cwd = expand('&lt;afile&gt;:p:h') let nam = expand('&lt;afile&gt;:t:r') let ext = expand('&lt;afile&gt;:e') if -1 == match(nam, &quot;[\._]src$&quot;) let minfname = nam.&quot;.min.&quot;.ext else let minfname =...</b:summary>
+				<b:mainContent><p>因為每次存完 js 檔案還要 Ctrl+Z ，然後手動跑 yuicompressor 才能去看效果，有問題還要 fg 回來繼續改，所以我剛剛終於受不了去研究 vim script 了</p>
+
+
+
+<pre><code>function Js_css_compress ()
+    let cwd = expand('&lt;afile&gt;:p:h')
+    let nam = expand('&lt;afile&gt;:t:r')
+    let ext = expand('&lt;afile&gt;:e')
+    if -1 == match(nam, &quot;[\._]src$&quot;)
+        let minfname = nam.&quot;.min.&quot;.ext
+    else
+        let minfname = substitute(nam, &quot;[\._]src$&quot;, &quot;&quot;, &quot;g&quot;).&quot;.&quot;.ext
+    endif
+    if ext == 'less'
+        if executable('lessc')
+            cal system( 'lessc '.cwd.'/'.nam.'.'.ext.' &amp;')
+        endif
+    else
+        if filewritable(cwd.'/'.minfname)
+            if ext == 'js' &amp;&amp; executable('closure-compiler')
+                cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            elseif executable('yuicompressor')
+                cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
+            endif
+        endif
+    endif
+endfunction
+autocmd FileWritePost,BufWritePost *.js :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.css :call Js_css_compress()
+autocmd FileWritePost,BufWritePost *.less :call Js_css_compress()
+</code></pre>
+
+
+
+<p><del>把上面的指令加到 vimrc 檔裡面就可以了，前兩個分別是會把 blah.src.js, blah_src.js 轉成 blah.js 用的，第三行則是會把 blah.js 檔轉成 blah.min.js ，慎用之～～</del></p>
+
+<p class="update"><del>加上第四行，會先檢查 blah.min.js 存不存在，存在的話才用 yuicompressor ，另外 code 在 gist 也貼了 <a href="http://gist.github.com/182971">一份</a> 。</del></p>
+
+<p class="update">改版成 function 形式了~~</p>
+
+<p class="update">更新：支援 less，有 Google Closure 的話會先用它壓縮 js 檔。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000590" baseName="tinymce-compressor-bug">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-09-01</b:date>
+				<b:time>00:46:06</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>TinyMCE Compressor 的 bug</b:title>
+			<b:content>
+				<b:summary>有在 Twitter follow 我的人大概上週五會看到 這篇 ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 HTTP Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 HTTP Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 幹，split 完要 trim 一下啊！！ 」這句肺腑之言啊。 狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：...</b:summary>
+				<b:mainContent><p>有在 Twitter follow 我的人大概上週五會看到 <a href="http://twitter.com/othree/status/3599802673">這篇</a> ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 <span class="caps">HTTP</span> Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 <span class="caps">HTTP</span> Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 <strong>幹，split 完要 trim 一下啊！！</strong> 」這句肺腑之言啊。</p>
+
+<p>狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：</p>
+
+
+
+<pre><code>tinyMCE_GZ.init({
+	plugins : 'style, layer, table, save'
+});</code></pre>
+
+
+
+<p>每個逗點後面都有個空白，我覺得這樣的 coding style 也比較好，結果 TinyMCE Compressor 在做 plugin 呼叫註記的時候，沒把空白去掉（不過 php 端可以正確把 plugin 包進來），接著到了正式初始 TinyMCE 時用一樣的 pluing 設定：</p>
+
+
+
+<pre><code>tinyMCE.init({
+	plugins : 'style, layer, table, save'
+});</code></pre>
+
+
+
+<p>這裡卻有把空白去掉，結果它自己認為這些 plugin 沒呼叫過，就重新呼叫了一次...orz，目前是有去回報 bug ，不過不知道會不會受理，總之有要用 TinyMCE 的就小心逗點後面不要加空白吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000589" baseName="flash">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-08-26</b:date>
+				<b:time>00:12:48</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>閃燈</b:title>
+			<b:content>
+				<b:summary> 這篇不是應景文，而是最近想買顆閃燈，要求其實也不高，輕便點造型可以接受就好，本來鎖定的是 Olympus FL-20 的，沒想到辛苦在正確的時間點到達博漢區後，逛了一大圈發現完全缺貨， Olympus 原廠小顆的只有 FL-14 ，不過我不是很喜歡 FL-14 ，規格比較差價錢又貴，而一般 DSLR 使用者都是直上 36 或 50 ，回來上網尋找發現不只是博漢區沒貨，整個冏到，只好找其他閃燈了。 接著在 Mobile01 的 E-P1 閃燈選擇 這篇文章看到 Metz 28 AF3 for Olympus 好像也和我的需求，而且他的 GN 值和打光範圍都比 FL-14, 20 來的好，加上之前的一些文章看起過對 Metz 印象不錯，所以就決定改買這隻，沒想到還有更慘烈的狀況，這隻是世界等級的缺貨，一部分是因為 Metz 出 for Olympus...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2009/08/26/flash/28-af-3m.jpg" alt="Metz 28 AF3O" height="200" width="141" /></p>
+
+<p>這篇不是應景文，而是最近想買顆閃燈，要求其實也不高，輕便點造型可以接受就好，本來鎖定的是 <a href="http://olympus-imaging.jp/product/dslr/accessory/flash/fl20/index.html">Olympus FL-20</a> 的，沒想到辛苦在正確的時間點到達博漢區後，逛了一大圈發現完全缺貨， Olympus 原廠小顆的只有 <a href="http://olympus-imaging.jp/product/dslr/accessory/flash/fl14/index.html">FL-14</a> ，不過我不是很喜歡 FL-14 ，規格比較差價錢又貴，而一般 <span class="caps">DSLR </span>使用者都是直上 36 或 50 ，回來上網尋找發現不只是博漢區沒貨，整個冏到，只好找其他閃燈了。</p>
+
+<p>接著在 Mobile01 的 <a href="http://www.mobile01.com/topicdetail.php?f=249&amp;t=1128165&amp;p=2%2312">E-P1 閃燈選擇</a> 這篇文章看到 <a href="http://www.metz.de/en/photo-electronics/mecablitz-models/system-flash-units/mecablitz-28-af-3-digital/product-information.html">Metz 28 <span class="caps">AF3 </span>for Olympus</a> 好像也和我的需求，而且他的 GN 值和打光範圍都比 FL-14, 20 來的好，加上之前的一些文章看起過對 Metz 印象不錯，所以就決定改買這隻，沒想到還有更慘烈的狀況，這隻是世界等級的缺貨，一部分是因為 Metz 出 for Olympus 的貨量都不多，加上 E-P1 效應，我在網路上翻來覆去，只找到一家網站還可以下單，其他像是 Amazon, Ebay 上都完全看不到（有其他系統的，但是 Olympus 的超缺），而且本來這隻大概售價平均在 100 美金，我找到這一家是賣 160 的原價，加運費近來大約要6K台票，其實價錢我是能負擔，只是之前台灣有幾個人賣過只要四千啊 &lt;O&gt; ，總之是下單了，不知道能不能順利拿到就是，加上背帶也拿到的話就可以寫使用心得了～。</p>
+
+<p class="update">收到沒貨通知信耶～～～</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000587" baseName="carcassonne">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-06-17</b:date>
+				<b:time>01:58:54</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>卡卡頌 Carcassonne</b:title>
+			<b:content>
+				<b:summary> 之前玩過一次卡卡頌，覺得還不錯，不過也沒特別著迷，後來 xdite 買大盒板 的時候我就跟著買了，玩了幾次反而意外的喜歡上，我必須承認卡坦（我第一款真的下去玩的桌上遊戲）也不錯玩，不過我覺得卡卡頌的趣味性比較高，而且另外還有一個優勢，很好學，推廣容易！所以要找人玩到不會太困難（雖然我家裡沒人要跟我玩），問題反而是時間比較少，總之總之，迷上之後三不五時就會開始找一些資料，擴充包介紹，規則講解，還有一些有的沒的，這篇就是要來整理並介紹一下這些東西的。...</b:summary>
+				<b:mainContent><p><a href="http://www.flickr.com/photos/ornoth/436953615/"><img src="http://blog.othree.net/log/2009/06/17/carcassonne/436953615_6ae5fe331e.jpg" width="400" height="266" alt="" /></a></p>
+
+<p>之前玩過一次卡卡頌，覺得還不錯，不過也沒特別著迷，後來 <a href="http://blog.xdite.net/?p=1240">xdite 買大盒板</a> 的時候我就跟著買了，玩了幾次反而意外的喜歡上，我必須承認卡坦（我第一款真的下去玩的桌上遊戲）也不錯玩，不過我覺得卡卡頌的趣味性比較高，而且另外還有一個優勢，很好學，推廣容易！所以要找人玩到不會太困難（雖然我家裡沒人要跟我玩），問題反而是時間比較少，總之總之，迷上之後三不五時就會開始找一些資料，擴充包介紹，規則講解，還有一些有的沒的，這篇就是要來整理並介紹一下這些東西的。</p></b:mainContent>
+				<b:extendContent><p>首先是所有擴充版本和規則，卡卡頌除了一個基本版外，還有各種擴充組合，而這些擴充組合還可以分為大擴充和小擴充，分類依據不是很肯定，不過比較風行的幾個大擴充都會改變遊戲的進行策略，小擴充則不一定。另外就是小擴充目前為止一組最多只有12塊新版塊。再來每種擴充的版塊上都會有小小的浮水印，方便辨識整理用，聽說以前的沒有，不過現在新出的好像都有印了。</p>
+
+<p><a href="http://blog.othree.net/log/2010/11/24/carcassonne-and-expansions/">新版的擴充整理</a></p>
+
+<dl>
+<dt>卡卡頌, Carcassonne, 72</dt>
+<dd><p><a href="http://crazycat1130.pixnet.net/blog/post/1345560">瘋小貓的卡卡頌介紹</a></p></dd>
+</dl>
+
+<h4>大擴充</h4>
+<dl>
+<dt>主教, Inns and Cathedrals, Wirtshäuser und Kathedralen, 2002, 18</dt>
+<dd><p>    其實全名是旅館與主教教堂，這兩個東西都分別是可以讓路和城市的分數增加用的，不過副作用是沒完成不算分，那個主教教堂根本是婊人用的， <a href="http://monica0906.pixnet.net/blog/post/21739915">詳細介紹</a> 。</p></dd>
+<dt>小豬, Traders and Builders, Händler und Baumeister, 2003, 24</dt>
+<dd><p>這個擴充多了貨物、小豬、建築師三種東西，我覺得最大的改變是多了幫人完成城堡的動機， <a href="http://www.flickr.com/photos/ornoth/436953615/">詳細介紹</a> ，小豬擴充還有付一個抽版塊用的袋子，不過買大盒版的話就沒有了。</p>
+<p><a href="http://www.boardgamegeek.com/image/63832"><img src="http://blog.othree.net/log/2009/06/17/carcassonne/1219907584800345382.jpg" width="400" height="300" alt="小豬擴充內容：包和新版塊、新單位、貨物和袋子)!"/></a></p></dd>
+<dt>火龍, The Princess and the Dragon, Burgfräulein und Drache, 2005, 30</dt>
+<dd><p>從這個擴充開始，卡卡頌就從闔家歡樂的溫馨遊戲開始慢慢變成友情破壞、互相廝殺的遊戲了～～，這個擴充的重點就是那個火龍，被火龍走過版塊上的小人都會被趕跑，卡卡頌終於開始可以攻擊對手了， <a href="http://monica0906.pixnet.net/blog/post/21745446">詳細介紹</a>。</p></dd>
+<dt>高塔, The Tower, Der Turm, March 2006, 18</dt>
+<dd><p>高塔也是友情破壞系列之一，可以建塔囚禁別的玩家的小人，而且被囚禁到還蠻慘的。除了新增的高塔，這個擴充還真的附了一個放地圖版塊的塔，不過似乎只能放到150多片，現在全部的擴充加起來算有兩百五十多片了， <a href="http://crazycat1130.pixnet.net/blog/post/3220922">詳細介紹</a>。</p></dd>
+<dt>市長, Abbey and Mayor, Abtei und Bürgermeister, October 2007, 18</dt>
+<dd><p>這個擴充比較不那麼刺激，每位玩家多了一片萬能的大修道院，另外還多了榖倉、車車、市長三種新單位，<a href="http://monica0906.pixnet.net/blog/post/21754233">詳細介紹</a>。</p></dd>
+<dt>投石車, The Catapult, Das Katapult, 2008, 12</dt>
+<dd><p>投石車是最新的大擴充，真的就如標題，有台小小投石車和一些小紙片（石頭）可以丟東西，這款還蠻新的，目前比較不清楚，不過看來也是友情破壞擴充， <a href="http://www.wretch.cc/blog/silvanus321/26789180">規則介紹</a>。</p></dd>
+</dl>
+
+<h4>小擴充</h4>
+<dl>
+<dt>河流, The River, Der Fluss, 2001, 12</dt>
+<dd><p>替代起始版塊的河流擴充，一開始就要先把河流拼完，然後農夫得分力量就大減XD。</p></dd>
+<dt>國王, King and Scout, König und Späher, 2003, 5</dt>
+<dd><p>多了城王和路王（這其實是卡坦用語），另外還有五個一般版塊，沒有很特別的地方就是。</p></dd>
+<dt>圍城, The Cathars, Die Katharer, 2004, 4 tiles</dt>
+<dd><p>其實應該叫異教徒，這個小擴充比較少見到，已經絕版了，現在改叫 Siege （圍城），不過實際上版塊圖 <a href="http://www.boardgamegeek.com/image/380606">不太一樣</a> ，舊版城市的城牆是被攻破的，新版則否，不知道是不是受了什麼壓力才改的@_@，2004年的異教徒也是目前唯一絕版的一組擴充，詳細規則可以看 <a href="http://www.ptt.cc/man/BoardGame/D658/D970/DA2D/M.1234201095.A.B6E.html">PTT 桌遊版精華區文章</a> 。</p></dd>
+<dt>異教徒, Cult, 2008, 5+1</dt>
+<dd><p>類似修道院的版塊，又稱為祭壇版塊，放在上面的小人就稱為異教徒，把祭壇放在修道院旁邊還會引發宗教對決XD，這組擴充的版塊數比較特別，其中第六片只有 <a href="http://www.boardgamegeek.com/boardgame/35666">Cult, Siege and Creativity</a> 這個組合有，裡面的 Siege 就是包含新版的圍城版塊，今年出的新版 Big Box 也只有五片祭壇，會有這一片差距其實是因為版塊製作時，數量一定都是六的倍數，規則一樣在 <a href="http://www.ptt.cc/man/BoardGame/D658/D970/DA2D/M.1234201095.A.B6E.html">PTT 精華區那篇文章有</a> 。</p></dd>
+<dt>伯爵, The Count of Carcassonne, Der Graf von Carcassonne, 2004, 12</dt>
+<dd><p>伯爵擴充裡面的這座城才是真的卡卡頌城！以前作的那些都是城市喔～～，有圖（借用瘋小貓的圖片）為證，這款擴充規則稍微複雜點， <a href="http://crazycat1130.pixnet.net/blog/post/3197887">詳細介紹</a> 。</p>
+<p> <img src="http://blog.othree.net/log/2009/06/17/carcassonne/carcassonne.tile.jpg" width="400" height="300" alt="伯爵擴充的卡卡頌城" /> </p>
+<p> <a href="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=zh-TW&amp;geocode=&amp;q=Carcassonne&amp;sll=37.579413,-95.712891&amp;sspn=44.348302,71.894531&amp;ie=UTF8&amp;ll=43.206458,2.363842&amp;spn=0.005036,0.008776&amp;t=k&amp;z=17"><img src="http://blog.othree.net/log/2009/06/17/carcassonne/carcassonne.map.png" width="400" height="310" alt="Google Maps 上看到的卡卡頌城" /></a> </p></dd>
+<dt>河流二, The River II, Der Fluss II, November 2005, 12</dt>
+<dd><p>新的河流二代多了一條支流，讓河流的變化更多，還可以和河流一起用，作出超長河流XD。</p></dd>
+<dt>桌遊季刊, The Mini-Expansion, Winter 2006, 12</dt>
+<dd><p>雜誌附送的12片基本版塊，其中兩片是河流，沒有浮水印，是唯一丟進去後就不好挑出來的擴充組合，其他的大小擴充不是有浮水印，就是很好判斷（像是祭壇、圍城）。</p></dd>
+</dl>
+
+<p>其中小擴充的國王、異教徒和伯爵三組有組合起來成捆販售，官方是編號為第六個大擴充，投石車則是第七個。</p>
+
+<p>所有擴充加起來已經超過250個版塊了， <a href="http://blog.xuite.net/asilentfish/blog/18575337">水底城</a> 有作一些整理（到市長擴充），還有個不同擴充同時玩時可能會遇到的 <a href="http://blog.xuite.net/asilentfish/blog/18949065">規則問題</a> ，以上介紹的都是官方的東西，我還找到不少其他有趣的東西，像是 <a href="http://carcassonnecentral.com/">Carcassonne Central</a> 這個討論社群，這邊除了討論區和社群聯繫外，還收集了很多 <a href="http://www.carcassonnecentral.com/index.php?option=com_content&amp;task=view&amp;id=49&amp;Itemid=62">玩家自製的擴充</a> ，這些玩家自製的擴充種類很多，除了要自製版塊外，有些還需要自製小人元件，對我來說有些困難，不過很有趣的是這些玩家自製擴充還有分幾個大系列，像是河流系列、森林系列，除了這些玩家自製的擴充外，在下載區還有一區是專門放 <a href="http://www.carcassonnecentral.com/index.php?option=com_content&amp;task=view&amp;id=48&amp;Itemid=61">輔助遊戲的道具</a> ，像是一圈100分的計分版，一整片的卡卡頌城（伯爵擴充）等，有興趣的可以去逛逛，還蠻有趣的。</p>
+
+<p>接下來的東西比較敗家一些，首先是遊戲中的小人，雖然說明書上是寫 follower （跟隨者），不過其實 follower 是總稱，小人、大人、市長、車車都是跟隨者，而小人另外有個名字叫 meeple （米寶），好像字元是 my people。總之， meeple 其實是很有人氣的，還有人開了 <a href="http://www.meeplepeople.com/">meeplepeople.com</a> 賣周邊商品，進去逛逛就會發現他還有賣標準色以外的 meeple ，總共有12種顏色，不過他的小人組合只有小人、大人、工程師、小豬，沒有把市長擴充新增的三種單位加進去，實在很可惜。另外在 cacassonne central 有看到有人有買到整組 <a href="http://www.carcassonnecentral.com/forum/index.php?topic=433.msg5715#msg5715">白色的</a> ，他買了兩組，還把其中一組漆成橘色的，可惜的是他提供的賣家好像沒賣了，不然我很想多弄一兩組，這樣還可以增加遊戲人數。再來，還有人作了高級的 <a href="http://www.av-technologies.net/scoreboard/index.html">電子計分版</a>，用遙控器控制分數，還會自動計算排名，最厲害的是用蘋果電腦新的那種鋁磚工法作的，光成本就要100歐元以上，也因此作者沒打算要量產來賣，不過他把相關的資料都放在網路上了，包括電路板的設計等，其實我是覺得讓小人在計分版上跑感覺還蠻不錯的啦，只不過有次玩到快結束時，不小心撞到計分版，就...</p>
+
+<p><img src="http://blog.othree.net/log/2008/06/17/carcassonne/scoreboard1_front.jpg" width="400" height="300" alt=""/></p>
+
+<p>再來要介紹的是收藏解決方案，前面有說過，目前所有擴充加起來已經超過250張版塊了，即使高塔也只放的下約150張，再加上還有各種木頭小人、高塔等東西，因此要如何收藏卡卡頌也是個不小的問題，因此有人做了高級的 <a href="http://www.carcassonnebox.com/">Carcassonne Box</a>。</p>
+
+<p><img src="http://blog.othree.net/log/2009/06/17/carcassonne/carcbox02qc6.jpg" width="400" height="342" alt="木製的盒子，質感很棒" /></p>
+
+<p>當然這種敗家物少不了 <a href="http://www.boardgamegeek.com/thread/230462">開箱報告</a>，比較可惜的是投石車是在這箱子推出後才出的，不知道裡面有沒有空間放投石車，當然他有多預留一些空間放新的版塊。另外一個我覺得很棒的是有人買 <a href="http://www.flickr.com/photos/byrnefamilyphotos/sets/72157602250791441/">工具箱來放</a> ，外國有些高級的工具箱，可自定的程度很高，就有人找到一些組合很適合拿來放，不過很可惜的是，他提供的工具箱的型號好像都買不到了，而且這些照片裡面也還沒有投石車^^b，我自己目前是用一個紙盒把計分版以外的東西都塞了進去。</p>
+
+<p><a href="http://www.flickr.com/photos/othree/3610618467/" title="Flickr 上 othree 的 卡卡頌大盒版"><img src="http://farm3.static.flickr.com/2450/3610618467_4b5a41bf7b.jpg" width="400" height="300" alt="卡卡頌大盒版" /></a></p>
+
+<p>另外還有個不錯的 <a href="http://ikitz.de/projects/#carcassonne">整理方式</a> ，也不用花大錢，他用兩個不同擴充的盒子組成，裡面的地圖版塊分區放好，另外印了一張位置索引記錄不同擴充所放的位置，木頭小人則另外做了小紙盒來裝，計分版則是掃描列印後切對半，小紙盒和位置索引的檔案他都有提供下載，有興趣的人也可以試試看用這種方式來整理。</p>
+
+<p>最後，我要介紹的是這個卡卡頌魔術方塊～</p>
+
+<p><a href="http://carcassonne.wikia.com/wiki/File:Carccube.jpg"><img src="http://blog.othree.net/log/2009/06/17/carcassonne/Carccube.jpg" width="400" height="427" alt="利用卡卡頌地圖做的魔術方塊" /></a></p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="7"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000584" baseName="face-death">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-06-02</b:date>
+				<b:time>12:34:46</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>勉勵的話語</b:title>
+			<b:content>
+				<b:summary> 這張紙條是我大阿姨留給我和我哥的，目前的我無法體會帶著遺憾離開人世，卻還能留下這樣勉勵話語時的感受。或許等我繼續成長，有了關愛的後輩時會理解吧。...</b:summary>
+				<b:mainContent><p><a href="http://www.flickr.com/photos/othree/3587357293/" title="Flickr 上 othree 的 DSCF3551"><img src="http://farm4.static.flickr.com/3303/3587357293_69be451d0a.jpg" width="375" height="500" alt="DSCF3551" /></a></p>
+
+<p>這張紙條是我大阿姨留給我和我哥的，目前的我無法體會帶著遺憾離開人世，卻還能留下這樣勉勵話語時的感受。或許等我繼續成長，有了關愛的後輩時會理解吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000583" baseName="my-blog-is-back">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-05-12</b:date>
+				<b:time>11:14:31</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>My blog is back</b:title>
+			<b:content>
+				<b:summary>掛了將近一個月有餘，昨天終於先弄回來，中間一度少掉的文章在 Google Reader 裡都還看的到，所以復原文章也沒花上什麼心力，不過苦工少不了就是，另外在 暫時站 寫的文章也搬過來了，這幾篇同時有用 WTFPL 授權，還順便把 MT 升級到最新的4.25版，本來很想順便改版的，不過一直沒好好設計，這部份就先繼續放著了，反正目前版面我其實還蠻滿意的（除了XHTML實在有夠麻煩）。...</b:summary>
+				<b:mainContent><p>掛了將近一個月有餘，昨天終於先弄回來，中間一度少掉的文章在 Google Reader 裡都還看的到，所以復原文章也沒花上什麼心力，不過苦工少不了就是，另外在 <a href="http://othree.github.com">暫時站</a> 寫的文章也搬過來了，這幾篇同時有用 <span class="caps">WTFPL </span>授權，還順便把 MT 升級到最新的4.25版，本來很想順便改版的，不過一直沒好好設計，這部份就先繼續放著了，反正目前版面我其實還蠻滿意的（除了XHTML實在有夠麻煩）。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000582" baseName="opera_in_taiwan">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-30</b:date>
+				<b:time>10:18:41</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Opera in Taiwan</b:title>
+			<b:content>
+				<b:summary>最近 Opera 台灣隨著15週年辦了一系列的活動，包括使用者聚會、校園講座與徵才，15週年記者會等，小弟我有幸參與了其中幾場，好像可以簡單介紹一下XD。 Opera 大約是去年年底在台灣成立分公司，雖然 Opera Desktop 在台灣幾乎是沒什麼能見度，可是在電腦以外的平台佔有率還是最高的，不過 Opera 台灣並沒有打算只專注在這些平台，除了推廣外，還要把台灣為數不少的 Opera 使用者集結起來，讓社群成形，現在不但有正式的中文討論區，還有官方的 Twitter帳號 和 Plurk帳號，另外還有 Opera 第一手消息這個部落格。目前是可以預見他們會對台灣使用者開始投入些心力、資源，總之是好是一件。 在這次活動中，有人問到，為什麼 Opera 功能那麼強，但是使用者還是不多，那時候 Andreas 說他們也好奇原因，其實我一直以來也很納悶， Opera 本身除了效能好，還內建很多功能，其中不少還是 Opera 首先推出的，但是一直以來他們的佔有率就是不高，即使成為免費版後也沒有提昇多少。不過我想這會一直是個難解的問題，但是至少我自己選擇的原因我還有點印象，說來算是時間點不好，當我在決定要選哪個瀏覽器時，Opera 畫中文還畫的很難看，這應該是我當初選擇使用 Firefox 而不是 Opera 的主要原因（我對這種東西很外貿協會的XD），後來才知道 Firefox 很多擴充套件的功能是 Opera 直接就有內建的。 剛好大約一個月一次的摩茲連續聚，我下次還沒想到可以分享什麼東西，大概就介紹 Opera 吧XD，所以應該這兩天開始要強迫自己用 Opera 用一個月了XD，到時候從功能面來介紹它:P，雖然不能吸引到...</b:summary>
+				<b:mainContent><p>最近 Opera 台灣隨著15週年辦了一系列的活動，包括使用者聚會、校園講座與徵才，15週年記者會等，小弟我有幸參與了其中幾場，好像可以簡單介紹一下XD。</p>
+
+<p>Opera 大約是去年年底在台灣成立分公司，雖然 Opera Desktop 在台灣幾乎是沒什麼能見度，可是在電腦以外的平台佔有率還是最高的，不過 Opera 台灣並沒有打算只專注在這些平台，除了推廣外，還要把台灣為數不少的 Opera 使用者集結起來，讓社群成形，現在不但有正式的<a href="http://my.opera.com/tradchinese/forums/">中文討論區</a>，還有官方的 <a href="http://twitter.com/operatw">Twitter帳號</a> 和 <a href="http://www.plurk.com/operatw">Plurk帳號</a>，另外還有 <a href="http://my.opera.com/ting0619/blog/">Opera 第一手消息</a>這個部落格。目前是可以預見他們會對台灣使用者開始投入些心力、資源，總之是好是一件。</p>
+
+<p>在這次活動中，有人問到，為什麼 Opera 功能那麼強，但是使用者還是不多，那時候 <a href="http://my.opera.com/andreasbovens/about/">Andreas</a> 說他們也好奇原因，其實我一直以來也很納悶， Opera 本身除了效能好，還內建很多功能，其中不少還是 Opera 首先推出的，但是一直以來他們的佔有率就是不高，即使成為免費版後也沒有提昇多少。不過我想這會一直是個難解的問題，但是至少我自己選擇的原因我還有點印象，說來算是時間點不好，當我在決定要選哪個瀏覽器時，Opera 畫中文還畫的很難看，這應該是我當初選擇使用 Firefox 而不是 Opera 的主要原因（我對這種東西很外貿協會的XD），後來才知道 Firefox 很多擴充套件的功能是 Opera 直接就有內建的。</p>
+
+<p>剛好大約一個月一次的摩茲連續聚，我下次還沒想到可以分享什麼東西，大概就介紹 Opera 吧XD，所以應該這兩天開始要強迫自己用 Opera 用一個月了XD，到時候從功能面來介紹它:P，雖然不能吸引到 IE 使用者跳槽就是~_~。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000581" baseName="hate-ie">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-27</b:date>
+				<b:time>10:14:31</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Hate IE</b:title>
+			<b:content>
+				<b:summary>昨天我才被微軟救到，今天它就用 IE 來討債了Q_Q，這件事要從 JOYSOUND 講起， JOYSOUND是日本的一個卡拉OK系統，前陣子推出了 Wii 版，讓使用者可以用便宜的月費就可以唱到數萬首日文歌曲，不過使用上有個問題，就是它的網頁沒有針對 Wii 版的搜尋功能，透過 Wii 介面來搜尋又不夠快，於是我就自己手寫了一個 http://joysound.othree.net/，資料來源是他們網站，我定期去撈新增曲目，結果最近太混，才發現 7 週沒有去更新，網頁上又只保留 5 週份的更新資料，於是就趕快上 Google 看有沒有 cache，順利的找到4份中的3份，但是有一份找很久都找不到，過了幾十分，找了一堆日本的搜尋引擎，才在日本 MSN 找到那個網頁的 cache，於是心中一顆大石頭終於落地，也實在沒想到會讓微軟幫到這樣一個大忙。 時光飛逝，歲月如梭，一下就來到了新的一週，早上九點半開始開了四小時的會，回到電腦前一看發現有 IE bug 要解，沒想到這一個 bug 讓我整整花了4個小時才解決掉，一開始看起來是 javascript 問題，搞到最後竟然是無法說明的 CSS 地雷，花了數小時，只砍掉下面這樣一行東西而已： right: 0; 更讓人難過的是這個 bug 是在 IE7, 8才會發生的，講到這我就必須要抱怨一下...</b:summary>
+				<b:mainContent><p>昨天我才被微軟救到，今天它就用 IE 來討債了Q_Q，這件事要從 <a href="http://joysound.com/">JOYSOUND</a> 講起， JOYSOUND是日本的一個卡拉OK系統，前陣子推出了 Wii 版，讓使用者可以用便宜的月費就可以唱到數萬首日文歌曲，不過使用上有個問題，就是它的網頁沒有針對 Wii 版的搜尋功能，透過 Wii 介面來搜尋又不夠快，於是我就自己手寫了一個 <a href="http://joysound.othree.net/">http://joysound.othree.net/</a>，資料來源是他們網站，我定期去撈新增曲目，結果最近太混，才發現 7 週沒有去更新，網頁上又只保留 5 週份的更新資料，於是就趕快上 Google 看有沒有 cache，順利的找到4份中的3份，但是有一份找很久都找不到，過了幾十分，找了一堆日本的搜尋引擎，才在<a href="http://jp.msn.com/">日本 MSN</a> 找到那個網頁的 cache，於是心中一顆大石頭終於落地，也實在沒想到會讓微軟幫到這樣一個大忙。</p>
+
+<p>時光飛逝，歲月如梭，一下就來到了新的一週，早上九點半開始開了四小時的會，回到電腦前一看發現有 IE bug 要解，沒想到這一個 bug 讓我整整花了4個小時才解決掉，一開始看起來是 javascript 問題，搞到最後竟然是無法說明的 CSS 地雷，花了數小時，只砍掉下面這樣一行東西而已：</p>
+
+<pre><code>
+right: 0;
+</code></pre>
+
+<p>更讓人難過的是這個 bug 是在 IE7, 8才會發生的，講到這我就必須要抱怨一下 IE，這陣子處理不少問題根本都還是 IE7, 8 還在的，感覺上 IE 這兩次升級對於 javascript 相關的部分都沒什麼改善，這也是為什麼我決定把這裡弄的讓 IE 都看不到。</p>
+<p>最後就是提一下，大概要怎麼判斷是不是 CSS 地雷，和要怎麼找，基本上，會被稱為地雷，就是那種會看起來應該不會有問題，出了問題你也不知道問題在哪的狀況，如果是 javascript 的問題現在瀏覽器都可以妥善處理，不小心跑進無窮迴圈也不會跑到死，所以如果一直出現找不到的問題發生點的話，那就有可能是 CSS 地雷了，像我這次遇到的狀況是整個 IE 吃光 CPU，但是不會有訊息問我要不要停止執行 script，然後我找了很久，排除頁面上各種可能產生影響的 javascript，最後才懷疑到 CSS 上，這時候我已經浪費超過三小時了，要判斷是不是 CSS 問題到很簡單，先把 CSS disable 掉試試看就知道了，如果一 disable 掉問題就沒了，那很明顯就是 CSS 的問題，接下來就是用消去法來尋找造成問題的 CSS 定義，就不贅述了。</p>
+
+<p>真的最後了，就是其實 JOYSOUND 現在已經可以在網頁上<a href="http://joysound.com/ex/wii/search/index.htm">搜尋 Wii 版曲目</a>了XDD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000580" baseName="handle-ie">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-27</b:date>
+				<b:time>10:13:03</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Handle IE</b:title>
+			<b:content>
+				<b:summary>暫時站本來用下面的語法來阻擋IE使用者： &lt;!--[if IE]&gt;&lt;style type=&quot;text/css&quot;&gt;* {display: none; !importanat}&lt;/style&gt;&lt;![endif]--&gt; 不過用IE還是看的到 title，不太愉悅，今天 EvenWu 推薦我另一個弄法： &lt;!DOCTYPE html&gt; &lt;!--[if !IE]&gt;--&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;blah...&lt;/title&gt; &lt;/head&gt; &lt;body&gt; blah blah... &lt;/body&gt; &lt;/html&gt; &lt;!--&lt;![endif]--&gt; 現在用 IE 來看感覺真是棒XD...</b:summary>
+				<b:mainContent><p><a href="http://othree.github.com">暫時站</a>本來用下面的語法來阻擋IE使用者：</p>
+<pre><code>
+&lt;!--[if IE]&gt;&lt;style type=&quot;text/css&quot;&gt;* {display: none; !importanat}&lt;/style&gt;&lt;![endif]--&gt;
+</code></pre>
+<p>不過用IE還是看的到 title，不太愉悅，今天 <a href="http://evendesign.tw/">EvenWu</a> 推薦我另一個弄法：</p>
+<pre><code>
+&lt;!DOCTYPE html&gt;
+&lt;!--[if !IE]&gt;--&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;blah...&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        blah blah...
+    &lt;/body&gt;
+&lt;/html&gt;
+&lt;!--&lt;![endif]--&gt; 
+</code></pre>
+<p>現在用 IE 來看感覺真是棒XD</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000579" baseName="opera-face-gesture-and-more">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-25</b:date>
+				<b:time>10:11:29</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Opera Face Gesture 與其它</b:title>
+			<b:content>
+				<b:summary>首先來看一下 Opera 在今年愚人節推出的臉部表情控制吧。...</b:summary>
+				<b:mainContent><p>首先來看一下 Opera 在今年愚人節推出的<a href="http://labs.opera.com/news/2009/04/01/">臉部表情控制</a>吧。</p>
+<p><object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/kkNxbyp6thM&amp;color1=0xb1b1b1&amp;color2=0xcfcfcf&amp;hl=en&amp;feature=player_embedded&amp;fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="http://www.youtube.com/v/kkNxbyp6thM&amp;color1=0xb1b1b1&amp;color2=0xcfcfcf&amp;hl=en&amp;feature=player_embedded&amp;fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed></object></p></b:mainContent>
+				<b:extendContent><p>應該很多人看過了，我想大部分人應該都會笑一笑看過去（聽說有人當真了@@），不過我確實覺得這東西有機會做出來，這想法是來自另外兩段影片，首先第一段是 <a href="http://johnnylee.net/projects/wii/">Jonny Lee</a> 的 <a href="http://www.ted.com/index.php/talks/johnny_lee_demos_wii_remote_hacks.html">TED Talk</a>，Jonny Lee 在 Wii 上市後，用它的控制器作為互動介面弄了不少有趣的玩意，他在 TED Talk 介紹了其中兩個，第二個是很有趣的 3D 應用，利用 Wii Remote 和 Sensor Bar 來判斷視點相對於螢幕的位置和角度，依據這些資訊來改變畫面，用單純的螢幕做出更接近真實的3D效果，機下來就來看看這段影片吧。</p>
+
+<p><object width="446" height="326"><param name="movie" value="http://video.ted.com/assets/player/swf/EmbedPlayer.swf"></param><param name="allowFullScreen" value="true" /><param name="wmode" value="transparent"></param><param name="bgColor" value="#ffffff"></param> <param name="flashvars" value="vu=http://video.ted.com/talks/embed/JohnnyLee_2008-embed_high.flv&amp;su=http://images.ted.com/images/ted/tedindex/embed-posters/JohnnyLee-2008.embed_thumbnail.jpg&amp;vw=432&amp;vh=240&amp;ap=0&amp;ti=245" /><embed src="http://video.ted.com/assets/player/swf/EmbedPlayer.swf" pluginspace="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="transparent" bgColor="#ffffff" width="446" height="326" allowFullScreen="true" flashvars="vu=http://video.ted.com/talks/embed/JohnnyLee_2008-embed_high.flv&amp;su=http://images.ted.com/images/ted/tedindex/embed-posters/JohnnyLee-2008.embed_thumbnail.jpg&amp;vw=432&amp;vh=240&amp;ap=0&amp;ti=245"></embed></object></p>
+
+<p>接著第三段影片做的事情和 Johnny Lee 做的事情一樣，不過用的技術和用途也不太一樣，這是日本 H-Game 公司 <a href="http://www.teatime.ne.jp/">TEATIME</a> 推出的 <a href="http://www.teatime.ne.jp/infor/tech48/tech48_index.htm">Face Tracking</a> 技術，不過他的原理是用 Web Cam 來做臉部辨識，然後判斷臉部和螢幕的相對位置，藉以改變視點，如果視點很低的話，遊戲中的女生也會有相對的反應出來，官方網頁上有影片可以下載來看，不過 YouTube 上也有人上傳了。</p>
+
+<p><object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/wwaSBld4ucQ&amp;hl=zh_TW&amp;fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/wwaSBld4ucQ&amp;hl=zh_TW&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object></p>
+
+<p>看著第三影片後，就覺得這技術似乎有機會實現臉部表情控制，至於為什麼要實現，我是想過或許可以作為輔助的操控手，或是讓無法用手腳操控的人使用吧，現在相關的輔助控制我比較知道的是用眼球追蹤啦。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000578" baseName="linked-open-data">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-21</b:date>
+				<b:time>10:10:19</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>The Web of Linked Open Data</b:title>
+			<b:content>
+				<b:summary>週末要到摩茲連續聚介紹可能的網路未來，以下整理一些相關連結。 Tim Berners-Lee on the next Web | Video on TED.com The Web of Data: Creating Machine-Accessible Information - ReadWriteWeb Linking Open Data SWEO Community Project: Linking Open Data on the Semantic Web OWL Web本體語言概述 推薦標準 d.CAT- the RIA blog...</b:summary>
+				<b:mainContent><p>週末要到<a href="http://registrano.com/events/moztw-gathering-tp-1">摩茲連續聚</a>介紹可能的網路未來，以下整理一些相關連結。</p>
+<ol>
+    <li><a href="http://www.ted.com/index.php/talks/tim_berners_lee_on_the_next_web.html">Tim Berners-Lee on the next Web | Video on TED.com</a></li>
+    <li><a href="http://www.readwriteweb.com/archives/web_of_data_machine_accessible_information.php">The Web of Data: Creating Machine-Accessible Information - ReadWriteWeb</a></li>
+    <li><a href="http://esw.w3.org/topic/SweoIG/TaskForces/CommunityProjects/LinkingOpenData">Linking Open Data</a></li>
+    <li><a href="http://esw.w3.org/topic/TaskForces/CommunityProjects/LinkingOpenData/DataSets">SWEO Community Project: Linking Open Data on the Semantic Web</a></li>
+    <li><a href="http://zh.transwiki.org/cn/owloverview.htm">OWL Web本體語言概述 推薦標準</a></li>
+    <li><a href="http://ria.richtechmedia.com/2005/03/02/ontology/">d.CAT- the RIA blog » ontology 是什麼？</a></li>
+    <li><a href="http://www.openstreetmap.org/">OpenStreetMap</a></li>
+    <li><a href="http://www.w3.org/DesignIssues/LinkedData.html">Linked Data - Design Issues</a></li>
+</ol></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000577" baseName="wtfpl">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-21</b:date>
+				<b:time>10:09:20</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>WTFPL</b:title>
+			<b:content>
+				<b:summary>前陣子透過 Manic 才知道這個超讚的授權，WTFPL - Do What The Fuck You Want To Public License，「隨便拿去做你的鳥東西」授權條款，超棒的，裡面的說明和 FAQ 都很值得一看。...</b:summary>
+				<b:mainContent><p>前陣子透過 <a href="http://www.manic.tw/blog">Manic</a> 才知道這個超讚的授權，<a href="http://sam.zoy.org/wtfpl/">WTFPL - Do What The Fuck You Want To Public License</a>，「隨便拿去做你的鳥東西」授權條款，超棒的，裡面的說明和 FAQ 都很值得一看。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000576" baseName="domcontentloaded">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-20</b:date>
+				<b:time>10:07:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Use DOMContentLoaded ?</b:title>
+			<b:content>
+				<b:summary>onload 越來越少人在用，而改用像是 DOMContentLoaded 這種事件來代替，像是 jQuery 也有個 ready event 可以用，主要是因為 onload 事件還要等待網頁中所有的元素都讀取完畢（或是 timeout），這些元素包括圖片，其他網站的 style, script，flash 物件等，常常訪客開始看網頁內容時，需要執行的 script 卻還沒開始執行，不過並不是所有瀏覽器都有支援 DOMContentLoaded 或是提供其他替代方案，所以各家 js library 為了處理這問題就無所不用其極限。 我是傾向用另外一個方法處理這問題，不過需要一些對網頁內元件的控制能力，其實也很簡單，就是把 script 放在頁面尾端，然後馬上跑，這方法除了可以解決上述問題外，還有另外兩個好處，一是所有瀏覽器都支援，二是可以讓網頁內容先讀進來才跑 script，這也是 YSlow 的建議項目之一，當然如果你就是想那讓那些瀏覽器的使用者看起來感覺不好，就當我沒說吧XD。...</b:summary>
+				<b:mainContent><p>onload 越來越少人在用，而改用像是 <a href="https://developer.mozilla.org/en/Gecko-Specific_DOM_Events#DOMContentLoaded">DOMContentLoaded</a> 這種事件來代替，像是 <a href="http://jquery.com/">jQuery</a> 也有個 <a href="http://docs.jquery.com/Events/ready">ready event</a> 可以用，主要是因為 onload 事件還要等待網頁中所有的元素都讀取完畢（或是 timeout），這些元素包括圖片，其他網站的 style, script，flash 物件等，常常訪客開始看網頁內容時，需要執行的 script 卻還沒開始執行，不過並<abbr title="Internet Explorer">不是所有瀏覽器</abbr>都有支援 DOMContentLoaded 或是提供其他替代方案，所以各家 js library 為了處理這問題就無所不用其極限。</p>
+
+<p>我是傾向用另外一個方法處理這問題，不過需要一些對網頁內元件的控制能力，其實也很簡單，就是把 script 放在頁面尾端，然後馬上跑，這方法除了可以解決上述問題外，還有另外兩個好處，一是所有瀏覽器都支援，二是可以讓網頁內容先讀進來才跑 script，這也是 YSlow 的<a href="http://developer.yahoo.com/performance/rules.html#js_bottom">建議項目之一</a>，當然如果你就是想那讓那些瀏覽器的使用者看起來感覺不好，就當我沒說吧XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000575" baseName="ie8">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-04-01</b:date>
+				<b:time>01:44:53</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>大家來用 IE8</b:title>
+			<b:content>
+				<b:summary> IE8 超棒的，大家趕快來用！！...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://stickeraction.com/ie8infx/go" title="體驗 IE8 最新功能"><img src="http://stickeraction.com/ie8infx/sticker/random" alt="體驗 IE8 最新功能" /></a></p>
+
+<p><span class="caps">IE8 </span>超棒的，大家趕快來用！！</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000574" baseName="object-oriented-javascrip">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-03-29</b:date>
+				<b:time>01:42:58</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>Object Oriented Javascript</b:title>
+			<b:content>
+				<b:summary> 本書評由othree 評論於2009/03/29 ，評分為4.5分（滿分5分） ，採創用 CC 姓名標示 授權條款釋出。 看書名就知道，這本書是專門在講 JavaScript 的物件導向，其實看完這本書我當下的想法是：「媽媽我不要用 JavaScript 寫物件導向程式 Q_Q。」 這本書總共有八章，我大概可以切成三段，首先是一到四章，講基礎的 JavaScript，裡面有些東西後面會用到還蠻重要的，再來是本書最重點的五六兩章，在講 prototype 和物件繼承，最後是剩下的BOM、DOM、design pattern和附錄，前後的部份我也沒看的很仔細，主要還是五六章為主。 第五章介紹 JavaScript 特有的 prototype 屬性，接著第六章就開始講解要怎樣利用 prototype 來實作物件繼承，這部份真是越看越不想用 JavaScript 來寫 OO 的程式，作者一種方法接著一種方法介紹，然後再說有什麼問題，解著介紹比較好的方法，整章看下來早就忘了已經介紹幾種方法了，就是看完這張才讓我有了上面的感想，不過用像 Base 這種已經寫好的 library 我到還可以接受啦。 總之，結論，這本在 prototype 和 JavaScript 物件繼承的部份，講的很詳細，是別本書無法取代的，如果對這部份想要深入研究的，那我會推薦來看這本，不過很多時候的 Web...</b:summary>
+				<b:mainContent><div class="hreview">
+  <p>
+    <a target="_blank" href="http://www.packtpub.com/object-oriented-javascript-applications-libraries/book"><img alt="Object Oriented JavaScript" src="http://blog.othree.net/log/2009/03/29/object-oriented-javascrip/ooj-cover.png" height="381" width="300" /></a>
+  </p>
+  <p>
+  本書評由<b class="reviewer vcard nickname">othree</b>
+  評論於<abbr class="dtreviewed" title="20090329">2009/03/29</abbr>
+  ，評分為<abbr title="4.5">4.5分（滿分5分）</abbr>
+  ，採<a target="_blank" rel="license" href="http://creativecommons.org/licenses/by/2.5/tw/">創用 CC 姓名標示 授權條款</a>釋出。
+  </p>
+  <div class="description">
+    <p>看書名就知道，這本書是專門在講 JavaScript 的物件導向，其實看完這本書我當下的想法是：「媽媽我不要用 JavaScript 寫物件導向程式 Q_Q。」</p>
+    <p>這本書總共有<a target="_blank" href="http://www.packtpub.com/article/object-oriented-javascript-applications-libraries-table-of-contents">八章</a>，我大概可以切成三段，首先是一到四章，講基礎的 JavaScript，裡面有些東西後面會用到還蠻重要的，再來是本書最重點的五六兩章，在講 prototype 和物件繼承，最後是剩下的BOM、DOM、design pattern和附錄，前後的部份我也沒看的很仔細，主要還是五六章為主。</p>
+    <p>第五章介紹 JavaScript 特有的 prototype 屬性，接著第六章就開始講解要怎樣利用 prototype 來實作物件繼承，這部份真是越看越不想用 JavaScript 來寫 OO 的程式，作者一種方法接著一種方法介紹，然後再說有什麼問題，解著介紹比較好的方法，整章看下來早就忘了已經介紹幾種方法了，就是看完這張才讓我有了上面的感想，不過用像 <a target="_blank" href="http://base2.googlecode.com/svn/doc/base2.html#/doc/%21base2.Base">Base</a> 這種已經寫好的 library 我到還可以接受啦。</p>
+    <p>總之，結論，這本在 prototype 和 JavaScript 物件繼承的部份，講的很詳細，是別本書無法取代的，如果對這部份想要深入研究的，那我會推薦來看這本，不過很多時候的 Web Develop 是用不太到這些東西的（開發 Firefox Extension 用到的機會還比較大）。</p>
+  </div>
+</div></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000573" baseName="zowie_n-rf1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-03-08</b:date>
+				<b:time>01:41:51</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>Zowie N-RF1</b:title>
+			<b:content>
+				<b:summary>上個月參加 iqmore blog 的活動，我幸運的抽到這張滑鼠墊來試用，所以有了這篇文章，剛好我之前用的是EVERGLIDE TITAN（我知道很老了XD），所以就拿這張來做比較了，直接說結論，這張滑鼠墊在各方面都比TITAN好，重點特色的防水就不說了，像是移動時的阻力，鼠墊背面防滑層的效果，表現都比TITAN還好。 其實可以的話，考量到桌面空間，我是不希望用鼠墊的，不過一般桌面用起來都不是很好，通常是摩擦力太大，所以後來還是用起鼠墊來，在玻璃和布之間，我挑選的一直是布墊，原因有二，一是觸感比較好，二是價錢比較便宜，當然布墊沒辦法到玻璃墊那樣誇張的滑順程度，不過我覺得用起來也還算ok，也配過鐵佛龍膠布來貼鼠腳，效果當然不錯，不過磨損的實在很快，所以後來也沒繼續貼了，總之我後來換了 EVERGLIDE TITAN 後就一直用了幾年沒換，這次換用 Zowie 的RF-1 後有種科技持續在進步的感覺XD。首先感覺到的當然就是摩擦力變小了，雖然沒用多久就沒感覺了，不過在回去用 TITAN 就覺得移動困難XD，算是有明顯的差距。再來是他的滑防層，看起來摸起來都沒什麼，不過效果還真的很不錯，放在桌上，我的MX-R 壓上去，要從旁邊拉動就很困難了。 最後要說說我覺得還比較不夠的，就是要做細微控制的時候，還是很容易跑超過，這部份也可能是因為我手殘吧XD Zowie 官網 老貓的 Blog...</b:summary>
+				<b:mainContent><p>上個月參加 iqmore blog 的活動，我幸運的抽到這張滑鼠墊來試用，所以有了這篇文章，剛好我之前用的是EVERGLIDE <span>TITAN</span>（我知道很老了XD），所以就拿這張來做比較了，直接說結論，這張滑鼠墊在各方面都比TITAN好，重點特色的防水就不說了，像是移動時的阻力，鼠墊背面防滑層的效果，表現都比TITAN還好。</p>
+
+<p><a target="_blank" href="http://www.flickr.com/photos/othree/3337109801/" title="Flickr 上 othree 的 Zowie N-RF1"><img src="http://farm4.static.flickr.com/3664/3337109801_5dd88794e5.jpg" alt="疊疊樂，下面是之前用的 Everglide Titan" height="375" width="500" /></a></p>
+
+<p>其實可以的話，考量到桌面空間，我是不希望用鼠墊的，不過一般桌面用起來都不是很好，通常是摩擦力太大，所以後來還是用起鼠墊來，在玻璃和布之間，我挑選的一直是布墊，原因有二，一是觸感比較好，二是價錢比較便宜，當然布墊沒辦法到玻璃墊那樣誇張的滑順程度，不過我覺得用起來也還算ok，也配過鐵佛龍膠布來貼鼠腳，效果當然不錯，不過磨損的實在很快，所以後來也沒繼續貼了，總之我後來換了 <span>EVERGLIDE TITAN </span>後就一直用了幾年沒換，這次換用 Zowie 的RF-1 後有種科技持續在進步的感覺XD。首先感覺到的當然就是摩擦力變小了，雖然沒用多久就沒感覺了，不過在回去用 <span>TITAN </span>就覺得移動困難XD，算是有明顯的差距。再來是他的滑防層，看起來摸起來都沒什麼，不過效果還真的很不錯，放在桌上，我的MX-R 壓上去，要從旁邊拉動就很困難了。</p>
+
+<p>最後要說說我覺得還比較不夠的，就是要做細微控制的時候，還是很容易跑超過，這部份也可能是因為我手殘吧XD</p>
+
+<p><a target="_blank" href="http://www.flickr.com/photos/othree/3337942016/" title="Flickr 上 othree 的 Zowie N-RF1"><img src="http://farm4.static.flickr.com/3339/3337942016_2f9edda55c.jpg" alt="用很久的 MX-Revolution" height="500" width="375" /></a></p>
+
+<p><a target="_blank" href="http://www.flickr.com/photos/othree/3337114517/" title="Flickr 上 othree 的 Zowie N-RF1"><img src="http://farm4.static.flickr.com/3398/3337114517_84813ab000.jpg" alt="背面防滑墊比較" height="375" width="500" /></a></p>
+
+<ul>
+<li><a target="_blank" href="http://www.zowiegear.com/">Zowie 官網</a></li>
+<li><a target="_blank" href="http://www.iqmore.idv.tw/" title="iqmore">老貓的 Blog</a></li>
+</ul></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000572" baseName="cross-browser-inline-block">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-03-04</b:date>
+				<b:time>01:40:38</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Cross-Browser Inline Block</b:title>
+			<b:content>
+				<b:summary>大約兩週前在 Mozilla Webdev Blog 上有一篇 Cross-Browser Inline-Block ，介紹如何用 inline block 代替 float 排列，好解決方塊高度不同時，float 排列會造成的問題，當然，這麼新(?)的 display 屬性，必定會有瀏覽器不支援，加上其實目前各家瀏覽器的行為表現都還不是很一致，所以整篇文章大部分的篇幅是在處理 cross browser 的問題。那時候 DK 長輩說我要是有什麼想法的話可以發一篇，那時候雖然覺得好像有什麼可以講的，不過直到昨天看了 flickr 的原始碼時才知道我想講的是什麼。首先，其實這篇文章介紹的方法我覺得做的很好了，CSS hack的部份也還算乾淨，不過我很龜毛，覺得用到 inline 來做這種像是 block 的東西就是覺得怪怪的，昨天在看 flickr 時突然就在想：「他們是用什麼方法來排照片的？」打開原始碼一看，是 table，flickr 是用 table 來排照片的，我才回憶起之前買的 Everything You Know About CSS is...</b:summary>
+				<b:mainContent><p>大約兩週前在 Mozilla Webdev Blog 上有一篇 <a target="_blank" href="http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/">Cross-Browser Inline-Block</a> ，介紹如何用 inline block 代替 float 排列，好解決方塊高度不同時，float 排列會造成的問題，當然，這麼新(?)的 display 屬性，必定會有<span title="IE">瀏覽器</span>不支援，加上其實目前各家瀏覽器的行為表現都還不是很一致，所以整篇文章大部分的篇幅是在處理 cross browser 的問題。那時候 DK 長輩說我要是有什麼想法的話可以發一篇，那時候雖然覺得好像有什麼可以講的，不過直到昨天看了 flickr 的原始碼時才知道我想講的是什麼。</p><p>首先，其實這篇文章介紹的方法我覺得做的很好了，CSS hack的部份也還算乾淨，不過我很龜毛，覺得用到 inline 來做這種像是 block 的東西就是覺得怪怪的，昨天在看 flickr 時突然就在想：「他們是用什麼方法來排照片的？」打開原始碼一看，是 table，flickr 是用 table 來排照片的，我才回憶起之前買的 <a target="_blank" href="http://blog.othree.net/log/2008/12/18/csswrong/">Everything You Know About <span>CSS </span>is Wrong</a> 這本書，裡面主要介紹到的東西是 table-cell, table-row, ... 等表格元件的 display 屬性，又稱為 css-table，簡單說就是可以拿其他標籤來做 table，這些 display 屬性值可以讓 <span>HTML </span>文件保持它比較適合的語意，但是顯示上又能夠和 table 一樣排列，雖然我在 Everything You Know About <span>CSS </span>is Wrong 的書評中寫到我覺得拿 css-table 來排版還是怪怪的，但是如果是拿來排照片、商品目錄這種，我就突然覺得還不錯，不過 css-table 很理所當然的和 table 一樣，一列要幾個 cell 在寫 <span>HTML </span>markup 階段時就要決定了，不像 float 或是 inline-block 可以透過控制長度來調整，真的達到文件結構和顯示分開的理想。</p>
+
+<p>用 css-table 來排還是有它的好處，最明顯的就是同一列的 cell 高度都會一樣。想要元件高度會自動調整，然後同排的還會一樣高，目前只有用 table 的解法，不論是真的用 table 還是用 css-table，當然，盡量避免非表格資料的東西使用 table 標籤，所以比較好的處理方法還是 css-table。</p>
+
+<p>兩種方法各有他的優缺點，還很難說哪種方法比較好，先不考慮 css-table 方法在舊瀏覽器的支援度問題的話，我是覺得可以用整個版面的 layout 是固定寬度還是自動寬度來決定用那個方法比較好，如果版面是固定寬度的話比較適合用 css-table，反之則是用 inline block。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000571" baseName="post_1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-02-17</b:date>
+				<b:time>01:39:42</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>最近</b:title>
+			<b:content>
+				<b:summary>最近心境有些變化，不過這部份不適合在這講XD，要說的是關於這裡的事，目前有兩個計畫，一比較單純，就是這裡的樣式想改版，還想對應mobile device，雖然問題是有多少人會用行動裝置來看我的部落格～＿～，目前有兩個主要方向：黑底白字、減少頁面資訊。 另外一個就是 gugod 前陣子叫我推廣大家多用 CSS3，所以想寫一系列文章，一篇文章介紹一個 CSS3 的特色，包括還沒瀏覽器支援的，所以最近兩週都花了些時間在看 CSS3 Spec，不過越看越覺得自己認識實在還很少，而且另外還有一些東西我覺得可以介紹的，其實是 CSS2 的東西，但是因為 IE 過去一直不支援所以很少人用，這部份該不該放一起我還蠻猶豫的。 可惜我這週有工作要忙，所以至少要下週才會開始有東西出來吧（其實有壓力時才會想寫啊XD）。...</b:summary>
+				<b:mainContent><p>最近心境有些變化，不過這部份不適合在這講XD，要說的是關於這裡的事，目前有兩個計畫，一比較單純，就是這裡的樣式想改版，還想對應mobile device，雖然問題是有多少人會用行動裝置來看我的部落格～＿～，目前有兩個主要方向：黑底白字、減少頁面資訊。</p>
+
+<p>另外一個就是 <a target="_blank" href="http://gugod.org/">gugod</a> 前陣子叫我推廣大家多用 <span><span class="caps">CSS3</span></span>，所以想寫一系列文章，一篇文章介紹一個 <span><span class="caps">CSS3 </span></span>的特色，包括還沒瀏覽器支援的，所以最近兩週都花了些時間在看 <span><span class="caps">CSS3</span></span> Spec，不過越看越覺得自己認識實在還很少，而且另外還有一些東西我覺得可以介紹的，其實是 <span><span class="caps">CSS2 </span></span>的東西，但是因為 IE 過去一直不支援所以很少人用，這部份該不該放一起我還蠻猶豫的。</p>
+
+<p>可惜我這週有工作要忙，所以至少要下週才會開始有東西出來吧（其實有壓力時才會想寫啊XD）。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000570" baseName="safari-re-support">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-02-03</b:date>
+				<b:time>01:37:39</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Safari 的 re 支援</b:title>
+			<b:content>
+				<b:summary>過年前犯的錯誤，就是用到太新的 Regular Expression： (?!pattern) 結果 Safari 就出錯了，然後某站新年期間用 Safari 都可能出現錯誤，我還一度以為是 jQuery 1.31 還有 bug，結果看來是我的問題～＿～。 perl re...</b:summary>
+				<b:mainContent><p>過年前犯的錯誤，就是用到太新的 Regular Expression：</p>
+
+<pre><code>(?!pattern)</code></pre>
+
+<p>結果 Safari 就出錯了，然後某站新年期間用 Safari 都可能出現錯誤，我還一度以為是 jQuery 1.31 還有 bug，結果看來是我的問題～＿～。</p>
+
+<ul>
+<li><a target="_blank" href="http://www.perl.com/doc/manual/html/pod/perlre.html">perl re</a></li>
+</ul></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000569" baseName="cjk-fulltext-index">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-02-02</b:date>
+				<b:time>01:36:27</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>日文全文搜尋</b:title>
+			<b:content>
+				<b:summary>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。 MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。 轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上： ft_min_word_len=1 這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 MATCH, AGAINST 的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 LIKE 時要忽略平假名片假名可是很辛苦的～＿～。...</b:summary>
+				<b:mainContent><p>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。</p>
+
+<p>MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。</p>
+
+<p>轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上：</p>
+
+<pre><code>ft_min_word_len=1</code></pre>
+
+<p>這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 <span>MATCH, AGAINST </span>的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 <span>LIKE </span>時要忽略平假名片假名可是很辛苦的～＿～。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000568" baseName="order-while-search-multiple-fields">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-25</b:date>
+				<b:time>01:33:50</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>多欄位搜尋時的排序問題</b:title>
+			<b:content>
+				<b:summary>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。 問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 SQL 的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法： SELECT DISTINCT id, title, artist, artist_id, program FROM ( SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION SELECT *, 2 AS o FROM...</b:summary>
+				<b:mainContent><p>有看過 usability 的相關文件的話，或許會有看到關於搜尋的欄位，不要給太多的選項讓使用者調整，像是 Amazon 或是 Google 那樣，在初始的搜尋介面只有一個欄位讓人填寫，其實可以有比較多的成功搜尋，最近就試著做了這樣的設計，結果沒想到還有些背後的東西需要顧慮，而且目前我還沒想到個好解法。</p>
+
+<p>問題就是結果的排序該如何排，我做的是歌曲的搜尋，會希望歌名有符合關鍵字的放第一順位，演唱者的第二，然後才是其他的資訊，不過如果只是用 <span>SQL </span>的 OR 來做多欄位搜尋，結果會怎樣排序不是我們能決定的，ORDER 只能針對單一欄位的內容來進行排序，而不能根據那個欄位有符合到關鍵字來決定順序，我想了很久才想到目前的解法：</p>
+
+<pre><code>SELECT DISTINCT id, title, artist, artist_id, program FROM (
+    SELECT *, 1 AS o FROM songs WHERE id = 'keyword' UNION
+    SELECT *, 2 AS o FROM songs WHERE title LIKE 'keyword' UNION
+    SELECT *, 3 AS o FROM songs WHERE artist LIKE '%keyword%' UNION
+    SELECT *, 4 AS o FROM songs WHERE program LIKE '%keyword%' UNION
+    SELECT *, 5 AS o FROM songs WHERE utaidasi LIKE '%keyword%'
+) s ORDER BY o
+</code></pre>
+
+<p>大量的子查詢，還好我的資料庫小，使用人數也少，不然應該一下系統就撐不下去了吧，而且這個方法還有個問題，就是只能處理一個關鍵字，如果有兩個以上的關鍵字，似乎就沒辦法只用 <span>SQL </span>來做處理了，因為不同的關鍵字可能在不同欄位符合，要計算結果的優先順序會隨著關鍵字增加而變得越來越複雜，純用 <span>SQL </span>來寫感覺就是會整個慢到，不知道 Amazon 是怎麼處理這個問題的架構的，我想應該是自己開發或修改過的資料庫系統吧XD。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000567" baseName="iterm-alt-key-to-change-irssi-window">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-23</b:date>
+				<b:time>01:32:11</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>iTerm 用 alt + 數字鍵切換視窗</b:title>
+			<b:content>
+				<b:summary>Bookmarks &gt; Manage Profiles &gt; Keyboard Profiles &gt; Global &gt; Option Key as +ESC...</b:summary>
+				<b:mainContent><p>Bookmarks &gt; Manage Profiles &gt; Keyboard Profiles &gt; Global &gt; Option Key as +ESC</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000566" baseName="kakasi">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-20</b:date>
+				<b:time>01:30:27</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>kakasi</b:title>
+			<b:content>
+				<b:summary>kakasi 並不是火影忍者那位卡卡西，他的全名是 Kanji Kana Simple Inverter，用來轉換日文漢字、平假名、片假名和羅馬拼音的。 最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 IRC 上問人，在 zonble 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 apt-get install kakasi 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 UTF-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例： echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://kakasi.namazu.org/">kakasi</a> 並不是火影忍者那位卡卡西，他的全名是 <strong>Kanji Kana Simple Inverter</strong>，用來轉換日文漢字、平假名、片假名和羅馬拼音的。</p>
+
+<p>最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 <span>IRC </span>上問人，在 <a target="_blank" href="http://zonble.twbbs.org/">zonble</a> 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 <code>apt-get install kakasi</code> 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 <span>UTF</span>-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例：</p>
+
+<pre><code>
+echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK | iconv -f sjis -t utf8
+</code></pre>
+
+<p>就可以看到 <strong>マジンエイユウデン</strong> ，這樣我就可以在 python script 裡面呼叫一下命令列來轉字串，處理資料庫的資料，不過要放上網路的程式這樣呼叫其實蠻危險的，所以我又找了一下 <span>PHP </span>有沒有這東西可以用，沒想到還真的有，在 <a target="_blank" href="http://pecl.php.net/"><span>PECL</span></a> 裡面有人有 port，不過網站上看不到，我是從 google 搜尋到 mail list 的 <a target="_blank" href="http://marc.info/?l=php-i18n&amp;m=105914120819128&amp;w=2">舊文章</a> 才找到的，所以就照文內的安裝步驟抓下來 compile，ubuntu 記得要先 <code>apt-get install php5-dev</code> 才有辦法執行 <code>phpize</code> 初始化編譯環境，裝好後就可以在 phpinfo 裡面看到 kakasi 這個模組。</p>
+
+<p>然後測試的結果發現他也只能吃 sjis 字串，所以還是要用 iconv 轉一下碼，使用範例如下：</p>
+
+<pre><code>$roma = kakasi(iconv("UTF-8", "sjis", $qs[0]), array("-Hj", "-Jj", "-Kj"));
+</code></pre>
+
+<p>這串因為是轉成羅馬拼音的，所以最後沒在用一次 iconv 轉回 <span>UTF</span>-8，至於各種轉換的設定請參考 <code>kakasi -help</code>。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000565" baseName="ubuntu-yuicompressor">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-01-15</b:date>
+				<b:time>01:28:47</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>在ubuntu上套件安裝yuicompressor  </b:title>
+			<b:content>
+				<b:summary>很久之前DK長輩跟我說過FreeBSD上有人port好的，所以裝起來很方便，我自己放在學校的主機是用ubuntu，最近又搜尋一次發現也有人有編譯好提供套件安裝，是第三方的套件來源，又花了點時間查要怎樣用命令列新增第三方套件來源並加入public key，所以記錄一下。 首先把下面兩行用root權限加入 /etc/apt/sources.list 檔案裡： deb http://ppa.launchpad.net/launchpad/ubuntu intrepid main deb-src http://ppa.launchpad.net/launchpad/ubuntu intrepid main 接著一樣用root權限執行下面兩行指令來把public key加入apt裡面： gpg --keyserver keyserver.ubuntu.com --recv-keys 0A5174AF gpg --armor --export 0A5174AF | apt-key add - 然後用 apt-get update; apt-get install yuicompressor 就可以把 yuicompressor 裝好了，不過我這台P4 2.4的跑起來還有點慢。 PPA for...</b:summary>
+				<b:mainContent><p><a target="_blank" href="http://blog.othree.net/log/2008/10/11/yuicompressor/">很久之前DK長輩跟我說過FreeBSD上有人port好的</a>，所以裝起來很方便，我自己放在學校的主機是用ubuntu，最近又搜尋一次發現也有人有編譯好提供套件安裝，是第三方的套件來源，又花了點時間查要怎樣用命令列新增第三方套件來源並加入public key，所以記錄一下。</p>
+
+<p>首先把下面兩行用root權限加入 <strong>/etc/apt/sources.list</strong> 檔案裡：</p>
+
+<pre><code>deb http://ppa.launchpad.net/launchpad/ubuntu intrepid main
+deb-src http://ppa.launchpad.net/launchpad/ubuntu intrepid main</code></pre>
+
+<p>接著一樣用root權限執行下面兩行指令來把public key加入apt裡面：</p>
+
+<pre><code>gpg --keyserver keyserver.ubuntu.com --recv-keys 0A5174AF
+gpg --armor --export 0A5174AF | apt-key add -</code></pre>
+
+<p>然後用 <code>apt-get update; apt-get install yuicompressor</code> 就可以把 yuicompressor 裝好了，不過我這台P4 2.4的跑起來還有點慢。</p>
+
+<ul>
+<li><a target="_blank" href="https://launchpad.net/%7Elaunchpad/+archive"><span>PPA </span>for Canonical Launchpad Developers</a></li>
+<li><a target="_blank" href="http://wiki.scribus.net/index.php/Getting_Scribus_on_Ubuntu/Kubuntu_up_and_running">Getting Scribus on Ubuntu/Kubuntu up and running</a></li>
+</ul></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

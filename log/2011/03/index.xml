@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2011-03">March 2011</b:listData>
+
+			<b:previous>
+				<b:mTitle>February 2011</b:mTitle>
+				<b:mDate>2011/02</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>April 2011</b:mTitle>
+				<b:mDate>2011/04</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000679" baseName="jquery-ujs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-09</b:date>
+				<b:time>23:06:35</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery-ujs</b:title>
+			<b:content>
+				<b:summary>Rails 預設是配合 prototype 來做到一些 Ajax 的功能的，不過他其實也可以配合 jQuery ，只要配合 jQuery-ujs 這個 Gem 就可以，前陣子從頭開始學 Rails 3 的時候開始接觸到這個 plugin，後來花了些時間看他的原始碼，發現他的設計其實很棒，一如 Rails 的風格，非常的 Best Practice 的設計，因此事實上，不需要是 Rails Application 也很容易就可以利用它。 jQuery-ujs 全名 Unobtrusive scripting adapter for jQuery ，是由 Rails Team 的人開發，所以也是個官方支援，用了 custom event 和 data-* 屬性...</b:summary>
+				<b:mainContent><p><a href="http://rubyonrails.org/">Rails</a> 預設是配合 <a href="http://www.prototypejs.org/">prototype</a> 來做到一些 Ajax 的功能的，不過他其實也可以配合 <a href="http://jquery.com/">jQuery</a> ，只要配合 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 這個 Gem 就可以，前陣子從頭開始學 Rails 3 的時候開始接觸到這個 plugin，後來花了些時間看他的原始碼，發現他的設計其實很棒，一如 Rails 的風格，非常的 Best Practice 的設計，因此事實上，不需要是 Rails Application 也很容易就可以利用它。</p>
+
+<p>jQuery-ujs 全名 <strong>Unobtrusive scripting adapter for jQuery</strong> ，是由 Rails Team 的人開發，所以也是個官方支援，用了 <a href="http://benalman.com/news/2010/03/jquery-special-events/">custom event</a> 和 <a href="http://html5doctor.com/html5-custom-data-attributes/">data-* 屬性</a> 這兩種東西所建立出來的，不亂入的 JavaScript adapter ，jQuery-ujs 的基本設計是用 data-* 屬性來記錄連結或是表單的一些行為，是不是要用XHR 送 request ，HTTP request 是 POST、GET 還是 DELETE 等等，而這些 XHR request 的事件就用 ajax:beforeSend、ajax:success 等自定事件來處理，所以假設你要做一個連結，點下去會去遠端抓一個 JSON 資料回來，那你的 HTML 會要這樣寫：</p>
+
+<pre><code>&lt;a href="/getme.json" data-remote="true" data-type="json"&gt;Click Me !&lt;/a&gt;
+</code></pre>
+
+<p>然後 JavaScript 這邊這樣寫：</p>
+
+<pre><code>$('a').bind('ajax:success', function (data, status, xhr) {
+    //data is parsed JSON object
+    //do something with data here
+});
+</code></pre>
+
+<p>這樣就可以讓 <em>Click Me !</em> 這個連結被點到時，用 XHR Request 取代換頁到那個網址，然後回來的資料就會自動進 callback function ，而除了 ajax:success 外，還有 ajax:error 可以做錯誤處理，另外還有兩個事件，詳細的資料在官方 <a href="https://github.com/rails/jquery-ujs/wiki/ajax">文件</a> 有，另外還有一份文件則是關於 <a href="https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery">支援的 data-* 屬性</a> ，這兩份看一下就可以正確的使用 jQuery-ujs 了。</p>
+
+<p>而除了文件上寫到的，還有兩個特色是直接沿用 Rails 的 Best Practice ，第一個是 _method 參數，雖然 HTTP 有設計了四種 request method：POST、GET、PUT、DELETE，但是 HTML 表單卻只有 POST 和 GET 兩種可以用，但是 Rails 的 <a href="http://ihower.tw/rails3/routing.html">RESTful API</a> 定義的七種動作中，把四種 request method 都用到了，所以為了讓 PUT 和 DELETE 也可以動作， jQuery-ujs 會在必要的時候，多送一個 _method 參數，告訴 server 端，現在實際上是哪種 request 。</p>
+
+<p>另一個就是 <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">CSRF</a> 了，Rails 對付 CSRF 的方法就是很常見的，用 token，只不過它是寫在 <code>&lt;meta name='csrf-token'&gt;</code> 裡面，然後 jQuery-ujs 會去把它的值抓出來，也當成參數一起送出，如果是 XHR 的話，則會寫在 HTTP header 裡面，因為使用的方法都很簡單好懂，如果是自己寫的 server 架構，也可以依照這個原則來配合 jQuery-ujs 來檔 CSRF 的攻擊。</p>
+
+<p>這篇簡單介紹了幾個 <strong>jQuery-ujs</strong> 的特色，而我最後還有一個覺得可以使用它的理由，就是它現在是 Rails 官方維護，有持續更新，而且品質還算可靠（最近 jQuery 1.5 改了 ajax 結果就...）。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000678" baseName="markdown-syntax">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-08</b:date>
+				<b:time>21:28:45</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Markdown</b:title>
+			<b:content>
+				<b:summary>這個部落格最早的文章，我是直接寫原始的 HTML 碼，後來久了也是會嫌煩，就開始用 Textile ，功能蠻多，而且還可以寫 id、class 之類的，不過同時，我對另外一個也是類似的 text to HTML 的文件格式 Markdown 就一直很有印象，不過那時候只覺得他的語法功能比較少，還感覺不出他的特色，直到過了幾年，在學校寫了幾篇論文，有訂閱的 mailing-list，寫作的觀念和態度也被指導教授盯過之後，某一天又再次看到一篇 Markdown 格式的文件，它的連結用的很像是論文的參考文獻的用法，它的程式碼區塊很像我部落格上排版過顯示的樣子，而它的引言看起來和 BBS 的幾乎一樣，每個細節都非常的熟悉，於是再次讓我對它產生了興趣，就開始試著用 Markdown 來寫部落格了，沒想到一試成主顧，因為語法都很熟悉，幾乎是不用再花時間學，而且我覺得更棒的一點是 Markdown 的文件直接閱讀也很方便，它的語法可以讓文章的感覺保持的很好。 Markdown 是 John Gruber 在 2004 年左右推出的，然後他自己提供了 Perl 版的程式碼，當時支援 MovableType 和 BLOSXOM 兩個部落格系統，也可以用在命令列直接執行轉換文字檔，而現在使用比例最高的 Wordpress 也有人寫 外掛 讓它支援 ，程式語言的部份除了...</b:summary>
+				<b:mainContent><p>這個部落格最早的文章，我是直接寫原始的 HTML 碼，後來久了也是會嫌煩，就開始用 <a href="http://www.textism.com/tools/textile/">Textile</a> ，功能蠻多，而且還可以寫 id、class 之類的，不過同時，我對另外一個也是類似的 text to HTML 的文件格式 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 就一直很有印象，不過那時候只覺得他的語法功能比較少，還感覺不出他的特色，直到過了幾年，在學校寫了幾篇論文，有訂閱的 mailing-list，寫作的觀念和態度也被指導教授盯過之後，某一天又再次看到一篇 Markdown 格式的文件，它的連結用的很像是論文的參考文獻的用法，它的程式碼區塊很像我部落格上排版過顯示的樣子，而它的引言看起來和 BBS 的幾乎一樣，每個細節都非常的熟悉，於是再次讓我對它產生了興趣，就開始試著用 Markdown 來寫部落格了，沒想到一試成主顧，因為語法都很熟悉，幾乎是不用再花時間學，而且我覺得更棒的一點是 Markdown 的文件直接閱讀也很方便，它的語法可以讓文章的感覺保持的很好。</p>
+
+<p>Markdown 是  John Gruber 在 2004 年左右推出的，然後他自己提供了 Perl 版的程式碼，當時支援 <a href="http://www.movabletype.org/">MovableType</a> 和 <a href="http://www.blosxom.com/">BLOSXOM</a> 兩個部落格系統，也可以用在命令列直接執行轉換文字檔，而現在使用比例最高的 Wordpress 也有人寫 <a href="http://wordpress.org/extend/plugins/markdown-for-wordpress-and-bbpress/">外掛</a> 讓它支援 ，程式語言的部份除了 Perl 外，還有 <a href="http://michelf.com/projects/php-markdown/">PHP</a>、<a href="http://deveiate.org/projects/BlueCloth/">Ruby</a> 等，在 <a href="http://xbeta.org/wiki/show/Markdown">Markdown Wiki</a> 還有一份更詳細的清單，其實支援很廣泛，可惜的是大部分的 BSP 都沒有提供，目前似乎就只有 <a href="http://www.tumblr.com/">Tumblr</a> 而已，而這幾年在推廣上，我覺得有兩個網站的功勞不小，第一個是 <a href="https://github.com/">github</a> ，因為他支援用 Markdown 寫 README ，其實它還支援很多其他的格式，不過我看到使用最多的還是 Markdown，就這樣，為了寫出可以在 github 上顯示的良好結構的 HTML README 文件，很多人就寫起了 Markdown 文件， github 支援的格式其實是一個修改過的版本，叫做 <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavored Markdown</a> ，稍微有些行為上的不一樣，然後多加了一些方便 Github 使用的功能，不過整體而言其實可以說是一樣的文件格式。</p>
+
+<p>另一個則是 <a href="http://stackoverflow.com/">StackOverflow</a> ，Markdown 是 StackOverflow 發問、回覆所使用的預設格式，而且 StackOverflow 還有即時的預覽功能，實在很棒，我在深入了解之後，才發現 他們用的編輯器還有一段故事。StackOverflow 用的是 <em>John Fraser</em> 的 WMD Editor，他同時也是 JavaScript 版的 Markdown 轉換器，showdown.js 的作者，如果去看現在版本的 WMD Editor 和 showdown.js 的程式碼，都還可以看到他的名字，本來 StackOverflow 和 John 是有合作而不是只是單純拿它的編輯器來用，結果有一天突然就聯絡不上 John 了，就這樣一直無法聯繫上 John <a href="http://blog.stackoverflow.com/2008/12/reverse-engineering-the-wmd-editor/">四個月</a> 後，StackOveflow 的 Jeff Atwood 在網路跟大家說了這件事情，除了持續的想要連絡上 John 或是了解他狀況之外，還發起了一個工作，就是要對 WMD Editor 做反向工程，因為當時他們手上只有最小化過 JavaScript 檔案，裡面的變數名稱什麼的，都已經是失去意義的了，確認過授權沒問題後，一群社群朋友就開始幫忙了，後來他們利用 github 作為協做平台，成果就是現在 StackOverflow 的 <a href="https://github.com/cky/wmd">版本</a> ，至於 John Fraser 到底發生了什麼事，則是到現在也沒人知道。</p>
+
+<p>如果想要看看 Markdown 文件長怎樣，可以看看 <a href="http://daringfireball.net/projects/markdown/basics">Markdown Basics</a> 這篇文章，至於完整的文件，我正找了幾位網友在翻譯中，等全部處理好就會公開了，雖然這樣說，其實東西都在 github 上啦。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000677" baseName="update">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-07</b:date>
+				<b:time>00:41:22</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>狀況更新</b:title>
+			<b:content>
+				<b:summary>來更新一下近況，我之前有說過要寫一篇文章講一下我的 ID 由來，本來的計畫是想把前年的東京行的文章完成後在寫的，不過那篇文章一直寫不出來，因為那次行程對我蠻有意義的，結果就是一直寫不出來，所以最打算先寫 ID 來源那篇，不過來源沒什麼有趣的故事，只是多種東西的合成而已，不用太期待:P。 另外就是部落格這邊有些更新，本來是想要整個樣式大改，原來的目標是以可讀性為主，然後黑白主色，單欄的排版（比較不會有雜訊干擾讀者），不過實在是沒有個起頭，所以暫時還沒有進度，最近幾天發的文章比較多，想說短時間還是不會改版，所以就順便改了一些之前覺得不是很好的地方，CSS 也有微幅的修改，希望能夠讓訪客體驗更好點，其它就是還拿掉了引用和 OpenID 的支援，前者幾乎沒人用，後者實在是因為支援做的不太好，不然我自己還會用的說，大概就是這樣，最近預計要寫的文章還有三篇左右（隨時可能增加），應該也會維持一兩天發一篇的速度吧。...</b:summary>
+				<b:mainContent><p>來更新一下近況，我之前有說過要寫一篇文章講一下我的 ID 由來，本來的計畫是想把前年的東京行的文章完成後在寫的，不過那篇文章一直寫不出來，因為那次行程對我蠻有意義的，結果就是一直寫不出來，所以最打算先寫 ID 來源那篇，不過來源沒什麼有趣的故事，只是多種東西的合成而已，不用太期待:P。</p>
+
+<p>另外就是部落格這邊有些更新，本來是想要整個樣式大改，原來的目標是以可讀性為主，然後黑白主色，單欄的排版（比較不會有雜訊干擾讀者），不過實在是沒有個起頭，所以暫時還沒有進度，最近幾天發的文章比較多，想說短時間還是不會改版，所以就順便改了一些之前覺得不是很好的地方，CSS 也有微幅的修改，希望能夠讓訪客體驗更好點，其它就是還拿掉了引用和 OpenID 的支援，前者幾乎沒人用，後者實在是因為支援做的不太好，不然我自己還會用的說，大概就是這樣，最近預計要寫的文章還有三篇左右（隨時可能增加），應該也會維持一兩天發一篇的速度吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000676" baseName="default-font-style">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-06</b:date>
+				<b:time>11:44:53</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>預設字型樣式</b:title>
+			<b:content>
+				<b:summary>前兩天介紹 TypeHelper.js 時，有提供了我現在用的字型樣式設定， Ethan 則提出了它的 建議 ， Ethan 的建議如下： html { font-family: sans-serif; } html.hasFontSmoothing-false { font-family: "新細明體", PMingLiU, serif; } Ethan 的想法應該是在確定沒支援 Clear Type 的話，就改用新細明體為預設字型，不然就用系統內建的黑體（sans-serif），他的建議給我不少想法，讓我重新確認了一下我的需求： 如果系統支援 Clear Type，那就用微軟正黑體做預設字型（sans-serif） 不支援的話，用新細明體（serif） 假如無法判斷就當成沒有 Clear Type 不支援 JavaScript 的情形當成沒有 Clear Type 然後考慮到系統環境，事實上只有 Windows...</b:summary>
+				<b:mainContent><p>前兩天介紹 TypeHelper.js 時，有提供了我現在用的字型樣式設定， <a href="http://ethantw.net/">Ethan</a> 則提出了它的<a href="http://blog.othree.net/log/2011/03/04/detect-clear-type/#comment111723"> 建議</a> ， Ethan 的建議如下：</p>
+
+<pre><code>html {
+    font-family: sans-serif;
+}
+
+html.hasFontSmoothing-false {
+    font-family: "新細明體", PMingLiU, serif;
+}
+</code></pre>
+
+<p>Ethan 的想法應該是在確定沒支援 Clear Type 的話，就改用新細明體為預設字型，不然就用系統內建的黑體（sans-serif），他的建議給我不少想法，讓我重新確認了一下我的需求：</p>
+
+<ul>
+<li>如果系統支援 Clear Type，那就用微軟正黑體做預設字型（sans-serif）</li>
+<li>不支援的話，用新細明體（serif）</li>
+<li>假如無法判斷就當成沒有 Clear Type</li>
+<li>不支援 JavaScript 的情形當成沒有 Clear Type</li>
+</ul>
+
+<p>然後考慮到系統環境，事實上只有 Windows 需要做這個判斷，OSX 不用說自然是都有，Linux 雖然不一定，但是它並沒有新細明體和微軟正黑體的選擇問題，所以只要考慮 Windows 的情形，有沒有 Clear Type 和有沒有安裝微軟正黑體，最後其實只有改一行就是了：</p>
+
+<pre><code>html {
+    font-family: serif;
+}
+
+html.hasFontSmoothing-true {
+    font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+}
+</code></pre>
+
+<p>我的和 Ethan 的差別在於，分別是對於 JavaScript 有無的像下相容方式和他使用瀏覽器設定的黑體字型，或是強迫指定新細明體，我則是使用瀏覽器預設的明體字型，或是強迫指定微軟正黑體，我想選擇用哪個，就變成是網站主人的決定了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000675" baseName="revcanonical-and-relshortlink">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-05</b:date>
+				<b:time>22:34:51</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>RevCanonical and rel-shortlink</b:title>
+			<b:content>
+				<b:summary>前兩天介紹了 Canonical URL ，這篇要介紹的是有點關係的 RevCanonical ，Chris Shiflett 有寫一篇蠻不錯的 介紹 ，RevCanonical 是用來記錄自己的短網址的，以 Canonical URL 那篇的 Flickr 網址為例： http://www.flickr.com/photos/othree/5478867242/ http://flic.kr/p/9m9Cmj 第二個網址是 Flickr 官方提供的短網址，在繼續往下之前，先來說說為什麼要提供自己的短網址，Chris 那篇文章有列舉幾項： 網址是我的，是否正常運作由我負責 網址有其意義，像是 flic.kr 這個網域名稱就很明顯可以代表 Flickr 因為訪客可以看的出網址的意義，就不用擔心會跑到奇怪的地方 並且，短網址服務被認為是對安全性不好的，所以其實很多短網址服務是有提供 preview 的功能，訪客可以先確認會連到哪裡才確定要不要連結過去，但是這網址要從哪邊取得呢？其實就放在網頁的 HTML 碼裡面： &lt;link id="shorturl" rev="canonical" type="text/html" href="http://flic.kr/p/9m9Cmj"&gt; RevCanonical 就只是這樣而已，非常簡單，...</b:summary>
+				<b:mainContent><p>前兩天介紹了 <a href="http://blog.othree.net/log/2011/03/03/canonical-url/">Canonical URL</a> ，這篇要介紹的是有點關係的 <a href="http://revcanonical.appspot.com/">RevCanonical</a> ，Chris Shiflett 有寫一篇蠻不錯的 <a href="http://shiflett.org/blog/2009/apr/save-the-internet-with-rev-canonical">介紹</a> ，RevCanonical 是用來記錄自己的短網址的，以 Canonical URL 那篇的 Flickr 網址為例：</p>
+
+<pre><code>http://www.flickr.com/photos/othree/5478867242/
+http://flic.kr/p/9m9Cmj
+</code></pre>
+
+<p>第二個網址是 Flickr 官方提供的短網址，在繼續往下之前，先來說說為什麼要提供自己的短網址，Chris 那篇文章有列舉幾項：</p>
+
+<ul>
+<li>網址是我的，是否正常運作由我負責</li>
+<li>網址有其意義，像是 <strong>flic.kr</strong> 這個網域名稱就很明顯可以代表 Flickr</li>
+<li>因為訪客可以看的出網址的意義，就不用擔心會跑到奇怪的地方</li>
+</ul>
+
+<p>並且，短網址服務被認為是對安全性不好的，所以其實很多短網址服務是有提供 preview 的功能，訪客可以先確認會連到哪裡才確定要不要連結過去，但是這網址要從哪邊取得呢？其實就放在網頁的 HTML 碼裡面：</p>
+
+<pre><code>&lt;link id="shorturl" rev="canonical" type="text/html" href="http://flic.kr/p/9m9Cmj"&gt;
+</code></pre>
+
+<p>RevCanonical 就只是這樣而已，非常簡單， 當初會使用這樣的標記，是因為 Kevin Marks 覺得短網址和 Canonical URL 的某種層面的 <a href="http://twitter.com/#!/kevinmarks/status/1448424167">反向關係</a> ，並且提議給 Kellan Elliott-McCrea ，Kellan 當時為了 Flickr 的短網址系統不知道該如何在網頁原始碼內標記而 <a href="http://laughingmeme.org/2009/04/03/url-shortening-hinting/">徵詢意見</a>。</p>
+
+<p>不過其實現在已經不推薦使用 RevCanonical 了， Mark Nottingham 提出了不少它的 <a href="http://www.mnot.net/blog/2009/04/14/rev_canonical_bad">問題</a> ，其中像是 canonical 的語意不正確，rev 屬性已經從 HTML5 中被 <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2006-July/006888.html">拿掉了</a> ，還好 Microformats 有個 <a href="http://microformats.org/wiki/rel-shortlink">rel-shortlink</a> ，而且是已經成為 Spec 的標準之一，寫起來也是很簡單，範例如下：</p>
+
+<pre><code>&lt;link rel="shortlink" href="http://youtu.be/zJhTLzTjhwM"&gt;
+</code></pre>
+
+<p>Microformat 的 wiki 頁面上有列出不少在使用 rel-shortlink 的網站，像是 <a href="http://en.blog.wordpress.com/2009/08/14/shorten/">wordpress.com</a> ，還有 <a href="http://youtube-global.blogspot.com/2009/12/make-way-for-youtube-links.html">YouTube</a> 也是，不過至於 Flickr，現在還是繼續在使用 RevCanonical 就是，希望有天能改掉。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000674" baseName="html5-developer-edition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-05</b:date>
+				<b:time>16:19:36</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>HTML5 Web Developer Edition</b:title>
+			<b:content>
+				<b:summary> HTML5 標準的文件 和以前的版本有些地方有很大的不同，像是標籤的語意說明比起以前就詳細很多，還會提出範例，另外也更詳細的規範了瀏覽器應該怎樣實作的細節，也因此整份文件的長度非常驚人，WHATWG 那邊有提供 A4 PDF 的版本 ，將近有 800 頁的內容，非常驚人， HTML 4 也才接近 400 頁而已，文字量則接近 3 倍，而這麼多的內容其實不是所有人都需要的，例如網頁設計師，它就不需要理解一些 API 的實作細節，他只要知道不同的標籤應該怎樣使用，怎樣編排網頁結構符合語義，因此 Ben Schwars 就做出了一份針對 Web Developer 的 HTML5 文件「HTML5 - Edition for Web Developers」，只保留了 Web Developer 需要的資訊，而且還整個把頁面樣式大改，不只是更漂亮而已，還針對可讀性下了不少 功夫 ，還有搜尋、單一章節的目錄等，閱讀的體驗實在是提昇非常多。 而一如往常的，W3C 那邊也有一份...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5498667619/" title="Flickr 上 othree 的 HTML5 -- Edition for Web Developers"><img src="http://farm6.static.flickr.com/5171/5498667619_1817f41fba.jpg" width="500" height="475" alt="HTML5 -- Edition for Web Developers" /></a></p>
+
+<p><a href="http://dev.w3.org/html5/spec/">HTML5 標準的文件</a> 和以前的版本有些地方有很大的不同，像是標籤的語意說明比起以前就詳細很多，還會提出範例，另外也更詳細的規範了瀏覽器應該怎樣實作的細節，也因此整份文件的長度非常驚人，WHATWG 那邊有提供 <a href="http://www.whatwg.org/specs/web-apps/current-work/html-a4.pdf">A4 PDF 的版本</a> ，將近有 800 頁的內容，非常驚人， <a href="http://www.w3.org/TR/html401/html40.pdf.gz">HTML 4</a> 也才接近 400 頁而已，文字量則接近 3 倍，而這麼多的內容其實不是所有人都需要的，例如網頁設計師，它就不需要理解一些 API 的實作細節，他只要知道不同的標籤應該怎樣使用，怎樣編排網頁結構符合語義，因此 <a href="http://germanforblack.com/">Ben Schwars</a> 就做出了一份針對 Web Developer 的 HTML5 文件「<a href="http://developers.whatwg.org/">HTML5 - Edition for Web Developers</a>」，只保留了 Web Developer 需要的資訊，而且還整個把頁面樣式大改，不只是更漂亮而已，還針對可讀性下了不少 <a href="http://www.germanforblack.com/articles/moving-towards-readable-w3c-specs">功夫</a> ，還有搜尋、單一章節的目錄等，閱讀的體驗實在是提昇非常多。</p>
+
+<p>而一如往常的，W3C 那邊也有一份 <a href="http://dev.w3.org/html5/spec-author-view/">HTML5 Edition for Web Authors</a> ，兩份其實是同樣的文件，我在 Ben Schwars 的 <a href="http://www.slideshare.net/benschwarz/building-a-better-web">Building a better web</a> 這份投影片中看到的網址就是 W3C 這邊的，目前的關係大概也只是不同的更新版本吧，我剛發現時幾乎是只有配色不同，現在樣式兩邊就有些差異了，不過章節內容還是差不多，順序有些調動，喔對了，這份投影片第 14 頁還有個不錯 W3C 標誌。</p>
+
+<p>最後要提的是 Ben Schwars 是自己主動建立了這份文件的，他在看 HTML5 標準後受不了，跑去 WHATWG IRC 說他要做這東西，編輯說 ok 後他就開始動手了，他也把這段 <a href="http://germanforblack.com/articles/taking-the-web-back">過程</a> 寫出來，呼籲大家盡量參與標準的發展，不要只是對 W3C 有意見卻不參與不貢獻。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000673" baseName="detect-clear-type">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-04</b:date>
+				<b:time>00:40:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>偵測 Clear Type</b:title>
+			<b:content>
+				<b:summary>Windows 上的網頁中文字型一直是很多設計師的痛苦來源，像我這種喜歡黑體字型的，就喜歡微軟正黑體大於新細明體很多，當然如果是蘋果電腦或是有很多 Linux 版本都已經內建字型渲染和預設的中文黑體字型（Linux 部分我比較不確定，有錯誤煩請指正），使用這些平台的看中文網頁比起 Windows 的使用者實在是愉悅很多，因為字型漂亮，網頁看起來就漂亮100倍，然後心情也跟著好起來。 雖然微軟從 Windows Vista 開始在系統上使用了新的預設字體「微軟正黑體」，不過網頁的使用上卻有不少的問題，也一再的被提出來討論，最近剛正式成立的 W3C 中文小組 內也才剛又被提出來 討論中 ，如果直接從 CSS 中強制設定微軟正黑體當網頁的中文字型，那會遇到一個比較直接的問題是，假如訪客的電腦是 Windows Vista 以前的版本，又剛好有裝微軟正黑體，但是沒開 Clear Type ，那結果是他會看到一個不太適合閱讀的字體，因為微軟正黑體如果沒有字型渲染的話，其實看起來不是很好，會覺得淡淡的顏色不夠深，辨識度還比新細明體差很多。 這樣其實蠻可惜的，因為很多人的系統其實是可以使用微軟正黑體來瀏覽網頁，但是卻因為需要像下相容，預設給了他們新細明體，要處理這個問題，最好的方法就是照漸進增強的原則，有支援字型渲染的給他微軟正黑體，沒支援的給他新細明體，IE 的話很簡單，看一下 screen.fontSmoothingEnabled 就好了，不過其他幾個瀏覽器可只能哭哭了。還好 canvas 發展到了可以在裡面畫字，而這部份的功能其他幾家瀏覽器都實作的比較快，於是 Zoltan 就想到用這個功能來判斷系統有沒有支援字體渲染，作法就是先用到處都有的字型畫個字進去，然後再看幾個關鍵點的顏色來判斷，如果有支援的話它就會在 html 標籤加上 hasFontSmoothing-true 這個 class，然後我就可以這樣寫 CSS： html {...</b:summary>
+				<b:mainContent><p>Windows 上的網頁中文字型一直是很多設計師的痛苦來源，像我這種喜歡黑體字型的，就喜歡微軟正黑體大於新細明體很多，當然如果是蘋果電腦或是有很多 Linux 版本都已經內建字型渲染和預設的中文黑體字型（Linux 部分我比較不確定，有錯誤煩請指正），使用這些平台的看中文網頁比起 Windows 的使用者實在是愉悅很多，因為字型漂亮，網頁看起來就漂亮100倍，然後心情也跟著好起來。</p>
+
+<p>雖然微軟從 Windows Vista 開始在系統上使用了新的預設字體「<a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=87e726a9-5c79-4a73-9347-78a557314d0b&amp;displayLang=zh-tw">微軟正黑體</a>」，不過網頁的使用上卻有不少的問題，也一再的被提出來討論，最近剛正式成立的 <a href="http://www.w3.org/html/ig/zh/">W3C 中文小組</a> 內也才剛又被提出來 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Mar/0098.html">討論中</a> ，如果直接從 CSS 中強制設定微軟正黑體當網頁的中文字型，那會遇到一個比較直接的問題是，假如訪客的電腦是 Windows Vista 以前的版本，又剛好有裝微軟正黑體，但是沒開 <a href="http://www.microsoft.com/typography/cleartype/tuner/step1.aspx">Clear Type</a> ，那結果是他會看到一個不太適合閱讀的字體，因為微軟正黑體如果沒有字型渲染的話，其實看起來不是很好，會覺得淡淡的顏色不夠深，辨識度還比新細明體差很多。</p>
+
+<p>這樣其實蠻可惜的，因為很多人的系統其實是可以使用微軟正黑體來瀏覽網頁，但是卻因為需要像下相容，預設給了他們新細明體，要處理這個問題，最好的方法就是照漸進增強的原則，有支援字型渲染的給他微軟正黑體，沒支援的給他新細明體，IE 的話很簡單，看一下 <code>screen.fontSmoothingEnabled</code> 就好了，不過其他幾個瀏覽器可只能哭哭了。還好 canvas 發展到了可以在裡面畫字，而這部份的功能其他幾家瀏覽器都實作的比較快，於是  Zoltan 就想到用這個功能來判斷系統有沒有支援字體渲染，作法就是先用到處都有的字型畫個字進去，然後再看幾個關鍵點的顏色來判斷，如果有支援的話它就會在 html 標籤加上 <code>hasFontSmoothing-true</code> 這個 class，然後我就可以這樣寫 CSS：</p>
+
+<pre><code>html {
+    font-family: sans-serif;
+}
+html.hasFontSmoothing-true {
+    font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+}</code></pre>
+
+<p>Christian Beier 還有提供一個 <a href="https://gist.github.com/283689">修改</a> 過的版本，讓事件綁定改用比較多人用的 jQuery，不然本來的要用 <a href="http://www.useragentman.com/shared/js/EventHelpers.js">EventHelpers.js</a> ，是個神祕（網站上找不到介紹）且知名度不高的 JS Event Library，而實際上這部份的修改很簡單，所以你也可以根據你的需要改用其他的方法來做一樣的事件綁定。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000672" baseName="canonical-url">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-03</b:date>
+				<b:time>00:57:59</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Canonical URL</b:title>
+			<b:content>
+				<b:summary>我本來以為我應該寫過這東西了，可是剛剛找卻找不到文章，決定就當成沒寫過，介紹一下這個兩年前的東西。Canonical URL 是為了解決網路上很多不同網址可能其實是同樣頁面的問題，例如下面三個網址其實都是同樣的 Amazon 商品： http://www.amazon.com/gp/product/0596522304/ref=s9_qpp_gw_p14_ir03?pf_rd_m=ATVPDKIKX0DER&amp;amp;pf_rd_s=center-3&amp;amp;pf_rd_r=0BC0MGCJ16BHCYNY6AYG&amp;amp;pf_rd_t=101&amp;amp;pf_rd_p=470938811&amp;amp;pf_rd_i=507846 http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304 http://www.amazon.com/dp/0596522304 但是可能是因為來源不同，Amazon 藉由不同的網址記錄一些行為，像是不同的廣告來源，或是為使用者提供不同的相關訊息等，不過這些網址其實都應該是一樣的，都是代表那本書的頁面，這時就產生個問題了，三個網址在搜尋引擎的紀錄是分開的，頁面整體的影響力也因此被低估，同樣會有這個問題的還有像是 flickr： http://www.flickr.com/photos/othree/5478867242/in/set-72157626142121334/ http://www.flickr.com/photos/othree/5478867242/in/photostream/ http://www.flickr.com/photos/othree/5478867242/ http://flic.kr/p/9m9Cmj 或是 T 客邦： http://www.techbang.com.tw/posts/5033-ios-great-copy-mac-os-x-107-lion-info http://www.techbang.com.tw/posts/5033 這些不同長度的網址其實都是一樣的頁面，卻因為被當成不同的頁面而讓分數下降，不只是網站本身的 SEO 問題，對於搜尋引擎來說也是一個會讓搜尋結果排序不好的問題，為解決這個問題，Google、微軟、Yahoo!、ask.com 等搜尋引擎大廠在 2009 共同合作，制定了 canonical URL 這樣的一個機制，機制很簡單，就是在網頁內加上一個 link 標籤記錄實際上代表的網址，以第一個 Amazon 的網址為例，每個網址開進去看他的原始碼，都可以發現有一個如下的 link 標籤 &lt;link rel="canonical" href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304" /&gt; 裡面的...</b:summary>
+				<b:mainContent><p>我本來以為我應該寫過這東西了，可是剛剛找卻找不到文章，決定就當成沒寫過，介紹一下這個兩年前的東西。Canonical URL 是為了解決網路上很多不同網址可能其實是同樣頁面的問題，例如下面三個網址其實都是同樣的 Amazon 商品：</p>
+
+<pre><code>http://www.amazon.com/gp/product/0596522304/ref=s9_qpp_gw_p14_ir03?pf_rd_m=ATVPDKIKX0DER&amp;amp;pf_rd_s=center-3&amp;amp;pf_rd_r=0BC0MGCJ16BHCYNY6AYG&amp;amp;pf_rd_t=101&amp;amp;pf_rd_p=470938811&amp;amp;pf_rd_i=507846
+http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304
+http://www.amazon.com/dp/0596522304
+</code></pre>
+
+<p>但是可能是因為來源不同，Amazon 藉由不同的網址記錄一些行為，像是不同的廣告來源，或是為使用者提供不同的相關訊息等，不過這些網址其實都應該是一樣的，都是代表那本書的頁面，這時就產生個問題了，三個網址在搜尋引擎的紀錄是分開的，頁面整體的影響力也因此被低估，同樣會有這個問題的還有像是 flickr：</p>
+
+<pre><code>http://www.flickr.com/photos/othree/5478867242/in/set-72157626142121334/
+http://www.flickr.com/photos/othree/5478867242/in/photostream/
+http://www.flickr.com/photos/othree/5478867242/
+http://flic.kr/p/9m9Cmj
+</code></pre>
+
+<p>或是 T 客邦：</p>
+
+<pre><code>http://www.techbang.com.tw/posts/5033-ios-great-copy-mac-os-x-107-lion-info
+http://www.techbang.com.tw/posts/5033
+</code></pre>
+
+<p>這些不同長度的網址其實都是一樣的頁面，卻因為被當成不同的頁面而讓分數下降，不只是網站本身的 SEO 問題，對於搜尋引擎來說也是一個會讓搜尋結果排序不好的問題，為解決這個問題，<a href="http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html">Google</a>、<a href="http://www.bing.com/community/site_blogs/b/webmaster/archive/2009/02/12/partnering-to-help-solve-duplicate-content-issues.aspx">微軟</a>、<a href="http://www.ysearchblog.com/2009/02/12/fighting-duplication-adding-more-arrows-to-your-quiver/">Yahoo!</a>、<a href="http://blog.ask.com/2009/02/ask-is-going-canonical.html">ask.com</a> 等搜尋引擎大廠在 2009 共同合作，制定了 canonical URL 這樣的一個機制，機制很簡單，就是在網頁內加上一個 link 標籤記錄實際上代表的網址，以第一個 Amazon 的網址為例，每個網址開進去看他的原始碼，都可以發現有一個如下的 link 標籤</p>
+
+<pre><code>&lt;link rel="canonical" href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304" /&gt;
+</code></pre>
+
+<p>裡面的 <strong>href</strong> 的值，就是這些網址的實際目標，代表這些網址們實際上的 URL 都是這個實際目標，搜尋引擎看到的話就會把該網址的權重、分數等等算在它上面，也就可以簡單解決上面提到的問題，如果你用 <a href="http://www.google.com.tw/search?hl=zh-TW&amp;q=amazon+even+fast+website&amp;meta=">Google 搜尋 Amazon 上面那本書</a> ，就會發現連結過去的網址就是 canonical 設定的網址了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

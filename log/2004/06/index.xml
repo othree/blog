@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2004-06">June 2004</b:listData>
+
+			<b:previous>
+				<b:mTitle>May 2004</b:mTitle>
+				<b:mDate>2004/05</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>July 2004</b:mTitle>
+				<b:mDate>2004/07</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000072" baseName="sleipnir-1-6-use-gecko">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-06-22</b:date>
+				<b:time>01:45:56</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Sleipnir 1.6使用Gecko引擎</b:title>
+			<b:content>
+				<b:summary>Sleipnir是日本很受歡迎的瀏覽器，和MyIE一樣用IE當核心，功能很多，除了最基本的分頁瀏覽外，很多實用的小功能，連Mouse Gesture都內建了，還有很多複雜到我沒去試過的功能。我也用了好一陣子，最近出了最新的1.60版在更新列表中有一項「Gecko ActiveX Control に対応した。（一部の機能は Gecko では動作しません）mozctlx.dll がレジストリに登録されていると Gecko エンジンが使用できるようになります。プロキシの設定等は prefs.js から行ってください。」英文版是這樣寫的「It corresponded to Gecko ActiveX Control. (A part of functions do not operate in Gecko) If mozctlx.dll is registered into the registry Gecko engine can be used now. Setup...</b:summary>
+				<b:mainContent><p><a href="http://www20.pos.to/~sleipnir/eng/">Sleipnir</a>是日本很受歡迎的瀏覽器，和MyIE一樣用IE當核心，功能很多，除了最基本的分頁瀏覽外，很多實用的小功能，連Mouse Gesture都內建了，還有很多複雜到我沒去試過的功能。我也用了好一陣子，最近出了最新的1.60版在更新列表中有一項「<strong>Gecko ActiveX Control に対応した。（一部の機能は Gecko では動作しません）mozctlx.dll がレジストリに登録されていると Gecko エンジンが使用できるようになります。プロキシの設定等は prefs.js から行ってください。</strong>」英文版是這樣寫的「<strong>It corresponded to Gecko ActiveX Control. (A part of functions do not operate in Gecko) If mozctlx.dll is registered into the registry Gecko engine can be used now. Setup of a proxy etc. Please carry out from prefs.js.</strong>」</p></b:mainContent>
+				<b:extendContent><p>一開始看到這功能時很驚訝又很興奮，因為剛接觸這軟體時，在官方網頁的希望功能列表裏就有人提出，不過開發者是說沒辦法辦到，沒想到現在竟然真出來了，真是讓我很意外。不過事情不能高興的太早，因為我升級到1.60的那天，一直找不到要怎摩設定成Gecko引擎。直到前兩天，在[PCZONE":http://www.pczone.com/]看到有人貼出一個網站，我想應該稱他為<a href="http://www3.sppd.ne.jp/bugtracker/wiki/index.php?FrontPage">Slepnir Wiki</a>吧，是作者發表測試版的地方，而除了發表測試版之外還有一些資料，例如這次要講的Gecko引擎的部份，就有一個<a href="http://www3.sppd.ne.jp/bugtracker/wiki/index.php?Gecko">Gecko特設頁</a>，裡面提到為什麼要加入Gecko引擎的功能，如何使用Gecko引擎的方法，還有一些設定（如Proxy之類的），我也是看到這夜後，才知道要如何上Sleipnir使用Gecko引擎。</p>
+
+<p>裝起來蠻簡單的，分為3個步驟：</p>
+
+
+<ol>
+<li>先上<a href="http://www.iol.ie/~locka/mozilla/control.htm">Mozilla ActiveX Control</a>，在他的Download下載<strong>Mozilla ActiveX Control 1.7 test 1</strong>，這是現在用的版本，Mozilla 1.7正式版也已經推出了，我想這裡過陣子也會更新吧，抓哪一版不是很重要，比較重要的是之後的安裝路徑，和登錄的路徑要一致。檔案抓下來後直接安裝即可，我是用照他預設的安裝路徑「<strong>C:\Program Files\Mozilla ActiveX Control v1.7t1\</strong>」，如果要改到其他位置也可以，只要記住就可以了。</li>
+<li>安裝完畢後，打開開始工作列，選擇執行，輸入「<strong>regsvr32 "C:\Program Files\Mozilla ActiveX Control v1.7t1\mozctlx.dll</strong>」並執行它，如果前面安裝Mozilla ActiveX Control的路徑有改，那這裡也要跟著改成相對應的「regsvr32 "安裝路徑\mozctlx.dll"」，執行無誤的話應該會有一個確認登錄成功的對話視窗出現，直接按OK即可。</li>
+<li>上面兩個步驟完成後，執行Slepnir，File→New→Use Gecko這項打勾，然後重新執行Sleipnir就可以了（其實也可以只開新視窗，基本上它是以視窗為單位決定使用的引擎，而不是整個程式要同時用一個引擎），如果不確定是否有成功，可以上<a href="http://www.meyerweb.com/eric/css/edge/">css/edge</a>看看，例如<a href="http://www.meyerweb.com/eric/css/edge/complexspiral/demo.html">這頁</a>，如果是IE來看的畫背景圖會有問題，不過Gecko引擎來處理就很正常了:P</li>
+</ol>
+
+
+
+<p>雖然Sleipnir 1.60已經支援了Gcko引擎，不過仍然有些問題，最主要的是設定很麻煩，設定的方法我就不詳細介紹了，簡單的說是要在某個位置建立一個<strong>prefs.js</strong>的檔案，然後在裡面用手打的方式輸入設定，設定起來還蠻不方便的，不過和Mozilla的進階設定一樣就是(Mozilla有些功能也是要像這樣編修檔案才能出來，例如關閉MS自創的跑馬燈標籤)，如果有興趣了解目前會需要做哪些設定的人（例如proxy），可以到前面提到Gecko引擎特設頁參考。</p>
+
+<p>現在這應該算是第一個同時支援IE和Gecko引擎的瀏覽器吧，雖然在Gecko的部分還有不少小問題，還是非常值得慶賀一番，不過話雖如此說，我還是繼續Mozilla Firefox和Sleipnir一起用:P</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000071" baseName="change-isp">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-06-05</b:date>
+				<b:time>00:54:34</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>換ISP</b:title>
+			<b:content>
+				<b:summary>要把用了4年的東森換掉了，因為他聯外實在是太差了，不過要退時客服小姐說可以考慮要他們的ADSL，他們的ADSL聯外不會像cable那樣差，聽到時我是蠻驚訝的，只是我沒去追究原因就是。 新換的是HiNet ADSL 8M/640k的方案，不過因為配合裝ADSL免費裝了新的室內電話，所以被綁約兩年，要是ADSL或是電話在兩年內要退掉，各要賠償2000元，應該也是可以只退掉一邊啦。昨天去附近的中華電信服務處申請了，還沒來裝，據說8M的理想距離是離機房500m以內，我家大約是6xx，不知到訊號會衰退到怎樣的程度，還是要等裝好了才會知道，這陣子應該有不少人申裝ADSL，希望不要拖太久，不然我可能會錯過東森拆機前裝好，就變成會沒網路過日子了XD。 其實我本來有考慮SoNet和SeedNet的，SoNet據說連日本很快，其他地方普普，還有就是不用撥接，SeedNet則沒有特別打聽，不過也不少人用，但是，我申請時兩家的8M方案都還沒出來啊...orz，還有就是HiNet聯外的頻寬確實還是最大，我逛最少的站大概就是台灣的吧，英文的日文的簡體的都不少，還有些香港站，台灣的主要還是BBS和幾個固定的站台而已，所以聯外對我來說是很重要的。真期待ADSL快點裝好。...</b:summary>
+				<b:mainContent><p>要把用了4年的東森換掉了，因為他聯外實在是太差了，不過要退時客服小姐說可以考慮要他們的ADSL，他們的ADSL聯外不會像cable那樣差，聽到時我是蠻驚訝的，只是我沒去追究原因就是。</p>
+
+<p>新換的是HiNet ADSL 8M/640k的方案，不過因為配合裝ADSL免費裝了新的室內電話，所以被綁約兩年，要是ADSL或是電話在兩年內要退掉，各要賠償2000元，應該也是可以只退掉一邊啦。昨天去附近的中華電信服務處申請了，還沒來裝，據說8M的理想距離是離機房500m以內，我家大約是6xx，不知到訊號會衰退到怎樣的程度，還是要等裝好了才會知道，這陣子應該有不少人申裝ADSL，希望不要拖太久，不然我可能會錯過東森拆機前裝好，就變成會沒網路過日子了XD。</p>
+
+<p>其實我本來有考慮SoNet和SeedNet的，SoNet據說連日本很快，其他地方普普，還有就是不用撥接，SeedNet則沒有特別打聽，不過也不少人用，但是，我申請時兩家的8M方案都還沒出來啊...orz，還有就是HiNet聯外的頻寬確實還是最大，我逛最少的站大概就是台灣的吧，英文的日文的簡體的都不少，還有些香港站，台灣的主要還是BBS和幾個固定的站台而已，所以聯外對我來說是很重要的。真期待ADSL快點裝好。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000070" baseName="pputty">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2004-06-05</b:date>
+				<b:time>00:30:25</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>pputty</b:title>
+			<b:content>
+				<b:summary>http://ntu.csie.org/~piaip/prjs/pputty/ piaip改的PuTTY，PuTTY是一個很不錯的win32 terminal軟體，支援telnet、SSH…etc，我會開始使用PuTTY是因為我把我的Windows常駐在日文模式，不過平常還有中文的telnet BBS站台要上，理所當然的遇到編碼的問題。找遍各個BBS軟體，最後只有PuTTY可以解決這個問題，不過在PuTTY下使用新注音卻有個BUG，選字時，方向鍵只按一下，他卻會一次移動兩格，看似小問題，在打字時卻是異常辛苦，有時候要的字就是剛好選不到。還好piaip把這個問題修正了（那時稱為lputty），實在是令我受益良多，而他最近因為種種原因（詳細請見pputty網站），決定推出自己改的pputty（piaip's PuTTY extension Project），還作了新的UI，希望能讓PuTTY對新手更友善。要是可以的話，我倒是蠻希望支援雙色字（這個似乎不好改），背景前景顏色分開設定和單視窗多tab的環境，但是都是非必要的功能啦。...</b:summary>
+				<b:mainContent><p><a href="http://ntu.csie.org/~piaip/prjs/pputty/">http://ntu.csie.org/~piaip/prjs/pputty/</a></p>
+
+<p><a href="http://ntu.csie.org/~piaip/">piaip</a>改的<a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</a>，PuTTY是一個很不錯的win32 terminal軟體，支援telnet、SSH…etc，我會開始使用PuTTY是因為我把我的Windows常駐在日文模式，不過平常還有中文的telnet <span class="caps">BBS</span>站台要上，理所當然的遇到編碼的問題。找遍各個BBS軟體，最後只有PuTTY可以解決這個問題，不過在PuTTY下使用新注音卻有個BUG，選字時，方向鍵只按一下，他卻會一次移動兩格，看似小問題，在打字時卻是異常辛苦，有時候要的字就是剛好選不到。還好piaip把這個問題修正了（那時稱為lputty），實在是令我受益良多，而他最近因為種種原因（詳細請見pputty網站），決定推出自己改的pputty（piaip's PuTTY extension Project），還作了新的UI，希望能讓PuTTY對新手更友善。要是可以的話，我倒是蠻希望支援雙色字（這個似乎不好改），背景前景顏色分開設定和單視窗多tab的環境，但是都是非必要的功能啦。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="1"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

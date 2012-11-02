@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000540" baseName="javascript-closure-issue">JavaScript Closure</b:listData>
+
+			<b:previous>
+				<b:mTitle>Konami Command</b:mTitle>
+				<b:mDate>2008-09-20</b:mDate>
+				<b:mBase>konami-command</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>超展開檢視</b:mTitle>
+				<b:mDate>2008-09-29</b:mDate>
+				<b:mBase>super-expand</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000540" baseName="javascript-closure-issue">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-09-27</b:date>
+				<b:time>02:21:41</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript Closure</b:title>
+			<b:content>
+				<b:summary>這篇想寫很久了，test case的檔案也寫好超過一個月了，這次用了3(?)個case來說明，以下每個test-case都有三個h2標籤，然後透過getElementsByTagName來取得這三個h2，接著用for迴圈來對每個h2加上click事件，click後會alert i的值出來，i是for迴圈的索引值。首先來看一下第一個case的script： var subHeads = document.getElementsByTagName('h2'); for (var i=0; i&lt;subHeads.length; i++) { subHeads[i].onclick = function () { alert(i); }; } 這個case中，使用非常直觀的想法，不過他的結果是每個h2 click下去都會alert "3"出來，實際上每個click都是執行一個function，這個function會執行alert function，並且送 i 這個變數作為輸入值，不過實際上使用者click動作發生時，迴圈已經跑過一遍，而且 i 的值已經變成3了，所以你不管click哪一個h2，實際上都是做 alert(3) 這個動作。...</b:summary>
+				<b:mainContent><p>這篇想寫很久了，test case的檔案也寫好超過一個月了，這次用了3(?)個case來說明，以下每個test-case都有三個h2標籤，然後透過getElementsByTagName來取得這三個h2，接著用for迴圈來對每個h2加上click事件，click後會alert i的值出來，i是for迴圈的索引值。首先來看一下<a href="http://othree.net/projects/test-case/closure/test1.html">第一個case</a>的script：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads[i].onclick = function () {
+        alert(i);
+    };
+}</code></pre>
+
+
+
+<p>這個case中，使用非常直觀的想法，不過他的結果是每個h2 click下去都會alert "3"出來，實際上每個click都是執行一個function，這個function會執行alert function，並且送 <strong>i</strong> 這個變數作為輸入值，不過實際上使用者click動作發生時，迴圈已經跑過一遍，而且 i 的值已經變成3了，所以你不管click哪一個h2，實際上都是做 alert(3) 這個動作。</p></b:mainContent>
+				<b:extendContent><p>要解決這個問題，有兩個方法可以處理，第一個是利用function來做closure把變數的scope獨立出來，另一個方法是用eval來做function，首先來看<a href="http://othree.net/projects/test-case/closure/test2.html">第一個作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    (function () {
+        var ii = i;
+        subHeads[i].onclick = function () {
+            alert(ii);
+        };
+    })();
+}</code></pre>
+
+
+
+<p>這個方法是用匿名function把 <strong>ii</strong> 這個變數的scope獨立起來，而 ii 的值就是在這個匿名function執行時 i 的值，這樣每個click function裡面的 ii 就都各自獨立，不會互相影響到。再來看<a href="http://othree.net/projects/test-case/closure/test3.html">第二個作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    eval(&quot;subHeads[i].onclick = function () {&quot; +
+         &quot;    alert(&quot;+i+&quot;);&quot; +
+         &quot;};&quot;);
+}</code></pre>
+
+
+
+<p>可以看到整個event function的指派都是用eval來達成的，比較特別的是要用 <strong>i</strong> 時，我是跳脫字串，直接用 i變數 的值，這個作法其實是讓每個click function的內容都不太一樣（alert的輸入值不同）。而除了這兩個方法之外，我還蠻喜歡把屬性加到DOM的elementNode上的，所以來看看<a href="http://othree.net/projects/test-case/closure/test4.html">我習慣的作法</a>：</p>
+
+
+
+<pre><code>var subHeads = document.getElementsByTagName('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads[i].attr_i = i;
+    subHeads[i].onclick = function () {
+        alert(this.attr_i);
+    };
+}</code></pre>
+
+
+
+<p>在這個範例理，我先在 h2 node 下面加上 attr_i 這個屬性，值就是 i 當時的值，而click function內就是送 attr_i 給alert function，這樣結果也可以如我們所預期。不過如果是用jQuery的話就要注意了，來看看最後這個<a href="http://jquery.com/">jQuery</a>的<a href="http://othree.net/projects/test-case/closure/test5.html">例子</a>：</p>
+
+
+
+<pre><code>var subHeads = $('h2');
+for (var i=0; i&lt;subHeads.length; i++) {
+    subHeads.eq(i).attr_i = i;
+    subHeads.eq(i).click(function () {
+        alert($(this).attr_i);
+    });
+}</code></pre>
+
+
+
+<p>因為jQuery沒有cache機制，所以上面這個例子會發生錯誤， $(this).attr_i 會不存在，會alert出 'undefined' ，要新增屬性的話要直接加到最基本的 <span class="caps">DOM</span> Node 上，不可以放在jQuery物件上，要存取DOM Node可以用 <code>subHead.get(0)</code> 或是 <code>subHead[0]</code> ，後者我沒測試過就是。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="4">
+
+				<b:comment commentID="092106" entryID="000540">
+					<b:author>
+						<b:authorName>Jacky</b:authorName>
+						<b:authorEmail>jackysee@gmail.com</b:authorEmail>
+						<b:authorUrl>http://jacky.seezone.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-09-27</b:date>
+						<b:time>10:30:39</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>應該用 $(this).attr(&#8216;attr<em>i&#8217;) 吧.
+另外，如果想存非 string 的資料，可以用 $(this).data(&#8216;attr</em>i&#8217;, dataObject);</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="092212" entryID="000540">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-09-27</b:date>
+						<b:time>20:38:42</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>data()我是沒用過，看來可以用，不過attr我確定他是會寫到屬性裡面，但是不正確（標準內有）的屬性名稱不會生效。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="092229" entryID="000540">
+					<b:author>
+						<b:authorName>Jacky</b:authorName>
+						<b:authorEmail>jackysee@gmail.com</b:authorEmail>
+						<b:authorUrl>http://jacky.seezone.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-09-27</b:date>
+						<b:time>22:17:19</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>oh? 但我試過是可以自訂attribute的~ 
+寫了個簡單測試 <a href="http://jackysee.googlepages.com/attr.html" rel="nofollow">http://jackysee.googlepages.com/attr.html</a></p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="092577" entryID="000540">
+					<b:author>
+						<b:authorName>othree.net</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2008-09-29</b:date>
+						<b:time>16:56:23</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>如果我記憶沒錯的話，那就可能是版本差異了@@</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/538">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

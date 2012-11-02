@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000714" baseName="device-pixel-ratio">Device Pixel Ratio</b:listData>
+
+			<b:previous>
+				<b:mTitle>SEIKO STANDARD</b:mTitle>
+				<b:mDate>2012-10-23</b:mDate>
+				<b:mBase>seiko-standard</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Open Graph Protocol, Twitter Card</b:mTitle>
+				<b:mDate>2012-11-02</b:mDate>
+				<b:mBase>opengraph-protocol-twitter-card</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000714" baseName="device-pixel-ratio">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-10-28</b:date>
+				<b:time>22:42:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Device Pixel Ratio</b:title>
+			<b:content>
+				<b:summary> 這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8128174518/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" width="500" height="333" alt="2x compare to 1x"/></a></p>
+
+<p>這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的 width 是 1024px，而其實際的螢幕點數有 2048 點，除上 Device Pixel Ratio 是 2，結果會剛好回到 1024，對於網頁製作上來說，直接當程式 1024px 寬的畫面來處理基本上就沒問題了。</p>
+
+<p>雖然說好像瀏覽器都幫你把東西解決了，不過其實還會有一個問題需要處理，那就是圖片 asset 的問題，原來的圖片在這些高 DPI 的螢幕上顯示，解析度不夠，結果都會有鉅齒出現，而這裡出現的就是 Device Pixel Ratio 了，要得到 Device Pixel Ratio 的方法目前有兩種，一個是 CSS 用 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">media query</a>：</p>
+
+<pre><code>@media (-webkit-min-device-pixel-ratio: 2),
+       (min--moz-device-pixel-ratio: 2),
+       (min-resolution: 2dppx)
+</code></pre>
+
+<p>這個 <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries#-moz-device-pixel-ratio">MDN 提供的範例</a>中，共有三行，第一行是 WebKit Based 瀏覽器用的，像是 iOS 內建的瀏覽器就是用這行，第二行則是給比較舊的 Firefox （&lt; 16）用的，第三行則是 <a href="http://www.w3.org/TR/css3-mediaqueries/#resolution">W3C 提出的標準</a>，W3C 的應該還是會是以後的主流，dppx 代表的是 dots per pixel，除了這個單位外其實還可以用 dpi, dpcm 等密度單位，考量的比較全面，CSS 那邊管的圖片像是元件背景之類的，透過這個 media query 就可以順利的在需要的時候換成不同品質的圖片，另外還有一種圖片來源是動態從 JavaScript 那邊插入的，這目前也有個方法可以支援：</p>
+
+<pre><code>window.devicePixelRatio
+</code></pre>
+
+<p>直接讀取這個值就可以知道現在的 device pixel ratio 了，然後根據讀到的值來選擇適當的圖片，不過講到網頁的圖片，其實最先應該想到的是 img 標籤才是，偏偏這兩個方法都不直接適用，而且實際上目前也還沒有針對這個問題，可直接使用的新機制，有人有寫 jQuery plugin 來把圖片換掉，我的作法則是第一次瀏覽不管，不過同時就把 device pixel ratio 數值寫進 cookie，這樣下次使用者來訪，或是他點到其他頁時，server 端就可以知道他用的 device pixel ratio，然後先一步把 img 要丟出的圖片網址處理好，以 flickr 的圖片為例，我平常貼的都是 500px 寬的縮圖，要給 ratio 2 的裝置看則需要 1000px 以上，flickr 最大的縮圖是 1024px，剛好很接近 1000px，又很幸運的兩者檔案路徑只有在檔名最後面差一個 _b ，所以我就很開心的拿來用了，在 XSLT parse 時把 img 標籤，src 是 flickrfarm 來的，檔名結尾不是 _o 的（代表原始檔）的圖片路徑都加上 _b ，結果的差異就是上面第一張圖那樣，其他還抓了不少比較圖，不過都要到 flickr 那去開原始檔比較才看得出差異。</p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8128147819/" title="Flickr 上 othree 的 2x compare to 1x"><img src="http://farm9.staticflickr.com/8043/8128147819_45f5f33352.jpg" width="500" height="333" alt="2x compare to 1x"/></a>
+<figcaption>比較圖原始大小</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127784377/" title="Flickr 上 othree 的 Support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8052/8127784377_5db2831fb7.jpg" width="375" height="500" alt="Support device pixel ratio 2x"/></a>
+<figcaption>2x 圖片</figcaption>
+</figure></p>
+
+<p><figure class="thumbnail">
+<a href="http://www.flickr.com/photos/othree/8127811546/" title="Flickr 上 othree 的 Not support device pixel ratio 2x"><img src="http://farm9.staticflickr.com/8336/8127811546_4e62af122b.jpg" width="375" height="500" alt="Not support device pixel ratio 2x"/></a>
+<figcaption>1x 圖片</figcaption>
+</figure></p>
+
+<p>這支寫 device pixel ratio cookie 的程式很簡單，我也放上 github 了，就叫 <a href="https://github.com/othree/dpr-cookie">dpr-cookie</a>，完全 stand alone，不需要其他 Library，有需要的歡迎使用，還沒放上 License 宣告，不過會用 MIT License。</p>
+
+<p>最後提一下 img 標籤的問題，WHATWG 目前是有<a href="http://www.w3.org/community/respimg/2012/05/11/respimg-proposal/">候選方案</a>的，不過我覺得各方意見還很多，要有個定案應該不會太快，看起來會像是這樣：</p>
+
+<pre><code>&lt;img src="face-600-200@1.jpg" alt=""
+    set="face-600-200@1.jpg 600w 200h 1x, face-600-200@2.jpg 600w 200h 2x, face-icon.png 200w 200h"&gt;
+</code></pre>
+
+<p>或是：</p>
+
+<pre><code>&lt;picture alt=""&gt;
+    &lt;source src="mobile.jpg" /&gt;
+    &lt;source src="large.jpg" media="min-width: 600px" /&gt;
+    &lt;source src="large_1.5x-res.jpg" media="min-width: 600px, min-device-pixel-ratio: 1.5" /&gt;
+    &lt;img src="mobile.jpg" /&gt;
+&lt;/picture&gt;
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="275400" entryID="000714">
+					<b:author>
+						<b:authorName>Alica</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-10-29</b:date>
+						<b:time>01:54:14</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>對於不想屯一堆大小圖的情況，有什麼簡便CSS怪招可以讓圖檔在這種高PPI螢幕上以原解析度（就是看起來依舊銳利但會縮小）顯示嘛？想得到的法子似乎要用JS才成…</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="275956" entryID="000714">
+					<b:author>
+						<b:authorName>OOO</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl></b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-10-30</b:date>
+						<b:time>01:05:58</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>@Alica 如果你只要 server 一張比較高解析度的圖，那什麼都不用作摟，img 標籤指定比較小的寬高就可以了，CSS 背景圖就比較麻煩，要新一點的 background-size 才能指定大小。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/712">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

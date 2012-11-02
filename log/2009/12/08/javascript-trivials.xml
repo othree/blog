@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000596" baseName="javascript-trivials">JavaScript 二三事</b:listData>
+
+			<b:previous>
+				<b:mTitle>json2.js 和 toJSON()</b:mTitle>
+				<b:mDate>2009-09-30</b:mDate>
+				<b:mBase>json2js-and-tojson</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>String and String Object</b:mTitle>
+				<b:mDate>2009-12-21</b:mDate>
+				<b:mBase>string-and-string-object</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000596" baseName="javascript-trivials">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2009-12-08</b:date>
+				<b:time>17:20:53</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript 二三事</b:title>
+			<b:content>
+				<b:summary>好久沒寫 blog 了，來記錄一下最近和 JavaScript 有關的消息，首先是新書， High Performance JavaScript ，是除了 JavaScript Ninja 外我最近比較期待的新書，不過兩本都是明年才會出，JavaScript Ninja 是 John Resig 寫的，目標讀者是開發 JavaScript Framework 的開發者，所以內容相當深，我有先買預覽的電子版，裡面的 code 就常常看到暈頭， High Performance 那本則是 YUI 的開發者之一 Zakas Nicholas 寫的，之前也寫過不少書，不過我都沒看過就是，目前期待主要是書名的關係。 第二個則是 Loading JavaScript as strings 這篇文章，提到如果先把 js 程式碼先用字串形式讀進來，再用 eval() 來執行速度反而會比直接邊讀邊執行還要快，這項技巧可以用在...</b:summary>
+				<b:mainContent><p>好久沒寫 blog 了，來記錄一下最近和 JavaScript 有關的消息，首先是新書， <a href="http://www.amazon.com/dp/059680279X/">High Performance JavaScript</a> ，是除了 <a href="http://jsninja.com/">JavaScript Ninja</a> 外我最近比較期待的新書，不過兩本都是明年才會出，JavaScript Ninja 是 <a href="http://ejohn.org/">John Resig</a> 寫的，目標讀者是開發 JavaScript Framework 的開發者，所以內容相當深，我有先買預覽的電子版，裡面的 code 就常常看到暈頭， High Performance 那本則是 <span class="caps">YUI </span>的開發者之一 <a href="http://www.nczonline.net/">Zakas Nicholas</a> 寫的，之前也寫過不少書，不過我都沒看過就是，目前期待主要是書名的關係。</p>
+
+<p>第二個則是 <a href="http://www.stevesouders.com/blog/2009/12/07/downloading-javascript-as-strings/">Loading JavaScript as strings</a> 這篇文章，提到如果先把 js 程式碼先用字串形式讀進來，再用 eval() 來執行速度反而會比直接邊讀邊執行還要快，這項技巧可以用在 js 量大的 web application，對於之後才要用的 code 就用這種方法讀，讓頁面的生成可以快一點，詳細的內容在 12/8 的 <a href="http://en.oreilly.com/velocityfall09#faster-load-times"><span class="caps">O'R</span>eilly Velocity Online Conference</a> 會介紹並 demo ，換算成台灣時間好像是週三凌晨一點多開始。</p>
+
+<p>最後一個不是新東西，其實是 <a href="http://code.google.com/speed/articles/optimizing-javascript.html">Google 的文章</a> ，裡面有講到會造成 memory leak 的原因，第一種是 IE 的 event function 可能會造成記憶體浪費（其實原因和下面的很像），解法是自己寫一個 event dispatcher ，像是 jQuery 就是這樣，第二種就是把資料附加在 <span class="caps">DOM </span>元件上，例如：</p>
+
+
+
+<pre><code>var node = document.getElementById('getMe');
+node.myData = 123;
+</code></pre>
+
+
+
+<p>像這樣可以把資料付在 <span class="caps">DOM </span>node 物件上，再某些情況下很有用，但是如果這些附加的資料包含其他 <span class="caps">DOM </span>node 的話，就會造成 memory leak ，建議的處理方法是完全不用這種特性，至於 jQuery 則是有個 <a href="http://docs.jquery.com/Data">data</a> 可以用，用法就像是 key, value 的資料型態。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/594">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

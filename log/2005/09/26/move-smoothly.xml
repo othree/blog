@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000267" baseName="move-smoothly">讓你的特效更平順</b:listData>
+
+			<b:previous>
+				<b:mTitle>Opera 9 coming</b:mTitle>
+				<b:mDate>2005-09-24</b:mDate>
+				<b:mBase>opera-9-coming</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>學校檔了IRC的port</b:mTitle>
+				<b:mDate>2005-09-29</b:mDate>
+				<b:mBase>irc-port-banned</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000267" baseName="move-smoothly">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2005-09-26</b:date>
+				<b:time>20:13:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>讓你的特效更平順</b:title>
+			<b:content>
+				<b:summary>前幾天在改hidden links時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用時間來決定要移動到哪。...</b:summary>
+				<b:mainContent><p>前幾天在改<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hidden links</a>時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用<strong>時間</strong>來決定要移動到哪。</p></b:mainContent>
+				<b:extendContent><p>我以前的方法有兩個缺點，一就是移動可能很不順，二則是可能會因為重複的觸發起動條件而造成速度倍增，但是改用時間來作判斷的話就沒有這個問題。在javascript中要取得時間很簡單，應該是每個瀏覽器的方法都一樣（Safari、IE、Opera、Firefox這幾個我測試過都OK）：</p>
+
+
+
+<pre><code>timestamp = new Date().getTime();</code></pre>
+
+
+
+<p>這樣就可以取得unix time stamp了（從1970年1月1日開始計算的時間戳記），只不過比較特別的是單位是1/1000秒，而要使用這個時間戳記，你還需要另外一個時間戳記記錄你的特效開始的時間。有了這兩個時間戳記後，要讓效果能跑，還需要幾個東西，一是物件的起迄點，二是特效要花多久時間（週期），三是移動的方式（ex: 要減速效果。也可以說是位置的時間函數）。</p>
+
+<p>以上幾樣東西都設定好了之後，我們就可以寫主要的script了，假設我的時間戳記變數名稱是<code>ts</code>、開始的時間戳記是<code>st</code>、物件要從<code>sp</code>處移動到<code>ep</code>處、移動要花一秒鐘，用等速度移動，那我可以寫成下面這樣：</p>
+
+
+
+<pre><code>ts = new Date().getTime();
+p = (ts - ss) / 1000;
+p = (p&gt;1)1:p;
+target.style.top = sp + (ep - sp) * p + &quot;px&quot;;
+if (p == 1)
+{
+	clearInterval(Interval);
+}</code></pre>
+
+
+
+<p>第一行在取得現在的時間，第二行則是算現在是進行到整個動作的那個部分（幾個週期），第三行則是避免移動過頭，第四行才是指定新的位置給物件，接下來的if回圈則是動作結束的處理，大概的流程就是這樣，我把我的hidden links的這部份的code貼在下面，可以看的更完整：</p>
+
+
+
+<pre><code>function hlGo (type)
+{
+	if (!ts &amp;&amp; !(type ^ hlFlag))
+	{
+		(type)?(tS.display = &quot;block&quot;,delEvent(tA, &quot;mouseover&quot;, hlMouseIn)):delEvent(body, &quot;mousemove&quot;, hlMouseMove);
+		ss = ts = new Date().getTime();
+		this.Interval = setInterval(&quot;hlMove(&quot;+type+&quot;);&quot;, 20);
+	}
+}
+
+function hlMove (type)
+{
+	ts = new Date().getTime();
+	p = (ts-ss)/period;
+	p = (p&gt;1)?1:p;
+	p = (type)?p:1-p;
+	tS.top = iP+Math.sin(p*Math.PI/2)*tH+&quot;px&quot;;
+	if (isO) tS.opacity = p*0.96;
+	if (!(p - type))
+	{
+		if (type &amp;&amp; autofocus) tList.firstChild.firstChild.focus();
+		ts = 0;
+		clearInterval(this.Interval);
+		(type)?addEvent(body, &quot;mousemove&quot;, hlMouseMove):(tS.display = &quot;none&quot;,addEvent(tA, &quot;mouseover&quot;, hlMouseIn));
+	}
+}</code></pre>
+
+
+
+<p>要觸發事件只要呼叫<code>hlGo</code>這個function就好了，有多的判斷都是針對hidden links的需要放上的，除了<code>hlGo</code>裡面會先判斷<code>ts</code>受否不存在才繼續，這是為了避免重複觸發動作，當然事件結束就要把<code>ts</code>給清除掉（設為0）。</p></b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="000870" entryID="000267">
+					<b:author>
+						<b:authorName>EvenWu</b:authorName>
+						<b:authorEmail>evendesign@gmail.com</b:authorEmail>
+						<b:authorUrl>http://1pxcare.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-09-27</b:date>
+						<b:time>01:26:12</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>奇怪了我怎麼看不到特效在哪裡
+我這邊有 ie, firefox, safari 三種，哪個能看到？</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="000871" entryID="000267">
+					<b:author>
+						<b:authorName>EvenWu</b:authorName>
+						<b:authorEmail>evendesign@gmail.com</b:authorEmail>
+						<b:authorUrl>http://1pxcare.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2005-09-27</b:date>
+						<b:time>01:28:15</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>不好意思，我剛剛看到了&#8230;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/266">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

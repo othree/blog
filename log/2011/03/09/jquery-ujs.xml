@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000679" baseName="jquery-ujs">jQuery-ujs</b:listData>
+
+			<b:previous>
+				<b:mTitle>Markdown</b:mTitle>
+				<b:mDate>2011-03-08</b:mDate>
+				<b:mBase>markdown-syntax</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Markdown 介紹與文件</b:mTitle>
+				<b:mDate>2011-04-07</b:mDate>
+				<b:mBase>markdown-intro-and-doc</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000679" baseName="jquery-ujs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-09</b:date>
+				<b:time>23:06:35</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>jQuery-ujs</b:title>
+			<b:content>
+				<b:summary>Rails 預設是配合 prototype 來做到一些 Ajax 的功能的，不過他其實也可以配合 jQuery ，只要配合 jQuery-ujs 這個 Gem 就可以，前陣子從頭開始學 Rails 3 的時候開始接觸到這個 plugin，後來花了些時間看他的原始碼，發現他的設計其實很棒，一如 Rails 的風格，非常的 Best Practice 的設計，因此事實上，不需要是 Rails Application 也很容易就可以利用它。 jQuery-ujs 全名 Unobtrusive scripting adapter for jQuery ，是由 Rails Team 的人開發，所以也是個官方支援，用了 custom event 和 data-* 屬性...</b:summary>
+				<b:mainContent><p><a href="http://rubyonrails.org/">Rails</a> 預設是配合 <a href="http://www.prototypejs.org/">prototype</a> 來做到一些 Ajax 的功能的，不過他其實也可以配合 <a href="http://jquery.com/">jQuery</a> ，只要配合 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 這個 Gem 就可以，前陣子從頭開始學 Rails 3 的時候開始接觸到這個 plugin，後來花了些時間看他的原始碼，發現他的設計其實很棒，一如 Rails 的風格，非常的 Best Practice 的設計，因此事實上，不需要是 Rails Application 也很容易就可以利用它。</p>
+
+<p>jQuery-ujs 全名 <strong>Unobtrusive scripting adapter for jQuery</strong> ，是由 Rails Team 的人開發，所以也是個官方支援，用了 <a href="http://benalman.com/news/2010/03/jquery-special-events/">custom event</a> 和 <a href="http://html5doctor.com/html5-custom-data-attributes/">data-* 屬性</a> 這兩種東西所建立出來的，不亂入的 JavaScript adapter ，jQuery-ujs 的基本設計是用 data-* 屬性來記錄連結或是表單的一些行為，是不是要用XHR 送 request ，HTTP request 是 POST、GET 還是 DELETE 等等，而這些 XHR request 的事件就用 ajax:beforeSend、ajax:success 等自定事件來處理，所以假設你要做一個連結，點下去會去遠端抓一個 JSON 資料回來，那你的 HTML 會要這樣寫：</p>
+
+<pre><code>&lt;a href="/getme.json" data-remote="true" data-type="json"&gt;Click Me !&lt;/a&gt;
+</code></pre>
+
+<p>然後 JavaScript 這邊這樣寫：</p>
+
+<pre><code>$('a').bind('ajax:success', function (data, status, xhr) {
+    //data is parsed JSON object
+    //do something with data here
+});
+</code></pre>
+
+<p>這樣就可以讓 <em>Click Me !</em> 這個連結被點到時，用 XHR Request 取代換頁到那個網址，然後回來的資料就會自動進 callback function ，而除了 ajax:success 外，還有 ajax:error 可以做錯誤處理，另外還有兩個事件，詳細的資料在官方 <a href="https://github.com/rails/jquery-ujs/wiki/ajax">文件</a> 有，另外還有一份文件則是關於 <a href="https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery">支援的 data-* 屬性</a> ，這兩份看一下就可以正確的使用 jQuery-ujs 了。</p>
+
+<p>而除了文件上寫到的，還有兩個特色是直接沿用 Rails 的 Best Practice ，第一個是 _method 參數，雖然 HTTP 有設計了四種 request method：POST、GET、PUT、DELETE，但是 HTML 表單卻只有 POST 和 GET 兩種可以用，但是 Rails 的 <a href="http://ihower.tw/rails3/routing.html">RESTful API</a> 定義的七種動作中，把四種 request method 都用到了，所以為了讓 PUT 和 DELETE 也可以動作， jQuery-ujs 會在必要的時候，多送一個 _method 參數，告訴 server 端，現在實際上是哪種 request 。</p>
+
+<p>另一個就是 <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">CSRF</a> 了，Rails 對付 CSRF 的方法就是很常見的，用 token，只不過它是寫在 <code>&lt;meta name='csrf-token'&gt;</code> 裡面，然後 jQuery-ujs 會去把它的值抓出來，也當成參數一起送出，如果是 XHR 的話，則會寫在 HTTP header 裡面，因為使用的方法都很簡單好懂，如果是自己寫的 server 架構，也可以依照這個原則來配合 jQuery-ujs 來檔 CSRF 的攻擊。</p>
+
+<p>這篇簡單介紹了幾個 <strong>jQuery-ujs</strong> 的特色，而我最後還有一個覺得可以使用它的理由，就是它現在是 Rails 官方維護，有持續更新，而且品質還算可靠（最近 jQuery 1.5 改了 ajax 結果就...）。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/678">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

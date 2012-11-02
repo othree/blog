@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000672" baseName="canonical-url">Canonical URL</b:listData>
+
+			<b:previous>
+				<b:mTitle>jQuery Deferred Object</b:mTitle>
+				<b:mDate>2011-02-27</b:mDate>
+				<b:mBase>jquery-deferred-object</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>偵測 Clear Type</b:mTitle>
+				<b:mDate>2011-03-04</b:mDate>
+				<b:mBase>detect-clear-type</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000672" baseName="canonical-url">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2011-03-03</b:date>
+				<b:time>00:57:59</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Canonical URL</b:title>
+			<b:content>
+				<b:summary>我本來以為我應該寫過這東西了，可是剛剛找卻找不到文章，決定就當成沒寫過，介紹一下這個兩年前的東西。Canonical URL 是為了解決網路上很多不同網址可能其實是同樣頁面的問題，例如下面三個網址其實都是同樣的 Amazon 商品： http://www.amazon.com/gp/product/0596522304/ref=s9_qpp_gw_p14_ir03?pf_rd_m=ATVPDKIKX0DER&amp;amp;pf_rd_s=center-3&amp;amp;pf_rd_r=0BC0MGCJ16BHCYNY6AYG&amp;amp;pf_rd_t=101&amp;amp;pf_rd_p=470938811&amp;amp;pf_rd_i=507846 http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304 http://www.amazon.com/dp/0596522304 但是可能是因為來源不同，Amazon 藉由不同的網址記錄一些行為，像是不同的廣告來源，或是為使用者提供不同的相關訊息等，不過這些網址其實都應該是一樣的，都是代表那本書的頁面，這時就產生個問題了，三個網址在搜尋引擎的紀錄是分開的，頁面整體的影響力也因此被低估，同樣會有這個問題的還有像是 flickr： http://www.flickr.com/photos/othree/5478867242/in/set-72157626142121334/ http://www.flickr.com/photos/othree/5478867242/in/photostream/ http://www.flickr.com/photos/othree/5478867242/ http://flic.kr/p/9m9Cmj 或是 T 客邦： http://www.techbang.com.tw/posts/5033-ios-great-copy-mac-os-x-107-lion-info http://www.techbang.com.tw/posts/5033 這些不同長度的網址其實都是一樣的頁面，卻因為被當成不同的頁面而讓分數下降，不只是網站本身的 SEO 問題，對於搜尋引擎來說也是一個會讓搜尋結果排序不好的問題，為解決這個問題，Google、微軟、Yahoo!、ask.com 等搜尋引擎大廠在 2009 共同合作，制定了 canonical URL 這樣的一個機制，機制很簡單，就是在網頁內加上一個 link 標籤記錄實際上代表的網址，以第一個 Amazon 的網址為例，每個網址開進去看他的原始碼，都可以發現有一個如下的 link 標籤 &lt;link rel="canonical" href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304" /&gt; 裡面的...</b:summary>
+				<b:mainContent><p>我本來以為我應該寫過這東西了，可是剛剛找卻找不到文章，決定就當成沒寫過，介紹一下這個兩年前的東西。Canonical URL 是為了解決網路上很多不同網址可能其實是同樣頁面的問題，例如下面三個網址其實都是同樣的 Amazon 商品：</p>
+
+<pre><code>http://www.amazon.com/gp/product/0596522304/ref=s9_qpp_gw_p14_ir03?pf_rd_m=ATVPDKIKX0DER&amp;amp;pf_rd_s=center-3&amp;amp;pf_rd_r=0BC0MGCJ16BHCYNY6AYG&amp;amp;pf_rd_t=101&amp;amp;pf_rd_p=470938811&amp;amp;pf_rd_i=507846
+http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304
+http://www.amazon.com/dp/0596522304
+</code></pre>
+
+<p>但是可能是因為來源不同，Amazon 藉由不同的網址記錄一些行為，像是不同的廣告來源，或是為使用者提供不同的相關訊息等，不過這些網址其實都應該是一樣的，都是代表那本書的頁面，這時就產生個問題了，三個網址在搜尋引擎的紀錄是分開的，頁面整體的影響力也因此被低估，同樣會有這個問題的還有像是 flickr：</p>
+
+<pre><code>http://www.flickr.com/photos/othree/5478867242/in/set-72157626142121334/
+http://www.flickr.com/photos/othree/5478867242/in/photostream/
+http://www.flickr.com/photos/othree/5478867242/
+http://flic.kr/p/9m9Cmj
+</code></pre>
+
+<p>或是 T 客邦：</p>
+
+<pre><code>http://www.techbang.com.tw/posts/5033-ios-great-copy-mac-os-x-107-lion-info
+http://www.techbang.com.tw/posts/5033
+</code></pre>
+
+<p>這些不同長度的網址其實都是一樣的頁面，卻因為被當成不同的頁面而讓分數下降，不只是網站本身的 SEO 問題，對於搜尋引擎來說也是一個會讓搜尋結果排序不好的問題，為解決這個問題，<a href="http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html">Google</a>、<a href="http://www.bing.com/community/site_blogs/b/webmaster/archive/2009/02/12/partnering-to-help-solve-duplicate-content-issues.aspx">微軟</a>、<a href="http://www.ysearchblog.com/2009/02/12/fighting-duplication-adding-more-arrows-to-your-quiver/">Yahoo!</a>、<a href="http://blog.ask.com/2009/02/ask-is-going-canonical.html">ask.com</a> 等搜尋引擎大廠在 2009 共同合作，制定了 canonical URL 這樣的一個機制，機制很簡單，就是在網頁內加上一個 link 標籤記錄實際上代表的網址，以第一個 Amazon 的網址為例，每個網址開進去看他的原始碼，都可以發現有一個如下的 link 標籤</p>
+
+<pre><code>&lt;link rel="canonical" href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304" /&gt;
+</code></pre>
+
+<p>裡面的 <strong>href</strong> 的值，就是這些網址的實際目標，代表這些網址們實際上的 URL 都是這個實際目標，搜尋引擎看到的話就會把該網址的權重、分數等等算在它上面，也就可以簡單解決上面提到的問題，如果你用 <a href="http://www.google.com.tw/search?hl=zh-TW&amp;q=amazon+even+fast+website&amp;meta=">Google 搜尋 Amazon 上面那本書</a> ，就會發現連結過去的網址就是 canonical 設定的網址了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="6">
+
+				<b:comment commentID="111699" entryID="000672">
+					<b:author>
+						<b:authorName>timdream</b:authorName>
+						<b:authorEmail>timdream@gmail.com</b:authorEmail>
+						<b:authorUrl>http://timc.idv.tw/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-04</b:date>
+						<b:time>10:06:25</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>學到了！感謝。</p>
+
+<p>不過這跟把所有網址流量都 302 到唯一的那個頁面有什麼 SEO 上的差別？效能是有差啦，多一個 HTTP request &#8230;</p>
+
+<p>PS. MT 家的 OpenID 登入好像壞掉了</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111713" entryID="000672">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-04</b:date>
+						<b:time>22:51:59</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我想先把 OpenID 拿掉了 ~_~</p>
+
+<p>話說和 302 的差異其實沒有，不過上面那些網址其實只有 flickr 的短網址會用到 302 轉址，其他的頁面上都會有些次要內容不一樣，拿 flickr 的那幾個網址為例，注意看它側欄就會內容發現不太一樣了。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111716" entryID="000672">
+					<b:author>
+						<b:authorName>xdite</b:authorName>
+						<b:authorEmail>xuite.joke@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.xdite.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-04</b:date>
+						<b:time>23:52:38</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>把所有網址流量都 302 到唯一的那個頁面有的 SEO 上的差別，就是你分數摔更慘，大概往後直接掉 100 名吧。非不得已重導請用 301 導</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111717" entryID="000672">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-04</b:date>
+						<b:time>23:57:09</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>被指正了 <a href="http://twitter.com/#!/xdite/status/43700089428000768" rel="nofollow">http://twitter.com/#!/xdite/status/43700089428000768</a></p>
+
+<p>我剛剛把 301 和 302 搞錯，302 是暫時的轉址，真的要用這種作法請用 301 用久轉址。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="111719" entryID="000672">
+					<b:author>
+						<b:authorName>timdream</b:authorName>
+						<b:authorEmail>timdream@gmail.com</b:authorEmail>
+						<b:authorUrl>http://blog.timc.idv.tw/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2011-03-05</b:date>
+						<b:time>00:04:41</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>嗚嗚，我知道要用 permanent redirection，一時忘記是 301 or 302</p>
+
+<p>果然被大大噹 >&lt;</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="277600" entryID="000672">
+					<b:author>
+						<b:authorName>Mae</b:authorName>
+						<b:authorEmail>maemayes@gmail.com</b:authorEmail>
+						<b:authorUrl>http://juliannestights.blog.com/2012/01/20/are-fishnet-tights-nuts/</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2012-11-02</b:date>
+						<b:time>18:48:55</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>I am not afraid of death, I just don&#8217;t want to be there when it happens.</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/671">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

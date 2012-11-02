@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2006-12">December 2006</b:listData>
+
+			<b:previous>
+				<b:mTitle>November 2006</b:mTitle>
+				<b:mDate>2006/11</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>January 2007</b:mTitle>
+				<b:mDate>2007/01</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000369" baseName="jquery-11-no-backward-compatible">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-29</b:date>
+				<b:time>00:22:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>jQuery 1.1將不會向下相容</b:title>
+			<b:content>
+				<b:summary>根據jQuery Blog的文章The Path to 1.1，jQuery 1.1將在1月7號公開alpha版、14號正式公開（剛好一週年），然後值得注意的就是他將不會向下相容，不相容處如下所述：...</b:summary>
+				<b:mainContent><p>根據jQuery Blog的文章<a href="http://jquery.com/blog/2006/12/27/the-path-to-11/">The Path to 1.1</a>，jQuery 1.1將在1月7號公開alpha版、14號正式公開（剛好一週年），然後值得注意的就是他將不會向下相容，不相容處如下所述：</p></b:mainContent>
+				<b:extendContent>
+<ul>
+<li>像是.onclick()和.unclick()的事件處理器會改成.one("click")和.unbind("click")，他們發現這些功能不是這麼的需要。</li>
+<li>:nth-child()、:gt()、:lt()和:eq()選擇器將換改成由1開始計算，這樣才符合CSS的標準（這其實是一個bug fix）。</li>
+<li>部份的CSS相關函式像是.color()和.background()將不再被支援，你應該改成使用.css("color")和.css("background")這樣的方式。</li>
+<li>一些屬性的相關函式如.title()和.rel()也將取消，你應該改為使用.attr("title")和.attr("rel")。</li>
+</ul>
+
+
+
+<p>我覺得這些改變都很不錯，把整個核心弄的更精簡了，或許還是會有人不習慣吧，也不用擔心，他還有說另外會有一個相容plugin讓你可以拿1.0的程式在1.1跑。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000368" baseName="little-thins-about-javascript">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-28</b:date>
+				<b:time>23:41:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript 二三事</b:title>
+			<b:content>
+				<b:summary>最近在看ppk on JavaScript，目前進度是第五章後半，覺得有些小東西可以先講一講，其實也是我在學習 JavaScript 中遇到的不少問題，而且一直以來我的想法也沒有得到證實。 本來是這樣想的啦，結果寫一寫變成我的 JavaScript 學習歷程....。...</b:summary>
+				<b:mainContent><p>最近在看ppk on JavaScript，目前進度是第五章後半，覺得有些小東西可以先講一講，其實也是我在學習 JavaScript 中遇到的不少問題，而且一直以來我的想法也沒有得到證實。</p>
+
+<p>本來是這樣想的啦，結果寫一寫變成我的 JavaScript 學習歷程....。</p></b:mainContent>
+				<b:extendContent><p>雖然CSS我學習上沒什麼障礙，但是我學習 JavaScript 的路其實算蠻艱辛的，第一本買的書是<a href="http://www.oreilly.com.tw/product_web.php?id=a003">JavaScript 設計風格第一版</a>，那本書現在來看算是蠻過時的書了，像是他講的瀏覽器不少還是第四版的，不過也因此他的程式碼很簡單，不複雜，所以我對 JavaScript 算是有個基本的概念了，不過接著問題來了，很常見的瀏覽器差異問題，我那時候想要找一本可以幫助我處理這方面問題的文件或書，我發現市面上沒有一本書能符合我的需要，我要的有點像是官方標準那樣的東西，所以我後來去找 JavaScript 的標準，尋線找到了<a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><span class="caps">ECMAS</span>cript</a>這東西，結果抓下的規格書都是核心語法的內容，之後我找到了<a href="http://msdn2.microsoft.com/en-us/library/default.aspx"><span class="caps">MSDN</span> Library</a>的關於<a href="http://msdn2.microsoft.com/en-us/library/hbxc2t98.aspx">JScript的文件模型的文件</a>，結果我好一陣子寫的 JavaScript 是IE only的....。</p>
+
+<p>過了一兩年吧，我發現到 <a href="http://www.w3.org/DOM/"><span class="caps">DOM</span></a> 這個東西，似乎有跨瀏覽器的支援能力，於是也研究了起來，後來還到 <span class="caps">W3C </span>抓標準文件來看，想當然看不懂，那時候我已經看得懂HTML和CSS的標準文件了說@@，等我看的懂時不知道已經是第幾次看他了，總之，這時候我終於了解，不同瀏覽器的文件模型和瀏覽器模型命名方式不一樣，並不是 JavaScript 的問題，而是瀏覽器開發公司的問題，也才會有W3C <span class="caps">DOM</span>的出現。一直到我了解DOM，我才覺得我會寫 JavaScript 了，不過其實那時候我對 JavaScript 的 prototype 和物件觀念完全是 0。</p>
+
+<p>我會看到 prototype 和物件的使用主要都是<a href="http://dean.edwards.name/IE7/"><span class="caps">IE7</span></a>作者<a href="http://dean.edwards.name/">dean edwards</a>的 JavaScript 程式，看時看他的一些 script 是一整個看不懂，後來才又從一些其他的文章和程式瞭解到 prototype 和 JavaScript 的物件要怎樣產生，到這個地步，我總算把 JavaScript 該學的東西都學到了，然後<a href="http://jquery.com/">jQuery</a>就出現了，結果我現在幾乎都用 jQuery 寫XD。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000367" baseName="bought-ys-origin">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-28</b:date>
+				<b:time>22:01:43</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>ys origin入手</b:title>
+			<b:content>
+				<b:summary> 今天拿到了上週訂的ys origin了，這是伊蘇系列許久不見和伊蘇有關的新劇情，上一款ysf其實是很久以前的ys4的劇情，然後我買來一直沒玩XD，不過我想這次origin我很快就會開始玩了吧。 另外據已經先玩的朋友說，這次設計的比上一代更周全了，我想應該是從ys6之後最完美的系統和關卡設計了吧，ys6是首次進入3D世界的依蘇，ysf在整個動作性則是有很大的進步，看過ysf在回頭看ys6就會覺得很多部份其實都還很陽春，那時已經覺得FALCOM在這種3D動作系統的設計已經很完整了吧，沒想到在yso還能夠在進步，真是很棒，FALCOM真是間好公司，真不愧是少數還能在日本存活的一般向PC Game廠商啊。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/12/28/bought-ys-origin/DSCF0948.JPG" class="thickbox"><img alt="yso包裝中規中矩，不過比起之前幾代小很多" src="http://blog.othree.net/log/2006/12/28/bought-ys-origin/DSCF0948-thumb-300x400.jpg" width="300" height="400" /></a></p>
+
+<p>今天拿到了上週訂的<a href="http://www.falcom.com/yso/">ys origin</a>了，這是伊蘇系列許久不見和伊蘇有關的新劇情，上一款<a href="http://www.falcom.com/ysf/index.html">ysf</a>其實是很久以前的ys4的劇情，然後我買來一直沒玩XD，不過我想這次origin我很快就會開始玩了吧。</p>
+
+<p>另外據已經先玩的朋友說，這次設計的比上一代更周全了，我想應該是從ys6之後最完美的系統和關卡設計了吧，<a href="http://www.falcom.com/newgames/win_xp/ys6.html">ys6</a>是首次進入3D世界的依蘇，ysf在整個動作性則是有很大的進步，看過ysf在回頭看ys6就會覺得很多部份其實都還很陽春，那時已經覺得<a href="http://www.falcom.com"><span class="caps">FALCOM</span></a>在這種3D動作系統的設計已經很完整了吧，沒想到在yso還能夠在進步，真是很棒，FALCOM真是間好公司，真不愧是少數還能在日本存活的一般向PC Game廠商啊。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000366" baseName="fon-party">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-25</b:date>
+				<b:time>22:40:21</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>遲來的FON Party心得</b:title>
+			<b:content>
+				<b:summary>因為已經遲來許久，那我覺得報告Party過程也沒什麼意義，這方面的文章也已經很多人寫了，而且圖文並茂，過程也介紹得很詳細，所以我覺得我就不要再這方面著墨了，改成來說說FON的缺點吧。...</b:summary>
+				<b:mainContent><p>因為已經遲來許久，那我覺得報告Party過程也沒什麼意義，這方面的文章也已經很多人寫了，而且圖文並茂，過程也介紹得很詳細，所以我覺得我就不要再這方面著墨了，改成來說說FON的缺點吧。</p></b:mainContent>
+				<b:extendContent><p>其實我個人是非常期待FON能在台灣成功的，因為我自己前陣子常常帶著NB在外面找不到網路可用，所以如果FON的點夠多的話，以後我就不太需要擔心這問題了，不過台灣FON團隊卻一直讓我有點失望，當然他們很努力在佈點、推廣，這我看的出來，我要講的問題是別的方面。首先FON Party就讓人覺得有些缺點，主要是時間的掌控，位子要給記者作這點我能理解，不過讓我們進場後還要在那邊等上半小時才開始活動，我就覺得感覺不太好，不過Party畢竟只有一次。我覺得更大的問題是客服，上週我去交通大學作Firefox的推廣活動時，本來想把我的La Fonera帶去當獎品，不過我這台是Party上拿到的，拿的時候有登記我的個人資訊和機器的序號，所以我想說要轉贈的話應該要先跟那邊知會，結果，網頁上找不到一通聯絡電話，只有服務信箱，寄去過後也個了一整天才回信，沒想到回信也沒把我內容看清楚，以為我要跟他們拉贊助，另外要跟他們拿機器去當贈品...，然後我又回了一封信給他們，結果到我那場推廣結束超過一週的今天，都沒下文了...，然後我透過其他管道想跟他們聯絡也是一樣。</p>
+
+<p>我想是因為人力很不足吧，不過草草了事總是比慢工出細活來的糟糕，FON Taiwan，你們還需要多多加油啊！！</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000364" baseName="bullet-proof-web-design-zh">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>22:08:10</b:time>
+			</b:datetime>
+			<b:category>books</b:category>
+			<b:title>無懈可擊的Web設計</b:title>
+			<b:content>
+				<b:summary> 本書評由othree 評論於2006/12/24 ，評分為5分（滿分5分） ，採創用 CC 姓名標示-相同方式分享 授權條款釋出。 Bulletproof Web Design出了中文版，不過只有簡體版的，因為沒有繁體版的，所以我特別去找了幾個入手方法，不過運費都很驚人...，後來有朋友告訴我有人有在拍賣，我就跑去下標了，終於上禮拜入手了，結果當天就看完了，先就內容來簡單說一下吧，這是一本好書，相較於designing with web standards是告訴你為甚麼要遵循網路標準、Eric Meyer on CSS是教你怎麼用CSS，這本書則是告訴你要怎樣利用CSS和HTML來設計出靈活度較高的網站，例如可調的字體大小設定、不會因為使用者調整字體大小而破掉的版面等等，我認為這本書的內容是任何一個想要往網頁標準之路邁進的設計師都需要經歷的，不過不一定只有這本書才有就是，因為以我來說，其實這些技巧和方法我都有在網路上看過，例如標籤頁（書中翻為選項卡）那章的內容在A List Apart也有，叫做Sliding Doors of CSS，也因此我才能一個晚上就看完。 接下來的部份則是要講中譯本的缺點了，當然話要說在前頭，我絕對不是要刻意找碴，而是因為這兩個問題蠻明顯的。首先是圖6-18用錯了，用到和6-19同一張圖，但是因為大小不一樣所以整個比例就變的很奇怪。第二點則是整本書的第一句話：「在Web設計領域中，"如何設定頁面文字的大小"是為數不多的充滿爭議的著名話題之一。」這句感覺一整個怪，最主要是因為用了兩個的吧，不過我不確定是不是兩邊的文法差異造成的感覺@@。...</b:summary>
+				<b:mainContent>        <div class="hreview" id="hreview-BPWD">
+          <p class="item"><a class="fn url" href="http://www.sinzy.net/BPWD/"><img alt="無懈可擊的Web設計" src="http://blog.othree.net/log/2006/12/24/bullet-proof-web-design-zh/bpwd.jpg" class="photo" width="200" height="243" /></a></p>
+          <p class="entry-info">
+  本書評由<span class="reviewer vcard"><span class="fn nickname">othree</span></span>
+
+  評論於<abbr class="dtreviewed" title="20061224">2006/12/24</abbr>
+  ，評分為<abbr title="5" class="rating">5分（滿分5分）</abbr>
+  ，採<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/tw/deed.zh_TW">創用 CC 姓名標示-相同方式分享 授權條款</a>釋出。
+  </p>
+          <div class="description">
+        <p><a href="http://www.simplebits.com/publications/bulletproof/">Bulletproof Web Design</a>出了<a href="http://www.sinzy.net/BPWD/">中文版</a>，不過只有簡體版的，因為沒有繁體版的，所以我特別去找了幾個入手方法，不過運費都很驚人...，後來有朋友告訴我有人有在拍賣，我就跑去下標了，終於上禮拜入手了，結果當天就看完了，先就內容來簡單說一下吧，這是一本好書，相較於<a href="http://www.zeldman.com/dwws/">designing with web standards</a>是告訴你為甚麼要遵循網路標準、<a href="http://www.ericmeyeroncss.com/">Eric Meyer on <span class="caps">CSS</span></a>是教你怎麼用CSS，這本書則是告訴你要怎樣利用CSS和HTML來設計出靈活度較高的網站，例如可調的字體大小設定、不會因為使用者調整字體大小而破掉的版面等等，我認為這本書的內容是任何一個想要往網頁標準之路邁進的設計師都需要經歷的，不過不一定只有這本書才有就是，因為以我來說，其實這些技巧和方法我都有在網路上看過，例如標籤頁（書中翻為選項卡）那章的內容在<a href="http://www.alistapart.com/">A List Apart</a>也有，叫做<a href="http://www.alistapart.com/articles/slidingdoors">Sliding Doors of <span class="caps">CSS</span></a>，也因此我才能一個晚上就看完。</p>
+
+        <p>接下來的部份則是要講中譯本的缺點了，當然話要說在前頭，我絕對不是要刻意找碴，而是因為這兩個問題蠻明顯的。首先是圖6-18用錯了，用到和6-19同一張圖，但是因為大小不一樣所以整個比例就變的很奇怪。第二點則是整本書的第一句話：「<q>在Web設計領域中，"如何設定頁面文字的大小"是為數不多的充滿爭議的著名話題之一。</q>」這句感覺一整個怪，最主要是因為用了兩個<strong>的</strong>吧，不過我不確定是不是兩邊的文法差異造成的感覺@@。</p>
+           </div>
+        </div></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="6"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000363" baseName="firefox-win">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>18:19:41</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Firefox大獲全勝？</b:title>
+			<b:content>
+				<b:summary>請先看圖： 真是想不到來我這的訪客使用Firefox的人數比例這麼高XD，要是這是什麼大型入口網站的資料就好了。 這段期間好像我有東西沒弄好結果IE的根本上不來。...</b:summary>
+				<b:mainContent><p>請先看圖：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/24/firefox-win/agents.png" class="thickbox"><img alt="Firefox佔有率高達87.24%，IE則只有1.69%，排第5名" src="http://blog.othree.net/log/2006/12/24/firefox-win/agents-thumb-400x233.png" width="400" height="233" /></a></p>
+
+<p>真是想不到來我這的訪客使用Firefox的人數比例這麼高XD，要是這是什麼大型入口網站的資料就好了。</p>
+
+<p class="update">這段期間好像我有東西沒弄好結果IE的根本上不來。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000362" baseName="hemidemi-1year">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-24</b:date>
+				<b:time>18:00:49</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>HEMiDEMi總部一遊</b:title>
+			<b:content>
+				<b:summary> 上週五是HEMiDEMi的一週年慶，我剛好要拿定的襯衫，所以中午就跑過去了，除了吃了紅豆湯圓，和親切的葛力、閃恩碰面之外（其他幾位其實我都不知道你們是誰orz），還玩到夢寐以求的Wii，果然是沒有讓我失望，一下就玩到不知時間，要是下午沒其他事，我搞不好會泡在那邊一下午，然後之後就兩手都廢掉吧XD。...</b:summary>
+				<b:mainContent><p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0933.JPG" class="thickbox"><img alt="黑米T-shirt" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0933-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p>上週五是<a href="http://www.hemidemi.com/home"><span class="caps">HEM</span>iDEMi</a>的一週年慶，我剛好要拿定的襯衫，所以中午就跑過去了，除了吃了紅豆湯圓，和親切的葛力、閃恩碰面之外（其他幾位其實我都不知道你們是誰orz），還玩到夢寐以求的Wii，果然是沒有讓我失望，一下就玩到不知時間，要是下午沒其他事，我搞不好會泡在那邊一下午，然後之後就兩手都廢掉吧XD。</p></b:mainContent>
+				<b:extendContent><p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0934.JPG" class="thickbox"><img alt="用投機玩Wii果然是最棒的" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0934-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p><a href="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0935.JPG" class="thickbox"><img alt="Wii主機" src="http://blog.othree.net/log/2006/12/24/hemidemi-1year/DSCF0935-thumb-400x300.jpg" width="400" height="300" /></a></p>
+
+<p>雖然只待了短短的兩個小時左右，但卻是事讓人身心都愉快的旅程啊（到今天肩膀肌肉都還會痛）。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000361" baseName="w11">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-23</b:date>
+				<b:time>11:25:45</b:time>
+			</b:datetime>
+			<b:category>buy</b:category>
+			<b:title>W11</b:title>
+			<b:content>
+				<b:summary>今天終於弄到了，話不多說，看圖先：...</b:summary>
+				<b:mainContent><p>今天終於弄到了，話不多說，看圖先：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/23/w11/DSCF0938.JPG" class="thickbox"><img alt="很小的W11，就是一般手機吊飾大小" src="http://blog.othree.net/log/2006/12/23/w11/DSCF0938-thumb-400x300.jpg" width="400" height="300" /></a></p></b:mainContent>
+				<b:extendContent><p>近一點看：</p>
+
+<p><a href="http://blog.othree.net/log/2006/12/23/w11/DSCF0939.JPG" class="thickbox"><img alt="進看就會發現比例還是有差" src="http://blog.othree.net/log/2006/12/23/w11/DSCF0939-thumb-300x400.jpg" width="300" height="400" /></a></p>
+
+<p>然後我錄了一段<a href="http://blog.othree.net/log/2006/12/23/w11/W11.mov"><span class="caps">W11</span>的叫聲</a>:P。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="2"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000360" baseName="nice-day">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-23</b:date>
+				<b:time>01:12:42</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>不錯的一天</b:title>
+			<b:content>
+				<b:summary>今天（12/22）對我來說是很不錯的一天，玩到了夢寐以求的Wii，blog新版面上線，唯一的缺憾就是為了更新而積欠的好幾篇文章來不及在今天都寫完吧，因為前幾天的動畫都沒看，然後明天活動又很滿，明天下午我就兩個活動衝到了@@，總之現在大概欠fon party心得、無懈可擊網頁設計心得、HEMiDEMi總部一遊幾篇文章吧，欠最久的是FON Party的那篇，可能也要到週日才能寫吧。...</b:summary>
+				<b:mainContent><p>今天（12/22）對我來說是很不錯的一天，玩到了夢寐以求的Wii，blog新版面上線，唯一的缺憾就是為了更新而積欠的好幾篇文章來不及在今天都寫完吧，因為前幾天的動畫都沒看，然後明天活動又很滿，明天下午我就兩個活動衝到了@@，總之現在大概欠fon party心得、無懈可擊網頁設計心得、HEMiDEMi總部一遊幾篇文章吧，欠最久的是FON Party的那篇，可能也要到週日才能寫吧。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000359" baseName="new-theme">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-22</b:date>
+				<b:time>22:53:39</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>新版面上線</b:title>
+			<b:content>
+				<b:summary>今天更新了，因為不是只有改到樣式表，而是連HTML結構都有作改變，所以舊的兩個樣式就都先下線了，等修改到新結構也可以正常套用時會在重新放上來給大家選用的:P。...</b:summary>
+				<b:mainContent><p>今天更新了，因為不是只有改到樣式表，而是連HTML結構都有作改變，所以舊的兩個樣式就都先下線了，等修改到新結構也可以正常套用時會在重新放上來給大家選用的:P。</p></b:mainContent>
+				<b:extendContent><p>這次更新有幾點主要的不同，首先是我放棄了自由頁寬的設計，改成固定頁寬的設計，因為我發現用寬螢幕看網頁的時候自由頁寬的版面會因為左右拉長，造成文章閱讀不易，我目前寬度是固定在900px，其實是給1024以上的解析度用的，如果使用者只有800px寬的解析度，那至少看主要內容的部份不會受影響。再來是側邊欄的內容，相較於以往，現在的側邊欄內容我覺得可用性高很多，以前幾乎每頁的都差不多～～，不過這部份我還要慢慢調整，看看不同的頁面要放上什麼樣的資訊會比較有用。最後就是網站基本框架又改變了，雖然還是header+2 column+footer，不過這次參考<a href="http://www.satzansatz.de/cssd/columnswapping.html">Column-swapping: an attempt for two columns with equal height</a>這篇文章做了修改，所以現在更接近我理想的等高雙欄版面了。</p>
+
+<p>主要改變的大方向就是以上三點，其實三點都還有進步空間，不過像第一點會卡在IE對CSS支援度的問題，另外現在的雙欄寬度都是定死的，如果要改成可變動的可能還要改不少地方吧。講到這我就不得不說，其實這次設計新版面時我很想不管IE 6（含以下）的死活，然後在網頁內註明一下如果你用IE6看會發生什麼事我也不知道之類的警告語，結果全部設計好後，打開IE6檢查，發現幾乎沒問題（冏），只有幾個小地方有問題，我就很不情願的把他修正了XD，現在連IE 5.5都沒什麼問題，不過IE5就比較不行了 飄～～。</p>
+
+<p>最後，其實我正式上線後發現某個神秘的bug，就是如果我現在HTML結構中的某個element內沒有東西的話，在IE下會整個亂掉，而且亂到不可思議XD。</p>
+
+<p>補充：本來文章寫完後當機，嚇到死，還好有<a href="http://moztw.org/firefox/">Firefox</a>的還原功能O_O。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="8"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000358" baseName="hemidemi-button-beta-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2006-12-11</b:date>
+				<b:time>21:35:59</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>HEMiDEMi Firefox 擴充套件測試版 2</b:title>
+			<b:content>
+				<b:summary> 拖了很久，最近實在是沒時間也沒動力把lightbox完成，不過新分頁和網頁標題問題已經解決了，有一個簡單的設定介面可以切換新分頁或現在的分頁，至於lightbox我已經把基本的技術掌握了，接下來就是師程工和美術設計的問題XD。 下載HEMiDEMi Firefox 擴充套件測試版 2...</b:summary>
+				<b:mainContent><p><img alt="陽春的設定畫面" src="http://blog.othree.net/log/2006/12/11/hemidemi-button-beta-2/hemi-config.png" width="133" height="192" /></p>
+
+<p>拖了很久，最近實在是沒時間也沒動力把lightbox完成，不過新分頁和網頁標題問題已經解決了，有一個簡單的設定介面可以切換新分頁或現在的分頁，至於lightbox我已經把基本的技術掌握了，接下來就是師程工和美術設計的問題XD。</p>
+
+
+<ul>
+<li><a href="http://blog.othree.net/log/2006/12/11/hemidemi-button-beta-2/hemidemibutton.xpi">下載HEMiDEMi Firefox 擴充套件測試版 2</a></li>
+</ul>
+
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="5"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>
