@@ -5,10 +5,85 @@
 <link>http://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2012</copyright>
-<lastBuildDate>2012-11-02 11:07</lastBuildDate>
+<lastBuildDate>2012-11-04 21:34</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>schema.org  </title>
+<description><![CDATA[<p>語意網基本的組成可以分成描述框架和知識本體，框架就是如 <a href="http://www.w3.org/RDF/">RDF</a> 或是 <a href="http://www.w3.org/2000/10/swap/doc/">N3</a> 那樣的標準規範，我一開始看到 RDF 規範的時候其實就很納悶，說是語意網很重要的標準，怎麼一點語意的知識都沒有，後來才了解，它只是一個框架，知識是由其他地方來的，在語意網設計下的知識，可以把它分為語彙 (vocabulary) 和關係 (relation)，舉例來說：<em>相機有鏡頭</em>，這句話之中就包含了三個語彙，分別是 <em>相機</em> 、 <em>鏡頭</em> 和 <em>有</em>，相機和鏡頭都是屬於某個特定領域（相機、攝影這個領域）的語彙，會由該領域的人編撰它的相關知識，在這邊就先當他們代表某個物體，而 <em>有</em> 則是一個不同領域來的語彙，它同時也是代表一個關係，代表前者內包含後者，和相機有關的這種關係不勝枚舉，例如相機有關景窗、有快門、要裝底片、標價多少等等，W3C 有一套標準專門是用來制定這些詞彙的意義以及之間的關係，稱作 <a href="http://www.w3.org/TR/owl-features/">Web Ontology Language</a>，簡稱為 OWL，應該會有人注意到它的縮寫字母順序不太對，我猜是故意取貓頭鷹的名稱來用的，因為在很多國家貓頭鷹是智慧的象徵。</p>
+
+<p>OWL 要編寫起來其實很辛苦，因為即使只是一個很小很專門的領域，要把特定領域的所有語彙和他們之間的關係整理出來就很不容易了，若不是由有公信力的機構或專家背書，甚至也會被質疑這些知識的可靠度，而且 OWL 語言本身也是很複雜的 XML 語言，是複雜到不會想用純文字編輯軟體寫的程度，另外還有一個我也不想用純文字編輯器編輯的 XML 文件，叫做 XML Schema Definition(XSD)，是用來定義 XML 文件格式的 XML 文件，兩者我都寧願用專門的編輯軟體來處理。</p>
+
+<p>不過回來先只看語彙的部分，目前可以應用的語彙其來源上都不是 W3C，有名的像是 <a href="http://www.foaf-project.org/">FOAF</a>, <a href="http://dublincore.org/">Dublin Core</a>，前者是用來描述人際關係的，FOAF 是 Friend Of A Friend 的意思，後者則是 1995 年的第一屆 Metadata Workshop 所制訂的，一整套通用性很高，專門用來描述電子資源的後設資料 (metadata) 語彙，W3C 的網站也有<a href="http://semanticweb.org/wiki/Ontology">整理</a>了不少現存 ontology 資源出來，不過有很多時候，即使只有語彙的定義就很有幫助了，像是 microformats 就是用了很多其他地方已經先定義好的語彙來讓結構化的資料值可以對應到不同的屬性上，而且現在的搜尋引擎不止支援 microformats 你也可以用 <a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a> 來在網頁中加入結構化的語意資料，去年，三大搜尋引擎龍頭：Google, Yahoo, Bing 宣布了一個合作計畫叫 <a href="http://schema.org/">schema.org</a>，制訂了非常多的語彙建議，像是文章、書、電影、電視、活動、聽眾、工作機會、醫療相關等等的主題都有，並且建議使用 HTML5 的 microdata 機制來內嵌在網頁內提供給搜尋引擎。</p>
+
+<p>舉一個例子，以前介紹 microformats 時的範例：</p>
+
+<pre><code>&lt;div class="hreview"&gt;
+ &lt;span&gt;&lt;span class="rating"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
+ &lt;h4 class="summary"&gt;&lt;span class="item fn"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
+ &lt;span&gt;Reviewer: &lt;span class="reviewer fn"&gt;Tantek&lt;/span&gt; - 
+ &lt;abbr class="dtreviewed" title="20050418T2300-0700"&gt;April 18, 2005&lt;/abbr&gt;&lt;/span&gt;
+ &lt;blockquote class="description"&gt;&lt;p&gt;
+  Crepes on Cole is one of the best little creperies in San Francisco.
+  Excellent food and service. Plenty of tables in a variety of sizes 
+  for parties large and small.  Window seating makes for excellent 
+  people watching to/from the N-Judah which stops right outside.  
+  I've had many fun social gatherings here, as well as gotten 
+  plenty of work done thanks to neighborhood WiFi.
+ &lt;/p&gt;&lt;/blockquote&gt;
+ &lt;p&gt;Visit date: &lt;span&gt;April 2005&lt;/span&gt;&lt;/p&gt;
+ &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>如果改成用 schema.org 建議的 microdata 寫法：</p>
+
+<pre><code>&lt;div itempscope itemtype="http://schema.org/Review"&gt;
+ &lt;span&gt;&lt;span itemprop="ratingValue"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
+ &lt;h4 itemprop="itemReviewed" itemscope itemtype="http://schema.org/Book"&gt;&lt;span itemprop="name"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
+ &lt;span itemprop="author" itemscope itemtype="http://schema.org/Person"&gt;Reviewer: &lt;span itemprop="name"&gt;Tantek&lt;/span&gt;&lt;/span&gt; - 
+ &lt;time itemprop="dateCreated" datetime="20050418T2300"&gt;April 18, 2005&lt;/time&gt;
+ &lt;p itemprop="reviewBody"&gt;
+  Crepes on Cole is one of the best little creperies in San Francisco.
+  Excellent food and service. Plenty of tables in a variety of sizes 
+  for parties large and small.  Window seating makes for excellent 
+  people watching to/from the N-Judah which stops right outside.  
+  I've had many fun social gatherings here, as well as gotten 
+  plenty of work done thanks to neighborhood WiFi.
+ &lt;/p&gt;
+ &lt;p&gt;Visit date: &lt;time&gt;April 2005&lt;/span&gt;&lt;/p&gt;
+ &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>用 microdata 的方法和 microformats 和 RDFa 兩種比起來，我覺得優點在：</p>
+
+<ol>
+<li>使用的是標準，設計語意上確實描述資料的屬性來用，這是 microformats 無法辦到的，我覺得 microformats 是屬於過渡時期的規範，所以多要求了最大的相容性</li>
+<li>撰寫起來也不會太複雜，且不要求使用 XHTML，這點則是相較於 RDFa，因為規範上，要使用 RDFa 來加註 metadata，是透過 XHTML 的擴充性達到的，如果是單純的 HTML 文件，其實是不能加入其他文件的標籤或屬性的</li>
+<li>使用了 URI 的概念作為資料類別的值，用 URI 取代普通單純的類別值有兩個好處，一是在網路上他是絕對唯一，二是未來如果要和其他的標準、後設資料等接軌，或是有人要補上這些資訊的 OWL 文件，都不會是問題</li>
+</ol>
+
+<p>基於這些優點，我現在也很推薦使用 schema.org 建議的格式化資料結構，然後我想說看看國內有沒有人用，發現清單上有個 <a href="http://schema.org/Recipe">食譜</a>，就上 <a href="http://icook.tw/">iCook</a> 看看，結果發現有耶！</p>
+
+<p>以下面這道<a href="http://icook.tw/recipes/16641">食譜</a>為例</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8153705385/" title="Flickr 上 othree 的 品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"><img src="http://farm8.staticflickr.com/7254/8153705385_cf5b849f07.jpg" width="500" height="343" alt="品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"/></a></p>
+
+<p>丟進 Google 的<a href="http://www.google.com/webmasters/tools/richsnippets">結構化資料測試工具</a>，會產生如下的分析結果（可以自己 <a href="http://www.google.com/webmasters/tools/richsnippets?url=http%3A%2F%2Ficook.tw%2Frecipes%2F16641&amp;html=">試試看</a>，看圖要看原始大小也沒比較方便）：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8153733486/" title="Flickr 上 othree 的 Google Structured Data Testing Tool"><img src="http://farm9.staticflickr.com/8490/8153733486_c3527b34b5.jpg" width="207" height="500" alt="Google Structured Data Testing Tool"/></a></p>
+
+<p>這份結果可以很清楚的看到， Google 可以把 iCook 的食譜網頁的各項資訊包括菜名、作者、材料、步驟等都正確的抓出來。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2012/11/04/schemaorg/</link>
+<guid>http://blog.othree.net/log/2012/11/04/schemaorg/</guid>
+<category>css-html</category>
+<pubDate>2012-11-04 21:34</pubDate>
+</item>
 
 <item>
 <title>Open Graph Protocol, Twitter Card</title>
@@ -907,110 +982,6 @@ objThumb.setAttribute('aria-valuetext', iValue + ' %');
 <guid>http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/</guid>
 <category>css-html</category>
 <pubDate>2010-10-13 23:08</pubDate>
-</item>
-
-<item>
-<title>WAI-ARIA 介紹之一</title>
-<description><![CDATA[<p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，會分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
-
-<ul>
-<li>WAI-ARIA 介紹之一 - 本篇文章</li>
-<li><a href="http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/">WAI-ARIA 介紹之二</a></li>
-<li><a href="http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/">WAI-ARIA 介紹之三</a></li>
-</ul>
-
-<h4>引言</h4>
-
-<p>HTML最初並不是被設計來製作網路應用程式的，所以它所有的控制介面非常少，而且受限至於 client-server 的通訊模式，然後開發者們使用 JavaScript 突破了這層限制，並建置了各式各樣的介面元件。</p>
-
-<p>然而不幸的是，這些突破 HTML 限制的技術通常也不具備親和力，即使這些介面元件看起來用起來都和一般的桌面應用程式沒什麼不同，但是像 screen reader 這些輔助科技並沒辦法存取到這些介面元件的角色(role，這個元件是什麼東西)、狀態(特有的設定，如 checked)和其他重要的資訊，這狀況就如同只是調整樣式讓一段文字看起來像標題，卻不使用正確的標題標籤，造成各種輔助科技並無法知道這段文字是標題一樣。</p>
-
-<p>使用輔助科技的訪客通常不會注意到網頁動態更新的內容，輔助科技通常會認為只有在導航事件，例如開啟連結或是送出表單時，網頁的內容才會變動。網路應用程式使用AJAX這類新技術，會在背後默默的更新網頁的內容，即使輔助科技會去助益網頁內容的更改，使用者仍然可能不會注意到內容有更新，或是不知道如何移動到更新的位置。</p>
-
-<p><a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>為這些介面元件提供了角色(role)定義，以及各種角色狀態和屬性的規格，使用輔助科技的訪客便可以理解並使用這些資訊，除此之外，WAI-ARIA還提供了一種機制以確保訪客不會錯過資訊的更新。</p>
-]]><![CDATA[<h4>HTML簡史</h4>
-
-<p>HTML 最初設計是用來作為超文字文件的，初期的 HTML 草稿規範的標籤有標題、段落、清單和連結等，<a href="http://www.w3.org/MarkUp/draft-ietf-iiir-html-01.txt">第一分由 IETF 制定的 HTML 草案</a>還包括了可以在行內顯示圖片的 img 標籤，而第一份較正式的 HTML 規格是 <a href="http://tools.ietf.org/html/rfc1866">HTML 2</a> ，基於初期的 HTML 草稿，這個版本還導入了網頁表單和一小部分的控制介面元件包括文字輸入欄位、按鈕、單選選項、勾選框和下拉式選單，然而 HTML 2 所定義的這些控制元件和現在主要使用的 <a href="http://www.w3.org/TR/html401/">HTML 4</a> 的版本相比，並沒有什麼變化。</p>
-
-<p>HTML 所使用的溝通模式事蹟於主從式架構，主從式架構的流程為，客戶端送出請求到伺服端，並等待接收回應，伺服端則是一直在等待客戶端的請求，收到後進行處理並回覆給客戶端，由於 HTML 並沒有行為層，所有的溝通都是單線性的－客戶端向伺服端送出請求，伺服端對請求做出處理並傳回一個網頁給客戶端。</p>
-
-<h4>網路應用程式</h4>
-
-<p>網路應用程式試著去模擬一般的桌面應用程式，不過有個主要的差異在網路應用程式是在瀏覽器裡面執行的，除此之外，網路應用程式和桌面應用程式還有兩個根本性的差異：</p>
-
-<ul>
-<li>一般桌面應用程式有一行為層，而不用對伺服端做溝通</li>
-<li>一般桌面應用程式有更多樣的介面控制元件</li>
-</ul>
-
-<h4>模擬一般桌面應用程式</h4>
-
-<h5>背景資料傳輸</h5>
-
-<p>為了模擬一般桌面應用程式，網路應用程式使用 JavaScript 去增加網頁的行為，例如使用 JavaScript 讓使用者可以展開或關閉選單項目。網路應用程式有時會需要跟伺服器要些資料，可能是要伺服器上資料庫內的資料來更新頁面內容，當網路應用程式需要和伺服器溝通時，這時候多會使用 AJAX 或是 IFRAME 的技術來在背景溝通。 </p>
-
-<h5>模擬多樣化的元件</h5>
-
-<p>由於 HTML 只有非常少的介面元件，網路應用程式有時就會需要自己創造更複雜的介面元件，像是三種狀態的勾選框或是滑動條控制器，這些介面元件通常是圖形化顯示給使用者，而它們的行為則是由另外的 script 來實作。</p>
-
-<p><a href="http://www.flickr.com/photos/othree/5067306375/" title="Flickr 上 othree 的 tristate"><img src="http://farm5.static.flickr.com/4132/5067306375_94123b07bc_o.gif" width="228" height="171" alt="" /></a> <br />
-圖一 -- 三種狀態的勾選框</p>
-
-<p><a href="http://www.flickr.com/photos/othree/5067918384/" title="Flickr 上 othree 的 slider"><img src="http://farm5.static.flickr.com/4105/5067918384_d4b9079419_o.gif" width="358" height="65" alt="" /></a> <br />
-圖二 -- 一個滑動條控制器，可能用來調整服務品質</p>
-
-<h4>視覺與感官模擬的親和力問題</h4>
-
-<p>從視覺上模擬各種介面元件，對伺服器進行背景的溝通都可以讓使用者有更好的使用經驗，但是不幸的是，這些都造成了親和力問題，對於使用輔助科技的使用者都產非常不好：</p>
-
-<ul>
-<li>只有圖形化顯示的介面元件通常鍵盤無法控制</li>
-<li>這些介面元件的角色定義、用途等，輔助科技都無從得知</li>
-<li>這需介面元件的狀態和屬性資料，輔助科技也無法得知</li>
-<li>頁面的更新也沒有通知這些輔助科技</li>
-</ul>
-
-<h4>救星是 WAI-ARIA</h4>
-
-<p>幸好，列出的這些問題都可以靠 Web Accessibility Initiative's Accessible Rich Internet Applications 來解決，ARIA 是一個正面的技術，而不是跟開發人員說什麼不能做，ARIA 讓開發人員可以製作豐富的網路應用程式，而且它也很簡單就可以上手。</p>
-
-<h4>鍵盤導覽</h4>
-
-<p>替非文字物件提供替代文字和讓介面元件可以用鍵盤控制都是非常基本的親和力規定，知道親和力相關議題的開發人員可能會讓他所製作的介面元件是可以用鍵盤取用並操作的，像是使用 <code>&lt;input type="image"&gt;</code> ，不過大部分的介面元件都不是以這種方式製作，而會使用像是 img 這種無法使用鍵盤取用的元素，或是複雜的元件可能會使用 div 來做為外層包覆的元素，一樣也是無法使用鍵盤取用。</p>
-
-<p>HTML 4 開始有了 tabindex，可以用於 a、area、button、input、object、select、textarea 這幾個元素上，tabindex的值是介於 1～32767 的正整數，導覽會從數字小的開始，直到數字最大的元素，有設定 tabindex 的元素會以設定的值排入導覽順序，不過如果網頁的內容有好的邏輯結構，tabindex 就可以不必設定，介面元件會自己依序排入 tab 鍵導覽的順序中。</p>
-
-<p>ARIA <a href="http://www.w3.org/TR/wai-aria/#tabindex">擴充了 tabindex 屬性</a>，讓他可以出現在所有可見的元素中，除此之外，還允許使用負值讓元素不在 tab 鍵導覽的順序中出現，但還是可以用 script 程式取用它，不過由於負值的大小並不重要，所以通常是使用 -1。</p>
-
-<h5>加入預設 Tab 導覽順序</h5>
-
-<p>下面的範例使用 tabindex 讓 div 元素可以照文件結構排入 tab 鍵導覽的順序之中，因此該元素是可以使用鍵盤取用的。</p>
-
-<pre><code>&lt;div tabindex="0"&gt;
-...
-&lt;/div&gt;
-</code></pre>
-
-<h5>負的 tabindex</h5>
-
-<p>下面的範例則是使用負值設定tabindex，因此該元素只能經由 script 取用</p>
-
-<pre><code>&lt;div id="progaccess" tabindex="-1"&gt;
-...
-&lt;/div&gt;
-</code></pre>
-
-<p>在這個範例中，div 元素不會排進 Tab 導覽的順序之中,但是由於它有 tabindex 屬性，且其值為 -1 ，表示說該元素還是可以透過程式取用，下面這段程式碼會選用上面所定義的元素，並且使用 focus 函式來取用該元素。</p>
-
-<pre><code>var objDiv = document.getElementById('progaccess');
-\\ Focus on the element
-objDiv.focus();
-</code></pre>
-]]></description>
-<link>http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/</link>
-<guid>http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/</guid>
-<category>css-html</category>
-<pubDate>2010-10-10 22:06</pubDate>
 </item>
 
 
