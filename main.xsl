@@ -24,7 +24,17 @@
 <!-- html5 DTD -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html>
 </xsl:text>
-<html lang="zh-tw" itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html lang="zh-tw">
+    <xsl:choose>
+        <xsl:when test="$listType = 's'">
+            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+            <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$listType = 'about'">
+            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+            <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
+        </xsl:when>
+    </xsl:choose>
 	<head>
 		<meta charset="UTF-8" />
 		<title>
@@ -461,7 +471,7 @@
 <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-{@baseName}">
     <header>
         <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}" pubdate="pubdate">
-            <!--xsl:choose>
+            <xsl:choose>
                 <xsl:when test="$showdate != '1'">
                     <xsl:attribute name="style">display: none;</xsl:attribute>
                 </xsl:when>
@@ -469,24 +479,8 @@
                     <xsl:attribute name="id">date-<xsl:value-of select="b:datetime/b:date"/></xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
-            <span class="mon">
-                <xsl:value-of select="substring(b:datetime/b:date,6,2)" />月
-                <xsl:choose>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '01'">壹月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '02'">貳月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '03'">參月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '04'">肆月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '05'">伍月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '06'">陸月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '07'">柒月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '08'">捌月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '09'">玖月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '10'">拾月</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '11'">拾壹</xsl:when>
-                    <xsl:when test="substring(b:datetime/b:date,6,2) = '12'">拾貳</xsl:when>
-                </xsl:choose>
-            </span>
-            <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" /></span-->
+            <span class="mon"><xsl:value-of select="substring(b:datetime/b:date,6,2)" />月</span>
+            <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" />日</span>
         </time>
         
         <h3 itemprop="name">
