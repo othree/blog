@@ -9,6 +9,37 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000717" baseName="ctrlpvim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-11-10</b:date>
+				<b:time>00:11:53</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>ctrlp.vim </b:title>
+			<b:content>
+				<b:summary> Mac 上很有名的編輯軟體 TextMate 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 open source 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 Vim 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 snipmate.vim，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。 Vim 也很快的就有人做出了相似的功能，第一套叫做 command-t，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： ctrlp.vim，ctrlp.vim 剛好就把我在 command-t...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8157305010/" title="Flickr 上 othree 的 Ctrl + P on Vim with ctrlp.vim"><img src="http://farm9.staticflickr.com/8339/8157305010_8f603b1e30.jpg" width="500" height="386" alt="Ctrl + P on Vim with ctrlp.vim" /></a></p>
+
+<p>Mac 上很有名的編輯軟體 <a href="http://macromates.com/">TextMate</a> 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 <a href="https://github.com/textmate/textmate">open source</a> 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 <a href="http://www.vim.org/">Vim</a> 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 <a href="https://github.com/garbas/vim-snipmate">snipmate.vim</a>，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8166619003/" title="Flickr 上 othree 的 CMD + T on Textmate"><img src="http://farm8.staticflickr.com/7262/8166619003_a615549145.jpg" width="500" height="337" alt="CMD + T on Textmate" /></a></p>
+
+<p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="http://kien.github.com/ctrlp.vim/">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000696" baseName="coffee-check-vim">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -326,40 +357,6 @@ autocmd VimEnter * :call AfterStart()
 			</b:content>
 
 			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000610" baseName="screen_vim_f1f4_map">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-01-07</b:date>
-				<b:time>22:41:26</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Screen 下 Vim F1~F4 沒辦法正常 map</b:title>
-			<b:content>
-				<b:summary>剛剛遇到的問題，好像是我的環境才會，不過如果有遇到的話就把下面這段 code 加到 vimrc 裡面吧，記得放在 map 前。 &quot; Screen fix if &amp;term =~ '^screen' set t_k1=^[[11~ set t_k2=^[[12~ set t_k3=^[[13~ set t_k4=^[[14~ endif...</b:summary>
-				<b:mainContent><p>剛剛遇到的問題，好像是我的環境才會，不過如果有遇到的話就把下面這段 code 加到 vimrc 裡面吧，記得放在 map 前。</p>
-
-
-
-<pre><code>&quot; Screen fix
-if &amp;term =~ '^screen'
-    set t_k1=^[[11~
-    set t_k2=^[[12~
-    set t_k3=^[[13~
-    set t_k4=^[[14~
-endif
-</code></pre></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="1"></b:comments>
 
 
 		</b:entry>

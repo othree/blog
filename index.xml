@@ -9,6 +9,37 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000717" baseName="ctrlpvim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-11-10</b:date>
+				<b:time>00:11:53</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>ctrlp.vim </b:title>
+			<b:content>
+				<b:summary> Mac 上很有名的編輯軟體 TextMate 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 open source 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 Vim 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 snipmate.vim，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。 Vim 也很快的就有人做出了相似的功能，第一套叫做 command-t，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： ctrlp.vim，ctrlp.vim 剛好就把我在 command-t...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8157305010/" title="Flickr 上 othree 的 Ctrl + P on Vim with ctrlp.vim"><img src="http://farm9.staticflickr.com/8339/8157305010_8f603b1e30.jpg" width="500" height="386" alt="Ctrl + P on Vim with ctrlp.vim" /></a></p>
+
+<p>Mac 上很有名的編輯軟體 <a href="http://macromates.com/">TextMate</a> 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 <a href="https://github.com/textmate/textmate">open source</a> 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 <a href="http://www.vim.org/">Vim</a> 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 <a href="https://github.com/garbas/vim-snipmate">snipmate.vim</a>，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8166619003/" title="Flickr 上 othree 的 CMD + T on Textmate"><img src="http://farm8.staticflickr.com/7262/8166619003_a615549145.jpg" width="500" height="337" alt="CMD + T on Textmate" /></a></p>
+
+<p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="http://kien.github.com/ctrlp.vim/">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000716" baseName="schemaorg">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -162,7 +193,7 @@
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="2"></b:comments>
+			<b:comments commentCount="3"></b:comments>
 
 
 		</b:entry>
@@ -334,43 +365,6 @@
 			</b:content>
 
 			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000711" baseName="apple-earpods">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2012-09-23</b:date>
-				<b:time>23:46:31</b:time>
-			</b:datetime>
-			<b:category>buy</b:category>
-			<b:title>Apple EarPods</b:title>
-			<b:content>
-				<b:summary> 這次 Apple 的發表會，當天的主角算是有三樣吧，新的 iPod 產品，iPhone 5，還有一個比較意外的就是新耳機 EarPods，不過其實講到這耳機時，我已經撐不住睡著了，所以我看到消息已經是隔天早上醒來了，一開始也沒很注意，不過看到一些介紹吸引了我的注意，Apple 設計這隻耳機是其中一個目標是可以符合所有人的耳朵，他們還掃描了上百人的耳朵來做為設計的參考，事實上，我就是一個找不到適合的耳塞式耳機的人，因為我的耳朵比較小，所以一般耳塞耳機都會有點擠，然後大約戴個半小時就會開始不舒服，耳朵痛了，所以我要是要買耳機都會考慮耳掛式或是耳罩式，不過這兩種耳機還會有其他的問題需要考慮，總之，看到這點就讓我很想嘗試看看這款新耳機了，後來又聽到網路上其他長輩評價說聲音表現也不錯，可以打死其他同價位的耳機，就更讓我堅定信心，於是昨天我聽說台灣蘋果專賣店已經有現貨，就特別跑了一趟去買了一隻回來。 這次包裝也是依然維持一段簡潔，不過他這繞線真的是講究，我敢保證線條長度是和包裝盒一起決定的，這也是第一次我沒有信心可以還原的蘋果產品包裝，不過包裝畢竟不是重點，重點還是他到底有沒說的這麼神，可以適合這麼多人的耳朵，所以來看一下他新的神祕造型： 令人意外的是，這造型真的很厲害，我戴上去兩三個小時一點都沒有不舒服，真的就只像是放在耳朵那邊，完全沒有壓迫到我的耳朵，而且聲音品質還不錯，至少和我印象中前代耳機差很多（不過我上次使用是很久以前了），低音和空間感都有出來，聲音完整很多，玩 Zoo Keeper Battle 馬上就七連勝，不過今天又一直輸 :'(...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015602105/" title="Flickr 上 othree 的 Apple EarPod"><img src="http://farm9.staticflickr.com/8456/8015602105_b161872e4b.jpg" width="333" height="500" alt="Apple EarPods"/></a></p>
-
-<p>這次 Apple 的發表會，當天的主角算是有三樣吧，新的 iPod 產品，iPhone 5，還有一個比較意外的就是新耳機 <a href="http://www.apple.com/iphone/design/#earpods">EarPods</a>，不過其實講到這耳機時，我已經撐不住睡著了，所以我看到消息已經是隔天早上醒來了，一開始也沒很注意，不過看到一些介紹吸引了我的注意，Apple 設計這隻耳機是其中一個目標是可以符合所有人的耳朵，他們還掃描了上百人的耳朵來做為設計的參考，事實上，我就是一個找不到適合的耳塞式耳機的人，因為我的耳朵比較小，所以一般耳塞耳機都會有點擠，然後大約戴個半小時就會開始不舒服，耳朵痛了，所以我要是要買耳機都會考慮耳掛式或是耳罩式，不過這兩種耳機還會有其他的問題需要考慮，總之，看到這點就讓我很想嘗試看看這款新耳機了，後來又聽到網路上其他長輩評價說聲音表現也不錯，可以打死其他同價位的耳機，就更讓我堅定信心，於是昨天我聽說台灣蘋果專賣店已經有現貨，就特別跑了一趟去買了一隻回來。</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015603167/" title="Flickr 上 othree 的 Apple EarPod"><img src="http://farm9.staticflickr.com/8459/8015603167_e6e2e0a8eb.jpg" width="500" height="333" alt="Apple EarPods"/></a></p>
-
-<p>這次包裝也是依然維持一段簡潔，不過他這繞線真的是講究，我敢保證線條長度是和包裝盒一起決定的，這也是第一次我沒有信心可以還原的蘋果產品包裝，不過包裝畢竟不是重點，重點還是他到底有沒說的這麼神，可以適合這麼多人的耳朵，所以來看一下他新的神祕造型：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015604005/" title="Flickr 上 othree 的 Apple EarPods"><img src="http://farm9.staticflickr.com/8173/8015604005_6ddf3b9dce.jpg" width="500" height="333" alt="Apple EarPod"/></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8015604585/" title="Flickr 上 othree 的 Apple EarPods"><img src="http://farm9.staticflickr.com/8296/8015604585_88a4434775.jpg" width="500" height="333" alt="Apple EarPod"/></a></p>
-
-<p>令人意外的是，這造型真的很厲害，我戴上去兩三個小時一點都沒有不舒服，真的就只像是放在耳朵那邊，完全沒有壓迫到我的耳朵，而且聲音品質還不錯，至少和我印象中前代耳機差很多（不過我上次使用是很久以前了），低音和空間感都有出來，聲音完整很多，玩 Zoo Keeper Battle 馬上就七連勝，不過今天又一直輸 :'(</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="1"></b:comments>
 
 
 		</b:entry>
