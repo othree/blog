@@ -642,9 +642,7 @@ google_color_url = "008000";
 	<!-- )</span></h4> -->
 	<xsl:choose>
 	<xsl:when test="@commentCount &gt; 0">
-		<ol id="commentlist">
-			<xsl:apply-templates select="b:comment" />
-		</ol>
+        <xsl:apply-templates select="b:comment" />
 	</xsl:when>
 	<xsl:otherwise>
 		<p>目前無人回應。</p>
@@ -701,7 +699,7 @@ google_color_url = "008000";
 <!-- template comment -->
 
 <xsl:template match="b:comment">
-<li id="comment{@commentID}">
+<article id="comment{@commentID}">
 <xsl:attribute name="class">
 <xsl:choose>
 	<xsl:when test="b:author/b:authorUrl = 'http://blog.othree.net'">comment3 well</xsl:when>
@@ -724,7 +722,7 @@ google_color_url = "008000";
 	發表：
 </h5>
 <xsl:apply-templates select="b:content/b:mainContent" mode="content" />
-</li>
+</article>
 </xsl:template>
 
 <!-- template blogData -->
