@@ -9,7 +9,6 @@
 <xsl:param name="dpr">1</xsl:param>
 <xsl:variable name="blog" select="//b:blog" />
 <xsl:variable name="blogData" select="document('sidebar.xml')" />
-<xsl:variable name="links" select="document('links.xml')" />
 <xsl:variable name="blogCategories" select="$blogData//b:blogData/b:categories" />
 <xsl:variable name="blogID" select="$blogData//b:blogData/@blogID" />
 <xsl:variable name="listType" select="b:blog/b:entries/b:entriesMeta/b:listType" />
@@ -117,6 +116,17 @@
         <meta property="fb:admin" content="582724207" />
 	</head>
 	<body>
+        <xsl:if test="$listType = 's'">
+            <div id="fb-root"><xsl:text> </xsl:text></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&amp;appId=353606324674423";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+        </xsl:if>
+
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
 		</xsl:if>
@@ -291,6 +301,19 @@
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"> </script>
+        <xsl:if test="$listType = 's'">
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            <!-- Place this tag after the last +1 button tag. -->
+            <script type="text/javascript">
+              window.___gcfg = {lang: 'zh-TW'};
+
+              (function() {
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/plusone.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+              })();
+            </script>
+        </xsl:if>
         <script>
 
   var _gaq = _gaq || [];
@@ -520,6 +543,13 @@
             </xsl:otherwise>
         </xsl:choose>
         <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響(<xsl:value-of select="b:comments/@commentCount" />)</a>
+        <xsl:if test="$listType = 's'">
+            <div class="fb-like" data-href="http://blog.othree.net{$permalink}" data-send="false" data-layout="button_count" data-width="80" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw">Tweet</a>
+            <!-- Place this tag where you want the +1 button to render. -->
+            <div class="g-plusone" data-size="medium" data-href="http://blog.othree.net/log/2012/11/10/ctrlpvim/"></div>
+        </xsl:if>
+
         <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
     </footer>
     <xsl:if test="$listType = 's'">
@@ -721,6 +751,7 @@ google_color_url = "008000";
 	<xsl:value-of select="b:datetime/b:date" /><xsl:text> </xsl:text><xsl:value-of select="b:datetime/b:time" />
 	發表：
 </h5>
+<hr/>
 <xsl:apply-templates select="b:content/b:mainContent" mode="content" />
 </article>
 </xsl:template>
@@ -741,7 +772,6 @@ google_color_url = "008000";
 </xsl:if>
 <xsl:if test="$listType = 'i'">
 	<xsl:apply-templates select="b:recentComments" />
-	<!--<xsl:apply-templates select="$links//rss/channel" />-->
 </xsl:if>
 </xsl:template>
 
@@ -789,20 +819,6 @@ google_color_url = "008000";
 	<span class="hideinfo">at <xsl:value-of select="concat(translate(b:datetime/b:date,'\-','\/'),' ',substring(b:datetime/b:time,1,5))" /></span>
 </li>
 </xsl:template>
-
-<!-- template linksblock -->
-
-<xsl:template match="channel">
-<h3>del.icio.us 書籤</h3>
-<p>這裡顯示了我在del.icio.us收錄的十筆最新的書籤，主要都是網路相關的內容，你也可以看我所收錄的<a href="http://del.icio.us/othree">所有書籤</a>。</p>
-<ul id="delicious">
-	<xsl:for-each select="item[position() &lt; 11]">
-		<xsl:call-template name="item" />
-	</xsl:for-each>
-</ul>
-</xsl:template>
-
-<!-- template link -->
 
 <xsl:template name="item">
 <li>
