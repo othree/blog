@@ -116,16 +116,6 @@
         <meta property="fb:admin" content="582724207" />
 	</head>
 	<body>
-        <xsl:if test="$listType = 's'">
-            <div id="fb-root"><xsl:text> </xsl:text></div>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&amp;appId=353606324674423";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-        </xsl:if>
 
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
@@ -215,7 +205,14 @@
                             <xsl:text> 無類別 </xsl:text>
                         </xsl:otherwise>
                         </xsl:choose>
-                        ，截至目前為止共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
+                        ，目前共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
+
+                        <div>
+                        <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" />
+                            <div class="fb-like" data-href="http://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div>
+                            <div class="g-plusone" data-size="tall" data-href="http://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div>
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw" data-count="vertical">Tweet</a>
+                        </div>
 
                         <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous or //b:blog/b:entries/b:entriesMeta/b:next">
                         <p>
@@ -302,6 +299,14 @@
         <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"> </script>
         <xsl:if test="$listType = 's'">
+            <div id="fb-root"><xsl:text> </xsl:text></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&amp;appId=353606324674423";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             <!-- Place this tag after the last +1 button tag. -->
             <script type="text/javascript">
@@ -543,12 +548,6 @@
             </xsl:otherwise>
         </xsl:choose>
         <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響(<xsl:value-of select="b:comments/@commentCount" />)</a>
-        <xsl:if test="$listType = 's'">
-            <div class="fb-like" data-href="http://blog.othree.net{$permalink}" data-send="false" data-layout="button_count" data-width="80" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div>
-            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw">Tweet</a>
-            <!-- Place this tag where you want the +1 button to render. -->
-            <div class="g-plusone" data-size="medium" data-href="http://blog.othree.net/log/2012/11/10/ctrlpvim/"></div>
-        </xsl:if>
 
         <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
     </footer>
