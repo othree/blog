@@ -49,7 +49,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <link rel="stylesheet" type='text/css' href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' />
+        <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' />
         <link rel="stylesheet" type='text/css' href="/stylesheets/othree.min.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
@@ -271,12 +271,12 @@
                     </ul>
                     <h3>訂閱本網誌</h3>
                     <ul id="feeds">
-                        <li><a href="http://feeds.feedburner.com/othree"><img src="http://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
+                        <li><a href="http://feeds.feedburner.com/othree"><img src="/feedburner/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
                     </ul>
                     <h3>貼紙</h3>
                     <p id="stickers">
                         <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
-                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='http://static.jsconf.us/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
+                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
                         <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="/images/cc.png" style="border:0px;" /></a>
                     </p>
                 </aside>
