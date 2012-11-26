@@ -43,7 +43,7 @@
 			<b:title>Open Graph Protocol, Twitter Card</b:title>
 			<b:content>
 				<b:summary> 大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 Open Graph Protocol，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下： &lt;meta property="og:title" content="Device Pixel Ratio" /&gt; &lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt; &lt;meta property="og:type" content="article" /&gt; &lt;meta property="og:description" content="...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146654174/" title="Flickr 上 othree 的 Twitter Card from 影像紀錄區"><img src="http://farm9.staticflickr.com/8332/8146654174_48699279f9.jpg" width="422" height="500" alt="Twitter Card from 影像紀錄區" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="//www.flickr.com/photos/othree/8146654174/" title="Flickr 上 othree 的 Twitter Card from 影像紀錄區"><img src="//farm9.staticflickr.com/8332/8146654174_48699279f9.jpg" width="422" height="500" alt="Twitter Card from 影像紀錄區" /></a></p>
 
 <p>大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 <a href="http://ogp.me/">Open Graph Protocol</a>，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下：</p>
 
@@ -56,7 +56,7 @@
 
 <p>這組標籤放在你的 head 裡面，如果有人在分享的 facebook 上分享的話，看起來就如下圖：</p>
 
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146662104/" title="Flickr 上 othree 的 Facebook Open Graph Protocol"><img src="http://farm9.staticflickr.com/8191/8146662104_50ff447a3b.jpg" width="500" height="183" alt="Facebook Open Graph Protocol" /></a></p>
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146662104/" title="Flickr 上 othree 的 Facebook Open Graph Protocol"><img src="//farm9.staticflickr.com/8191/8146662104_50ff447a3b.jpg" width="500" height="183" alt="Facebook Open Graph Protocol" /></a></p>
 
 <p>Open Graph Protocol 定義的標籤很好理解，也沒有複雜的結構，所以對於開發人員是非常友善，不過其實我是不太樂觀其成的，主要原因是我覺得它是個被 Facebook 控制的封閉標準，網路標準的發展最不希望發生的就是某個標準受至於特定的人或公司，不過其實一年過後的今天，我對 Open Graph Protocol 有改觀不少，也讓我願意在自己的網站上加入這樣的標籤，會讓我改觀的原因有兩個，一是雖然 Facebook 沒有明說過，不過 Open Graph Protocol 的網站上其實是一點 Facebook 的色彩都沒有的，如果不知道前因後果的話，其實不容易發現這套格式是由他們家提出，這讓我覺得他們有希望把這個格式推出去，而不是只限於 Facebook 使用，當然這一切可能都是商業陰謀，所以直到 Twitter 推出了 <a href="https://dev.twitter.com/docs/cards">Twitter Cards</a> 之前，我都還是不敢貿然進場。</p>
 
@@ -71,7 +71,7 @@
 
 <p>這張 Twitter Card 結果會在 Twitter 呈現成如下圖的樣子：</p>
 
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146619231/" title="Flickr 上 othree 的 Twitter Card Preview"><img src="http://farm9.staticflickr.com/8193/8146619231_4c368a50d9.jpg" width="464" height="500" alt="Twitter Card Preview" /></a></p>
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146619231/" title="Flickr 上 othree 的 Twitter Card Preview"><img src="//farm9.staticflickr.com/8193/8146619231_4c368a50d9.jpg" width="464" height="500" alt="Twitter Card Preview" /></a></p>
 
 <p>Twitter Cards 基本上也和 Open Graph Ptotocol 一樣定義了整套相近的標籤屬性，像是 title, desciption, url, image 等就是兩種規格都有的屬性，而最讓我意外的一件事情是，Twitter Card 相容於 Open Graph Protocol，大部分兩種規格都有的屬性，Twitter Cards 都可以支援 Open Graph Protocol 已經寫好的 meta 標籤，所以我如果要同時支援 Twitter 和 Open Graph 不用兩套重複的內容都寫出來，只要先寫 Open Graph Protocol，然後再把 Twitter 不足的部分補上去就可以了：</p>
 
@@ -149,7 +149,9 @@
 
 <p>但是如果只看 website 這個 og type 的話，基本上倒不是很大的問題。</p>
 
-<p>2.og:admin 這個屬性就很 facebook 了，不過可以理解。（可以用來取得該 open graph page 的 fb comment 管理權。XD）</p>
+<ol>
+<li>og:admin 這個屬性就很 facebook 了，不過可以理解。（可以用來取得該 open graph page 的 fb comment 管理權。XD）</li>
+</ol>
 </b:mainContent>
 					</b:content>
 				</b:comment>

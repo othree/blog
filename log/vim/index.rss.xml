@@ -12,11 +12,11 @@
 
 <item>
 <title>ctrlp.vim </title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8157305010/" title="Flickr 上 othree 的 Ctrl + P on Vim with ctrlp.vim"><img src="http://farm9.staticflickr.com/8339/8157305010_8f603b1e30.jpg" width="500" height="386" alt="Ctrl + P on Vim with ctrlp.vim" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8157305010/" title="Flickr 上 othree 的 Ctrl + P on Vim with ctrlp.vim"><img src="//farm9.staticflickr.com/8339/8157305010_8f603b1e30.jpg" width="500" height="386" alt="Ctrl + P on Vim with ctrlp.vim" /></a></p>
 
 <p>Mac 上很有名的編輯軟體 <a href="http://macromates.com/">TextMate</a> 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 <a href="https://github.com/textmate/textmate">open source</a> 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 <a href="http://www.vim.org/">Vim</a> 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 <a href="https://github.com/garbas/vim-snipmate">snipmate.vim</a>，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。</p>
 
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8166619003/" title="Flickr 上 othree 的 CMD + T on Textmate"><img src="http://farm8.staticflickr.com/7262/8166619003_a615549145.jpg" width="500" height="337" alt="CMD + T on Textmate" /></a></p>
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8166619003/" title="Flickr 上 othree 的 CMD + T on Textmate"><img src="//farm8.staticflickr.com/7262/8166619003_a615549145.jpg" width="500" height="337" alt="CMD + T on Textmate" /></a></p>
 
 <p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="http://kien.github.com/ctrlp.vim/">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
 ]]>
@@ -113,7 +113,7 @@ filetype plugin indent on
 
 <item>
 <title>Gundo.vim</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5478866289/" title="Gundo 的 undo branch 圖"><img src="http://farm6.static.flickr.com/5260/5478866289_5f64b4da86.jpg" width="500" height="490" alt="Gundo 的 undo branch 圖" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5478866289/" title="Gundo 的 undo branch 圖"><img src="//farm6.static.flickr.com/5260/5478866289_5f64b4da86.jpg" width="500" height="490" alt="Gundo 的 undo branch 圖" /></a></p>
 
 <p>詳細可以看 Vimcast 最新的一期：<a href="http://vimcasts.org/episodes/undo-branching-and-gundo-vim/">Undo branching and Gundo.vim</a>，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此  <a href="http://stevelosh.com/">Steve Losh</a> 做了個 <a href="http://sjl.bitbucket.org/gundo.vim/">Gundo</a> ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。</p>
 ]]>
@@ -126,7 +126,7 @@ filetype plugin indent on
 
 <item>
 <title>Vim for Python</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5198373889/" title="Flickr 上 othree 的 pythoncomplete"><img src="http://farm5.static.flickr.com/4131/5198373889_10fbb7c65a.jpg" width="500" height="347" alt="pythoncomplete" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5198373889/" title="Flickr 上 othree 的 pythoncomplete"><img src="//farm5.static.flickr.com/4131/5198373889_10fbb7c65a.jpg" width="500" height="347" alt="pythoncomplete" /></a></p>
 
 <p>昨天去參加了 <a href="http://www.openfoundry.org/">OpenFoundry</a> 辦的 Python 3 初學者課程，請到 <a href="http://www.plurk.com/mosky">Mosky</a> 來介紹，結果我大概只聽了一半內容，一半的時間花在弄環境和調 Vim ，主要是參考 <a href="http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/">Python and vim: Make your own IDE</a> 這篇，因為我沒有很常寫 Python ，所以只是大概裝一下， <a href="http://www.vim.org/scripts/script.php?script_id=790">Syntax</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=974">縮排</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=1542">自動完成</a> ，而且大部分時間是花在自動完成套件，因為他要 Vim 編譯出 +python ，我之前編的一直是 +python/dyn +python3/dyn ，差別在動態讀取，而且事實上我不知道怎樣動態讀取，所以實際上是沒有讀到 python library 的，後來經過不斷嘗試，暫時是先把 +python3 拿掉，就可以編出 +python -python3 的版本，雖然沒有 pytohn3 ，不過這樣就夠執行 pythoncomplete 了，再配合像是 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 這個 plugin 就很方便了。</p>
 
