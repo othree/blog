@@ -975,12 +975,19 @@ google_color_url = "008000";
 <xsl:template mode="copy-no-ns" match="*">
 <xsl:element name="{local-name()}">
     <xsl:choose>
-    <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
             <xsl:attribute name="src">
                 <xsl:variable name="p" select="@*[local-name() = 'src']" />
                 <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
                 <xsl:text>_b</xsl:text>
                 <xsl:value-of select="substring($p, string-length($p)-3)"/>
+            </xsl:attribute>
+            <xsl:copy-of select="@*[local-name() != 'src']" />
+        </xsl:when>
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'srcset'], '2x')">
+            <xsl:attribute name="src">
+                <xsl:variable name="p" select="@*[local-name() = 'srcset']" />
+                <xsl:value-of select="substring($p, 1, string-length($p)-3)"/>
             </xsl:attribute>
             <xsl:copy-of select="@*[local-name() != 'src']" />
         </xsl:when>
