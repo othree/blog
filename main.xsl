@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:transform version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo">
+<xsl:transform version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:str="http://exslt.org/strings" extension-element-prefixes="str" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo str">
 <!-- <xsl:import href="calendar.xsl" /> -->
 <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
@@ -598,7 +598,7 @@ google_color_url = "008000";
 <xsl:param name="entryID" />
 <xsl:param name="permalink" />
 <xsl:apply-templates select="b:mainContent" mode="content" />
-<xsl:if test="b:extendContent != ''">
+<xsl:if test="b:extendContent/*">
 	<xsl:choose>
 		<xsl:when test="$listType != 's'">
 			<em class="extended">
@@ -924,43 +924,43 @@ google_color_url = "008000";
 
 <!-- function to get src -->
 
-<xsl:function name="b:getsrc" as="xsi:string">
+<xsl:template name="srcset">
     <xsl:param name="set"/>
     <xsl:param name="res"/>
-    <xsl:variable name="src" as="xsi:string">
-        <xsl:for-each select="tokenize($set, ', *')">
-            <xsl:if test="substring-after(., ' ') = $res">
-                <xsl:value-of select="substring-before(., ' ')"/>
-            </xsl:if>
-        </xsl:for-each>
-    </xsl:variable>
-    <xsl:choose>
-        <xsl:when test="$res = '1x' and not($src = '')">
-            <xsl:value-of select="''"/>
-        </xsl:when>
-        <xsl:when test="not($src = '')">
-            <xsl:value-of select="$src"/>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:value-of select="b:getsrc($set, '768w 2x')"/>
-        </xsl:otherwise>
-    </xsl:choose>
-</xsl:function>
+    <xsl:for-each select="str:tokenize($set, ',')">
+        <xsl:if test="substring-after(normalize-space(.), ' ') = $res">
+            <xsl:value-of select="substring-before(normalize-space(.), ' ')"/>
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
 
 <!-- template copy without namespace -->
 
 <xsl:template mode="copy-no-ns" match="*">
 <xsl:element name="{local-name()}">
     <xsl:choose>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1 and contains(@src, 'staticflickr.com') and contains(@srcset, '2x')">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'srcset'], '2x')">
+            <xsl:variable name="src">
+                <xsl:call-template name="srcset">
+                    <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
+                    <xsl:with-param name="res">2x</xsl:with-param>
+                </xsl:call-template>
+            </xsl:variable>
             <xsl:attribute name="src">
-                <xsl:value-of select="b:getsrc(@srcset, '2x')"/>
+                <xsl:choose>
+                    <xsl:when test="$src != ''">
+                        <xsl:value-of select="$src"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="@*[local-name() = 'src']"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:attribute>
             <xsl:copy-of select="@*[local-name() != 'src']" />
         </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@src, 'staticflickr.com') and contains(@src, '_o') = false">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
             <xsl:attribute name="src">
-                <xsl:variable name="p" select="@src" />
+                <xsl:variable name="p" select="@*[local-name() = 'src']" />
                 <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
                 <xsl:text>_b</xsl:text>
                 <xsl:value-of select="substring($p, string-length($p)-3)"/>
