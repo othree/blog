@@ -3,6 +3,8 @@
 error_reporting(0);
 // error_reporting(E_ALL);
 
+include "XML_XSLT2Processor/XSLT2Processor.php";
+
 if (preg_match("/_/", getenv('QUERY_STRING'))) {
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: http://blog.othree.net".preg_replace("/_/", "-", getenv('QUERY_STRING')));
@@ -105,7 +107,10 @@ function xslt($xml, $xsl, $mime, $dpr) {
         $xslo->load($xsl);
 
         /* Configure the transformer */
-        $proc = new XSLTProcessor;
+        // $proc = new XSLTProcessor;
+
+        $proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
+
         $proc->importStyleSheet($xslo); // attach the xsl rules
         $proc->setParameter('blog.othree.net', 'ext', '');
         $proc->setParameter('blog.othree.net', 'mime', $mime);

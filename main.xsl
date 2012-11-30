@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:transform version="1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo">
+<xsl:transform version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo">
 <!-- <xsl:import href="calendar.xsl" /> -->
 <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
 <xsl:strip-space elements="*"/>
-<xsl:param name="ext">xml</xsl:param>
+<xsl:param name="ext"></xsl:param>
 <xsl:param name="mime">html</xsl:param>
 <xsl:param name="dpr">1</xsl:param>
 <xsl:variable name="blog" select="//b:blog" />
@@ -104,7 +104,11 @@
                 <meta property="og:url" content="{$canonical}" />
                 <meta property="og:type" content="article" />
                 <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
-                <xsl:apply-templates select="//b:blog/b:entries/b:entry/b:content/b:mainContent" mode="img" />
+                <xsl:for-each select="descendant::*[local-name() = 'img'][1]">
+                    <meta property="og:image" content="{@src}" />
+                    <meta property="og:image:width" content="{@width}" />
+                    <meta property="og:image:height" content="{@height}" />
+                </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
                 <meta property="og:title" content="{b:blogTitle}" />
@@ -364,7 +368,7 @@
 			<h3>依照日期整理</h3>
 			<ul class="month-archive">
 				<xsl:call-template name="monthArchive" >
-						<xsl:with-param name="mArchive" select="$blogData//b:blog/b:blogData/b:archives/b:archive[b:archiveMeta/b:listType = 'm']" />
+                    <xsl:with-param name="mArchive" select="$blogData//b:blog/b:blogData/b:archives/b:archive[b:archiveMeta/b:listType = 'm']" />
 				</xsl:call-template>
 			</ul>
 			<h3>依照分類整理</h3>
@@ -452,7 +456,7 @@
 		</xsl:call-template>
 	</xsl:if>
 	<xsl:if test="b:listType = 'o' or b:listType = 'about' or b:listType = 'archive' or b:listType = 's'">
-                <a href="../{$ext}">上一層</a>
+        <a href="../{$ext}">上一層</a>
 	</xsl:if>
 	<xsl:comment>fix for ie</xsl:comment>
 	</div>
@@ -598,8 +602,8 @@ google_color_url = "008000";
 	<xsl:choose>
 		<xsl:when test="$listType != 's'">
 			<em class="extended">
-				<a href="{$permalink}">閱讀 「<xsl:value-of select="../b:title" />」 全文</a>
-			</em>
+                <a href="{$permalink}">閱讀 「<xsl:value-of select="../b:title" />」 全文</a>
+            </em>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates select="b:extendContent" mode="content" />
@@ -607,49 +611,6 @@ google_color_url = "008000";
 	</xsl:choose>
 </xsl:if>
 
-</xsl:template>
-
-<!-- template trackbacks -->
-
-<xsl:template match="b:trackbacks">
-<xsl:param name="entryID" />
-<xsl:param name="accepted" />
-<div id="trackbacks">
-	<h4>引用<span>(
-	<xsl:choose>
-		<xsl:when test="$accepted = 0">
-			本文章目前不開放引用
-		</xsl:when>
-		<xsl:otherwise>
-			<a href="{@trackbackURL}"><xsl:value-of select="@trackbackURL" /></a>
-		</xsl:otherwise>
-	</xsl:choose>
-	)</span></h4>
-	<xsl:choose>	
-	<xsl:when test="@trackbackCount &gt; 0">
-		<ol>
-			<xsl:apply-templates select="b:trackback" />
-		</ol>
-	</xsl:when>
-	<xsl:otherwise>
-		<p>目前無人引用。</p>
-	</xsl:otherwise>
-	</xsl:choose>
-</div>
-</xsl:template>
-
-<!-- template trackback -->
-
-<xsl:template match="b:trackback">
-<li id="trackback{@trackbackID}">
-<h5>
-	<a href="#trackback{@commentID}" class="num"><xsl:value-of select="position()" /></a>
-	由 <xsl:value-of select="b:pingBlogName" />
-	在 <xsl:value-of select="translate(b:datetime/b:date,'-','/')" /><xsl:text> </xsl:text><xsl:value-of select="substring(b:datetime/b:time,1,5)" />
-	時引用，引用文章：<a href="{b:pingURL}"><xsl:value-of select="b:pingTitle" /></a>
-</h5>
-<p><xsl:apply-templates select="b:pingExcerpt" mode="content" /></p>
-</li>
 </xsl:template>
 
 <!-- template comments -->
@@ -883,8 +844,8 @@ google_color_url = "008000";
 <xsl:param name="mArchive" />
 <xsl:for-each select="$mArchive/b:archiveItem">
 	<xsl:sort select="." order="descending" />
-	<xsl:if test="substring(preceding-sibling::b:archiveItem[1],1,4) != substring(.,1,4) or preceding-sibling::b:archiveItem[1] = false()">
-		<li>
+	<xsl:if test="substring(preceding-sibling::b:archiveItem[1],1,4) != substring(.,1,4) or not(preceding-sibling::b:archiveItem[1])">
+        <li>
 			<a href="/log/{substring(.,1,4)}/{$ext}"><xsl:value-of select="substring(.,1,4)" /></a>
 			<xsl:text> </xsl:text>:<xsl:text> </xsl:text>
 			<ol>
@@ -893,7 +854,7 @@ google_color_url = "008000";
 					<xsl:with-param name="cm" select="1" />
 				</xsl:call-template>
 			</ol>
-		</li>
+        </li>
 	</xsl:if>
 </xsl:for-each>
 
@@ -955,36 +916,51 @@ google_color_url = "008000";
 </xsl:for-each>
 </xsl:template>
 
-<!-- template img -->
-<xsl:template mode="img" match="*">
-    <xsl:if test="descendant::*[name() = 'img']">
-        <meta property="og:image" content="{descendant::*[name() = 'img'][1]/@src}" />
-        <meta property="og:image:width" content="{descendant::*[name() = 'img'][1]/@width}" />
-        <meta property="og:image:height" content="{descendant::*[name() = 'img'][1]/@height}" />
-    </xsl:if>
-</xsl:template>
-
 <!-- template content -->
 
 <xsl:template mode="content" match="*">
 	<xsl:apply-templates mode="copy-no-ns" />
 </xsl:template>
 
+<!-- function to get src -->
+
+<xsl:function name="b:getsrc" as="xsi:string">
+    <xsl:param name="set"/>
+    <xsl:param name="res"/>
+    <xsl:variable name="src" as="xsi:string">
+        <xsl:for-each select="tokenize($set, ', *')">
+            <xsl:if test="substring-after(., ' ') = $res">
+                <xsl:value-of select="substring-before(., ' ')"/>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:variable>
+    <xsl:choose>
+        <xsl:when test="$res = '1x' and not($src = '')">
+            <xsl:value-of select="''"/>
+        </xsl:when>
+        <xsl:when test="not($src = '')">
+            <xsl:value-of select="$src"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="b:getsrc($set, '768w 2x')"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:function>
+
 <!-- template copy without namespace -->
 
 <xsl:template mode="copy-no-ns" match="*">
 <xsl:element name="{local-name()}">
     <xsl:choose>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'srcset'], '2x')">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1 and contains(@src, 'staticflickr.com') and contains(@srcset, '2x')">
             <xsl:attribute name="src">
-                <xsl:variable name="p" select="@*[local-name() = 'srcset']" />
-                <xsl:value-of select="substring($p, 1, string-length($p)-3)"/>
+                <xsl:value-of select="b:getsrc(@srcset, '2x')"/>
             </xsl:attribute>
             <xsl:copy-of select="@*[local-name() != 'src']" />
         </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@src, 'staticflickr.com') and contains(@src, '_o') = false">
             <xsl:attribute name="src">
-                <xsl:variable name="p" select="@*[local-name() = 'src']" />
+                <xsl:variable name="p" select="@src" />
                 <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
                 <xsl:text>_b</xsl:text>
                 <xsl:value-of select="substring($p, string-length($p)-3)"/>
