@@ -4,6 +4,7 @@ error_reporting(0);
 // error_reporting(E_ALL);
 
 // include "XML_XSLT2Processor/XSLT2Processor.php";
+include 'Mobile_Detect.php';
 
 if (preg_match("/_/", getenv('QUERY_STRING'))) {
     header("HTTP/1.1 301 Moved Permanently");
@@ -15,6 +16,14 @@ $dpr = 1;
 if ($_COOKIE['devicePixelRatio']) {
     $dpr = floatval($_COOKIE['devicePixelRatio']);
 }
+$detect = new Mobile_Detect();
+$w = 'm';
+if (intval($_COOKIE['w']) < 768) {
+    $w = 's';
+} else if ($detect->isMobile() && !$detect->isTablet()) {
+    $w = 's';
+}
+
 
 //get local path
 $self_path = preg_replace("!index\.php!", "", getenv('SCRIPT_NAME'));
@@ -82,7 +91,7 @@ if ($format == "html") {
         header("Content-type: text/html; charset=UTF-8");
     }
     //xsl transform
-    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $format, $dpr) );
+    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $format, $dpr, $w) );
 } else if ($format == "xml") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
@@ -99,7 +108,7 @@ echo $output;
 
 
 //xsl transform function
-function xslt($xml, $xsl, $mime, $dpr) {
+function xslt($xml, $xsl, $mime, $dpr, $w) {
     if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);
@@ -115,6 +124,7 @@ function xslt($xml, $xsl, $mime, $dpr) {
         $proc->setParameter('blog.othree.net', 'ext', '');
         $proc->setParameter('blog.othree.net', 'mime', $mime);
         $proc->setParameter('blog.othree.net', 'dpr', $dpr);
+        $proc->setParameter('blog.othree.net', 'w', $w);
         return $proc->transformToXML($xmlo); // actual transformation
     } else {
         header("Content-type: text/html; charset=UTF-8");
