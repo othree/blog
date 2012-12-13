@@ -5,10 +5,27 @@
 <link>http://blog.othree.net//log/ software/</link>
 <description></description>
 <copyright>Copyright 2012</copyright>
-<lastBuildDate>2009-09-21 11:26</lastBuildDate>
+<lastBuildDate>2012-12-08 14:17</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Flickr Share with Template </title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8233565165/" title="Flickr 上 othree 的 flickr share with template"><img src="//farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg" width="1022" height="766" alt="flickr share with template" srcset="//farm9.staticflickr.com/8198/8233565165_befb00d8cd.jpg 768w, //farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg 768w 2x" /></a></p>
+
+<p>前幾天在做 <a href="http://blog.othree.net/log/2012/12/02/srcset/">srcset 支援</a> 支援時，遇到一個問題是，Flickr 雖然有提供到 2048px 和原始大小的檔案，可是這些高解析度檔案的檔名和 1024px 以下的檔案是不一樣的，所以不能用簡單的加 postfix 來找到位置，所以我每要貼一張圖，就要辛苦的去開 Flickr 的各種 size 來抓他的路徑，然後剪剪貼貼組合出原始碼，這實在太辛苦了，而且手工作業長期下來很容易會出錯，剛好我也對 Flickr 預設的分享用 HTML code 不支援 XHTML 不滿很久了，所以我就決定寫個 Chrome extension 來做這件事。</p>
+
+<p>目前還沒正式公開，沒有上架，<a href="https://github.com/othree/flickr-share-template">專案</a>在 Github 上，現在因為還沒上架，要使用比較麻煩一點，把專案 clone 到本機後，先開啟 Chrome 擴充功能的開發人員模式，然後選 <strong>載入未封裝擴充功能</strong>，路徑指到專案下的 source 去。</p>
+
+<p>目前樣版語法用 mustache 語法，大概看一下預設的樣版就能懂怎麼用了，不過不是很正式的 parser 來處理，以後可能會換成 <a href="http://twitter.github.com/hogan.js/">hogan.js</a> 引擎，東西現狀其實只是可以用，還沒有寫文件，寫 License...等，先貼上來其實主要目的是，徵求一組可用的 icon，沒有 icon 就上架好像怪怪，有興趣提供的麻煩跟我聯絡，專案本身會是 MIT License，之後還會弄 Firefox 版，大概就這樣，非常感謝。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2012/12/08/flickr-share-with-templat/</link>
+<guid>http://blog.othree.net/log/2012/12/08/flickr-share-with-templat/</guid>
+<category>software</category>
+<pubDate>2012-12-08 14:17</pubDate>
+</item>
 
 <item>
 <title>Screen 支援 256 色</title>
@@ -85,15 +102,6 @@
 <guid>http://blog.othree.net/log/2008/12/13/mockups/</guid>
 <category>software</category>
 <pubDate>2008-12-13 20:19</pubDate>
-</item>
-
-<item>
-<title>nginx on windows</title>
-<description><![CDATA[<p>這兩天想說在windows上裝個 <a href="http://nginx.net/">nginx</a> 來玩玩看，翻了一下官網才發現官方沒有提供 windows 版，不過有人用 <a href="http://www.cygwin.com/">cygwin</a> 編譯出 <a href="http://www.kevinworthington.com/category/computers/nginx/">windows 版</a>來，所以我還是順利的裝起來玩了，接著馬上就遇到問題了，我 server 裝在 C 碟，不過我想把網頁文件放在 D 碟，然後還要自動產生檔案索引，這兩個問題結果我找了一下午才解決，先說第二個，要自動產生檔案所以只要用 <a href="http://wiki.codemongers.com/NginxHttpAutoindexModule">AutoIndex module</a> 就好了，因為apache這是內建的，我想說 nginx 也會內建吧，就一直在 nginx core module 裡面找設定。第一個問題就比較棘手了，我找來找去都找不到相關文章，而且官方也沒提供windows環境的說明，最後再快要回家前終於注意到關鍵字 <strong>cygwin</strong> 了，由於目前的 nginx windows 版是用 cygwin 環境編譯的，關於磁碟存取應該也是會用一樣的規則，結果果然成功了，想要存取 D 碟，就把路徑寫成 <strong>/cygdrive/d/</strong> 就可以了。</p>]]></description>
-<link>http://blog.othree.net/log/2008/11/04/nginx-on-windows/</link>
-<guid>http://blog.othree.net/log/2008/11/04/nginx-on-windows/</guid>
-<category>software</category>
-<pubDate>2008-11-04 15:45</pubDate>
 </item>
 
 <item>

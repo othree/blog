@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000722" baseName="srcset">srcset 支援</b:listData>
+
+			<b:previous>
+				<b:mTitle>PHP and XSLT 2.0</b:mTitle>
+				<b:mDate>2012-12-01</b:mDate>
+				<b:mBase>php-xslt-2</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>id 的由來  </b:mTitle>
+				<b:mDate>2012-12-04</b:mDate>
+				<b:mBase>id-quest</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000722" baseName="srcset">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-12-02</b:date>
+				<b:time>17:52:46</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>srcset 支援</b:title>
+			<b:content>
+				<b:summary> 之前的 Device Pixel Ratio 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 picture 標籤和 srcset 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像： &lt;picture&gt; &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt; &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt; &lt;img src="fallback.jpg" alt=""&gt; &lt;/picture&gt; 至於 srcset 就長的像： &lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x,...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8229879792/" title="Flickr 上 othree 的 Large"><img src="//farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg" width="1024" height="768" alt="Large" srcset="//farm9.staticflickr.com/8202/8229879792_f364c8645f.jpg 768w, //farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg 768w 2x, //farm9.staticflickr.com/8202/8229879792_eba1553052_k.jpg 2x" /></a></p>
+
+<p>之前的 <a href="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/">Device Pixel Ratio</a> 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 <a href="http://picture.responsiveimages.org/">picture</a> 標籤和 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像：</p>
+
+<pre><code>&lt;picture&gt;
+  &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt;
+  &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt;
+  &lt;img src="fallback.jpg" alt=""&gt;
+&lt;/picture&gt;
+</code></pre>
+
+<p>至於 srcset 就長的像：</p>
+
+<pre><code>&lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x, small-hd.jpg 640w 2x, med.jpg 1x, med-hd.jpg 2x "&gt;
+</code></pre>
+
+<p>基本上差異就是，picture 標籤內可以用 <a href="http://www.w3.org/TR/css3-mediaqueries/">media-query</a>，而 srcset 裡面的寬高則是代表最大值，也就是等價於 max-width 和 max-height，而不能設定 min-width 或 min-height，目前這兩份標準都是由 <a href="http://responsiveimages.org/">Responsive Images Community Group</a>(RICG) 來制訂，這個 Community Group(CG) 我覺得還蠻特別的，因為他們有自己的 domain，自己的網站，還有 <a href="https://twitter.com/respimg">twitter 帳號</a>、<a href="https://github.com/responsiveimagescg">Github 帳號</a>，和以往的標準 CG 比起來實在差蠻多，不知道組成成員是哪些，都用些很新世代的服務。</p>
+
+<p>我自己是比較喜歡 srcset 這個作法，簡潔很多，不過相對的也就沒有 picture 那樣結構化，不過兩者都有正確的 fallback 機制，所以不管選那個方法，目前的瀏覽器至少都還是可以顯示圖片。現在由於還沒有任何一個瀏覽器開始支援，所以要能實現 responsive image，要碼就是用 javascript library 來實做，要碼就是在 server 端做這件事，RICG 他們推薦的 polyfill library 是 <a href="https://github.com/scottjehl/picturefill">picturefill</a> 這套，不過我不太喜歡，因為它不是用 picture 標籤，而是自定義了一組用 div 和 data attribute 的寫法：</p>
+
+<pre><code>&lt;div data-picture data-alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;div data-src="small.jpg"&gt;&lt;/div&gt;
+    &lt;div data-src="medium.jpg"     data-media="(min-width: 400px)"&gt;&lt;/div&gt;
+    &lt;div data-src="large.jpg"      data-media="(min-width: 800px)"&gt;&lt;/div&gt;
+    &lt;div data-src="extralarge.jpg" data-media="(min-width: 1000px)"&gt;&lt;/div&gt;
+
+    &lt;!-- Fallback content for non-JS browsers. Same img src as the initial, unqualified source element. --&gt;
+    &lt;noscript&gt;
+        &lt;img src="external/imgs/small.jpg" alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>目前 <a href="http://dribbble.com/">dribbble</a> 是使用這套，另外有一套實做 srcset 的 library 叫 <a href="https://github.com/borismus/srcset-polyfill">srcset-polyfill</a>，這套就是完全照 spec 草稿下去寫的，不過我自己是沒用過，因為我自己是能少用 polyfill 就少用的那種，剛好我的 blog 架構有多一層 XSLT，所以我就把支援做在那層了。我的作法就是 server 端想辦法判斷應該要給瀏覽器哪張圖片，然後 parse 網頁內容後，對有 srcset 的圖片作處理，把原來的 src 替換成適合的圖片位置，做在 XSLT 端的好處是反正那邊本來就要處理網頁的 DOM tree 了，用專門 XML parser 來做這件事情比較不會發生意外這樣，不過基本上就是個 server 端實做，也沒很特別，倒是判斷依據和規則想比較久。</p>
+
+<pre><code>&lt;a class="thumbnail" href="http://www.flickr.com/photos/othree/7877215448/" title="Flickr 上 othree 的 花蓮"&gt;
+    &lt;img src="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg" width="1024" height="683" alt="花蓮" 
+        srcset="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c.jpg 768w,
+            //farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg 768w 2x,
+            //farm9.staticflickr.com/8431/7877215448_9a51e0f42a_k.jpg 2x" /&gt;
+&lt;/a&gt;
+</code></pre>
+
+<p>目前我會在 srcset 裡面放三張圖，寬度分別是 500px、1024px 和 2048px 的，500px 那張的主要目標是給手機，1024px 那張是一般電腦，2048px 則是要給螢幕夠大且支援 HiDPI 的設備，像是 MBPR 和 iPad 3，基本上和 Device Pixel Ratio 的方法一樣，第一次來的訪客會寫入 cookie，記錄寬高最短邊的長度，只要最短邊小於 768 就給他最小張的寬 500px 的圖，剩下的情形就看 Dvice Pixel Ratio 決定要給哪張。不過光是這樣的規則其實還有些問題，就是頻寬的問題，像是用手機的人用 3G 網路加上螢幕不大，即使只是第一次來也很不需要抓 1024px 的圖片，所以第一次來的訪客我還會用 <a href="https://github.com/serbanghita/Mobile-Detect">Mobile_Detect</a> 來判斷，如果發現是手機的話第一次就會給 500px 的小圖。</p>
+
+<p>目前用 Android Chrome、iPad Safari 還有桌上型電腦測過都有符合預期目標，目前也還沒想到其他改進的方向，可能等市面上的裝置分布有改變的話再調整了吧，不過如果瀏覽器直接支援 srcset 的話，那是最好，我也不需要在修改了:P。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

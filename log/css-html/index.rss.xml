@@ -5,10 +5,126 @@
 <link>http://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2012</copyright>
-<lastBuildDate>2012-11-04 21:34</lastBuildDate>
+<lastBuildDate>2012-12-04 23:06</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>WebSite Improvent</title>
+<description><![CDATA[<p>這篇文章整理一下這次改版大概是做了哪些東西，其實一開始的目標很簡單，就是對以前的樣式不滿很久了，想要一個簡潔，沒有多餘東西的版面，不過實際上讓我動手的原因其實是我開始有 Responsive Web Site 的需求了，我想很多人都知道，現在全世界可以上網的設備，手持裝置的數量已經和電腦不相上下了，以前我想說要看文章應該不會想在手機上看，可是後來我慢慢瞭解，有很多時候可能是點到朋友在 Twitter 上的分享，所以訪客才會用手機打開你的網頁，如果訪客這時候點開的網頁有支援行動裝置的低解析度，那使用者體驗會好很多。總之，我就想要讓我的部落格也有支援就是，一開始只是想要套用 Twitter Bootstrap，不過之後又陸續加上不少東西，整理如下：</p>
+
+<h5>Bootstrap</h5>
+
+<p>這次使用 Bootstrap 的 CSS Framework 來支援不同解析度的瀏覽介面，套用起來很簡單，預設的樣式就很不錯，像是表單之類的元件我就不用另外費心思來處理，主要是調整行高之類的改善排版，讓中文文章的閱讀更輕鬆些，顏色和背景則是從 <a href="http://blog.othree.net/log/2012/11/22/nippon-colors/">日本的傳統色</a> 那裡挑來的，目前是還沒考慮到配色的協調，應該還會再調整。</p>
+
+<h5>Web Fonts</h5>
+
+<p>用了 <a href="http://www.google.com/webfonts">Google Web fonts</a>，分別在頁首 logo 和程式碼區塊，範例：</p>
+
+<pre><code>@media (-webkit-min-device-pixel-ratio: 2),
+       (min--moz-device-pixel-ratio: 2),
+       (min-resolution: 2dppx)
+</code></pre>
+
+<p>Logo 部分當然就是要讓它比較不一樣些，所以找了個很特別的 8bit 風格字體，至於程式碼區塊，有一個基本要求是要是等寬字形，不然程式碼每個字元垂直對不齊會超難受的，後來用的是設計給 Android 手機的 Droid Sans，Google Web Fonts 有個好處是完全照標準 CSS 的用法，而且免費。</p>
+
+<h5>DevicePixelRatio Support</h5>
+
+<p>這也是之前 <a href="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/">介紹</a> 過，讓高解析度螢幕的環境可以使用比較大張的圖片，配合 flickr 的命名規則作的，自己用 iPad 看起來是蠻漂亮的啦。</p>
+
+<h5>Default sans-serif font</h5>
+
+<p>以前有介紹過判斷訪客瀏覽器是否支援字體渲染的 <a href="http://blog.othree.net/log/2011/03/06/default-font-style/">方法</a>，當時我給 Windows 的預設是不支援，不過時代在改變，所以現在預設的字型都是黑體了，如果瀏覽器判斷出來不支援字體渲染，那會改用系統預設字形，通常會是新細明體，會做這樣的改變事我自己有時候會看到切換字型那瞬間的跳動，老實說一直跳是不太舒服啦，所以我想讓看到的人盡量減少，考量到現在數據上訪客用 Windows 7 的使用者已經大於其他所有的 Windows 的使用者的總和，所以我就這樣改了。</p>
+
+<h5>Twitter Cards and Open Graph Protocol</h5>
+
+<p>接下來的改造則是社群網路的結合，這部分是以前完全沒弄過的部分，主要的原因是太多社群網路了，但是每個社群網路間都有堵 <a href="http://www.w3.org/2010/Talks/0303-socialcloud-tbl/">高牆</a>，使用者要跨越這些高牆非常困難，一個只用 Facebook 的人無法和只用 Twitter 的人從社群網路上有太多互動，就像是陷入飛彈發射井一樣。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8215041817/" title="Flickr 上 othree 的 Social Network Silos"><img src="//farm9.staticflickr.com/8489/8215041817_a15170fb3d_b.jpg" width="1024" height="845" alt="Social Network Silos" srcset="//farm9.staticflickr.com/8489/8215041817_a15170fb3d.jpg 768w, //farm9.staticflickr.com/8489/8215041817_a15170fb3d_b.jpg 768w 2x" /></a></p>
+
+<p>從網站開發者這端來看，要減少這個社群網路的壟斷，基本上就是增加支援不同的社群網路，不過社群網站太多了，簡單 Google 一下 <a href="https://www.google.com.tw/search?num=10&amp;hl=zh-TW&amp;site=imghp&amp;tbm=isch&amp;source=hp&amp;q=social+network+buttons&amp;oq=social+network+buttons">Social Network Buttons</a> 就可以看到一大堆按鈕，要公平的對待每個社群網路，那就是每個都支援，可以想像要是每篇文章都這麼多按鈕要加，那是會多可怕的畫面，所以現狀雖然很殘酷，不過網際網路目前確實是被社群網路控制著的，最大的就是 Facebook 和 Twitter 兩家。</p>
+
+<p>不過先不看社群網路的壟斷問題，資訊在網路上傳播的方式已經從最早的入口網站、搜尋網站這種使用者主動尋找的模式，經過 RSS 訂閱機制這種半被動方式，到現在透過社群網路分享，使用者只要做這那邊等朋友們分享的資訊，看似被動模式，不過其實是角色之間界線的消失了，在社群網路內的每個人都可能是資訊的提供者、傳播者或接收者。</p>
+
+<p>話題有點扯遠了，總之社群網站礙於使用性我不可能全部支援，所以就挑最大的三家支援，Facebook、Twitter、Google+，而第一步就是 <a href="http://blog.othree.net/log/2012/11/02/opengraph-protocol-twitter-card/">Twitter Cards 和 Open Graph Protocol</a>，其中 Twitter Cards 目前需要申請，而且我自己測試過，個人網站也是會通過的。</p>
+
+<h5>Twitter Feed</h5>
+
+<p>第二步就是讓新文章能主動發佈到社群網站上，這邊是使用 <a href="http://twitterfeed.com/">twitter feed</a> 這個服務，目前由於 Google+ 沒有開放 API，所以只支援 Twitter 和 Facebook，只要給該服務你網站內容的 RSS 並透過社群網站的授權機制授權給它發文，它就會在 RSS 有更新時，自動用你的帳號在你的 timeline 貼連結，不過這個服務其實是 <a href="https://bitly.com/">bit.ly</a> 的相關服務，所以貼過去的連結其實是 bit.ly 短網址，好處是會有 bit.ly 的統計資料，而且也不影響 Twitter Card 的功能。</p>
+
+<h5>Social Network Buttons</h5>
+
+<p>最後一個社群網站相關的修改是加上這三個社群網站的分享按鈕，也是很基本就照文件說明，不過比較麻煩的是按鈕樣式的選擇，本來是想要放最小的，20px 高的那種，可是因為寬度問題，由於都是用 iframe 實做，iframe 裡不同網域的程式碼無法動到 iframe 本身的大小，結果就是會讓這些按鈕後面需要預留空間，當多個按鈕要放一起時，就會出現間距不相同的情形。後來我就改成現在的形式，好處是寬高固定，比較可以控制位置，不過我發現三家社群網路的類似形式的按鈕還是故意有些不相容，眼尖的人可以能會發現他們高度不一樣，分別有 59px、60px、61px，如果把 Pinterest 也算上來，那還有 57px，還真是不知道該說什麼...</p>
+
+<h5>HTTPS</h5>
+
+<p>最後還有一個比較不重要，純粹是自爽的，就是現在本 blog 支援 HTTPS 連線了，一開始的動機只是因為看到 Chrome 會說網站尚未驗證身份，所以就一不做二不休，弄到有綠色鎖頭出現，不過目前還有一些問題需要處理，所以沒有弄成強制轉成 HTTPS，像是 Twitter Card 白名單好像有分，還有提交給搜尋引擎的 sitemap.xml，還有 canonical url 等都要統一，其實還很多細節要處理就是。</p>
+
+<p>這一兩個月大概就是做了這些改進，斷斷續續的修改，看到什麼就修什麼，其實沒有先列清單，其實還有剛完成的 <a href="http://blog.othree.net/log/2012/12/02/srcset/">srcset</a> 支援的東西就是。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2012/12/04/website-improvent/</link>
+<guid>http://blog.othree.net/log/2012/12/04/website-improvent/</guid>
+<category>css-html</category>
+<pubDate>2012-12-04 23:06</pubDate>
+</item>
+
+<item>
+<title>srcset 支援</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8229879792/" title="Flickr 上 othree 的 Large"><img src="//farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg" width="1024" height="768" alt="Large" srcset="//farm9.staticflickr.com/8202/8229879792_f364c8645f.jpg 768w, //farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg 768w 2x, //farm9.staticflickr.com/8202/8229879792_eba1553052_k.jpg 2x" /></a></p>
+
+<p>之前的 <a href="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/">Device Pixel Ratio</a> 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 <a href="http://picture.responsiveimages.org/">picture</a> 標籤和 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像：</p>
+
+<pre><code>&lt;picture&gt;
+  &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt;
+  &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt;
+  &lt;img src="fallback.jpg" alt=""&gt;
+&lt;/picture&gt;
+</code></pre>
+
+<p>至於 srcset 就長的像：</p>
+
+<pre><code>&lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x, small-hd.jpg 640w 2x, med.jpg 1x, med-hd.jpg 2x "&gt;
+</code></pre>
+
+<p>基本上差異就是，picture 標籤內可以用 <a href="http://www.w3.org/TR/css3-mediaqueries/">media-query</a>，而 srcset 裡面的寬高則是代表最大值，也就是等價於 max-width 和 max-height，而不能設定 min-width 或 min-height，目前這兩份標準都是由 <a href="http://responsiveimages.org/">Responsive Images Community Group</a>(RICG) 來制訂，這個 Community Group(CG) 我覺得還蠻特別的，因為他們有自己的 domain，自己的網站，還有 <a href="https://twitter.com/respimg">twitter 帳號</a>、<a href="https://github.com/responsiveimagescg">Github 帳號</a>，和以往的標準 CG 比起來實在差蠻多，不知道組成成員是哪些，都用些很新世代的服務。</p>
+
+<p>我自己是比較喜歡 srcset 這個作法，簡潔很多，不過相對的也就沒有 picture 那樣結構化，不過兩者都有正確的 fallback 機制，所以不管選那個方法，目前的瀏覽器至少都還是可以顯示圖片。現在由於還沒有任何一個瀏覽器開始支援，所以要能實現 responsive image，要碼就是用 javascript library 來實做，要碼就是在 server 端做這件事，RICG 他們推薦的 polyfill library 是 <a href="https://github.com/scottjehl/picturefill">picturefill</a> 這套，不過我不太喜歡，因為它不是用 picture 標籤，而是自定義了一組用 div 和 data attribute 的寫法：</p>
+
+<pre><code>&lt;div data-picture data-alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;div data-src="small.jpg"&gt;&lt;/div&gt;
+    &lt;div data-src="medium.jpg"     data-media="(min-width: 400px)"&gt;&lt;/div&gt;
+    &lt;div data-src="large.jpg"      data-media="(min-width: 800px)"&gt;&lt;/div&gt;
+    &lt;div data-src="extralarge.jpg" data-media="(min-width: 1000px)"&gt;&lt;/div&gt;
+
+    &lt;!-- Fallback content for non-JS browsers. Same img src as the initial, unqualified source element. --&gt;
+    &lt;noscript&gt;
+        &lt;img src="external/imgs/small.jpg" alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>目前 <a href="http://dribbble.com/">dribbble</a> 是使用這套，另外有一套實做 srcset 的 library 叫 <a href="https://github.com/borismus/srcset-polyfill">srcset-polyfill</a>，這套就是完全照 spec 草稿下去寫的，不過我自己是沒用過，因為我自己是能少用 polyfill 就少用的那種，剛好我的 blog 架構有多一層 XSLT，所以我就把支援做在那層了。我的作法就是 server 端想辦法判斷應該要給瀏覽器哪張圖片，然後 parse 網頁內容後，對有 srcset 的圖片作處理，把原來的 src 替換成適合的圖片位置，做在 XSLT 端的好處是反正那邊本來就要處理網頁的 DOM tree 了，用專門 XML parser 來做這件事情比較不會發生意外這樣，不過基本上就是個 server 端實做，也沒很特別，倒是判斷依據和規則想比較久。</p>
+
+<pre><code>&lt;a class="thumbnail" href="http://www.flickr.com/photos/othree/7877215448/" title="Flickr 上 othree 的 花蓮"&gt;
+    &lt;img src="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg" width="1024" height="683" alt="花蓮" 
+        srcset="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c.jpg 768w,
+            //farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg 768w 2x,
+            //farm9.staticflickr.com/8431/7877215448_9a51e0f42a_k.jpg 2x" /&gt;
+&lt;/a&gt;
+</code></pre>
+
+<p>目前我會在 srcset 裡面放三張圖，寬度分別是 500px、1024px 和 2048px 的，500px 那張的主要目標是給手機，1024px 那張是一般電腦，2048px 則是要給螢幕夠大且支援 HiDPI 的設備，像是 MBPR 和 iPad 3，基本上和 Device Pixel Ratio 的方法一樣，第一次來的訪客會寫入 cookie，記錄寬高最短邊的長度，只要最短邊小於 768 就給他最小張的寬 500px 的圖，剩下的情形就看 Dvice Pixel Ratio 決定要給哪張。不過光是這樣的規則其實還有些問題，就是頻寬的問題，像是用手機的人用 3G 網路加上螢幕不大，即使只是第一次來也很不需要抓 1024px 的圖片，所以第一次來的訪客我還會用 <a href="https://github.com/serbanghita/Mobile-Detect">Mobile_Detect</a> 來判斷，如果發現是手機的話第一次就會給 500px 的小圖。</p>
+
+<p>目前用 Android Chrome、iPad Safari 還有桌上型電腦測過都有符合預期目標，目前也還沒想到其他改進的方向，可能等市面上的裝置分布有改變的話再調整了吧，不過如果瀏覽器直接支援 srcset 的話，那是最好，我也不需要在修改了:P。</p>
+]]>
+</description>
+<link>http://blog.othree.net/log/2012/12/02/srcset/</link>
+<guid>http://blog.othree.net/log/2012/12/02/srcset/</guid>
+<category>css-html</category>
+<pubDate>2012-12-02 17:52</pubDate>
+</item>
 
 <item>
 <title>schema.org  </title>
@@ -665,323 +781,6 @@ http://www.techbang.com.tw/posts/5033
 <guid>http://blog.othree.net/log/2010/11/04/google-page-speed-module/</guid>
 <category>css-html</category>
 <pubDate>2010-11-04 14:28</pubDate>
-</item>
-
-<item>
-<title>WAI-ARIA 介紹之三</title>
-<description><![CDATA[<p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
-
-<ul>
-<li><a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a></li>
-<li><a href="http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/">WAI-ARIA 介紹之二</a></li>
-<li>WAI-ARIA 介紹之三 - 本篇文章</li>
-</ul>
-
-<h4>ARIA 可以做什麼用？</h4>
-
-<p>使用 ARIA 並不會有不好的副作用，所以你可以馬上開始使用他，而且主流的四個瀏覽器都已經支援或已經有計劃支援了，Opera 9.5 和 Firefox 1.5 已經有支援 ARIA ， IE8b 也有支援， Safari 所使用的 WebKit 框架也發表說他們將會開始支援 ARIA ， 輔助科技也廣泛的支援 ARIA ，JAWS 7.1、Window-Eyes 5.5+、NVDA、Zoomtext 9+ 和其他輔助科技都有基本的支援，而且還會越來越好。</p>
-
-<h4>現在就參與使用</h4>
-
-<p>由於使用 ARIA 並沒有任何不好的副作用，而且相關的支援都已經到位，現在就參與使用百利而無一害，即使你的網站非常簡單，你也可以使用文件地標讓使用者有更好的導覽系統可以使用。</p>
-]]><![CDATA[<h5>使用文件地標</h5>
-
-<p>在我的個人網站，我就使用了 main、navigation、search、secondary 這幾個文件地標，以下面的文件結構為例：</p>
-
-<pre><code>&lt;div id="ads"&gt;
-...
-&lt;/div&gt;
-&lt;div id="nav"&gt;
-    &lt;form id="searchform" ...&gt;
-    ...
-    &lt;/form&gt;
-...
-&lt;/div&gt;
-&lt;div id="content"&gt;
-...
-&lt;/div&gt;
-</code></pre>
-
-<p>我們可以把 role 屬性寫進標記內以加上地標資訊。</p>
-
-<pre><code>&lt;div id="ads" role="banner"&gt;
-...
-&lt;/div&gt;
-&lt;div id="nav" role="navigation"&gt;
-    &lt;form id="searchform" role="search" ...&gt;
-    ...
-    &lt;/form&gt;
-...
-&lt;/div&gt;
-&lt;div id="content" role="main"&gt;
-...
-&lt;/div&gt;
-</code></pre>
-
-<p>大部分的網頁都會有設計好的結構，好方便使用 CSS 做版面配置，而此範例頁就使用到 id，id 還可以簡單的傳給 JavaScript 函數，下面的範例是一個簡單的 JavaScript 函數，它接收的參數是元素的 id 和 role 角色值，會將指定 id 元素的 role 設為指定的值。</p>
-
-<pre><code>function addARIARole(strID, strRole)
-{
-    // Find the element to add a role property to
-    var objElement = document.getElementById(strID);
-
-    if (objElement)
-    {
-        // Add the role property to the element
-        objElement.setAttribute('role', strRole);
-    }
-}
-</code></pre>
-
-<p>接著就可以使用這個函數，傳入文件內元素的 id 和對應的文件地標，而已前面的文件結構來說，我們可以用下面的 JavaScript 來加上地標資訊，而不必直接寫入標籤。</p>
-
-<pre><code>function setupARIA()
-{
-    // Add ARIA roles to the document
-    addARIARole('content', 'main');
-    addARIARole('nav', 'navigation');
-    addARIARole('searchform', 'search');
-    addARIARole('ads', 'banner');
-}
-window.onload = setupARIA;
-</code></pre>
-
-<h5>標出必填欄位</h5>
-
-<p>如果你的表單內有必填欄位，你可以使用 aria-required 屬性，此屬性告訴使用者此欄位在送出前必須要有填值，下面的範例就是有使用 aria-required 的 input 元素。</p>
-
-<pre><code>&lt;label for="contactname"&gt;Name&lt;/label&gt;
-&lt;input type="text"
-       id="contactname" 
-       name="contactname"
-       size="30"
-       aria-required="true"&gt;
-</code></pre>
-
-<p>Wordpress 已經有在迴響表單的必填欄位內加上 aria-required 屬性了。</p>
-
-<h5>加上其他相關屬性</h5>
-
-<p>還有許多 ARIA 屬性可以使用在簡單的網站上，像是 aria-labeledby 和 aria-describerdby，aria-labeledby 是用來定位該元素的標題是哪個或哪些元素裡，aria-describedby 則是用來定位敘述該元素的資訊放在哪。</p>
-
-<pre><code>&lt;h2 id="limg"&gt;Paragliding&lt;/h2&gt;
-&lt;p id="dimg"&gt;
-A long description of our paragliding trip ...
-&lt;/p&gt;
-&lt;div&gt;
-&lt;img src="takeoff.png"
-     alt="Getting ready to take off"
-     aria-labelledby="limg"
-     aria-describedby="dimg"&gt;
-&lt;/div&gt;
-</code></pre>
-
-<h5>更高的優先權</h5>
-
-<p>ARIA 的屬性比 HTML 原本的屬性優先權還要高，意思是說 aria-labeledby 和 label 元素的 for一起出現時， aria-labeledby 優先度會較高，不過 label 元素還是可以讓不支援 ARIA 的舊瀏覽器能正確的找出元素間的關係，有個簡單的技巧可以避免衝突，就是用 aria-labeledby 連回 label 元素，不管 ARIA 支援如何，都可以確保 input 元素的標題存在。</p>
-
-<pre><code>&lt;label id="lblef" for="effectiveness"&gt;Effectiveness&lt;/label&gt;
-&lt;input type="image"
-       role="slider"
-       id="effectiveness"
-       aria-labelledby="lblef"
-       ...&gt;
-</code></pre>
-
-<p>看看完整的 ARIA [屬性清單][8] 可以幫助你讓你把網頁內容弄的更具有親和力。</p>
-
-<h4>總結</h4>
-
-<p>HTML 最初不是設計來製作網路應用程式的，但是設計師們還是藉著製作自定的介面元件，並使用 JavaScript 給予它們可以操作互動的能力而拼湊出網路應用程式，而問題是這些元件的角色、狀態和屬性以及網頁內容的更新情形並不會讓輔助科技正確的知道，因此 ARIA 規範藉由讓設計師可以詳細的描述這些介面元件、定義文件結構和即時更新的區域來解決這個問題。</p>
-
-<p>不論你是要開發最新潮複雜的網路應用程式還是你有的只是簡單的 HTML 文件，你都可以使用 ARIA 讓身心障礙人士獲益。</p>
-
-<h4>進階閱讀</h4>
-
-<ul>
-<li><a href="http://www.w3.org/TR/wai-aria-practices/">WAI-ARIA Best Practices</a></li>
-<li><a href="http://www.marcozehe.de/2008/02/29/easy-aria-tip-1-using-aria-required/">Using aria-required</a></li>
-<li><a href="http://www.marcozehe.de/2008/03/23/easy-aria-tip-2-aria-labelledby-and-aria-describedby/">Using aria-labelledby and aria-describedby</a></li>
-<li><a href="http://www.marcozehe.de/2008/07/16/easy-aria-tip-3-aria-invalid-and-role-alert/">Using aria-invalid and role alert</a></li>
-<li><a href="http://www.paciellogroup.com/blog/?p=53">Tri-State Checkbox Example</a></li>
-<li><a href="http://www.paciellogroup.com/blog/?p=68">ARIA Slider Example</a></li>
-</ul>
-]]></description>
-<link>http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/</link>
-<guid>http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/</guid>
-<category>css-html</category>
-<pubDate>2010-10-17 23:46</pubDate>
-</item>
-
-<item>
-<title>WAI-ARIA 介紹之二</title>
-<description><![CDATA[<p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
-
-<ul>
-<li><a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a></li>
-<li>WAI-ARIA 介紹之二 - 本篇文章</li>
-<li><a href="http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/">WAI-ARIA 介紹之三</a></li>
-</ul>
-
-<h4>我是誰？</h4>
-
-<p>ARIA 導入了 role 屬性來幫助定義介面元件和頁面結構，介面元件像是滑動條控制器，頁面結構像是導覽區塊，網路應用程式的一個主要問題是任何 HTML 元素都可以用來製作介面元件，但是 HTML 元素都已經有其定義與角色了。 Role 屬性代表的是該元素是什麼東西，它在整個架構中是什麼角色，例如 heading 標題就是輔助科技所可以了解的角色。當使用既有的元素建置介面元件時，輔助科技會以元素的預設角色和定義來認知該元素，而不是它實際上在介面元件中的角色，例如滑動條控制器中的滑塊使用 img 標籤製作並標上適當的替代文字，螢幕閱讀器會讀出「圖形、滑塊」而不是更有意義的「滑動條控制器、值為百分之16。」</p>
-
-<p><a href="http://www.flickr.com/photos/othree/5067918400/" title="Flickr 上 othree 的 thumb"><img src="http://farm5.static.flickr.com/4128/5067918400_56f38e1a6c_o.gif" width="166" height="81" alt="" /></a> <br />
-Figure 3 -- 滑動條控制器上的滑塊</p>
-]]><![CDATA[<p>role 所設定的元素角色會蓋過原本元素預設的角色，下面的例子中，有一個 role 屬性為 slider 的 input 元素（其他的屬性將會在後面介紹），因此輔助科技將會將它認為是滑動條控制器(slider) 而不是普通的文字輸入欄位 (input)。</p>
-
-<pre><code>&lt;input type="image"
-       src="thumb.gif"
-       alt="Effectiveness"
-       role="slider"
-       aria-valuemin="0"
-       aria-valuemax="100"
-       aria-valuenow="42"
-       aria-valuetext="42 percent" 
-       aria-labelledby="leffective"&gt;
-</code></pre>
-
-<p>當這個元素被取用時，螢幕閱讀器便可以正確的告訴使用者這個介面元件是什麼。ARIA規格也有維護一份 <a href="http://www.w3.org/TR/wai-aria/roles#role_definitions">role 屬性值的清單</a>。</p>
-
-<h5>文件地標</h5>
-
-<p>Role 屬性除了定義介面元件外，還可以幫助建立文件的結構，<a href="http://www.w3.org/TR/wai-aria/roles#landmark_roles">文件地標</a>是 role 屬性的一個子集，它可以幫助螢幕閱讀器的使用者了解不同 HTML 內部同文件區塊的用途，好快速的定位到想要去的位置。</p>
-
-<p><a href="http://www.flickr.com/photos/othree/5067918418/" title="Flickr 上 othree 的 pagestructure"><img src="http://farm5.static.flickr.com/4153/5067918418_ae41f9b617_o.gif" width="179" height="256" alt="" /></a> <br />
-Figure 4 -- 常見的文件結構，有標頭、側邊欄和主要內容</p>
-
-<p>ARIA 規格定義了以下的文件地標。</p>
-
-<dl>
-    <dt>article</dt>
-    <dd>完整的一段內容，像是完整的一篇部落格文章、一篇迴響或是討論區的亦篇文章等</dd>
-    <dt>banner</dt>
-    <dd>跨網頁，屬於網站全體層級的內容，像是網站標題或是標誌等</dd>
-    <dt>complementary</dt>
-    <dd>和 main 內容相關的東西，不過可以獨立於主要內容之外，像是在入口網站提供的天氣資訊</dd>
-    <dt>contentinfo</dt>
-    <dd>相關資訊，例如註腳、版權宣告、隱私聲明、設定連結等</dd>
-    <dt>main</dt>
-    <dd>文件主要內容</dd>
-    <dt>navigation</dt>
-    <dd>內含本身以及相關文件導覽連結的部份</dd>
-    <dt>search</dt>
-    <dd>站內搜尋的表單區塊</dd>
-</dl>
-
-<p>下面的例子使用了文件地標指定了圖四文件中的 banner, navigation 和 main 三個區塊。</p>
-
-<pre><code>&lt;div role="banner"&gt;
-...
-&lt;/div&gt;
-&lt;div role="navigation"&gt;
-...
-&lt;/div&gt;
-&lt;div role="main"&gt;
-...
-&lt;/div&gt;
-</code></pre>
-
-<h4>ARIA 狀態與屬性</h4>
-
-<p>ARIA <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性</a> 讓輔助科技可以得到介面元件的更多資訊幫助使用者了解如何操作這些介面元件，狀態是用來指定物件的某個特定資訊，例如 aria-checked 有三種狀態值， true, false 和 mixed 。而前面介紹的滑動條控制器，也有數個 aria 屬性可以幫助輔助科技描述這個元件。</p>
-
-<dl>
-    <dt>aria-valuemin</dt>
-    <dd>儲存可接受數值的最小值</dd>
-    <dt>aria-valuemax</dt>
-    <dd>儲存可接受數值的最大值</dd>
-    <dt>aria-valuenow</dt>
-    <dd>儲存現在介面元件的值</dd>
-    <dt>aria-valuetext</dt>
-    <dd>儲存方便使用者理解接現在數值的文字，例如：30塊錢</dd>
-    <dt>aria-labelledy</dt>
-    <dd>儲存描述此介面元件的元素的 id 值</dd>
-</dl>
-
-<p>部分屬性可能會被 script 程式改變，例如 aria-valuenow 和 aria-valuetext 就應該在滑塊移動時跟著改變。</p>
-
-<pre><code>// Set the ARIA property values when the thumb is 
-// moved on the slider
-objThumb.setAttribute('aria-valuenow', iValue);
-objThumb.setAttribute('aria-valuetext', iValue + ' %');
-</code></pre>
-
-<p>網頁加上 role 屬性和 ARIA 屬性會讓文件無法通過標準檢測，但沒關係，讓 ARIA 支援古老標準的相關的工作也正在進行，像是有一個可以讓 <a href="http://www.w3.org/WAI/PF/adaptable/StatesAndProperties-20051106.HTML">模組化 XML 使用的文件類型定義(DTD)</a>，XHTML 1.1 就是一種模組化 XML 文件格式，有一份完整的 <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性清單</a> ，可以幫助建立具親和力的介面元件。</p>
-
-<h4>即時區塊</h4>
-
-<p>即時區塊讓 HTML 元素在內容有更新時會通知使用者，而不會忽略掉最新的狀況，這意味著使用者可以不用離開他現在的游標位置也可以收到最新的更新內容，例如聊天室可以讓使用者接收到其他人的回覆，而不用離開文字輸入框，中斷正在輸入的訊息。</p>
-
-<h5>aria-live</h5>
-
-<p>無法發現網頁內容的更新是螢幕閱讀器使用者一直以來最大的障礙，ARIA 提供了 aria-live 這個屬性來設定網頁區塊更新時通知該如何通知使用者，下面是三種可以使用的設定。</p>
-
-<dl>
-    <dt>off</dt>
-    <dd>預設值，區塊的更新不會通知輔助科技
-    <pre><code>
-        &lt;ul aria-live="off"&gt;
-    </code></pre></dd>
-    <dt>polite</dt>
-    <dd>這是適用於大部分 live 區塊的設定， polite 區塊將會在使用者完成正在進行的動作後才會通知輔助科技
-    <pre><code>
-        &lt;ul aria-live="polite"&gt;
-    </code></pre></dd>
-    <dt>assertive</dt>
-    <dd>這個值比一般的情形更為優先，但不會打斷使用者的動作。
-    <pre><code>
-        &lt;ul aria-live="assertive"&gt;
-    </code></pre></dd>
-</dl>
-
-<p>其他還有一些重要的屬性可以幫助設定即時區塊，下面接著介紹。</p>
-
-<h5>aria-atomic 屬性</h5>
-
-<p>aria-atomic 是即時區塊的非必要的屬性，它的值可以是 true 或 false (預設是無指定)，當即時區塊更新時，aria-atomic 屬性是用來決定輔助科技是否要把整個區塊的內容都通報給使用者，如果設為 true，輔助科技就會把整個即時區塊的內容都通報出去，不然就只通報更改的部份。</p>
-
-<p>下面的例子中，所有在此非排序清單中的元素都會被完整的念出，除非 aria-atomic 屬性被覆蓋。</p>
-
-<pre><code>&lt;ul aria-atomic="true"
-    aria-live="polite"&gt;
-</code></pre>
-
-<h5>aria-busy 屬性</h5>
-
-<p>aria-busy 屬性也是非必要屬性，值可以為 true 或 false （預設為無指定），如果即時區塊內有多個地方都需要更改，之後才需要通知使用者的話，那就可以先將 aria-busy 設為 true 
-，等到在內容都更新完後再把 aria-busy 設為 false，這個屬性可以避免輔助科技在即時區的內容更新完成之前就通知使用者。</p>
-
-<pre><code>&lt;ul aria-atomic="true"
-    aria-busy="true"   aria-live="polite"&gt;
-</code></pre>
-
-<h5>aria-relevant 屬性</h5>
-
-<p>aria-relevant 屬性也是非必要屬性，是用來表示即時區塊的資訊更新要對哪些變化做出反應，此屬性接受以下的值，並可以用空白分開不同的值。</p>
-
-<dl>
-    <dt>additions</dt>
-    <dd>即時區塊內有新增 DOM 節點</dd>
-    <dt>removals</dt>
-    <dd>即時區塊內有減少 DOM 節點</dd>
-    <dt>text</dt>
-    <dd>即時區塊內的文字有變化</dd>
-    <dt>all</dt>
-    <dd>上面所有的變化都有發生</dd>
-</dl>
-
-<p>如果沒有設定 aria-relevant 的話，預設會認為是文字變化與新增內容(aria-relevant="text additions")，下面的範例中的即時區塊，只會在區塊內有增加節點時，輔助科技才會告知使用者，如果是移除節點或是文字內容的變化，輔助科技都不會告知使用者。</p>
-
-<pre><code>&lt;ul aria-relevant="additions" 
-    aria-atomic="true"   aria-live="polite"&gt;
-</code></pre>
-]]></description>
-<link>http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/</link>
-<guid>http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/</guid>
-<category>css-html</category>
-<pubDate>2010-10-13 23:08</pubDate>
 </item>
 
 

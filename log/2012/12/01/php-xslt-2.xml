@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000721" baseName="php-xslt-2">PHP and XSLT 2.0</b:listData>
+
+			<b:previous>
+				<b:mTitle>大圖測試</b:mTitle>
+				<b:mDate>2012-11-29</b:mDate>
+				<b:mBase>large-photo-test</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>srcset 支援</b:mTitle>
+				<b:mDate>2012-12-02</b:mDate>
+				<b:mBase>srcset</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000721" baseName="php-xslt-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-12-01</b:date>
+				<b:time>23:03:58</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>PHP and XSLT 2.0</b:title>
+			<b:content>
+				<b:summary>最近弄 srcset 支援的時候，一度需要 XSLT 2.0 的 xsl:function，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 extension 用的是 libxslt，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 SAXON 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 Saxonica 這間公司維護的，有 open source 的 home edition。 找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 PHP/Java Bridge，不過我覺得還要弄...</b:summary>
+				<b:mainContent><p>最近弄 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 支援的時候，一度需要 XSLT 2.0 的 <a href="http://www.w3.org/TR/xslt20/#element-function">xsl:function</a>，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 <a href="http://php.net/manual/en/book.xsl.php">extension</a> 用的是 <a href="http://xmlsoft.org/XSLT/">libxslt</a>，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 <a href="http://saxon.sourceforge.net/">SAXON</a> 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 <a href="http://www.saxonica.com/welcome/welcome.xml">Saxonica</a> 這間公司維護的，有 open source 的 home edition。</p>
+
+<p>找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 <a href="http://php-java-bridge.sourceforge.net/pjb/">PHP/Java Bridge</a>，不過我覺得還要弄 proxy 有些麻煩，幸好有找到 <a href="http://sourceforge.net/projects/xslt2processor/">XML_XSLT2Processor</a> 這個專門來把第三方 XSLT 引擎包起來給 PHP 用的專案，用起來很簡單，API 開的和 PHP 自己的版本都一樣，只是產生物件時要跟他說是要用那個引擎，檔案位置在哪而已：</p>
+
+<pre><code>$proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
+</code></pre>
+
+<p>像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 >_&lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 <a href="http://www.exslt.org/">EXSLT</a> 的 <a href="http://www.exslt.org/str/functions/tokenize/index.html">tokenize</a> 這個 function，後來根據 stackoverflow 上的 <a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function">回答</a> 改動之後，發現可以動我就換去 PHP extension 了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/719">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

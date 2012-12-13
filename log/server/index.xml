@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>c</b:listType>
+			<b:listData listID="server">server</b:listData>
+		</b:entriesMeta>
+
+		<b:entry entryID="000721" baseName="php-xslt-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-12-01</b:date>
+				<b:time>23:03:58</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+			<b:title>PHP and XSLT 2.0</b:title>
+			<b:content>
+				<b:summary>最近弄 srcset 支援的時候，一度需要 XSLT 2.0 的 xsl:function，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 extension 用的是 libxslt，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 SAXON 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 Saxonica 這間公司維護的，有 open source 的 home edition。 找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 PHP/Java Bridge，不過我覺得還要弄...</b:summary>
+				<b:mainContent><p>最近弄 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 支援的時候，一度需要 XSLT 2.0 的 <a href="http://www.w3.org/TR/xslt20/#element-function">xsl:function</a>，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 <a href="http://php.net/manual/en/book.xsl.php">extension</a> 用的是 <a href="http://xmlsoft.org/XSLT/">libxslt</a>，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 <a href="http://saxon.sourceforge.net/">SAXON</a> 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 <a href="http://www.saxonica.com/welcome/welcome.xml">Saxonica</a> 這間公司維護的，有 open source 的 home edition。</p>
+
+<p>找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 <a href="http://php-java-bridge.sourceforge.net/pjb/">PHP/Java Bridge</a>，不過我覺得還要弄 proxy 有些麻煩，幸好有找到 <a href="http://sourceforge.net/projects/xslt2processor/">XML_XSLT2Processor</a> 這個專門來把第三方 XSLT 引擎包起來給 PHP 用的專案，用起來很簡單，API 開的和 PHP 自己的版本都一樣，只是產生物件時要跟他說是要用那個引擎，檔案位置在哪而已：</p>
+
+<pre><code>$proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
+</code></pre>
+
+<p>像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 >_&lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 <a href="http://www.exslt.org/">EXSLT</a> 的 <a href="http://www.exslt.org/str/functions/tokenize/index.html">tokenize</a> 這個 function，後來根據 stackoverflow 上的 <a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function">回答</a> 改動之後，發現可以動我就換去 PHP extension 了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000554" baseName="nginx-on-windows">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-11-04</b:date>
+				<b:time>15:45:24</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+			<b:title>nginx on windows</b:title>
+			<b:content>
+				<b:summary>這兩天想說在windows上裝個 nginx 來玩玩看，翻了一下官網才發現官方沒有提供 windows 版，不過有人用 cygwin 編譯出 windows 版來，所以我還是順利的裝起來玩了，接著馬上就遇到問題了，我 server 裝在 C 碟，不過我想把網頁文件放在 D 碟，然後還要自動產生檔案索引，這兩個問題結果我找了一下午才解決，先說第二個，要自動產生檔案所以只要用 AutoIndex module 就好了，因為apache這是內建的，我想說 nginx 也會內建吧，就一直在 nginx core module 裡面找設定。第一個問題就比較棘手了，我找來找去都找不到相關文章，而且官方也沒提供windows環境的說明，最後再快要回家前終於注意到關鍵字 cygwin 了，由於目前的 nginx windows 版是用 cygwin 環境編譯的，關於磁碟存取應該也是會用一樣的規則，結果果然成功了，想要存取 D 碟，就把路徑寫成 /cygdrive/d/ 就可以了。...</b:summary>
+				<b:mainContent><p>這兩天想說在windows上裝個 <a href="http://nginx.net/">nginx</a> 來玩玩看，翻了一下官網才發現官方沒有提供 windows 版，不過有人用 <a href="http://www.cygwin.com/">cygwin</a> 編譯出 <a href="http://www.kevinworthington.com/category/computers/nginx/">windows 版</a>來，所以我還是順利的裝起來玩了，接著馬上就遇到問題了，我 server 裝在 C 碟，不過我想把網頁文件放在 D 碟，然後還要自動產生檔案索引，這兩個問題結果我找了一下午才解決，先說第二個，要自動產生檔案所以只要用 <a href="http://wiki.codemongers.com/NginxHttpAutoindexModule">AutoIndex module</a> 就好了，因為apache這是內建的，我想說 nginx 也會內建吧，就一直在 nginx core module 裡面找設定。第一個問題就比較棘手了，我找來找去都找不到相關文章，而且官方也沒提供windows環境的說明，最後再快要回家前終於注意到關鍵字 <strong>cygwin</strong> 了，由於目前的 nginx windows 版是用 cygwin 環境編譯的，關於磁碟存取應該也是會用一樣的規則，結果果然成功了，想要存取 D 碟，就把路徑寫成 <strong>/cygdrive/d/</strong> 就可以了。</p></b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000518" baseName="typepad-antispam">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2008-05-30</b:date>
+				<b:time>13:32:24</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+			<b:title>TypePad AntiSpam</b:title>
+			<b:content>
+				<b:summary> 最近我一直受spam所苦，雖然最新的文章不會受到影響，不過稍微舊一點的文章就一直會被spam，以前都還是一波一波的，最近這次則是一直沒有停歇，所以我只好不斷的砍spam comment，結果昨天看到miyagawaさん在twitter提到TypePad AntiSpam這個SixApart推出的反spam服務，而且還同時提供了MovableType和Wordpress的plugin，昨天就裝起來了，不過到今天早上才正確設定好，成效蠻顯著的，到現在已經擋了40多篇spam comment，只有漏掉一篇。...</b:summary>
+				<b:mainContent><p><img src="http://blog.othree.net/log/2008/05/30/typepad-antispam/antispam-header.gif" alt="" /></p>
+
+<p>最近我一直受spam所苦，雖然最新的文章不會受到影響，不過稍微舊一點的文章就一直會被spam，以前都還是一波一波的，最近這次則是一直沒有停歇，所以我只好不斷的砍spam comment，結果昨天看到<a href="http://bulknews.vox.com/">miyagawaさん</a>在twitter提到<a href="http://antispam.typepad.com/">TypePad AntiSpam</a>這個SixApart推出的反spam服務，而且還同時提供了MovableType和Wordpress的plugin，昨天就裝起來了，不過到今天早上才正確設定好，成效蠻顯著的，到現在已經擋了40多篇spam comment，只有漏掉一篇。</p></b:mainContent>
+				<b:extendContent><p>MovebleType的安裝和設定還算簡單，不過他網站上沒講清楚，所以我API Key一直沒找到地方設定，後來才發現是在<strong>System Overview</strong>裡面的整體Plugins設定那裡，設定成功後Spam就銳減了，愉悅度大增，而且還有個widget可以看擋下多少spam了，爽快度也大增XD。</p>
+
+<p><img src="http://blog.othree.net/log/2008/05/30/typepad-antispam/anti-spam.png" alt="已經擋了68篇Spam" /></p>
+
+<p>如前面所說的，TypePad AntiSpam是個網路服務，並不是針對Moveble Type和WordPress，如果想在自己的程式上使用此服務，可以參考<a href="http://antispam.typepad.com/info/developers.html">Developers</a>的內容，不過基本上他相容<a href="http://akismet.com/development/api/">Akismet <span class="caps">API</span></a>，所以，就祝大家抗Spam快樂啦～。</p></b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>
