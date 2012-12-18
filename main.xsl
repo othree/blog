@@ -89,7 +89,7 @@
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
-                <xsl:variable name="canonical">http://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
+                <xsl:variable name="canonical">https://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
                 <link rel="canonical" itemprop="url" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
@@ -121,7 +121,7 @@
             <xsl:otherwise>
                 <meta property="og:title" content="{b:blogTitle}" />
                 <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄" />
-                <meta property="og:url" content="http://blog.othree.net" />
+                <meta property="og:url" content="https://blog.othree.net" />
                 <meta property="og:type" content="website" />
         </xsl:otherwise>
 		</xsl:choose>
@@ -136,7 +136,7 @@
         <nav class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="http://www.google.com/search" role="search">
+                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="//www.google.com/search" role="search">
                         <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                     </form>
@@ -401,6 +401,17 @@
 				</xsl:for-each>
 			</ul>
 		</xsl:when>
+		<xsl:when test="$listType = 'i'">
+            <xsl:for-each select="b:entry[position()  &lt; last()]">
+                <xsl:variable name="showdate">
+                    <xsl:if test="position() = 1 or preceding-sibling::b:entry[1]/b:datetime/b:date != b:datetime/b:date">1</xsl:if>
+                </xsl:variable>
+                <xsl:call-template name="b:entry">
+                    <xsl:with-param name="showdate" select="$showdate" />
+                </xsl:call-template>
+			</xsl:for-each>
+            <a id="prev-link" href="/log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}#entry-{b:entry[last()]/@baseName}">➡ 看看其它文章</a>
+		</xsl:when>
 		<xsl:otherwise>
             <xsl:for-each select="b:entry">
                 <xsl:variable name="showdate">
@@ -415,9 +426,6 @@
 			</xsl:if>
 			<xsl:if test="$listType = 'm'">
                 <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">➡ 前一個月的文章</a>
-			</xsl:if>
-			<xsl:if test="$listType = 'i'">
-                <a id="prev-link" href="/log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}">➡ 看看其它文章</a>
 			</xsl:if>
 		</xsl:otherwise>
 	</xsl:choose>
@@ -648,7 +656,7 @@ google_color_url = "008000";
 	</xsl:choose>
     <xsl:if test="$accepted = 1">
         <hr/>
-        <form id="comment-form" method="post" action="http://othree.net/mt/mt-comments.cgi" class="form-horizontal">
+        <form id="comment-form" method="post" action="//othree.net/mt/mt-comments.cgi" class="form-horizontal">
             <fieldset>
             <div id="author-row" class="control-group">
               <label for="author" class="control-label">姓名暱稱：<span class="accesskey"><span>accesskey:</span>N</span></label>

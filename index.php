@@ -4,7 +4,6 @@ error_reporting(0);
 // error_reporting(E_ALL);
 
 // include "XML_XSLT2Processor/XSLT2Processor.php";
-include 'Mobile_Detect.php';
 
 if (preg_match("/_/", getenv('QUERY_STRING'))) {
     header("HTTP/1.1 301 Moved Permanently");
@@ -16,14 +15,15 @@ $dpr = 1;
 if ($_COOKIE['devicePixelRatio']) {
     $dpr = floatval($_COOKIE['devicePixelRatio']);
 }
-$detect = new Mobile_Detect();
 $w = 'm';
-if (intval($_COOKIE['w']) < 768) {
+if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
     $w = 's';
-} else if ($detect->isMobile() && !$detect->isTablet()) {
-    $w = 's';
+} else if ((include 'Mobile_Detect.php') == 'OK') {
+    $detect = new Mobile_Detect();
+    if ($detect->isMobile() && !$detect->isTablet()) {
+        $w = 's';
+    }
 }
-
 
 //get local path
 $self_path = preg_replace("!index\.php!", "", getenv('SCRIPT_NAME'));
@@ -39,15 +39,37 @@ if (preg_match("/rss\/?$/", $query_string)) {
 }
 
 $query_string = preg_replace("/[\.\/]?(".$format.")?+$/", "", $query_string);
-if ($query_string == "") $target_file = "index.".$ext;
-else $target_file = $query_string."/index.".$ext;
-if (!is_file($target_file))
+if ($query_string == "") {
+    $hash_file = "index.md5";
+    $target_file = "index.".$ext;
+}
+else {
+    $hash_file = $query_string."/index.md5";
+    $target_file = $query_string."/index.".$ext;
+}
+if (!is_file($target_file)) {
+    $hash_file = $query_string.".md5";
     $target_file = $query_string.".".$ext;
+}
 if (!is_file($target_file)) {
     $target_file = "about/404.".$ext;
 }
 if ($target_file == "about/404.".$ext) {
     $not_found = true;
+}
+if (!is_file($hash_file) || filemtime($target_file) > filemtime($hash_file)) {
+    $hash = hash_file('md5', $target_file);
+    file_put_contents($hash_file, $hash);
+} else {
+    $hash = file_get_contents($hash_file);
+}
+
+$request_hash = $_SERVER['HTTP_IF_NONE_MATCH'];
+if (isset($request_hash) && $request_hash == '"'.$hash.'"') {
+    header("HTTP/1.0 304 Not Modified");
+    exit;
+} else {
+    header("ETag: \"".$hash."\"");
 }
 
 //output string
@@ -103,6 +125,9 @@ if ($format == "html") {
 if ($not_found) {
     header("HTTP/1.0 404 Not Found");
 }
+
+header("Cache-Control: max-age=3600, public");
+header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 
 echo $output;
 

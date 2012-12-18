@@ -1,8 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # RewriteCond %{HTTPS} =off
-    # RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    # RewriteCond %{HTTPS} off
+    RewriteCond %{SERVER_PORT} ^80$
+    RewriteCond %{HTTP_USER_AGENT} 	!FeedBurner
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 
     RewriteCond %{REQUEST_URI}	!^/google
     RewriteCond %{REQUEST_URI}	!^/feed
@@ -46,8 +48,11 @@ ErrorDocument 404 /index.php?about/404/
 #Header append Vary User-Agent env=!dont-vary
 
 <FilesMatch "\.(gif|jpe?g|png|css|js)$">
-    ExpiresActive On
-    ExpiresDefault "access plus 12 weeks"
+    # ExpiresActive On
+    # ExpiresDefault "access plus 12 weeks"
+    Header set Cache-Control "max-age=2592000, public"
 </FilesMatch>
 
-FileETag none
+Header unset X-Powered-By
+
+FileETag MTime Size
