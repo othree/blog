@@ -50,7 +50,7 @@
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' />
+        <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
         <link rel="stylesheet" type='text/css' href="/stylesheets/othree.min.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
@@ -220,10 +220,21 @@
                         ，目前共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
 
                         <div>
-                        <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" />
-                            <div class="fb-like" data-href="http://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div>
-                            <div class="g-plusone" data-size="tall" data-href="http://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div>
-                            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw" data-count="vertical">Tweet</a>
+                            <xsl:variable name="permalink">
+                                <xsl:value-of select="'https%3A%2F%2Fblog.othree.net'" />
+                                <xsl:call-template name="string-replace-all">
+                                    <xsl:with-param name="text" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" />
+                                    <xsl:with-param name="replace" select="'/'" />
+                                    <xsl:with-param name="by" select="'%2F'" />
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <iframe id="fb-button" allowTransparency="true" frameborder="0" scrolling="no" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fblog.othree.net%2F{$permalink}&amp;send=false&amp;layout=box_count&amp;width=41&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=61&amp;appId=263583993673371"></iframe>
+                            <iframe id="gp-button" allowtransparency="true" frameborder="0" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
+                            <iframe id="tw-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
+                            <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
+                            <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
+                            <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
+                            <!-- <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw" data-count="vertical">Tweet</a> -->
                         </div>
 
                         <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous or //b:blog/b:entries/b:entriesMeta/b:next">
@@ -289,7 +300,7 @@
                     <p id="stickers">
                         <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
                         <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
-                        <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="/images/cc.png" style="border:0px;" /></a>
+                        <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="/images/cc.png" /></a>
                     </p>
                 </aside>
             </div>
@@ -310,41 +321,13 @@
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"> </script>
-        <xsl:if test="$listType = 's'">
-            <div id="fb-root"><xsl:text> </xsl:text></div>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&amp;appId=353606324674423";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-            <!-- Place this tag after the last +1 button tag. -->
-            <script type="text/javascript">
-              window.___gcfg = {lang: 'zh-TW'};
-
-              (function() {
-                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                po.src = 'https://apis.google.com/js/plusone.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-              })();
-            </script>
-        </xsl:if>
-        <script>
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-77906-1']);
-  _gaq.push(['_trackPageview']);
-  _gaq.push(['_trackPageLoadTime']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-        </script>
+        <!-- <xsl:if test="$listType = 's'"> -->
+            <!-- <div id="fb-root"><xsl:text> </xsl:text></div> -->
+            <!-- <script src="/scripts/googleplusone.js"> </script> -->
+            <!-- <script src="/scripts/facebook.js"> </script> -->
+            <!-- <script src="/scripts/twitter.js"> </script> -->
+        <!-- </xsl:if> -->
+        <script src="/scripts/googleanalytic.js"> </script>
 	</body>
 </html>
 </xsl:template>
@@ -521,7 +504,7 @@
         <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}" pubdate="pubdate">
             <xsl:choose>
                 <xsl:when test="$showdate != '1'">
-                    <xsl:attribute name="style">display: none;</xsl:attribute>
+                    <xsl:attribute name="class">same-date</xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:attribute name="id">date-<xsl:value-of select="b:datetime/b:date"/></xsl:attribute>
@@ -1102,6 +1085,27 @@ google_color_url = "008000";
 	</xsl:element>
 	<xsl:if test="$porn = 'prev' and $type= 'a'"> | </xsl:if>
 </xsl:if>
+</xsl:template>
+
+<xsl:template name="string-replace-all">
+    <xsl:param name="text" />
+    <xsl:param name="replace" />
+    <xsl:param name="by" />
+    <xsl:choose>
+      <xsl:when test="contains($text, $replace)">
+        <xsl:value-of select="substring-before($text,$replace)" />
+        <xsl:value-of select="$by" />
+        <xsl:call-template name="string-replace-all">
+          <xsl:with-param name="text"
+          select="substring-after($text,$replace)" />
+          <xsl:with-param name="replace" select="$replace" />
+          <xsl:with-param name="by" select="$by" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text" />
+      </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 </xsl:transform>

@@ -127,7 +127,9 @@ if ($not_found) {
 }
 
 header("Cache-Control: max-age=3600, public");
-header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+
+// header("X-WebKit-CSP: default-src 'none'; style-src 'self'; script-src 'self' https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; font-src https://themes.googleusercontent.com; img-src 'self' https://*.staticflickr.com https://ssl.google-analytics.com; frame-src https://plusone.google.com https://www.facebook.com https://platform.twitter.com https://speakerdeck.com;");
 
 echo $output;
 
