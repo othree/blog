@@ -2,13 +2,34 @@
 <rss version="2.0">
 <channel>
 <title>O3noBLOG - server</title>
-<link>http://blog.othree.net//log/ server/</link>
+<link>https://blog.othree.net//log/ server/</link>
 <description></description>
 <copyright>Copyright 2012</copyright>
-<lastBuildDate>2012-12-01 23:03</lastBuildDate>
+<lastBuildDate>2012-12-16 22:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>mod_proxy 的注意事項</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8277973312/" title="Flickr 上 othree 的 Network"><img src="//farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network" srcset="//farm9.staticflickr.com/8217/8277973312_82f5c92af6.jpg 768w, //farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 768w 2x" /></a></p>
+
+<p>最近調整 HTTPS 支援的時候，啟用了 <a href="http://httpd.apache.org/">Apache</a> 的 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html">mod_proxy</a>，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8276915051/" title="Flickr 上 othree 的 CPU"><img src="//farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU" srcset="//farm9.staticflickr.com/8082/8276915051_90d24d435c.jpg 768w, //farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 768w 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8277973240/" title="Flickr 上 othree 的 Disk IO"><img src="//farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO" srcset="//farm9.staticflickr.com/8079/8277973240_8d262d60d7.jpg 768w, //farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 768w 2x" /></a></p>
+
+<p>到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。</p>
+
+<p>在這邊奉勸大家要用 Apache 的 mod_proxy 的時候記得要把 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxyrequests">ProxyRequests</a> 設成 Off 啊，預設是 On 什麼的根本是蓄意謀殺啊！</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2012/12/16/mod-proxy/</link>
+<guid>https://blog.othree.net/log/2012/12/16/mod-proxy/</guid>
+<category>server</category>
+<pubDate>2012-12-16 22:59</pubDate>
+</item>
 
 <item>
 <title>PHP and XSLT 2.0</title>
@@ -22,8 +43,8 @@
 <p>像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 >_&lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 <a href="http://www.exslt.org/">EXSLT</a> 的 <a href="http://www.exslt.org/str/functions/tokenize/index.html">tokenize</a> 這個 function，後來根據 stackoverflow 上的 <a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function">回答</a> 改動之後，發現可以動我就換去 PHP extension 了。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2012/12/01/php-xslt-2/</link>
-<guid>http://blog.othree.net/log/2012/12/01/php-xslt-2/</guid>
+<link>https://blog.othree.net/log/2012/12/01/php-xslt-2/</link>
+<guid>https://blog.othree.net/log/2012/12/01/php-xslt-2/</guid>
 <category>server</category>
 <pubDate>2012-12-01 23:03</pubDate>
 </item>
@@ -31,8 +52,8 @@
 <item>
 <title>nginx on windows</title>
 <description><![CDATA[<p>這兩天想說在windows上裝個 <a href="http://nginx.net/">nginx</a> 來玩玩看，翻了一下官網才發現官方沒有提供 windows 版，不過有人用 <a href="http://www.cygwin.com/">cygwin</a> 編譯出 <a href="http://www.kevinworthington.com/category/computers/nginx/">windows 版</a>來，所以我還是順利的裝起來玩了，接著馬上就遇到問題了，我 server 裝在 C 碟，不過我想把網頁文件放在 D 碟，然後還要自動產生檔案索引，這兩個問題結果我找了一下午才解決，先說第二個，要自動產生檔案所以只要用 <a href="http://wiki.codemongers.com/NginxHttpAutoindexModule">AutoIndex module</a> 就好了，因為apache這是內建的，我想說 nginx 也會內建吧，就一直在 nginx core module 裡面找設定。第一個問題就比較棘手了，我找來找去都找不到相關文章，而且官方也沒提供windows環境的說明，最後再快要回家前終於注意到關鍵字 <strong>cygwin</strong> 了，由於目前的 nginx windows 版是用 cygwin 環境編譯的，關於磁碟存取應該也是會用一樣的規則，結果果然成功了，想要存取 D 碟，就把路徑寫成 <strong>/cygdrive/d/</strong> 就可以了。</p>]]></description>
-<link>http://blog.othree.net/log/2008/11/04/nginx-on-windows/</link>
-<guid>http://blog.othree.net/log/2008/11/04/nginx-on-windows/</guid>
+<link>https://blog.othree.net/log/2008/11/04/nginx-on-windows/</link>
+<guid>https://blog.othree.net/log/2008/11/04/nginx-on-windows/</guid>
 <category>server</category>
 <pubDate>2008-11-04 15:45</pubDate>
 </item>
@@ -46,8 +67,8 @@
 <p><img src="http://blog.othree.net/log/2008/05/30/typepad-antispam/anti-spam.png" alt="已經擋了68篇Spam" /></p>
 
 <p>如前面所說的，TypePad AntiSpam是個網路服務，並不是針對Moveble Type和WordPress，如果想在自己的程式上使用此服務，可以參考<a href="http://antispam.typepad.com/info/developers.html">Developers</a>的內容，不過基本上他相容<a href="http://akismet.com/development/api/">Akismet <span class="caps">API</span></a>，所以，就祝大家抗Spam快樂啦～。</p>]]></description>
-<link>http://blog.othree.net/log/2008/05/30/typepad-antispam/</link>
-<guid>http://blog.othree.net/log/2008/05/30/typepad-antispam/</guid>
+<link>https://blog.othree.net/log/2008/05/30/typepad-antispam/</link>
+<guid>https://blog.othree.net/log/2008/05/30/typepad-antispam/</guid>
 <category>server</category>
 <pubDate>2008-05-30 13:32</pubDate>
 </item>
