@@ -57,24 +57,30 @@ if (!is_file($target_file)) {
 if ($target_file == "about/404.".$ext) {
     $not_found = true;
 }
-if (!is_file($hash_file) || filemtime($target_file) > filemtime($hash_file)) {
-    $hash = hash_file('md5', $target_file);
-    file_put_contents($hash_file, $hash);
-} else {
-    $hash = file_get_contents($hash_file);
+if (is_file($target_file)) {
+    if (!is_file($hash_file) || filemtime($target_file) > filemtime($hash_file)) {
+        $hash = hash_file('md5', $target_file);
+        file_put_contents($hash_file, $hash);
+    } else {
+        $hash = file_get_contents($hash_file);
+    }
 }
 
 $request_hash = $_SERVER['HTTP_IF_NONE_MATCH'];
 if (isset($request_hash) && $request_hash == '"'.$hash.'"') {
+    header("Cache-Control: max-age=3600, public");
+    header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
     header("HTTP/1.0 304 Not Modified");
     exit;
 } else {
     header("ETag: \"".$hash."\"");
 }
 
+$UA = getenv('HTTP_USER_AGENT');
+
 //output string
 if ($format == "html") {
-    if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match("/W3C/", getenv('HTTP_USER_AGENT'))) $format = 'xhtml';
+    if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match("/W3C/", $UA)) $format = 'xhtml';
     //compitable fix for IE or nonIE
     $patterns = array("/<(script|textarea|iframe)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)\/>/",
         "/([\"\'])\/>/",
@@ -86,7 +92,7 @@ if ($format == "html") {
         "<\\1>",
         "<\\1\\2>",
         "&amp;");
-    if (!preg_match("/IE/", getenv('HTTP_USER_AGENT'))) {
+    if (!preg_match("/IE/", $UA)) {
         array_push($patterns, "/\s*<(\/?(pre|code))>\s*/is");
         array_push($replacements, "<\\1>");
     }
@@ -118,7 +124,7 @@ if ($format == "html") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
     fclose($handle);
-    if (preg_match("/IE/", getenv('HTTP_USER_AGENT'))) sheader("Content-type: text/xml; charset=UTF-8");
+    if (preg_match("/IE/", $UA)) sheader("Content-type: text/xml; charset=UTF-8");
     else header("Content-type: application/xml; charset=UTF-8");
 }
 
@@ -127,9 +133,18 @@ if ($not_found) {
 }
 
 header("Cache-Control: max-age=3600, public");
+// header("Cache-Control: no-cache");
 header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 
-// header("X-WebKit-CSP: default-src 'none'; style-src 'self'; script-src 'self' https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; font-src https://themes.googleusercontent.com; img-src 'self' https://*.staticflickr.com https://ssl.google-analytics.com; frame-src https://plusone.google.com https://www.facebook.com https://platform.twitter.com https://speakerdeck.com;");
+$CSP = 'Content-Security-Policy';
+if (preg_match("/MSIE/", $UA) || preg_match("/Firefox/", $UA)) {
+    $CSP = 'X-Content-Security-Policy';
+}
+if (preg_match("/Webkit/", $UA)) {
+    $CSP = 'X-WebKit-CSP';
+}
+
+header($CSP.": default-src 'none'; style-src 'self'; script-src 'self' https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; font-src https://themes.googleusercontent.com; img-src 'self' https://*.staticflickr.com https://ssl.google-analytics.com; frame-src https://plusone.google.com https://www.facebook.com https://platform.twitter.com https://speakerdeck.com;");
 
 echo $output;
 
