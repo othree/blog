@@ -1,10 +1,19 @@
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-77906-1']);
-  _gaq.push(['_trackPageview']);
-  _gaq.push(['_trackPageLoadTime']);
+/*jslint nomen: true, windows: true */
+(function() {
+"use strict";
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+window._gaq = window._gaq || [];
+window._gaq.push(['_setAccount', 'UA-77906-1']);
+window._gaq.push(['_trackPageview']);
+window._gaq.push(['_trackPageLoadTime']);
+
+var ga = document.createElement('script'),
+    s;
+
+ga.type = 'text/javascript';
+ga.async;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+s = document.getElementsByTagName('script')[0]; 
+s.parentNode.insertBefore(ga, s);
+
+})();
