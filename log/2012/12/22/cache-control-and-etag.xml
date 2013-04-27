@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000727" baseName="cache-control-and-etag">Cache Control 與 ETag</b:listData>
+
+			<b:previous>
+				<b:mTitle>mod_proxy 的注意事項</b:mTitle>
+				<b:mDate>2012-12-16</b:mDate>
+				<b:mBase>mod-proxy</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>2012</b:mTitle>
+				<b:mDate>2012-12-25</b:mDate>
+				<b:mBase>2012</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000727" baseName="cache-control-and-etag">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2012-12-22</b:date>
+				<b:time>01:24:54</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Cache Control 與 ETag</b:title>
+			<b:content>
+				<b:summary>俗話說的好，最快的連線就是不要連線，最快的下載就是不要下載，訪客連到網站的網路狀況其實是不容易由網站這邊來控制的，所以要提升網頁的速度，除了提升網路的可達性外，還有一個方法就是 cache，瀏覽器在需要某個檔案的時候，首先它會檢查是否有 cache，有的話會看有沒有過期，過期的話就根據現有資訊去問 server 有沒有新版，如果 server 比對之後發現有新版的，才會把要求的檔案傳給瀏覽器。這一個流程一共有三個判斷點，分別是： 是否需要無視 cache，前面沒講到，可能是 cache 設定或是瀏覽器設定 有沒有 cache、有沒有過期 Server 端檔案有沒有更新 Cache 的機制早在 HTTP 1.0 時就有制訂了，不過當時只有 Expires 和 Pragma 這兩個 header，其中一個可以指定 cache 過期的時間，另外一個就只能指定叫瀏覽器 no-cache，到了 HTTP 1.1 之後，改成用 Cache-Control 提供更多功能來控制，支援 HTTP 1.1 的瀏覽器，只要看到 Cache-Control 就會忽略 Expires，除了因為 Cache-Control...</b:summary>
+				<b:mainContent><p>俗話說的好，最快的連線就是不要連線，最快的下載就是不要下載，訪客連到網站的網路狀況其實是不容易由網站這邊來控制的，所以要提升網頁的速度，除了提升網路的可達性外，還有一個方法就是 cache，瀏覽器在需要某個檔案的時候，首先它會檢查是否有 cache，有的話會看有沒有過期，過期的話就根據現有資訊去問 server 有沒有新版，如果 server 比對之後發現有新版的，才會把要求的檔案傳給瀏覽器。這一個流程一共有三個判斷點，分別是：</p>
+
+<ol>
+<li>是否需要無視 cache，前面沒講到，可能是 cache 設定或是瀏覽器設定</li>
+<li>有沒有 cache、有沒有過期</li>
+<li>Server 端檔案有沒有更新</li>
+</ol>
+
+<p>Cache 的機制早在 HTTP 1.0 時就有制訂了，不過當時只有 Expires 和 Pragma 這兩個 header，其中一個可以指定 cache 過期的時間，另外一個就只能指定叫瀏覽器 no-cache，到了 HTTP 1.1 之後，改成用 Cache-Control 提供更多功能來控制，支援 HTTP 1.1 的瀏覽器，只要看到 Cache-Control 就會忽略 Expires，除了因為 Cache-Control 的功能比較強大外，單純就過期時間的這點來看，Expires 看的是 ISO Time，會有 server 和 client 之間的時差問題，而 Cache-Control 則是用 max-age 直接說這個 Cache 可以活多久，就沒了時差問題。</p>
+
+<p>Cache-Control 除了 max-age 外還有很多參數可以用，簡單介紹幾個常用的：</p>
+
+<ul>
+<li>no-store, 完全不存下來，所以完全沒有 cache</li>
+<li>no-cache, 雖然會 cache，但還是會每次都問有沒有新內容，就是三個判斷點的第一個</li>
+<li>private, 限制在只有現在這個使用者可以用，通常用於敏感資料</li>
+<li>public, cache 公開讓不同使用者用，如果是有 HTTP Auth 的網頁，預設會是 private cache</li>
+<li>must-revalidate, 在一些情形下會去檢查內容是否有更新，像是使用者自己重新造訪頁面時，也是第一個判斷點</li>
+</ul>
+
+<p>根據 Cache-Control 的規則，瀏覽器在有需要時會去問 Server 是否有新版本，而這裡根據的資訊就是 Date 和 ETag 兩個資訊。Date 很簡單，就是回 request 的時間，ETag 全名是 Entity Tag，可以想成是該檔案的版本 hash，理想上確實是用 hash 來當 ETag 最合適，不過不可能每次 request 都算 hash，所以 Apache 內建的 ETag 機制是用 inode、檔案大小和最後修改時間來產生的，不過這種方法有個缺點，在 YSlow 的 guide 有提到其中的 inode 在有負載平衡的架構下，不同機器會產生出不一樣的 ETag，結果反而可能會造成不需要重新抓的檔案又下載一次，雖然說 Apache 也是可以指定說不要用 inode 來生 ETag 啦。</p>
+
+<p>個人建議是如果是 CMS 之類的系統，每個節點都可以在變動時重算 hash，然後在 response 的時候加上 ETag header，其他靜態檔案就用 Apache 的 ETag，有負載平衡機制的話就把 inode 的部分拿掉就好了。當然也是可以照 YSlow 的建議就是完全不用 ETag，只看修改時間，當然有個小缺點是，時間單位的最小精度是秒，如果是一秒內內容就會一直變動的話，就不適合使用了，似乎也很少這種需求就是（又要 cache 又要在一秒內數次變動還要能反應）。</p>
+
+<p>瀏覽器如果要問 Server 有沒有新東西的話，就會帶著這兩個資訊一起去問，Date 會變成 If-Modified-Since，字面意思就是從那個時間點以後有更新的話。Etag 則會變成 If-None-Match，字面上意思就是如果和這個不一樣的話。Server 端除非是 Apache 直接 host 的靜態檔案，都要 Server Side 的程式自己來處理，有些 Framework 就有內建支援，像是 Rails。如果要自己實做的話，其實檢查是否有新東西這個動作有分嚴謹 (strong) 和寬鬆 (weak) 兩種驗證方式，其中用更新時間判斷的話，是屬於寬鬆驗證的，因為它的時間精度只有一秒。而 ETag 也不是完全就是嚴謹的驗證方式，其實 ETag 的格式有兩種：</p>
+
+<pre><code>ETag: "1234abcd"
+ETag: W/"1234abcd"
+</code></pre>
+
+<p>第一種是嚴謹的 ETag，第二種就是寬鬆的格式，W 代表的是 weak，如果宣告是寬鬆的話，那代表的意思是檔案內容不完全相同，但是可以互相通用，像是有沒有最小化過的 JS/CSS，更新解析度的圖片或是小修正排版的文章等等都是，不過如果用寬鬆判斷，由於檔案內容可能不相同，所以就無法用區段下載的功能，也就是所謂的續傳功能，通常這會搭配的是 If-Match，確定要抓的檔案是同一份。理想上支援寬鬆驗證的話可以減少更多的實際傳輸，因為一些小修改可以不用更新訪客端的 cache，不過實際上好像沒看到有人實做，而且實做起來也不是很簡單，所以一般看到有用 ETag 的話都是用嚴謹版的。</p>
+
+<p>總之，如果 server 端判斷說沒有新內容的話，那就回個 304 Not Modified 的 header 就可以了，同時還可以趁機更新 cache 的 expire time，這樣就不會內容依然沒更新，但是 cache 過期讓瀏覽器還是一直問你更新了沒。</p>
+
+<p>最前面提到三個判斷點當中的第一二兩個判斷點是用來決定要不要跟 Server 發 request，而不管這邊判斷的依據為何，只要結果是有發 request 的話，都還是會照著標準的流程來看 Server 端檔案是否有更新，不過一些情形下，像是瀏覽器關閉 cache 支援的時候，發出去的 request 不會有 If-Modified-Since 和 If-None-Match，所以這時候一定會把檔案抓一份回來。</p>
+
+<p>最後設定完後，以本 blog 為例，還沒有 cache 時：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8293989580/" title="Flickr 上 othree 的 chrome nocache"><img src="//farm9.staticflickr.com/8216/8293989580_ec78ce5c8e_b.jpg" width="885" height="931" alt="chrome nocache" srcset="//farm9.staticflickr.com/8216/8293989580_ec78ce5c8e.jpg 768w, //farm9.staticflickr.com/8216/8293989580_ec78ce5c8e_b.jpg 768w 2x" /></a></p>
+
+<p>有 cache 還沒過期，request 不會發出，速度最快：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8292934577/" title="Flickr 上 othree 的 chrome norequest"><img src="//farm9.staticflickr.com/8080/8292934577_d28fd98f9b_b.jpg" width="885" height="931" alt="chrome norequest" srcset="//farm9.staticflickr.com/8080/8292934577_d28fd98f9b.jpg 768w, //farm9.staticflickr.com/8080/8292934577_d28fd98f9b_b.jpg 768w 2x" /></a></p>
+
+<p>Cache 過期去問 server 有沒有更新版時，檔案沒更新所以都是 304 沒抓內容下來：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8293989462/" title="Flickr 上 othree 的 chrome cache"><img src="//farm9.staticflickr.com/8353/8293989462_1dbe5fec22_b.jpg" width="885" height="931" alt="chrome cache" srcset="//farm9.staticflickr.com/8353/8293989462_1dbe5fec22.jpg 768w, //farm9.staticflickr.com/8353/8293989462_1dbe5fec22_b.jpg 768w 2x" /></a></p>
+
+<p>參考資料：</p>
+
+<ul>
+<li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9">HTTP 1.1 Cache Control</a></li>
+<li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.3.3">Weak and Strong Validator</a></li>
+<li><a href="http://en.wikipedia.org/wiki/HTTP_ETag#Strong_and_weak_validation">ETag</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/HTTP_Caching_FAQ">HTTP Caching FAQ</a></li>
+<li><a href="http://wp.xdite.net/?p=1045">Rails ETag</a></li>
+<li><a href="http://developer.yahoo.com/performance/rules.html#etags">YSlow ETag</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

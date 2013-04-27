@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000732" baseName="eregexvim-260">eregex.vim 2.60</b:listData>
+
+			<b:previous>
+				<b:mTitle>Vim JavaScript Libraries Syntax</b:mTitle>
+				<b:mDate>2013-02-11</b:mDate>
+				<b:mBase>vim-javascript-libraries</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>IE10 for Windows 7</b:mTitle>
+				<b:mDate>2013-02-26</b:mDate>
+				<b:mBase>ie10-for-windows7</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000732" baseName="eregexvim-260">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-02-26</b:date>
+				<b:time>00:59:45</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>eregex.vim 2.60</b:title>
+			<b:content>
+				<b:summary>我這幾天釋出了 eregex.vim 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。 Vim 裡面搜尋和取代的 Regular Expression 有自己的一套語法，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 ack.vim，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。 原來的 eregex.vim 只能單向搜尋，也就是只有支援 / 而不支援 ?，之前我加上了 ? 反向搜尋的支援，不過問題是反向搜尋後，按 n 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要...</b:summary>
+				<b:mainContent><p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
+
+<p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
+
+<p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
+
+<p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

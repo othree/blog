@@ -9,6 +9,108 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000732" baseName="eregexvim-260">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-02-26</b:date>
+				<b:time>00:59:45</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>eregex.vim 2.60</b:title>
+			<b:content>
+				<b:summary>我這幾天釋出了 eregex.vim 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。 Vim 裡面搜尋和取代的 Regular Expression 有自己的一套語法，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 ack.vim，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。 原來的 eregex.vim 只能單向搜尋，也就是只有支援 / 而不支援 ?，之前我加上了 ? 反向搜尋的支援，不過問題是反向搜尋後，按 n 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要...</b:summary>
+				<b:mainContent><p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
+
+<p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
+
+<p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
+
+<p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000731" baseName="vim-javascript-libraries">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-02-11</b:date>
+				<b:time>10:58:16</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim JavaScript Libraries Syntax</b:title>
+			<b:content>
+				<b:summary> 我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，JavaScript Libraries Syntax，說順手其實也不太順，為了支援 SyntaxComplete 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 jQuery、underscore.js、Backbone.js 和 prelude.ls，其中 jQuery 是拿之前就 有的 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、CoffeeScript 和 LiveScript，安裝建議用 pathogen 或是 vundle，專案放在 Github 上，patch welcome。 Github othree/javascript-libraries-syntax.vim...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8462979359/" title="Flickr 上 othree 的 JavaScript Libraries Syntax"><img src="//farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="//farm9.staticflickr.com/8373/8462979359_27480834ea.jpg 768w, //farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 768w 2x" /></a></p>
+
+<p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
+
+<ul>
+<li><a href="https://github.com/othree/javascript-libraries-syntax.vim">Github othree/javascript-libraries-syntax.vim</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000730" baseName="vim-syntax-complete">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-02-08</b:date>
+				<b:time>21:25:25</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim Syntax Complete</b:title>
+			<b:content>
+				<b:summary>Vim 的 Omni completion 功能推出之時，同時有提供一個 syntaxcomplete 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單： setlocal omnifunc=syntaxcomplete#Complete 這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax...</b:summary>
+				<b:mainContent><p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
+
+<pre><code>setlocal omnifunc=syntaxcomplete#Complete
+</code></pre>
+
+<p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
+
+<p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
+
+<pre><code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
+let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
+</code></pre>
+
+<p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
+
+<p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000717" baseName="ctrlpvim">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -250,110 +352,6 @@ nnoremap ,/ /
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000628" baseName="html5vim">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-09-16</b:date>
-				<b:time>21:30:12</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>html5.vim</b:title>
-			<b:content>
-				<b:summary>上週花了約三四天時間搞出來的 html5.vim ，目前主要功能是 HTML5 syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 WAI-ARIA 和一些其他規範的支援，之後有考慮加上 MathML 和 SVG ，如果有任何意見歡迎到 github repo 上提出 issue。...</b:summary>
-				<b:mainContent><p>上週花了約三四天時間搞出來的 <a href="http://www.vim.org/scripts/script.php?script_id=3236">html5.vim</a> ，目前主要功能是 <span class="caps">HTML5 </span>syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 <a href="http://www.w3.org/TR/wai-aria/"><span class="caps">WAI</span>-ARIA</a> 和一些其他規範的支援，之後有考慮加上 MathML 和 <span class="caps">SVG </span>，如果有任何意見歡迎到 <a href="http://github.com/othree/html5.vim/">github repo</a> 上提出 issue。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="1"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000617" baseName="vimrc-onload">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-02-28</b:date>
-				<b:time>21:14:50</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>vimrc 的 onload</b:title>
-			<b:content>
-				<b:summary>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如： if exists(&quot;:Align&quot;) com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;) endif 這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 VimEnter 這個 auto command 的事件執行： function AfterStart () &quot;...</b:summary>
-				<b:mainContent><p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
-
-
-
-<pre><code>if exists(&quot;:Align&quot;)
-    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif</code></pre>
-
-
-
-<p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
-
-
-
-<pre><code>function AfterStart ()
-
-&quot; plugin commands
-if exists(&quot;:Align&quot;)
-    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif
-
-endfunction
-autocmd VimEnter * :call AfterStart()
-</code></pre></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="1"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000611" baseName="perl-style-regexp-for-vim">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-01-08</b:date>
-				<b:time>01:41:44</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Perl Style RegExp for Vim</b:title>
-			<b:content>
-				<b:summary>今天下午在尋找能讓 Vim 的 Regular Expression 變得好看一點的方法，因為實在太多斜線了，當然直接就把目標鎖定在 perl 的語法，一開始找到一個 vim tip 有建議用 perldo ，不過編譯時要把 +perl 弄起來，使用上也不是很好用，而且不能搜尋，只能做取代，雖然 有人寫了 function 來搜尋，不過實際測試之後離方便使用還有些距離。 c9s 還有建議我用 very magic 看看，結果還是不夠滿意，後來換成找日本那邊，終於找到 eregex.vim 這個 plugin ，他的作法是把 perl/ruby 的 regexp 語法用 function 轉成 vim 的 regexp 語法，所以問題少很多，預設會把 S（大寫S）替換成用 perl/ruby 的...</b:summary>
-				<b:mainContent><p>今天下午在尋找能讓 Vim 的 Regular Expression 變得好看一點的方法，因為實在太多斜線了，當然直接就把目標鎖定在 perl 的語法，一開始找到一個 <a href="http://vim.wikia.com/wiki/Perl_compatible_regular_expressions">vim tip</a> 有建議用 <a href="http://vimdoc.sourceforge.net/htmldoc/if_perl.html#:perldo">perldo</a> ，不過編譯時要把 <a href="http://vimdoc.sourceforge.net/htmldoc/various.html#+perl">+perl</a> 弄起來，使用上也不是很好用，而且不能搜尋，只能做取代，雖然 <a href="http://tech.groups.yahoo.com/group/vim/message/49561">有人寫了 function</a> 來搜尋，不過實際測試之後離方便使用還有些距離。 <a href="http://c9s.blogspot.com/">c9s</a> 還有建議我用 <a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html#/\v">very magic</a> 看看，結果還是不夠滿意，後來換成找日本那邊，終於找到 <a href="http://www.vector.co.jp/soft/unix/writing/se265654.html">eregex.vim</a> 這個 plugin ，他的作法是把 perl/ruby 的 regexp 語法用 function 轉成 vim 的 regexp 語法，所以問題少很多，預設會把 S（大寫S）替換成用 perl/ruby 的 regexp 語法來搜尋搜尋取代的指令，使用方法和原來 s（小寫S）的都一樣，另外單純搜尋的部分有 :M/ 這個命令，也可以 map 到原來的 / 上：</p>
-
-
-
-<pre><code>nnoremap / :M/</code></pre>
-
-
-
-<p>使用上就和原來幾乎完全一樣了，超棒的～</p>
-
-<p>順帶一提， <a href="http://www.ubuntu.com/">Ubuntu</a> 上要編譯出 +perl 的功能要 <a href="http://www.tfug.org/pipermail/tfug/2006-May/011262.html">確定一下 libperl.so 在不在</a> ，像我的系統就只有 libperl.so.5.8，還要自己做個鏈結。</p>
-
-<p class="update">由於作者聯絡不上，我已經接起 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 的維護工作了，放在 github 上。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
 			</b:content>
 
 			<b:comments commentCount="0"></b:comments>

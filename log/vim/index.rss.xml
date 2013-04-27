@@ -2,13 +2,73 @@
 <rss version="2.0">
 <channel>
 <title>O3noBLOG - vim</title>
-<link>http://blog.othree.net//log/ vim/</link>
+<link>https://blog.othree.net//log/ vim/</link>
 <description></description>
-<copyright>Copyright 2012</copyright>
-<lastBuildDate>2012-11-10 00:11</lastBuildDate>
+<copyright>Copyright 2013</copyright>
+<lastBuildDate>2013-02-26 00:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>eregex.vim 2.60</title>
+<description><![CDATA[<p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
+
+<p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
+
+<p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
+
+<p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/02/26/eregexvim-260/</link>
+<guid>https://blog.othree.net/log/2013/02/26/eregexvim-260/</guid>
+<category>vim</category>
+<pubDate>2013-02-26 00:59</pubDate>
+</item>
+
+<item>
+<title>Vim JavaScript Libraries Syntax</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8462979359/" title="Flickr 上 othree 的 JavaScript Libraries Syntax"><img src="//farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="//farm9.staticflickr.com/8373/8462979359_27480834ea.jpg 768w, //farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 768w 2x" /></a></p>
+
+<p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
+
+<ul>
+<li><a href="https://github.com/othree/javascript-libraries-syntax.vim">Github othree/javascript-libraries-syntax.vim</a></li>
+</ul>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/02/11/vim-javascript-libraries/</link>
+<guid>https://blog.othree.net/log/2013/02/11/vim-javascript-libraries/</guid>
+<category>vim</category>
+<pubDate>2013-02-11 10:58</pubDate>
+</item>
+
+<item>
+<title>Vim Syntax Complete</title>
+<description><![CDATA[<p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
+
+<pre><code>setlocal omnifunc=syntaxcomplete#Complete
+</code></pre>
+
+<p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
+
+<p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
+
+<pre><code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
+let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
+</code></pre>
+
+<p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
+
+<p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/02/08/vim-syntax-complete/</link>
+<guid>https://blog.othree.net/log/2013/02/08/vim-syntax-complete/</guid>
+<category>vim</category>
+<pubDate>2013-02-08 21:25</pubDate>
+</item>
 
 <item>
 <title>ctrlp.vim </title>
@@ -21,8 +81,8 @@
 <p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="http://kien.github.com/ctrlp.vim/">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2012/11/10/ctrlpvim/</link>
-<guid>http://blog.othree.net/log/2012/11/10/ctrlpvim/</guid>
+<link>https://blog.othree.net/log/2012/11/10/ctrlpvim/</link>
+<guid>https://blog.othree.net/log/2012/11/10/ctrlpvim/</guid>
 <category>vim</category>
 <pubDate>2012-11-10 00:11</pubDate>
 </item>
@@ -54,8 +114,8 @@
 <p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2012/01/23/coffee-check-vim/</link>
-<guid>http://blog.othree.net/log/2012/01/23/coffee-check-vim/</guid>
+<link>https://blog.othree.net/log/2012/01/23/coffee-check-vim/</link>
+<guid>https://blog.othree.net/log/2012/01/23/coffee-check-vim/</guid>
 <category>vim</category>
 <pubDate>2012-01-23 00:00</pubDate>
 </item>
@@ -69,8 +129,8 @@
 <p><a href="https://groups.google.com/forum/?hl=zh-TW_US#!forum/vim-taiwan">Vim-Taiwan</a> 第一次聚會我的分享題目：「Vim Plugin Deployment」，內容是在介紹怎樣發佈自己寫的 Vim Plugin，不是 Plugin Developer 才需要知道的東西，不論是偶爾會修改別人的 plugin，抑或是會在 vimrc 裡面寫 function 的人都可以了解一下的。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</link>
-<guid>http://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</guid>
+<link>https://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</link>
+<guid>https://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</guid>
 <category>vim</category>
 <pubDate>2011-10-12 02:16</pubDate>
 </item>
@@ -105,8 +165,8 @@ filetype plugin indent on
 <p>舉例來說， <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 我就自己改成用 Douglas Crockford 的 <a href="https://github.com/douglascrockford/JSLint">JSLint repo</a> 下的最新版 jslint.js ，這種情形，我會自己 <a href="https://github.com/othree/jslint.vim">fork 一份 jslint.vim</a> 下來修改，然後安裝就裝自己的那份。使用 Vundle 之後，把 plugin 裝回來的過程比以前要簡單上數百倍，所以只要備份 .vimrc 就可以了，整個 <a href="https://github.com/othree/rc/tree/master/home">目錄</a> 看起來清爽太多了。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2011/06/05/vundle/</link>
-<guid>http://blog.othree.net/log/2011/06/05/vundle/</guid>
+<link>https://blog.othree.net/log/2011/06/05/vundle/</link>
+<guid>https://blog.othree.net/log/2011/06/05/vundle/</guid>
 <category>vim</category>
 <pubDate>2011-06-05 08:14</pubDate>
 </item>
@@ -118,8 +178,8 @@ filetype plugin indent on
 <p>詳細可以看 Vimcast 最新的一期：<a href="http://vimcasts.org/episodes/undo-branching-and-gundo-vim/">Undo branching and Gundo.vim</a>，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此  <a href="http://stevelosh.com/">Steve Losh</a> 做了個 <a href="http://sjl.bitbucket.org/gundo.vim/">Gundo</a> ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2011/02/27/gundovim/</link>
-<guid>http://blog.othree.net/log/2011/02/27/gundovim/</guid>
+<link>https://blog.othree.net/log/2011/02/27/gundovim/</link>
+<guid>https://blog.othree.net/log/2011/02/27/gundovim/</guid>
 <category>vim</category>
 <pubDate>2011-02-27 00:01</pubDate>
 </item>
@@ -135,8 +195,8 @@ filetype plugin indent on
 <p><a href="http://dancingpenguinsoflight.com/2009/02/python-and-vim-make-your-own-ide/">Python and vim: Make your own IDE</a> 這篇文章還有不少和 Python 相關的設定，像是 <a href="http://www.vim.org/scripts/script.php?script_id=910">pydoc</a> 和 <a href="http://www.logilab.org/857">pylint</a> 的整合等等，有興趣的還可以在深入看看，我接下來要研究 Ruby 的部份了:P。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2010/11/22/vim-for-python/</link>
-<guid>http://blog.othree.net/log/2010/11/22/vim-for-python/</guid>
+<link>https://blog.othree.net/log/2010/11/22/vim-for-python/</link>
+<guid>https://blog.othree.net/log/2010/11/22/vim-for-python/</guid>
 <category>vim</category>
 <pubDate>2010-11-22 11:00</pubDate>
 </item>
@@ -154,8 +214,8 @@ nnoremap ,/ /
 <p>這樣就可以用 <kbd>/</kbd> 和 Perl 形式的表示式進行搜尋了，如果要取代可以用 :S (大寫S)，不過這頂多是平常編輯文件時使用，要開發 plugin 的話還是只能用內建的語法寫。</p>
 ]]>
 </description>
-<link>http://blog.othree.net/log/2010/10/19/eregex-vim/</link>
-<guid>http://blog.othree.net/log/2010/10/19/eregex-vim/</guid>
+<link>https://blog.othree.net/log/2010/10/19/eregex-vim/</link>
+<guid>https://blog.othree.net/log/2010/10/19/eregex-vim/</guid>
 <category>vim</category>
 <pubDate>2010-10-19 17:58</pubDate>
 </item>
@@ -163,8 +223,8 @@ nnoremap ,/ /
 <item>
 <title>html5.vim</title>
 <description><![CDATA[<p>上週花了約三四天時間搞出來的 <a href="http://www.vim.org/scripts/script.php?script_id=3236">html5.vim</a> ，目前主要功能是 <span class="caps">HTML5 </span>syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 <a href="http://www.w3.org/TR/wai-aria/"><span class="caps">WAI</span>-ARIA</a> 和一些其他規範的支援，之後有考慮加上 MathML 和 <span class="caps">SVG </span>，如果有任何意見歡迎到 <a href="http://github.com/othree/html5.vim/">github repo</a> 上提出 issue。</p>]]></description>
-<link>http://blog.othree.net/log/2010/09/16/html5vim/</link>
-<guid>http://blog.othree.net/log/2010/09/16/html5vim/</guid>
+<link>https://blog.othree.net/log/2010/09/16/html5vim/</link>
+<guid>https://blog.othree.net/log/2010/09/16/html5vim/</guid>
 <category>vim</category>
 <pubDate>2010-09-16 21:30</pubDate>
 </item>
@@ -195,8 +255,8 @@ endif
 endfunction
 autocmd VimEnter * :call AfterStart()
 </code></pre>]]></description>
-<link>http://blog.othree.net/log/2010/02/28/vimrc-onload/</link>
-<guid>http://blog.othree.net/log/2010/02/28/vimrc-onload/</guid>
+<link>https://blog.othree.net/log/2010/02/28/vimrc-onload/</link>
+<guid>https://blog.othree.net/log/2010/02/28/vimrc-onload/</guid>
 <category>vim</category>
 <pubDate>2010-02-28 21:14</pubDate>
 </item>
@@ -216,8 +276,8 @@ autocmd VimEnter * :call AfterStart()
 <p>順帶一提， <a href="http://www.ubuntu.com/">Ubuntu</a> 上要編譯出 +perl 的功能要 <a href="http://www.tfug.org/pipermail/tfug/2006-May/011262.html">確定一下 libperl.so 在不在</a> ，像我的系統就只有 libperl.so.5.8，還要自己做個鏈結。</p>
 
 <p class="update">由於作者聯絡不上，我已經接起 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 的維護工作了，放在 github 上。</p>]]></description>
-<link>http://blog.othree.net/log/2010/01/08/perl-style-regexp-for-vim/</link>
-<guid>http://blog.othree.net/log/2010/01/08/perl-style-regexp-for-vim/</guid>
+<link>https://blog.othree.net/log/2010/01/08/perl-style-regexp-for-vim/</link>
+<guid>https://blog.othree.net/log/2010/01/08/perl-style-regexp-for-vim/</guid>
 <category>vim</category>
 <pubDate>2010-01-08 01:41</pubDate>
 </item>
@@ -236,8 +296,8 @@ if &amp;term =~ '^screen'
     set t_k4=^[[14~
 endif
 </code></pre>]]></description>
-<link>http://blog.othree.net/log/2010/01/07/screen_vim_f1f4_map/</link>
-<guid>http://blog.othree.net/log/2010/01/07/screen_vim_f1f4_map/</guid>
+<link>https://blog.othree.net/log/2010/01/07/screen_vim_f1f4_map/</link>
+<guid>https://blog.othree.net/log/2010/01/07/screen_vim_f1f4_map/</guid>
 <category>vim</category>
 <pubDate>2010-01-07 22:41</pubDate>
 </item>
@@ -291,184 +351,10 @@ test('all', function () {
 
 
 <p>不過這個 testrunner 不能做任何和 html 文件、瀏覽器有關的測試，只能做很核心部份的測試。</p>]]></description>
-<link>http://blog.othree.net/log/2009/12/31/basic-javascript-auto-unit-test/</link>
-<guid>http://blog.othree.net/log/2009/12/31/basic-javascript-auto-unit-test/</guid>
+<link>https://blog.othree.net/log/2009/12/31/basic-javascript-auto-unit-test/</link>
+<guid>https://blog.othree.net/log/2009/12/31/basic-javascript-auto-unit-test/</guid>
 <category>vim</category>
 <pubDate>2009-12-31 10:18</pubDate>
-</item>
-
-<item>
-<title>JavaScript on vim</title>
-<description><![CDATA[<p>因為現在主要都是在寫 javascript 為主，所以這兩天調整 <a href="http://www.vim.org" target="_blank">Vim</a> 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。</p>
-
-<h4>syntax/indent</h4>
-
-<p>Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的：</p>
-
-
-<ul>
-<li><a href="http://www.vim.org/scripts/script.php?script_id=1491" target="_blank">JavaScript syntax : Better JavaScrirpt syntax support</a></li>
-<li><a href="http://www.vim.org/scripts/script.php?script_id=1840" target="_blank">Javascript Indentation : Indentation for Javascript</a></li>
-</ul>
-
-
-
-<p>照說明把檔案放到正確的位置即可，另外雖然有 <a href="http://www.vim.org/scripts/script.php?script_id=2416" target="_blank">jQuery 的 syntax</a> ，不過我安裝後發現會和 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 <a href="http://groups.google.com/group/vim-taiwan" target="_blank">vim-taiwan</a> 上的 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/a371c30000e3138e" target="_blank">討論</a> ，我目前是還沒覺得有需求。</p>]]><![CDATA[<h4>自動完成</h4>
-
-<p>這部份就比較麻煩了，在自動完成我使用了 <a href="http://www.vim.org/scripts/script.php?script_id=2540" target="_blank">snipMate</a> （ <a href="http://blog.othree.net/log/2008/03/23/auto-complete-on-vim/" target="_blank">以前</a> 用 <a href="http://www.vim.org/scripts/script.php?script_id=1318" target="_blank">snippetsEmu</a> ，不過都沒更新了，而且內建的 snippets 少很多），還有 <a href="http://www.vim.org/scripts/script.php?script_id=1879" target="_blank">autocomplpop</a> ，兩者安裝都很簡單，就解到 .vim 目錄下，或是用 c9s 大大寫的 <a href="http://github.com/c9s/Vimana" target="_blank">Vimana</a> ，snipMate 別忘了先 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/55c11ab0438dfeb9" target="_blank">hack 一下</a> 讓它支援 autocomplpop ，autocomplpop 雖然新版已經有幫不少檔案格式設定好預設的行為了，包括 html 和 css，但是卻不包含 javascript，所以還要自己設定一下，在 vimrc 裡面加上以下的設定：</p>
-
-
-
-<pre><code>let g:acp_enableAtStartup = 1
-let g:acp_completeOption = '.,w,b,u,t,i,k'
-let g:acp_behaviorSnipmateLength = 1
-let g:acp_behaviorKeywordCommand = "\&lt;C-n&gt;"
-
-let jsbehavs = { 'javascript': [] }
-    call add(jsbehavs.javascript, {
-        \   'command'      : "\&lt;C-x&gt;\&lt;C-u&gt;",
-        \   'completefunc' : 'acp#completeSnipmate',
-        \   'meets'        : 'acp#meetsForSnipmate',
-        \   'onPopupClose' : 'acp#onPopupCloseSnipmate',
-        \   'repeat'       : 0,
-    \})
-    call add(jsbehavs.javascript, {
-        \   'command' : g:acp_behaviorKeywordCommand,
-        \   'meets'   : 'acp#meetsForKeyword',
-        \   'repeat'  : 0,
-        \ })
-    call add(jsbehavs.javascript, {
-        \    'command'  : "\&lt;C-x&gt;\&lt;C-o&gt;",
-        \    'meets'   : 'acp#meetsForKeyword',
-        \    'repeat'   : 0,
-    \})
-
-let g:acp_behavior = {}
-call extend(g:acp_behavior, jsbehavs, 'keep')
-</code></pre>
-
-
-
-<p>這樣編輯 javascript 時應該就會做正確的跑出自動完成的候選選項，包括 snipMate、關鍵字自動完成、和 omni 自動完成（好像有翻成全補完的），順便提一下，Vim 7.2 大部分檔案格式不用去設定 omnifunc ，幾乎都會指到自己的預設函式，不過 html 卻沒有，還要自己加下面這行到 vimrc ：</p>
-
-
-
-<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
-
-
-
-<p>而且最好依照我 <a href="http://blog.othree.net/log/2009/12/25/bug-of-html-complete/" target="_blank">上一篇的建議</a> 修改一下。</p>
-
-<h4>code 檢查</h4>
-
-<p>再來是設定讓 <a href="http://www.jslint.com/" target="_blank">jslint</a> 檢查 javascript 程式碼，用的是 <a href="http://github.com/hallettj/jslint.vim" target="_blank">jslint.vim</a> ，要記得先安裝 <a href="http://www.mozilla.org/js/spidermonkey/" target="_blank">spidermonkey</a> ，然後照說明把檔案移動到 ~/.vim 裡面，這樣就可以執行 :JSLint 來檢查程式碼了，不過一開始一定會發現它對所有的全域變數都發出錯誤訊息，這時可以加上一些設定參數放到 ~/.jslintrc ，我的設定檔內容（其實就是 jslint.vim 提供的範例）：</p>
-
-
-
-<pre><code>/*jslint browser: true*/
-/*global jQuery $ */
-</code></pre>
-
-
-
-<p>第一行是說這些 code 是網路用的，用瀏覽器來執行，所以在這種環境下會出現的全域變數就不會被當成錯誤，第二行則是你自己定義會使用到的全域變數，這個範例是加上了 jQuery 的兩個全域變數，這些設定也可以加在 js 檔案裡面，其他的設定參數請看 <a href="http://www.jslint.com/lint.html" target="_blank">官方說明</a> 。不過每次都要執行 :JSLint 也是蠻麻煩的，所以可以設一下快速鍵，另外也可以設定存檔時自動檢查：</p>
-
-
-
-<pre><code>map &lt;F12&gt; :JSLintLight&lt;CR&gt;
-map &lt;F11&gt; :JSLint&lt;CR&gt;
-
-autocmd FileWritePost,BufWritePost *.js :JSLint</code></pre>
-
-
-
-<h4>壓縮</h4>
-
-<p>最後就是壓縮了， <a href="http://blog.othree.net/log/2009/09/08/vim-js-yuicompressor/" target="_blank">以前有寫過個 function</a> ，因應 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 的出現和建議，現在有作些修改：</p>
-
-
-
-<pre><code>function Yuic ()
-    let cwd = expand('&lt;afile&gt;:p:h')
-    let nam = expand('&lt;afile&gt;:t:r')
-    let ext = expand('&lt;afile&gt;:e')
-    if -1 == match(nam, "[\._]src$")
-        let minfname = nam.".min.".ext
-    else
-        let minfname = substitute(nam, "[\._]src$", "", "g").".".ext
-    endif
-    if filewritable(cwd.'/'.minfname)
-        if ext == 'js' &amp;&amp; executable('closure-compiler')
-            cal system( 'closure-compiler --js '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
-        elseif executable('yuicompressor')
-            cal system( 'yuicompressor '.cwd.'/'.nam.'.'.ext.' &gt; '.cwd.'/'.minfname.' &amp;')
-        endif
-    endif
-endfunction
-
-autocmd FileWritePost,BufWritePost *.js :call Yuic()
-autocmd FileWritePost,BufWritePost *.css :call Yuic()
-</code></pre>
-
-
-
-<p>至於怎麼裝 <a href="http://developer.yahoo.com/yui/compressor/" target="_blank">yuicompressor</a> 和 <a href="http://code.google.com/p/closure-compiler/" target="_blank">closure-compiler</a> 就因系統而異了。</p>
-
-<h4>其他</h4>
-
-<p>其他還有兩個不是針對 javascript 的 plugin ，不過寫程式時蠻有用的，分別是 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 和 <a href="http://www.vim.org/scripts/script.php?script_id=294" target="_blank">Align</a> ，The <span>NERD</span> Commenter 是快速註解用，Align 則是對齊用，例如一連串的變數初值指定，可以用 :Align = 來把等號左右兩邊的程式碼對齊，美觀不少。</p>]]></description>
-<link>http://blog.othree.net/log/2009/12/26/javascript-on-vim/</link>
-<guid>http://blog.othree.net/log/2009/12/26/javascript-on-vim/</guid>
-<category>vim</category>
-<pubDate>2009-12-26 20:10</pubDate>
-</item>
-
-<item>
-<title>htmlcomplete#CompleteTags 的 bug</title>
-<description><![CDATA[<p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p>]]><![CDATA[<p>這個錯誤訊息的發生條件其實很特別，首先 html 的 omnifunc 要設成 htmlcomplete#CompleteTags，就是說你的 vimrc 裡面應該會有一行長成</p>
-
-
-
-<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
-
-
-
-<p>再來你正在編輯的 html 文件裡面要有 &lt;link rel="stylesheet" /&gt; 這種外連 <span class="caps">CSS </span>檔案的標籤，而關鍵是 href 指到的位置沒有一個可以用的檔案（不存在、無權限讀取都可），然後接下來你在 class=" 或是 id=" 的位置裡面執行了 omni complete (&lt;C-x&gt;, &lt;C-o&gt;) ，當然如果有裝 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 的話，這時就會自動幫你跑（2.7 版以後），錯誤訊息也就會自動冒出。</p>
-
-<p>問題發生的原因是，這個 html 自動完成函式會去檢查你的 <span class="caps">CSS </span>，包括外連的檔案，去裡面把 class name, id name 抽出送回作自動完成的選項，不過他有一個動作應該是要檔案可讀才要跑的，卻放到 if 的外面，所以只要把它移過去就好了，錯誤那行 code 是 310 行：</p>
-
-
-
-<pre><code>308        endif
-309    &quot; We gathered classes definitions from all external files
-310    let classes += classlines
-</code></pre>
-
-
-
-<p>把它移到 308 行的 endif 前面就好了：</p>
-
-
-
-<pre><code>308        &quot; We gathered classes definitions from all external files
-309        let classes += classlines
-310    endif
-</code></pre>]]></description>
-<link>http://blog.othree.net/log/2009/12/25/bug-of-html-complete/</link>
-<guid>http://blog.othree.net/log/2009/12/25/bug-of-html-complete/</guid>
-<category>vim</category>
-<pubDate>2009-12-25 23:58</pubDate>
-</item>
-
-<item>
-<title>Zen Coding on vim</title>
-<description><![CDATA[<p>前兩天試了一下，還蠻厲害的，不過不知道是不是我現在的設定有點亂，所以沒辦法 tab 觸發自動完成，一定要按 Ctrl + E，另外就是目前只支援 <span class="caps">HTML </span>的樣子，我看原始碼發現判斷檔案格式的函式直接回傳 "HTML"，不過這也還好，因為 <span class="caps">CSS </span>有其他自動完成可以用，zen-coding 在 <span class="caps">CSS </span>處理上沒特別強，但是 <span class="caps">HTML </span>要到這樣厲害目前沒其他方案，下面記錄一下安裝方法。</p>
-
-<p>先到 <a href="http://code.google.com/p/zen-coding/issues/detail?id=16">這串討論</a> 抓最下面的 	zencoding.vim 和 zencoding_vim.py 兩個檔案，放到 ~/.vim/plugin/ 裡，再來到 <a href="http://code.google.com/p/zen-coding/downloads/list">zen-coding 下載頁</a> 抓 Zen Coding for TextMate v0.3.1.zip, TextMate.Zen.HTML.1.3.1.zip, TextMate.Zen.CSS.1.3.1.zip 三個檔案一樣解開放到 ~/.vim/plugin/ 裡面，這樣就可以了，測試方法就是隨便打個 css selector 然後按 Ctrl+E ，另外記得 selector 裡面不要有空白，這個 plugin 其實是用 Vim 跑 python ，所以 Vim 要先支援執行 Python Script ，我的就是裝完就可以，所以沒對這部份下去研究，如果有人跑不起來可以看看是不是這方面的問題。</p>]]></description>
-<link>http://blog.othree.net/log/2009/12/25/zen-coding-on-vim/</link>
-<guid>http://blog.othree.net/log/2009/12/25/zen-coding-on-vim/</guid>
-<category>vim</category>
-<pubDate>2009-12-25 11:18</pubDate>
 </item>
 
 
