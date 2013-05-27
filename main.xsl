@@ -5,6 +5,7 @@
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
 <xsl:strip-space elements="*"/>
 <xsl:param name="ext"></xsl:param>
+<xsl:param name="canonical">https://blog.othree.net</xsl:param>
 <xsl:param name="mime">html</xsl:param>
 <xsl:param name="dpr">1</xsl:param>
 <xsl:param name="w">m</xsl:param>
@@ -70,7 +71,7 @@
 			</xsl:when>
 			<xsl:when test="$listType = 'o'">
 				<link rel="previous" title="彙整" href="{$mainPath}log/{$ext}" />
-				<link rel="next" title="關於這" href="{$mainPath}about/here/{$ext}" />
+				<link rel="next" title="關於" href="{$mainPath}about/me/{$ext}" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name="prev_next">
@@ -89,7 +90,6 @@
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
-                <xsl:variable name="canonical">https://blog.othree.net/log/<xsl:value-of select="translate(//b:blog/b:entries/b:entry/b:datetime/b:date, '-', '/')" />/<xsl:value-of select="//b:blog/b:entries/b:entry/@baseName" />/</xsl:variable>
                 <link rel="canonical" itemprop="url" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
@@ -117,15 +117,23 @@
                     <meta property="og:image:width" content="{@width}" />
                     <meta property="og:image:height" content="{@height}" />
                 </xsl:for-each>
+                <xsl:if test="not(descendant::*[local-name() = 'img'][1])">
+                    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png" />
+                    <meta property="og:image:width" content="240" />
+                    <meta property="og:image:height" content="240" />
+                </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <meta property="og:title" content="{b:blogTitle}" />
                 <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄" />
-                <meta property="og:url" content="https://blog.othree.net" />
+                <meta property="og:url" content="{$canonical}" />
                 <meta property="og:type" content="website" />
-        </xsl:otherwise>
+                <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png" />
+                <meta property="og:image:width" content="240" />
+                <meta property="og:image:height" content="240" />
+            </xsl:otherwise>
 		</xsl:choose>
-        <meta property="fb:admin" content="582724207" />
+        <meta property="fb:admins" content="582724207" />
 	</head>
 	<body>
 
@@ -167,7 +175,10 @@
                                 <xsl:attribute name="id">active</xsl:attribute>
                                 <xsl:attribute name="class">active</xsl:attribute>
                             </xsl:if>
-                            <a href="{$mainPath}about/here/{$ext}">關於這</a>
+                            <a href="{$mainPath}about/me/{$ext}">關於</a>
+                        </li>
+                        <li class="icon github">
+                            <a href="https://github.com/othree">Github</a>
                         </li>
                     </ul>
                 </div>

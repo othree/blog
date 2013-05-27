@@ -28,6 +28,7 @@ if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
 //get local path
 $self_path = preg_replace("!index\.php!", "", getenv('SCRIPT_NAME'));
 $query_string = preg_replace("!^".$self_path."!", "", getenv('QUERY_STRING'));
+$canonical = 'https://blog.othree.net/' . $query_string;
 
 //get target file path
 if (preg_match("/^feeds|rss\/?$/", $query_string)) $format = "xml";
@@ -119,7 +120,7 @@ if ($format == "html") {
         header("Content-type: text/html; charset=UTF-8");
     }
     //xsl transform
-    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $format, $dpr, $w) );
+    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $canonical, $format, $dpr, $w) );
 } else if ($format == "xml") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
@@ -150,7 +151,7 @@ echo $output;
 
 
 //xsl transform function
-function xslt($xml, $xsl, $mime, $dpr, $w) {
+function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
     if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);
@@ -164,6 +165,7 @@ function xslt($xml, $xsl, $mime, $dpr, $w) {
 
         $proc->importStyleSheet($xslo); // attach the xsl rules
         $proc->setParameter('blog.othree.net', 'ext', '');
+        $proc->setParameter('blog.othree.net', 'canonical', $canonical);
         $proc->setParameter('blog.othree.net', 'mime', $mime);
         $proc->setParameter('blog.othree.net', 'dpr', $dpr);
         $proc->setParameter('blog.othree.net', 'w', $w);
