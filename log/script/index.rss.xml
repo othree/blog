@@ -5,10 +5,47 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-04-21 00:01</lastBuildDate>
+<lastBuildDate>2013-05-19 21:25</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>this</title>
+<description><![CDATA[<p>這次 JSDC 2013 分享的投影片出來了，這次的主題是比較根基的東西，也算是我寫一陣子 JavaScript 後覺得可以整理出來的一個 Pattern，沒聽現場的，應該看投影片也可以知道我說的是什麼，本來題目是 Magic this，後來改成 <strong>this</strong> 了，不過已經生好的標題圖片不用太可惜，所以還是放上來了。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="148e0f10a2b50130c7f86aa80182a416" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/*A_A*/</script>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/05/19/this/</link>
+<guid>https://blog.othree.net/log/2013/05/19/this/</guid>
+<category>script</category>
+<pubDate>2013-05-19 21:25</pubDate>
+</item>
+
+<item>
+<title>Chrome Debug 文件</title>
+<description><![CDATA[<p>Google Chrome 開發工具的文件昨天有更新，不確定這整頁是新的還是改寫，不過總之是詳細很多的 Script Debugging 的<a href="https://developers.google.com/chrome-developer-tools/docs/javascript-debugging">使用說明</a>，從詳細的介面介紹，到如何用這些功能都有說明，值得推薦一看。</p>
+
+<p>另外還有一篇新的則是關於把開發工具導入<a href="https://developers.google.com/chrome-developer-tools/docs/authoring-development-workflow">開發流程內的文件</a>，所以包括一些新功能像是 snippets 的介紹，也有 in place editing ，如何儲存修改過的檔案等。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/05/09/chrome-debug-doc/</link>
+<guid>https://blog.othree.net/log/2013/05/09/chrome-debug-doc/</guid>
+<category>script</category>
+<pubDate>2013-05-09 00:13</pubDate>
+</item>
+
+<item>
+<title>deferred.then</title>
+<description><![CDATA[<p>前陣子 <a href="http://blog.blackbing.net/">Bingo</a> 告知才發現，jQuery Deferred 物件的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a> 在 1.8 被標為 <strong>Deprecated</strong> 了，以後請改用 <a href="http://api.jquery.com/deferred.then/">then</a>，兩者其實不管回傳值的話，行為還蠻接近的，現在的 pipe 還沒移除掉，不過已經是新版的 then 的 alias 了。看文件的話如果不看下面的敘述，很可能不知道 1.8 前後的差異，雖然回傳的都是 Promise 物件，不過 1.8 之前回傳的是同一個 Promise 物件，1.8 之後回傳的則是新的，和原來 pipe 行為一樣，結果修改過的 Promise 物件。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/05/03/deferred-then/</link>
+<guid>https://blog.othree.net/log/2013/05/03/deferred-then/</guid>
+<category>script</category>
+<pubDate>2013-05-03 20:11</pubDate>
+</item>
 
 <item>
 <title>Functional Programming using underscore.js</title>
@@ -505,69 +542,6 @@ deferred[ tuple[0] + "With" ] =  function () {
 <guid>https://blog.othree.net/log/2011/05/14/front-end-coding-styles/</guid>
 <category>script</category>
 <pubDate>2011-05-14 01:14</pubDate>
-</item>
-
-<item>
-<title>jQuery 1.6.1</title>
-<description><![CDATA[<p><a href="http://blog.jquery.com/2011/05/12/jquery-1-6-1-released/">jQuery 1.6.1 釋出</a>了，主要的修改就是讓我前一篇提到的 attr() 可以像下相容，如果本來因為 attr() 變動的關係不敢升上 1.6 的話，現在可以試試看 1.6.1 。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/05/13/jquery-161/</link>
-<guid>https://blog.othree.net/log/2011/05/13/jquery-161/</guid>
-<category>script</category>
-<pubDate>2011-05-13 12:08</pubDate>
-</item>
-
-<item>
-<title>jQuery 1.6</title>
-<description><![CDATA[<p><a href="http://blog.jquery.com/2011/05/03/jquery-16-released/">jQuery 1.6</a> 前兩天剛出來，改變不少，其中我覺得影響最大的就是 <a href="http://api.jquery.com/attr/">attr()</a> 和 <a href="http://api.jquery.com/prop/">prop()</a> 這兩個東西了，attr 變成完全是依照 HTML 原始碼的內容回傳東西，所以像是 checkbox 標籤的 checked 屬性：</p>
-
-<pre><code>&lt;input type="checkbox" checked&gt;
-</code></pre>
-
-<p>以前用 attr 會傳回 true，但是現在會傳回空字串，因為他沒有設定內容，如果要向以前一樣使用，變成要改用 prop 來純取屬性了，我用 jsFiddle 作了個簡單範例給大家看看：</p>
-
-<iframe style="width: 500px; height: 300px" src="http://jsfiddle.net/othree/YQAL8/embedded/"></iframe>
-
-<p>順便趁機問問大家意見，attribute 和 properties 同時出現時，中文翻譯要怎樣區別呢？</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/05/07/jquery-16/</link>
-<guid>https://blog.othree.net/log/2011/05/07/jquery-16/</guid>
-<category>script</category>
-<pubDate>2011-05-07 11:33</pubDate>
-</item>
-
-<item>
-<title>jQuery-ujs</title>
-<description><![CDATA[<p><a href="http://rubyonrails.org/">Rails</a> 預設是配合 <a href="http://www.prototypejs.org/">prototype</a> 來做到一些 Ajax 的功能的，不過他其實也可以配合 <a href="http://jquery.com/">jQuery</a> ，只要配合 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 這個 Gem 就可以，前陣子從頭開始學 Rails 3 的時候開始接觸到這個 plugin，後來花了些時間看他的原始碼，發現他的設計其實很棒，一如 Rails 的風格，非常的 Best Practice 的設計，因此事實上，不需要是 Rails Application 也很容易就可以利用它。</p>
-
-<p>jQuery-ujs 全名 <strong>Unobtrusive scripting adapter for jQuery</strong> ，是由 Rails Team 的人開發，所以也是個官方支援，用了 <a href="http://benalman.com/news/2010/03/jquery-special-events/">custom event</a> 和 <a href="http://html5doctor.com/html5-custom-data-attributes/">data-* 屬性</a> 這兩種東西所建立出來的，不亂入的 JavaScript adapter ，jQuery-ujs 的基本設計是用 data-* 屬性來記錄連結或是表單的一些行為，是不是要用XHR 送 request ，HTTP request 是 POST、GET 還是 DELETE 等等，而這些 XHR request 的事件就用 ajax:beforeSend、ajax:success 等自定事件來處理，所以假設你要做一個連結，點下去會去遠端抓一個 JSON 資料回來，那你的 HTML 會要這樣寫：</p>
-
-<pre><code>&lt;a href="/getme.json" data-remote="true" data-type="json"&gt;Click Me !&lt;/a&gt;
-</code></pre>
-
-<p>然後 JavaScript 這邊這樣寫：</p>
-
-<pre><code>$('a').bind('ajax:success', function (data, status, xhr) {
-    //data is parsed JSON object
-    //do something with data here
-});
-</code></pre>
-
-<p>這樣就可以讓 <em>Click Me !</em> 這個連結被點到時，用 XHR Request 取代換頁到那個網址，然後回來的資料就會自動進 callback function ，而除了 ajax:success 外，還有 ajax:error 可以做錯誤處理，另外還有兩個事件，詳細的資料在官方 <a href="https://github.com/rails/jquery-ujs/wiki/ajax">文件</a> 有，另外還有一份文件則是關於 <a href="https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery">支援的 data-* 屬性</a> ，這兩份看一下就可以正確的使用 jQuery-ujs 了。</p>
-
-<p>而除了文件上寫到的，還有兩個特色是直接沿用 Rails 的 Best Practice ，第一個是 _method 參數，雖然 HTTP 有設計了四種 request method：POST、GET、PUT、DELETE，但是 HTML 表單卻只有 POST 和 GET 兩種可以用，但是 Rails 的 <a href="http://ihower.tw/rails3/routing.html">RESTful API</a> 定義的七種動作中，把四種 request method 都用到了，所以為了讓 PUT 和 DELETE 也可以動作， jQuery-ujs 會在必要的時候，多送一個 _method 參數，告訴 server 端，現在實際上是哪種 request 。</p>
-
-<p>另一個就是 <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">CSRF</a> 了，Rails 對付 CSRF 的方法就是很常見的，用 token，只不過它是寫在 <code>&lt;meta name='csrf-token'&gt;</code> 裡面，然後 jQuery-ujs 會去把它的值抓出來，也當成參數一起送出，如果是 XHR 的話，則會寫在 HTTP header 裡面，因為使用的方法都很簡單好懂，如果是自己寫的 server 架構，也可以依照這個原則來配合 jQuery-ujs 來檔 CSRF 的攻擊。</p>
-
-<p>這篇簡單介紹了幾個 <strong>jQuery-ujs</strong> 的特色，而我最後還有一個覺得可以使用它的理由，就是它現在是 Rails 官方維護，有持續更新，而且品質還算可靠（最近 jQuery 1.5 改了 ajax 結果就...）。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/03/09/jquery-ujs/</link>
-<guid>https://blog.othree.net/log/2011/03/09/jquery-ujs/</guid>
-<category>script</category>
-<pubDate>2011-03-09 23:06</pubDate>
 </item>
 
 

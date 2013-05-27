@@ -9,6 +9,74 @@
 			<b:listData listID="server">server</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000736" baseName="dnssec">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-05-02</b:date>
+				<b:time>11:46:40</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+			<b:title>DNSSEC</b:title>
+			<b:content>
+				<b:summary>前幾天我的網域名稱 othree.net 突然無法從 Google 的 Public DNS 8.8.8.8 查到，經過一些交叉比對後，發現 Google Public DNS 和 Linode 內部用的 DNS 查不到，其他大部分的 DNS 都查的到，一時也不知道到底是什麼問題，就和 namecheap 聯絡，結果對方客服還蠻鬼打牆的，聯繫兩次都說設定沒問題，他們連的到，有問題也是 Google 的，還好 DK 有跟我說可能和 DNSSEC 有關係，讓我比較好找問題，其實我也有跟 namecheap 的人說到 DNSSEC，但是他們好像沒聽到一樣，讓我有些訝異的是， namecheap 的人對於 Google Public DNS 查不到他們客戶的 domain 覺得好像沒什麼，沒有很積極找問題。 還好 Google...</b:summary>
+				<b:mainContent><p>前幾天我的網域名稱 <strong>othree.net</strong> 突然無法從 Google 的 Public DNS 8.8.8.8 查到，經過一些交叉比對後，發現 Google Public DNS 和 Linode 內部用的 DNS 查不到，其他大部分的 DNS 都查的到，一時也不知道到底是什麼問題，就和 namecheap 聯絡，結果對方客服還蠻鬼打牆的，聯繫兩次都說設定沒問題，他們連的到，有問題也是 Google 的，還好 DK 有跟我說可能和 DNSSEC 有關係，讓我比較好找問題，其實我也有跟 namecheap 的人說到 DNSSEC，但是他們好像沒聽到一樣，讓我有些訝異的是， namecheap 的人對於 Google Public DNS 查不到他們客戶的 domain 覺得好像沒什麼，沒有很積極找問題。</p>
+
+<p>還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 <a href="http://dnsviz.net/">DNSViz</a> 結果給我。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8699979829/" title="Flickr 上 othree 的 Bogus"><img src="//farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="//farm9.staticflickr.com/8119/8699979829_2005069587.jpg 768w, //farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 768w 2x" /></a></p>
+
+<p>其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：</p>
+
+<pre><code>[/root] -root- &gt;&gt;&gt; dig @192.55.83.30 othree.net. DS
+
+; &lt;&lt;&gt;&gt; DiG 9.7.0-P1 &lt;&lt;&gt;&gt; @192.55.83.30 othree.net. DS
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 14284
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 13, ADDITIONAL: 12
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;othree.net. IN DS
+
+;; ANSWER SECTION:
+othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
+</code></pre>
+
+<p>其實看到這邊有點傻眼，因為用來驗證我的 DNSKEY 的 hash 竟然是 '1234567890123456789012345678901234657890' ，怎麼想都是有人亂打的，不過我也不想追究了，總之上層有 DS record，但是去問下層 DNSKEY 時確沒有：</p>
+
+<pre><code>[/root] -root- &gt;&gt;&gt; dig @208.64.122.242 +multiline othree.net. DNSKEY
+
+; &lt;&lt;&gt;&gt; DiG 9.7.0-P1 &lt;&lt;&gt;&gt; @208.64.122.242 +multiline othree.net. DNSKEY
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 16844
+;; flags: qr aa rd; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;othree.net. IN DNSKEY
+</code></pre>
+
+<p>這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8699979931/" title="Flickr 上 othree 的 Insecure"><img src="//farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="//farm9.staticflickr.com/8131/8699979931_575f791a25.jpg 768w, //farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 768w 2x" /></a></p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000727" baseName="cache-control-and-etag">
 			<b:author>
 				<b:authorName>othree</b:authorName>
