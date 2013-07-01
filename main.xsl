@@ -390,7 +390,7 @@
 				<xsl:for-each select="b:entry">
 					<li>
 						<a href="{concat('/log/',translate(b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext)}"><xsl:value-of select="b:title" /></a>
-						<xsl:text> </xsl:text><span><xsl:value-of select="b:datetime/b:date" /><xsl:text> </xsl:text><xsl:value-of select="b:datetime/b:time" /></span>
+						<time><xsl:value-of select="b:datetime/b:date" /></time>
 					</li>
 				</xsl:for-each>
 			</ul>
