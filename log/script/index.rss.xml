@@ -5,10 +5,185 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-06-01 01:56</lastBuildDate>
+<lastBuildDate>2013-06-30 14:24</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>JavaScript Primitives Objects</title>
+<description><![CDATA[<p>接續上一篇文章，JavaScript 的資料型別可以分為兩類：基本型別(primitive value)和物件(object)。基本型別包含字串、數值、布林值等，物件除了物件外，還有像是函數、Regular Expression 等。JavaScript 還有一組很特別的 constructor，對應到每種基本型別，所以你可以 <code>new String('blah');</code> 來產生基本型別的物件：</p>
+
+<pre><code>new String('blah');
+new Number(42);
+ner Boolean(true);
+</code></pre>
+
+<p>如果看最近的書本和教學都會說不要使用這種方法來建立這些基本型別，缺點有效能問題、API 設計不好，會有混淆等等。不過如果是物件的話，不就可以很方便的做一些操作了嗎？</p>
+
+<p>這兩年很受歡迎的 Ruby 有一個特性就是所有的基本型別都是物件，所以就可以很簡單的用一些串接的方式直接對這些基本型別進行操作：</p>
+
+<pre><code>str = 'hello'
+str.capitalize        #  Hello
+str.capitalize!
+str                   #  Hello
+str.count('l')        #  2
+</code></pre>
+
+<p>在 JavaScript 中的基本型別其實不需要以物件的形式，也可以做類似的操作：</p>
+
+<pre><code>var str = 'hello';
+str.length;           // 2
+str.contains('l');    // true
+str.indexOf('l');     // 2
+</code></pre>
+
+<p>但是如果想要更進一步的在上面加上屬性或是 method 就會發現行不通：</p>
+
+<pre><code>var str = 'hello';
+str.target = 'world';
+str.target;            // undefined
+</code></pre>
+
+<p>這中間到底是有什麼差異呢？這個問題我想了很久，直到看了 <a href="http://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/">The Secret Life of JavaScript Primitives</a> 這篇文章才瞭解，最後面這個例子，其實等同於：</p>
+
+<pre><code>var str = 'hello';
+(new String(str)).target = 'world';
+(new String(str)).target;
+</code></pre>
+
+<p>當使用物件形式的 <code>.</code> 運算子對基本型別資料操作的時候，會產生一個新的物件，然後用完就丟掉，所以在指派 target 屬性那行操作到的物件，和要取回 target 屬性那行的物件，是完全不一樣的兩個物件，這也就是為什麼這些資料可以用類似物件的方法操作，但是卻不能真的像物件一樣使用。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/06/30/javascript-primitives-obj/</link>
+<guid>https://blog.othree.net/log/2013/06/30/javascript-primitives-obj/</guid>
+<category>script</category>
+<pubDate>2013-06-30 14:24</pubDate>
+</item>
+
+<item>
+<title>JavaScript is Untyped</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9167965602/" title="Flickr 上 othree 的 untyped"><img src="//farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg" width="674" height="382" alt="untyped" srcset="//farm6.staticflickr.com/5328/9167965602_d9be012d23.jpg 768w, //farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg 768w 2x" /></a></p>
+
+<p>上週去聽 <a href="https://twitter.com/gsklee">Gias Kay Lee</a> 講 <a href="http://slid.es/gsklee/animation-in-angularjs">Animation in AngularJS</a>，說到 JavaScript 其實是 <a href="http://en.wikipedia.org/wiki/Talk%3ATyped_and_untyped_languages#.22Untyped_Language.22">untyped language</a>，因為我沒受過 Computer Science 的正統教育，這名詞對我來說是新的，所以回來花了些時間看網路上的文件。</p>
+
+<p>Wikipedia 上的文章不少，不過看起來比較吃力，Stack Overflow 上也有幾則不錯的<a href="http://stackoverflow.com/questions/964910/is-javascript-an-untyped-language">問答</a>，對我來說幫助很大，這個問題其實也沒很複雜，在 Computer Science 上來說，是不使用 strong type 和 weak type 來形容程式語言的，因為沒有明確的定義，取而代之的，是數個有明確定義的相關特性：type safety、memory safety、static/dynamic type checking、type conversions。</p>
+
+<p>所以我之前 <a href="https://blog.othree.net/log/2013/06/01/dependency-injection-of-angularjs/">文章</a> 說到 JavaScript 是 weak type 那段其實應該要說是 untyped 會比較好。其實講到 type 的問題，就會想到 JavaScript 的效能問題，Brendan Eich 說過 JavaScript 引擎很難跑得快的原因就是因為它是 untyped 的。在 <a href="http://www.html5rocks.com/en/tutorials/speed/v8/">Performance Tips for JavaScript in V8</a> 這篇文章有提到，V8 引擎其中有一個提升速度的設計是給變數 hidden class，這個 hidden class 其實就是隱藏的變數型別，如果你的變數從頭到尾都維持同樣的型別，例如整數永遠是整數、字串永遠是字串，而不會有中間換型別的情形，那 V8 引擎就可以利用 hidden class 的資訊來提升運算速度，我覺得這個 tip 很不錯，不只是 V8 可以跑比較快，即使其他引擎沒有受益，作為寫程式時的 good practice 也很受用，減少了程式內的不可預期性。</p>
+
+<p>另外一個我覺得很相似的例子是這兩年新的 <a href="http://asmjs.org/spec/latest/">asm.js</a>，asm.js 是一個 JavaScript 的子集，設計上可以直接做一些比較低階的操作，像是直接 allocate 記憶體還有 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays">Typed Array</a> 等，而其中還定義了一組相容於普通 JavaScript 的寫法來宣告變數的型別：</p>
+
+<pre><code>function f(x, y) {
+    x = x|0;      // int parameter
+    y = +y;       // double parameter
+
+    return;
+}
+</code></pre>
+
+<p>只是 asm.js 會直接手寫的應該很少，像 asm.js 有名的例子： Unreal Engine 就是用工具 compile 過去的。</p>
+
+<p>PS: 我還找不到上面那張圖片的投影片出處，有人知道的話麻煩告訴我，感謝。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/06/30/javascript-is-untyped/</link>
+<guid>https://blog.othree.net/log/2013/06/30/javascript-is-untyped/</guid>
+<category>script</category>
+<pubDate>2013-06-30 00:08</pubDate>
+</item>
+
+<item>
+<title>Options Object</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9074497361/" title="Flickr 上 othree 的 Options Object"><img src="//farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg" width="1024" height="683" alt="Options Object" srcset="//farm4.staticflickr.com/3829/9074497361_5298d2643e.jpg 768w, //farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg 768w 2x, //farm4.staticflickr.com/3829/9074497361_013ef7e2be_k.jpg 2x" /></a></p>
+
+<p>上一篇文章 <a href="https://blog.othree.net/log/2013/06/18/dom-event-module/">DOM Event Module</a> 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 <a href="http://effectivejs.com/">Effective JavaScript</a> 也有說到這個 pattern，所以就拿他當參考文獻了~~</p>
+
+<p>這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的：</p>
+
+<pre><code>var alert = new Alert(100, 75, 300, 200, 
+                      "Error", messaage,
+                      "blue", "white", "black",
+                      "error", true);
+</code></pre>
+
+<p>這個例子比我前一篇的例子還要複雜許多，相信更能夠感覺到這些參數分別的意義很難判斷吧，所以改成用 options object 的：</p>
+
+<pre><code>var alert = new Alert({
+    x: 100, y: 75,
+    width: 300, height: 200,
+    title: "Error", message: message,
+    titleColor: "blue", bgColor: "white", textColor: "black",
+    icon: "error", modal: "true"
+});
+</code></pre>
+
+<p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
+
+<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 [jQuery.extend][] 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
+
+<pre><code>_.defaults(options, defaultOptions);
+</code></pre>
+
+<p>但是如果用 options 要達成一樣的效果，你要寫成：</p>
+
+<pre><code>options = _.extend({}, defaultOptions, options);
+</code></pre>
+
+<p>因為 extend 會讓後者的屬性覆蓋掉前者的，所以 defaultOptions 要放在 options 前面，但是 extend 回傳的是前面那個物件，所以要取代原本的 options 還要多一個 assign，至於 defaults 則是會改原來的 options 物件，所以不需要多那個 assign，也不需要先丟一個空物件給它，如果要讓 options 是可省略的參數，用 CoffeeScript 還可以在定義 function 時給它預設值，整個程式碼就漂亮很多：</p>
+
+<pre><code>mylib.ajax = (url, options = {}) -&gt;
+    _.default(options, defaultOptions)
+</code></pre>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/06/19/options-object/</link>
+<guid>https://blog.othree.net/log/2013/06/19/options-object/</guid>
+<category>script</category>
+<pubDate>2013-06-19 01:35</pubDate>
+</item>
+
+<item>
+<title>Native DOM Event Module</title>
+<description><![CDATA[<p>我是在看 <a href="http://alxgbsn.co.uk/2012/03/12/tap-js-a-lightweight-tap-event-javascript-plugin/">tap.js</a> 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.dispatchEvent">dispatchEvent</a>  這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的<a href="https://blog.othree.net/log/2010/05/20/jquery-events/">文章</a>。</p>
+
+<p>dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他：</p>
+
+<pre><code>var event = document.createEvent('Event');
+event.initEvent(type, true, true);
+
+domnode.dispatchEvent(event);
+</code></pre>
+
+<p>其中的 type 才是你想要觸發的事件名稱，而第一個 createEvent 收的參數，除了 "Event" 這個最通用的之外，還有很多種<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent">原生事件</a>，如果是要自訂事件的話，可以用最通用的 "Event"。不過其實，還有一個比較新的 API：</p>
+
+<pre><code>var event = new CustomEvent(type, {bubbles: true, cancelable: true});
+</code></pre>
+
+<p>這是 DOM Level 4 裡面提出來的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">Custom Event Constructor</a>，在這之前的 Level 3 就可以用第一個範例的方法產生 custom event，要先 create 再 init。這邊岔題一下，應該有人會注意到，createEvent 後 initEvent 那邊的 API 設計和 CustomEvent 不一樣，initEvent 收三個值，後面兩個都傳了 true，可是這樣的 API 設計近年來都被認為是不好的，因為你看程式碼，你完全不知道這兩個 true 是什麼意思，所以都是建議用第二種 API 的設計，收一個 options 物件，其實，initEvent 那兩個 true 分別就是 CustomEvent 後面的 bubbles 和 cancelable，但是後者的設計就可以讓程式碼看一眼就知道那兩個 true 是什麼用途的，看到這種不止開發者的程式在進化，連標準也跟著一起演進的現象還蠻有趣的~</p>
+
+<p>Custom Event Constructor 目前 IE 的支援還比較差，所以還不能直接使用，還是要做一下 feature detection。至於哪些物件可以使用這些 method，除了 DOM Node，外，其實一般瀏覽器都還有一些物件可以聽事件，像是 window、document、 XMLHttpRequest instance 等，很可惜不是任意物件都可以，事實上，這些可以使用 DOM Event Module 的物件都是實作了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget">EventTarget</a> 這個介面，不過又要再說一次很可惜的，目前沒辦法把瀏覽器內的這些實作偷出來給其它物件使用，幸好 Andrea Giammarchi 有做了 <a href="https://github.com/WebReflection/event-target">一個</a> 放在 Github 上，可以給一般物件繼承去用。</p>
+
+<p>我曾經寫過一篇文章介紹 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，這篇文章的最後我要來介紹第二個參數，第二個參數一般都是丟 function 進去，不過他其實也可以丟 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventListener">EventListener</a> 進去，基本上就是一個物件有 handleEvent 來當事件的 callback 而已，不過像 tap.js 就有很有趣的用法，它不管是什麼事件，在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L35">加上 addEventListener 時</a>丟進去的都是 this 物件，實際上則是統一在 handleEvent 裡面在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L97">根據事件的不同去作不同的事情</a>：</p>
+
+<pre><code>Tap.prototype.handleEvent = function (e) {
+    switch (e.type) {
+        case 'touchstart': this.start(e); break;
+        case 'touchmove': this.move(e); break;
+        case 'touchend': this.end(e); break;
+        case 'touchcancel': this.cancel(e); break;
+        case 'mousedown': this.start(e); break;
+        case 'mousemove': this.move(e); break;
+        case 'mouseup': this.end(e); break;
+    }
+};
+</code></pre>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/06/18/dom-event-module/</link>
+<guid>https://blog.othree.net/log/2013/06/18/dom-event-module/</guid>
+<category>script</category>
+<pubDate>2013-06-18 16:51</pubDate>
+</item>
 
 <item>
 <title>Dependency Injection of AngularJS</title>
@@ -417,150 +592,6 @@ deferred[ tuple[0] + "With" ] =  function () {
 <guid>https://blog.othree.net/log/2012/05/21/module-amd-requirejs/</guid>
 <category>script</category>
 <pubDate>2012-05-21 11:00</pubDate>
-</item>
-
-<item>
-<title>JavaScript Essential Patterns</title>
-<description><![CDATA[<p>
-<script async="async" class="speakerdeck-embed" data-id="4f8b8e20b204f6002200912f" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>]]></description>
-<link>https://blog.othree.net/log/2012/04/16/javascript-essential-patt/</link>
-<guid>https://blog.othree.net/log/2012/04/16/javascript-essential-patt/</guid>
-<category>script</category>
-<pubDate>2012-04-16 21:58</pubDate>
-</item>
-
-<item>
-<title>jQuery.queue</title>
-<description><![CDATA[<p><a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/queue/">queue</a> 是存在很久的東西了，不過我到最近才去了解它到底是用來作什麼的，其實，基本上就和一般的 queue 一樣，只是 jQuery 預設使用它來處理所有的動畫效果的順序，像是 fadeIn、fadeOut 還有最重要的 <a href="http://api.jquery.com/animate/">animate</a> ，這些特效的動作都會丟到一個叫 <em>fx</em> 的 queue 裡面，然後照順序執行，所以下面的程式碼會讓一個元素先 fade in 再 fade out，而不會發生兩個動畫效果打架的情形：</p>
-
-<pre><code>$('#id').fadeIn().fadeOut();
-</code></pre>
-
-<p>也不用寫成 callback function 的方式：</p>
-
-<pre><code>$('#id').fadeIn(function () {
-    $(this).fadeOut();
-});
-</code></pre>
-
-<p>如果你是要把元素 fade out，然後改裡面文字後再讓它 fade in，以前用 callback 的寫法會寫成：</p>
-
-<pre><code>$('#id').fadeOut(function () {
-    $(this).html('new content');
-    $(this).fadeOut();
-});
-</code></pre>
-
-<p>但是好一點的作法應該善用 queue：</p>
-
-<pre><code>$('#id')
-    .fadeOut()
-    .queue(function () {
-        $(this).html('new content');
-        $(this).dequeue();
-    })
-    .fadeIn();
-</code></pre>
-
-<p>這樣不知道看不看的出好在哪？讓我來把要做的動作複雜一點好了，我要淡出，改內容，淡入，然後接著右移 500px、加上 active 的 class，再移動回來，然後再把內容改變一次，用 callback 的寫法：</p>
-
-<pre><code>$('#id').fadeOut(function () {
-    $(this).html('new content');
-    $(this).fadeIn(function () {
-        $(this).animate({left: '+=500'}, function () {
-            $(this).addClass('active');
-            $(this).animate({left: '-=500'}, function () {
-                $(this).html('even new content');
-            });
-        });
-    });
-});
-</code></pre>
-
-<p>如果用 queue：</p>
-
-<pre><code>$('#id')
-    .fadeOut()
-    .queue(function () {
-        $(this).html('new content');
-        $(this).dequeue();
-    })
-    .fadeIn()
-    .animate({left: '+=500'})
-    .queue(function () {
-        $(this).addClass('active');
-        $(this).dequeue();
-    })
-    .animate({left: '-=500'})
-    .queue(function () {
-        $(this).html('even new content');
-        $(this).dequeue();
-    });
-</code></pre>
-
-<p>眼尖的人大概馬上就可以發現，用 queue 程式碼變多了！不過這其實不是重點，重點其實是縮排的階層減少了，而且使用 queue 的程式碼，看起來就是一個步驟接著一個步驟，和使用 callback 的階層的關係不一樣，而且除了看起來比較好之外其實還有不少優點，首先是如果要修改連續動作的順序或是內容，使用 queue 的顯然比較簡單，二是還可以配合 <a href="http://api.jquery.com/delay/">delay</a> 來讓動作之間有個暫停，三是可以用 clearQueue 來把整串動作清掉，用 callback 的話，因為執行到各個 animate 的時間不是同步的，所以用 <a href="http://api.jquery.com/clearQueue/">clearQueue</a> 可能會清不乾淨。所以在使用 jQuery 動畫效果時，正確的配合 queue 來做，會讓程式碼的可維護度提昇許多，大家都應該來用一下～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/02/23/jqueryqueue/</link>
-<guid>https://blog.othree.net/log/2012/02/23/jqueryqueue/</guid>
-<category>script</category>
-<pubDate>2012-02-23 00:45</pubDate>
-</item>
-
-<item>
-<title>Module, AMD, RequireJS</title>
-<description><![CDATA[<p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
-
-<pre><code>function Person(age, gender) {
-    var _age = age || 16,
-        _gender = gender || 1;
-
-    return {
-        getAge: function () {
-            return _age;
-        }
-    };
-}
-</code></pre>
-
-<p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
-
-<p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
-
-<pre><code>define('moduleA', [dep1, dep2], function (export1, export2) {
-    //do something..
-    return {
-        method1: function () {},
-        method2: function () {},
-    };
-});
-</code></pre>
-
-<p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
-
-<p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/01/22/module-amd-requirejs/</link>
-<guid>https://blog.othree.net/log/2012/01/22/module-amd-requirejs/</guid>
-<category>script</category>
-<pubDate>2012-01-22 00:48</pubDate>
-</item>
-
-<item>
-<title>getElementById </title>
-<description><![CDATA[<p>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 <a href="https://developer.mozilla.org/en/DOM/document.getElementById">getElementById</a> 這個函式其實只有 <a href="https://developer.mozilla.org/en/DOM/document#Methods">document 物件</a> 才有，<a href="https://developer.mozilla.org/en/DOM/element#Methods">element 物件</a> 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 <a href="http://mootools.net/">mootools</a> 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。</p>
-
-<p>於是我改用 <a href="http://jquery.com/">jQuery</a> ，更精確的一點說我是用 <a href="http://sizzlejs.com/">Sizzle</a>，結果我發現用 find 狀況依舊，因為 Sizzle 引擎有對選擇器做一些最佳化，如果看到是 <code>"#id"</code> 這樣的形式，就會直接用 <code>document.getElementById()</code> ，然後就悲劇重演了～</p>
-
-<p>結果目前這種狀況我是只能先用 <code>*#id</code> 這樣的寫法來給 Sizzle 處理，應該會去報 jQuery 和 mootools 的 bug。這問題我也有在 W3C <a href="http://www.w3.org/html/ig/zh/">中文興趣小組</a>的討論群組裡面 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Jul/0030.html">提出</a>，目前還沒空回文，有興趣的可以一起來參與討論啊。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/07/31/getelementbyid-not-on-element/</link>
-<guid>https://blog.othree.net/log/2011/07/31/getelementbyid-not-on-element/</guid>
-<category>script</category>
-<pubDate>2011-07-31 11:46</pubDate>
 </item>
 
 

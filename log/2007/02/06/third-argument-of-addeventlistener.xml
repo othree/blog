@@ -46,7 +46,7 @@
 				<b:mainContent><p><span class="caps">W3C </span><a href="http://www.w3.org/DOM/"><span class="caps">DOM</span></a>裡用來新增觸發事件的函數叫<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener">AddEventListener</a>，不過我一直不知道這個函數的第三個參數是要做什麼用的，總是隨便設，也沒發現差異再哪，前兩天看<a href="http://www.quirksmode.org/book/">ppk on javascript</a>終於看到說明了，至於很久以前就有的DOM的標準文件，我其實根本沒去找過這個參數的資訊。</p></b:mainContent>
 				<b:extendContent><p>這個參數叫做<strong>useCapture</strong>，是一個boolean值，就是true or false，如果送出true的話就是瀏覽器會使用Capture方式，false的話是Bubbling，只有在特定狀況下才會有影響，通常建議是false，而會有影響的情形是目標元素(target element)有祖先元素(ancestor element)，而且也有同樣的事件對應函數，我想，看圖會比較清楚。</p>
 
-<p><img alt="範例有兩層的div方塊" src="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/ex.png" width="280" height="100" /></p>
+<p><img alt="範例有兩層的div方塊" src="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/ex.png" width="280" height="100" /></p>
 
 <p>像這張圖所顯示的，我的範例有兩層div元素，而且都設定有click事件，一般來說，如果我在內層藍色的元素上click不只會觸發藍色元素的click事件，還會同時觸發紅色元素的click事件，而useCapture這個參數就是在控制這時候兩個click事件的先後順序。如果是false，那就會使用bubbling，他是從內而外的流程，所以會先執行藍色元素的click事件再執行紅色元素的click事件，如果是true，那就是capture，和bubbling相反是由外而內，會先執行紅色元素的click事件才執行藍色元素的click事件。附上兩個範例，<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/useCapture.html">capture</a>和<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/notUseCapture.html">bubbling</a>，兩個檔案只有差在此一參數不同，可以發現事件的發生順序不一樣了。</p>
 
@@ -250,7 +250,7 @@
 				</b:comment>
 
 			</b:comments>
-			<b:trackbacks trackbackCount="0" trackbackURL="http://othree.net/mt/mt-tb.cgi/385">
+			<b:trackbacks trackbackCount="0" trackbackURL="https://othree.net/mt/mt-tb.cgi/385">
 
 			</b:trackbacks>
 		</b:entry>
