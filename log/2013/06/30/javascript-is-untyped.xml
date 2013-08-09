@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000750" baseName="javascript-is-untyped">JavaScript is Untyped</b:listData>
+
+			<b:previous>
+				<b:mTitle>autocomplpop + snipmate</b:mTitle>
+				<b:mDate>2013-06-25</b:mDate>
+				<b:mBase>autocomplpop-and-snipmate</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>JavaScript Primitives Objects</b:mTitle>
+				<b:mDate>2013-06-30</b:mDate>
+				<b:mBase>javascript-primitives-obj</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000750" baseName="javascript-is-untyped">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-06-30</b:date>
+				<b:time>00:08:06</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript is Untyped</b:title>
+			<b:content>
+				<b:summary> 上週去聽 Gias Kay Lee 講 Animation in AngularJS，說到 JavaScript 其實是 untyped language，因為我沒受過 Computer Science 的正統教育，這名詞對我來說是新的，所以回來花了些時間看網路上的文件。 Wikipedia 上的文章不少，不過看起來比較吃力，Stack Overflow 上也有幾則不錯的問答，對我來說幫助很大，這個問題其實也沒很複雜，在 Computer Science 上來說，是不使用 strong type 和 weak type 來形容程式語言的，因為沒有明確的定義，取而代之的，是數個有明確定義的相關特性：type safety、memory safety、static/dynamic type checking、type conversions。 所以我之前 文章 說到 JavaScript 是 weak...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9167965602/" title="Flickr 上 othree 的 untyped"><img src="//farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg" width="674" height="382" alt="untyped" srcset="//farm6.staticflickr.com/5328/9167965602_d9be012d23.jpg 768w, //farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg 768w 2x" /></a></p>
+
+<p>上週去聽 <a href="https://twitter.com/gsklee">Gias Kay Lee</a> 講 <a href="http://slid.es/gsklee/animation-in-angularjs">Animation in AngularJS</a>，說到 JavaScript 其實是 <a href="http://en.wikipedia.org/wiki/Talk%3ATyped_and_untyped_languages#.22Untyped_Language.22">untyped language</a>，因為我沒受過 Computer Science 的正統教育，這名詞對我來說是新的，所以回來花了些時間看網路上的文件。</p>
+
+<p>Wikipedia 上的文章不少，不過看起來比較吃力，Stack Overflow 上也有幾則不錯的<a href="http://stackoverflow.com/questions/964910/is-javascript-an-untyped-language">問答</a>，對我來說幫助很大，這個問題其實也沒很複雜，在 Computer Science 上來說，是不使用 strong type 和 weak type 來形容程式語言的，因為沒有明確的定義，取而代之的，是數個有明確定義的相關特性：type safety、memory safety、static/dynamic type checking、type conversions。</p>
+
+<p>所以我之前 <a href="https://blog.othree.net/log/2013/06/01/dependency-injection-of-angularjs/">文章</a> 說到 JavaScript 是 weak type 那段其實應該要說是 untyped 會比較好。其實講到 type 的問題，就會想到 JavaScript 的效能問題，Brendan Eich 說過 JavaScript 引擎很難跑得快的原因就是因為它是 untyped 的。在 <a href="http://www.html5rocks.com/en/tutorials/speed/v8/">Performance Tips for JavaScript in V8</a> 這篇文章有提到，V8 引擎其中有一個提升速度的設計是給變數 hidden class，這個 hidden class 其實就是隱藏的變數型別，如果你的變數從頭到尾都維持同樣的型別，例如整數永遠是整數、字串永遠是字串，而不會有中間換型別的情形，那 V8 引擎就可以利用 hidden class 的資訊來提升運算速度，我覺得這個 tip 很不錯，不只是 V8 可以跑比較快，即使其他引擎沒有受益，作為寫程式時的 good practice 也很受用，減少了程式內的不可預期性。</p>
+
+<p>另外一個我覺得很相似的例子是這兩年新的 <a href="http://asmjs.org/spec/latest/">asm.js</a>，asm.js 是一個 JavaScript 的子集，設計上可以直接做一些比較低階的操作，像是直接 allocate 記憶體還有 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays">Typed Array</a> 等，而其中還定義了一組相容於普通 JavaScript 的寫法來宣告變數的型別：</p>
+
+<pre><code>function f(x, y) {
+    x = x|0;      // int parameter
+    y = +y;       // double parameter
+
+    return;
+}
+</code></pre>
+
+<p>只是 asm.js 會直接手寫的應該很少，像 asm.js 有名的例子： Unreal Engine 就是用工具 compile 過去的。</p>
+
+<p>PS: 我還找不到上面那張圖片的投影片出處，有人知道的話麻煩告訴我，感謝。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="2">
+
+				<b:comment commentID="305471" entryID="000750">
+					<b:author>
+						<b:authorName>Johnny</b:authorName>
+						<b:authorEmail></b:authorEmail>
+						<b:authorUrl>http://2sh.tw</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2013-06-30</b:date>
+						<b:time>17:55:15</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>JavaScript 不應該被稱為 untyped, 因為它在 ECMA 語言規格裡是有明確定義型別 (ECMA-262 5.1 Clause 8) 的; 更不用說 Object 的 prototype 預設有個 typeof 函式了 &#8212; 雖然這東西也帶來很多疑問。</p>
+
+<p>真正的 untype 語言, 可能要數機械碼或者 assembly 了吧。它不是真的無型別, 而是交由使用者自己定義變數的 alignment。JavaScript 遠比它高階多了! 如果 JavaScript 真的是無型別, 那麼使用者最終還是要把它改成有型別, 這樣程式才會好寫。不然一個變數指標指到的地方, 你到底要取多少個 byte 都無法確定, 怎麼辦? 你還是要另外再找個地方記錄每次要取多少 byte, 這樣不是又等於有型別了嗎? :-)</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+				<b:comment commentID="305488" entryID="000750">
+					<b:author>
+						<b:authorName>othree</b:authorName>
+						<b:authorEmail>othree@gmail.com</b:authorEmail>
+						<b:authorUrl>https://blog.othree.net</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2013-07-04</b:date>
+						<b:time>00:56:17</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>我查文獻後的認知是，untyped 語言的資料還是可以有型別的，不過它只能用 dynamic type checking 來做，組語只是剛好幾乎都是 untyped 的，所以幾乎都會用組語做例子。</p>
+
+<p>另外目前所知道兩個判斷是不是 untyped 語言的方法分別為：</p>
+
+<ul>
+<li>宣告變數時不用指定型別</li>
+<li>任意變數可以做任意的操作（例：字串 +-*/ 數字），然後都不會有錯誤</li>
+</ul>
+
+<p>JavaScript 則是兩種判斷方式都符合，所以我還是認為 JavaScript 是 untyped 語言。</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

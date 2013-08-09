@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000746" baseName="options-object">Options Object</b:listData>
+
+			<b:previous>
+				<b:mTitle>Native DOM Event Module</b:mTitle>
+				<b:mDate>2013-06-18</b:mDate>
+				<b:mBase>dom-event-module</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>使用 Syntastic 執行 CoffeeLint 檢驗 CoffeeScript</b:mTitle>
+				<b:mDate>2013-06-21</b:mDate>
+				<b:mBase>syntastic-coffeelint</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000746" baseName="options-object">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-06-19</b:date>
+				<b:time>01:35:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Options Object</b:title>
+			<b:content>
+				<b:summary> 上一篇文章 DOM Event Module 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 Effective JavaScript 也有說到這個 pattern，所以就拿他當參考文獻了~~ 這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的： var alert = new Alert(100, 75, 300, 200, "Error", messaage, "blue", "white", "black", "error", true);...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9074497361/" title="Flickr 上 othree 的 Options Object"><img src="//farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg" width="1024" height="683" alt="Options Object" srcset="//farm4.staticflickr.com/3829/9074497361_5298d2643e.jpg 768w, //farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg 768w 2x, //farm4.staticflickr.com/3829/9074497361_013ef7e2be_k.jpg 2x" /></a></p>
+
+<p>上一篇文章 <a href="https://blog.othree.net/log/2013/06/18/dom-event-module/">DOM Event Module</a> 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 <a href="http://effectivejs.com/">Effective JavaScript</a> 也有說到這個 pattern，所以就拿他當參考文獻了~~</p>
+
+<p>這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的：</p>
+
+<pre><code>var alert = new Alert(100, 75, 300, 200, 
+                      "Error", messaage,
+                      "blue", "white", "black",
+                      "error", true);
+</code></pre>
+
+<p>這個例子比我前一篇的例子還要複雜許多，相信更能夠感覺到這些參數分別的意義很難判斷吧，所以改成用 options object 的：</p>
+
+<pre><code>var alert = new Alert({
+    x: 100, y: 75,
+    width: 300, height: 200,
+    title: "Error", message: message,
+    titleColor: "blue", bgColor: "white", textColor: "black",
+    icon: "error", modal: "true"
+});
+</code></pre>
+
+<p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
+
+<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 [jQuery.extend][] 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
+
+<pre><code>_.defaults(options, defaultOptions);
+</code></pre>
+
+<p>但是如果用 options 要達成一樣的效果，你要寫成：</p>
+
+<pre><code>options = _.extend({}, defaultOptions, options);
+</code></pre>
+
+<p>因為 extend 會讓後者的屬性覆蓋掉前者的，所以 defaultOptions 要放在 options 前面，但是 extend 回傳的是前面那個物件，所以要取代原本的 options 還要多一個 assign，至於 defaults 則是會改原來的 options 物件，所以不需要多那個 assign，也不需要先丟一個空物件給它，如果要讓 options 是可省略的參數，用 CoffeeScript 還可以在定義 function 時給它預設值，整個程式碼就漂亮很多：</p>
+
+<pre><code>mylib.ajax = (url, options = {}) -&gt;
+    _.default(options, defaultOptions)
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="1">
+
+				<b:comment commentID="305423" entryID="000746">
+					<b:author>
+						<b:authorName>Thomas</b:authorName>
+						<b:authorEmail>cslts8@gmail.com</b:authorEmail>
+						<b:authorUrl>http://www.lifetat.com</b:authorUrl>
+					</b:author>
+					<b:datetime>
+						<b:date>2013-06-23</b:date>
+						<b:time>18:59:50</b:time>
+					</b:datetime>
+					<b:content>
+						<b:mainContent><p>Option Object 真的不錯,起碼有個KEY會易明白一點</p>
+</b:mainContent>
+					</b:content>
+				</b:comment>
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

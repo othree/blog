@@ -5,10 +5,122 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-06-25 00:46</lastBuildDate>
+<lastBuildDate>2013-08-03 23:49</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>JavaScript on Vim</title>
+<description><![CDATA[<p>今天在 COSCUP 講的 JavaScript on Vim 投影片因為是用 <a href="https://github.com/ingydotnet/vroom-pm">Vroom</a> 做的，所以沒有 PDF 可以上傳到 SlideShare 和 Speaker Deck，不過他有內建生成 html 版，所以我開了個 <a href="http://othree.github.io/javascript-on-vim-slide/">gh-pages</a> 來放著讓大家看，按鍵盤空白鍵是下一頁，Backspace 是上一頁。</p>
+
+<p>這次有超過時間，事前練習也超過一點，不過這次正式上場講的還比較慢，結果總時間就不夠了，算是意外，所以只好補充一下最後面我想要說的。如果你要學 Vim Script，除了看教學外，有個很重要的東西就是 Vim Document，一定要學著如何閱讀，包括怎麼搜尋、怎樣在文件連結中穿梭等等，Vim 的文件是我看過的程式文件中數一數二詳細的，幾乎是把 Vim 的所有細節都寫在內了，有些時候你的問題可能用 google 搜尋不到，但是其實文件內都已經有記載了，所以學習讀他真的很重要。</p>
+
+<p>會後有聽眾跑來跟我說 Vim 可以輸入 <code>:help ctrl</code> 然後還不要按 enter，改按 CTRL + D，會變成用 ctrl 當關鍵字搜尋所有的 help document 連結關鍵字，我覺得這功能應該是蠻有幫助的，所以在這邊補充一下。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/08/03/javascript-on-vim/</link>
+<guid>https://blog.othree.net/log/2013/08/03/javascript-on-vim/</guid>
+<category>vim</category>
+<pubDate>2013-08-03 23:49</pubDate>
+</item>
+
+<item>
+<title>True Color Terminal Vim on OSX</title>
+<description><![CDATA[<p>True Color 指的是紅綠藍三原色每個顏色都用 8bit 來記錄色階，總共有 2 的 24 次方種顏色，一般台灣是稱為 1677 萬色，也就是現在主流的電腦螢幕顏色數，不過終端機介面，一直以來都是活在 16 色和 256 色的世界，所以我一直都是只能用 256 色的 Vim，雖然 GVim 有支援 True Color，不過我用 GVim 實在很不習慣。</p>
+
+<p>前陣子在 <a href="http://usevim.com/">usevim</a> 上看到 <a href="http://usevim.com/2013/05/31/24bit/">24-bit Vim</a> 這篇文章，讓我對 True Color 的 Vim 環境燃起了一線希望，大概的狀況是據說有個 ISO-8613-3 有設計了 TrueColor 的 notation，就長的很像 BBS 上色語法，但是有三個數值。所以只要大家都有支援，就可以看到 1677 萬色的終端機了，而所謂的大家都有支援，指的是：</p>
+
+<ol>
+<li>命令列軟體輸出有支援，這邊需要的就是 Vim 能支援輸出 ISO-8613-3 所定義的語法</li>
+<li>Terminal 軟體有支援，看到 ISO 語法能呈現對應的顏色，以 OSX 上來說，我用的是 <a href="http://www.iterm2.com/">iTerm 2</a></li>
+</ol>
+
+<p>24-bit Vim 這篇文章說的是 Vim 有位 ZyX 有實做了 True Color 支援，而當時有個叫 <a href="http://konsole.kde.org/">Konsole</a> 的 KDE Terminal 支援 True Color，所以要是你是用 KDE，就可以有 True Color 的 Vim 環境了，只是我用的環境幾乎都還是 OSX 為主。最近 iTerm 2 的作者在 Twitter 上說<a href="https://twitter.com/gnachman/status/356902333424226304">他們的 24-bit color 支援 merge 到 master</a> 了，本來我一直在等 beta 版的更新，不過今天突然想到，可以去找 <a href="https://code.google.com/p/iterm2/">nightly build</a>，然後去抓了<a href="https://github.com/adaptee/konsole/blob/master/tests/color-spaces.pl">測試用的 perl 檔</a>來測試，發現真的可以用，下面兩張圖，上面那張是不支援的版本，下面的是支援的。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="//farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="//farm4.staticflickr.com/3689/9367473947_69798edde0.jpg 768w, //farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 768w 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="//farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="//farm8.staticflickr.com/7289/9367473883_1b2ee32d17.jpg 768w, //farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 768w 2x" /></a></p>
+
+<p>接下來，就是 Vim 了，這部分我花了不少時間才弄出來，簡單說就是抓 <a href="https://bitbucket.org/ZyX_I/vim">ZyX 的 Vim</a> 來自己 compile，不過也不是 clone 下來直接編譯就好，要換 branch 加上 config 等等：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
+cd vim
+hg update 24-bit-xterm
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp \
+  --enable-termtruecolor
+
+make
+make install
+</code></pre>
+
+<p>照理說上面這段複製貼上執行就可以了，然後，編譯安裝完，進入 Vim 可以執行 <code>version</code> 看看 <strong>termtruecolor</strong> 這個選項有沒有打開，有的話，那還差一步，就是在 <strong>.vimrc</strong> 裡面加上一行把設定打開：</p>
+
+<pre><code>set guicolors
+</code></pre>
+
+<p>然後你的 Terminal Vim 就會去使用 GVim 用的顏色設定了，以 <a href="http://ethanschoonover.com/solarized">solarized</a> 為例，上面是 256 色的，下面是 True Color：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="//farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="//farm6.staticflickr.com/5548/9367473873_222b86f6ec.jpg 768w, //farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 768w 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="//farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="//farm8.staticflickr.com/7368/9370253776_54c4dafe85.jpg 768w, //farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 768w 2x" /></a></p>
+
+<p>其實，差異蠻大的，讓我蠻意外，最後我找了一些以前沒辦法看到真相的 Vim color 來用，目前暫時是用 <a href="https://github.com/nanotech/jellybeans.vim">jellybeans</a>：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="//farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="//farm8.staticflickr.com/7282/9367473855_d576b3a7d8.jpg 768w, //farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 768w 2x" /></a></p>
+
+<p>至於 iTerm 2 和 Vim 官方何時會支援呢，前者比較樂觀，下次 release 就有了，後者的話，大約半年前 Bram 有說會加到 TODO，不過到目前的 7.4 看來都還沒有認真要面對它的樣子...</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/</link>
+<guid>https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/</guid>
+<category>vim</category>
+<pubDate>2013-07-27 01:10</pubDate>
+</item>
+
+<item>
+<title>vim-airline</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9203696971/" title="Flickr 上 othree 的 vim-airline"><img src="//farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="//farm6.staticflickr.com/5472/9203696971_8ffe6c5afd.jpg 768w, //farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 768w 2x" /></a></p>
+
+<p>最近發現 <a href="https://github.com/bling/vim-airline">vim-airline</a> 這個 plugin，其實就是 <a href="https://github.com/Lokaltog/powerline">powerline</a> 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#'statusline'">statusline</a>，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。</p>
+
+<p>我以前都是用自己寫的設定，還接了 <a href="https://github.com/mattn/hahhah-vim">hahhah.vim</a>，長得比較簡單：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9205236137/" title="Flickr 上 othree 的 My Vim statusline"><img src="//farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="//farm4.staticflickr.com/3686/9205236137_d614de6369.jpg 768w, //farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 768w 2x" /></a></p>
+
+<p>一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是：</p>
+
+<ul>
+<li>airline 是 pure vim script，powerline 則有一些 python</li>
+<li>簡單, 速度也比 powerline 快</li>
+</ul>
+
+<p>而且它也支援 powerline patch 過的<a href="https://github.com/Lokaltog/powerline-fonts">字形</a>來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9204959479/" title="Flickr 上 othree 的 ambiguous"><img src="//farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="//farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 768w,  768w 2x" /></a></p>
+
+<p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
+
+<p>powerline 自訂的這幾個 <a href="https://powerline.readthedocs.org/en/latest/fontpatching.html#glyph-table">新符號</a>，也是歸類在這些字元，剛好我以前都會用 iTerm 上工作站連 BBS，所以那個選項有開，結果就是如上圖下半部那樣，符號的右邊多了一個空白的寬度。這張圖上下的差異只有該選項有沒有打開而已，不過雖然搞清楚問題在哪，我最後還是決定不要用三角形，只用了 branch 的符號而已，結果就是本文的第一張圖那樣。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/07/04/vim-airline/</link>
+<guid>https://blog.othree.net/log/2013/07/04/vim-airline/</guid>
+<category>vim</category>
+<pubDate>2013-07-04 18:15</pubDate>
+</item>
 
 <item>
 <title>autocomplpop + snipmate</title>
@@ -314,66 +426,6 @@ filetype plugin indent on
 <guid>https://blog.othree.net/log/2010/11/22/vim-for-python/</guid>
 <category>vim</category>
 <pubDate>2010-11-22 11:00</pubDate>
-</item>
-
-<item>
-<title>eregex.vim</title>
-<description><![CDATA[<p>新開始維護的 <a href="http://www.vim.org/scripts/script.php?script_id=3282">eregex.vim</a>，一開始的動機是因為我有小東西要修改，然後就開了 <a href="http://github.com/othree/eregex.vim">git repo</a>，後來覺得乾脆就自己維護，順便推廣，所以目前主要貢獻幾乎都是在翻譯說明文件。</p>
-
-<p>簡單介紹，eregex.vim 是讓 Vim 可以使用 Perl/Ruby 形式的正規表示式，因為實在是很不習慣 Vim 的正規表示式寫法，安裝後，把以下兩行加到 .vimrc 檔案裡：</p>
-
-<pre><code>nnoremap / :M/
-nnoremap ,/ /
-</code></pre>
-
-<p>這樣就可以用 <kbd>/</kbd> 和 Perl 形式的表示式進行搜尋了，如果要取代可以用 :S (大寫S)，不過這頂多是平常編輯文件時使用，要開發 plugin 的話還是只能用內建的語法寫。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2010/10/19/eregex-vim/</link>
-<guid>https://blog.othree.net/log/2010/10/19/eregex-vim/</guid>
-<category>vim</category>
-<pubDate>2010-10-19 17:58</pubDate>
-</item>
-
-<item>
-<title>html5.vim</title>
-<description><![CDATA[<p>上週花了約三四天時間搞出來的 <a href="http://www.vim.org/scripts/script.php?script_id=3236">html5.vim</a> ，目前主要功能是 <span class="caps">HTML5 </span>syntax 和 omnicomplete，omnicomplete 的部份是拿內建的 html omni complete function 出來修改，除了幾乎重建的字典檔外，還修了補完函數中一些我之前發現的錯誤，字典檔的部份還特別加上 <a href="http://www.w3.org/TR/wai-aria/"><span class="caps">WAI</span>-ARIA</a> 和一些其他規範的支援，之後有考慮加上 MathML 和 <span class="caps">SVG </span>，如果有任何意見歡迎到 <a href="http://github.com/othree/html5.vim/">github repo</a> 上提出 issue。</p>]]></description>
-<link>https://blog.othree.net/log/2010/09/16/html5vim/</link>
-<guid>https://blog.othree.net/log/2010/09/16/html5vim/</guid>
-<category>vim</category>
-<pubDate>2010-09-16 21:30</pubDate>
-</item>
-
-<item>
-<title>vimrc 的 onload</title>
-<description><![CDATA[<p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
-
-
-
-<pre><code>if exists(&quot;:Align&quot;)
-    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif</code></pre>
-
-
-
-<p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
-
-
-
-<pre><code>function AfterStart ()
-
-&quot; plugin commands
-if exists(&quot;:Align&quot;)
-    com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif
-
-endfunction
-autocmd VimEnter * :call AfterStart()
-</code></pre>]]></description>
-<link>https://blog.othree.net/log/2010/02/28/vimrc-onload/</link>
-<guid>https://blog.othree.net/log/2010/02/28/vimrc-onload/</guid>
-<category>vim</category>
-<pubDate>2010-02-28 21:14</pubDate>
 </item>
 
 

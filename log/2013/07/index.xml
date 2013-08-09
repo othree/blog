@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2013-07">July 2013</b:listData>
+
+			<b:previous>
+				<b:mTitle>June 2013</b:mTitle>
+				<b:mDate>2013/06</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>August 2013</b:mTitle>
+				<b:mDate>2013/08</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000757" baseName="true-color-terminal-vim-osx">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-27</b:date>
+				<b:time>01:10:07</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>True Color Terminal Vim on OSX</b:title>
+			<b:content>
+				<b:summary>True Color 指的是紅綠藍三原色每個顏色都用 8bit 來記錄色階，總共有 2 的 24 次方種顏色，一般台灣是稱為 1677 萬色，也就是現在主流的電腦螢幕顏色數，不過終端機介面，一直以來都是活在 16 色和 256 色的世界，所以我一直都是只能用 256 色的 Vim，雖然 GVim 有支援 True Color，不過我用 GVim 實在很不習慣。 前陣子在 usevim 上看到 24-bit Vim 這篇文章，讓我對 True Color 的 Vim 環境燃起了一線希望，大概的狀況是據說有個 ISO-8613-3 有設計了 TrueColor 的 notation，就長的很像...</b:summary>
+				<b:mainContent><p>True Color 指的是紅綠藍三原色每個顏色都用 8bit 來記錄色階，總共有 2 的 24 次方種顏色，一般台灣是稱為 1677 萬色，也就是現在主流的電腦螢幕顏色數，不過終端機介面，一直以來都是活在 16 色和 256 色的世界，所以我一直都是只能用 256 色的 Vim，雖然 GVim 有支援 True Color，不過我用 GVim 實在很不習慣。</p>
+
+<p>前陣子在 <a href="http://usevim.com/">usevim</a> 上看到 <a href="http://usevim.com/2013/05/31/24bit/">24-bit Vim</a> 這篇文章，讓我對 True Color 的 Vim 環境燃起了一線希望，大概的狀況是據說有個 ISO-8613-3 有設計了 TrueColor 的 notation，就長的很像 BBS 上色語法，但是有三個數值。所以只要大家都有支援，就可以看到 1677 萬色的終端機了，而所謂的大家都有支援，指的是：</p>
+
+<ol>
+<li>命令列軟體輸出有支援，這邊需要的就是 Vim 能支援輸出 ISO-8613-3 所定義的語法</li>
+<li>Terminal 軟體有支援，看到 ISO 語法能呈現對應的顏色，以 OSX 上來說，我用的是 <a href="http://www.iterm2.com/">iTerm 2</a></li>
+</ol>
+
+<p>24-bit Vim 這篇文章說的是 Vim 有位 ZyX 有實做了 True Color 支援，而當時有個叫 <a href="http://konsole.kde.org/">Konsole</a> 的 KDE Terminal 支援 True Color，所以要是你是用 KDE，就可以有 True Color 的 Vim 環境了，只是我用的環境幾乎都還是 OSX 為主。最近 iTerm 2 的作者在 Twitter 上說<a href="https://twitter.com/gnachman/status/356902333424226304">他們的 24-bit color 支援 merge 到 master</a> 了，本來我一直在等 beta 版的更新，不過今天突然想到，可以去找 <a href="https://code.google.com/p/iterm2/">nightly build</a>，然後去抓了<a href="https://github.com/adaptee/konsole/blob/master/tests/color-spaces.pl">測試用的 perl 檔</a>來測試，發現真的可以用，下面兩張圖，上面那張是不支援的版本，下面的是支援的。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="//farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="//farm4.staticflickr.com/3689/9367473947_69798edde0.jpg 768w, //farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 768w 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="//farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="//farm8.staticflickr.com/7289/9367473883_1b2ee32d17.jpg 768w, //farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 768w 2x" /></a></p>
+
+<p>接下來，就是 Vim 了，這部分我花了不少時間才弄出來，簡單說就是抓 <a href="https://bitbucket.org/ZyX_I/vim">ZyX 的 Vim</a> 來自己 compile，不過也不是 clone 下來直接編譯就好，要換 branch 加上 config 等等：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
+cd vim
+hg update 24-bit-xterm
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp \
+  --enable-termtruecolor
+
+make
+make install
+</code></pre>
+
+<p>照理說上面這段複製貼上執行就可以了，然後，編譯安裝完，進入 Vim 可以執行 <code>version</code> 看看 <strong>termtruecolor</strong> 這個選項有沒有打開，有的話，那還差一步，就是在 <strong>.vimrc</strong> 裡面加上一行把設定打開：</p>
+
+<pre><code>set guicolors
+</code></pre>
+
+<p>然後你的 Terminal Vim 就會去使用 GVim 用的顏色設定了，以 <a href="http://ethanschoonover.com/solarized">solarized</a> 為例，上面是 256 色的，下面是 True Color：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="//farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="//farm6.staticflickr.com/5548/9367473873_222b86f6ec.jpg 768w, //farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 768w 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="//farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="//farm8.staticflickr.com/7368/9370253776_54c4dafe85.jpg 768w, //farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 768w 2x" /></a></p>
+
+<p>其實，差異蠻大的，讓我蠻意外，最後我找了一些以前沒辦法看到真相的 Vim color 來用，目前暫時是用 <a href="https://github.com/nanotech/jellybeans.vim">jellybeans</a>：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="//farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="//farm8.staticflickr.com/7282/9367473855_d576b3a7d8.jpg 768w, //farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 768w 2x" /></a></p>
+
+<p>至於 iTerm 2 和 Vim 官方何時會支援呢，前者比較樂觀，下次 release 就有了，後者的話，大約半年前 Bram 有說會加到 TODO，不過到目前的 7.4 看來都還沒有認真要面對它的樣子...</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000756" baseName="markdown-resources">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-14</b:date>
+				<b:time>18:34:30</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Markdown 資源</b:title>
+			<b:content>
+				<b:summary>前兩天終於把 Markdown 資源 這頁弄上線了，其實想弄很久了，目標是收集不同領域的熱門資源，例如某某語言比較多人用的轉譯引擎。另外還有一些算是歷史紀錄，像是 shodown.js ，還有就是之前 Jeff Atwood 登高一呼 要訂 spec，雖然沒有正式的版本，不過也已經有 W3C Community Group，說到這邊，他們其實還收集了很大量的引擎實做，不過像這種不是我覺得有用的清單，內容太多東西了，所以並沒有阻止我把這頁生出來。 最後要感謝 WM 提供他收集的一份清單，然後有人覺得有什麼資源是值得刊上去的歡迎提供給我，也可以直接發 pull request 啦，不過基本上是我主觀決定適不適合的，目前這份清單應該偶爾會更新一下，因為像是 iOS 有非常多軟體支援 Markdown，和其他作業系統比起來，比例上有點不平衡，還不知道哪些比較好用，所以我目前是先列出我以前就看到過的，希望這份清單能夠越來越好。...</b:summary>
+				<b:mainContent><p>前兩天終於把 <a href="http://markdown.tw/resources.html">Markdown 資源</a> 這頁弄上線了，其實想弄很久了，目標是收集不同領域的熱門資源，例如某某語言比較多人用的轉譯引擎。另外還有一些算是歷史紀錄，像是 shodown.js ，還有就是之前 Jeff Atwood <a href="http://www.codinghorror.com/blog/2012/10/the-future-of-markdown.html">登高一呼</a> 要訂 spec，雖然沒有正式的版本，不過也已經有 <a href="http://www.w3.org/community/markdown/">W3C Community Group</a>，說到這邊，他們其實還收集了很大量的引擎<a href="http://www.w3.org/community/markdown/wiki/MarkdownImplementations">實做</a>，不過像這種不是我覺得有用的清單，內容太多東西了，所以並沒有阻止我把這頁生出來。</p>
+
+<p>最後要感謝 WM 提供他收集的一份清單，然後有人覺得有什麼資源是值得刊上去的歡迎提供給我，也可以直接發 <a href="https://github.com/othree/markdown-syntax-zhtw">pull request</a> 啦，不過基本上是我主觀決定適不適合的，目前這份清單應該偶爾會更新一下，因為像是 iOS 有非常多軟體支援 Markdown，和其他作業系統比起來，比例上有點不平衡，還不知道哪些比較好用，所以我目前是先列出我以前就看到過的，希望這份清單能夠越來越好。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000755" baseName="flickr-share-publidhed">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-13</b:date>
+				<b:time>01:13:42</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Flickr Share with Template Published</b:title>
+			<b:content>
+				<b:summary> 距離第一次說這東西其實好久了，最近終於把它推上 Chrome Store，其實上次徵求 icon 有徵到，不過對方不願具名所以沒有任何 attribute，還是很感激他就是，現在這版已經改用 Twitter 的 hogan，還用了 q 做 async flow control，然後還衍生出 sandbox-hogan 這個專案，不過目前用的是 prototype，等那邊發展成熟一點在換過去。 最後再次介紹一下 Flickr Share with Template，這是套可以用自訂的 template 來產生 Flickr 照片分享 HTML/BBCode 的套件，會開發的原因包括： flickr 原生的分享是 HTML，不是 XHTML 只有 HTML/BBCode 只有 http，但是 flickr 其實有 https...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9252437903/" title="Flickr Share with Template by othree, on Flickr"><img src="//farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg" width="982" height="606" alt="Flickr Share with Template" srcset="//farm3.staticflickr.com/2840/9252437903_e68a25280f.jpg 768w, //farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg 768w 2x" /></a></p>
+
+<p>距離第一次說<a href="https://blog.othree.net/log/2012/12/08/flickr-share-with-templat/">這東西</a>其實好久了，最近終於把它推上 <a href="https://chrome.google.com/webstore/detail/flickr-share-with-templat/dfnfhbapijahpaobcpojofokllocfpnc">Chrome Store</a>，其實上次徵求 icon 有徵到，不過對方不願具名所以沒有任何 attribute，還是很感激他就是，現在這版已經改用 Twitter 的 <a href="http://twitter.github.io/hogan.js/">hogan</a>，還用了 <a href="https://github.com/kriskowal/q">q</a> 做 async flow control，然後還衍生出 <a href="https://github.com/othree/sandbox-hogan">sandbox-hogan</a> 這個專案，不過目前用的是 prototype，等那邊發展成熟一點在換過去。</p>
+
+<p>最後再次介紹一下 <strong>Flickr Share with Template</strong>，這是套可以用自訂的 template 來產生 Flickr 照片分享 HTML/BBCode 的套件，會開發的原因包括：</p>
+
+<ul>
+<li>flickr 原生的分享是 HTML，不是 XHTML</li>
+<li>只有 HTML/BBCode</li>
+<li>只有 http，但是 flickr 其實有 https 支援</li>
+<li>只有一些尺寸，無法滿足我支援 retina disaply 的需求</li>
+<li>最重要的，不支援自訂 template </li>
+</ul>
+
+<p>如果你對以上任何一個問題有同感的話，歡迎你來試試看我的擴充套件，有任何問題歡迎回報。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000754" baseName="vim-airline">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-04</b:date>
+				<b:time>18:15:37</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>vim-airline</b:title>
+			<b:content>
+				<b:summary> 最近發現 vim-airline 這個 plugin，其實就是 powerline 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 statusline，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。 我以前都是用自己寫的設定，還接了 hahhah.vim，長得比較簡單： 一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是： airline 是 pure vim script，powerline 則有一些 python 簡單, 速度也比 powerline 快 而且它也支援 powerline patch 過的字形來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題： 在 iTerm...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9203696971/" title="Flickr 上 othree 的 vim-airline"><img src="//farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="//farm6.staticflickr.com/5472/9203696971_8ffe6c5afd.jpg 768w, //farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 768w 2x" /></a></p>
+
+<p>最近發現 <a href="https://github.com/bling/vim-airline">vim-airline</a> 這個 plugin，其實就是 <a href="https://github.com/Lokaltog/powerline">powerline</a> 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#'statusline'">statusline</a>，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。</p>
+
+<p>我以前都是用自己寫的設定，還接了 <a href="https://github.com/mattn/hahhah-vim">hahhah.vim</a>，長得比較簡單：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9205236137/" title="Flickr 上 othree 的 My Vim statusline"><img src="//farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="//farm4.staticflickr.com/3686/9205236137_d614de6369.jpg 768w, //farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 768w 2x" /></a></p>
+
+<p>一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是：</p>
+
+<ul>
+<li>airline 是 pure vim script，powerline 則有一些 python</li>
+<li>簡單, 速度也比 powerline 快</li>
+</ul>
+
+<p>而且它也支援 powerline patch 過的<a href="https://github.com/Lokaltog/powerline-fonts">字形</a>來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9204959479/" title="Flickr 上 othree 的 ambiguous"><img src="//farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="//farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 768w,  768w 2x" /></a></p>
+
+<p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
+
+<p>powerline 自訂的這幾個 <a href="https://powerline.readthedocs.org/en/latest/fontpatching.html#glyph-table">新符號</a>，也是歸類在這些字元，剛好我以前都會用 iTerm 上工作站連 BBS，所以那個選項有開，結果就是如上圖下半部那樣，符號的右邊多了一個空白的寬度。這張圖上下的差異只有該選項有沒有打開而已，不過雖然搞清楚問題在哪，我最後還是決定不要用三角形，只用了 branch 的符號而已，結果就是本文的第一張圖那樣。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="4"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000753" baseName="phantom-jasmine-and-aladdin">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-02</b:date>
+				<b:time>00:00:10</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>phantom-jasmine 與阿拉丁</b:title>
+			<b:content>
+				<b:summary>前陣子開始寫起 JavaScript 的 test，用的是 Jasmine，用瀏覽器跑都正常，只是用 npm 上的 phantom-jasmine 來跑測試結果都不正常。因為想要把專案丟上 Travis CI，所以今天又花了不少時間下去找問題，結果還真是有些意外。 這個問題最大原因就是 npm phantom-jasmine 和原作者的 phantom-jasmine 的是不同 fork，npm module maintainer 是 rlayte，而 phantom-jasmine 作者是 Joshua Carver，雖然 npm 網站上的使用說明和 Joshua 在 Github 上的幾乎都一樣，Joshua 也在 README 說了可以用 npm 裝，但是實際上用 npm install -g...</b:summary>
+				<b:mainContent><p>前陣子開始寫起 JavaScript 的 test，用的是 <a href="http://pivotal.github.io/jasmine/">Jasmine</a>，用瀏覽器跑都正常，只是用 npm 上的 <a href="https://npmjs.org/package/phantom-jasmine">phantom-jasmine</a> 來跑測試結果都不正常。因為想要把專案丟上 <a href="https://travis-ci.org/">Travis CI</a>，所以今天又花了不少時間下去找問題，結果還真是有些意外。</p>
+
+<p>這個問題最大原因就是 npm phantom-jasmine 和原作者的 <a href="https://github.com/jcarver989/phantom-jasmine">phantom-jasmine</a> 的是不同 fork，npm module maintainer 是 <a href="https://npmjs.org/~rlayte">rlayte</a>，而 phantom-jasmine 作者是 <a href="https://github.com/jcarver989">Joshua Carver</a>，雖然 npm 網站上的使用說明和 Joshua 在 Github  上的幾乎都一樣，Joshua 也在 <a href="https://github.com/jcarver989/phantom-jasmine#installation">README</a> 說了可以用 npm 裝，但是實際上用 <code>npm install -g phantom-jasmine</code> 裝的卻是 rlayte 的 <a href="https://github.com/rlayte/phantom-jasmine">fork</a>，然而 rlayte 的那版，卻是他改很大的版本，整個行為都已經和說明上寫的不一樣了。</p>
+
+<p>本來的 phantom-jasmine 是使用者丟 HTML 檔案進去，不過 rlayte 改到後來，變成是它會自己去特定的路徑找 js 檔案，丟進 tempalte 產生 html 然後跑測試的，而這個路徑好死不死預設是 <code>exmample/js/**/*.js</code>，雖然測試的 spec 還是預設在 <code>spec/</code> 下找，可是要測試的檔案會在 <code>example/js/</code> 下面找，如果沒有改設定，根本就不會測試到想要測的檔案，這個行為是和原來完全不一樣的，而且也沒寫在文件上。</p>
+
+<p>還好我也有發現，rlayte 其實已經把他的 phantom-jasmine fork 改成 <a href="https://github.com/rlayte/aladdin">aladdin</a> 了，前面講的那些行為該怎樣用，其實都寫在 aladdin 那邊的 README 內。</p>
+
+<p>aladdin 設計的其實蠻無腦的，spec 檔案放在 <code>spec/</code> 目錄下，然後在 spec 目錄下新增一個 config.json：</p>
+
+<pre><code>[ 
+  'lib/jquery.js',
+  'app/**/*.js'
+]
+</code></pre>
+
+<p>這個檔案把你要測試的 src 和 dependency 都照順序放好，然後在專案根目錄執行 <code>aladdin</code> 就會開始測試了，連 Jasmine 的檔案都不用自己抓。</p>
+
+<p>要在 Travis CI 上跑測試，只要再加上兩個檔案就可以，一個是 <a href="http://about.travis-ci.org/docs/user/getting-started/#Step-three%3A-Add-.travis.yml-file-to-your-repository">.travis.yml</a>，另外一個是 <a href="https://npmjs.org/doc/json.html">package.json</a>，<code>.travis.yml</code> 只要設成 <a href="http://about.travis-ci.org/docs/user/getting-started/#Node.js">Node.js</a> 的就可以，可以直接拷貝範例，然後內容的 nodejs 版本只留一個。然後再加上 before_script 告訴 Travis CI 要安裝 aladdin：</p>
+
+<pre><code>before_script:
+    - npm install -g aladdin
+</code></pre>
+
+<p>至於 <code>package.json</code> 就稍微複雜一點，以下是範例：</p>
+
+<pre><code>{
+  "name": "robst-video",
+  "author": "othree",
+  "scripts": {
+    "test": "aladdin"
+  }
+}
+</code></pre>
+
+<p>重點是 <strong>scripts</strong> 那一塊，要讓 <code>npm test</code> 執行時會跑 <code>aladdin</code> 來啟動測試。這樣 Travis CI 就可以幫你跑測試了。</p>
+
+<p>回到 phantom-jasmine，現在的狀況是 npm 的 phantom-jasmine 被搞爛了，我必須說 rlayte 搞出這狀況還蠻不負責任的，所以也 report 了個 issue，還好 npm 可以從本地目錄安裝：</p>
+
+<pre><code>sudo npm install -g /path/to/phantom-jasmine/
+</code></pre>
+
+<p>只是裝起來後，目前我反而還沒辦法讓原版的 phantom-jasmine 跑起來，可能下次有動力在繼續看問題在哪了吧。 目前我是只有在 <a href="https://github.com/othree/robust-video">robust-video</a> 這個專案跑 Travis CI，有興趣的也可以直接去看看檔案怎樣放。</p>
+
+<p>最後補充一下，不知道有沒有人注意到，迪士尼的阿拉丁電影裡面的公主，就叫做 Jasmine。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="3"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000752" baseName="ntu">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-07-01</b:date>
+				<b:time>22:35:55</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>台大</b:title>
+			<b:content>
+				<b:summary>由於已經連續發了超過十篇技術文章，所以要貼些照片來平衡一下，剛好前兩天晚上走過台大拍了一些，所以就來貼些在台大校內拍的照片吧。...</b:summary>
+				<b:mainContent><p>由於已經連續發了超過十篇技術文章，所以要貼些照片來平衡一下，剛好前兩天晚上走過台大拍了一些，所以就來貼些在台大校內拍的照片吧。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5014521240/" title="Flickr 上 othree 的 台大校門"><img src="//farm5.staticflickr.com/4147/5014521240_a5a4a72b4c_b.jpg" width="1024" height="768" alt="台大校門" srcset="//farm5.staticflickr.com/4147/5014521240_a5a4a72b4c.jpg 768w, //farm5.staticflickr.com/4147/5014521240_a5a4a72b4c_b.jpg 768w 2x" /></a></p>
+</b:mainContent>
+				<b:extendContent><p>台大校門，現在已經是古蹟了，據說以前校門廣場常常是黨外人士聚會的場所。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9158987767/" title="Flickr 上 othree 的 台大 at Night"><img src="//farm8.staticflickr.com/7394/9158987767_2c2c9649a7_b.jpg" width="1024" height="683" alt="台大 at Night" srcset="//farm8.staticflickr.com/7394/9158987767_2c2c9649a7.jpg 768w, //farm8.staticflickr.com/7394/9158987767_2c2c9649a7_b.jpg 768w 2x, //farm8.staticflickr.com/7394/9158987767_eab77f0438_k.jpg 2x" /></a></p>
+
+<p>台灣應該只有大學校內會看到這樣壯觀的腳踏車海吧。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9158986845/" title="Flickr 上 othree 的 台大 at Night"><img src="//farm4.staticflickr.com/3811/9158986845_c9a66049f3_b.jpg" width="1024" height="683" alt="台大 at Night" srcset="//farm4.staticflickr.com/3811/9158986845_c9a66049f3.jpg 768w, //farm4.staticflickr.com/3811/9158986845_c9a66049f3_b.jpg 768w 2x, //farm4.staticflickr.com/3811/9158986845_c095e99e80_k.jpg 2x" /></a></p>
+
+<p>很喜歡這樣拍透光的植物，晚上的時候剛好可以用路燈，看起來就很翠綠。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/3933561345/" title="Flickr 上 othree 的 第一活動中心屋頂"><img src="//farm4.staticflickr.com/3253/3933561345_45fd2e3449_b.jpg" width="1024" height="768" alt="第一活動中心屋頂" srcset="//farm4.staticflickr.com/3253/3933561345_45fd2e3449.jpg 768w, //farm4.staticflickr.com/3253/3933561345_45fd2e3449_b.jpg 768w 2x" /></a></p>
+
+<p>台大的第一學生活動中心也是某個時期才有的歷史建物，這種中空屋頂結構現在已經看不到了，最近幾年做了不少改建，因為要符合現代的建築法規，加了一些不是這麼需要的補強，像是二樓口字形的走廊硬是一邊要加上剪力牆，有點難過啊，希望能保存下去。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9158993245/" title="Flickr 上 othree 的 台大 at Night"><img src="//farm6.staticflickr.com/5477/9158993245_6553e9436f_b.jpg" width="1024" height="683" alt="台大 at Night" srcset="//farm6.staticflickr.com/5477/9158993245_6553e9436f.jpg 768w, //farm6.staticflickr.com/5477/9158993245_6553e9436f_b.jpg 768w 2x, //farm6.staticflickr.com/5477/9158993245_cd28aec67f_k.jpg 2x" /></a></p>
+
+<p>校內很多這樣小小一棟不知道是什麼的建築物。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9161215528/" title="Flickr 上 othree 的 台大 at Night"><img src="//farm8.staticflickr.com/7295/9161215528_12a2e8522a_b.jpg" width="1024" height="683" alt="台大 at Night" srcset="//farm8.staticflickr.com/7295/9161215528_12a2e8522a.jpg 768w, //farm8.staticflickr.com/7295/9161215528_12a2e8522a_b.jpg 768w 2x, //farm8.staticflickr.com/7295/9161215528_c98da9527b_k.jpg 2x" /></a></p>
+
+<p>偷渡的台科大，不過還是在台大校內拍的~~</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8567737535/" title="Flickr 上 othree 的 台大杜鵑花節"><img src="//farm9.staticflickr.com/8527/8567737535_3c6bbabec4_b.jpg" width="1024" height="683" alt="台大杜鵑花節" srcset="//farm9.staticflickr.com/8527/8567737535_3c6bbabec4.jpg 768w, //farm9.staticflickr.com/8527/8567737535_3c6bbabec4_b.jpg 768w 2x, //farm9.staticflickr.com/8527/8567737535_fb8bf6bcee_k.jpg 2x" /></a></p>
+
+<p>杜鵑花節現在人都很多，很多是家長會帶小孩，還有校內社團也可以趁機擺攤宣傳，似乎有很多高中生是整車整車來的？</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8567736513/" title="Flickr 上 othree 的 台大杜鵑花節"><img src="//farm9.staticflickr.com/8245/8567736513_865c07887c_b.jpg" width="1024" height="683" alt="台大杜鵑花節" srcset="//farm9.staticflickr.com/8245/8567736513_865c07887c.jpg 768w, //farm9.staticflickr.com/8245/8567736513_865c07887c_b.jpg 768w 2x, //farm9.staticflickr.com/8245/8567736513_39fbacb025_k.jpg 2x" /></a></p>
+
+<p>來張杜鵑花！</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5385180238/" title="Flickr 上 othree 的 台大醫院"><img src="//farm6.staticflickr.com/5211/5385180238_a069cacb4e_b.jpg" width="1024" height="768" alt="台大醫院" srcset="//farm6.staticflickr.com/5211/5385180238_a069cacb4e.jpg 768w, //farm6.staticflickr.com/5211/5385180238_a069cacb4e_b.jpg 768w 2x" /></a></p>
+
+<p>最後來張很久以前拍的台大醫院舊館，台大以前的建物幾乎都是這種風格，後來有一個時期的建築真是超難看，幾乎都四四方方，像是現在已經拆掉的新生大樓（有興趣的自己 google 看看，我沒拍過它XD），大約在我在學時期，系上的教授就說最近幾年有開始在注重這些，當時是新的圖書館剛成立啟用，後來的幾棟新館真的也都好看許多。然後看到這張照片就想到基隆車站（默）。</p>
+
+<p>最後話說台大沒有建築系，最相關的就是土木系的建築與城鄉研究所了，所以現在回想起來，才發覺大學時也是有吸收到一些相關的知識耶，雖然我現在做的完全不相關...</p>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>
