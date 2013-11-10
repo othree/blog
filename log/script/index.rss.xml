@@ -5,10 +5,71 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-07-02 00:00</lastBuildDate>
+<lastBuildDate>2013-10-31 11:53</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Mobile Web Application 甘苦談</title>
+<description><![CDATA[<p>上個週末在 <a href="http://mopcon.org/2013/">MOPCON</a> 演講的投影片：</p>
+
+<script async="async" class="speakerdeck-embed" data-id="0c7d22d02409013107c55e2c4b81d3ea" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/*A_A*/</script>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/10/31/mobile-web-application-mopcon/</link>
+<guid>https://blog.othree.net/log/2013/10/31/mobile-web-application-mopcon/</guid>
+<category>script</category>
+<pubDate>2013-10-31 11:53</pubDate>
+</item>
+
+<item>
+<title>你所不知道的 JavaScript Object</title>
+<description><![CDATA[<p>以前在寫 VB 時，看到物件有 set/get 可以用，你可以用簡單的存取方式設定或取得物件的某個屬性，但是實際上存取時做一些操作和運算，對物件外來說，就和一般屬性一樣的，當時覺得這個特性還蠻方便的，不過這不是所有程式語言都有的，像是當年的 JavaScript 就沒有，不過時光飛逝，歲月如梭，其實現在 JavaScript 也支援 get/set 了，只是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty">defineProperty</a> 來設定，沒辦法用 Good Part 裡面建議的，單純用 object literal notation，當然比較舊的 IE 也不支援，寫起來如下：</p>
+
+<pre><code>var square = {
+    side: 1
+};
+
+Object.defineProperty(square, 'area', {
+    get: function () {
+        return Math.pow(this.side, 2);
+    },
+    set: function (val) {
+        this.side = Math.pow(val, 0.5);
+    }
+});
+</code></pre>
+
+<p>不過，defineProperty 的功能可不止於此，它提供了更改更為底層設定的能力，包括 configurable、enumerable 和 writable 三個設定。configurable 表示這個屬性的設定是否可以再次用 defineProperty 更改，writable 比較簡單就是表示這個屬性的值是否可以修改，enumerable 則是設定這個屬性在列舉的時候會不會被列出，物件的列舉其實就是用 <code>for in</code>：</p>
+
+<pre><code>for (attr in obj) {
+    obj[attr] = 'foo';
+}
+</code></pre>
+
+<p>如果有在用 JSLint 可能會看過這樣寫的話都會跳出下面的錯誤訊息：</p>
+
+<blockquote>
+  <p>The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype</p>
+</blockquote>
+
+<p>這是因為用 <code>for in</code> 的話，會把 prototype 裡面的屬性也列舉出來，這樣會有什麼問題呢，以前在做陣列的新 method 的 polyfill 時，會有個狀況就是，我們手動新增的 method，會在列舉時被列出，所以變成所有的陣列都不能用 <code>for in</code> 來跑，但是現在有 defneProperty 的 enumerable 了，未來在有類似的狀況，可以直接給陣列新增 method 而不會影響 <code>for in</code> 的行為。</p>
+
+<p>除了 defineProperty 之外，還有 defineProperties 可以大量設定屬性，另外也可以在 Object.create 時直接設定好。</p>
+
+<p>第二個要說的是，現在 JavaScript 的物件可以 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal">封</a>(seal) 起來或是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze">凍</a>(freeze) 起來了，seal 做的事情是限制物件屬性的新增或刪除，既有屬性的值還是可以修改，freeze 則是把物件完全凍結住，連修改屬性都不可以。而且這些行為是不可逆的，沒有提供可以 unseal 或是 unfreeze 的方法，不過倒是有 <code>isSealed</code> 和 <code>isFrozen</code> 可以判斷物件狀態。</p>
+
+<p>在 strict mode 下，上面兩個特性有限制的地方在被違反的時候，都會 throw error，普通模式下是不會有錯誤，不過他的行為還是不變，使用時需要注意。</p>
+
+<p>最後要介紹的是還不能使用的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">observe</a>，observe 又稱為觀察者，在 Backbone 有利用 set 和事件系統來實做，是在開發應用程式時很有用的 pattern，TC39 有打算把它加進 JavaScript 之中，目前還只有草案就是，要能用應該還要好一陣子就是了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/09/16/javascript-object-you-dont-know/</link>
+<guid>https://blog.othree.net/log/2013/09/16/javascript-object-you-dont-know/</guid>
+<category>script</category>
+<pubDate>2013-09-16 20:47</pubDate>
+</item>
 
 <item>
 <title>phantom-jasmine 與阿拉丁</title>
@@ -532,106 +593,6 @@ var encrypt = function (data, key) {
 <guid>https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/</guid>
 <category>script</category>
 <pubDate>2012-08-21 18:41</pubDate>
-</item>
-
-<item>
-<title>COSCUP 2012 slides</title>
-<description><![CDATA[<p>
-<script async="async" class="speakerdeck-embed" data-id="502fb1b39a533c000203951d" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
-
-<p>
-<script async="async" class="speakerdeck-embed" data-id="503108129c9652000203d80a" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
-
-<p>說好的 deferred.pipe 文章應該明天就可以貼出了～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/08/20/coscup-2012-slides/</link>
-<guid>https://blog.othree.net/log/2012/08/20/coscup-2012-slides/</guid>
-<category>script</category>
-<pubDate>2012-08-20 00:51</pubDate>
-</item>
-
-<item>
-<title>Side Effect Free Function</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/shereen84/2511071028/" title="俄羅斯娃娃"><img src="//farm3.staticflickr.com/2087/2511071028_98ed598b90.jpg" width="500" height="333" alt="" /></a></p>
-
-<p>在 Functional Programming 裡面，有個名詞叫做 <strong>pure function</strong>，要稱為 pure function 要滿足兩個條件：</p>
-
-<ol>
-<li>不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。</li>
-<li>執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。</li>
-</ol>
-
-<p>哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。</p>
-
-<p>再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。</p>
-
-<p>要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用：</p>
-
-<pre><code>var neko = {
-    meow: function () {
-        console.log(this);
-    }
-};
-
-neko.meow(); // neko
-
-var func = neko.meow;
-func(); // window
-</code></pre>
-
-<p>上面的範例中，我定義了一個物件，並且給了它一個 function 作為 method，接著用兩種不同的方法來執行這個 method，然後會發現兩種執行方式會讓 function 內的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/this">this</a> 是不一樣的，而且很不巧的，this 在物件導向程式設計上，其實還蠻常會需要它的，因為你會需要存取該物件的屬性，最簡單的方法就是用 this 來代表該物件，設計上合理，語意上也合理，可是物件的 method 的執行方法的不同卻會讓它存取到不同的 this，結果就是會有意外的副作用，JavaScript 的這種特性其實也不全然是壞處，有種稱為 "borrowing method" （或是 <a href="https://github.com/shichuan/javascript-patterns/blob/master/code-reuse-patterns/borrowing-methods.html">code reuse</a>）的 pattern 就可以利用這個特性，現在最可靠的判斷某變數是否是陣列的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray#See_also">方法</a>，也是一種 "borrowing method" 的應用。</p>
-
-<p>要確保 this 不變，有不少方法，像是多包一層用 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">apply</a>、<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">call</a> 來執行，或是用新的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind">bind</a> 來指定好 this 的值，一些 JavaScript Library 也有對應的功能可以利用，像是 jQuery 的 <a href="http://api.jquery.com/jQuery.proxy/">proxy</a>，不過用 apply 或是 call 來執行其實效率上會比較差，所以我想介紹的是另一種方法，利用 JavaScript 的另外一種特性：<strong>closure</strong>，closure 指的是，在多層的 variable scope 環境下，內層的 scope 可以去存取外層 scope 的變數，一個簡單例子：</p>
-
-<pre><code>var Dog = function () {
-    var gender = 'male';
-
-    this.getGender = function () {
-        return gender;
-    };
-};
-
-dog = new Dog();
-dog.getGender(); // male
-</code></pre>
-
-<p>dog 這個物件會得到一個 method 叫做 getGender，而它會回傳在這個 method 外一層，也就是 dog 物件的建構函式裡面定義的 gender 變數，這個 method 並不會因為他的 scope 內沒有 gender 變數就噴出錯誤訊息，取而代之的，它會往上一層的 variable scope 找同樣名稱的變數，一直找到最外層，也就是 root 物件那層，以網頁應用的話，root 物件就是 window 了，如果還是找不到才有機會出現錯誤訊息，利用這個特性，就可以完全的避免使用到 this 這個關鍵字來建立物件，不使用 this 的話自然就沒有我上面說的副作用了，這樣該物件的 method 不管是怎樣執行的，都不會影響到內部去存取的變數。</p>
-
-<p>jQuery 裡面也有使用到這種技巧， jQuery 的 <a href="http://api.jquery.com/category/callbacks-object/">Callbacks</a> 就是這樣子設計的物件，所以你可以在使用 Callbacks 的 <a href="http://api.jquery.com/category/deferred-object/">Deferred</a> 裡面看到這樣的<a href="https://github.com/jquery/jquery/blob/master/src/deferred.js#L74">程式碼</a>：</p>
-
-<pre><code>deferred[ tuple[0] ] = list.fire;
-deferred[ tuple[0] + "With" ] = list.fireWith;
-</code></pre>
-
-<p>前面的 tuple[0] 是 'resolve', 'reject' 或 'notify'，而 list 就是相對應的 Callbacks 物件，這段程式碼實際上就是在定義 Deferred 物件的 resolve, resolveWith, reject, rejectWith... 等屬性，可以看到他的指派方法就是直接把 Callbacks 物件的 fire 和 fireWith method 借給 Deferred 物件，所以執行 Deferred.resolve 其實就等同於執行對應 Callbacks 物件的 fire 方法，而由於 Callback 內部沒有使用到 this ，所以這樣的使用完全是沒有問題的。</p>
-
-<p>這樣子的用法有什麼好處呢？我們可以先反過來看看要確保 this 正確的話，程式碼要改成怎樣：</p>
-
-<pre><code>deferred[ tuple[0] ] = function () {
-    list.fire();
-};
-deferred[ tuple[0] + "With" ] =  function () {
-    list.fireWith();
-};
-</code></pre>
-
-<p>這樣子寫可以確保 list 裡面方法的 this 就是 Callbacks 物件本身，不過其實這樣改會造成 jQuery 的 Chain Ability 爛掉，請不要真的去改。這樣的寫法有兩個缺點：</p>
-
-<ol>
-<li>多了一層 scope，雖然現在瀏覽器的 JavaScript 引擎讓 scope 層數和 performance 之間的影響比以前小很多了，不過還是能少就少。</li>
-<li>程式碼變得比較不漂亮，程式碼漂不漂亮和好不好讀、好不好維護息息相關。</li>
-</ol>
-
-<p>Side effect free 的 function 還有哪些地方可以用呢，除了像 jQuery 這樣供物件之間呼叫執行，最多的還是作為 callback function 了吧，不管是事件的 callback function 還是 XHR 的 callback function，都可以利用到這些好處，讓程式碼更好看，也減少 scope chain 的層數。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/08/06/side-effect-free-function/</link>
-<guid>https://blog.othree.net/log/2012/08/06/side-effect-free-function/</guid>
-<category>script</category>
-<pubDate>2012-08-06 01:26</pubDate>
 </item>
 
 

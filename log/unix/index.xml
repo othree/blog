@@ -9,6 +9,34 @@
 			<b:listData listID="unix">unix</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000764" baseName="osx-ruby-193p392">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-10-24</b:date>
+				<b:time>16:16:44</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>OSX 裝 ruby 1.9.3p392 編譯問題</b:title>
+			<b:content>
+				<b:summary>最近因故要在 Mac 上重新建立工作環境，結果在裝 ruby 時遇到 compile error，看起來也不是今天才有的問題，狀況是 clang 4.1 之後才開始有的，而 OSX 10.9 要用的 XCode 5.0.1 已經是 clang 5.0 了，所以不避開這個問題會無法在新的 OSX 上裝 Ruby，包括用其他 Ruby 管理工具也是一樣，像我其實就是用 rvm 要裝，還好有解法： CFLAGS=-Wno-error=shorten-64-to-32 rvm install ruby-1.9.3-p392...</b:summary>
+				<b:mainContent><p>最近因故要在 Mac 上重新建立工作環境，結果在裝 ruby 時遇到 compile error，看起來也不是今天才有的<a href="https://github.com/sstephenson/ruby-build/issues/297">問題</a>，狀況是 clang 4.1 之後才開始有的，而 OSX 10.9 要用的 XCode 5.0.1 已經是 clang 5.0 了，所以不避開這個問題會無法在新的 OSX 上裝 Ruby，包括用其他 Ruby 管理工具也是一樣，像我其實就是用 rvm 要裝，還好有解法：</p>
+
+<pre><code>CFLAGS=-Wno-error=shorten-64-to-32 rvm install ruby-1.9.3-p392
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000742" baseName="fasd-cli-booster">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -330,33 +358,6 @@ https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
 			</b:content>
 
 			<b:comments commentCount="2"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000602" baseName="spidermonkey-utf-8">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2009-12-27</b:date>
-				<b:time>16:01:39</b:time>
-			</b:datetime>
-			<b:category>unix</b:category>
-			<b:title>spidermonkey 的 UTF-8 支援</b:title>
-			<b:content>
-				<b:summary>JSLint 其實是用 javascript 寫的 javascript 語法檢查工具， jslint.vim 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 JSLint ，最好找的 JS 引擎就是 mozilla 的 spidermonkey ，很多 linux 有包好的套件，FreeBSD 也有 port ，不過實際上用的時候發現有個問題，就是不支援 UTF-8 字串，結果就是在 JSLint 的字元檢查時會把一些中文當成不安全字元，例如：「下」。 其實要 spidermonkey 支援 UTF-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 MacPorts...</b:summary>
-				<b:mainContent><p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
-
-<p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
-
-<p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>

@@ -5,10 +5,61 @@
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-08-17 00:22</lastBuildDate>
+<lastBuildDate>2013-11-05 15:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Transition 之惡</title>
+<description><![CDATA[<p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
+
+<p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
+
+<pre><code>.case1.active {
+    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease;
+}
+
+.case2.active {
+    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease;
+}
+</code></pre>
+
+<p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
+
+<p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
+
+<p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/11/05/bad-part-of-css-transition/</link>
+<guid>https://blog.othree.net/log/2013/11/05/bad-part-of-css-transition/</guid>
+<category>css-html</category>
+<pubDate>2013-11-05 15:59</pubDate>
+</item>
+
+<item>
+<title>消失的 video</title>
+<description><![CDATA[<p>最近遇到一個 CSS bug，主要是在 Chrome 上發生，一開始是有些元素在做 CSS Transition 時會不見，而且有時候 transition 結束還是看不到，要隨便作一些事情觸發瀏覽器 redraw 東西才會回來，作什麼事情又很不一定，而且去 access clientWidth 之類的屬性來想要叫瀏覽器重新畫在這個 bug 上是無效的，後來在網路上找到避開的作法：</p>
+
+<pre><code>-webkit-backface-visibility: hidden;
+-webkit-transform: translateZ(0);
+</code></pre>
+
+<p>加上這兩個 CSS 屬性就可以讓會消失的元件不要消失了，後來才知道之前也有同事處理過一樣的問題。然後，接著又遇到另外一個神秘的現象，因為做的東西有投影片播放，動畫 transition 換頁和 video，加起來就是要作一個 transition 讓 video 進入頁面，然後自動播放的機制，結果就發生怪事了，如果 video 沒播過，還沒有 cache 的話，會發生 video 消失的狀況，一開始以為是抓檔案 loading 到真的開始播放之中間的這段時間，Chrome 實作不好，會讓影片節點變成透明的，然後因為其他的問題讓影片卡在那個狀況，所以就變成一直看不到。</p>
+
+<p>後來花了很多時間測試，最後發現影片根本就有在播，只是東西都看不到，進一步發現根本和上面講的是同一個 bug，加上同樣的 style 後，影片就不再消失了，而且連那開始 loading 到開始播放間的那段時間，畫面也完全不會消失了，就從原來給它的 poster 接到真的影片，一切都很順暢。</p>
+
+<p>至於什麼情況下會有這個 bug 出現，目前只知道是 <code>position: absolute;</code> 的元件加上 transition 後有發生的機會。</p>
+
+<p>Ref: <a href="http://help.dimsemenov.com/discussions/problems/858-weird-bug-in-chrome">Element disappearing during transition in Chrome</a></p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/08/26/blinked-video/</link>
+<guid>https://blog.othree.net/log/2013/08/26/blinked-video/</guid>
+<category>css-html</category>
+<pubDate>2013-08-26 18:17</pubDate>
+</item>
 
 <item>
 <title>Main</title>
@@ -716,75 +767,6 @@ http://flic.kr/p/9m9Cmj
 <guid>https://blog.othree.net/log/2011/03/05/html5-developer-edition/</guid>
 <category>css-html</category>
 <pubDate>2011-03-05 16:19</pubDate>
-</item>
-
-<item>
-<title>Canonical URL</title>
-<description><![CDATA[<p>我本來以為我應該寫過這東西了，可是剛剛找卻找不到文章，決定就當成沒寫過，介紹一下這個兩年前的東西。Canonical URL 是為了解決網路上很多不同網址可能其實是同樣頁面的問題，例如下面三個網址其實都是同樣的 Amazon 商品：</p>
-
-<pre><code>http://www.amazon.com/gp/product/0596522304/ref=s9_qpp_gw_p14_ir03?pf_rd_m=ATVPDKIKX0DER&amp;amp;pf_rd_s=center-3&amp;amp;pf_rd_r=0BC0MGCJ16BHCYNY6AYG&amp;amp;pf_rd_t=101&amp;amp;pf_rd_p=470938811&amp;amp;pf_rd_i=507846
-http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304
-http://www.amazon.com/dp/0596522304
-</code></pre>
-
-<p>但是可能是因為來源不同，Amazon 藉由不同的網址記錄一些行為，像是不同的廣告來源，或是為使用者提供不同的相關訊息等，不過這些網址其實都應該是一樣的，都是代表那本書的頁面，這時就產生個問題了，三個網址在搜尋引擎的紀錄是分開的，頁面整體的影響力也因此被低估，同樣會有這個問題的還有像是 flickr：</p>
-
-<pre><code>http://www.flickr.com/photos/othree/5478867242/in/set-72157626142121334/
-http://www.flickr.com/photos/othree/5478867242/in/photostream/
-http://www.flickr.com/photos/othree/5478867242/
-http://flic.kr/p/9m9Cmj
-</code></pre>
-
-<p>或是 T 客邦：</p>
-
-<pre><code>http://www.techbang.com.tw/posts/5033-ios-great-copy-mac-os-x-107-lion-info
-http://www.techbang.com.tw/posts/5033
-</code></pre>
-
-<p>這些不同長度的網址其實都是一樣的頁面，卻因為被當成不同的頁面而讓分數下降，不只是網站本身的 SEO 問題，對於搜尋引擎來說也是一個會讓搜尋結果排序不好的問題，為解決這個問題，<a href="http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html">Google</a>、<a href="http://www.bing.com/community/site_blogs/b/webmaster/archive/2009/02/12/partnering-to-help-solve-duplicate-content-issues.aspx">微軟</a>、<a href="http://www.ysearchblog.com/2009/02/12/fighting-duplication-adding-more-arrows-to-your-quiver/">Yahoo!</a>、<a href="http://blog.ask.com/2009/02/ask-is-going-canonical.html">ask.com</a> 等搜尋引擎大廠在 2009 共同合作，制定了 canonical URL 這樣的一個機制，機制很簡單，就是在網頁內加上一個 link 標籤記錄實際上代表的網址，以第一個 Amazon 的網址為例，每個網址開進去看他的原始碼，都可以發現有一個如下的 link 標籤</p>
-
-<pre><code>&lt;link rel="canonical" href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304" /&gt;
-</code></pre>
-
-<p>裡面的 <strong>href</strong> 的值，就是這些網址的實際目標，代表這些網址們實際上的 URL 都是這個實際目標，搜尋引擎看到的話就會把該網址的權重、分數等等算在它上面，也就可以簡單解決上面提到的問題，如果你用 <a href="http://www.google.com.tw/search?hl=zh-TW&amp;q=amazon+even+fast+website&amp;meta=">Google 搜尋 Amazon 上面那本書</a> ，就會發現連結過去的網址就是 canonical 設定的網址了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/03/03/canonical-url/</link>
-<guid>https://blog.othree.net/log/2011/03/03/canonical-url/</guid>
-<category>css-html</category>
-<pubDate>2011-03-03 00:57</pubDate>
-</item>
-
-<item>
-<title>HTML5 近況 </title>
-<description><![CDATA[<p>首先是比較多人知道的 <a href="http://www.w3.org/html/logo/">HTML5 官方 logo</a> ，除了大 logo 外，你還可以根據你用到哪些技術來建立屬於自的小貼紙，現在還有賣 T-shirt ，也有免費的貼紙可以索取，logo 設計好壞見仁見智，我是兩種聲音都有聽到，不過已經有不少地方開始拿來使用了，像是 Chrome 馬上就有人寫個 <a href="https://chrome.google.com/webstore/detail/klleofbhhghgacodijohlacbfhfcefom">HTML5 Powered</a> 的小擴充套件，只是在位址列顯示該網站有沒有用 HTML5 而已:P。</p>
-
-<p><a href="http://www.flickr.com/photos/othree/8220185645/" title="Flickr 上 othree 的 HTML5 Logo"><img src="//farm9.staticflickr.com/8065/8220185645_7a8a4bc305_o.png" width="256" height="256" alt="HTML5 Logo"/></a></p>
-]]><![CDATA[<p>最近不少新東西，首先是 HTML-WG 在 13 日時更新了大量的文件，除了 HTML5 標準本身外，周邊的一些文件也一起更新了，包括以下這些文件：</p>
-
-<ul>
-<li><a href="http://www.w3.org/TR/2011/WD-html5-20110113/">HTML5</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-html5-diff-20110113/">HTML5 differences from HTML4</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-html-markup-20110113/">HTML: The Markup Language</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-rdfa-in-html-20110113/">HTML+RDFa 1.1</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-microdata-20110113/">HTML Microdata</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-2dcontext-20110113/">HTML Canvas 2D Context</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-html-alt-techniques-20110113/">HTML5: Techniques for providing useful text alternatives</a></li>
-<li><a href="http://www.w3.org/TR/2011/WD-html-polyglot-20110113/">Polyglot Markup: HTML-Compatible XHTML Documents</a></li>
-</ul>
-
-<p>其中 HTML5 標準本身最主要的變動是多了 <a href="http://www.w3.org/TR/2011/WD-html5-20110113/text-level-semantics.html#the-bdi-element">&lt;bdi&gt;</a> 這個標籤，用途是和 i18n 的文字方向相關的，其實文字方向，光只是左右方向就有不少問題要處理，事實上是比想像的複雜許多，而如果加上直排，那還會更加複雜。其他也還有一些新東西，如果想要看每一版差異， <a href="http://www.w3.org/TR/html5-diff/#changelog">HTML5 differences from HTML4</a> 的 changelog 可以參考，雖然不能保證他是照著主要文件在更新的就是。</p>
-
-<p>另外一份值得推薦的文件是 <a href="http://www.w3.org/TR/html-alt-techniques/">HTML5: Techniques for providing useful text alternatives</a> ，內容是如何提供有用的替代文字，包括給圖片、影片等用的。</p>
-
-<p>上面是 W3C 那邊，接下來要說的是 WHATWG 那邊，他們決定現在維護中 <a href="http://blog.whatwg.org/html-is-the-new-html5">HTML5 要改為 HTML</a> ，並且持續開發，不會照 W3C 那邊的發展流程，會有定案不再修改的一天，算是一個方針性的修改，這樣的方式是好是壞現在還難以定論就是，原來 2012 年 HTML5 會進入 PR 的計畫應該是不會變動，只是狀況可能變成 W3C 那邊進入 PR ，功能不再修改，但是 WHATWG 那邊的 HTML 標準還會持續的修改並加新東西進去。</p>
-
-<p>最後是 <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/">WAI-ARIA</a> 進入 CR 了，除了文件狀態更新外，其實 HTML5 的發展和 WAI-ARIA 等一些互相支援的標準還蠻密切的，像是 <a href="http://html5.validator.nu/">html5.validator.nu</a> 這個 HTML5 驗證工具就有支援 WAI-ARIA、SVG、MathML 等，甚至你如果是使用 XHTML 的文件，他也可以正確的處理 namespace 的東西。</p>
-]]></description>
-<link>https://blog.othree.net/log/2011/01/22/html5-2011-01/</link>
-<guid>https://blog.othree.net/log/2011/01/22/html5-2011-01/</guid>
-<category>css-html</category>
-<pubDate>2011-01-22 09:13</pubDate>
 </item>
 
 

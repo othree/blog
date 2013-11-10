@@ -5,10 +5,24 @@
 <link>https://blog.othree.net//log/ unix/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-05-09 21:12</lastBuildDate>
+<lastBuildDate>2013-10-24 16:16</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>OSX 裝 ruby 1.9.3p392 編譯問題</title>
+<description><![CDATA[<p>最近因故要在 Mac 上重新建立工作環境，結果在裝 ruby 時遇到 compile error，看起來也不是今天才有的<a href="https://github.com/sstephenson/ruby-build/issues/297">問題</a>，狀況是 clang 4.1 之後才開始有的，而 OSX 10.9 要用的 XCode 5.0.1 已經是 clang 5.0 了，所以不避開這個問題會無法在新的 OSX 上裝 Ruby，包括用其他 Ruby 管理工具也是一樣，像我其實就是用 rvm 要裝，還好有解法：</p>
+
+<pre><code>CFLAGS=-Wno-error=shorten-64-to-32 rvm install ruby-1.9.3-p392
+</code></pre>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/10/24/osx-ruby-193p392/</link>
+<guid>https://blog.othree.net/log/2013/10/24/osx-ruby-193p392/</guid>
+<category>unix</category>
+<pubDate>2013-10-24 16:16</pubDate>
+</item>
 
 <item>
 <title>fasd, 命令列加速工具</title>

@@ -14,7 +14,49 @@
 			</b:previous>
 
 
+			<b:next>
+				<b:mTitle>September 2013</b:mTitle>
+				<b:mDate>2013/09</b:mDate>				
+			</b:next>
+
 		</b:entriesMeta>
+
+		<b:entry entryID="000762" baseName="blinked-video">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-08-26</b:date>
+				<b:time>18:17:52</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>消失的 video</b:title>
+			<b:content>
+				<b:summary>最近遇到一個 CSS bug，主要是在 Chrome 上發生，一開始是有些元素在做 CSS Transition 時會不見，而且有時候 transition 結束還是看不到，要隨便作一些事情觸發瀏覽器 redraw 東西才會回來，作什麼事情又很不一定，而且去 access clientWidth 之類的屬性來想要叫瀏覽器重新畫在這個 bug 上是無效的，後來在網路上找到避開的作法： -webkit-backface-visibility: hidden; -webkit-transform: translateZ(0); 加上這兩個 CSS 屬性就可以讓會消失的元件不要消失了，後來才知道之前也有同事處理過一樣的問題。然後，接著又遇到另外一個神秘的現象，因為做的東西有投影片播放，動畫 transition 換頁和 video，加起來就是要作一個 transition 讓 video 進入頁面，然後自動播放的機制，結果就發生怪事了，如果 video 沒播過，還沒有 cache 的話，會發生 video 消失的狀況，一開始以為是抓檔案 loading 到真的開始播放之中間的這段時間，Chrome 實作不好，會讓影片節點變成透明的，然後因為其他的問題讓影片卡在那個狀況，所以就變成一直看不到。...</b:summary>
+				<b:mainContent><p>最近遇到一個 CSS bug，主要是在 Chrome 上發生，一開始是有些元素在做 CSS Transition 時會不見，而且有時候 transition 結束還是看不到，要隨便作一些事情觸發瀏覽器 redraw 東西才會回來，作什麼事情又很不一定，而且去 access clientWidth 之類的屬性來想要叫瀏覽器重新畫在這個 bug 上是無效的，後來在網路上找到避開的作法：</p>
+
+<pre><code>-webkit-backface-visibility: hidden;
+-webkit-transform: translateZ(0);
+</code></pre>
+
+<p>加上這兩個 CSS 屬性就可以讓會消失的元件不要消失了，後來才知道之前也有同事處理過一樣的問題。然後，接著又遇到另外一個神秘的現象，因為做的東西有投影片播放，動畫 transition 換頁和 video，加起來就是要作一個 transition 讓 video 進入頁面，然後自動播放的機制，結果就發生怪事了，如果 video 沒播過，還沒有 cache 的話，會發生 video 消失的狀況，一開始以為是抓檔案 loading 到真的開始播放之中間的這段時間，Chrome 實作不好，會讓影片節點變成透明的，然後因為其他的問題讓影片卡在那個狀況，所以就變成一直看不到。</p>
+
+<p>後來花了很多時間測試，最後發現影片根本就有在播，只是東西都看不到，進一步發現根本和上面講的是同一個 bug，加上同樣的 style 後，影片就不再消失了，而且連那開始 loading 到開始播放間的那段時間，畫面也完全不會消失了，就從原來給它的 poster 接到真的影片，一切都很順暢。</p>
+
+<p>至於什麼情況下會有這個 bug 出現，目前只知道是 <code>position: absolute;</code> 的元件加上 transition 後有發生的機會。</p>
+
+<p>Ref: <a href="http://help.dimsemenov.com/discussions/problems/858-weird-bug-in-chrome">Element disappearing during transition in Chrome</a></p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
 
 		<b:entry entryID="000761" baseName="main">
 			<b:author>
