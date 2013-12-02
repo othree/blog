@@ -68,7 +68,7 @@
 
 <p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
 
-<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 [jQuery.extend][] 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
+<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 <a href="http://api.jquery.com/jQuery.extend/">jQuery.extend</a> 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
 
 <pre><code>_.defaults(options, defaultOptions);
 </code></pre>

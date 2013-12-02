@@ -5,10 +5,287 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-10-31 11:53</lastBuildDate>
+<lastBuildDate>2013-11-27 19:35</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Web Component</title>
+<description><![CDATA[<p>最近覺得可以開始玩 Web Component 了，然後就開始研究，本來以為應該會是個簡單的東西，結果意外的有一些細節還蠻複雜，有些設計目前也不知道為什麼，不過還是從基本的來開始整理吧。</p>
+
+<p>Web Component 其實最早只有 Shaodw DOM 的概念，不過現在已經變成好幾個標準合在一起來構成 component 了，這些標準中，最主要的三個分別是：</p>
+
+<ul>
+<li><a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a></li>
+<li><a href="http://www.w3.org/TR/custom-elements/">Custom Element</a></li>
+<li><a href="http://www.w3.org/TR/html-imports/">HTML Imports</a></li>
+</ul>
+
+<p>這三者分別都是構成 Web Component 很重要的元素，不過也分別規範了一些不是單純只能應用在 Web Component 上的功能，這篇文章不一定會說到這些特色，一切都看緣份吧～</p>
+]]><![CDATA[<h4>Shadow DOM</h4>
+
+<p>我所知當中這是最早被提出的部分，這份文件的目的在提出一套標準來在文件樹上把一些 DOM 節點隱藏起來，有這個需求的原因是因為現在越來越多的自訂 UI 元件，為了達成效果可能用了很多的 <code>&lt;div&gt;</code>、<code>&lt;span&gt;</code> 等元素，但是在做 DOM Traversal 或是 Inspect 時，這些元素的出現其實很多餘，而且看起來會很花，如果是開發要除錯看到大量不相干的東西實在是很干擾，而最重要的其實是，如果要把能讓這些自訂元件模組化再利用，那應該也要能把東西封裝起來。</p>
+
+<p>Shadow DOM 最大的功用就是在 DOM Tree 上能把子文件樹封裝起來的機制，使用很簡單，就在你想要放隱藏元件結構的地方，執行 <code>createShadowHost()</code>，然後把東西塞進去就可以了：</p>
+
+<pre><code>var host = document.querySelector('.custom-component');
+var root = host.createShadowRoot();
+host.innerHTML = html_template_string;
+</code></pre>
+
+<p>目前應該還只有 Chrome 支援，而且要先去 <code>about:flags</code> 裡面把「Experimental Web Platform features」打開，然後標準還沒定案，所以其實現在要執行 <code>webkitCreateShadowRoot</code> 才會動。這個 function 回傳的東西稱為 <em>shadow root</em>，它下面的文件樹就稱為 <em>shadow tree</em>，至於 <code>host</code> 那個變數所指的 DOM node 則是 <em>shadow host</em>。</p>
+
+<p>簡單說的 Shadow DOM 就這樣講完了，不過事情當然不會這麼簡單，還有幾個問題要解決，首先第一個是 style，要給 shadow tree 內的元素加上樣式其實就把 style 標籤也插進去就可以了：</p>
+
+<pre><code>var html_template_string = 
+    '&lt;style&gt;div { color: red; }&lt;/style&gt;&lt;div&gt;Click me!&lt;/div&gt;';
+</code></pre>
+
+<p>預設這種在 shadow tree 裡面的 style 都是 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#attr-style-scoped">scoped</a> 的，是從 host 節點開始算，所以包括 host 節點本身也會受到影響，而在這邊，一個新的 CSS at-rule <code>@host</code> 就誕生了，是專門從 shadow tree 裡面來對外面的 host 節點的樣式做調整用的：</p>
+
+<pre><code>@host {
+    .custom-component {
+        display: inline-block;
+    }
+}
+</code></pre>
+
+<p>第二個問題則是，如果我要做的 custom element 是下拉式選單時，我的選項哪裡來呢？當然我可以直接把東西用 JS 寫到 shadow tree 裡面，但是如果是用以前的 <code>&lt;select&gt;</code> 的話，是用 <code>&lt;select&gt;</code> 下的子節點作為選項的來源。：</p>
+
+<pre><code>&lt;select&gt;
+    &lt;option value="1"&gt; 1
+    &lt;option value="2"&gt; 2
+    &lt;option value="3"&gt; 3
+&lt;/select&gt;
+</code></pre>
+
+<p>如果要用 shadow DOM 做到類似的效果，把複雜的 UI 呈現用結構藏起來，只讓單純的選項出現在文件樹內，也是可以辦到的，不過比較複雜，這個特性叫 distribution，配合一個新的標籤 <code>&lt;content&gt;</code> 和 CSS selector 來把 shadow host 的子元素移動到 shadow tree 內。</p>
+
+<p>舉例來說，下面是我的 shadow host 節點：</p>
+
+<pre><code>&lt;div class="x-header"&gt;
+    &lt;h1&gt;Site Name&lt;/h1&gt;
+    &lt;h2&gt;Section 1&lt;/h2&gt;
+    &lt;h2&gt;Section 2&lt;/h2&gt;
+    &lt;h2&gt;Section 3&lt;/h2&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>除了他自己外還有一個大標題，三個小標題。然後我希望丟進 shadow root 的結構如下：</p>
+
+<pre><code>&lt;header&gt;
+   &lt;img src="logo.png" /&gt;
+   &lt;h1&gt;Site Name&lt;/h1&gt;
+&lt;/header&gt;
+&lt;nav&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;h2&gt;Section 1&lt;/h2&gt;
+        &lt;h2&gt;Section 2&lt;/h2&gt;
+        &lt;h2&gt;Section 3&lt;/h2&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p>那麼我可以用 <code>&lt;content&gt;</code> 來辦到：</p>
+
+<pre><code>&lt;header&gt;
+   &lt;img src="logo.png" /&gt;
+   &lt;content select="h1"&gt;
+&lt;/header&gt;
+&lt;nav&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;content select="h2"&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;
+</code></pre>
+
+<p><code>select</code> 屬性的內容是 CSS selector，可以把符合該 selector 的 shadow host 子節點抓出來放在 <code>&lt;content&gt;</code> 的位置。如果不給任何 selector 的話，就會把全部的東西都抓過去，像下拉選單就可以用這種方式來把選項填入 shadow tree。</p>
+
+<p>不過這邊要注意，distributed 的 DOM node 吃的樣式是外面的文件的樣式，shadow tree 裡面的 style 不會套用到他們上面。</p>
+
+<p>第三個問題是，用 JS 字串或是動態產生 DOM 節點的方式來作 shadow DOM 的內容實在很多問題，所以 HTML 還多了個 <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/templates/index.html">Templates</a> 擴充，就是多了一個眾望所歸的 <code>&lt;template&gt;</code> 標籤，內容會 parse，會有內容的 DOM tree，但是不 render，所以裡面需要的圖片、JS 等等都不會抓下來，然後 template 標籤的 <code>content</code> 屬性就是內容的 DOM node，所以第一段程式碼範例就可以改寫成：</p>
+
+<pre><code>var host = document.querySelector('.custom-component');
+var root = host.createShadowRoot();
+var clone = templateNode.content.cloneNode(true);
+root.appendChild(clone);
+</code></pre>
+
+<p>以前比較常見的作法是用 <code>&lt;script&gt;</code> 標籤，然後說 type 是某個瀏覽器不認得的語言，像是 "text/template" 之類的，這樣瀏覽器就不會去執行內容，不過這方法的缺點一就是語意不對，二是潛藏有安全性問題。</p>
+
+<h4>Custom Element</h4>
+
+<p>Custom Element 的部分就是定義了怎樣在 document 下定義新的自訂標籤，不是以前剛進入 HTML5 時代時為了語意而產生的新標籤，這邊說的自訂標籤通常都是為了有特殊的用途，會能和使用者有互動，可以操控等特性的，只用 shadow DOM 的話，雖然可以把整個元件封裝起來，但是最外層還是用 div 標籤來把東西包起來，在語意上不太合，而且加上可能有非同步的問題，新標籤可能是動態插入文件樹內，傳統的方法並不方便處理這種狀況。</p>
+
+<p>在繼續之前要先說，網路上還可以看到一些比較舊的文章有介紹 <code>&lt;element&gt;</code> 這個標籤，不過該標籤目前已經被廢棄了，custom element 現在是全由 JavaScript 那邊來和 document 作溝通，所以基本上就是定義了一組 document 的擴充 API，<em>register</em>：</p>
+
+<pre><code>document.register('x-button', {prototype: xButtonProto});
+</code></pre>
+
+<p>這樣在這個文件樹下，就有了 <code>&lt;x-button&gt;</code> 這個新的標籤，其中標籤的命名方式是有建議一定要有個 '-' 的，有 '-' 的標籤，在有定義之前，會被認為是 unresolved element，可以用新的 CSS pseudo class <code>:unresolved</code> 來隱藏起來，避免類似 FOUT 的現象，但是如果你沒有 '-' 而只是用了簡單的單詞來作自訂標籤的名稱，像是 slider、calendar 之類的，這樣就會被認為是 unknown element，就沒辦法用 <code>:unresolved</code> 了。</p>
+
+<p>第二個參數則是 option object，其中的 prototype 則是定義了關於這個新的自訂標籤的行為，通常會從 HTMLElement 繼承來：</p>
+
+<pre><code>var xButtonProto = Object.create(HTMLElement.prototype);
+</code></pre>
+
+<p>然後接著定義它的 <a href="http://w3c.github.io/webcomponents/spec/custom/#custom-element-lifecycle">lifecycle</a> callback function，lifecycle 這是個新的東西，在 custom element 的標準裡面定義了一個標籤的一生會發生的事情，包括：</p>
+
+<ul>
+<li>created</li>
+<li>enteredView</li>
+<li>leftView</li>
+<li>attributeChanged</li>
+</ul>
+
+<p>最常會用到的大概就是 created 了吧：</p>
+
+<pre><code>xButtonProto.createdCallback = function () {
+    var root = this;
+    var host = this.webkitCreateShadowRoot();
+    var clone = tpl.content.cloneNode(true);
+    host.appendChild(clone);
+};
+</code></pre>
+
+<p>像這樣定義 lifecycle callback，就會在 <code>&lt;x-button&gt;</code> 插入文件時，把他裡面的 shadow tree 建好，同時你也可以把一些事件和行為也在這個時間點建立起來。要拿到 shadow tree 裡面的元素的話，可以直接對 shadow host 下 query selector 指令來達成。</p>
+
+<p>目前 WebKit 雖然有支援 custom element，不過也還是實驗中的狀態，要自己去把 'Experimental Web Platform features' 選項打開。</p>
+
+<h4>HTML Imports</h4>
+
+<p>HTML Imports 雖然是比較晚期才聽到有成形的標準，不過其實很早之前，在 Web Component 的概念成形之前，就已經有很多地方有類似的，引用外部資源需求了，所以標準的設計也沒有局現在 Web Component 的使用，結果而言，在 Web Component 這塊，import 的功能是讓 Web Component 的程式碼能夠在維護、發布時也能模組化、封裝起來的關鍵標準，但是他的設計方向卻不是以此為中心，HTML Imports 設計上市 link 標籤的一個擴充：</p>
+
+<pre><code>&lt;link rel="import" href="component.html" /&gt;
+</code></pre>
+
+<p>結果就是，有支援 HTML Imports 的瀏覽器就會把 component.html 抓下來也 parse 過，正常網頁該抓的圖片、script，該跑的 script 也都會真的執行，而且在該檔案內的 script 執行環境的 document 和外面的 document 是同一個。所以理論上，只要把所有的 custom element 相關的東西移到獨立的檔案，然後在 import 進來就好了，這樣就可以保持主文件內容的乾淨，也可以讓這些自訂的標籤能夠獨立管理，方便維護。</p>
+
+<p>不過這邊有個細節需要注意，就是要怎麼在被 import 的 component.html 裡面的 script 中，去 query component.html 的內容呢？例如我要 query template 出來塞到 shadow tree 裡面，那就要用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/document.currentScript">currentScript</a> 這個 HTML5 的 API：</p>
+
+<pre><code>var doc = document.currentScript.ownerDocument;
+var tpl = doc.getElementById('x-button-template');
+</code></pre>
+
+<p>這個寫法在非 import 的 HTML 文件中也是可以動的，所以即使沒有要用 HTML Imports 也可以直接用這個寫法，而 currentScript 的出現其實一部分原因是為了大量的第三方 widget 吧，像是 Facebook like button 之類的，它會給的通常是一個 script 標籤，然後我們把他放到想放的位置，script 再用 document.write 寫入 widget 元素，不過 document.write 不支援 async 的操作，還會有效能 issue，然而 currentScript 會指到現在這行程式碼所在的 <code>&lt;script&gt;</code>，就可以非同步的用標準的 DOM 操作而不需要 document.write 也可以把東西放到正確的位置，這樣就可以解決很多這種第三方 script 插入元素的定位問題。</p>
+
+<p>到這邊就可以把上面的東西全部接在一起了，目錄下會有以下檔案：</p>
+
+<ul>
+<li>index.html</li>
+<li>x-button/x-button.html</li>
+<li>x-button/x-button-style.css</li>
+<li>x-button/x-button-script.js</li>
+</ul>
+
+<p>x-button.html 的內容：</p>
+
+<pre><code>&lt;template id="x-button-template"&gt;
+    &lt;style&gt;
+        @import 'x-button/x-button-style.css';
+    &lt;/style&gt;
+
+    &lt;div class="x-button"&gt;
+        &lt;i class="icon"&gt;&lt;/i&gt;
+        &lt;div class="content"&gt;&lt;content&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/template&gt;
+
+&lt;script src="x-button-script.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>CSS 跳過，js 的內容：</p>
+
+<pre><code>var doc = document.currentScript.ownerDocument;
+var tpl = doc.getElementById('x-button-template');
+var xButtonProto = Object.create(HTMLElement.prototype);
+
+xButtonProto.createdCallback = function () {
+    var root = this;
+    var host = this.webkitCreateShadowRoot();
+    var clone = tpl.content.cloneNode(true);
+    host.appendChild(clone);
+};
+
+document.register('x-button', {prototype: xButtonProto});
+</code></pre>
+
+<p>最後 html 的內容：</p>
+
+<pre><code>&lt;link rel="import" href="x-button/x-button.html"&gt;
+
+&lt;x-button&gt;Super Button&lt;/x-button&gt;
+</code></pre>
+
+<h4>Library</h4>
+
+<p>瀏覽器的實作，目前是 Chrome 最完整，不過都還在測試，要自己去把功能打開，其中 HTML Imports 比較新，Firefox 也還不支援，不過想要用的話還是可以透過兩套 JavaScript Library 來用，一個是 Google 的 Polymer，另外一套是 Mozilla 的 <a href="http://www.x-tags.org/">&lt;x-tags&gt;</a>，Mozilla 的比較單純，就是可以方便定義 Custom Element 的一套 Library，看上面的介紹可以知道要定義一個 custom element 有很多地方要處理，x-tags 則是另外定義了一套 API 來把東西都集中起來，順便也把 custom element 登錄到文件內，另外也開了一個 repository 來收集大家做的 custom element，至於底層的部份，其實是用 Polymer 的 polyfill - platform.js。</p>
+
+<p>Polymer 這套涵蓋的範圍就比較大了，首先它為了讓 Web Component 的相關新標準可以在現在的主流瀏覽器上動，它把這些標準的 polyfill 的做好了，接著基於這些標準做了 polymer-element 和 data binding 機制等核心的功能，然後開發者就可以用這些東西建構自己想要的 custom component，當然它也提供一些常用的 cusotm element，拼裝起來就可以把 application 建構出來。</p>
+
+<p>Polymer 其實除了上面說的三個標準外，還做了好幾個 polyfill，包括 Web Animations、Pointer Event 以及目前沒有在標準內的 binding 機制我覺得終極目標應該是會和 AngularJS 相輔相成，畢竟現在 AngularJS 的 directive 機制就有點像是 Web Component + data binding 的組合。</p>
+
+<h4>Summary</h4>
+
+<p>其實 Web Component 真的是越看越覺得細節很多，這篇文章其實還是有不少沒提到的細節，不過大部分都可以在參考文獻中找到，有很多東西其實都還在進行中，文件不完整，找的到的範例也太過單純，不過相信資源會越來越完整，目前看起來 Web Component 的潮流遲早會成為主流，加上 Google 還把這麼多標準的 polyfill 都做好了，AngularJS 也把 component 的模式在開發者之間帶起來，我想整個潮流只會越來越快。</p>
+
+<h4>Reference</h4>
+
+<p>最後整理一下參考資料，有不少細節和一些相關的東西這篇文章還沒有講，之後有機會在分享吧。首先是 w3c 的 editor draft，包含三份 spec 還有一篇 <a href="http://w3c.github.io/webcomponents/explainer/">intro</a>：</p>
+
+<ul>
+<li><a href="http://w3c.github.io/webcomponents/">Web Component Editor Draft</a></li>
+<li><a href="http://w3c.github.io/webcomponents/spec/shadow/">Shadow DOM Editor Draft</a></li>
+<li><a href="http://w3c.github.io/webcomponents/spec/custom/">Custom Element Editor Draft</a></li>
+<li><a href="http://w3c.github.io/webcomponents/spec/imports/">HTML Imports Editor Draft</a></li>
+</ul>
+
+<p>Specs：</p>
+
+<ul>
+<li><a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a></li>
+<li><a href="http://www.w3.org/TR/custom-elements/">Custom Element</a></li>
+<li><a href="http://www.w3.org/TR/html-imports/">HTML Imports</a></li>
+<li><a href="http://www.w3.org/TR/pointerevents/">Pointer Events</a></li>
+<li><a href="http://www.w3.org/TR/web-animations/">Web Animations</a></li>
+</ul>
+
+<p>然後 HTML5 Rocks 有好幾篇文章：</p>
+
+<ul>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/customelements/">Custom Element</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/imports/">HTML Imports</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/template/">Template</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/">Shadow DOM 101</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-201/">Shadow DOM 201</a>，特別要注意現在 pseudo 屬性已經沒了，改成 part 了。</li>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom-301/">Shadow DOM 301</a></li>
+</ul>
+
+<p>看到各主題的篇數就知道什麼東西比較複雜了，還有一些其他地方的介紹文章：</p>
+
+<ul>
+<li><a href="http://css-tricks.com/modular-future-web-components/">Modular Future Web Components</a></li>
+<li><a href="http://html5-demos.appspot.com/static/webcomponents/index.html">&lt;web&gt;components&lt;/web&gt;</a></li>
+<li><a href="http://robdodson.me/blog/2013/08/20/exploring-html-imports/">Exploring HTML Imports</a></li>
+</ul>
+
+<p>一個 Web Component 的 <a href="http://jonrimmer.github.io/are-we-componentized-yet/">支援度檢查表</a> 和 shadow DOM <a href="http://html5-demos.appspot.com/static/shadowdom-visualizer/index.html">視覺化工具</a>。Google 推廣還算蠻用力的，今年的 Google IO 有不少 <a href="https://developers.google.com/events/io/sessions">場次</a> 有相關，還有一個 Google Plus <a href="https://plus.google.com/103330502635338602217/posts">專頁</a>。</p>
+
+<p>Libraries 的就是上面說到的兩個，Google 的 Polymer，建議可以去他的 Github 看看，然後還有 Mozilla 的 x-tags 和 Brick，其中 Brick 沒說到，不過他是基於 x-tag 的專案，要來收集各種 custom element，然後未來可以疊床架屋用的：</p>
+
+<ul>
+<li><a href="http://www.polymer-project.org/">Polymer</a></li>
+<li><a href="http://www.x-tags.org/">x-tags</a></li>
+<li><a href="http://mozilla.github.io/brick/">Brick</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2013/11/27/web_component/</link>
+<guid>https://blog.othree.net/log/2013/11/27/web_component/</guid>
+<category>script</category>
+<pubDate>2013-11-27 19:35</pubDate>
+</item>
 
 <item>
 <title>Mobile Web Application 甘苦談</title>
@@ -235,7 +512,7 @@ str.target;            // undefined
 
 <p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
 
-<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 [jQuery.extend][] 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
+<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 <a href="http://api.jquery.com/jQuery.extend/">jQuery.extend</a> 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
 
 <pre><code>_.defaults(options, defaultOptions);
 </code></pre>
@@ -476,123 +753,6 @@ domnode.dispatchEvent(event);
 <guid>https://blog.othree.net/log/2012/09/06/ie-bug/</guid>
 <category>script</category>
 <pubDate>2012-09-06 00:30</pubDate>
-</item>
-
-<item>
-<title>jQuery.Deferred.pipe</title>
-<description><![CDATA[<p>這次的 COSCUP 有<a href="http://blog.othree.net/log/2012/08/20/coscup-2012-slides/">介紹</a>到 <a href="http://jquery.com/">jQuery</a> 的 <a href="http://api.jquery.com/category/deferred-object/">deferred</a>，當時沒講到的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a>，其實是非常強大的，當我開始會使用 pipe 時，那種衝擊不遜於當初看到 deferred 和 <a href="http://api.jquery.com/jQuery.when/">when</a> 的時候。deferred 是用來監聽非同步變數的狀態，簡單說就是拿到變數的時候，程式還不知道它的值是什麼，deferred 常使用於像是 ajax call，使用者回應等等地方，而配合 deferred 的 when 則是用來監聽複數個 deferred 物件，利用 when 還可以處理比較複雜的非同步相依性問題，不過其實光是有這兩個工具，實際開發一些 Web Application 偶爾還是會覺得有不夠的地方。</p>
-
-<p>先舉一個簡單的例子，要做一個登入頁面，然後要支援 <a href="http://en.wikipedia.org/wiki/One-time_password">one time password</a>(OTP)，就是像 battle.net 或是 google 的兩步認證那樣，如果簡單寫的話，用 callback，第一階段的程式碼：</p>
-
-<pre><code>$.post('/api/login', idpw, function (res) {
-    if (res.requireOTP) {
-        showOTPUI();
-    } else {
-        loginSuccess();
-    }
-}, loginFail);
-</code></pre>
-
-<p>然後接著使用者輸入認證碼後的部份：</p>
-
-<pre><code>$.post('/api/', otp, loginSuccess, loginFai);
-</code></pre>
-
-<p>這兩段程式碼的流程其實很簡單，就是如果帳號密碼錯，執行 loginFail，如果對的話，看有沒有需要 OTP 驗證，沒需要的話執行 loginSuccess，需要的話再跟使用者要 OTP，然後送去 server 做驗證，結果正確的話執行 loginSuccess，不正確的話執行 loginFail，可以畫成流程圖如下：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7786699632/" title="Flickr 上 othree 的 no pipe"><img src="//farm9.staticflickr.com/8289/7786699632_be23a7d0fa_o.png" width="761" height="172" alt="no pipe"/></a></p>
-
-<p>這個流程基本上沒問題，可是身為一個程式設計師，看到重複的東西出現，就會想要把它拿掉，在這張流程圖中什麼東西重複出現了呢，就是最後的終點，Success 和 Fail 分別出現兩次，看到這種終點出現兩次就會很想修改掉，這時候 pipe 就派上用場了。</p>
-
-<p>Pipe 顧名思義就是管路，和 linux 作業系統命令列介面的 <a href="http://en.wikipedia.org/wiki/Pipeline_(Unix)">pipeline</a> 很像，一樣是一個程式處理完，結果丟到下一個程式繼續處理，一個接一個這樣，只不過 deferred 的 pipe 處理的是非同步的流程，如果使用 jQuery 的 pipe 來處理這個問題，程式碼大概會變成：</p>
-
-<pre><code>$.post('/api/login', idpw).pipe(function (res) {
-    _dfd = $.Deferred();
-    if (res.requireOTP) {
-        showOTPUI(_dfd);
-    } else {
-        _dfd.resolve();
-    }
-    return _dfd;
-}).then(loginSuccess, loginFail);
-</code></pre>
-
-<p>showOTPUI 那邊則要處理使用者輸入認證碼後的行為：</p>
-
-<pre><code>$.post('/api/', otp, _dfd.resolve, _dfd.reject);
-</code></pre>
-
-<p>這樣的程式碼就可以看到重複的 loginSuccess 和 loginFail 消失了，流程圖則變成像是下面這樣：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7793084172/" title="Flickr 上 othree 的 pipe"><img src="//farm8.staticflickr.com/7261/7793084172_6b3bcbf282_o.png" width="761" height="212" alt="pipe"/></a></p>
-
-<p>再舉一個例子，假設某個網路服務的使用者資料更新，要同時在前端處理上傳頭像、加密資料等，流程可能會是：</p>
-
-<ol>
-<li>檢查欄位</li>
-<li>上傳頭像</li>
-<li>跟 server 要求加密用的 key</li>
-<li>加密資料</li>
-<li>把資料上傳</li>
-</ol>
-
-<p>這樣的流程中，有三個動作是跟 server 作溝通的非同步工作，分別是上傳頭像、跟 server 要 key 和最後的把資料上傳，但是這五個動作又要照順序作，這種情形就非常適合使用 pipe，下面是一個大概的範例，先定義三個後面 pipe 裡面會用到函數：</p>
-
-<pre><code>var validator = function ($form) {
-    return $.Deferred()[_validate($form)? 'resolve' : 'reject']();
-};
-
-var upload = function ($file) {
-    var prepared = prepare($file);
-    return $.post(prepared);
-};
-
-var encrypt = function (data, key) {
-    var crypt_data = _encrypt(data, key);
-    return $.Deferred().resolve(crypt_data);
-};
-</code></pre>
-
-<p>這些函數在寫的時候要注意到，他們回傳的最好都是 deferred 物件，根據情況可以直接決定它的狀態，接著是重點的，表單的送出事件：</p>
-
-<pre><code>$('#profile-form').on('submit', function () {
-    var $form = $(this),
-        data = $form.serialize();
-
-    validate($form).pipe(function () {
-        return upload($form.find('[name=avatar]'));
-    }).pipe(function (avatar_id) {
-        data.avatar_id = avatar_id;
-    }).pipe(function () {
-        return $.get('/api/key');
-    }).pipe(function (key) {
-        return encrypt(data, key);
-    }).pipe(function (crypt_data) {
-        return $.post('/api/profile', crypt_data);
-    }).done(function () {
-        //Do some response to user
-    });
-});
-</code></pre>
-
-<p>而除了這類的應用外，還有一個用途，就是處理複雜的動畫效果，在 COSCUP 的 queue 的那部分，最後的例子，要把 #A, #B, #C 照順序 fade out，其實也是可以用 pipe 來處理，而這要多虧 jQuery 的 <a href="http://api.jquery.com/promise/">.promise</a> 讓 <a href="http://api.jquery.com/queue/">queue</a> 和 deferred 可以接在一起，程式碼如下：</p>
-
-<pre><code>$('#A').fadeOut().promise().pipe(function () {
-    return $('#B').fadeOut().promise();
-}).pipe(function () {
-    return $('#C').fadeOut().promise();
-});
-</code></pre>
-
-<p>如果單純只是作動畫，那這樣寫並沒有比較好，不過要是你的動畫會和一些其他的 deferred 物件整合、串接，那這功能就很好用了。</p>
-
-<p>最後下個小結論，deferred 是用來代表非同步的變數，when 是平行處理非同步變數，也可以說是並聯的狀態，pipe 則是處理序列的非同步變數，也可以說是串聯的狀態，並聯和串聯當然可以在自己任意連接，所以就可以兼顧到各種狀況了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/</link>
-<guid>https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/</guid>
-<category>script</category>
-<pubDate>2012-08-21 18:41</pubDate>
 </item>
 
 

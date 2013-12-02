@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000763" baseName="javascript-object-you-dont-know">你所不知道的 JavaScript Object</b:listData>
+
+			<b:previous>
+				<b:mTitle>消失的 video</b:mTitle>
+				<b:mDate>2013-08-26</b:mDate>
+				<b:mBase>blinked-video</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>OSX 裝 ruby 1.9.3p392 編譯問題</b:mTitle>
+				<b:mDate>2013-10-24</b:mDate>
+				<b:mBase>osx-ruby-193p392</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000763" baseName="javascript-object-you-dont-know">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-09-16</b:date>
+				<b:time>20:47:28</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>你所不知道的 JavaScript Object</b:title>
+			<b:content>
+				<b:summary>以前在寫 VB 時，看到物件有 set/get 可以用，你可以用簡單的存取方式設定或取得物件的某個屬性，但是實際上存取時做一些操作和運算，對物件外來說，就和一般屬性一樣的，當時覺得這個特性還蠻方便的，不過這不是所有程式語言都有的，像是當年的 JavaScript 就沒有，不過時光飛逝，歲月如梭，其實現在 JavaScript 也支援 get/set 了，只是要用 defineProperty 來設定，沒辦法用 Good Part 裡面建議的，單純用 object literal notation，當然比較舊的 IE 也不支援，寫起來如下： var square = { side: 1 }; Object.defineProperty(square, 'area', { get: function () { return Math.pow(this.side, 2); }, set:...</b:summary>
+				<b:mainContent><p>以前在寫 VB 時，看到物件有 set/get 可以用，你可以用簡單的存取方式設定或取得物件的某個屬性，但是實際上存取時做一些操作和運算，對物件外來說，就和一般屬性一樣的，當時覺得這個特性還蠻方便的，不過這不是所有程式語言都有的，像是當年的 JavaScript 就沒有，不過時光飛逝，歲月如梭，其實現在 JavaScript 也支援 get/set 了，只是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty">defineProperty</a> 來設定，沒辦法用 Good Part 裡面建議的，單純用 object literal notation，當然比較舊的 IE 也不支援，寫起來如下：</p>
+
+<pre><code>var square = {
+    side: 1
+};
+
+Object.defineProperty(square, 'area', {
+    get: function () {
+        return Math.pow(this.side, 2);
+    },
+    set: function (val) {
+        this.side = Math.pow(val, 0.5);
+    }
+});
+</code></pre>
+
+<p>不過，defineProperty 的功能可不止於此，它提供了更改更為底層設定的能力，包括 configurable、enumerable 和 writable 三個設定。configurable 表示這個屬性的設定是否可以再次用 defineProperty 更改，writable 比較簡單就是表示這個屬性的值是否可以修改，enumerable 則是設定這個屬性在列舉的時候會不會被列出，物件的列舉其實就是用 <code>for in</code>：</p>
+
+<pre><code>for (attr in obj) {
+    obj[attr] = 'foo';
+}
+</code></pre>
+
+<p>如果有在用 JSLint 可能會看過這樣寫的話都會跳出下面的錯誤訊息：</p>
+
+<blockquote>
+  <p>The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype</p>
+</blockquote>
+
+<p>這是因為用 <code>for in</code> 的話，會把 prototype 裡面的屬性也列舉出來，這樣會有什麼問題呢，以前在做陣列的新 method 的 polyfill 時，會有個狀況就是，我們手動新增的 method，會在列舉時被列出，所以變成所有的陣列都不能用 <code>for in</code> 來跑，但是現在有 defneProperty 的 enumerable 了，未來在有類似的狀況，可以直接給陣列新增 method 而不會影響 <code>for in</code> 的行為。</p>
+
+<p>除了 defineProperty 之外，還有 defineProperties 可以大量設定屬性，另外也可以在 Object.create 時直接設定好。</p>
+
+<p>第二個要說的是，現在 JavaScript 的物件可以 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal">封</a>(seal) 起來或是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze">凍</a>(freeze) 起來了，seal 做的事情是限制物件屬性的新增或刪除，既有屬性的值還是可以修改，freeze 則是把物件完全凍結住，連修改屬性都不可以。而且這些行為是不可逆的，沒有提供可以 unseal 或是 unfreeze 的方法，不過倒是有 <code>isSealed</code> 和 <code>isFrozen</code> 可以判斷物件狀態。</p>
+
+<p>在 strict mode 下，上面兩個特性有限制的地方在被違反的時候，都會 throw error，普通模式下是不會有錯誤，不過他的行為還是不變，使用時需要注意。</p>
+
+<p>最後要介紹的是還不能使用的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">observe</a>，observe 又稱為觀察者，在 Backbone 有利用 set 和事件系統來實做，是在開發應用程式時很有用的 pattern，TC39 有打算把它加進 JavaScript 之中，目前還只有草案就是，要能用應該還要好一陣子就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
