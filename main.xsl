@@ -960,11 +960,54 @@ google_color_url = "008000";
     </xsl:attribute>
 </xsl:template>
 
+<xsl:template name="src-n">
+    <xsl:param name="set"/>
+    <xsl:param name="res"/>
+    <xsl:param name="def"/>
+    <xsl:variable name="src">
+        <xsl:for-each select="str:tokenize($set, ',')">
+            <xsl:if test="$res = '' and not(contains(normalize-space(.), ' '))">
+                <xsl:value-of select="normalize-space(.)"/>
+            </xsl:if>
+            <xsl:if test="substring-after(normalize-space(.), ' ') = $res">
+                <xsl:value-of select="substring-before(normalize-space(.), ' ')"/>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:variable>
+    <xsl:attribute name="src">
+        <xsl:choose>
+            <xsl:when test="$src != ''">
+                <xsl:value-of select="$src"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$def"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:attribute>
+</xsl:template>
+
 <!-- template copy without namespace -->
 
 <xsl:template mode="copy-no-ns" match="*">
 <xsl:element name="{local-name()}">
     <xsl:choose>
+        <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
+            <xsl:call-template name="src-n">
+                <xsl:variable name="p" select="@*[local-name() = 'src-1']" />
+                <xsl:with-param name="set"><xsl:value-of select="substring($p, 19, string-length($p))"/></xsl:with-param>
+                <xsl:with-param name="res">1x</xsl:with-param>
+                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[local-name() != 'src']" />
+        </xsl:when>
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src-2'], '2x')">
+            <xsl:call-template name="src-n">
+                <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'src-2']"/></xsl:with-param>
+                <xsl:with-param name="res">2x</xsl:with-param>
+                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[local-name() != 'src']" />
+        </xsl:when>
         <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'srcset'], '')">
             <xsl:call-template name="srcset">
                 <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
