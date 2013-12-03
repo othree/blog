@@ -8,7 +8,7 @@
 <xsl:param name="canonical">https://blog.othree.net</xsl:param>
 <xsl:param name="mime">html</xsl:param>
 <xsl:param name="dpr">1</xsl:param>
-<xsl:param name="w">m</xsl:param>
+<xsl:param name="w">s</xsl:param>
 <xsl:variable name="blog" select="//b:blog" />
 <xsl:variable name="blogData" select="document('sidebar.xml')" />
 <xsl:variable name="blogCategories" select="$blogData//b:blogData/b:categories" />
@@ -993,8 +993,7 @@ google_color_url = "008000";
     <xsl:choose>
         <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
             <xsl:call-template name="src-n">
-                <xsl:variable name="p" select="@*[local-name() = 'src-1']" />
-                <xsl:with-param name="set"><xsl:value-of select="substring($p, 19, string-length($p))"/></xsl:with-param>
+                <xsl:with-param name="set"><xsl:value-of select="substring(@*[local-name() = 'src-1'], 19)"/></xsl:with-param>
                 <xsl:with-param name="res">1x</xsl:with-param>
                 <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
