@@ -311,7 +311,6 @@
                     <p id="stickers">
                         <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
                         <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
-                        <a xmlns:sioc="http://rdfs.org/sioc/ns#" rel="sioc:has_owner" href="https://creativecommons.net/othree"><img src="/images/cc.png" /></a>
                     </p>
                 </aside>
             </div>
@@ -324,7 +323,7 @@
                     <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 標準">CSS</a>
                     <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
                     <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
-                    <a href="http://creativecommons.org/licenses/by/3.0/tw/">CC-BY-3.0</a>
+                    <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
                     <a href="https://plus.google.com/108698651587282496682?rel=author">Google+</a>
                 </p>
             </footer>
