@@ -5,10 +5,49 @@
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-11-05 15:59</lastBuildDate>
+<lastBuildDate>2013-12-02 21:45</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Resoponsive Image 新標準：src-N</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11132191124/" title="Mozilla l10n Workshop by othree, on Flickr"><img src="//farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg" width="1024" height="683" alt="Mozilla l10n Workshop" src-1="(max-width: 768px)  //farm8.staticflickr.com/7448/11132191124_748877076f.jpg 1x, //farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg 2x" src-2="//farm8.staticflickr.com/7448/11132191124_c3e64f78a7_k.jpg 2x" /></a></p>
+
+<p>上週看到 <a href="http://html5doctor.com/responsive-images-end-of-year-report/">Responsive images - end of year report</a> 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經被落伍了，現在呼聲最高的是 <a href="http://tabatkins.github.io/specs/respimg/Overview.html#syntax">src-N</a> 屬性。</p>
+
+<p>src-N 的 N 是正整數，所以就是 <code>src-1</code>、<code>src-2</code>、<code>src-3</code> 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。</p>
+
+<p>src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個 media query 作 prefix，之後只給針對解析度分開的 srcset 值，例如：</p>
+
+<pre><code>src-1="(max-width: 768px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8.jpg 1x, //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8_b.jpg 2x"
+src-2="//farm4.staticflickr.com/3820/11153957705_eafe482d62_k.jpg 2x"
+</code></pre>
+
+<p>當然解析度是可選的，所以也可以一個 media query 只配一張圖片：</p>
+
+<pre><code>src-1="(max-width: 768px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8.jpg"
+src-2="(max-width: 2560px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8_b.jpg"
+src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_k.jpg"
+</code></pre>
+
+<p>這種寫法是比較簡單好懂得，第二種寫法是只提供一個 src-N 屬性，然後告訴瀏覽器你想要的 Resoponsive Design 的 media query 的中間點和圖片想要的寬度，然後把所有可以提供的圖片和他的大小都提供出來，瀏覽器會根據實際的 device 來計算找到最適合的圖片，拿標準上的範例來說明：</p>
+
+<pre><code>&lt;img src-1="100% (30em) 50% (50em) calc(33% - 100px);
+            pic100.png 100, pic200.png 200, pic400.png 400,
+            pic800.png 800, pic1600.png 1600, pic3200.png 3200"&gt;
+</code></pre>
+
+<p>首先，<code>;</code> 前面那串稱為 size viewport list，理論上都會是單數個值，會是圖片寬度、viewport 中間點、圖片寬度、中間點這樣的循環，所以上面的 <code>(30em)</code> 和 <code>(50em)</code> 就是你的 responsive design layout 的不同 layout 切換的條件，另外三個值則是圖片在那個 layout 下希望的寬度。也就是螢幕寬度小於 30em 時，你這個版面這張圖片寬度會是 100%，如果螢幕介於 30-50em，那圖片寬度會是 50%，如果螢幕大於 50em，那圖片寬度就是 33%-100px。接著的 <code>;</code> 後面的內容則是你提供的各種大小的圖片和他的寬度，然後接著神奇的事情就發生了，瀏覽器會根據你的螢幕寬度決定要取哪個 layout，用那個 layout 的圖片寬度去計算實際上圖片大約的大小，乘上解析度，然後自己去後面那堆候選的圖片檔案找最適合的來用。</p>
+
+<p>第二種語法的缺點就是不能忽略 device pixel ratio，不然在大部分情形是方便簡單很多的。回頭看目前出現過的三種語法，目前我是最喜歡 src-N 的，雖然我是覺的一致性、整齊性比 srcset 還要差，不過比起 &lt;picture&gt; 實在都好很多，只是目前依然也還沒有瀏覽器支援，其實 srcset 之前也都沒人支援，webkit 的支援在發布前被檔下了，後來的討路就產生了現在的 src-N，目前看起來也沒其他候選標準，或許過陣子就會有瀏覽器開始支援這種寫法了吧。 </p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/12/02/src-n/</link>
+<guid>https://blog.othree.net/log/2013/12/02/src-n/</guid>
+<category>css-html</category>
+<pubDate>2013-12-02 21:45</pubDate>
+</item>
 
 <item>
 <title>Transition 之惡</title>
@@ -750,23 +789,6 @@ http://flic.kr/p/9m9Cmj
 <guid>https://blog.othree.net/log/2011/03/05/revcanonical-and-relshortlink/</guid>
 <category>css-html</category>
 <pubDate>2011-03-05 22:34</pubDate>
-</item>
-
-<item>
-<title>HTML5 Web Developer Edition</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5498667619/" title="Flickr 上 othree 的 HTML5 -- Edition for Web Developers"><img src="//farm6.static.flickr.com/5171/5498667619_1817f41fba.jpg" width="500" height="475" alt="HTML5 -- Edition for Web Developers" /></a></p>
-
-<p><a href="http://dev.w3.org/html5/spec/">HTML5 標準的文件</a> 和以前的版本有些地方有很大的不同，像是標籤的語意說明比起以前就詳細很多，還會提出範例，另外也更詳細的規範了瀏覽器應該怎樣實作的細節，也因此整份文件的長度非常驚人，WHATWG 那邊有提供 <a href="http://www.whatwg.org/specs/web-apps/current-work/html-a4.pdf">A4 PDF 的版本</a> ，將近有 800 頁的內容，非常驚人， <a href="http://www.w3.org/TR/html401/html40.pdf.gz">HTML 4</a> 也才接近 400 頁而已，文字量則接近 3 倍，而這麼多的內容其實不是所有人都需要的，例如網頁設計師，它就不需要理解一些 API 的實作細節，他只要知道不同的標籤應該怎樣使用，怎樣編排網頁結構符合語義，因此 <a href="http://germanforblack.com/">Ben Schwars</a> 就做出了一份針對 Web Developer 的 HTML5 文件「<a href="http://developers.whatwg.org/">HTML5 - Edition for Web Developers</a>」，只保留了 Web Developer 需要的資訊，而且還整個把頁面樣式大改，不只是更漂亮而已，還針對可讀性下了不少 <a href="http://www.germanforblack.com/articles/moving-towards-readable-w3c-specs">功夫</a> ，還有搜尋、單一章節的目錄等，閱讀的體驗實在是提昇非常多。</p>
-
-<p>而一如往常的，W3C 那邊也有一份 <a href="http://dev.w3.org/html5/spec-author-view/">HTML5 Edition for Web Authors</a> ，兩份其實是同樣的文件，我在 Ben Schwars 的 <a href="http://www.slideshare.net/benschwarz/building-a-better-web">Building a better web</a> 這份投影片中看到的網址就是 W3C 這邊的，目前的關係大概也只是不同的更新版本吧，我剛發現時幾乎是只有配色不同，現在樣式兩邊就有些差異了，不過章節內容還是差不多，順序有些調動，喔對了，這份投影片第 14 頁還有個不錯 W3C 標誌。</p>
-
-<p>最後要提的是 Ben Schwars 是自己主動建立了這份文件的，他在看 HTML5 標準後受不了，跑去 WHATWG IRC 說他要做這東西，編輯說 ok 後他就開始動手了，他也把這段 <a href="http://germanforblack.com/articles/taking-the-web-back">過程</a> 寫出來，呼籲大家盡量參與標準的發展，不要只是對 W3C 有意見卻不參與不貢獻。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/03/05/html5-developer-edition/</link>
-<guid>https://blog.othree.net/log/2011/03/05/html5-developer-edition/</guid>
-<category>css-html</category>
-<pubDate>2011-03-05 16:19</pubDate>
 </item>
 
 

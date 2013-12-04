@@ -9,6 +9,59 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000772" baseName="src-n">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-02</b:date>
+				<b:time>21:45:59</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Resoponsive Image 新標準：src-N</b:title>
+			<b:content>
+				<b:summary> 上週看到 Responsive images - end of year report 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經被落伍了，現在呼聲最高的是 src-N 屬性。 src-N 的 N 是正整數，所以就是 src-1、src-2、src-3 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。 src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11132191124/" title="Mozilla l10n Workshop by othree, on Flickr"><img src="//farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg" width="1024" height="683" alt="Mozilla l10n Workshop" src-1="(max-width: 768px)  //farm8.staticflickr.com/7448/11132191124_748877076f.jpg 1x, //farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg 2x" src-2="//farm8.staticflickr.com/7448/11132191124_c3e64f78a7_k.jpg 2x" /></a></p>
+
+<p>上週看到 <a href="http://html5doctor.com/responsive-images-end-of-year-report/">Responsive images - end of year report</a> 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經被落伍了，現在呼聲最高的是 <a href="http://tabatkins.github.io/specs/respimg/Overview.html#syntax">src-N</a> 屬性。</p>
+
+<p>src-N 的 N 是正整數，所以就是 <code>src-1</code>、<code>src-2</code>、<code>src-3</code> 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。</p>
+
+<p>src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個 media query 作 prefix，之後只給針對解析度分開的 srcset 值，例如：</p>
+
+<pre><code>src-1="(max-width: 768px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8.jpg 1x, //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8_b.jpg 2x"
+src-2="//farm4.staticflickr.com/3820/11153957705_eafe482d62_k.jpg 2x"
+</code></pre>
+
+<p>當然解析度是可選的，所以也可以一個 media query 只配一張圖片：</p>
+
+<pre><code>src-1="(max-width: 768px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8.jpg"
+src-2="(max-width: 2560px) //farm4.staticflickr.com/3820/11153957705_50c0f5a7d8_b.jpg"
+src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_k.jpg"
+</code></pre>
+
+<p>這種寫法是比較簡單好懂得，第二種寫法是只提供一個 src-N 屬性，然後告訴瀏覽器你想要的 Resoponsive Design 的 media query 的中間點和圖片想要的寬度，然後把所有可以提供的圖片和他的大小都提供出來，瀏覽器會根據實際的 device 來計算找到最適合的圖片，拿標準上的範例來說明：</p>
+
+<pre><code>&lt;img src-1="100% (30em) 50% (50em) calc(33% - 100px);
+            pic100.png 100, pic200.png 200, pic400.png 400,
+            pic800.png 800, pic1600.png 1600, pic3200.png 3200"&gt;
+</code></pre>
+
+<p>首先，<code>;</code> 前面那串稱為 size viewport list，理論上都會是單數個值，會是圖片寬度、viewport 中間點、圖片寬度、中間點這樣的循環，所以上面的 <code>(30em)</code> 和 <code>(50em)</code> 就是你的 responsive design layout 的不同 layout 切換的條件，另外三個值則是圖片在那個 layout 下希望的寬度。也就是螢幕寬度小於 30em 時，你這個版面這張圖片寬度會是 100%，如果螢幕介於 30-50em，那圖片寬度會是 50%，如果螢幕大於 50em，那圖片寬度就是 33%-100px。接著的 <code>;</code> 後面的內容則是你提供的各種大小的圖片和他的寬度，然後接著神奇的事情就發生了，瀏覽器會根據你的螢幕寬度決定要取哪個 layout，用那個 layout 的圖片寬度去計算實際上圖片大約的大小，乘上解析度，然後自己去後面那堆候選的圖片檔案找最適合的來用。</p>
+
+<p>第二種語法的缺點就是不能忽略 device pixel ratio，不然在大部分情形是方便簡單很多的。回頭看目前出現過的三種語法，目前我是最喜歡 src-N 的，雖然我是覺的一致性、整齊性比 srcset 還要差，不過比起 &lt;picture&gt; 實在都好很多，只是目前依然也還沒有瀏覽器支援，其實 srcset 之前也都沒人支援，webkit 的支援在發布前被檔下了，後來的討路就產生了現在的 src-N，目前看起來也沒其他候選標準，或許過陣子就會有瀏覽器開始支援這種寫法了吧。 </p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000767" baseName="bad-part-of-css-transition">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -467,35 +520,6 @@
 			<b:content>
 				<b:summary>WHATWG Blog 兩週前發出的 文章 正式宣告 WHATWG 和 W3C 的 HTML5 分家了，主編 Ian Hickson 有在 mainling list 發出一篇比較完整的 說明 ，主要還是兩邊方向不一樣，不過這篇文章也把一些過去的事情說的比較清楚，像是 WHATWG 的標準以前正式名稱是 Web Application，HTML5 只是別名，而現在的本版正式名稱則改成 HTML Living Standard ，還有把裡面一些標準拆分成子標準則是 W3C 那邊這樣做，WHATWG 則是一直維持全部東西塞在一起的作法，而最重要的差異，當然還是 WHATWG 不會讓 HTML 標準穩定下來，未來會有一個確定版本的 HTML5 會是 W3C 的， WHATWG...</b:summary>
 				<b:mainContent><p>WHATWG Blog 兩週前發出的 <a href="http://blog.whatwg.org/html-and-html5">文章</a> 正式宣告 WHATWG 和 W3C 的 HTML5 分家了，主編 Ian Hickson 有在 mainling list 發出一篇比較完整的 <a href="http://lists.w3.org/Archives/Public/public-whatwg-archive/2012Jul/0119.html">說明</a> ，主要還是兩邊方向不一樣，不過這篇文章也把一些過去的事情說的比較清楚，像是 WHATWG 的標準以前正式名稱是 Web Application，HTML5 只是別名，而現在的本版正式名稱則改成 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML Living Standard</a> ，還有把裡面一些標準拆分成子標準則是 W3C 那邊這樣做，WHATWG 則是一直維持全部東西塞在一起的作法，而最重要的差異，當然還是 WHATWG 不會讓 HTML 標準穩定下來，未來會有一個確定版本的 HTML5 會是 W3C 的， WHATWG 版的會隨時更新，只要有新需求，有錯誤。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000688" baseName="wai-aria-is-more-than-acc">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2011-08-26</b:date>
-				<b:time>01:28:35</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>WAI-ARIA is More Than Accessibility</b:title>
-			<b:content>
-				<b:summary> /* A_A */ 這次 COSCUP 分享題目的投影片，授權一樣是 CC-BY，有沒有講者心得就看天了。...</b:summary>
-				<b:mainContent><p>
-<script async="async" class="speakerdeck-embed" data-id="4e8134522d853c00600030bd" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
-
-<p>這次 COSCUP 分享題目的投影片，授權一樣是 CC-BY，有沒有講者心得就看天了。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
