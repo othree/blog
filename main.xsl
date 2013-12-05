@@ -1022,7 +1022,7 @@ google_color_url = "008000";
             </xsl:call-template>
             <xsl:copy-of select="@*[local-name() != 'src']" />
         </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_o') = false">
+        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_') = false">
             <xsl:attribute name="src">
                 <xsl:variable name="p" select="@*[local-name() = 'src']" />
                 <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
