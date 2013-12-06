@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    if (!window.requestAnimationFrame) {
+    if (!window.requestAnimationFrame || !document.documentElement) {
         return;
     }
 
@@ -12,13 +12,13 @@
 
     var scrolling = function () {
         tick = false;
-        var currentScroll = document.body.scrollTop;
+        var currentScroll = document.documentElement.scrollTop;
         if (scroll === currentScroll) {
             return;
         }
         scroll = currentScroll;
-        var offset = parseInt(scroll * 0.5, 10);
-        document.body.style.backgroundPositionY = -offset + 'px';
+        var offset = parseInt(scroll * 0.75, 10);
+        document.body.style.backgroundPosition = "0 " + (-offset) + 'px';
     };
 
     var onscroll = function () {
