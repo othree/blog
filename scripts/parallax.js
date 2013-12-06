@@ -12,13 +12,14 @@
 
     var scrolling = function () {
         tick = false;
-        var currentScroll = document.documentElement.scrollTop;
+        var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
         if (scroll === currentScroll) {
             return;
         }
         scroll = currentScroll;
-        var offset = parseInt(scroll * 0.75, 10);
-        document.body.style.backgroundPosition = "0 " + (-offset) + 'px';
+        var offset = parseInt(scroll * 0.5, 10) % 128;
+        document.body.style.backgroundPosition = "0 " + offset + 'px';
+        document.documentElement.style.backgroundPosition = "0 " + offset + 'px';
     };
 
     var onscroll = function () {
