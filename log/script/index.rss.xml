@@ -5,10 +5,33 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-11-27 19:35</lastBuildDate>
+<lastBuildDate>2013-12-05 10:26</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>AngularJS Data Binding 機制</title>
+<description><![CDATA[<p>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。</p>
+
+<p>結果又是在 StackOverflow 找到重要的<a href="http://stackoverflow.com/questions/9682092/databinding-in-angularjs">參考資料</a>，說到 <code>$digest</code> 和 <code>$apply</code> 這兩個 method，<code>$apply</code> 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 <code>$apply()</code> ，然後 <code>$apply</code> 會去執行 <a href="http://docs.angularjs.org/guide/expression">angular expression</a>，然後接著執行 <code>$digest</code> 檢查資料變化並讓對應的變化發生。所以 AngularJS 的 data binding 作法實際上是，AngularJS Framework 內的 controller function 有經手過的 scope，它會自己接在 function 的後面執行 <code>$apply()</code> 來套用變動，算是一種 dirty check，不過是檢查的很乾淨。</p>
+
+<p>另外還剛好看到今年 <a href="2013.jsconf.eu/">JSConf EU</a> 有一場 <a href="http://2013.jsconf.eu/speakers/marius-gundersen-a-comparison-of-the-twoway-binding-in-angularjs-emberjs-and-knockoutjs.html">A comparison of the two-way binding in AngularJS, EmberJS and KnockoutJS</a> 的演講，不長，二十分而已內容也很不錯，推薦花點時間看看：</p>
+
+<iframe width="420" height="315" src="//www.youtube.com/embed/mVjpwia1YN4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>講者 Marius Gundersen 比較了 AngularJS、EmberJS 和 KnockoutJS 三套 framework 的 data binding 機制，結果是各有優缺點，在最後的問與答也說到現在制定中的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">Object.observer</a> 的 JavaScript 未來新功能，等到這功能正式可以用時，就可以解決現在這些實作大部分的問題。</p>
+
+<p>還有一篇文章 <a href="http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks">Accessors vs Dirty-checking in Javascript Frameworks</a> 有蠻深入的比較現在不同 data binding 實作的特性，就如標題是 Dirty-checking 和 Accessor 兩類實作為主，Accessor 的實作其實就是像 Backbone 那樣，要修改 model 的屬性要用他的 <code>set()</code> 方法來作，才能順便觸發後面的動作。</p>
+
+<p>最後文章寫完才看到 AngularJS 社群第四次聚會 Ticore 已經講過這個主題了，<a href="http://www.slideshare.net/ticore/angularjs-data-binding">投影片</a>內容也還蠻深入的。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/12/05/angularjs-data-binding/</link>
+<guid>https://blog.othree.net/log/2013/12/05/angularjs-data-binding/</guid>
+<category>script</category>
+<pubDate>2013-12-05 10:26</pubDate>
+</item>
 
 <item>
 <title>Web Component</title>
@@ -732,27 +755,6 @@ domnode.dispatchEvent(event);
 <guid>https://blog.othree.net/log/2012/10/28/device-pixel-ratio/</guid>
 <category>script</category>
 <pubDate>2012-10-28 22:42</pubDate>
-</item>
-
-<item>
-<title>我找過最...的 bug</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/7827733700/" title="Flickr 上 othree 的 IE &gt;_&lt;"><img src="//farm8.staticflickr.com/7113/7827733700_a217d1b314.jpg" width="500" height="333" alt="IE &gt;_&lt;"/></a></p>
-
-<p>最近因為總總原因，工作上在弄的東西要開始處理 IE 的相容問題，讓我想起我寫 JavaScript 以來，找過最難找的一個 bug，當然不意外的，這是一個 IE 上發生的錯誤，因為已經有兩年以上的時間了，所以一些細節其實已經不記得了。</p>
-
-<p>一開始我看到的是有個 JavaScript 錯誤，以前 IE 的 JavaScript 錯誤是只會說有錯誤，錯誤訊息沒什麼幫助，好一點你會看到是哪一行（不過沒說是哪個檔案喔～），於是，我看到了一個不記得是六位數還是七位數的數字，總之是個大到全站的程式碼加起來都沒這麼多的數字...</p>
-
-<p>要定位錯誤發生的位置還有個方法，就是用除錯工具，那時候就是用 <a href="http://www.microsoft.com/en-us/download/details.aspx?id=22185">Script Debugger</a>，然後就會比較接近現在除錯工具那樣用法，不過想當然，那神祕行號的錯誤自然是用 Script Debugger 也定位不到。</p>
-
-<p>到這種情形就只省下最後一招了，排除法，一步一步的把網頁內用到的 script 拿掉，然後看錯誤什麼時候消失，理論上就可以找到錯誤發生的位置了，理應當是這樣的，我一直是這樣相信的，直到我發現頁面上已經被我砍到沒有 script 了，而錯誤訊息依舊。</p>
-
-<p>最後還好我沒放棄，繼續移除其他東西，結果發現這其實是一個 CSS pseudo-class 造成的 JavaScript 錯誤訊息，當下實在是不知道要說什麼好啊～～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/09/06/ie-bug/</link>
-<guid>https://blog.othree.net/log/2012/09/06/ie-bug/</guid>
-<category>script</category>
-<pubDate>2012-09-06 00:30</pubDate>
 </item>
 
 

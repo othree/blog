@@ -9,6 +9,43 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000775" baseName="angularjs-data-binding">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-05</b:date>
+				<b:time>10:26:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>AngularJS Data Binding 機制</b:title>
+			<b:content>
+				<b:summary>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。 結果又是在 StackOverflow 找到重要的參考資料，說到 $digest 和 $apply 這兩個 method，$apply 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 $apply() ，然後 $apply 會去執行 angular expression，然後接著執行 $digest 檢查資料變化並讓對應的變化發生。所以...</b:summary>
+				<b:mainContent><p>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。</p>
+
+<p>結果又是在 StackOverflow 找到重要的<a href="http://stackoverflow.com/questions/9682092/databinding-in-angularjs">參考資料</a>，說到 <code>$digest</code> 和 <code>$apply</code> 這兩個 method，<code>$apply</code> 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 <code>$apply()</code> ，然後 <code>$apply</code> 會去執行 <a href="http://docs.angularjs.org/guide/expression">angular expression</a>，然後接著執行 <code>$digest</code> 檢查資料變化並讓對應的變化發生。所以 AngularJS 的 data binding 作法實際上是，AngularJS Framework 內的 controller function 有經手過的 scope，它會自己接在 function 的後面執行 <code>$apply()</code> 來套用變動，算是一種 dirty check，不過是檢查的很乾淨。</p>
+
+<p>另外還剛好看到今年 <a href="2013.jsconf.eu/">JSConf EU</a> 有一場 <a href="http://2013.jsconf.eu/speakers/marius-gundersen-a-comparison-of-the-twoway-binding-in-angularjs-emberjs-and-knockoutjs.html">A comparison of the two-way binding in AngularJS, EmberJS and KnockoutJS</a> 的演講，不長，二十分而已內容也很不錯，推薦花點時間看看：</p>
+
+<iframe width="420" height="315" src="//www.youtube.com/embed/mVjpwia1YN4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>講者 Marius Gundersen 比較了 AngularJS、EmberJS 和 KnockoutJS 三套 framework 的 data binding 機制，結果是各有優缺點，在最後的問與答也說到現在制定中的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">Object.observer</a> 的 JavaScript 未來新功能，等到這功能正式可以用時，就可以解決現在這些實作大部分的問題。</p>
+
+<p>還有一篇文章 <a href="http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks">Accessors vs Dirty-checking in Javascript Frameworks</a> 有蠻深入的比較現在不同 data binding 實作的特性，就如標題是 Dirty-checking 和 Accessor 兩類實作為主，Accessor 的實作其實就是像 Backbone 那樣，要修改 model 的屬性要用他的 <code>set()</code> 方法來作，才能順便觸發後面的動作。</p>
+
+<p>最後文章寫完才看到 AngularJS 社群第四次聚會 Ticore 已經講過這個主題了，<a href="http://www.slideshare.net/ticore/angularjs-data-binding">投影片</a>內容也還蠻深入的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000770" baseName="web_component">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -743,33 +780,6 @@ domnode.dispatchEvent(event);
 			</b:content>
 
 			<b:comments commentCount="1"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000743" baseName="this">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-05-19</b:date>
-				<b:time>21:25:25</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>this</b:title>
-			<b:content>
-				<b:summary>這次 JSDC 2013 分享的投影片出來了，這次的主題是比較根基的東西，也算是我寫一陣子 JavaScript 後覺得可以整理出來的一個 Pattern，沒聽現場的，應該看投影片也可以知道我說的是什麼，本來題目是 Magic this，後來改成 this 了，不過已經生好的標題圖片不用太可惜，所以還是放上來了。 /*A_A*/...</b:summary>
-				<b:mainContent><p>這次 JSDC 2013 分享的投影片出來了，這次的主題是比較根基的東西，也算是我寫一陣子 JavaScript 後覺得可以整理出來的一個 Pattern，沒聽現場的，應該看投影片也可以知道我說的是什麼，本來題目是 Magic this，後來改成 <strong>this</strong> 了，不過已經生好的標題圖片不用太可惜，所以還是放上來了。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="148e0f10a2b50130c7f86aa80182a416" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/*A_A*/</script>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>

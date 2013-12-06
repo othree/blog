@@ -16,6 +16,79 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000775" baseName="angularjs-data-binding">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-05</b:date>
+				<b:time>10:26:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>AngularJS Data Binding 機制</b:title>
+			<b:content>
+				<b:summary>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。 結果又是在 StackOverflow 找到重要的參考資料，說到 $digest 和 $apply 這兩個 method，$apply 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 $apply() ，然後 $apply 會去執行 angular expression，然後接著執行 $digest 檢查資料變化並讓對應的變化發生。所以...</b:summary>
+				<b:mainContent><p>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。</p>
+
+<p>結果又是在 StackOverflow 找到重要的<a href="http://stackoverflow.com/questions/9682092/databinding-in-angularjs">參考資料</a>，說到 <code>$digest</code> 和 <code>$apply</code> 這兩個 method，<code>$apply</code> 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 <code>$apply()</code> ，然後 <code>$apply</code> 會去執行 <a href="http://docs.angularjs.org/guide/expression">angular expression</a>，然後接著執行 <code>$digest</code> 檢查資料變化並讓對應的變化發生。所以 AngularJS 的 data binding 作法實際上是，AngularJS Framework 內的 controller function 有經手過的 scope，它會自己接在 function 的後面執行 <code>$apply()</code> 來套用變動，算是一種 dirty check，不過是檢查的很乾淨。</p>
+
+<p>另外還剛好看到今年 <a href="2013.jsconf.eu/">JSConf EU</a> 有一場 <a href="http://2013.jsconf.eu/speakers/marius-gundersen-a-comparison-of-the-twoway-binding-in-angularjs-emberjs-and-knockoutjs.html">A comparison of the two-way binding in AngularJS, EmberJS and KnockoutJS</a> 的演講，不長，二十分而已內容也很不錯，推薦花點時間看看：</p>
+
+<iframe width="420" height="315" src="//www.youtube.com/embed/mVjpwia1YN4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>講者 Marius Gundersen 比較了 AngularJS、EmberJS 和 KnockoutJS 三套 framework 的 data binding 機制，結果是各有優缺點，在最後的問與答也說到現在制定中的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">Object.observer</a> 的 JavaScript 未來新功能，等到這功能正式可以用時，就可以解決現在這些實作大部分的問題。</p>
+
+<p>還有一篇文章 <a href="http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks">Accessors vs Dirty-checking in Javascript Frameworks</a> 有蠻深入的比較現在不同 data binding 實作的特性，就如標題是 Dirty-checking 和 Accessor 兩類實作為主，Accessor 的實作其實就是像 Backbone 那樣，要修改 model 的屬性要用他的 <code>set()</code> 方法來作，才能順便觸發後面的動作。</p>
+
+<p>最後文章寫完才看到 AngularJS 社群第四次聚會 Ticore 已經講過這個主題了，<a href="http://www.slideshare.net/ticore/angularjs-data-binding">投影片</a>內容也還蠻深入的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000774" baseName="cc-4">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-04</b:date>
+				<b:time>12:17:22</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Creative Commons 4.0</b:title>
+			<b:content>
+				<b:summary> Creative Commons 4.0 今天正式開始可以用了，雖然前兩週就已經公開消息，不過今天收到的信件通知才提供了新版授權選擇的網頁連結，新版的授權選擇工具還會直接根據你選的授權，告訴你這是不是屬不屬於 Free Culture 的授權，基本的判斷原則是有 NC 或是 ND 的就不能算是 Free Culture License，另外稍微看了一下目前的授權工具，目前中文版的 4.0 授權文件還沒上線，簡單版的也還只有部分單字翻譯了，不過相信這些東西都有在進行，台灣創用 CC 計畫其實也早在上周就發表了新一代的授權方式－創用CC授權 4.0 與大家見面！這篇文章，很清楚的說明 4.0 和 3.0 主要的差異，摘要一下主要的變化： 明文規定可以用網頁連結標注來源 授權人可以要求拿掉重製物上的註名（想要匿名、或是希望不要和衍生著作物有關聯） 違反授權的人有 30 天的時間可以修正 更好讀的文字敘述 其他還有一些以前的模糊地帶也都在這版的更新中修正了，整體來說應該是蠻大的進步，另外 CC 依然在尋求贊助，台灣的創用 CC 計畫是中研院的計畫案支持，不過國際的 CC 組織則是需要靠募款和贊助來維持營運，有興趣支持的也可以贊助一下，還可以拿些紀念品，不過今年的紀念品我不怎麼喜歡就是了。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11200431393/" title="CC4.0 is here by othree, on Flickr"><img src="//farm6.staticflickr.com/5546/11200431393_cbcc23aa1b_o.png" width="275" height="245" alt="CC4.0 is here" /></a></p>
+
+<p>Creative Commons 4.0 今天正式開始可以用了，雖然前兩週就已經公開消息，不過今天收到的信件通知才提供了新版<a href="http://creativecommons.org/choose/">授權選擇</a>的網頁連結，新版的授權選擇工具還會直接根據你選的授權，告訴你這是不是屬不屬於 <a href="http://creativecommons.org/freeworks">Free Culture</a> 的授權，基本的判斷原則是有 NC 或是 ND 的就不能算是 Free Culture License，另外稍微看了一下目前的授權工具，目前中文版的 4.0 授權文件還沒上線，<a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">簡單版</a>的也還只有部分單字翻譯了，不過相信這些東西都有在進行，台灣創用 CC 計畫其實也早在上周就發表了<a href="http://creativecommons.tw/blog/20131127">新一代的授權方式－創用CC授權 4.0 與大家見面！</a>這篇文章，很清楚的說明 4.0 和 3.0 主要的差異，摘要一下主要的變化：</p>
+
+<ul>
+<li>明文規定可以用網頁連結標注來源</li>
+<li>授權人可以要求拿掉重製物上的註名（想要匿名、或是希望不要和衍生著作物有關聯）</li>
+<li>違反授權的人有 30 天的時間可以修正</li>
+<li>更好讀的文字敘述</li>
+</ul>
+
+<p>其他還有一些以前的模糊地帶也都在這版的更新中修正了，整體來說應該是蠻大的進步，另外 CC 依然在尋求<a href="https://donate.creativecommons.org/">贊助</a>，台灣的創用 CC 計畫是中研院的計畫案支持，不過國際的 CC 組織則是需要靠募款和贊助來維持營運，有興趣支持的也可以贊助一下，還可以拿些紀念品，不過今年的紀念品我不怎麼喜歡就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000773" baseName="mozilla_location_service">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -29,10 +102,10 @@
 			<b:category>web</b:category>
 			<b:title>Mozilla Location Service</b:title>
 			<b:content>
-				<b:summary> 最近有明顯覺得 Mozilla 的路變多了，除了瀏覽器之外，還在各種不同面向的發展來維護網路世界的開放與自由，Mozilla Location Service 就是其中的一個計畫。一般而言，要取得位置基本上就是用 GPS 服務或是 AGPS 利用行動網路的基地台來計算位置，不過其實 Google 還有一套資料庫可以用 Wifi 基地台來作輔助甚至定位(WPS)，而他們的資料來源主要是靠街景車掃接的時候順便掃的 wifi 訊號紀錄，GPS、AGPS 加上 WPS 三套系統合作其實已經可以讓你的位置非常準確了，只是目前 Google 的 WPS 的缺點是，畢竟是由一間商業公司把持的，因此 Mozilla 就決定開始這個 Location Service 計畫，希望能讓這種資料庫能有開放自由的版本，就像是 Open Street Map 一樣，不過目前這個 service 還在資料收集階段，其實可以從上面的圖看到，台灣目前的資料點還比日本多喔～ 這篇文章的目的其實是要推廣大家一起來幫忙 Mozilla Location Service 收集資料，雖然現在幫忙收集有點像是放棄資料的任何權利，沒有...</b:summary>
+				<b:summary> 最近有明顯覺得 Mozilla 的路變多了，除了瀏覽器之外，還在各種不同面向的發展來維護網路世界的開放與自由，Mozilla Location Service 就是其中的一個計畫。一般而言，要取得位置基本上就是用 GPS 服務或是 AGPS 利用行動網路的基地台來計算位置，不過其實 Google 還有一套資料庫可以用 Wifi 基地台來作輔助甚至定位(WPS, Wifi Position System)，而他們的資料來源主要是靠街景車掃街的時候順便掃的 wifi 訊號紀錄，GPS、AGPS 加上 WPS 三套系統合作其實已經可以讓你的位置非常準確了，只是目前 Google 的 WPS 的缺點是，畢竟是由一間商業公司把持的，因此 Mozilla 就決定開始這個 Location Service 計畫，希望能讓這種資料庫能有開放自由的版本，就像是 Open Street Map 一樣，不過目前這個 service 還在資料收集階段，其實可以從上面的圖看到，台灣目前的資料點還比日本多喔～ 這篇文章的目的其實是要推廣大家一起來幫忙 Mozilla...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11184970576/" title="Mozilla Location Service by othree, on Flickr"><img src="//farm8.staticflickr.com/7449/11184970576_cbc2dc3989_b.jpg" width="970" height="600" alt="Mozilla Location Service" src-1="(max-width: 768px)  //farm8.staticflickr.com/7449/11184970576_cbc2dc3989.jpg 1x, //farm8.staticflickr.com/7449/11184970576_cbc2dc3989_b.jpg 2x" /></a></p>
 
-<p>最近有明顯覺得 Mozilla 的路變多了，除了瀏覽器之外，還在各種不同面向的發展來維護網路世界的開放與自由，Mozilla Location Service 就是其中的一個計畫。一般而言，要取得位置基本上就是用 GPS 服務或是 AGPS 利用行動網路的基地台來計算位置，不過其實 Google 還有一套資料庫可以用 Wifi 基地台來作輔助甚至定位(WPS)，而他們的資料來源主要是靠街景車掃接的時候順便掃的 wifi 訊號紀錄，GPS、AGPS 加上 WPS 三套系統合作其實已經可以讓你的位置非常準確了，只是目前 Google 的 WPS 的缺點是，畢竟是由一間商業公司把持的，因此 Mozilla 就決定開始這個 <a href="https://location.services.mozilla.com/">Location Service</a> 計畫，希望能讓這種資料庫能有開放自由的版本，就像是 <a href="http://www.openstreetmap.org/">Open Street Map</a> 一樣，不過目前這個 service 還在資料收集階段，其實可以從上面的圖看到，台灣目前的資料點還比日本多喔～</p>
+<p>最近有明顯覺得 Mozilla 的路變多了，除了瀏覽器之外，還在各種不同面向的發展來維護網路世界的開放與自由，<a href="https://location.services.mozilla.com/">Mozilla Location Service</a> 就是其中的一個計畫。一般而言，要取得位置基本上就是用 GPS 服務或是 AGPS 利用行動網路的基地台來計算位置，不過其實 Google 還有一套資料庫可以用 Wifi 基地台來作輔助甚至定位(WPS, Wifi Position System)，而他們的資料來源主要是靠街景車掃街的時候順便掃的 wifi 訊號紀錄，GPS、AGPS 加上 WPS 三套系統合作其實已經可以讓你的位置非常準確了，只是目前 Google 的 WPS 的缺點是，畢竟是由一間商業公司把持的，因此 Mozilla 就決定開始這個 <a href="https://location.services.mozilla.com/">Location Service</a> 計畫，希望能讓這種資料庫能有開放自由的版本，就像是 <a href="http://www.openstreetmap.org/">Open Street Map</a> 一樣，不過目前這個 service 還在資料收集階段，其實可以從上面的圖看到，台灣目前的資料點還比日本多喔～</p>
 
 <p>這篇文章的目的其實是要推廣大家一起來幫忙 Mozilla Location Service 收集資料，雖然現在幫忙收集有點像是放棄資料的任何權利，沒有 agreement 可以簽就是，不過至少可以相信 Mozilla 不太會亂來，<a href="https://mozilla-ichnaea.readthedocs.org/en/latest/api/submit.html">收集的資料</a>看起來也很合理，像是 SSID 就沒有拿，Google 當初因為收集太完整還發生了一些隱私權問題。</p>
 
@@ -62,10 +135,10 @@
 			<b:category>css-html</b:category>
 			<b:title>Resoponsive Image 新標準：src-N</b:title>
 			<b:content>
-				<b:summary> 上週看到 Responsive images - end of year report 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經被落伍了，現在呼聲最高的是 src-N 屬性。 src-N 的 N 是正整數，所以就是 src-1、src-2、src-3 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。 src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個...</b:summary>
+				<b:summary> 上週看到 Responsive images - end of year report 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經落伍了，現在呼聲最高的是 src-N 屬性。 src-N 的 N 是正整數，所以就是 src-1、src-2、src-3 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。 src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11132191124/" title="Mozilla l10n Workshop by othree, on Flickr"><img src="//farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg" width="1024" height="683" alt="Mozilla l10n Workshop" src-1="(max-width: 768px)  //farm8.staticflickr.com/7448/11132191124_748877076f.jpg 1x, //farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg 2x" src-2="//farm8.staticflickr.com/7448/11132191124_c3e64f78a7_k.jpg 2x" /></a></p>
 
-<p>上週看到 <a href="http://html5doctor.com/responsive-images-end-of-year-report/">Responsive images - end of year report</a> 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經被落伍了，現在呼聲最高的是 <a href="http://tabatkins.github.io/specs/respimg/Overview.html#syntax">src-N</a> 屬性。</p>
+<p>上週看到 <a href="http://html5doctor.com/responsive-images-end-of-year-report/">Responsive images - end of year report</a> 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經落伍了，現在呼聲最高的是 <a href="http://tabatkins.github.io/specs/respimg/Overview.html#syntax">src-N</a> 屬性。</p>
 
 <p>src-N 的 N 是正整數，所以就是 <code>src-1</code>、<code>src-2</code>、<code>src-3</code> 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。</p>
 
