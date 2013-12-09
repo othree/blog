@@ -16,6 +16,200 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000778" baseName="mutation-observer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-08</b:date>
+				<b:time>21:28:13</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Mutation Observer</b:title>
+			<b:content>
+				<b:summary>DOM Level 4 裡面提出了一個新的 DOM Mutation 的對應機制，叫做 Mutation Observer，顧名思義，它是 observer pattern 的一種，和以前的 Mutation Event 比起來有不少優點，現在大家也都建議使用 Mutation Obeserver 而不要用 Mutation Events 了。主要的差異是： Observer 是非同步的，效能比較好 DOM change 整理成 mutation record 給你 可以察看所有的 DOM 變動，也可以只注意想要的變動 這邊要先解釋第一點，可能會有人覺得 Mutation Event 也是非同步的，不過實際上，在 event callback 的 function...</b:summary>
+				<b:mainContent><p><a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#mutation-observers">DOM Level 4</a> 裡面提出了一個新的 DOM Mutation 的對應機制，叫做 Mutation Observer，顧名思義，它是 observer pattern 的一種，和以前的 <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">Mutation Event</a> 比起來有不少優點，現在大家也都建議使用 Mutation Obeserver 而不要用 Mutation Events 了。主要的差異是：</p>
+
+<ol>
+<li>Observer 是非同步的，效能比較好</li>
+<li>DOM change 整理成 mutation record 給你</li>
+<li>可以察看所有的 DOM 變動，也可以只注意想要的變動</li>
+</ol>
+
+<p>這邊要先解釋第一點，可能會有人覺得 Mutation Event 也是非同步的，不過實際上，在 event callback 的 function call 內，整個算是一個同步的執行 process，也就是說一個 mutation event 發生後，一定會執行對應的 event callback，而且開始執行後中間不會插入其他的東西，這樣的行為有個缺點就是，如果我要在一個 function process 中一口氣砍掉 100 個節點，然後又有綁 mutation event 來作對應的處理，不過如果這個對應的處理動作可以等到最後在執行就好的話，用 Mutation Event 就會被迫多執行 99 次。但是 Mutation Observer 則是非同步的機制，就是不會你的 DOM 有一點變動就會引發它去執行 callback，而是等你的 function process 結束，timer 空出來時才會去檢查，然後一口氣把所有變動整理好丟到 callback 裡面。</p>
+
+<p>目前<a href="http://caniuse.com/#feat=mutationobserver">支援</a>的程度也還不錯，Mutation Observer 用起來也不難，只是它就真的是一個獨立的觀察者物件，剛開始看到可能會不太習慣，可以參考 Dev.Opera 的 <a href="http://dev.opera.com/articles/view/mutation-observers-tutorial/">Getting to know mutation observers</a> 這篇文章，講的蠻詳細，包括怎樣偵測瀏覽器有沒有支援，如果是沒有支援的瀏覽器，一是可以 fallback 到 Mutation Event 做事，另一個則是可以用 Polymer 的 Mutation Observer <a href="https://github.com/Polymer/MutationObservers">polyfill</a>，底層也是用 Mutation Event 來達成的就是。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000777" baseName="california-highway-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-07</b:date>
+				<b:time>15:20:05</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>California Highway 1 &amp; 17 Miles Drive</b:title>
+			<b:content>
+				<b:summary> 如果你要從舊金山去 LA，又不趕時間，推薦可以開車下去，而且不要開內陸，花個一天走海岸邊的 Highway 1 接 101，路上的風景絕對值回油價，Highway 1 是從 Monterey 到 San Luis Obispo，路途大概可以分為兩段，前半段是類似北宜那樣，岩岸的靠海山路，後半段則是非常平緩的平原丘陵路線，兩段差異很大，非常特別。我們這次是前一天先到 Monterey 住一個晚上，隔天早上從 Monterey 出發，不過進入 Highway 1 之前，先去了 17 Miles Drive，Monterey 的有名景點，是一條沿著海岸的公路，不過這段的海岸還很平緩，而這段路線上的風景非常的特別，有非常豐富的生態。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337185545/" title="17 Miles Drive by othree, on Flickr"><img src="//farm8.staticflickr.com/7438/10337185545_c9910f0764_b.jpg" width="1024" height="683" alt="17 Miles Drive" src-1="(max-width: 768px)  //farm8.staticflickr.com/7438/10337185545_c9910f0764.jpg 1x, //farm8.staticflickr.com/7438/10337185545_c9910f0764_b.jpg 2x" src-2="//farm8.staticflickr.com/7438/10337185545_685d69f594_k.jpg 2x" /></a></p>
+
+<p>如果你要從舊金山去 LA，又不趕時間，推薦可以開車下去，而且不要開內陸，花個一天走海岸邊的 Highway 1 接 101，路上的風景絕對值回油價，Highway 1 是從 Monterey 到 San Luis Obispo，路途大概可以分為兩段，前半段是類似北宜那樣，岩岸的靠海山路，後半段則是非常平緩的平原丘陵路線，兩段差異很大，非常特別。我們這次是前一天先到 Monterey 住一個晚上，隔天早上從 Monterey 出發，不過進入 Highway 1 之前，先去了 17 Miles Drive，Monterey 的有名景點，是一條沿著海岸的公路，不過這段的海岸還很平緩，而這段路線上的風景非常的特別，有非常豐富的生態。</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337344773/" title="17 Miles Drive by othree, on Flickr"><img src="//farm6.staticflickr.com/5499/10337344773_3747c7913b_b.jpg" width="1024" height="683" alt="17 Miles Drive" src-1="(max-width: 768px)  //farm6.staticflickr.com/5499/10337344773_3747c7913b.jpg 1x, //farm6.staticflickr.com/5499/10337344773_3747c7913b_b.jpg 2x" src-2="//farm6.staticflickr.com/5499/10337344773_12a23118f9_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337155635/" title="17 Miles Drive by othree, on Flickr"><img src="//farm6.staticflickr.com/5475/10337155635_b7139c0b10_b.jpg" width="1024" height="683" alt="17 Miles Drive" src-1="(max-width: 768px)  //farm6.staticflickr.com/5475/10337155635_b7139c0b10.jpg 1x, //farm6.staticflickr.com/5475/10337155635_b7139c0b10_b.jpg 2x" src-2="//farm6.staticflickr.com/5475/10337155635_d0b335271e_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337141534/" title="17 Miles Drive by othree, on Flickr"><img src="//farm8.staticflickr.com/7439/10337141534_a32b192186_b.jpg" width="1024" height="683" alt="17 Miles Drive" src-1="(max-width: 768px)  //farm8.staticflickr.com/7439/10337141534_a32b192186.jpg 1x, //farm8.staticflickr.com/7439/10337141534_a32b192186_b.jpg 2x" src-2="//farm8.staticflickr.com/7439/10337141534_e3f511d1f5_k.jpg 2x" /></a></p>
+
+<p>可惜的是我們整段行程就剛好這邊遇到不好的天氣，所以照片看起來顏色比較灰暗，不然海岸線的景色可是很棒的，是還可以看得出來當地非常有特色的地景。而且有些很特別的因為要開車的關係沒辦法拍下來，雖然是要收費的路線，但是整段路線有幾十個點可以停下來，大約是一兩百公尺就有一個點的程度，我覺得是蠻值得的。</p>
+
+<p>離開 17 Miles Drive 後就會接到 Highway 1，又稱為 Cabrillo Highway 1，進去後一下子就會進入岸邊然後開始九灣十八拐，這段路上的風景也很漂亮，不過變化比較少一些，一樣，因為要開車的關係，漂亮的景色都沒拍到，而且有些路段真的是很彎，加上非常偏僻，甚至連手機訊號都沒有，開起來有點心驚，結果只能用兩張沒這麼漂亮的照片交差。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337101994/" title="Highway 1 by othree, on Flickr"><img src="//farm3.staticflickr.com/2838/10337101994_9a5de226f7_b.jpg" width="1024" height="683" alt="Highway 1" src-1="(max-width: 768px)  //farm3.staticflickr.com/2838/10337101994_9a5de226f7.jpg 1x, //farm3.staticflickr.com/2838/10337101994_9a5de226f7_b.jpg 2x" src-2="//farm3.staticflickr.com/2838/10337101994_b741804707_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337102894/" title="Highway 1 by othree, on Flickr"><img src="//farm8.staticflickr.com/7346/10337102894_ff2ba8b1b4_b.jpg" width="1024" height="683" alt="Highway 1" src-1="(max-width: 768px)  //farm8.staticflickr.com/7346/10337102894_ff2ba8b1b4.jpg 1x, //farm8.staticflickr.com/7346/10337102894_ff2ba8b1b4_b.jpg 2x" src-2="//farm8.staticflickr.com/7346/10337102894_d955328ceb_k.jpg 2x" /></a></p>
+
+<p>大約開了一段路後，會看到小有名氣的 BIXBY Bridge，這座橋其實是下午傍晚拍會比較好，陽光就可以直接打到靠外這面，不過這次行程只能在早上經過，有點可惜。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337302263/" title="BIXBY Bridge by othree, on Flickr"><img src="//farm6.staticflickr.com/5537/10337302263_2ef3260e72_b.jpg" width="1024" height="683" alt="BIXBY Bridge" src-1="(max-width: 768px)  //farm6.staticflickr.com/5537/10337302263_2ef3260e72.jpg 1x, //farm6.staticflickr.com/5537/10337302263_2ef3260e72_b.jpg 2x" src-2="//farm6.staticflickr.com/5537/10337302263_bcd9f2b981_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337120365/" title="BIXBY Bridge by othree, on Flickr"><img src="//farm8.staticflickr.com/7323/10337120365_8e8031d234_b.jpg" width="1024" height="683" alt="BIXBY Bridge" src-1="(max-width: 768px)  //farm8.staticflickr.com/7323/10337120365_8e8031d234.jpg 1x, //farm8.staticflickr.com/7323/10337120365_8e8031d234_b.jpg 2x" src-2="//farm8.staticflickr.com/7323/10337120365_bd230f09be_k.jpg 2x" /></a></p>
+
+<p>再開一陣子會離開海邊進入山區一陣子，這段路線其實就是進入 Big Sur 了，Big Sur 是一個州立公園，裡面也有幾個住宿的地方，其實如果可以的話，是推薦前一天可以下午就往這邊移動，路上可以看夕陽，第二天要開的路途也比較短，只是這邊的住宿還蠻搶手的，我們沒住這其實是因為沒搶到的關係。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337083034/" title="Highway 1 by othree, on Flickr"><img src="//farm4.staticflickr.com/3741/10337083034_bf24952151_b.jpg" width="1024" height="683" alt="Highway 1" src-1="(max-width: 768px)  //farm4.staticflickr.com/3741/10337083034_bf24952151.jpg 1x, //farm4.staticflickr.com/3741/10337083034_bf24952151_b.jpg 2x" src-2="//farm4.staticflickr.com/3741/10337083034_a707c41c1a_k.jpg 2x" /></a></p>
+
+<p>離開 Big Sur 在繼續開就會慢慢的進入平原區了。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5794930567/" title="P5230054 by othree, on Flickr"><img src="//farm3.staticflickr.com/2185/5794930567_387bab9eef_b.jpg" width="1024" height="768" alt="P5230054" src-1="(max-width: 768px)  //farm3.staticflickr.com/2185/5794930567_387bab9eef.jpg 1x, //farm3.staticflickr.com/2185/5794930567_387bab9eef_b.jpg 2x"  /></a></p>
+
+<p>開一開會經過一個叫 <a href="http://www.hearstcastle.org/">Hearst Castle</a> 的地方，這是 18 世紀時，美國的媒體大亨 George Hearst 的故居，幾乎當時美國的主流媒體他都有份，非常有錢，裡面非常奢華，有時間的話可以去參觀一下，不過進去只看一個 Tour 到出來也會超過一個小時，要自己抓時間。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5614561297/" title="Hearst Castle by othree, on Flickr"><img src="//farm6.staticflickr.com/5266/5614561297_60ac14354d_b.jpg" width="1024" height="768" alt="Hearst Castle" src-1="(max-width: 768px)  //farm6.staticflickr.com/5266/5614561297_60ac14354d.jpg 1x, //farm6.staticflickr.com/5266/5614561297_60ac14354d_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5616117584/" title="Hearst Castle by othree, on Flickr"><img src="//farm6.staticflickr.com/5310/5616117584_b8f41c3013_b.jpg" width="1024" height="768" alt="Hearst Castle" src-1="(max-width: 768px)  //farm6.staticflickr.com/5310/5616117584_b8f41c3013.jpg 1x, //farm6.staticflickr.com/5310/5616117584_b8f41c3013_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5617484935/" title="Hearst Castle by othree, on Flickr"><img src="//farm6.staticflickr.com/5269/5617484935_43ea240d25_b.jpg" width="1024" height="768" alt="Hearst Castle" src-1="(max-width: 768px)  //farm6.staticflickr.com/5269/5617484935_43ea240d25.jpg 1x, //farm6.staticflickr.com/5269/5617484935_43ea240d25_b.jpg 2x"  /></a></p>
+
+<p>Highway 1 進入平原區後就會經過不少小鎮，其中 Morro Bay 是要稍微離開 Highway 1 一下，沒有直接接到 Highway 1，是個很有活力的小港口，有兩個很大的特色，一是有座發電廠，所以有大大的三根煙囪，第二個特色是他的港灣外圍有一顆饅頭形狀的大石頭，在這邊的港口我還看到一家很特別的商店，裡面全部都是妖精、幻想世界為主題的商品，東西非常特別，數量也是我看過相關主題的店面數一數二多的。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5796381769/" title="Morro Bay by othree, on Flickr"><img src="//farm6.staticflickr.com/5196/5796381769_c7e9ec2e15_b.jpg" width="1024" height="768" alt="Morro Bay" src-1="(max-width: 768px)  //farm6.staticflickr.com/5196/5796381769_c7e9ec2e15.jpg 1x, //farm6.staticflickr.com/5196/5796381769_c7e9ec2e15_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11191301395/" title="Morro Bay Elf by othree, on Flickr"><img src="//farm8.staticflickr.com/7443/11191301395_614b8b076c_b.jpg" width="1024" height="768" alt="Morro Bay Elf" src-1="(max-width: 768px)  //farm8.staticflickr.com/7443/11191301395_614b8b076c.jpg 1x, //farm8.staticflickr.com/7443/11191301395_614b8b076c_b.jpg 2x" src-2="//farm8.staticflickr.com/7443/11191301395_6b44647157_k.jpg 2x" /></a></p>
+
+<p>在繼續開下去就會到 <a href="http://www.visitslo.com/">San Luis Obispo</a>，從舊金山到 LA 走 101 的話，這裡算是中間點，是個稍有規模的小鎮，有機場有學校還有很多商店，連 Apple Store 和 Amazon 集貨站都有，生活機能很充足但卻不失寧靜，上高速公路不用十分鐘就可以到沙灘海岸，要形容的話就是個很適合科技人過生活的地方，這個小鎮還曾經獲選為美國最快樂的城市，說缺點的話就是沒什麼電影院，最近的 IMAX 戲院是 Hearst Castle 裡面的。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10337109165/" title="San Luis Obispo by othree, on Flickr"><img src="//farm6.staticflickr.com/5541/10337109165_33ec6f386f_b.jpg" width="1024" height="683" alt="San Luis Obispo" src-1="(max-width: 768px)  //farm6.staticflickr.com/5541/10337109165_33ec6f386f.jpg 1x, //farm6.staticflickr.com/5541/10337109165_33ec6f386f_b.jpg 2x" src-2="//farm6.staticflickr.com/5541/10337109165_047c51a688_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5547186504/" title="San Luis Obispo by othree, on Flickr"><img src="//farm6.staticflickr.com/5013/5547186504_69d73b3417_b.jpg" width="1024" height="768" alt="San Luis Obispo" src-1="(max-width: 768px)  //farm6.staticflickr.com/5013/5547186504_69d73b3417.jpg 1x, //farm6.staticflickr.com/5013/5547186504_69d73b3417_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5787973731/" title="Old Mission San Luis Obisp by othree, on Flickr"><img src="//farm4.staticflickr.com/3532/5787973731_def1da6fec_b.jpg" width="1024" height="768" alt="Old Mission San Luis Obisp" src-1="(max-width: 768px)  //farm4.staticflickr.com/3532/5787973731_def1da6fec.jpg 1x, //farm4.staticflickr.com/3532/5787973731_def1da6fec_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5788531434/" title="San Luis Obispo by othree, on Flickr"><img src="//farm4.staticflickr.com/3350/5788531434_74e018e543_b.jpg" width="768" height="1024" alt="San Luis Obispo" src-1="(max-width: 768px)  //farm4.staticflickr.com/3350/5788531434_74e018e543.jpg 1x, //farm4.staticflickr.com/3350/5788531434_74e018e543_b.jpg 2x"  /></a></p>
+
+<p>除了非常棒的小鎮風光外，San Luis Obispo 附近其實有很多的酒莊，有大量的葡萄田，所以還可以來這邊挑選加州在地的葡萄酒，不過也是脫離主要路線的行程就是。</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5788471972/" title="P5229902 by othree, on Flickr"><img src="//farm3.staticflickr.com/2569/5788471972_43c3a91986_b.jpg" width="1024" height="768" alt="P5229902" src-1="(max-width: 768px)  //farm3.staticflickr.com/2569/5788471972_43c3a91986.jpg 1x, //farm3.staticflickr.com/2569/5788471972_43c3a91986_b.jpg 2x"  /></a></p>
+
+<p>到這邊就把我想介紹的 Highway 1 介紹完了，接下來我就走 101 了，要繼續往 LA 還需要在 101 公路開上三四小時，如果時間多可以去 Hearst Castle 然後到 Morro Bay 逛逛，接著在 San Luis Obispo 停留一晚，運氣好的話還可以碰到他們的 Farmer's Market，隔天在繼續移動。</p>
+
+<p>走 Highway 1 基本上就是海岸那段要小心，非常偏僻，要是出意外不一定會有人知道，車子其實也沒很多，我在 BIXBY Bridge 時想打卡都打不了，可是路上的風景很不錯，有時間有機會的話務必要嘗試看看，這篇文章貼出來的照片都不是最漂亮的景色。</p>
+
+<p>最後附上別人用行車記錄器拍的 Highway 1 路線影片，他開的方向和我相反，不過主要也都是海岸線很漂亮但是很多彎道那段：</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/k4H5tn4aiTc" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000776" baseName="nelson_mandela">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-06</b:date>
+				<b:time>21:33:05</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>Nelson Mandela</b:title>
+			<b:content>
+				<b:summary> 聯合新聞網 BBC Flickr g0v 本來想寫一篇文章講講他的故事對我的意義，想了很久拖到今天，不過實在是寫不出什麼，只好放上 Invictus 這首詩： Out of the night that covers me 夜幕低垂將我籠罩 Black as the Pit from pole to pole 宛若陷入漆黑地窖 I thank whatever gods may be 我感謝萬能的眾神 For my unconquerable soul. 賦予我不敗的心靈 In the fell...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/paullew/11227910724/" title="Nelson Mandela (1918-2013) by Lawrence OP, on Flickr"><img src="//farm3.staticflickr.com/2845/11227910724_b7337a4b6a_b.jpg" width="683" height="1024" alt="Nelson Mandela (1918-2013)" src-1="(max-width: 768px)  //farm3.staticflickr.com/2845/11227910724_b7337a4b6a.jpg 1x, //farm3.staticflickr.com/2845/11227910724_b7337a4b6a_b.jpg 2x" src-2="//farm3.staticflickr.com/2845/11227910724_656eb33cb9_k.jpg 2x" /></a></p>
+
+<ul>
+<li><a href="http://udn.com/NEWS/WORLD/WOR3/7983096.shtml?ch=fb_share">聯合新聞網</a></li>
+<li><a href="http://www.bbc.co.uk/zhongwen/trad/world/2013/12/131105_mandela_orbituary.shtml">BBC</a></li>
+<li><a href="http://www.flickr.com/photos/yahooeditorspicks/galleries/72157638394920394/">Flickr</a></li>
+<li><a href="http://fact.g0v.tw/wiki/%E7%B4%8D%E7%88%BE%E9%81%9C%C2%B7%E6%9B%BC%E5%BE%B7%E6%8B%89">g0v</a></li>
+</ul>
+
+<p>本來想寫一篇文章講講他的故事對我的意義，想了很久拖到今天，不過實在是寫不出什麼，只好放上 Invictus 這首詩：</p>
+
+<pre><code>Out of the night that covers me
+夜幕低垂將我籠罩
+Black as the Pit from pole to pole
+宛若陷入漆黑地窖
+I thank whatever gods may be
+我感謝萬能的眾神
+For my unconquerable soul.
+賦予我不敗的心靈
+In the fell clutch of circumstance
+即使環境險惡危急
+I have not winced nor cried aloud.
+我未曾退縮或哭嚎
+Under the bludgeonings of chance
+處於機運的脅迫下
+My head is bloody, but unbowed.
+血流滿面但我不屈服
+Beyond this place of wrath and tears
+超越這般悲憤交集
+Looms but the Horror of the shade
+恐怖陰霾逐步逼近
+And yet the menace of the years
+長年威脅揮之不去
+Finds and shall find me unafraid.
+我終究會無所畏懼
+It matters not how strait the gate
+縱然通道無比險狹
+How charged with punishments the scroll
+儘管嚴懲綿延不盡
+I am the master of my fate:
+我是我命運的主人
+I am the captain of my soul.
+我是我心靈的統帥
+
+──威廉亨利
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000775" baseName="angularjs-data-binding">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -135,12 +329,12 @@
 			<b:category>css-html</b:category>
 			<b:title>Resoponsive Image 新標準：src-N</b:title>
 			<b:content>
-				<b:summary> 上週看到 Responsive images - end of year report 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經落伍了，現在呼聲最高的是 src-N 屬性。 src-N 的 N 是正整數，所以就是 src-1、src-2、src-3 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。 src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個...</b:summary>
+				<b:summary> 上週看到 Responsive images - end of year report 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經落伍了，現在呼聲最高的是 src-N 屬性。 src-N 的 N 是正整數，所以就是 src-1、src-2、src-3 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣，所以 src-N 就有 src 用了一陣子之後，突然發現有需要其他的圖片 src，所以就用 src-1、src-2、src-3 來當名稱。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11132191124/" title="Mozilla l10n Workshop by othree, on Flickr"><img src="//farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg" width="1024" height="683" alt="Mozilla l10n Workshop" src-1="(max-width: 768px)  //farm8.staticflickr.com/7448/11132191124_748877076f.jpg 1x, //farm8.staticflickr.com/7448/11132191124_748877076f_b.jpg 2x" src-2="//farm8.staticflickr.com/7448/11132191124_c3e64f78a7_k.jpg 2x" /></a></p>
 
 <p>上週看到 <a href="http://html5doctor.com/responsive-images-end-of-year-report/">Responsive images - end of year report</a> 這篇文章，才驚覺到現在 resoponsive image 的競爭者們，srcset 和 &lt;picture&gt; 都已經落伍了，現在呼聲最高的是 <a href="http://tabatkins.github.io/specs/respimg/Overview.html#syntax">src-N</a> 屬性。</p>
 
-<p>src-N 的 N 是正整數，所以就是 <code>src-1</code>、<code>src-2</code>、<code>src-3</code> 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。</p>
+<p>src-N 的 N 是正整數，所以就是 <code>src-1</code>、<code>src-2</code>、<code>src-3</code> 這樣的形式，其實我覺得這個命名模式蠻有趣的，很像是程式設計師在程式寫一半，突然發現已經弄一半的系統中，某個變數突然有複數的值時，會在變數名稱後面加上 '1'、'2'、'3' 那樣，所以 src-N 就有 src 用了一陣子之後，突然發現有需要其他的圖片 src，所以就用 src-1、src-2、src-3 來當名稱。規範對於 N 的範圍沒有定義，然後照字面上來看是可以有空號的，不過 parse 時會照數字順序處理，如果全部處理完沒找到 match 的圖片可以用的話，就會拿 src 的值當成預設的圖片。</p>
 
 <p>src-N 屬性的內容和 srcset 的內容規則不太一樣，而且有兩種格式，首先第一種比較簡單，就是寫多個 src-N 屬性，然後每個給他一個 media query 作 prefix，之後只給針對解析度分開的 srcset 值，例如：</p>
 

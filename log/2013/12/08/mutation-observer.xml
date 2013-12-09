@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000778" baseName="mutation-observer">Mutation Observer</b:listData>
+
+			<b:previous>
+				<b:mTitle>California Highway 1 &amp; 17 Miles Drive</b:mTitle>
+				<b:mDate>2013-12-07</b:mDate>
+				<b:mBase>california-highway-1</b:mBase>
+			</b:previous>
+
+
+		</b:entriesMeta>
+		<b:entry entryID="000778" baseName="mutation-observer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-08</b:date>
+				<b:time>21:28:13</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Mutation Observer</b:title>
+			<b:content>
+				<b:summary>DOM Level 4 裡面提出了一個新的 DOM Mutation 的對應機制，叫做 Mutation Observer，顧名思義，它是 observer pattern 的一種，和以前的 Mutation Event 比起來有不少優點，現在大家也都建議使用 Mutation Obeserver 而不要用 Mutation Events 了。主要的差異是： Observer 是非同步的，效能比較好 DOM change 整理成 mutation record 給你 可以察看所有的 DOM 變動，也可以只注意想要的變動 這邊要先解釋第一點，可能會有人覺得 Mutation Event 也是非同步的，不過實際上，在 event callback 的 function...</b:summary>
+				<b:mainContent><p><a href="https://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html#mutation-observers">DOM Level 4</a> 裡面提出了一個新的 DOM Mutation 的對應機制，叫做 Mutation Observer，顧名思義，它是 observer pattern 的一種，和以前的 <a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mutationevents">Mutation Event</a> 比起來有不少優點，現在大家也都建議使用 Mutation Obeserver 而不要用 Mutation Events 了。主要的差異是：</p>
+
+<ol>
+<li>Observer 是非同步的，效能比較好</li>
+<li>DOM change 整理成 mutation record 給你</li>
+<li>可以察看所有的 DOM 變動，也可以只注意想要的變動</li>
+</ol>
+
+<p>這邊要先解釋第一點，可能會有人覺得 Mutation Event 也是非同步的，不過實際上，在 event callback 的 function call 內，整個算是一個同步的執行 process，也就是說一個 mutation event 發生後，一定會執行對應的 event callback，而且開始執行後中間不會插入其他的東西，這樣的行為有個缺點就是，如果我要在一個 function process 中一口氣砍掉 100 個節點，然後又有綁 mutation event 來作對應的處理，不過如果這個對應的處理動作可以等到最後在執行就好的話，用 Mutation Event 就會被迫多執行 99 次。但是 Mutation Observer 則是非同步的機制，就是不會你的 DOM 有一點變動就會引發它去執行 callback，而是等你的 function process 結束，timer 空出來時才會去檢查，然後一口氣把所有變動整理好丟到 callback 裡面。</p>
+
+<p>目前<a href="http://caniuse.com/#feat=mutationobserver">支援</a>的程度也還不錯，Mutation Observer 用起來也不難，只是它就真的是一個獨立的觀察者物件，剛開始看到可能會不太習慣，可以參考 Dev.Opera 的 <a href="http://dev.opera.com/articles/view/mutation-observers-tutorial/">Getting to know mutation observers</a> 這篇文章，講的蠻詳細，包括怎樣偵測瀏覽器有沒有支援，如果是沒有支援的瀏覽器，一是可以 fallback 到 Mutation Event 做事，另一個則是可以用 Polymer 的 Mutation Observer <a href="https://github.com/Polymer/MutationObservers">polyfill</a>，底層也是用 Mutation Event 來達成的就是。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
