@@ -138,7 +138,7 @@ header("Cache-Control: max-age=3600, public");
 header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 
 $CSP = 'Content-Security-Policy';
-if (preg_match("/MSIE/", $UA) || preg_match("/Firefox/", $UA)) {
+if (preg_match("/MSIE/", $UA)) {
     $CSP = 'X-Content-Security-Policy';
 }
 if (preg_match("/Webkit/", $UA)) {
@@ -158,7 +158,7 @@ function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
         $xslo = new DOMDocument;
         $xslo->load($xsl);
 
-        // Configure the transformer 
+        // Configure the transformer
         $proc = new XSLTProcessor;
 
         // $proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
