@@ -93,7 +93,7 @@
                 <link rel="canonical" itemprop="url" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
-                        <meta name="twitter:card" content="photo" />
+                        <meta name="twitter:card" content="summary" />
                         <meta name="twitter:site" content="@othree" />
                     </xsl:when>
                     <xsl:otherwise>
