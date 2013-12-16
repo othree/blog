@@ -1,9 +1,8 @@
-/*jslint vars: true */
-/*global window: false, document: false */
+/*jslint vars: true, browser: true */
 (function () {
     "use strict";
 
-    if (!window.requestAnimationFrame || !document.documentElement) {
+    if (!window.requestAnimationFrame || !document.documentElement || !document.documentElement.classList) {
         return;
     }
 
