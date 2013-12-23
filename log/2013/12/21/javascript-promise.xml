@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000780" baseName="javascript-promise">JavaScript Promise</b:listData>
+
+			<b:previous>
+				<b:mTitle>Accessibility in US</b:mTitle>
+				<b:mDate>2013-12-10</b:mDate>
+				<b:mBase>accessibility_in_us</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>iPad Air</b:mTitle>
+				<b:mDate>2013-12-21</b:mDate>
+				<b:mBase>ipad-air</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000780" baseName="javascript-promise">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-21</b:date>
+				<b:time>00:13:01</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>1</b:CommentsAccepted>
+
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript Promise</b:title>
+			<b:content>
+				<b:summary>最近 JavaScript 圈很熱的一則消息就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。 在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。 之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於...</b:summary>
+				<b:mainContent><p>最近 JavaScript 圈很熱的一則<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">消息</a>就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。</p>
+
+<p>在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。</p>
+
+<p>之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於 CommonJS <a href="http://wiki.commonjs.org/wiki/Promises">Promise/A</a> 這個標準，不過其實去看 Promise/A 會發現他內容根本就很少，不知道怎麼和 jQuery Deferred 扯上邊的，最近才了解，Promise/A 其實只有最基本的 Promise 的功能定義，而它的定義就只有說有個值未來會拿到，然後你要給他 <code>then</code> 這個 method。</p>
+
+<p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
+
+<pre><code>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state.
+</code></pre>
+
+<p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
+
+<p>由於 Promise/A 只有描述行為，而不是詳細的實作，於是就有了 <a href="http://promises-aplus.github.io/promises-spec/">Promise/A+</a>，這個 spec 不是 CommonJS 的 spec，而是由一群人自主發起的，把 Promise/A 裡面所缺的詳細規範補齊，像是 Promise fulfill 時要怎樣處理之類的，定義得很詳細，這份標準完全沒宣告著作權，用的是 CC0，像 <a href="https://github.com/tildeio/rsvp.js">rsvp.js</a> 和 <a href="https://github.com/kriskowal/q">Q</a> 用的就是 Promise/A+ 標準來實作，不過 Promise/A+ 還是只有定義 then 的部份，怎樣 fulfill，怎樣 reject 部分的 API 還是沒碰，所以不同的實作都還是會有些差異。其實 Promise/A+ 組織的 github 帳號上可以看到有關於這部份的<a href="https://github.com/promises-aplus/resolvers-spec">討論</a>，雖然是沒寫出任何草案，我想應該就是直接進了 TC39 的 <a href="https://github.com/domenic/promises-unwrapping">Promise spec</a> 了吧，畢竟好像編輯有重複的<a href="https://twitter.com/domenic">人</a>。</p>
+
+<p>TC39 的 Promise 就和 Promise/A+ 的差不多一樣，fulfill 和 reject 的 API 設計就是用他們討論時的其中一個選項，結果是和 rsvp.js 的時作比較接近，fulfill 和 reject function 是在 promise 物件的建構時給的 callback 裡面才會拿到，和 jQuery Deferred 物件可以從外面來 resolve/reject 的設計不一樣：</p>
+
+<pre><code>new Promise(function (fulfill, reject, progress) {
+    // blah....
+});
+</code></pre>
+
+<p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

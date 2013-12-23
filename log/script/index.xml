@@ -9,6 +9,80 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000782" baseName="asmjs-1half-x-slower-than-native">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-24</b:date>
+				<b:time>00:59:41</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>asm.js 效能再提昇</b:title>
+			<b:content>
+				<b:summary> Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的文章，現在這個數字已經變成 1.5 倍了，主要是歸功於 float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11517198133/" title="asm1.5b by othree, on Flickr"><img src="//farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg" width="1024" height="509" alt="asm1.5b" src-1="(max-width: 768px)  //farm6.staticflickr.com/5520/11517198133_293174bb1e.jpg 1x, //farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg 2x"  /></a></p>
+
+<p>Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的文章，現在這個數字已經變成 1.5 倍了，主要是歸功於  float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000780" baseName="javascript-promise">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2013-12-21</b:date>
+				<b:time>00:13:01</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JavaScript Promise</b:title>
+			<b:content>
+				<b:summary>最近 JavaScript 圈很熱的一則消息就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。 在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。 之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於...</b:summary>
+				<b:mainContent><p>最近 JavaScript 圈很熱的一則<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">消息</a>就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。</p>
+
+<p>在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。</p>
+
+<p>之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於 CommonJS <a href="http://wiki.commonjs.org/wiki/Promises">Promise/A</a> 這個標準，不過其實去看 Promise/A 會發現他內容根本就很少，不知道怎麼和 jQuery Deferred 扯上邊的，最近才了解，Promise/A 其實只有最基本的 Promise 的功能定義，而它的定義就只有說有個值未來會拿到，然後你要給他 <code>then</code> 這個 method。</p>
+
+<p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
+
+<pre><code>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state.
+</code></pre>
+
+<p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
+
+<p>由於 Promise/A 只有描述行為，而不是詳細的實作，於是就有了 <a href="http://promises-aplus.github.io/promises-spec/">Promise/A+</a>，這個 spec 不是 CommonJS 的 spec，而是由一群人自主發起的，把 Promise/A 裡面所缺的詳細規範補齊，像是 Promise fulfill 時要怎樣處理之類的，定義得很詳細，這份標準完全沒宣告著作權，用的是 CC0，像 <a href="https://github.com/tildeio/rsvp.js">rsvp.js</a> 和 <a href="https://github.com/kriskowal/q">Q</a> 用的就是 Promise/A+ 標準來實作，不過 Promise/A+ 還是只有定義 then 的部份，怎樣 fulfill，怎樣 reject 部分的 API 還是沒碰，所以不同的實作都還是會有些差異。其實 Promise/A+ 組織的 github 帳號上可以看到有關於這部份的<a href="https://github.com/promises-aplus/resolvers-spec">討論</a>，雖然是沒寫出任何草案，我想應該就是直接進了 TC39 的 <a href="https://github.com/domenic/promises-unwrapping">Promise spec</a> 了吧，畢竟好像編輯有重複的<a href="https://twitter.com/domenic">人</a>。</p>
+
+<p>TC39 的 Promise 就和 Promise/A+ 的差不多一樣，fulfill 和 reject 的 API 設計就是用他們討論時的其中一個選項，結果是和 rsvp.js 的時作比較接近，fulfill 和 reject function 是在 promise 物件的建構時給的 callback 裡面才會拿到，和 jQuery Deferred 物件可以從外面來 resolve/reject 的設計不一樣：</p>
+
+<pre><code>new Promise(function (fulfill, reject, progress) {
+    // blah....
+});
+</code></pre>
+
+<p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000778" baseName="mutation-observer">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -636,127 +710,6 @@ str.target;            // undefined
 			</b:content>
 
 			<b:comments commentCount="2"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000746" baseName="options-object">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-06-19</b:date>
-				<b:time>01:35:15</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>Options Object</b:title>
-			<b:content>
-				<b:summary> 上一篇文章 DOM Event Module 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 Effective JavaScript 也有說到這個 pattern，所以就拿他當參考文獻了~~ 這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的： var alert = new Alert(100, 75, 300, 200, "Error", messaage, "blue", "white", "black", "error", true);...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9074497361/" title="Flickr 上 othree 的 Options Object"><img src="//farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg" width="1024" height="683" alt="Options Object" srcset="//farm4.staticflickr.com/3829/9074497361_5298d2643e.jpg 768w, //farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg 768w 2x, //farm4.staticflickr.com/3829/9074497361_013ef7e2be_k.jpg 2x" /></a></p>
-
-<p>上一篇文章 <a href="https://blog.othree.net/log/2013/06/18/dom-event-module/">DOM Event Module</a> 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 <a href="http://effectivejs.com/">Effective JavaScript</a> 也有說到這個 pattern，所以就拿他當參考文獻了~~</p>
-
-<p>這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的：</p>
-
-<pre><code>var alert = new Alert(100, 75, 300, 200, 
-                      "Error", messaage,
-                      "blue", "white", "black",
-                      "error", true);
-</code></pre>
-
-<p>這個例子比我前一篇的例子還要複雜許多，相信更能夠感覺到這些參數分別的意義很難判斷吧，所以改成用 options object 的：</p>
-
-<pre><code>var alert = new Alert({
-    x: 100, y: 75,
-    width: 300, height: 200,
-    title: "Error", message: message,
-    titleColor: "blue", bgColor: "white", textColor: "black",
-    icon: "error", modal: "true"
-});
-</code></pre>
-
-<p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
-
-<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 <a href="http://api.jquery.com/jQuery.extend/">jQuery.extend</a> 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
-
-<pre><code>_.defaults(options, defaultOptions);
-</code></pre>
-
-<p>但是如果用 options 要達成一樣的效果，你要寫成：</p>
-
-<pre><code>options = _.extend({}, defaultOptions, options);
-</code></pre>
-
-<p>因為 extend 會讓後者的屬性覆蓋掉前者的，所以 defaultOptions 要放在 options 前面，但是 extend 回傳的是前面那個物件，所以要取代原本的 options 還要多一個 assign，至於 defaults 則是會改原來的 options 物件，所以不需要多那個 assign，也不需要先丟一個空物件給它，如果要讓 options 是可省略的參數，用 CoffeeScript 還可以在定義 function 時給它預設值，整個程式碼就漂亮很多：</p>
-
-<pre><code>mylib.ajax = (url, options = {}) -&gt;
-    _.default(options, defaultOptions)
-</code></pre>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="1"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000745" baseName="dom-event-module">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-06-18</b:date>
-				<b:time>16:51:19</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>Native DOM Event Module</b:title>
-			<b:content>
-				<b:summary>我是在看 tap.js 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 dispatchEvent 這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的文章。 dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他： var event =...</b:summary>
-				<b:mainContent><p>我是在看 <a href="http://alxgbsn.co.uk/2012/03/12/tap-js-a-lightweight-tap-event-javascript-plugin/">tap.js</a> 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.dispatchEvent">dispatchEvent</a>  這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的<a href="https://blog.othree.net/log/2010/05/20/jquery-events/">文章</a>。</p>
-
-<p>dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他：</p>
-
-<pre><code>var event = document.createEvent('Event');
-event.initEvent(type, true, true);
-
-domnode.dispatchEvent(event);
-</code></pre>
-
-<p>其中的 type 才是你想要觸發的事件名稱，而第一個 createEvent 收的參數，除了 "Event" 這個最通用的之外，還有很多種<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent">原生事件</a>，如果是要自訂事件的話，可以用最通用的 "Event"。不過其實，還有一個比較新的 API：</p>
-
-<pre><code>var event = new CustomEvent(type, {bubbles: true, cancelable: true});
-</code></pre>
-
-<p>這是 DOM Level 4 裡面提出來的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">Custom Event Constructor</a>，在這之前的 Level 3 就可以用第一個範例的方法產生 custom event，要先 create 再 init。這邊岔題一下，應該有人會注意到，createEvent 後 initEvent 那邊的 API 設計和 CustomEvent 不一樣，initEvent 收三個值，後面兩個都傳了 true，可是這樣的 API 設計近年來都被認為是不好的，因為你看程式碼，你完全不知道這兩個 true 是什麼意思，所以都是建議用第二種 API 的設計，收一個 options 物件，其實，initEvent 那兩個 true 分別就是 CustomEvent 後面的 bubbles 和 cancelable，但是後者的設計就可以讓程式碼看一眼就知道那兩個 true 是什麼用途的，看到這種不止開發者的程式在進化，連標準也跟著一起演進的現象還蠻有趣的~</p>
-
-<p>Custom Event Constructor 目前 IE 的支援還比較差，所以還不能直接使用，還是要做一下 feature detection。至於哪些物件可以使用這些 method，除了 DOM Node，外，其實一般瀏覽器都還有一些物件可以聽事件，像是 window、document、 XMLHttpRequest instance 等，很可惜不是任意物件都可以，事實上，這些可以使用 DOM Event Module 的物件都是實作了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget">EventTarget</a> 這個介面，不過又要再說一次很可惜的，目前沒辦法把瀏覽器內的這些實作偷出來給其它物件使用，幸好 Andrea Giammarchi 有做了 <a href="https://github.com/WebReflection/event-target">一個</a> 放在 Github 上，可以給一般物件繼承去用。</p>
-
-<p>我曾經寫過一篇文章介紹 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，這篇文章的最後我要來介紹第二個參數，第二個參數一般都是丟 function 進去，不過他其實也可以丟 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventListener">EventListener</a> 進去，基本上就是一個物件有 handleEvent 來當事件的 callback 而已，不過像 tap.js 就有很有趣的用法，它不管是什麼事件，在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L35">加上 addEventListener 時</a>丟進去的都是 this 物件，實際上則是統一在 handleEvent 裡面在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L97">根據事件的不同去作不同的事情</a>：</p>
-
-<pre><code>Tap.prototype.handleEvent = function (e) {
-    switch (e.type) {
-        case 'touchstart': this.start(e); break;
-        case 'touchmove': this.move(e); break;
-        case 'touchend': this.end(e); break;
-        case 'touchcancel': this.cancel(e); break;
-        case 'mousedown': this.start(e); break;
-        case 'mousemove': this.move(e); break;
-        case 'mouseup': this.end(e); break;
-    }
-};
-</code></pre>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>

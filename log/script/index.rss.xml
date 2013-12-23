@@ -5,10 +5,56 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2013</copyright>
-<lastBuildDate>2013-12-08 21:28</lastBuildDate>
+<lastBuildDate>2013-12-24 00:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>asm.js 效能再提昇</title>
+<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11517198133/" title="asm1.5b by othree, on Flickr"><img src="//farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg" width="1024" height="509" alt="asm1.5b" src-1="(max-width: 768px)  //farm6.staticflickr.com/5520/11517198133_293174bb1e.jpg 1x, //farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg 2x"  /></a></p>
+
+<p>Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的文章，現在這個數字已經變成 1.5 倍了，主要是歸功於  float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/12/24/asmjs-1half-x-slower-than-native/</link>
+<guid>https://blog.othree.net/log/2013/12/24/asmjs-1half-x-slower-than-native/</guid>
+<category>script</category>
+<pubDate>2013-12-24 00:59</pubDate>
+</item>
+
+<item>
+<title>JavaScript Promise</title>
+<description><![CDATA[<p>最近 JavaScript 圈很熱的一則<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">消息</a>就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。</p>
+
+<p>在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。</p>
+
+<p>之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於 CommonJS <a href="http://wiki.commonjs.org/wiki/Promises">Promise/A</a> 這個標準，不過其實去看 Promise/A 會發現他內容根本就很少，不知道怎麼和 jQuery Deferred 扯上邊的，最近才了解，Promise/A 其實只有最基本的 Promise 的功能定義，而它的定義就只有說有個值未來會拿到，然後你要給他 <code>then</code> 這個 method。</p>
+
+<p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
+
+<pre><code>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state.
+</code></pre>
+
+<p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
+
+<p>由於 Promise/A 只有描述行為，而不是詳細的實作，於是就有了 <a href="http://promises-aplus.github.io/promises-spec/">Promise/A+</a>，這個 spec 不是 CommonJS 的 spec，而是由一群人自主發起的，把 Promise/A 裡面所缺的詳細規範補齊，像是 Promise fulfill 時要怎樣處理之類的，定義得很詳細，這份標準完全沒宣告著作權，用的是 CC0，像 <a href="https://github.com/tildeio/rsvp.js">rsvp.js</a> 和 <a href="https://github.com/kriskowal/q">Q</a> 用的就是 Promise/A+ 標準來實作，不過 Promise/A+ 還是只有定義 then 的部份，怎樣 fulfill，怎樣 reject 部分的 API 還是沒碰，所以不同的實作都還是會有些差異。其實 Promise/A+ 組織的 github 帳號上可以看到有關於這部份的<a href="https://github.com/promises-aplus/resolvers-spec">討論</a>，雖然是沒寫出任何草案，我想應該就是直接進了 TC39 的 <a href="https://github.com/domenic/promises-unwrapping">Promise spec</a> 了吧，畢竟好像編輯有重複的<a href="https://twitter.com/domenic">人</a>。</p>
+
+<p>TC39 的 Promise 就和 Promise/A+ 的差不多一樣，fulfill 和 reject 的 API 設計就是用他們討論時的其中一個選項，結果是和 rsvp.js 的時作比較接近，fulfill 和 reject function 是在 promise 物件的建構時給的 callback 裡面才會拿到，和 jQuery Deferred 物件可以從外面來 resolve/reject 的設計不一樣：</p>
+
+<pre><code>new Promise(function (fulfill, reject, progress) {
+    // blah....
+});
+</code></pre>
+
+<p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2013/12/21/javascript-promise/</link>
+<guid>https://blog.othree.net/log/2013/12/21/javascript-promise/</guid>
+<category>script</category>
+<pubDate>2013-12-21 00:13</pubDate>
+</item>
 
 <item>
 <title>Mutation Observer</title>
@@ -690,32 +736,6 @@ domnode.dispatchEvent(event);
 <guid>https://blog.othree.net/log/2013/05/09/chrome-debug-doc/</guid>
 <category>script</category>
 <pubDate>2013-05-09 00:13</pubDate>
-</item>
-
-<item>
-<title>deferred.then</title>
-<description><![CDATA[<p>前陣子 <a href="http://blog.blackbing.net/">Bingo</a> 告知才發現，jQuery Deferred 物件的 <a href="http://api.jquery.com/deferred.pipe/">pipe</a> 在 1.8 被標為 <strong>Deprecated</strong> 了，以後請改用 <a href="http://api.jquery.com/deferred.then/">then</a>，兩者其實不管回傳值的話，行為還蠻接近的，現在的 pipe 還沒移除掉，不過已經是新版的 then 的 alias 了。看文件的話如果不看下面的敘述，很可能不知道 1.8 前後的差異，雖然回傳的都是 Promise 物件，不過 1.8 之前回傳的是同一個 Promise 物件，1.8 之後回傳的則是新的，和原來 pipe 行為一樣，結果修改過的 Promise 物件。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/05/03/deferred-then/</link>
-<guid>https://blog.othree.net/log/2013/05/03/deferred-then/</guid>
-<category>script</category>
-<pubDate>2013-05-03 20:11</pubDate>
-</item>
-
-<item>
-<title>Functional Programming using underscore.js</title>
-<description><![CDATA[<p>昨天在 OSDC 的演講投影片~</p>
-
-<p>
-<script async="async" class="speakerdeck-embed" data-id="26d284708c000130b42a22000a9d071a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/04/21/functional-underscorejs/</link>
-<guid>https://blog.othree.net/log/2013/04/21/functional-underscorejs/</guid>
-<category>script</category>
-<pubDate>2013-04-21 00:01</pubDate>
 </item>
 
 
