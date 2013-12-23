@@ -201,12 +201,12 @@
                     <hr />
                     <h2>其它資訊</h2>
                     <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
-                        <input accesskey="4" id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                        <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                         <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
                     </form>
                     <hr />
-                    <div role="contentinfo">
+                    <div role="contentinfo"><xsl:text> </xsl:text>
                     <xsl:if test="$listType = 's'">
                         <h3>關於本文章</h3>
                         <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於 <xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
@@ -512,7 +512,7 @@
 <xsl:variable name="permalink" select="concat('/log/',translate(b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext)" />
 <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-{@baseName}">
     <header>
-        <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}" pubdate="pubdate">
+        <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}">
             <xsl:choose>
                 <xsl:when test="$showdate != '1'">
                     <xsl:attribute name="class">same-date</xsl:attribute>
