@@ -135,7 +135,7 @@
 		</xsl:choose>
         <meta property="fb:admins" content="582724207" />
 	</head>
-	<body>
+	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
 
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
