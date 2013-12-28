@@ -25,17 +25,7 @@
 <!-- html5 DTD -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html>
 </xsl:text>
-<html lang="zh-tw">
-    <xsl:choose>
-        <xsl:when test="$listType = 's'">
-            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-            <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
-        </xsl:when>
-        <xsl:when test="$listType = 'about'">
-            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-            <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
-        </xsl:when>
-    </xsl:choose>
+<html lang="zh-tw" prefix="og: http://ogp.me/ns#">
 	<head>
 		<meta charset="UTF-8" />
 		<title>
@@ -93,7 +83,7 @@
                 <link rel="canonical" itemprop="url" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
-                        <meta name="twitter:card" content="summary" />
+                        <meta name="twitter:card" content="summary_large_image" />
                         <meta name="twitter:site" content="@othree" />
                     </xsl:when>
                     <xsl:otherwise>
@@ -136,6 +126,16 @@
         <meta property="fb:admins" content="582724207" />
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
+        <xsl:choose>
+            <xsl:when test="$listType = 'about'">
+                <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+                <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+                <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
+            </xsl:otherwise>
+        </xsl:choose>
 
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
@@ -193,10 +193,10 @@
             <div class="row">
                 
                 <xsl:apply-templates select="b:entries/b:entriesMeta" />
-                <div id="content" role="main" class="span9">
+                <main id="content" role="main" class="span9">
                     <hr/>
                     <xsl:apply-templates select="b:entries"/>
-                </div>
+                </main>
                 <aside role="complementary" class="span3">
                     <hr />
                     <h2>其它資訊</h2>
@@ -324,7 +324,7 @@
                     <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
                     <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
                     <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-                    <a href="https://plus.google.com/108698651587282496682?rel=author">Google+</a>
+                    <a href="https://plus.google.com/108698651587282496682?rel=author" rel="publisher">Google+</a>
                 </p>
             </footer>
 		</div>
