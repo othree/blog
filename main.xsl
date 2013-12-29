@@ -80,11 +80,12 @@
 		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
-                <link rel="canonical" itemprop="url" href="{$canonical}" />
+                <link rel="canonical" href="{$canonical}" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
                         <meta name="twitter:card" content="summary_large_image" />
-                        <meta name="twitter:site" content="@othree" />
+                        <!-- <meta name="twitter:card" content="summary" /> -->
+                        <meta name="twitter:creator" content="@othree" />
                     </xsl:when>
                     <xsl:otherwise>
                         <meta name="twitter:card" content="summary" />
@@ -92,9 +93,9 @@
                     </xsl:otherwise>
                 </xsl:choose>
                 <meta property="og:title" content="{//b:blog/b:entries/b:entry/b:title}" />
+                <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
                 <meta property="og:url" content="{$canonical}" />
                 <meta property="og:type" content="article" />
-                <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
                 <xsl:for-each select="descendant::*[local-name() = 'img'][1]">
                     <xsl:choose>
                         <xsl:when test="starts-with(@src, '//')">
@@ -114,6 +115,9 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
+                <meta name="twitter:card:test" content="hiphopbaseNL" />
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:creator" content="@othree" />
                 <meta property="og:title" content="{b:blogTitle}" />
                 <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄" />
                 <meta property="og:url" content="{$canonical}" />
@@ -239,9 +243,9 @@
                                     <xsl:with-param name="by" select="'%2F'" />
                                 </xsl:call-template>
                             </xsl:variable>
-                            <iframe id="fb-button" allowTransparency="true" frameborder="0" scrolling="no" src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fblog.othree.net%2F{$permalink}&amp;send=false&amp;layout=box_count&amp;width=41&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=61&amp;appId=263583993673371"></iframe>
-                            <iframe id="gp-button" allowtransparency="true" frameborder="0" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
-                            <iframe id="tw-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
+                            <iframe id="fb-button" src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fblog.othree.net%2F{$permalink}&amp;send=false&amp;layout=box_count&amp;width=41&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=61&amp;appId=263583993673371"></iframe>
+                            <iframe id="gp-button" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
+                            <iframe id="tw-button" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
                             <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
                             <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
                             <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
@@ -251,11 +255,11 @@
                         <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous or //b:blog/b:entries/b:entriesMeta/b:next">
                         <p>
                             <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous">
-                                <div><a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a></div>
+                                <a class="prev pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:previous/b:mBase}/{$ext}"><span class="prefix">上一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:previous/b:mDate"/></time></a>
                             </xsl:if>
 
                             <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:next">
-                                <div><a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a></div>
+                                <a class="next pn" href="/log/{translate(//b:blog/b:entries/b:entriesMeta/b:next/b:mDate, '-', '/')}/{//b:blog/b:entries/b:entriesMeta/b:next/b:mBase}/{$ext}"><span class="prefix">下一篇：</span><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mTitle"/><time><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:next/b:mDate"/></time></a>
                             </xsl:if>
                         </p>
                         </xsl:if>
