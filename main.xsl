@@ -243,7 +243,7 @@
                                     <xsl:with-param name="by" select="'%2F'" />
                                 </xsl:call-template>
                             </xsl:variable>
-                            <iframe id="fb-button" src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fblog.othree.net%2F{$permalink}&amp;send=false&amp;layout=box_count&amp;width=41&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=61&amp;appId=263583993673371"></iframe>
+                            <iframe id="fb-button" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;send=false&amp;layout=box_count&amp;width=41&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=61&amp;appId=263583993673371"></iframe>
                             <iframe id="gp-button" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
                             <iframe id="tw-button" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
                             <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
@@ -335,7 +335,7 @@
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"> </script>
-        <script src="/scripts/parallax.js"> </script>
+        <!-- <script src="/scripts/parallax.js"> </script> -->
         <!-- <xsl:if test="$listType = 's'"> -->
             <!-- <div id="fb-root"><xsl:text> </xsl:text></div> -->
             <!-- <script src="/scripts/googleplusone.js"> </script> -->
