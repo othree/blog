@@ -7,7 +7,7 @@ error_reporting(0);
 
 if (preg_match("/_/", getenv('QUERY_STRING'))) {
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: http://blog.othree.net".preg_replace("/_/", "-", getenv('QUERY_STRING')));
+    header("Location: https://blog.othree.net".preg_replace("/_/", "-", getenv('QUERY_STRING')));
     exit();
 }
 
