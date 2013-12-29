@@ -58,8 +58,9 @@
 
 <p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
 
-<pre><code>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state.
-</code></pre>
+<blockquote>
+  <p>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state. </p>
+</blockquote>
 
 <p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
 
