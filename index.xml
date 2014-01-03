@@ -9,6 +9,59 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000785" baseName="scrolling-performance">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-01</b:date>
+				<b:time>01:49:24</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Scrolling Performance</b:title>
+			<b:content>
+				<b:summary>元旦就是要來發篇技術文章的啦。 一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，Fixing a parallax scrolling website to run in 60 FPS 這篇文章有整理成條目： Resize、scroll 事件不要在迴圈內綁 Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行 避免 resize 大張圖片 避免 background-size HTML5 Rocks 的 Scrolling Performance 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的...</b:summary>
+				<b:mainContent><p>元旦就是要來發篇技術文章的啦。</p>
+
+<p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
+
+<ol>
+<li>Resize、scroll 事件不要在迴圈內綁</li>
+<li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
+<li>避免 resize 大張圖片</li>
+<li>避免 background-size</li>
+</ol>
+
+<p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
+
+<p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr"><img src="//farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" src-1="(max-width: 768px)  //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0.jpg 1x, //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 2x"  /></a></p>
+
+<p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
+
+<p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
+
+<ul>
+<li><code>&lt;img&gt;</code> width/height 屬性</li>
+<li>CSS 相對長度定義（百分比、em）</li>
+<li>CSS 絕對長對定義（px）</li>
+<li>CSS 背景圖 + background-size</li>
+</ul>
+
+<p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000784" baseName="2013">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -193,57 +246,6 @@
 <p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
 </b:mainContent>
 				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000779" baseName="accessibility_in_us">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-12-10</b:date>
-				<b:time>20:49:02</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>Accessibility in US</b:title>
-			<b:content>
-				<b:summary> 這次去美國因為有人受傷，讓我體會到美國的無障礙設施真的是完善很多，而且很早就開始弄了，當然有很多情形是他們地很大，要對輪椅友善相對簡單，像是 Mozilla 舊金山辦公室，前身是間酒館，旁邊入口處都有給輪椅上下用的電梯。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10321024516/" title="Mozilla San Francisco by othree, on Flickr"><img src="//farm4.staticflickr.com/3683/10321024516_32e0e491b0_b.jpg" width="683" height="1024" alt="Mozilla San Francisco" src-1="(max-width: 768px)  //farm4.staticflickr.com/3683/10321024516_32e0e491b0.jpg 1x, //farm4.staticflickr.com/3683/10321024516_32e0e491b0_b.jpg 2x" src-2="//farm4.staticflickr.com/3683/10321024516_99f1e526ab_k.jpg 2x" /></a></p>
-
-<p>這次去美國因為有人受傷，讓我體會到美國的無障礙設施真的是完善很多，而且很早就開始弄了，當然有很多情形是他們地很大，要對輪椅友善相對簡單，像是 Mozilla 舊金山辦公室，前身是間酒館，旁邊入口處都有給輪椅上下用的電梯。</p>
-</b:mainContent>
-				<b:extendContent><p>在舊金山似乎所有的公車都可以讓輪椅上下，雖然沒搭到公車，不過有搭這種輕軌電車：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10320984554/" title="San Francisco by othree, on Flickr"><img src="//farm6.staticflickr.com/5545/10320984554_c5c03d7a0a_b.jpg" width="1024" height="683" alt="San Francisco" src-1="(max-width: 768px)  //farm6.staticflickr.com/5545/10320984554_c5c03d7a0a.jpg 1x, //farm6.staticflickr.com/5545/10320984554_c5c03d7a0a_b.jpg 2x" src-2="//farm6.staticflickr.com/5545/10320984554_4484805db9_k.jpg 2x" /></a></p>
-
-<p>一樣可以讓輪椅上下車：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10321009585/" title="San Francisco by othree, on Flickr"><img src="//farm4.staticflickr.com/3712/10321009585_303e7f3c12_b.jpg" width="1024" height="683" alt="San Francisco" src-1="(max-width: 768px)  //farm4.staticflickr.com/3712/10321009585_303e7f3c12.jpg 1x, //farm4.staticflickr.com/3712/10321009585_303e7f3c12_b.jpg 2x" src-2="//farm4.staticflickr.com/3712/10321009585_5db07ecaea_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/milkway_gdh/10374452826/" title="R0022113 by 極地狐, on Flickr"><img src="//farm8.staticflickr.com/7354/10374452826_bfddf5db6f_b.jpg" width="1024" height="768" alt="R0022113" src-1="(max-width: 768px)  //farm8.staticflickr.com/7354/10374452826_bfddf5db6f.jpg 1x, //farm8.staticflickr.com/7354/10374452826_bfddf5db6f_b.jpg 2x" src-2="//farm8.staticflickr.com/7354/10374452826_a49329f54c_k.jpg 2x" /></a></p>
-
-<p>另外在 Costco 他們提供給行動不便會員的是有購物籃的電動車：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/milkway_gdh/10373701944/" title="San Fransico by 極地狐, on Flickr"><img src="//farm8.staticflickr.com/7440/10373701944_7439a62b24_b.jpg" width="1024" height="768" alt="San Fransico" src-1="(max-width: 768px)  //farm8.staticflickr.com/7440/10373701944_7439a62b24.jpg 1x, //farm8.staticflickr.com/7440/10373701944_7439a62b24_b.jpg 2x" src-2="//farm8.staticflickr.com/7440/10373701944_ddb19c35a6_k.jpg 2x" /></a></p>
-
-<p>在環球影城 Universal 也是備受禮遇，和柯博文拍照不用排隊：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10353215904/" title="Universal by othree, on Flickr"><img src="//farm8.staticflickr.com/7408/10353215904_3252d737fd_b.jpg" width="1024" height="683" alt="Universal" src-1="(max-width: 768px)  //farm8.staticflickr.com/7408/10353215904_3252d737fd.jpg 1x, //farm8.staticflickr.com/7408/10353215904_3252d737fd_b.jpg 2x" src-2="//farm8.staticflickr.com/7408/10353215904_3a5f8bf6b5_k.jpg 2x" /></a></p>
-
-<p>所有遊樂設施的通路也都沒階梯，輪椅通行無阻：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10353214124/" title="Universal by othree, on Flickr"><img src="//farm4.staticflickr.com/3779/10353214124_6c21c43259_b.jpg" width="1024" height="683" alt="Universal" src-1="(max-width: 768px)  //farm4.staticflickr.com/3779/10353214124_6c21c43259.jpg 1x, //farm4.staticflickr.com/3779/10353214124_6c21c43259_b.jpg 2x" src-2="//farm4.staticflickr.com/3779/10353214124_6c543e859a_k.jpg 2x" /></a></p>
-
-<p>另外在 Outlet 時，去借輪椅時順便問一下，這樣我們可以停殘障車位嘛？結果他說因為我們沒有殘障停車證，要是停的話還是會收到罰單，這點我覺得很有趣，因為 Outlet 的停車場應該算是私人的地方，但是美國那邊警察顯然還是可以進來開這種違規單，相較之下台灣的警察對於這種私人領域的交通違規似乎是很沒有力。</p>
-
-<p>其實以上只有講到行動不便需要輪椅的人，講到無障礙其實是有很多種狀況的，本來也沒繼續去看其他不同殘疾的人有沒有一樣友善的環境。回國後我看到一篇文章：<a href="http://disable.yam.org.tw/node/4053">聾人的資訊平權(一)</a>，講到聽障在美國和在台灣的處境差異，還蠻意外手語在美國是第三大外語，而且美國這麼大只有<a href="http://en.wikipedia.org/wiki/American_Sign_Language">一種</a>手語系統，小小的台灣不知道為什有三種的樣子，不過總之，美國在這方面真的是比我們完善很多，也已經行之有年，難怪美國 1986 就提出 <a href="http://www.section508.gov/">Section 508</a>，台灣現狀就...不說也罷了。</p>
 </b:extendContent>
 			</b:content>
 

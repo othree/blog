@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>y</b:listType>
+			<b:listData listID="2014">2014</b:listData>
+
+			<b:previous>
+				<b:mTitle>2013</b:mTitle>
+				<b:mDate>2013</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000785" baseName="scrolling-performance">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-01</b:date>
+				<b:time>01:49:24</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Scrolling Performance</b:title>
+			<b:content>
+				<b:summary>元旦就是要來發篇技術文章的啦。 一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，Fixing a parallax scrolling website to run in 60 FPS 這篇文章有整理成條目： Resize、scroll 事件不要在迴圈內綁 Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行 避免 resize 大張圖片 避免 background-size HTML5 Rocks 的 Scrolling Performance 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的...</b:summary>
+				<b:mainContent><p>元旦就是要來發篇技術文章的啦。</p>
+
+<p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
+
+<ol>
+<li>Resize、scroll 事件不要在迴圈內綁</li>
+<li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
+<li>避免 resize 大張圖片</li>
+<li>避免 background-size</li>
+</ol>
+
+<p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
+
+<p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr"><img src="//farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" src-1="(max-width: 768px)  //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0.jpg 1x, //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 2x"  /></a></p>
+
+<p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
+
+<p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
+
+<ul>
+<li><code>&lt;img&gt;</code> width/height 屬性</li>
+<li>CSS 相對長度定義（百分比、em）</li>
+<li>CSS 絕對長對定義（px）</li>
+<li>CSS 背景圖 + background-size</li>
+</ul>
+
+<p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

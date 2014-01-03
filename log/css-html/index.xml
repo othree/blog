@@ -9,6 +9,59 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000785" baseName="scrolling-performance">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-01</b:date>
+				<b:time>01:49:24</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Scrolling Performance</b:title>
+			<b:content>
+				<b:summary>元旦就是要來發篇技術文章的啦。 一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，Fixing a parallax scrolling website to run in 60 FPS 這篇文章有整理成條目： Resize、scroll 事件不要在迴圈內綁 Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行 避免 resize 大張圖片 避免 background-size HTML5 Rocks 的 Scrolling Performance 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的...</b:summary>
+				<b:mainContent><p>元旦就是要來發篇技術文章的啦。</p>
+
+<p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
+
+<ol>
+<li>Resize、scroll 事件不要在迴圈內綁</li>
+<li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
+<li>避免 resize 大張圖片</li>
+<li>避免 background-size</li>
+</ol>
+
+<p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
+
+<p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr"><img src="//farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" src-1="(max-width: 768px)  //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0.jpg 1x, //farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 2x"  /></a></p>
+
+<p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
+
+<p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
+
+<ul>
+<li><code>&lt;img&gt;</code> width/height 屬性</li>
+<li>CSS 相對長度定義（百分比、em）</li>
+<li>CSS 絕對長對定義（px）</li>
+<li>CSS 背景圖 + background-size</li>
+</ul>
+
+<p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000783" baseName="w3c-validator-suite">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -463,75 +516,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 			</b:content>
 
 			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000715" baseName="opengraph-protocol-twitter-card">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2012-11-02</b:date>
-				<b:time>11:07:11</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Open Graph Protocol, Twitter Card</b:title>
-			<b:content>
-				<b:summary> 大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 Open Graph Protocol，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下： &lt;meta property="og:title" content="Device Pixel Ratio" /&gt; &lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt; &lt;meta property="og:type" content="article" /&gt; &lt;meta property="og:description" content="...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="//www.flickr.com/photos/othree/8146654174/" title="Flickr 上 othree 的 Twitter Card from 影像紀錄區"><img src="//farm9.staticflickr.com/8332/8146654174_48699279f9.jpg" width="422" height="500" alt="Twitter Card from 影像紀錄區" /></a></p>
-
-<p>大部分人應該都會有注意到，Facebook 上在分享網誌的時候，會顯示出該網頁的文章摘要以及圖片的縮圖，一般的情形，這是 Facebook 的機器人去分析網頁後，抓出來的資訊，不過對於網站主人來說，其實是可以主動提供這些資訊的，也就是說你可以提供不一樣的網頁標題，摘要內容和要顯示的縮圖給 Facebook 的讀者，Facebook 在 2011 年的 F8 中發表了一個新的 <a href="http://ogp.me/">Open Graph Protocol</a>，藉由預先定義好的 meta 標籤來提供這些可以給 Facebook 機器人接收的資訊，使用上很簡單，就是插入一組 meta 標籤在 head 裡面，看起來如下：</p>
-
-<pre><code>&lt;meta property="og:title" content="Device Pixel Ratio" /&gt;
-&lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
-&lt;meta property="og:type" content="article" /&gt;
-&lt;meta property="og:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
-&lt;meta property="og:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
-</code></pre>
-
-<p>這組標籤放在你的 head 裡面，如果有人在分享的 facebook 上分享的話，看起來就如下圖：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146662104/" title="Flickr 上 othree 的 Facebook Open Graph Protocol"><img src="//farm9.staticflickr.com/8191/8146662104_50ff447a3b.jpg" width="500" height="183" alt="Facebook Open Graph Protocol" /></a></p>
-
-<p>Open Graph Protocol 定義的標籤很好理解，也沒有複雜的結構，所以對於開發人員是非常友善，不過其實我是不太樂觀其成的，主要原因是我覺得它是個被 Facebook 控制的封閉標準，網路標準的發展最不希望發生的就是某個標準受至於特定的人或公司，不過其實一年過後的今天，我對 Open Graph Protocol 有改觀不少，也讓我願意在自己的網站上加入這樣的標籤，會讓我改觀的原因有兩個，一是雖然 Facebook 沒有明說過，不過 Open Graph Protocol 的網站上其實是一點 Facebook 的色彩都沒有的，如果不知道前因後果的話，其實不容易發現這套格式是由他們家提出，這讓我覺得他們有希望把這個格式推出去，而不是只限於 Facebook 使用，當然這一切可能都是商業陰謀，所以直到 Twitter 推出了 <a href="https://dev.twitter.com/docs/cards">Twitter Cards</a> 之前，我都還是不敢貿然進場。</p>
-
-<p>今年 Twitter 推出一項新的 API 規格，叫做 Twitter Cards，可以把他想成是 Open Graph Protocol 的 Twitter 版，meta 標籤的部分看起來就像：</p>
-
-<pre><code>&lt;meta name="twitter:card" content="summary" /&gt;
-&lt;meta name="twitter:title" content="Device Pixel Ratio" /&gt;
-&lt;meta name="twitter:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
-&lt;meta name="twitter:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
-&lt;meta name="twitter:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
-</code></pre>
-
-<p>這張 Twitter Card 結果會在 Twitter 呈現成如下圖的樣子：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8146619231/" title="Flickr 上 othree 的 Twitter Card Preview"><img src="//farm9.staticflickr.com/8193/8146619231_4c368a50d9.jpg" width="464" height="500" alt="Twitter Card Preview" /></a></p>
-
-<p>Twitter Cards 基本上也和 Open Graph Ptotocol 一樣定義了整套相近的標籤屬性，像是 title, desciption, url, image 等就是兩種規格都有的屬性，而最讓我意外的一件事情是，Twitter Card 相容於 Open Graph Protocol，大部分兩種規格都有的屬性，Twitter Cards 都可以支援 Open Graph Protocol 已經寫好的 meta 標籤，所以我如果要同時支援 Twitter 和 Open Graph 不用兩套重複的內容都寫出來，只要先寫 Open Graph Protocol，然後再把 Twitter 不足的部分補上去就可以了：</p>
-
-<pre><code>&lt;meta name="twitter:card" content="summary" /&gt;
-&lt;meta property="og:title" content="Device Pixel Ratio" /&gt;
-&lt;meta property="og:url" content="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/" /&gt;
-&lt;meta property="og:type" content="article" /&gt;
-&lt;meta property="og:description" content=" 這兩天又對 blog 做了一些加強..." /&gt;
-&lt;meta property="og:image" content="http://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" /&gt;
-</code></pre>
-
-<p>其實這樣的相容是可以用語意網的觀念來解釋的，在語意網的世界中，描述事物的框架和事物本身的說明與資訊兩者是分開的，前者基本上是 RDF 標準，在這篇文章的例子就只是簡單的 meta 標籤，而後者也稱為知識本體（ontology），兩者基本上是完全獨立，而知識本體包括了語彙以及語彙之間的關係，在 Open Graph Protocol 中，像是 <em>og:title</em>, <em>og:type</em>, <em>og:decrition</em> 等都是屬於知識本體的語彙，分別有著標題、類別和敘述的意義，而 Twitter Cards 則是瞭解兩者間語彙的關係，建立了像是 <code>og:title = twitter:title</code>, <code>og:description = twitter:description</code> 這樣的關係，因此兩種屬性就是等價的存在。</p>
-
-<p>語意網的部分就先到這部分暫停，下一篇繼續介紹些新東西，回到 Open Graph Protocol，其實我對他有些不滿意的地方，就是 title, description 和 url 這三個屬性，其實在 HTML 裡已經早就有定義好的地方會記錄了，title 當然就是 title 標籤， description 就是 meta description，url 則是 <a href="http://blog.othree.net/log/2011/03/03/canonical-url/">canonical url</a>，不瞭解是什麼原因才讓他們捨棄使用既有的資訊，結果是雖然 Twitter Cards 相容 Open Graph Protocol，但是網頁的 meta data 還是會有重複的資料，實在很可惜，當然我想到一個可能性，就是語意網的支援。</p>
-
-<p>另外一個要提的就是兩個規範都有開發用的預覽工具，分別是 <a href="https://developers.facebook.com/tools/debug">Facebook Object Debugger</a> 和 <a href="https://dev.twitter.com/docs/cards/preview">Twitter Cards Preview Tool</a>，Facebook 對 Open Graph Protocol 的支援是完全開放的，不過 Twitter Cards 目前是白名單機制，似乎是有計畫要完全開放，不過沒有時程，目前是要先申請，台灣我目前只知道 <a href="https://twitter.com/toomore">@Toomore</a> 的 <a href="http://pi.isuphoto.org/">影像紀錄區</a> 申請有過，所以如果有人分享影像紀錄區的作品的話，在 Twitter 上就可以直接預覽到照片了！</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="3"></b:comments>
 
 
 		</b:entry>
