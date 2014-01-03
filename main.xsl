@@ -47,20 +47,20 @@
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
 			<xsl:when test="$listType = 'about'">
-				<link rel="previous" title="BLOGROLL" href="{$mainPath}blogroll/{$ext}" />
+				<link rel="prev" title="BLOGROLL" href="{$mainPath}blogroll/{$ext}" />
 			</xsl:when>
 			<xsl:when test="$listType = 'search'">
-				<link rel="previous" title="首頁" href="{$mainPath}{$ext}" />
+				<link rel="prev" title="首頁" href="{$mainPath}{$ext}" />
 			</xsl:when>
 			<xsl:when test="$listType = 'i'">
 				<link rel="next" title="彙整" href="{$mainPath}log/{$ext}" />
 			</xsl:when>
 			<xsl:when test="$listType = 'a'">
-				<link rel="previous" title="首頁" href="{$mainPath}{$ext}" />
+				<link rel="prev" title="首頁" href="{$mainPath}{$ext}" />
 				<link rel="next" title="BLOGROLL" href="{$mainPath}blogroll/{$ext}" />
 			</xsl:when>
 			<xsl:when test="$listType = 'o'">
-				<link rel="previous" title="彙整" href="{$mainPath}log/{$ext}" />
+				<link rel="prev" title="彙整" href="{$mainPath}log/{$ext}" />
 				<link rel="next" title="關於" href="{$mainPath}about/me/{$ext}" />
 			</xsl:when>
 			<xsl:otherwise>
@@ -84,7 +84,6 @@
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
                         <meta name="twitter:card" content="summary_large_image" />
-                        <!-- <meta name="twitter:card" content="summary" /> -->
                         <meta name="twitter:creator" content="@othree" />
                     </xsl:when>
                     <xsl:otherwise>
@@ -115,7 +114,6 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-                <meta name="twitter:card:test" content="hiphopbaseNL" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:creator" content="@othree" />
                 <meta property="og:title" content="{b:blogTitle}" />
