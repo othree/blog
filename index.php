@@ -145,7 +145,7 @@ if (preg_match("/Webkit/", $UA)) {
     $CSP = 'X-WebKit-CSP';
 }
 
-header($CSP.": default-src 'none'; style-src 'self'; script-src 'self' https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; font-src https://themes.googleusercontent.com; img-src 'self' https://*.static.flickr.com https://*.staticflickr.com https://ssl.google-analytics.com; frame-src https://plusone.google.com https://www.facebook.com https://platform.twitter.com https://speakerdeck.com https://www.youtube.com;");
+header($CSP.": default-src 'none'; style-src 'self'; script-src 'self' https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; font-src https://themes.googleusercontent.com; img-src 'self' http://*.static.flickr.com *.static.flickr.com *.staticflickr.com https://ssl.google-analytics.com; frame-src *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com;");
 
 echo $output;
 
