@@ -9,6 +9,85 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000790" baseName="object-fit">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-28</b:date>
+				<b:time>22:32:51</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>object-fit</b:title>
+			<b:content>
+				<b:summary>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。 如果要純前端處理，其實目前最好用的作法是用 CSS3 Background 的 background-size: cover;，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 &lt;img&gt; 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。 要維持 &lt;img&gt; 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣： $.fn.cover = (selector) -&gt; $(@).each -&gt; $outer = $(@)...</b:summary>
+				<b:mainContent><p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
+
+<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
+
+<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
+
+<pre><code>$.fn.cover = (selector) -&gt;
+  $(@).each -&gt;
+    $outer = $(@)
+    ow = $outer.width()
+    oh = $outer.height()
+    or = ow / oh
+    $outer.find(selector).each -&gt;
+      $item = $(@)
+      iw = $item.width()
+      ih = $item.height()
+      ir = iw / ih
+      if ir &lt; or
+        w = ow
+        h = ow / ir
+        l = 0
+        t = (oh - h) / 2
+      else
+        h = oh
+        w = oh * ir
+        t = 0
+        l = (ow - w) / 2
+
+      $item.css(width: w, height: h, top: t, left: l)
+</code></pre>
+
+<p>使用範例：</p>
+
+<pre><code>$('.cell').cover('img')
+</code></pre>
+
+<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
+
+<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
+
+<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
+
+<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
+</code></pre>
+
+<p>配上 CSS：</p>
+
+<pre><code>img.cover {
+  object-fit: cover;
+}
+</code></pre>
+
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個心標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>。</p>
+
+<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000786" baseName="more-twitter-cards">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -396,76 +475,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <p>最後還有一個比較不重要，純粹是自爽的，就是現在本 blog 支援 HTTPS 連線了，一開始的動機只是因為看到 Chrome 會說網站尚未驗證身份，所以就一不做二不休，弄到有綠色鎖頭出現，不過目前還有一些問題需要處理，所以沒有弄成強制轉成 HTTPS，像是 Twitter Card 白名單好像有分，還有提交給搜尋引擎的 sitemap.xml，還有 canonical url 等都要統一，其實還很多細節要處理就是。</p>
 
 <p>這一兩個月大概就是做了這些改進，斷斷續續的修改，看到什麼就修什麼，其實沒有先列清單，其實還有剛完成的 <a href="http://blog.othree.net/log/2012/12/02/srcset/">srcset</a> 支援的東西就是。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000722" baseName="srcset">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2012-12-02</b:date>
-				<b:time>17:52:46</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>srcset 支援</b:title>
-			<b:content>
-				<b:summary> 之前的 Device Pixel Ratio 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 picture 標籤和 srcset 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像： &lt;picture&gt; &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt; &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt; &lt;img src="fallback.jpg" alt=""&gt; &lt;/picture&gt; 至於 srcset 就長的像： &lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x,...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8229879792/" title="Flickr 上 othree 的 Large"><img src="//farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg" width="1024" height="768" alt="Large" srcset="//farm9.staticflickr.com/8202/8229879792_f364c8645f.jpg 768w, //farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg 768w 2x, //farm9.staticflickr.com/8202/8229879792_eba1553052_k.jpg 2x" /></a></p>
-
-<p>之前的 <a href="http://blog.othree.net/log/2012/10/28/device-pixel-ratio/">Device Pixel Ratio</a> 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 <a href="http://picture.responsiveimages.org/">picture</a> 標籤和 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像：</p>
-
-<pre><code>&lt;picture&gt;
-  &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt;
-  &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt;
-  &lt;img src="fallback.jpg" alt=""&gt;
-&lt;/picture&gt;
-</code></pre>
-
-<p>至於 srcset 就長的像：</p>
-
-<pre><code>&lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x, small-hd.jpg 640w 2x, med.jpg 1x, med-hd.jpg 2x "&gt;
-</code></pre>
-
-<p>基本上差異就是，picture 標籤內可以用 <a href="http://www.w3.org/TR/css3-mediaqueries/">media-query</a>，而 srcset 裡面的寬高則是代表最大值，也就是等價於 max-width 和 max-height，而不能設定 min-width 或 min-height，目前這兩份標準都是由 <a href="http://responsiveimages.org/">Responsive Images Community Group</a>(RICG) 來制訂，這個 Community Group(CG) 我覺得還蠻特別的，因為他們有自己的 domain，自己的網站，還有 <a href="https://twitter.com/respimg">twitter 帳號</a>、<a href="https://github.com/responsiveimagescg">Github 帳號</a>，和以往的標準 CG 比起來實在差蠻多，不知道組成成員是哪些，都用些很新世代的服務。</p>
-
-<p>我自己是比較喜歡 srcset 這個作法，簡潔很多，不過相對的也就沒有 picture 那樣結構化，不過兩者都有正確的 fallback 機制，所以不管選那個方法，目前的瀏覽器至少都還是可以顯示圖片。現在由於還沒有任何一個瀏覽器開始支援，所以要能實現 responsive image，要碼就是用 javascript library 來實做，要碼就是在 server 端做這件事，RICG 他們推薦的 polyfill library 是 <a href="https://github.com/scottjehl/picturefill">picturefill</a> 這套，不過我不太喜歡，因為它不是用 picture 標籤，而是自定義了一組用 div 和 data attribute 的寫法：</p>
-
-<pre><code>&lt;div data-picture data-alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
-    &lt;div data-src="small.jpg"&gt;&lt;/div&gt;
-    &lt;div data-src="medium.jpg"     data-media="(min-width: 400px)"&gt;&lt;/div&gt;
-    &lt;div data-src="large.jpg"      data-media="(min-width: 800px)"&gt;&lt;/div&gt;
-    &lt;div data-src="extralarge.jpg" data-media="(min-width: 1000px)"&gt;&lt;/div&gt;
-
-    &lt;!-- Fallback content for non-JS browsers. Same img src as the initial, unqualified source element. --&gt;
-    &lt;noscript&gt;
-        &lt;img src="external/imgs/small.jpg" alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
-    &lt;/noscript&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>目前 <a href="http://dribbble.com/">dribbble</a> 是使用這套，另外有一套實做 srcset 的 library 叫 <a href="https://github.com/borismus/srcset-polyfill">srcset-polyfill</a>，這套就是完全照 spec 草稿下去寫的，不過我自己是沒用過，因為我自己是能少用 polyfill 就少用的那種，剛好我的 blog 架構有多一層 XSLT，所以我就把支援做在那層了。我的作法就是 server 端想辦法判斷應該要給瀏覽器哪張圖片，然後 parse 網頁內容後，對有 srcset 的圖片作處理，把原來的 src 替換成適合的圖片位置，做在 XSLT 端的好處是反正那邊本來就要處理網頁的 DOM tree 了，用專門 XML parser 來做這件事情比較不會發生意外這樣，不過基本上就是個 server 端實做，也沒很特別，倒是判斷依據和規則想比較久。</p>
-
-<pre><code>&lt;a class="thumbnail" href="http://www.flickr.com/photos/othree/7877215448/" title="Flickr 上 othree 的 花蓮"&gt;
-    &lt;img src="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg" width="1024" height="683" alt="花蓮" 
-        srcset="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c.jpg 768w,
-            //farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg 768w 2x,
-            //farm9.staticflickr.com/8431/7877215448_9a51e0f42a_k.jpg 2x" /&gt;
-&lt;/a&gt;
-</code></pre>
-
-<p>目前我會在 srcset 裡面放三張圖，寬度分別是 500px、1024px 和 2048px 的，500px 那張的主要目標是給手機，1024px 那張是一般電腦，2048px 則是要給螢幕夠大且支援 HiDPI 的設備，像是 MBPR 和 iPad 3，基本上和 Device Pixel Ratio 的方法一樣，第一次來的訪客會寫入 cookie，記錄寬高最短邊的長度，只要最短邊小於 768 就給他最小張的寬 500px 的圖，剩下的情形就看 Dvice Pixel Ratio 決定要給哪張。不過光是這樣的規則其實還有些問題，就是頻寬的問題，像是用手機的人用 3G 網路加上螢幕不大，即使只是第一次來也很不需要抓 1024px 的圖片，所以第一次來的訪客我還會用 <a href="https://github.com/serbanghita/Mobile-Detect">Mobile_Detect</a> 來判斷，如果發現是手機的話第一次就會給 500px 的小圖。</p>
-
-<p>目前用 Android Chrome、iPad Safari 還有桌上型電腦測過都有符合預期目標，目前也還沒想到其他改進的方向，可能等市面上的裝置分布有改變的話再調整了吧，不過如果瀏覽器直接支援 srcset 的話，那是最好，我也不需要在修改了:P。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

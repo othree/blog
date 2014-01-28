@@ -332,7 +332,8 @@
 		</div>
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
-        <script src="/scripts/nav-search.js"> </script>
+        <script src="/scripts/nav-search.js"></script>
+        <script src="/scripts/disable_pointer_events.js"></script>
         <!-- <script src="/scripts/parallax.js"> </script> -->
         <!-- <xsl:if test="$listType = 's'"> -->
             <!-- <div id="fb-root"><xsl:text> </xsl:text></div> -->

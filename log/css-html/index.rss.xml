@@ -5,10 +5,75 @@
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-01-05 00:34</lastBuildDate>
+<lastBuildDate>2014-01-28 22:32</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>object-fit</title>
+<description><![CDATA[<p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
+
+<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
+
+<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
+
+<pre><code>$.fn.cover = (selector) -&gt;
+  $(@).each -&gt;
+    $outer = $(@)
+    ow = $outer.width()
+    oh = $outer.height()
+    or = ow / oh
+    $outer.find(selector).each -&gt;
+      $item = $(@)
+      iw = $item.width()
+      ih = $item.height()
+      ir = iw / ih
+      if ir &lt; or
+        w = ow
+        h = ow / ir
+        l = 0
+        t = (oh - h) / 2
+      else
+        h = oh
+        w = oh * ir
+        t = 0
+        l = (ow - w) / 2
+
+      $item.css(width: w, height: h, top: t, left: l)
+</code></pre>
+
+<p>使用範例：</p>
+
+<pre><code>$('.cell').cover('img')
+</code></pre>
+
+<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
+
+<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
+
+<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
+
+<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
+</code></pre>
+
+<p>配上 CSS：</p>
+
+<pre><code>img.cover {
+  object-fit: cover;
+}
+</code></pre>
+
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個心標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>。</p>
+
+<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/01/28/object-fit/</link>
+<guid>https://blog.othree.net/log/2014/01/28/object-fit/</guid>
+<category>css-html</category>
+<pubDate>2014-01-28 22:32</pubDate>
+</item>
 
 <item>
 <title>More Twitter Cards</title>
@@ -491,295 +556,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <guid>https://blog.othree.net/log/2011/08/26/wai-aria-is-more-than-acc/</guid>
 <category>css-html</category>
 <pubDate>2011-08-26 01:28</pubDate>
-</item>
-
-<item>
-<title>Markdown 介紹與文件</title>
-<description><![CDATA[<p>之前寫過一篇 <a href="http://blog.othree.net/log/2011/03/08/markdown-syntax/">文章</a> 介紹了一下 Markdown，其實那時候我就已經在翻譯它的 <a href="http://daringfireball.net/projects/markdown/syntax">文件</a> 了（類似 BSD 的 License，所以應該是可以自由翻譯吧:P），最近才差不多完成，除了完整文件外，我還把簡介語法的那篇 <a href="http://daringfireball.net/projects/markdown/basics">文章</a> 也翻譯了，全文就放在繼續閱讀裡，建議大家可以先看看這篇本文再去看完整的中文版文件。</p>
-
-<ul>
-<li>Markdown 文件中文版： <a href="http://markdown.tw/">markdown.tw</a> 。</li>
-</ul>
-
-<p>喔，對了，現在缺人潤稿，然後東西都放在 <a href="https://github.com/othree/markdown-syntax-zhtw">github</a> 上，如果你有發現什麼問題可以上去開 issue，網頁本身也是用 github pages 來 host ，只有 domain 是我花錢買的:P。</p>
-]]><![CDATA[<h4>Markdown 的語法要領</h4>
-
-<p>這頁提供了 Markdown 簡單的概觀給想使用的人， <a href="http://markdown.tw" title="Markdown Syntax">語法說明</a> 頁提供了完整詳細的文件，說明每項功能，但是 Markdown 其實很簡單就可以上手，這頁文件提供了一些範例，並且每個範例都有提供輸出的 HTML 結果。</p>
-
-<p>其實直接試試看也是一個很不錯的方法， <a href="http://daringfireball.net/projects/markdown/dingus" title="Markdown Dingus">Dingus</a> 是一個網頁應用程式，讓你可以把你的 Markdown 文件轉成 XHTML。</p>
-
-<p><strong>Note:</strong> 這份文件本身也是用 Markdown 寫的，你也可以看看 <a href="https://github.com/othree/markdown-syntax-zhtw/blob/master/basics.md">它的原始碼</a></p>
-
-<h4>段落、標題、區塊程式碼</h4>
-
-<p>一個段落是由一個以上的連接的行句組成，而一個以上的空行則會切分出不同的段落（空行的定義是顯示上看起來像是空行，就被視為空行，例如有一行只有空白和 tab，那該行也會被視為空行），一般的段落不需要用空白或斷行縮排。</p>
-
-<p>Markdown 支援兩種標題的語法，[Setext] [1] 和 [atx] [2] 形式。Setext 形式是用底線的形式，利用 <code>=</code> （最高階標題）和 <code>-</code> （第二階標題），Atx 形式在行首插入 1 到 6 個 <code>#</code> ，對應到標題 1 到 6 階。</p>
-
-<p>區塊引言則使用 email 形式的 '<code>&gt;</code>' 角括號。</p>
-
-<p>Markdown:</p>
-
-<pre><code>A First Level Header
-====================
-
-A Second Level Header
----------------------
-
-Now is the time for all good men to come to
-the aid of their country. This is just a
-regular paragraph.
-
-The quick brown fox jumped over the lazy
-dog's back.
-
-### Header 3
-
-&gt; This is a blockquote.
-&gt; 
-&gt; This is the second paragraph in the blockquote.
-&gt;
-&gt; ## This is an H2 in a blockquote
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;h1&gt;A First Level Header&lt;/h1&gt;
-
-&lt;h2&gt;A Second Level Header&lt;/h2&gt;
-
-&lt;p&gt;Now is the time for all good men to come to
-the aid of their country. This is just a
-regular paragraph.&lt;/p&gt;
-
-&lt;p&gt;The quick brown fox jumped over the lazy
-dog's back.&lt;/p&gt;
-
-&lt;h3&gt;Header 3&lt;/h3&gt;
-
-&lt;blockquote&gt;
-    &lt;p&gt;This is a blockquote.&lt;/p&gt;
-
-    &lt;p&gt;This is the second paragraph in the blockquote.&lt;/p&gt;
-
-    &lt;h2&gt;This is an H2 in a blockquote&lt;/h2&gt;
-&lt;/blockquote&gt;
-</code></pre>
-
-<h5>修辭和強調</h5>
-
-<p>Markdown 使用星號和底線來標記需要強調的區段。</p>
-
-<p>Markdown:</p>
-
-<pre><code>Some of these words *are emphasized*.
-Some of these words _are emphasized also_.
-
-Use two asterisks for **strong emphasis**.
-Or, if you prefer, __use two underscores instead__.
-</code></pre>
-
-<p>輸出:</p>
-
-<pre><code>&lt;p&gt;Some of these words &lt;em&gt;are emphasized&lt;/em&gt;.
-Some of these words &lt;em&gt;are emphasized also&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Use two asterisks for &lt;strong&gt;strong emphasis&lt;/strong&gt;.
-Or, if you prefer, &lt;strong&gt;use two underscores instead&lt;/strong&gt;.&lt;/p&gt;
-</code></pre>
-
-<h5>清單</h5>
-
-<p>無序清單使用星號、加號和減號來做為清單的項目標記，這些符號是都可以使用的，使用星號：</p>
-
-<pre><code>*   Candy.
-*   Gum.
-*   Booze.
-</code></pre>
-
-<p>加號：</p>
-
-<pre><code>+   Candy.
-+   Gum.
-+   Booze.
-</code></pre>
-
-<p>和減號</p>
-
-<pre><code>-   Candy.
--   Gum.
--   Booze.
-</code></pre>
-
-<p>都會輸出：</p>
-
-<pre><code>&lt;ul&gt;
-&lt;li&gt;Candy.&lt;/li&gt;
-&lt;li&gt;Gum.&lt;/li&gt;
-&lt;li&gt;Booze.&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
-
-<p>有序的清單則是使用一般的數字接著一個英文句點作為項目標記：</p>
-
-<pre><code>1.  Red
-2.  Green
-3.  Blue
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;ol&gt;
-&lt;li&gt;Red&lt;/li&gt;
-&lt;li&gt;Green&lt;/li&gt;
-&lt;li&gt;Blue&lt;/li&gt;
-&lt;/ol&gt;
-</code></pre>
-
-<p>如果你在項目之間插入空行，那項目的內容會備用 <code>&lt;p&gt;</code> 包起來，你也可以在一個項目內放上多個段落，只要在它前面縮排 4 個空白或 1 個 tab 。</p>
-
-<pre><code>*   A list item.
-
-    With multiple paragraphs.
-
-*   Another item in the list.
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;A list item.&lt;/p&gt;
-&lt;p&gt;With multiple paragraphs.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Another item in the list.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
-
-<h5>連結</h5>
-
-<p>Markdown 支援兩種形式的連結語法： <em>行內</em> 和 <em>參考</em> 兩種形式，兩種都是使用角括號來把文字轉成連結。</p>
-
-<p>行內形式形式是直接在後面用括號直接接上連結：</p>
-
-<pre><code>This is an [example link](http://example.com/).
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;This is an &lt;a href="http://example.com/"&gt;
-example link&lt;/a&gt;.&lt;/p&gt;
-</code></pre>
-
-<p>你也可以選擇性的加上 title 屬性：</p>
-
-<pre><code>This is an [example link](http://example.com/ "With a Title").
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;This is an &lt;a href="http://example.com/" title="With a Title"&gt;
-example link&lt;/a&gt;.&lt;/p&gt;
-</code></pre>
-
-<p>參考形式的連結讓你可以為連結定一個名稱，之後你可以在文件的其他地方定義該連結的內容：</p>
-
-<pre><code>I get 10 times more traffic from [Google][1] than from
-[Yahoo][2] or [MSN][3].
-
-[1]: http://google.com/        "Google"
-[2]: http://search.yahoo.com/  "Yahoo Search"
-[3]: http://search.msn.com/    "MSN Search"
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;I get 10 times more traffic from &lt;a href="http://google.com/"
-title="Google"&gt;Google&lt;/a&gt; than from &lt;a href="http://search.yahoo.com/"
-title="Yahoo Search"&gt;Yahoo&lt;/a&gt; or &lt;a href="http://search.msn.com/"
-title="MSN Search"&gt;MSN&lt;/a&gt;.&lt;/p&gt;
-</code></pre>
-
-<p>title 屬性是選擇性的，連結名稱可以用字母、數字和空格，但是不分大小寫：</p>
-
-<pre><code>I start my morning with a cup of coffee and
-[The New York Times][NY Times].
-
-[ny times]: http://www.nytimes.com/
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;I start my morning with a cup of coffee and
-&lt;a href="http://www.nytimes.com/"&gt;The New York Times&lt;/a&gt;.&lt;/p&gt;
-</code></pre>
-
-<h5>圖片</h5>
-
-<p>圖片的語法和連結很像。</p>
-
-<p>行內形式（title 是選擇性的）：</p>
-
-<pre><code>![alt text](/path/to/img.jpg "Title")
-</code></pre>
-
-<p>參考形式：</p>
-
-<pre><code>![alt text][id]
-
-[id]: /path/to/img.jpg "Title"
-</code></pre>
-
-<p>上面兩種方法都會輸出：</p>
-
-<pre><code>&lt;img src="/path/to/img.jpg" alt="alt text" title="Title" /&gt;
-</code></pre>
-
-<h5>程式碼</h5>
-
-<p>在一般的段落文字中，你可以使用反引號 <code>`</code> 來標記程式碼區段，區段內的 <code>&amp;</code>、<code>&lt;</code> 和 <code>&gt;</code> 都會被自動的轉換成 HTML 實體，這項特性讓你可以很容易的在程式碼區段內插入 HTML 碼：</p>
-
-<pre><code>I strongly recommend against using any `&lt;blink&gt;` tags.
-
-I wish SmartyPants used named entities like `&amp;mdash;`
-instead of decimal-encoded entites like `&amp;#8212;`.
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;I strongly recommend against using any
-&lt;code&gt;&amp;lt;blink&amp;gt;&lt;/code&gt; tags.&lt;/p&gt;
-
-&lt;p&gt;I wish SmartyPants used named entities like
-&lt;code&gt;&amp;amp;mdash;&lt;/code&gt; instead of decimal-encoded
-entites like &lt;code&gt;&amp;amp;#8212;&lt;/code&gt;.&lt;/p&gt;
-</code></pre>
-
-<p>如果要建立一個已經格式化好的程式碼區塊，只要每行都縮排 4 個空格或是一個 tab 就可以了，而 <code>&amp;</code>、<code>&lt;</code> 和 <code>&gt;</code> 也一樣會自動轉成 HTML 實體。</p>
-
-<p>Markdown:</p>
-
-<pre><code>If you want your page to validate under XHTML 1.0 Strict,
-you've got to put paragraph tags in your blockquotes:
-
-    &lt;blockquote&gt;
-        &lt;p&gt;For example.&lt;/p&gt;
-    &lt;/blockquote&gt;
-</code></pre>
-
-<p>輸出：</p>
-
-<pre><code>&lt;p&gt;If you want your page to validate under XHTML 1.0 Strict,
-you've got to put paragraph tags in your blockquotes:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;blockquote&amp;gt;
-    &amp;lt;p&amp;gt;For example.&amp;lt;/p&amp;gt;
-&amp;lt;/blockquote&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-</code></pre>
-]]></description>
-<link>https://blog.othree.net/log/2011/04/07/markdown-intro-and-doc/</link>
-<guid>https://blog.othree.net/log/2011/04/07/markdown-intro-and-doc/</guid>
-<category>css-html</category>
-<pubDate>2011-04-07 14:49</pubDate>
 </item>
 
 

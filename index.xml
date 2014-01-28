@@ -9,6 +9,166 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000790" baseName="object-fit">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-28</b:date>
+				<b:time>22:32:51</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>object-fit</b:title>
+			<b:content>
+				<b:summary>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。 如果要純前端處理，其實目前最好用的作法是用 CSS3 Background 的 background-size: cover;，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 &lt;img&gt; 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。 要維持 &lt;img&gt; 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣： $.fn.cover = (selector) -&gt; $(@).each -&gt; $outer = $(@)...</b:summary>
+				<b:mainContent><p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
+
+<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
+
+<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
+
+<pre><code>$.fn.cover = (selector) -&gt;
+  $(@).each -&gt;
+    $outer = $(@)
+    ow = $outer.width()
+    oh = $outer.height()
+    or = ow / oh
+    $outer.find(selector).each -&gt;
+      $item = $(@)
+      iw = $item.width()
+      ih = $item.height()
+      ir = iw / ih
+      if ir &lt; or
+        w = ow
+        h = ow / ir
+        l = 0
+        t = (oh - h) / 2
+      else
+        h = oh
+        w = oh * ir
+        t = 0
+        l = (ow - w) / 2
+
+      $item.css(width: w, height: h, top: t, left: l)
+</code></pre>
+
+<p>使用範例：</p>
+
+<pre><code>$('.cell').cover('img')
+</code></pre>
+
+<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
+
+<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
+
+<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
+
+<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
+</code></pre>
+
+<p>配上 CSS：</p>
+
+<pre><code>img.cover {
+  object-fit: cover;
+}
+</code></pre>
+
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個心標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>。</p>
+
+<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000789" baseName="mozilla-monument">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-15</b:date>
+				<b:time>23:54:32</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>Mozilla Monument</b:title>
+			<b:content>
+				<b:summary> 參加 Mozilla Summit 時說的紀念碑已經做好了，最近有社群朋友去把每面都拍下來，於是就出現了找名字的風潮，我也找到我的名字所以紀念一下，希望有機會去親眼看看。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11966368896/" title="othree at Mozilla SF Monument by othree, on Flickr"><img src="//farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg" width="1024" height="864" alt="othree at Mozilla SF Monument" src-1="(max-width: 768px)  //farm6.staticflickr.com/5508/11966368896_b7bfcb2c90.jpg 1x, //farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg 2x"  /></a></p>
+
+<p>參加 Mozilla Summit 時說的紀念碑已經做好了，最近有社群朋友去把每面都拍下來，於是就出現了找名字的風潮，我也找到我的名字所以紀念一下，希望有機會去親眼看看。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+		<b:entry entryID="000787" baseName="mixed-content">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-01-08</b:date>
+				<b:time>23:45:54</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Mixed Content</b:title>
+			<b:content>
+				<b:summary>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 ted.com 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客： IE 在開發工具內還會有紅字嚇人： 訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形： Chrome 則是會把 https 劃掉： 一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 TOSSUG HTML5 分享補充...</b:summary>
+				<b:mainContent><p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr"><img src="//farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" src-1="(max-width: 768px)  //farm6.staticflickr.com/5511/11834406594_683ec5e488.jpg 1x, //farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr"><img src="//farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" src-1="(max-width: 768px)  //farm8.staticflickr.com/7415/11834272353_88d18f35c4.jpg 1x, //farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 2x"  /></a></p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3696/11820942545_45a9948590.jpg 1x, //farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 2x"  /></a></p>
+
+<p>IE 在開發工具內還會有紅字嚇人：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3742/11820942315_803c340984.jpg 1x, //farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 2x"  /></a></p>
+
+<p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr"><img src="//farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" src-1="(max-width: 768px)  //farm8.staticflickr.com/7290/11834407574_99c84f38d3.jpg 1x, //farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 2x"  /></a></p>
+
+<p>Chrome 則是會把 https 劃掉：</p>
+
+<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3771/11834272603_5bf07439ea.jpg 1x, //farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 2x"  /></a></p>
+
+<p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
+
+<p>最後附上瀏覽器的說明：</p>
+
+<ul>
+<li><a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a></li>
+<li><a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a></li>
+<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a></li>
+<li><a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000786" baseName="more-twitter-cards">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -146,103 +306,6 @@
 <p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10927028886/" title="福壽山農場 by othree, on Flickr"><img src="//farm3.staticflickr.com/2822/10927028886_0803fb0752_b.jpg" width="1024" height="683" alt="福壽山農場" src-1="(max-width: 768px)  //farm3.staticflickr.com/2822/10927028886_0803fb0752.jpg 1x, //farm3.staticflickr.com/2822/10927028886_0803fb0752_b.jpg 2x" src-2="//farm3.staticflickr.com/2822/10927028886_09ef3ae64a_k.jpg 2x" /></a></p>
 
 <p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11497654454/" title="新北歡樂耶誕城 by othree, on Flickr"><img src="//farm4.staticflickr.com/3787/11497654454_51337d0be8_b.jpg" width="1024" height="683" alt="新北歡樂耶誕城" src-1="(max-width: 768px)  //farm4.staticflickr.com/3787/11497654454_51337d0be8.jpg 1x, //farm4.staticflickr.com/3787/11497654454_51337d0be8_b.jpg 2x" src-2="//farm4.staticflickr.com/3787/11497654454_8a4798e8c6_k.jpg 2x" /></a></p>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000783" baseName="w3c-validator-suite">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-12-25</b:date>
-				<b:time>22:13:16</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>W3C Validator Suite</b:title>
-			<b:content>
-				<b:summary>W3C 不知道何時推出了 Validator Suite，有別於 Markup Validator，這次是個收費服務，目前註冊帳號會送 20 個使用額度，收費也是買使用額度，而不是算時間的，Validator Suite，是基於 Markup Validator 而發展的，本身是 close source，兩者最主要的差別在於 Validator Suite 是可以一口氣檢查大量網頁的，你丟網址給它，它可以一直往下深入檢查每個子頁面，Markup Validator 則是一次只有一頁，這樣設計的目標對象其實應該是商業網站之類的，至於 W3C 的 Markup Validator 則是 open source 的，這幾年也一直有更新，整個進步很多，很多新標準的支援都很快，像是 itemprop、itemscope 之類的屬性都能真正的判斷是否有正確使用，而不只是單純的判斷是不是個合法的屬性。...</b:summary>
-				<b:mainContent><p>W3C 不知道何時推出了 <a href="https://validator-suite.w3.org/">Validator Suite</a>，有別於 <a href="http://validator.w3.org/">Markup Validator</a>，這次是個收費服務，目前註冊帳號會送 20 個使用額度，收費也是買使用額度，而不是算時間的，Validator Suite，是基於 Markup Validator 而發展的，本身是 close source，兩者最主要的差別在於 Validator Suite 是可以一口氣檢查大量網頁的，你丟網址給它，它可以一直往下深入檢查每個子頁面，Markup Validator 則是一次只有一頁，這樣設計的目標對象其實應該是商業網站之類的，至於 W3C 的 Markup Validator 則是 open source 的，這幾年也一直有更新，整個進步很多，很多新標準的支援都很快，像是 itemprop、itemscope 之類的屬性都能真正的判斷是否有正確使用，而不只是單純的判斷是不是個合法的屬性。</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11547188533/" title="W3C Validator Suite by othree, on Flickr"><img src="//farm8.staticflickr.com/7397/11547188533_3c7063ebd6_b.jpg" width="1024" height="759" alt="W3C Validator Suite" src-1="(max-width: 768px)  //farm8.staticflickr.com/7397/11547188533_3c7063ebd6.jpg 1x, //farm8.staticflickr.com/7397/11547188533_3c7063ebd6_b.jpg 2x"  /></a></p>
-</b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11547188043/" title="W3C Validator Suite by othree, on Flickr"><img src="//farm8.staticflickr.com/7429/11547188043_349956d8f8_b.jpg" width="1024" height="759" alt="W3C Validator Suite" src-1="(max-width: 768px)  //farm8.staticflickr.com/7429/11547188043_349956d8f8.jpg 1x, //farm8.staticflickr.com/7429/11547188043_349956d8f8_b.jpg 2x"  /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11547187753/" title="W3C Validator Suite by othree, on Flickr"><img src="//farm8.staticflickr.com/7375/11547187753_caccfa7ac7_b.jpg" width="1024" height="759" alt="W3C Validator Suite" src-1="(max-width: 768px)  //farm8.staticflickr.com/7375/11547187753_caccfa7ac7.jpg 1x, //farm8.staticflickr.com/7375/11547187753_caccfa7ac7_b.jpg 2x"  /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11547187353/" title="W3C Validator Suite by othree, on Flickr"><img src="//farm8.staticflickr.com/7344/11547187353_5f87f77d7d_b.jpg" width="1024" height="759" alt="W3C Validator Suite" src-1="(max-width: 768px)  //farm8.staticflickr.com/7344/11547187353_5f87f77d7d.jpg 1x, //farm8.staticflickr.com/7344/11547187353_5f87f77d7d_b.jpg 2x"  /></a></p>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000782" baseName="asmjs-1half-x-slower-than-native">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-12-24</b:date>
-				<b:time>00:59:41</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>asm.js 效能再提昇</b:title>
-			<b:content>
-				<b:summary> Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的文章，現在這個數字已經變成 1.5 倍了，主要是歸功於 float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，Mozilla Blog 有一篇文章則是在講比較技術面的內容，大概看一下，應該是犧牲精確度來換取速度。本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11517198133/" title="asm1.5b by othree, on Flickr"><img src="//farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg" width="1024" height="509" alt="asm1.5b" src-1="(max-width: 768px)  //farm6.staticflickr.com/5520/11517198133_293174bb1e.jpg 1x, //farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg 2x"  /></a></p>
-
-<p>Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的<a href="https://hacks.mozilla.org/2013/12/gap-between-asm-js-and-native-performance-gets-even-narrower-with-float32-optimizations/">文章</a>，現在這個數字已經變成 1.5 倍了，主要是歸功於  float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，Mozilla Blog 有一篇<a href="https://blog.mozilla.org/javascript/2013/11/07/efficient-float32-arithmetic-in-javascript/">文章</a>則是在講比較技術面的內容，大概看一下，應該是犧牲精確度來換取速度。本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000781" baseName="ipad-air">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-12-21</b:date>
-				<b:time>22:06:51</b:time>
-			</b:datetime>
-			<b:category>buy</b:category>
-			<b:title>iPad Air</b:title>
-			<b:content>
-				<b:summary> 前陣子入手的 iPad Air 真是很讓人滿意，歷代最輕，更好的螢幕，這些大家都知道的部份就不用說了，所以我要來說的是 smart cover 的部份。這次隨著 iPad 尺寸的改變，也推出了新版的 smart cover，針對之前的使用者回報做了許多的改進，官方有說到的就是和 iPad 接觸連接的地方有加上保護層，不會像以前一樣刮傷 iPad 表面，另外我還發現兩點改進比較少人講到。 這次發售前就已經可以發現，新版的 smart cover 的折線少了一條變成只有兩條，以前有三條四面，然後可以組成一個可以固定住的三角形，不過新版的只有三面，照理說三角形會不能固定，所以發表時我就開始很好奇會怎樣讓三角形固定，結果蘋果是用磁鐵來讓三角形固定住，真的是沒想到可以在邊邊還加磁鐵啊。 另外一個則是如果把 smart cover 翻到 iPad 後面，在主機的後面也有隱藏的磁鐵來幫你把 smart cover 定位好，說定位不是固定其實是因為雖然有磁鐵，但是這邊用的比較弱，像照片那樣其實很容易掉下來，但是手拿時好拿很多，也比較不會因為長期這樣拿而讓 smart cover 的轉軸那邊變形。 我覺的這些改進雖然小，但是卻可以表現出蘋果確實有在根據使用者習慣來改進產品，感覺不錯。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11453059264/" title="iPad Air by othree, on Flickr"><img src="//farm8.staticflickr.com/7331/11453059264_69bdb81298_b.jpg" width="1024" height="683" alt="iPad Air" src-1="(max-width: 768px)  //farm8.staticflickr.com/7331/11453059264_69bdb81298.jpg 1x, //farm8.staticflickr.com/7331/11453059264_69bdb81298_b.jpg 2x" src-2="//farm8.staticflickr.com/7331/11453059264_c8c4363402_k.jpg 2x" /></a></p>
-
-<p>前陣子入手的 iPad Air 真是很讓人滿意，歷代最輕，更好的螢幕，這些大家都知道的部份就不用說了，所以我要來說的是 smart cover 的部份。這次隨著 iPad 尺寸的改變，也推出了新版的 smart cover，針對之前的使用者回報做了許多的改進，官方有說到的就是和 iPad 接觸連接的地方有加上保護層，不會像以前一樣刮傷 iPad 表面，另外我還發現兩點改進比較少人講到。</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11452986475/" title="iPad Air by othree, on Flickr"><img src="//farm8.staticflickr.com/7449/11452986475_ca2f9dcf9c_b.jpg" width="1024" height="683" alt="iPad Air" src-1="(max-width: 768px)  //farm8.staticflickr.com/7449/11452986475_ca2f9dcf9c.jpg 1x, //farm8.staticflickr.com/7449/11452986475_ca2f9dcf9c_b.jpg 2x" src-2="//farm8.staticflickr.com/7449/11452986475_12bddee1a9_k.jpg 2x" /></a></p>
-
-<p>這次發售前就已經可以發現，新版的 smart cover 的折線少了一條變成只有兩條，以前有三條四面，然後可以組成一個可以固定住的三角形，不過新版的只有三面，照理說三角形會不能固定，所以發表時我就開始很好奇會怎樣讓三角形固定，結果蘋果是用磁鐵來讓三角形固定住，真的是沒想到可以在邊邊還加磁鐵啊。</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11478998005/" title="iPad Air smart cover by othree, on Flickr"><img src="//farm4.staticflickr.com/3772/11478998005_4ea7cae18c_b.jpg" width="1024" height="683" alt="iPad Air smart cover" src-1="(max-width: 768px)  //farm4.staticflickr.com/3772/11478998005_4ea7cae18c.jpg 1x, //farm4.staticflickr.com/3772/11478998005_4ea7cae18c_b.jpg 2x" src-2="//farm4.staticflickr.com/3772/11478998005_68fce9a600_k.jpg 2x" /></a></p>
-
-<p>另外一個則是如果把 smart cover 翻到 iPad 後面，在主機的後面也有隱藏的磁鐵來幫你把 smart cover 定位好，說定位不是固定其實是因為雖然有磁鐵，但是這邊用的比較弱，像照片那樣其實很容易掉下來，但是手拿時好拿很多，也比較不會因為長期這樣拿而讓 smart cover 的轉軸那邊變形。</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11479017524/" title="iPad Air smart cover by othree, on Flickr"><img src="//farm4.staticflickr.com/3690/11479017524_4a81b2693e_b.jpg" width="1024" height="683" alt="iPad Air smart cover" src-1="(max-width: 768px)  //farm4.staticflickr.com/3690/11479017524_4a81b2693e.jpg 1x, //farm4.staticflickr.com/3690/11479017524_4a81b2693e_b.jpg 2x" src-2="//farm4.staticflickr.com/3690/11479017524_53b6672b6d_k.jpg 2x" /></a></p>
-
-<p>我覺的這些改進雖然小，但是卻可以表現出蘋果確實有在根據使用者習慣來改進產品，感覺不錯。</p>
-</b:mainContent>
-				<b:extendContent>
 </b:extendContent>
 			</b:content>
 
