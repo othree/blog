@@ -59,7 +59,7 @@
 
 <p>我所知當中這是最早被提出的部分，這份文件的目的在提出一套標準來在文件樹上把一些 DOM 節點隱藏起來，有這個需求的原因是因為現在越來越多的自訂 UI 元件，為了達成效果可能用了很多的 <code>&lt;div&gt;</code>、<code>&lt;span&gt;</code> 等元素，但是在做 DOM Traversal 或是 Inspect 時，這些元素的出現其實很多餘，而且看起來會很花，如果是開發要除錯看到大量不相干的東西實在是很干擾，而最重要的其實是，如果要把能讓這些自訂元件模組化再利用，那應該也要能把東西封裝起來。</p>
 
-<p>Shadow DOM 最大的功用就是在 DOM Tree 上能把子文件樹封裝起來的機制，使用很簡單，就在你想要放隱藏元件結構的地方，執行 <code>createShadowHost()</code>，然後把東西塞進去就可以了：</p>
+<p>Shadow DOM 最大的功用就是在 DOM Tree 上能把子文件樹封裝起來的機制，使用很簡單，就在你想要放隱藏元件結構的地方，執行 <code>createShadowRoot()</code>，然後把東西塞進去就可以了：</p>
 
 <pre><code>var host = document.querySelector('.custom-component');
 var root = host.createShadowRoot();

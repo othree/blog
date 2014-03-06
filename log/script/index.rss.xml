@@ -5,10 +5,29 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2014</copyright>
-<lastBuildDate>2013-12-24 00:59</lastBuildDate>
+<lastBuildDate>2014-03-02 13:50</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.38</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>process.nextTick, setImmediate, setTimeout, requestAnimationFrame</title>
+<description><![CDATA[<p>標題這幾個 API 是感覺功能有些接近的東西，<code>process.nextTick</code> 是 node 的，<code>setImmediate</code> 是微軟提出但是只有 IE 和 node 有實作，<code>setTimeout</code> 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，<code>requestAnimationFrame</code> 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？</p>
+
+<p>要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 <a href="http://ejohn.org/blog/how-javascript-timers-work/">How JavaScript Timers Work</a> 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。</p>
+
+<p>那前面三個有什麼差別呢？先來看看 <code>setImmediate</code> 和 <code>setTimeout</code>，根據微軟的<a href="http://ie.microsoft.com/testdrive/Performance/setImmediateSorting/Default.html">說法</a>，因為 setTimeout 有個最小的 4ms 延遲，所以他們設計了 setImmediate 這個完全無延遲的 API 介面出來，不過其實根據 whatwg 的 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout">spec</a>，其實要 nesting 的 setTimeout call 才要加上這個 4ms 最小延遲，也就是在 setTimeout 裡面又呼叫 setTimeout 這種狀況，而且要超過五層，會這樣設計是為了避免連續的 setTimout 會造成 UI 卡住，所以我猜是微軟的 setTimeout 實作不正確，而 <a href="https://code.google.com/p/chromium/issues/detail?id=146172">Webkit</a> 和 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686201">Firefox</a> 也因此都沒實作它，總之要是正確的作 setTimout，不要連續呼叫超過五層，那他和 setImmediate 應該會是一樣快的，順代一題，微軟那個比較的網頁上就沒有設成 0ms 的 case 可以看在其他瀏覽器上的表現。</p>
+
+<p>最後一個是 <code>process.nextTick</code> 了，這是 node 才有的 API，它和後面三個的作法不太一樣，速度也是所有 API 裡面最快的，實際上它不是把 function 丟到 timer 的 queue 裡面等，而是跟系統說，現在這個 all stack 結束後，立即去執行這些 function，也就是它其實是獨立的 queue，所有丟到 nextTick 裡面的 function 都執行完後，才輪的到 setImmediate 或是其他 UI、系統 IO 的份，而這個 queue 是先進先出，所以其實還蠻好用的，難怪在 node 裡面感覺大家用得很兇，不過要注意。</p>
+
+<p>回頭看一下 setImmediate，其實網路上也是有不少 <a href="https://github.com/NobleJS/setImmediate">polyfill</a> 提供，這些實作都是用 postMessage 來避開 setTimeout 會產生的 4ms 最小延遲，無法使用 postMessage 時會 fallback 到 setTimout。其實會看這些東西是因為 browserify 的關係，因為 <a href="http://browserify.org/">browserify</a> 有說會提供 node 的東西到瀏覽器上，像是 <code>process.nextTick</code>，好奇了一下 <code>setImmediate</code> 有沒有也提供，結果看起來目前是沒有，不過深入研究之後也發現其實不是真的有這個需要就是了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/03/02/immediate-in-js/</link>
+<guid>https://blog.othree.net/log/2014/03/02/immediate-in-js/</guid>
+<category>script</category>
+<pubDate>2014-03-02 13:50</pubDate>
+</item>
 
 <item>
 <title>asm.js 效能再提昇</title>
@@ -118,7 +137,7 @@
 
 <p>我所知當中這是最早被提出的部分，這份文件的目的在提出一套標準來在文件樹上把一些 DOM 節點隱藏起來，有這個需求的原因是因為現在越來越多的自訂 UI 元件，為了達成效果可能用了很多的 <code>&lt;div&gt;</code>、<code>&lt;span&gt;</code> 等元素，但是在做 DOM Traversal 或是 Inspect 時，這些元素的出現其實很多餘，而且看起來會很花，如果是開發要除錯看到大量不相干的東西實在是很干擾，而最重要的其實是，如果要把能讓這些自訂元件模組化再利用，那應該也要能把東西封裝起來。</p>
 
-<p>Shadow DOM 最大的功用就是在 DOM Tree 上能把子文件樹封裝起來的機制，使用很簡單，就在你想要放隱藏元件結構的地方，執行 <code>createShadowHost()</code>，然後把東西塞進去就可以了：</p>
+<p>Shadow DOM 最大的功用就是在 DOM Tree 上能把子文件樹封裝起來的機制，使用很簡單，就在你想要放隱藏元件結構的地方，執行 <code>createShadowRoot()</code>，然後把東西塞進去就可以了：</p>
 
 <pre><code>var host = document.querySelector('.custom-component');
 var root = host.createShadowRoot();
@@ -724,19 +743,6 @@ domnode.dispatchEvent(event);
 <guid>https://blog.othree.net/log/2013/05/19/this/</guid>
 <category>script</category>
 <pubDate>2013-05-19 21:25</pubDate>
-</item>
-
-<item>
-<title>Chrome Debug 文件</title>
-<description><![CDATA[<p>Google Chrome 開發工具的文件昨天有更新，不確定這整頁是新的還是改寫，不過總之是詳細很多的 Script Debugging 的<a href="https://developers.google.com/chrome-developer-tools/docs/javascript-debugging">使用說明</a>，從詳細的介面介紹，到如何用這些功能都有說明，值得推薦一看。</p>
-
-<p>另外還有一篇新的則是關於把開發工具導入<a href="https://developers.google.com/chrome-developer-tools/docs/authoring-development-workflow">開發流程內的文件</a>，所以包括一些新功能像是 snippets 的介紹，也有 in place editing ，如何儲存修改過的檔案等。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/05/09/chrome-debug-doc/</link>
-<guid>https://blog.othree.net/log/2013/05/09/chrome-debug-doc/</guid>
-<category>script</category>
-<pubDate>2013-05-09 00:13</pubDate>
 </item>
 
 

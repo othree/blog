@@ -9,6 +9,39 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000791" baseName="immediate-in-js">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-03-02</b:date>
+				<b:time>13:50:53</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>process.nextTick, setImmediate, setTimeout, requestAnimationFrame</b:title>
+			<b:content>
+				<b:summary>標題這幾個 API 是感覺功能有些接近的東西，process.nextTick 是 node 的，setImmediate 是微軟提出但是只有 IE 和 node 有實作，setTimeout 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，requestAnimationFrame 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？ 要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 How JavaScript Timers Work 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。...</b:summary>
+				<b:mainContent><p>標題這幾個 API 是感覺功能有些接近的東西，<code>process.nextTick</code> 是 node 的，<code>setImmediate</code> 是微軟提出但是只有 IE 和 node 有實作，<code>setTimeout</code> 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，<code>requestAnimationFrame</code> 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？</p>
+
+<p>要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 <a href="http://ejohn.org/blog/how-javascript-timers-work/">How JavaScript Timers Work</a> 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。</p>
+
+<p>那前面三個有什麼差別呢？先來看看 <code>setImmediate</code> 和 <code>setTimeout</code>，根據微軟的<a href="http://ie.microsoft.com/testdrive/Performance/setImmediateSorting/Default.html">說法</a>，因為 setTimeout 有個最小的 4ms 延遲，所以他們設計了 setImmediate 這個完全無延遲的 API 介面出來，不過其實根據 whatwg 的 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout">spec</a>，其實要 nesting 的 setTimeout call 才要加上這個 4ms 最小延遲，也就是在 setTimeout 裡面又呼叫 setTimeout 這種狀況，而且要超過五層，會這樣設計是為了避免連續的 setTimout 會造成 UI 卡住，所以我猜是微軟的 setTimeout 實作不正確，而 <a href="https://code.google.com/p/chromium/issues/detail?id=146172">Webkit</a> 和 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686201">Firefox</a> 也因此都沒實作它，總之要是正確的作 setTimout，不要連續呼叫超過五層，那他和 setImmediate 應該會是一樣快的，順代一題，微軟那個比較的網頁上就沒有設成 0ms 的 case 可以看在其他瀏覽器上的表現。</p>
+
+<p>最後一個是 <code>process.nextTick</code> 了，這是 node 才有的 API，它和後面三個的作法不太一樣，速度也是所有 API 裡面最快的，實際上它不是把 function 丟到 timer 的 queue 裡面等，而是跟系統說，現在這個 all stack 結束後，立即去執行這些 function，也就是它其實是獨立的 queue，所有丟到 nextTick 裡面的 function 都執行完後，才輪的到 setImmediate 或是其他 UI、系統 IO 的份，而這個 queue 是先進先出，所以其實還蠻好用的，難怪在 node 裡面感覺大家用得很兇，不過要注意。</p>
+
+<p>回頭看一下 setImmediate，其實網路上也是有不少 <a href="https://github.com/NobleJS/setImmediate">polyfill</a> 提供，這些實作都是用 postMessage 來避開 setTimeout 會產生的 4ms 最小延遲，無法使用 postMessage 時會 fallback 到 setTimout。其實會看這些東西是因為 browserify 的關係，因為 <a href="http://browserify.org/">browserify</a> 有說會提供 node 的東西到瀏覽器上，像是 <code>process.nextTick</code>，好奇了一下 <code>setImmediate</code> 有沒有也提供，結果看起來目前是沒有，不過深入研究之後也發現其實不是真的有這個需要就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
 		<b:entry entryID="000790" baseName="object-fit">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -75,7 +108,7 @@
 }
 </code></pre>
 
-<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個心標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>。</p>
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
 
 <p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
 </b:mainContent>
@@ -259,53 +292,6 @@
 <p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
 </b:mainContent>
 				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000784" baseName="2013">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-12-28</b:date>
-				<b:time>20:01:51</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>2013</b:title>
-			<b:content>
-				<b:summary> 今年終於要結束了，照慣例來回顧一下，一樣是一個月挑一張照片，今年拍的照片數量比去年多了四千張左右，上傳的照片數量更是倍數成長，無法像去年一張一張看，只好從重要的事件中挑選了。因為強迫限制了一個月一張，所以也很多我很喜歡的照片無法貼在這篇，像是研討會今年去了有六場也只挑到其中兩場的照片，去日本的櫻花雖然覺的醍醐寺的最漂亮，但是因為天氣沒很好還是放棄那邊的照片。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8377172426/" title="WebConf 2013 Day 1 by othree, on Flickr"><img src="//farm9.staticflickr.com/8323/8377172426_f61d9b4002_b.jpg" width="1024" height="683" alt="WebConf 2013 Day 1" src-1="(max-width: 768px)  //farm9.staticflickr.com/8323/8377172426_f61d9b4002.jpg 1x, //farm9.staticflickr.com/8323/8377172426_f61d9b4002_b.jpg 2x" src-2="//farm9.staticflickr.com/8323/8377172426_a7a7fc1c96_k.jpg 2x" /></a></p>
-
-<p>今年終於要結束了，照慣例來回顧一下，一樣是一個月挑一張照片，今年拍的照片數量比去年多了四千張左右，上傳的照片數量更是倍數成長，無法像去年一張一張看，只好從重要的事件中挑選了。因為強迫限制了一個月一張，所以也很多我很喜歡的照片無法貼在這篇，像是研討會今年去了有六場也只挑到其中兩場的照片，去日本的櫻花雖然覺的醍醐寺的最漂亮，但是因為天氣沒很好還是放棄那邊的照片。</p>
-</b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8477826443/" title="FF21 by othree, on Flickr"><img src="//farm9.staticflickr.com/8374/8477826443_45100488aa_b.jpg" width="1024" height="683" alt="FF21" src-1="(max-width: 768px)  //farm9.staticflickr.com/8374/8477826443_45100488aa.jpg 1x, //farm9.staticflickr.com/8374/8477826443_45100488aa_b.jpg 2x" src-2="//farm9.staticflickr.com/8374/8477826443_af234665df_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8601062182/" title="Mozilla 15週年小 Party by othree, on Flickr"><img src="//farm9.staticflickr.com/8367/8601062182_89c3c88036_b.jpg" width="1024" height="683" alt="Mozilla 15週年小 Party" src-1="(max-width: 768px)  //farm9.staticflickr.com/8367/8601062182_89c3c88036.jpg 1x, //farm9.staticflickr.com/8367/8601062182_89c3c88036_b.jpg 2x" src-2="//farm9.staticflickr.com/8367/8601062182_012fb1072e_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8664825451/" title="清水寺 夜櫻 by othree, on Flickr"><img src="//farm9.staticflickr.com/8245/8664825451_447f9e3de4_b.jpg" width="1024" height="683" alt="清水寺 夜櫻" src-1="(max-width: 768px)  //farm9.staticflickr.com/8245/8664825451_447f9e3de4.jpg 1x, //farm9.staticflickr.com/8245/8664825451_447f9e3de4_b.jpg 2x" src-2="//farm9.staticflickr.com/8245/8664825451_254684d8a2_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8815321259/" title="大稻埕碼頭 by othree, on Flickr"><img src="//farm8.staticflickr.com/7282/8815321259_48a43c162a_b.jpg" width="1024" height="683" alt="大稻埕碼頭" src-1="(max-width: 768px)  //farm8.staticflickr.com/7282/8815321259_48a43c162a.jpg 1x, //farm8.staticflickr.com/7282/8815321259_48a43c162a_b.jpg 2x" src-2="//farm8.staticflickr.com/7282/8815321259_d16e8239c0_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9158987767/" title="台大 at Night by othree, on Flickr"><img src="//farm8.staticflickr.com/7394/9158987767_2c2c9649a7_b.jpg" width="1024" height="683" alt="台大 at Night" src-1="(max-width: 768px)  //farm8.staticflickr.com/7394/9158987767_2c2c9649a7.jpg 1x, //farm8.staticflickr.com/7394/9158987767_2c2c9649a7_b.jpg 2x" src-2="//farm8.staticflickr.com/7394/9158987767_eab77f0438_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9238189089/" title="台南夕陽 by othree, on Flickr"><img src="//farm3.staticflickr.com/2881/9238189089_f3dbea33e2_b.jpg" width="1024" height="683" alt="台南夕陽" src-1="(max-width: 768px)  //farm3.staticflickr.com/2881/9238189089_f3dbea33e2.jpg 1x, //farm3.staticflickr.com/2881/9238189089_f3dbea33e2_b.jpg 2x" src-2="//farm3.staticflickr.com/2881/9238189089_8e17feff18_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9441279600/" title="COSCUP 2013 Day 2 by othree, on Flickr"><img src="//farm3.staticflickr.com/2841/9441279600_e3ceecf7d2_b.jpg" width="1024" height="218" alt="COSCUP 2013 Day 2" src-1="(max-width: 768px)  //farm3.staticflickr.com/2841/9441279600_e3ceecf7d2.jpg 1x, //farm3.staticflickr.com/2841/9441279600_e3ceecf7d2_b.jpg 2x" src-2="//farm3.staticflickr.com/2841/9441279600_cd527072cd_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9848423285/" title="wedding by othree, on Flickr"><img src="//farm8.staticflickr.com/7307/9848423285_b16120d18d_b.jpg" width="1024" height="683" alt="wedding" src-1="(max-width: 768px)  //farm8.staticflickr.com/7307/9848423285_b16120d18d.jpg 1x, //farm8.staticflickr.com/7307/9848423285_b16120d18d_b.jpg 2x" src-2="//farm8.staticflickr.com/7307/9848423285_4bfcaab152_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10320981036/" title="Mozilla San Francisco by othree, on Flickr"><img src="//farm3.staticflickr.com/2820/10320981036_fe6d198645_b.jpg" width="1024" height="683" alt="Mozilla San Francisco" src-1="(max-width: 768px)  //farm3.staticflickr.com/2820/10320981036_fe6d198645.jpg 1x, //farm3.staticflickr.com/2820/10320981036_fe6d198645_b.jpg 2x" src-2="//farm3.staticflickr.com/2820/10320981036_2ab7f610ea_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/10927028886/" title="福壽山農場 by othree, on Flickr"><img src="//farm3.staticflickr.com/2822/10927028886_0803fb0752_b.jpg" width="1024" height="683" alt="福壽山農場" src-1="(max-width: 768px)  //farm3.staticflickr.com/2822/10927028886_0803fb0752.jpg 1x, //farm3.staticflickr.com/2822/10927028886_0803fb0752_b.jpg 2x" src-2="//farm3.staticflickr.com/2822/10927028886_09ef3ae64a_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11497654454/" title="新北歡樂耶誕城 by othree, on Flickr"><img src="//farm4.staticflickr.com/3787/11497654454_51337d0be8_b.jpg" width="1024" height="683" alt="新北歡樂耶誕城" src-1="(max-width: 768px)  //farm4.staticflickr.com/3787/11497654454_51337d0be8.jpg 1x, //farm4.staticflickr.com/3787/11497654454_51337d0be8_b.jpg 2x" src-2="//farm4.staticflickr.com/3787/11497654454_8a4798e8c6_k.jpg 2x" /></a></p>
 </b:extendContent>
 			</b:content>
 

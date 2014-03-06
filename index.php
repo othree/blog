@@ -53,6 +53,7 @@ if (!is_file($target_file)) {
     $target_file = $query_string.".".$ext;
 }
 if (!is_file($target_file)) {
+    $hash_file = "about/404.md5";
     $target_file = "about/404.".$ext;
 }
 if ($target_file == "about/404.".$ext) {

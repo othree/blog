@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2014-03">March 2014</b:listData>
+
+			<b:previous>
+				<b:mTitle>January 2014</b:mTitle>
+				<b:mDate>2014/01</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000791" baseName="immediate-in-js">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-03-02</b:date>
+				<b:time>13:50:53</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>process.nextTick, setImmediate, setTimeout, requestAnimationFrame</b:title>
+			<b:content>
+				<b:summary>標題這幾個 API 是感覺功能有些接近的東西，process.nextTick 是 node 的，setImmediate 是微軟提出但是只有 IE 和 node 有實作，setTimeout 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，requestAnimationFrame 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？ 要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 How JavaScript Timers Work 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。...</b:summary>
+				<b:mainContent><p>標題這幾個 API 是感覺功能有些接近的東西，<code>process.nextTick</code> 是 node 的，<code>setImmediate</code> 是微軟提出但是只有 IE 和 node 有實作，<code>setTimeout</code> 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，<code>requestAnimationFrame</code> 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？</p>
+
+<p>要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 <a href="http://ejohn.org/blog/how-javascript-timers-work/">How JavaScript Timers Work</a> 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。</p>
+
+<p>那前面三個有什麼差別呢？先來看看 <code>setImmediate</code> 和 <code>setTimeout</code>，根據微軟的<a href="http://ie.microsoft.com/testdrive/Performance/setImmediateSorting/Default.html">說法</a>，因為 setTimeout 有個最小的 4ms 延遲，所以他們設計了 setImmediate 這個完全無延遲的 API 介面出來，不過其實根據 whatwg 的 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout">spec</a>，其實要 nesting 的 setTimeout call 才要加上這個 4ms 最小延遲，也就是在 setTimeout 裡面又呼叫 setTimeout 這種狀況，而且要超過五層，會這樣設計是為了避免連續的 setTimout 會造成 UI 卡住，所以我猜是微軟的 setTimeout 實作不正確，而 <a href="https://code.google.com/p/chromium/issues/detail?id=146172">Webkit</a> 和 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686201">Firefox</a> 也因此都沒實作它，總之要是正確的作 setTimout，不要連續呼叫超過五層，那他和 setImmediate 應該會是一樣快的，順代一題，微軟那個比較的網頁上就沒有設成 0ms 的 case 可以看在其他瀏覽器上的表現。</p>
+
+<p>最後一個是 <code>process.nextTick</code> 了，這是 node 才有的 API，它和後面三個的作法不太一樣，速度也是所有 API 裡面最快的，實際上它不是把 function 丟到 timer 的 queue 裡面等，而是跟系統說，現在這個 all stack 結束後，立即去執行這些 function，也就是它其實是獨立的 queue，所有丟到 nextTick 裡面的 function 都執行完後，才輪的到 setImmediate 或是其他 UI、系統 IO 的份，而這個 queue 是先進先出，所以其實還蠻好用的，難怪在 node 裡面感覺大家用得很兇，不過要注意。</p>
+
+<p>回頭看一下 setImmediate，其實網路上也是有不少 <a href="https://github.com/NobleJS/setImmediate">polyfill</a> 提供，這些實作都是用 postMessage 來避開 setTimeout 會產生的 4ms 最小延遲，無法使用 postMessage 時會 fallback 到 setTimout。其實會看這些東西是因為 browserify 的關係，因為 <a href="http://browserify.org/">browserify</a> 有說會提供 node 的東西到瀏覽器上，像是 <code>process.nextTick</code>，好奇了一下 <code>setImmediate</code> 有沒有也提供，結果看起來目前是沒有，不過深入研究之後也發現其實不是真的有這個需要就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+			<b:comments commentCount="0"></b:comments>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>
