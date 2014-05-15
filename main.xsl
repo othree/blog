@@ -230,8 +230,7 @@
                             <xsl:text> 無類別 </xsl:text>
                         </xsl:otherwise>
                         </xsl:choose>
-                        ，你可以為此篇文章<a href="#comments">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
-
+                        ，你可以為此篇文章<a href="#comments">留下你的想法</a>。</p>
                         <div>
                             <xsl:variable name="permalink">
                                 <xsl:value-of select="'https%3A%2F%2Fblog.othree.net'" />
