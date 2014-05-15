@@ -230,7 +230,7 @@
                             <xsl:text> 無類別 </xsl:text>
                         </xsl:otherwise>
                         </xsl:choose>
-                        ，目前共有 <xsl:value-of select="//b:blog/b:entries/b:entry/b:comments/@commentCount" /> 篇讀者迴響，你可以為此篇文章<a href="#comment-form">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
+                        ，你可以為此篇文章<a href="#comments">留下你的想法</a>，或是訂閱<a href="rss">讀者迴響的RSS</a>。</p>
 
                         <div>
                             <xsl:variable name="permalink">
@@ -564,7 +564,7 @@
                 <xsl:text> 無類別 </xsl:text>
             </xsl:otherwise>
         </xsl:choose>
-        <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響(<xsl:value-of select="b:comments/@commentCount" />)</a>
+        <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響</a>
 
         <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
     </footer>
@@ -631,71 +631,24 @@ google_color_url = "008000";
 <xsl:template match="b:comments">
 <xsl:param name="entryID" />
 <xsl:param name="accepted" />
-<hr/>
 <div id="comments">
-	<!-- <h4>迴響<span>( -->
-	<!-- <xsl:choose> -->
-		<!-- <xsl:when test="$accepted = 0"> -->
-			<!-- 本文章目前不開放發表迴響 -->
-		<!-- </xsl:when> -->
-		<!-- <xsl:otherwise> -->
-			<!-- <a href="#post_comment">發表你的迴響</a> -->
-		<!-- </xsl:otherwise> -->
-	<!-- </xsl:choose> -->
-	<!-- )</span></h4> -->
-	<xsl:choose>
-	<xsl:when test="@commentCount &gt; 0">
-        <xsl:apply-templates select="b:comment" />
-	</xsl:when>
-	<xsl:otherwise>
-		<p>目前無人回應。</p>
-	</xsl:otherwise>
-	</xsl:choose>
-    <xsl:if test="$accepted = 1">
-        <hr/>
-        <form id="comment-form" method="post" action="//othree.net/mt/mt-comments.cgi" class="form-horizontal">
-            <fieldset>
-            <div id="author-row" class="control-group">
-              <label for="author" class="control-label">姓名暱稱：<span class="accesskey"><span>accesskey:</span>N</span></label>
-              <div class="controls">
-                  <input type="text" tabindex="3" id="author" name="author" accesskey="n" value="" />
-              </div>
-            </div>
-            <div id="email-row" class="control-group">
-              <label for="email" class="control-label">電子信箱：<span class="accesskey"><span>accesskey:</span>M</span></label>
-              <div class="controls">
-                  <input type="email" tabindex="4" id="email" name="email" accesskey="m" value="" />
-              </div>
-            </div>
-            <div class="control-group">
-              <label for="url" class="control-label">網站位置：<span class="accesskey"><span>accesskey:</span>U</span></label>
-              <div class="controls">
-                  <input type="url" tabindex="5" id="url" name="url" accesskey="u" placeholder="http://" value="" />
-              </div>
-            </div>
-            <div class="control-group">
-              <label for="text" class="control-label">迴響內容：<span class="accesskey"><span>accesskey:</span>C</span></label>
-              <div class="controls">
-                  <textarea tabindex="6" id="text" name="text" rows="15" cols="60" accesskey="c" class="input-mxlarge"></textarea>
-                  <p class="field-tip"> 可以使用 Markdown 語法，<a href="http://markdown.tw">語法說明</a>。 </p>
-              </div>
-            </div>
-            <!--p>
-              <label for="remember">記住我：<span class="accesskey"><span>accesskey:</span>R</span></label>
-              <input type="checkbox" tabindex="7" id="remember" name="remember" accesskey="r" value="yes" />
-            </p-->
-            <div class="form-actions">
-              <input type="hidden" name="static" value="2"/>
-              <input type="hidden" name="entry_id" value="{$entryID}"/>
-              <input type="hidden" name="blog_id" value="{$blogID}"/>
-              <input type="hidden" name="superstarooo" value="ryun" />
+    <div id="disqus_thread"></div>
+    <script type="text/javascript" src="/scripts/disqus.min.js">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'o3noblog'; // required: replace example with your forum shortname
+        var disqus_url = document.location.origin + document.location.pathname.replace(/\/$/, '.xml');
 
-              <button type="submit" tabindex="7" name="post" value="送出" accesskey="p" class="btn btn-primary">送出</button>
-              <span class="accesskey"><span>accesskey:</span>P</span>
-            </div>
-            </fieldset>
-        </form>
-	</xsl:if>
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
 </div>
 </xsl:template>
 
@@ -744,7 +697,7 @@ google_color_url = "008000";
 	<xsl:apply-templates select="b:recentEntries" />
 </xsl:if>
 <xsl:if test="$listType = 'i'">
-	<xsl:apply-templates select="b:recentComments" />
+	<!-- <xsl:apply-templates select="b:recentComments" /> -->
 </xsl:if>
 </xsl:template>
 
