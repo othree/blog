@@ -9,6 +9,121 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000797" baseName="es6-iterable">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-05-24</b:date>
+				<b:time>14:03:12</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>ES6 的 Generator 與 Iterator</b:title>
+			<b:content>
+				<b:summary>第一次看到 generator 時，我只有看到 yield 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。 Iterator 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 for of 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 next method，每次執行會回傳一個物件，裡面兩個屬性： { value: 100, // 下一個元素的值...</b:summary>
+				<b:mainContent><p>第一次看到 generator 時，我只有看到 <code>yield</code> 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">Iterator</a> 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 <code>for of</code> 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 <code>next</code> method，每次執行會回傳一個物件，裡面兩個屬性：</p>
+
+<pre><code>{
+    value: 100, // 下一個元素的值
+    done: false // Iterator 是否跑完了
+}
+</code></pre>
+
+<p><code>value</code> 就是迴圈要的值，<code>done</code> 則是用來判斷迴圈是否該結束了，<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator</a> 就是用 <code>yield</code> 這個語法來讓你簡單的可以產生 iterator，在 ES6 裡面的語法還算簡單，就是宣告 function 時加個 <code>*</code>：</p>
+
+<pre><code>function* idMaker(){
+    var index = 0;
+    while(true)
+        yield index++;
+}
+</code></pre>
+
+<p>上面就是一個簡單的 generator，執行 <code>idMaker</code> 這個 generator function 才會回傳對應的 iterator：</p>
+
+<pre><code>var gen = idMaker();
+
+console.log(gen.next().value); // 0
+console.log(gen.next().value); // 1
+console.log(gen.next().value); // 2
+</code></pre>
+
+<p>當然這是一個不會結束的 iterator 就是了，使用時要小心不要直接把這種東西丟到迴圈裡面。最後要來介紹的是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable
+">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，介面的物件，內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
+
+<ul>
+<li>字串</li>
+<li>陣列</li>
+<li>Generator</li>
+<li>Map, WeakMap</li>
+<li>Set, WeakSet</li>
+<li>arguments</li>
+</ul>
+
+<p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子：</p>
+
+<pre><code>var myIterable = {}
+myIterable["@@iterator"] = () =&gt; (function*(){
+    yield 1;
+    yield 2;
+    yield 3
+})();
+
+for (let value of myIterable) {
+    console.log(value);
+} // 1, 2, 3
+</code></pre>
+
+<p>通常會把 "@@iterator" 屬性放到 prototype 下比較保險。而有了自定義 iterable 物件的能力，就可以有很多東西可以玩啦，可以拿來跑二元樹、DOM tree、三維陣列或是特定應用領域的資料結構等等。</p>
+
+<p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructor 等等：</p>
+
+<pre><code>[...myIterable]; // [1, 2, 3]
+
+myFunc(...myIterable); // myFunc(1, 2, 3)
+</code></pre>
+
+<p>這個新的運算子也是一個非常好用的新功能。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000796" baseName="es6-map-set">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-05-19</b:date>
+				<b:time>21:07:07</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>ES6 的 Map 與 Set</b:title>
+			<b:content>
+				<b:summary>ECMAScript 6 多了兩個新的資料結構，分別是 Map 與 Set，剛開始看到時還因為太久沒接觸其他語言，整個想不起來是什麼東西，不過還是簡單介紹一下。 Set 我一開始想不起來到底和 Map 哪裡不一樣，後來還是看了說明才回憶起來，其實就是一組值，像是資料庫裡面的 enum 資料型態，也可以想像成是陣列那樣的結構，可是它沒辦法直接用索引取特定元素的值，只能用列舉的方法取值，常用的 method 有三個，add、delete 和 clear，預設是會幫你確保值都是唯一的，重複的值會被忽略，要列舉裡面的值基本上是要用 for...of 語法，這和以前的 for...in 語法不一樣，是直接取值出來的，也是 ES6 新的東西。 Map 則是和原來的 JS 物件好像重複到，都是 key value mapping 的資料結構，不過其實還是有個很重要的差異點，就是 Map 的 key 的可以用字串以外的值，例如你可以用 DOM Node 來當 Map 裡面的 key，用法基本上就是...</b:summary>
+				<b:mainContent><p>ECMAScript 6 多了兩個新的資料結構，分別是 Map 與 Set，剛開始看到時還因為太久沒接觸其他語言，整個想不起來是什麼東西，不過還是簡單介紹一下。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a> 我一開始想不起來到底和 Map 哪裡不一樣，後來還是看了說明才回憶起來，其實就是一組值，像是資料庫裡面的 enum 資料型態，也可以想像成是陣列那樣的結構，可是它沒辦法直接用索引取特定元素的值，只能用列舉的方法取值，常用的 method 有三個，<code>add</code>、<code>delete</code> 和 <code>clear</code>，預設是會幫你確保值都是唯一的，重複的值會被忽略，要列舉裡面的值基本上是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 語法，這和以前的 <code>for...in</code> 語法不一樣，是直接取值出來的，也是 ES6 新的東西。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a> 則是和原來的 JS 物件好像重複到，都是 key value mapping 的資料結構，不過其實還是有個很重要的差異點，就是 Map 的 key 的可以用字串以外的值，例如你可以用 DOM Node 來當 Map 裡面的 key，用法基本上就是 <code>set</code> 和 <code>get</code>，可以避免一些以前會遇到的問題，例如 jQuery 的 data，以前會需要幫每個 DOM Node 生 unique id，如果用 Map 來實做的話就不需要了。</p>
+
+<p>目前 Firefox 和 Chrome 都已經有把這兩個資料結構實做好了，不過 Chrome 還沒有把 <code>for...of</code> 實做好就是～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000791" baseName="immediate-in-js">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -37,8 +152,6 @@
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="1"></b:comments>
-
 
 		</b:entry>
 
@@ -63,8 +176,6 @@
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -112,8 +223,6 @@
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="0"></b:comments>
-
 
 		</b:entry>
 
@@ -146,8 +255,6 @@
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -183,8 +290,6 @@
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -475,8 +580,6 @@ document.register('x-button', {prototype: xButtonProto});
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="2"></b:comments>
-
 
 		</b:entry>
 
@@ -501,8 +604,6 @@ document.register('x-button', {prototype: xButtonProto});
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -563,142 +664,6 @@ Object.defineProperty(square, 'area', {
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000753" baseName="phantom-jasmine-and-aladdin">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-07-02</b:date>
-				<b:time>00:00:10</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>phantom-jasmine 與阿拉丁</b:title>
-			<b:content>
-				<b:summary>前陣子開始寫起 JavaScript 的 test，用的是 Jasmine，用瀏覽器跑都正常，只是用 npm 上的 phantom-jasmine 來跑測試結果都不正常。因為想要把專案丟上 Travis CI，所以今天又花了不少時間下去找問題，結果還真是有些意外。 這個問題最大原因就是 npm phantom-jasmine 和原作者的 phantom-jasmine 的是不同 fork，npm module maintainer 是 rlayte，而 phantom-jasmine 作者是 Joshua Carver，雖然 npm 網站上的使用說明和 Joshua 在 Github 上的幾乎都一樣，Joshua 也在 README 說了可以用 npm 裝，但是實際上用 npm install -g...</b:summary>
-				<b:mainContent><p>前陣子開始寫起 JavaScript 的 test，用的是 <a href="http://pivotal.github.io/jasmine/">Jasmine</a>，用瀏覽器跑都正常，只是用 npm 上的 <a href="https://npmjs.org/package/phantom-jasmine">phantom-jasmine</a> 來跑測試結果都不正常。因為想要把專案丟上 <a href="https://travis-ci.org/">Travis CI</a>，所以今天又花了不少時間下去找問題，結果還真是有些意外。</p>
-
-<p>這個問題最大原因就是 npm phantom-jasmine 和原作者的 <a href="https://github.com/jcarver989/phantom-jasmine">phantom-jasmine</a> 的是不同 fork，npm module maintainer 是 <a href="https://npmjs.org/~rlayte">rlayte</a>，而 phantom-jasmine 作者是 <a href="https://github.com/jcarver989">Joshua Carver</a>，雖然 npm 網站上的使用說明和 Joshua 在 Github  上的幾乎都一樣，Joshua 也在 <a href="https://github.com/jcarver989/phantom-jasmine#installation">README</a> 說了可以用 npm 裝，但是實際上用 <code>npm install -g phantom-jasmine</code> 裝的卻是 rlayte 的 <a href="https://github.com/rlayte/phantom-jasmine">fork</a>，然而 rlayte 的那版，卻是他改很大的版本，整個行為都已經和說明上寫的不一樣了。</p>
-
-<p>本來的 phantom-jasmine 是使用者丟 HTML 檔案進去，不過 rlayte 改到後來，變成是它會自己去特定的路徑找 js 檔案，丟進 tempalte 產生 html 然後跑測試的，而這個路徑好死不死預設是 <code>exmample/js/**/*.js</code>，雖然測試的 spec 還是預設在 <code>spec/</code> 下找，可是要測試的檔案會在 <code>example/js/</code> 下面找，如果沒有改設定，根本就不會測試到想要測的檔案，這個行為是和原來完全不一樣的，而且也沒寫在文件上。</p>
-
-<p>還好我也有發現，rlayte 其實已經把他的 phantom-jasmine fork 改成 <a href="https://github.com/rlayte/aladdin">aladdin</a> 了，前面講的那些行為該怎樣用，其實都寫在 aladdin 那邊的 README 內。</p>
-
-<p>aladdin 設計的其實蠻無腦的，spec 檔案放在 <code>spec/</code> 目錄下，然後在 spec 目錄下新增一個 config.json：</p>
-
-<pre><code>[ 
-  'lib/jquery.js',
-  'app/**/*.js'
-]
-</code></pre>
-
-<p>這個檔案把你要測試的 src 和 dependency 都照順序放好，然後在專案根目錄執行 <code>aladdin</code> 就會開始測試了，連 Jasmine 的檔案都不用自己抓。</p>
-
-<p>要在 Travis CI 上跑測試，只要再加上兩個檔案就可以，一個是 <a href="http://about.travis-ci.org/docs/user/getting-started/#Step-three%3A-Add-.travis.yml-file-to-your-repository">.travis.yml</a>，另外一個是 <a href="https://npmjs.org/doc/json.html">package.json</a>，<code>.travis.yml</code> 只要設成 <a href="http://about.travis-ci.org/docs/user/getting-started/#Node.js">Node.js</a> 的就可以，可以直接拷貝範例，然後內容的 nodejs 版本只留一個。然後再加上 before_script 告訴 Travis CI 要安裝 aladdin：</p>
-
-<pre><code>before_script:
-    - npm install -g aladdin
-</code></pre>
-
-<p>至於 <code>package.json</code> 就稍微複雜一點，以下是範例：</p>
-
-<pre><code>{
-  "name": "robst-video",
-  "author": "othree",
-  "scripts": {
-    "test": "aladdin"
-  }
-}
-</code></pre>
-
-<p>重點是 <strong>scripts</strong> 那一塊，要讓 <code>npm test</code> 執行時會跑 <code>aladdin</code> 來啟動測試。這樣 Travis CI 就可以幫你跑測試了。</p>
-
-<p>回到 phantom-jasmine，現在的狀況是 npm 的 phantom-jasmine 被搞爛了，我必須說 rlayte 搞出這狀況還蠻不負責任的，所以也 report 了個 issue，還好 npm 可以從本地目錄安裝：</p>
-
-<pre><code>sudo npm install -g /path/to/phantom-jasmine/
-</code></pre>
-
-<p>只是裝起來後，目前我反而還沒辦法讓原版的 phantom-jasmine 跑起來，可能下次有動力在繼續看問題在哪了吧。 目前我是只有在 <a href="https://github.com/othree/robust-video">robust-video</a> 這個專案跑 Travis CI，有興趣的也可以直接去看看檔案怎樣放。</p>
-
-<p>最後補充一下，不知道有沒有人注意到，迪士尼的阿拉丁電影裡面的公主，就叫做 Jasmine。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="3"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000751" baseName="javascript-primitives-obj">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-06-30</b:date>
-				<b:time>14:24:41</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>JavaScript Primitives Objects</b:title>
-			<b:content>
-				<b:summary>接續上一篇文章，JavaScript 的資料型別可以分為兩類：基本型別(primitive value)和物件(object)。基本型別包含字串、數值、布林值等，物件除了物件外，還有像是函數、Regular Expression 等。JavaScript 還有一組很特別的 constructor，對應到每種基本型別，所以你可以 new String('blah'); 來產生基本型別的物件： new String('blah'); new Number(42); ner Boolean(true); 如果看最近的書本和教學都會說不要使用這種方法來建立這些基本型別，缺點有效能問題、API 設計不好，會有混淆等等。不過如果是物件的話，不就可以很方便的做一些操作了嗎？ 這兩年很受歡迎的 Ruby 有一個特性就是所有的基本型別都是物件，所以就可以很簡單的用一些串接的方式直接對這些基本型別進行操作： str = 'hello' str.capitalize # Hello str.capitalize! str # Hello str.count('l') # 2 在 JavaScript 中的基本型別其實不需要以物件的形式，也可以做類似的操作： var str =...</b:summary>
-				<b:mainContent><p>接續上一篇文章，JavaScript 的資料型別可以分為兩類：基本型別(primitive value)和物件(object)。基本型別包含字串、數值、布林值等，物件除了物件外，還有像是函數、Regular Expression 等。JavaScript 還有一組很特別的 constructor，對應到每種基本型別，所以你可以 <code>new String('blah');</code> 來產生基本型別的物件：</p>
-
-<pre><code>new String('blah');
-new Number(42);
-ner Boolean(true);
-</code></pre>
-
-<p>如果看最近的書本和教學都會說不要使用這種方法來建立這些基本型別，缺點有效能問題、API 設計不好，會有混淆等等。不過如果是物件的話，不就可以很方便的做一些操作了嗎？</p>
-
-<p>這兩年很受歡迎的 Ruby 有一個特性就是所有的基本型別都是物件，所以就可以很簡單的用一些串接的方式直接對這些基本型別進行操作：</p>
-
-<pre><code>str = 'hello'
-str.capitalize        #  Hello
-str.capitalize!
-str                   #  Hello
-str.count('l')        #  2
-</code></pre>
-
-<p>在 JavaScript 中的基本型別其實不需要以物件的形式，也可以做類似的操作：</p>
-
-<pre><code>var str = 'hello';
-str.length;           // 2
-str.contains('l');    // true
-str.indexOf('l');     // 2
-</code></pre>
-
-<p>但是如果想要更進一步的在上面加上屬性或是 method 就會發現行不通：</p>
-
-<pre><code>var str = 'hello';
-str.target = 'world';
-str.target;            // undefined
-</code></pre>
-
-<p>這中間到底是有什麼差異呢？這個問題我想了很久，直到看了 <a href="http://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/">The Secret Life of JavaScript Primitives</a> 這篇文章才瞭解，最後面這個例子，其實等同於：</p>
-
-<pre><code>var str = 'hello';
-(new String(str)).target = 'world';
-(new String(str)).target;
-</code></pre>
-
-<p>當使用物件形式的 <code>.</code> 運算子對基本型別資料操作的時候，會產生一個新的物件，然後用完就丟掉，所以在指派 target 屬性那行操作到的物件，和要取回 target 屬性那行的物件，是完全不一樣的兩個物件，這也就是為什麼這些資料可以用類似物件的方法操作，但是卻不能真的像物件一樣使用。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>

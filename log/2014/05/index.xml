@@ -16,6 +16,156 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000797" baseName="es6-iterable">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-05-24</b:date>
+				<b:time>14:03:12</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>ES6 的 Generator 與 Iterator</b:title>
+			<b:content>
+				<b:summary>第一次看到 generator 時，我只有看到 yield 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。 Iterator 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 for of 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 next method，每次執行會回傳一個物件，裡面兩個屬性： { value: 100, // 下一個元素的值...</b:summary>
+				<b:mainContent><p>第一次看到 generator 時，我只有看到 <code>yield</code> 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">Iterator</a> 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 <code>for of</code> 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 <code>next</code> method，每次執行會回傳一個物件，裡面兩個屬性：</p>
+
+<pre><code>{
+    value: 100, // 下一個元素的值
+    done: false // Iterator 是否跑完了
+}
+</code></pre>
+
+<p><code>value</code> 就是迴圈要的值，<code>done</code> 則是用來判斷迴圈是否該結束了，<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator</a> 就是用 <code>yield</code> 這個語法來讓你簡單的可以產生 iterator，在 ES6 裡面的語法還算簡單，就是宣告 function 時加個 <code>*</code>：</p>
+
+<pre><code>function* idMaker(){
+    var index = 0;
+    while(true)
+        yield index++;
+}
+</code></pre>
+
+<p>上面就是一個簡單的 generator，執行 <code>idMaker</code> 這個 generator function 才會回傳對應的 iterator：</p>
+
+<pre><code>var gen = idMaker();
+
+console.log(gen.next().value); // 0
+console.log(gen.next().value); // 1
+console.log(gen.next().value); // 2
+</code></pre>
+
+<p>當然這是一個不會結束的 iterator 就是了，使用時要小心不要直接把這種東西丟到迴圈裡面。最後要來介紹的是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable
+">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，介面的物件，內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
+
+<ul>
+<li>字串</li>
+<li>陣列</li>
+<li>Generator</li>
+<li>Map, WeakMap</li>
+<li>Set, WeakSet</li>
+<li>arguments</li>
+</ul>
+
+<p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子：</p>
+
+<pre><code>var myIterable = {}
+myIterable["@@iterator"] = () =&gt; (function*(){
+    yield 1;
+    yield 2;
+    yield 3
+})();
+
+for (let value of myIterable) {
+    console.log(value);
+} // 1, 2, 3
+</code></pre>
+
+<p>通常會把 "@@iterator" 屬性放到 prototype 下比較保險。而有了自定義 iterable 物件的能力，就可以有很多東西可以玩啦，可以拿來跑二元樹、DOM tree、三維陣列或是特定應用領域的資料結構等等。</p>
+
+<p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructor 等等：</p>
+
+<pre><code>[...myIterable]; // [1, 2, 3]
+
+myFunc(...myIterable); // myFunc(1, 2, 3)
+</code></pre>
+
+<p>這個新的運算子也是一個非常好用的新功能。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000796" baseName="es6-map-set">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-05-19</b:date>
+				<b:time>21:07:07</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>ES6 的 Map 與 Set</b:title>
+			<b:content>
+				<b:summary>ECMAScript 6 多了兩個新的資料結構，分別是 Map 與 Set，剛開始看到時還因為太久沒接觸其他語言，整個想不起來是什麼東西，不過還是簡單介紹一下。 Set 我一開始想不起來到底和 Map 哪裡不一樣，後來還是看了說明才回憶起來，其實就是一組值，像是資料庫裡面的 enum 資料型態，也可以想像成是陣列那樣的結構，可是它沒辦法直接用索引取特定元素的值，只能用列舉的方法取值，常用的 method 有三個，add、delete 和 clear，預設是會幫你確保值都是唯一的，重複的值會被忽略，要列舉裡面的值基本上是要用 for...of 語法，這和以前的 for...in 語法不一樣，是直接取值出來的，也是 ES6 新的東西。 Map 則是和原來的 JS 物件好像重複到，都是 key value mapping 的資料結構，不過其實還是有個很重要的差異點，就是 Map 的 key 的可以用字串以外的值，例如你可以用 DOM Node 來當 Map 裡面的 key，用法基本上就是...</b:summary>
+				<b:mainContent><p>ECMAScript 6 多了兩個新的資料結構，分別是 Map 與 Set，剛開始看到時還因為太久沒接觸其他語言，整個想不起來是什麼東西，不過還是簡單介紹一下。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a> 我一開始想不起來到底和 Map 哪裡不一樣，後來還是看了說明才回憶起來，其實就是一組值，像是資料庫裡面的 enum 資料型態，也可以想像成是陣列那樣的結構，可是它沒辦法直接用索引取特定元素的值，只能用列舉的方法取值，常用的 method 有三個，<code>add</code>、<code>delete</code> 和 <code>clear</code>，預設是會幫你確保值都是唯一的，重複的值會被忽略，要列舉裡面的值基本上是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 語法，這和以前的 <code>for...in</code> 語法不一樣，是直接取值出來的，也是 ES6 新的東西。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a> 則是和原來的 JS 物件好像重複到，都是 key value mapping 的資料結構，不過其實還是有個很重要的差異點，就是 Map 的 key 的可以用字串以外的值，例如你可以用 DOM Node 來當 Map 裡面的 key，用法基本上就是 <code>set</code> 和 <code>get</code>，可以避免一些以前會遇到的問題，例如 jQuery 的 data，以前會需要幫每個 DOM Node 生 unique id，如果用 Map 來實做的話就不需要了。</p>
+
+<p>目前 Firefox 和 Chrome 都已經有把這兩個資料結構實做好了，不過 Chrome 還沒有把 <code>for...of</code> 實做好就是～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000795" baseName="disqus">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-05-16</b:date>
+				<b:time>23:32:27</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>留言切換到 Disqus</b:title>
+			<b:content>
+				<b:summary> 因為 MovableType 的反 spam 機制幾乎失靈了，最近廣告又太多，只好狠下心來換到 Disqus，其實是想換一陣子了，不過覺的話要花不少時間一直沒弄，結果果然弄了整個晚上，大概遇到三個問題。 其實 Disqus 對於轉移這件事做了不少工，不過我還是遇到匯出的檔案格式不支援的問題， Disqus 只支援 WordPress 的 wxr 格式，不過我的 MT 4 不能輸出這種格式，後來是使用 Disqus 的 MT plugin 來處理這個問題。 第二個問題是套用到頁面上的問題，因為這裡有使用 CSP，所以勢必要多開一些 domain，大概開了圖片和 script 的 *.disqus.com 和 *.disquscdn.com，不過還有一個我不太想開的 unsafe-eval，目前只能先暫時屈服，正在找管道回報這問題。 第三個問題就是留言對應的 url 不正確，因為我是用 plugin 處理匯出匯入的，他用的網址就是 MT 內部認為的網址，不過在這裡這不是正確的網址，本來我是在頁面讀入的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/14006265675/" title="奈良 東大寺 by othree, on Flickr"><img src="//farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg" width="1024" height="683" alt="奈良 東大寺" src-1="(max-width: 768px)  //farm8.staticflickr.com/7400/14006265675_5fe812acae.jpg 1x, //farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg 2x" src-2="//farm8.staticflickr.com/7400/14006265675_02fe3d9593_k.jpg 2x" /></a></p>
+
+<p>因為 MovableType 的反 spam 機制幾乎失靈了，最近廣告又太多，只好狠下心來換到 <a href="http://disqus.com/">Disqus</a>，其實是想換一陣子了，不過覺的話要花不少時間一直沒弄，結果果然弄了整個晚上，大概遇到三個問題。</p>
+
+<p>其實 Disqus 對於轉移這件事做了不少工，不過我還是遇到匯出的檔案格式不支援的問題， Disqus 只支援 WordPress 的 wxr 格式，不過我的 MT 4 不能輸出這種格式，後來是使用 Disqus 的 MT plugin 來處理這個問題。</p>
+
+<p>第二個問題是套用到頁面上的問題，因為這裡有使用 CSP，所以勢必要多開一些 domain，大概開了圖片和 script 的 <code>*.disqus.com</code> 和 <code>*.disquscdn.com</code>，不過還有一個我不太想開的 <em>unsafe-eval</em>，目前只能先暫時屈服，正在找管道回報這問題。</p>
+
+<p>第三個問題就是留言對應的 url 不正確，因為我是用 plugin 處理匯出匯入的，他用的網址就是 MT 內部認為的網址，不過在這裡這不是正確的網址，本來我是在頁面讀入的 script 內做處理，手動指定留言的網址，不過後來發現 Disqus 有 URL mapping 的功能，可以上傳 csv 檔來改網址，而且還支援下載現有的網址清單，設想蠻齊全的。</p>
+
+<p>總之我就這樣換過來了，自己測試留言看來是 ok，還不知道是不是都沒問題了，因為這邊也很少人來留言啊，至於切換過來有什麼優點呢，最主要還是我不想處理 spam 了，再來我可以把 comment 進入點關掉，對網站來說安全些，還有可以把一些流量丟到外面（Disqus 是賺什麼啊？），剩下就是我可以用 Disqus 的一些特殊功能啦，像是訂閱討論串之類的。</p>
+
+<p>對了，照片是隨便挑的，和內文沒關係～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000794" baseName="harukas-300">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -73,8 +223,6 @@
 <p><a class="thumbnail" href="http://www.flickr.com/photos/othree/14011113172/" title="Harukas 300 by othree, on Flickr"><img src="//farm8.staticflickr.com/7155/14011113172_7fd6daf712_b.jpg" width="1024" height="683" alt="Harukas 300" src-1="(max-width: 768px)  //farm8.staticflickr.com/7155/14011113172_7fd6daf712.jpg 1x, //farm8.staticflickr.com/7155/14011113172_7fd6daf712_b.jpg 2x" src-2="//farm8.staticflickr.com/7155/14011113172_ec8f34e742_k.jpg 2x" /></a></p>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
