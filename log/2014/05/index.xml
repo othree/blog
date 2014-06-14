@@ -14,6 +14,11 @@
 			</b:previous>
 
 
+			<b:next>
+				<b:mTitle>June 2014</b:mTitle>
+				<b:mDate>2014/06</b:mDate>				
+			</b:next>
+
 		</b:entriesMeta>
 
 		<b:entry entryID="000797" baseName="es6-iterable">
@@ -59,7 +64,7 @@ console.log(gen.next().value); // 2
 </code></pre>
 
 <p>當然這是一個不會結束的 iterator 就是了，使用時要小心不要直接把這種東西丟到迴圈裡面。最後要來介紹的是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable
-">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，介面的物件，內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
+">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，要是有支援 iterable 介面的物件才可以，ES6 內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
 
 <ul>
 <li>字串</li>
@@ -70,7 +75,7 @@ console.log(gen.next().value); // 2
 <li>arguments</li>
 </ul>
 
-<p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子：</p>
+<p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子（Symbol 目前還在變動中，以後會在介紹）：</p>
 
 <pre><code>var myIterable = {}
 myIterable["@@iterator"] = () =&gt; (function*(){
@@ -86,7 +91,7 @@ for (let value of myIterable) {
 
 <p>通常會把 "@@iterator" 屬性放到 prototype 下比較保險。而有了自定義 iterable 物件的能力，就可以有很多東西可以玩啦，可以拿來跑二元樹、DOM tree、三維陣列或是特定應用領域的資料結構等等。</p>
 
-<p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructor 等等：</p>
+<p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructuring 等等：</p>
 
 <pre><code>[...myIterable]; // [1, 2, 3]
 
