@@ -126,6 +126,7 @@
             </xsl:otherwise>
 		</xsl:choose>
         <meta property="fb:admins" content="582724207" />
+        <script src="/scripts/jfont.js"></script>
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
         <xsl:choose>
@@ -202,7 +203,7 @@
                 <aside role="complementary" class="span3">
                     <hr />
                     <h2>其它資訊</h2>
-                    <form method="get" id="search-form" class="form-search" action="http://www.google.com/search" role="search">
+                    <form method="get" id="search-form" class="form-search" action="//www.google.com/search" role="search">
                         <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
                         <input type="hidden"  name="sitesearch" value="blog.othree.net" />
                         <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
