@@ -241,9 +241,9 @@
                                     <xsl:with-param name="by" select="'%2F'" />
                                 </xsl:call-template>
                             </xsl:variable>
-                            <iframe id="fb-button" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"></iframe>
-                            <iframe id="gp-button" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
-                            <iframe id="tw-button" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
+                            <iframe id="fb-button" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"></iframe>
+                            <iframe id="gp-button" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
+                            <iframe id="tw-button" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
                             <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
                             <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
                             <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
