@@ -9,6 +9,110 @@
 			<b:listData listID="unix">unix</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000818" baseName="ubuntu-1404-mt4">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-11-03</b:date>
+				<b:time>17:42:28</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>Ubuntu 14.04 與 MovableType 4.x</b:title>
+			<b:content>
+				<b:summary>前一篇文章提到我為 SSL 安全性升級到 Ubuntu 14.04，其實升級之後遇到一些 MovableType 的相容性問題，Ubuntu 在 12.04 的時候還是用 Perl 5.14，不過到 14.04 時，Perl 升級到 5.18 了，順便提一下現在最新的穩定版是 5.20，不過 5.18 和 5.20 是同時都有在維護的。 然後我的 MovableType 是用很久以前的 4.38，用新的 Perl 會跑不起來，不過我也不太想升級，一來是 License 問題，二來是新的 MT 一個很大的架構改變是他變成是多 blog 系統，我也不太喜歡這點。總之剩下的方法就是想辦法修 bug，或是用舊的 Perl 跑，顯然後者容易許多，然後我也找到 gugod 開發的 perlbrew...</b:summary>
+				<b:mainContent><p>前一篇文章提到我為 SSL 安全性升級到 Ubuntu 14.04，其實升級之後遇到一些 MovableType 的相容性問題，Ubuntu 在 12.04 的時候還是用 Perl 5.14，不過到 14.04 時，Perl 升級到 5.18 了，順便提一下現在最新的穩定版是 5.20，不過 5.18 和 5.20 是同時都有在維護的。</p>
+
+<p>然後我的 MovableType 是用很久以前的 4.38，用新的 Perl 會跑不起來，不過我也不太想升級，一來是 License 問題，二來是新的 MT 一個很大的架構改變是他變成是多 blog 系統，我也不太喜歡這點。總之剩下的方法就是想辦法修 bug，或是用舊的 Perl 跑，顯然後者容易許多，然後我也找到 gugod 開發的 <a href="http://perlbrew.pl/">perlbrew</a> 這工具，類似於Ruby 的 <a href="http://rvm.io/">RVM</a>，c9s 也有寫一篇文章<a href="http://perlbrew.pl/Perlbrew-%E4%B8%AD%E6%96%87%E7%B0%A1%E4%BB%8B.html">介紹</a>。</p>
+
+<p>比較有趣的是我用了 perlbrew 安裝好 Perl 5.14 後，用 <code>which perl</code> 找到 Perl 5.14 執行檔位置然後手動修改 mt.cgi 等檔案，用 mt-check 檢查發現還缺 DBI 的套件，就用升級前就已經裝好的 cpanminus 裝了，不過怎麼裝都顯示正常但是 MT 就是一直抓不到，看了一下 cpanm 檔案原始碼才發現它用的 perl 是：</p>
+
+<pre><code>#!/usr/bin/perl
+</code></pre>
+
+<p>心想 gugod 怎麼可能不處理這個問題，於是搜尋一下發現可以用 <a href="http://perlbrew.pl/Perlbrew-and-Friends.html">perlbrew 安裝 cpanm</a>：</p>
+
+<pre><code>perlbrew install-cpanm
+</code></pre>
+
+<p>看了安裝出來的 cpanm 用的 perl 來源是不一樣的：</p>
+
+<pre><code>#!/usr/bin/env perl
+</code></pre>
+
+<p>這樣用 cpanm 裝的 Perl 套件總算可以用了，之後還有一個 5.14.2 和 5.14.4 的差異造成的錯誤，就照網路上找到的<a href="http://www.everitz.com/2012/06/20/mt-notifier-defined-hash-is-deprecated-error/">文章</a>修正了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000812" baseName="bracket">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-10-01</b:date>
+				<b:time>01:14:24</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>[</b:title>
+			<b:content>
+				<b:summary>最近因為 shellshock 的關係，跑去看了 /bin/ 下面的東西，結果突然發現有個執行檔叫做 [。 執行了也完全沒反應，結果和同事討論就上去 stack overflow 來問問看，然後馬上就被回說看看 man [。想不到，原來 shell script 裡面的 if else condition 的 [ ] ，其實就是這個執行檔啊，以前一直以為是個語法的 syntax......</b:summary>
+				<b:mainContent><p>最近因為 <a href="http://www.pcworld.com/article/2687857/bigger-than-heartbleed-shellshock-flaw-leaves-os-x-linux-more-open-to-attack.html">shellshock</a> 的關係，跑去看了 <code>/bin/</code> 下面的東西，結果突然發現有個執行檔叫做 <code>[</code>。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15403240745/" title="ls /bin/ by othree, on Flickr"><img src="https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_b.jpg" width="1024" height="767" alt="ls /bin/" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3.jpg 1x, https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_b.jpg 2x"  /></a></p>
+
+<p>執行了也完全沒反應，結果和同事討論就上去 stack overflow 來問問看，然後馬上就被回說看看 <code>man [</code>。想不到，原來 shell script 裡面的 if else condition 的 <code>[ ]</code> ，其實就是這個執行檔啊，以前一直以為是個語法的 syntax...</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000807" baseName="mozjpeg_21">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-08-16</b:date>
+				<b:time>14:34:37</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+			<b:title>mozjpeg 2.1</b:title>
+			<b:content>
+				<b:summary>Mozilla 最近發佈了 mozjpeg 2.1，同時還有一篇 用 mozjpeg 產生高效率的 JPEG 教大家使用裡面的工具，所以我之前誤會以為現在只有 c lib 可以用，這篇文章有一些範例指令讓大家可以把 cjpeg 把圖片重新壓縮，小缺憾是安裝講的比較不清楚，所以我另外測試過，提供一下 Mac OSX 的指令： cd mozjpeg autoreconf -fiv mkdir build &amp;&amp; cd build sh ../configure make sudo make install 關鍵的就是 BUILDING.txt 沒說 build 目錄是要自己建立的，不過實際測試的效果要等週一才能測試看看，目前只有編譯過確定有指令工具可以用而已。 另外一個比較容易漏掉的是要編譯需要 NASM， homebrew...</b:summary>
+				<b:mainContent><p>Mozilla 最近發佈了 <a href="https://github.com/mozilla/mozjpeg">mozjpeg</a> 2.1，同時還有一篇 <a href="http://blog.mozilla.com.tw/posts/6084/using-mozjpeg-to-create-efficient-jpegs">用 mozjpeg 產生高效率的 JPEG</a> 教大家使用裡面的工具，所以我之前誤會以為現在只有 c lib 可以用，這篇文章有一些範例指令讓大家可以把 <code>cjpeg</code> 把圖片重新壓縮，小缺憾是安裝講的比較不清楚，所以我另外測試過，提供一下 Mac OSX 的指令：</p>
+
+<pre><code>cd mozjpeg
+autoreconf -fiv
+mkdir build &amp;&amp; cd build
+sh ../configure
+make
+sudo make install
+</code></pre>
+
+<p>關鍵的就是 <a href="https://github.com/mozilla/mozjpeg/blob/master/BUILDING.txt">BUILDING.txt</a> 沒說 <code>build</code> 目錄是要自己建立的，不過實際測試的效果要等週一才能測試看看，目前只有編譯過確定有指令工具可以用而已。</p>
+
+<p>另外一個比較容易漏掉的是要編譯需要 <a href="https://github.com/mozilla/mozjpeg/blob/master/BUILDING.txt">NASM</a>， homebrew 可以直接 <code>brew install nasm</code> 。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000764" baseName="osx-ruby-193p392">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -31,8 +135,6 @@
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -71,8 +173,6 @@
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="2"></b:comments>
-
 
 		</b:entry>
 
@@ -102,8 +202,6 @@ make console=readline native
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="0"></b:comments>
-
 
 		</b:entry>
 
@@ -131,8 +229,6 @@ make console=readline native
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
 
 
 		</b:entry>
@@ -176,8 +272,6 @@ export LESS_TERMCAP_us=$'\E[38;5;167m'
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="3"></b:comments>
 
 
 		</b:entry>
@@ -233,8 +327,6 @@ https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
 </b:extendContent>
 			</b:content>
 
-			<b:comments commentCount="0"></b:comments>
-
 
 		</b:entry>
 
@@ -263,101 +355,6 @@ https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
 <p>這樣可以直接回去那個版本了，而不是只 revert 那個 commit 。</p></b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
-
-			<b:comments commentCount="2"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000609" baseName="wq-post-bbs-article">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-01-07</b:date>
-				<b:time>20:25:04</b:time>
-			</b:datetime>
-			<b:category>unix</b:category>
-			<b:title>用 :wq 送出 BBS 文章</b:title>
-			<b:content>
-				<b:summary>因為在 BBS 想要用 :wq 發文章的次數不算少，剛剛就用 expect 弄起來了，只要加一行到 interact 裡面就可以： \033:wq\r { send \030; send &quot;\r&quot; } 實際操作是要 &lt;ESC&gt; :wq &lt;ENTER&gt; ，會直接把文章發表，如果不想跳過發文前的確認選單，那就把最後的 \r 拿掉。...</b:summary>
-				<b:mainContent><p>因為在 <span class="caps">BBS </span>想要用 :wq 發文章的次數不算少，剛剛就用 expect 弄起來了，只要加一行到 interact 裡面就可以：</p>
-
-
-
-<pre><code>\033:wq\r { send \030; send &quot;\r&quot; }</code></pre>
-
-
-
-<p>實際操作是要 &lt;ESC&gt; :wq &lt;ENTER&gt; ，會直接把文章發表，如果不想跳過發文前的確認選單，那就把最後的 \r 拿掉。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000608" baseName="_screen_windows_terminal">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2010-01-05</b:date>
-				<b:time>21:18:28</b:time>
-			</b:datetime>
-			<b:category>unix</b:category>
-			<b:title>在 screen windows 裡開一個比較小的 terminal</b:title>
-			<b:content>
-				<b:summary>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 BBS 和 IRC，BBS 的標準視窗大小是 80*24，但是這個大小對於 IRC 來說又太小了，好在現在很多 BBS 系統已經已經支援大於 80*24 的終端機了，但是有一個 bahamut 自從商業化後 BBS 系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 下 ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上： width -d 80 24 重點在那個 -d 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。...</b:summary>
-				<b:mainContent><p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
-
-
-
-<pre><code>width -d 80 24</code></pre>
-
-
-
-<p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="0"></b:comments>
-
-
-		</b:entry>
-
-		<b:entry entryID="000605" baseName="closure-compiler-osx">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2009-12-29</b:date>
-				<b:time>23:16:50</b:time>
-			</b:datetime>
-			<b:category>unix</b:category>
-			<b:title>closure-compiler on OSX</b:title>
-			<b:content>
-				<b:summary>Google 的 Closure Cmpiler 要 Java 1.6 ，蘋果雖然有提供 1.6 的 更新 ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在 /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java 如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。...</b:summary>
-				<b:mainContent><p>Google 的 <a href="http://code.google.com/intl/en/closure/compiler/">Closure Cmpiler</a> 要 Java 1.6 ，蘋果雖然有提供 1.6 的 <a href="http://www.apple.com/downloads/macosx/apple/application_updates/javaformacosx105update1.html">更新</a> ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在</p>
-
-
-
-<pre><code>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java</code></pre>
-
-
-
-<p>如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。</p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-			<b:comments commentCount="2"></b:comments>
 
 
 		</b:entry>

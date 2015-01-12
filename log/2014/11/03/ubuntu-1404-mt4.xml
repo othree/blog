@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000818" baseName="ubuntu-1404-mt4">Ubuntu 14.04 與 MovableType 4.x</b:listData>
+
+			<b:previous>
+				<b:mTitle>SSL 設定更新</b:mTitle>
+				<b:mDate>2014-11-01</b:mDate>
+				<b:mBase>ssl-config</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>ES6 Promise</b:mTitle>
+				<b:mDate>2014-11-13</b:mDate>
+				<b:mBase>es6-promise</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000818" baseName="ubuntu-1404-mt4">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-11-03</b:date>
+				<b:time>17:42:28</b:time>
+			</b:datetime>
+			<b:category>unix</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Ubuntu 14.04 與 MovableType 4.x</b:title>
+			<b:content>
+				<b:summary>前一篇文章提到我為 SSL 安全性升級到 Ubuntu 14.04，其實升級之後遇到一些 MovableType 的相容性問題，Ubuntu 在 12.04 的時候還是用 Perl 5.14，不過到 14.04 時，Perl 升級到 5.18 了，順便提一下現在最新的穩定版是 5.20，不過 5.18 和 5.20 是同時都有在維護的。 然後我的 MovableType 是用很久以前的 4.38，用新的 Perl 會跑不起來，不過我也不太想升級，一來是 License 問題，二來是新的 MT 一個很大的架構改變是他變成是多 blog 系統，我也不太喜歡這點。總之剩下的方法就是想辦法修 bug，或是用舊的 Perl 跑，顯然後者容易許多，然後我也找到 gugod 開發的 perlbrew...</b:summary>
+				<b:mainContent><p>前一篇文章提到我為 SSL 安全性升級到 Ubuntu 14.04，其實升級之後遇到一些 MovableType 的相容性問題，Ubuntu 在 12.04 的時候還是用 Perl 5.14，不過到 14.04 時，Perl 升級到 5.18 了，順便提一下現在最新的穩定版是 5.20，不過 5.18 和 5.20 是同時都有在維護的。</p>
+
+<p>然後我的 MovableType 是用很久以前的 4.38，用新的 Perl 會跑不起來，不過我也不太想升級，一來是 License 問題，二來是新的 MT 一個很大的架構改變是他變成是多 blog 系統，我也不太喜歡這點。總之剩下的方法就是想辦法修 bug，或是用舊的 Perl 跑，顯然後者容易許多，然後我也找到 gugod 開發的 <a href="http://perlbrew.pl/">perlbrew</a> 這工具，類似於Ruby 的 <a href="http://rvm.io/">RVM</a>，c9s 也有寫一篇文章<a href="http://perlbrew.pl/Perlbrew-%E4%B8%AD%E6%96%87%E7%B0%A1%E4%BB%8B.html">介紹</a>。</p>
+
+<p>比較有趣的是我用了 perlbrew 安裝好 Perl 5.14 後，用 <code>which perl</code> 找到 Perl 5.14 執行檔位置然後手動修改 mt.cgi 等檔案，用 mt-check 檢查發現還缺 DBI 的套件，就用升級前就已經裝好的 cpanminus 裝了，不過怎麼裝都顯示正常但是 MT 就是一直抓不到，看了一下 cpanm 檔案原始碼才發現它用的 perl 是：</p>
+
+<pre><code>#!/usr/bin/perl
+</code></pre>
+
+<p>心想 gugod 怎麼可能不處理這個問題，於是搜尋一下發現可以用 <a href="http://perlbrew.pl/Perlbrew-and-Friends.html">perlbrew 安裝 cpanm</a>：</p>
+
+<pre><code>perlbrew install-cpanm
+</code></pre>
+
+<p>看了安裝出來的 cpanm 用的 perl 來源是不一樣的：</p>
+
+<pre><code>#!/usr/bin/env perl
+</code></pre>
+
+<p>這樣用 cpanm 裝的 Perl 套件總算可以用了，之後還有一個 5.14.2 和 5.14.4 的差異造成的錯誤，就照網路上找到的<a href="http://www.everitz.com/2012/06/20/mt-notifier-defined-hash-is-deprecated-error/">文章</a>修正了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

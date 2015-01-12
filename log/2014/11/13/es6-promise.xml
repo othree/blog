@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000819" baseName="es6-promise">ES6 Promise</b:listData>
+
+			<b:previous>
+				<b:mTitle>Ubuntu 14.04 與 MovableType 4.x</b:mTitle>
+				<b:mDate>2014-11-03</b:mDate>
+				<b:mBase>ubuntu-1404-mt4</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>OSX 10.10 紅綠燈</b:mTitle>
+				<b:mDate>2014-11-15</b:mDate>
+				<b:mBase>osx-yosemite-close-button-not-center</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000819" baseName="es6-promise">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-11-13</b:date>
+				<b:time>23:54:08</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>ES6 Promise</b:title>
+			<b:content>
+				<b:summary>ES6 Promise 目前各家瀏覽器的支援程度雖然還沒到可以直接用的程度，但是目前已經有非常多的 polyfill，差不多是可以開始使用的時候了。 如果習慣了 jQuery 設計的 Deferred 物件，應該會對於 ES6 的 Promise 設計很不習慣吧，相較於 jQuery 是產生好物件然後提供一些 method 做操作，要不要封裝起來也是開發者的事，ES6 Promise 的設計更是強調了封裝的特性，要怎麼 resolve、reject，在一開始就要決定好了，只有在建構函數裡面碰的到 resolve 和 reject 的觸發點： new Promise(function (resolve, reject) { //... }); 這樣的設計雖然在物件封裝上比較嚴謹，但是其實會讓一些程式碼多了一層的縮排，例如本來用 jQuery Deferred 包起來的 XHR： function JQXHR(url) { var...</b:summary>
+				<b:mainContent><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">ES6 Promise</a> 目前各家瀏覽器的支援程度雖然還沒到可以直接用的程度，但是目前已經有非常多的 polyfill，差不多是可以開始使用的時候了。</p>
+
+<p>如果習慣了 jQuery 設計的 Deferred 物件，應該會對於 ES6 的 Promise 設計很不習慣吧，相較於 jQuery 是產生好物件然後提供一些 method 做操作，要不要封裝起來也是開發者的事，ES6 Promise 的設計更是強調了封裝的特性，要怎麼 resolve、reject，在一開始就要決定好了，只有在建構函數裡面碰的到 resolve 和 reject 的觸發點：</p>
+
+<pre><code>new Promise(function (resolve, reject) {
+  //...
+});
+</code></pre>
+
+<p>這樣的設計雖然在物件封裝上比較嚴謹，但是其實會讓一些程式碼多了一層的縮排，例如本來用 jQuery Deferred 包起來的 XHR：</p>
+
+<pre><code>function JQXHR(url) {
+  var xhr = new XMLHttpRequest();
+  var dfd = new $.Deferred();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) { dfd.resolve(xhr.response); }
+  }
+  xhr.open('GET', url);
+  xhr.send();
+  return dfd.promise();
+}
+</code></pre>
+
+<p>用 ES6 Promise 就要改寫成：</p>
+
+<pre><code>function ESXHR(url) {
+  var xhr = new XMLHttpRequest();
+  var dfd = new Promise(function (resolve) {
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) { resolve(xhr.response); }
+    }
+  });
+  xhr.open('GET', url);
+  xhr.send();
+  return dfd;
+}
+</code></pre>
+
+<p>第二個差異就在於回傳的 thenable 物件要怎麼把結果改掉，以前 jQuery 的時候可以在 callback 裡面回傳新的 Deferred 物件改結果：</p>
+
+<pre><code>dfd.then(null, function () {
+  return $.Deferred().resolve();
+});
+</code></pre>
+
+<p>沒特別傳 Deferred 物件的話不管用 <code>then</code> 串接幾次的話結果都不會改變，不過 ES6 Promise 就不一樣了，不管是 resolve 狀況還是 reject 狀況，<code>then</code> 回傳的預設就是一個新的 resolved 狀態的 Promise 物件。那要怎樣改變狀態呢？這裡就要用 <code>throw new Error()</code> 了。在 ES6 Promise 的 <code>then</code> 裡面，不管是 resolve 還是 reject 的 handler，都是回傳任意值會讓後面拿到新的 resolved 的 Promise 物件，而如果在執行中 throw error 出去，就會讓後面拿到 rejected 的 Promise 物件：</p>
+
+<pre><code>dfd.then(function (val) {
+  if (val === 0) {
+    throw new Error('');
+  }
+});
+</code></pre>
+
+<p>然後就是 rejected 狀態的 Promise 也是有值的，如果是 throw error 產生的，那就是看 throw 什麼東西，那個東西就會變成新的 Promise 物件的值，而以往手動 throw error 時，為了相容性都會產生 Error 物件，在這邊就不必如此了，其實可以隨便傳想要給後面使用的值。</p>
+
+<p>再來，有時候只想要處理 reject 的狀況，會寫成：</p>
+
+<pre><code>dfd.then(null, function () {
+  //rejected handler
+});
+</code></pre>
+
+<p>有個 null 放前面其實蠻討厭的，不過 ES6 有提供一個 <code>catch</code> 可以用： </p>
+
+<pre><code>dfd.catch(function () {
+  //rejected handler
+});
+</code></pre>
+
+<p>這個以前倒是沒有類似的東西，蠻方便的。大概瞭解到這樣就可以使用 ES6 Promise 了，另外還有 <code>Promise.all</code> 和 <code>Promise.race</code> 可以做和 <code>jQuery.when</code> 類似的事情（race 是新的控制），至於我為什麼說現在差不多可以開始使用呢，除了 Polyfill 齊全外，其實還有一個原因是一些新的網路標準也開始使用 ES6 Promise 了，像是 <a href="http://www.w3.org/TR/WebCryptoAPI/">Web Crypto</a>，看 spec 比較不明顯，不過看 MDN 的<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto">介紹</a>，就有列出 encrypt、decrypt、sign 等花時間的 method 回傳都是 Promise 物件，實做就可以丟到背景的 Worker 去處理，才不會把 UI 卡住。而除了 Web Crypto 外，還有像是 ES7 可能會有的 <a href="http://jakearchibald.com/2014/es7-async-functions/">await</a> 語法也是要接 Promise 物件，總之是個未來趨勢，我覺得現在比較尷尬的是在 ES6 Promise 出來前的一堆標準都是用 event base 設計的，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">File Reader</a> 之類的，不知道有沒有機會慢慢都改到 Promise。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -5,10 +5,89 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2014</copyright>
-<lastBuildDate>2013-08-12 22:25</lastBuildDate>
-<generator>http://www.movabletype.org/?v=4.38</generator>
+<lastBuildDate>2014-12-10 01:46</lastBuildDate>
+<generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Latest True Color Vim</title>
+<description><![CDATA[<p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp \
+  --enable-termtruecolor
+
+make
+make install
+</code></pre>
+
+<p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
+
+<pre><code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
+let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
+</code></pre>
+
+<p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
+
+<p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/12/10/latest-true-color-vim/</link>
+<guid>https://blog.othree.net/log/2014/12/10/latest-true-color-vim/</guid>
+<category>vim</category>
+<pubDate>2014-12-10 01:46</pubDate>
+</item>
+
+<item>
+<title>JavaScript Parameter Complete</title>
+<description><![CDATA[<p>前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.crypto">Web Crypto API</a>，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 <code>-</code> 在裡面，像是 <code>SHA-256</code> 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 <code>-</code> 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 <a href="https://github.com/othree/jspc.vim">jspc.vim</a>。</p>
+
+<p>這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto algorithm，還有各種事件名稱，Media Type 等，其實越做發現越多這類的選項，目前支援的東西包括：</p>
+
+<ul>
+<li>Web Crypto Algorithm Name</li>
+<li>Event Name for DOM, jQuery, Backbone</li>
+<li>HTTP Methods for XHR, fetch</li>
+<li>HTTP Headers, some values</li>
+<li>Locales for Intl</li>
+<li>HTML Tag Name for DOM API</li>
+<li>Image Type for canvas.toBlob, canvas.toDataURL</li>
+</ul>
+
+<p>這個 function 的原理還蠻簡單的，如果抓到游標位置看起來在字串內（以下用底線代表游標位置）：</p>
+
+<pre><code>n.addEventListener('cl_
+</code></pre>
+
+<p>然後就會往前找看看這是不是一個 function call 的內部，是的話去看看 function name，像是上面的範例就會找 <code>addEventListener</code>，然後就去內部先定義好的表單找看有沒有候選的項目，有的話就會根據字串內容去做過濾後然後給回來。</p>
+
+<p>如果前面有其他參數是不會受影響的，不過 function name 和字串要在同一行，然後除了 JavaScript 的語法用 <code>(</code> 做為判斷是不是 function call 之外，其實還有支援 CoffeeScript 那種只用空白接餐處的寫法：</p>
+
+<pre><code>n.addEventListener 'cl_
+</code></pre>
+
+<p>其實判斷方法很簡單，就是找空白前面不是 <code>,</code> 的話就是了，一時還想不到是不是有其他種語言的 function call 的語法跳脫這兩種寫法的，我想應該可以支援大部分的程式語言了，不過裡面的候選資料還需要人來做苦工，所以我只弄了 JavaScript 的 Web 相關的東西，然後同時給 CoffeeScript、LiveScript、TypeScript 用，安裝方法就照用 Pathogen 那套裝法就可以了裝起來直接用，因為實做上是把原本的 omni complete function 包起來，所以不用特別做什麼設定，就可以和其它自動補完的輔助工具合作，像是 <a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a> 和 <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache.vim</a>，其實本來是獨立一個 function 的，但是這樣要和 Neo Complete Cache 整合太難了，乾脆就走 Vim 的 omnicomplete 路線，結果意外的方便，最後就是有什麼問題歡迎提出摟～</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/11/30/jspcvim/</link>
+<guid>https://blog.othree.net/log/2014/11/30/jspcvim/</guid>
+<category>vim</category>
+<pubDate>2014-11-30 18:37</pubDate>
+</item>
 
 <item>
 <title>Vroom</title>
@@ -371,55 +450,6 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
 <guid>https://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</guid>
 <category>vim</category>
 <pubDate>2011-10-12 02:16</pubDate>
-</item>
-
-<item>
-<title>Vundle, Bundler for Vim</title>
-<description><![CDATA[<p><a href="http://www.vim.org/">Vim</a> 雖然本身功能就很強大，但是要讓它好用，支援更多的功能，那不可缺少的就是安裝外掛 (plugin) 了，不過 Vim 的外掛安裝和尋找本身對新手來說就是一道不小的門檻，Vim 自己的網站雖然有 <a href="http://www.vim.org/scripts/index.php">scripts</a> 這塊讓人上傳外掛的地方，不過基本上不太好用，所以有些開發者不會把東西丟到這，取而代之的，這幾年最主流的方式反而是用 <a href="https://github.com">github</a> 來放 Vim 外掛，然後配上 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 來安裝和管理，不但讓外掛安裝時互相不干擾，用 git 管理的外掛也可以直接更新，要反安裝也不用怕不乾淨，和以前壓縮檔、<a href="http://www.vim.org/scripts/script.php?script_id=1502">Vimball</a> 時期比起來真的是好太多了。</p>
-
-<p><a href="http://gmarik.info">gmarik</a> 受到 pathogen 和 Ruby 的 <a href="http://gembundler.com/">bundler</a> 的啟發，開發了 <a href="https://github.com/gmarik/vundle">Vundle</a> 這個 Vim 外掛，除了可以像 pathogen 那樣把外掛分到不同目錄管理，更厲害的是你可以很簡單的新增要安裝的外掛，然後透過指令簡單的安裝和更新。</p>
-
-<pre><code>set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-" let Vundle manage Vundle
-Bundle 'gmarik/vundle'
-
-Bundle 'YankRing.vim'
-Bundle 'VisIncr'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-surround'
-Bundle 'Align'
-Bundle 'othree/eregex.vim'
-Bundle 'mru.vim'
-Bundle 'sjl/gundo.vim'
-
-filetype plugin indent on
-</code></pre>
-
-<p>節錄一段我現在的 <a href="https://github.com/othree/rc/blob/master/home/.vimrc">.vimrc</a> 設定，要新增外掛，就只要加上一行，然後進入 Vim 執行 <code>:BundleInstall</code> ，如果要更新就是 <code>:BundleInstall!</code> ，非常簡單，Bundle 支援的參數有三種，第一種是直接一個普通字串，會去找 Vim Script 裡面的外掛，第二種是中間有個 <code>/</code> 的，前面是 github 帳號，後面則是他的 Vim 外掛專案路徑，其實也就是 github 專案頁面路徑的後面那段，第三種就是 git repository 的位置了，基本上這樣就很夠用了，如果有遇到外掛沒有上述三種地方可以裝，或是想要自己修改的話怎麼辦？</p>
-
-<p>舉例來說， <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 我就自己改成用 Douglas Crockford 的 <a href="https://github.com/douglascrockford/JSLint">JSLint repo</a> 下的最新版 jslint.js ，這種情形，我會自己 <a href="https://github.com/othree/jslint.vim">fork 一份 jslint.vim</a> 下來修改，然後安裝就裝自己的那份。使用 Vundle 之後，把 plugin 裝回來的過程比以前要簡單上數百倍，所以只要備份 .vimrc 就可以了，整個 <a href="https://github.com/othree/rc/tree/master/home">目錄</a> 看起來清爽太多了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/06/05/vundle/</link>
-<guid>https://blog.othree.net/log/2011/06/05/vundle/</guid>
-<category>vim</category>
-<pubDate>2011-06-05 08:14</pubDate>
-</item>
-
-<item>
-<title>Gundo.vim</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/5478866289/" title="Gundo 的 undo branch 圖"><img src="//farm6.static.flickr.com/5260/5478866289_5f64b4da86.jpg" width="500" height="490" alt="Gundo 的 undo branch 圖" /></a></p>
-
-<p>詳細可以看 Vimcast 最新的一期：<a href="http://vimcasts.org/episodes/undo-branching-and-gundo-vim/">Undo branching and Gundo.vim</a>，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此  <a href="http://stevelosh.com/">Steve Losh</a> 做了個 <a href="http://sjl.bitbucket.org/gundo.vim/">Gundo</a> ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/02/27/gundovim/</link>
-<guid>https://blog.othree.net/log/2011/02/27/gundovim/</guid>
-<category>vim</category>
-<pubDate>2011-02-27 00:01</pubDate>
 </item>
 
 

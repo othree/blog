@@ -4,11 +4,67 @@
 <title>O3noBLOG - web</title>
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
-<copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-06-26 11:55</lastBuildDate>
+<copyright>Copyright 2015</copyright>
+<lastBuildDate>2015-01-05 21:20</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Android L WebView Fullscreen API</title>
+<description><![CDATA[<p>今天遇到一個問題是，本來好好的全螢幕影片播放功能，到了 Android L 的 Facebook App 裡的 webview 瀏覽器就壞掉了，而且透過開發工具看沒有錯誤訊息出來，查了一陣子終於發現，最新的 webview 改成使用 Chrome 核心後，有些 API 雖然 Chrome 有支援，但是在 WebView 裡面是<a href="https://developer.chrome.com/multidevice/webview/overview#does_the_new_webview_have_feature_parity_with_chrome_for_android_">沒開啟</a>的。</p>
+
+<p>其實我本來已經有用 feature detection 的寫法了，不過這個情形實際上，<code>requestFullscreen</code> 是找的到，可以執行，也不會有錯誤的，只是就是什麼事情都不會發生，後來才 <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode#Other_information">發現</a> 是要用 <code>document.fullscreenEnabled</code> 來做判斷，這個東西我之前一直覺得在手機上都用不到的東西（桌面瀏覽器通常會先問使用者是否願意讓網頁進入全螢幕），沒想到會在這邊派上用場啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/01/05/android-l-webview-fullscreen-api/</link>
+<guid>https://blog.othree.net/log/2015/01/05/android-l-webview-fullscreen-api/</guid>
+<category>web</category>
+<pubDate>2015-01-05 21:20</pubDate>
+</item>
+
+<item>
+<title>IE video 標籤記憶體問題</title>
+<description><![CDATA[<p>最近遇到一個 IE 會 crash 的問題，找很久才發現是記憶體問題，然後因為那頁有用到大量的 <code>&lt;video&gt;</code> 標籤，所以就直接鎖定目標，結果發現果然 video 就是問題元兇，測試到 IE 11 還是同樣行為。</p>
+
+<p>目前發現的問題有兩層，第一層問題是如果 IE 在遇到 video 沒有設定 poster 時，會自動初始化整個 video 元件，去把影片抓下來，只為了產生 poster 圖片，第二層問題，就是這個初始化 video 元件的動作，會吃掉很多的記憶體，即使我的影片只有五百多kb，IE 還是一個 video 就吃掉數十 mb 的記憶體，即使這些 video 都沒有播放，甚至還用 CSS 藏起來了，然後因為一個頁面上有很多的影片輪流播放，所以把記憶體吃光後就當掉了。</p>
+
+<p>要解決這個問題，一開始是想說設定正確的 poster 圖片就好了，確實解決了第一層的問題，但是因為影片還是會輪撥，遲早會把記憶體吃光，所以試了幾個方法想要避免這種情形，像是把 dom node detach 甚至砍掉之類的，不過都沒有效果，吃掉的記憶體不會還回來，最後只好讓 IE 不做輪撥了。</p>
+
+<p>這個問題我看 stackoverflow 好像也沒有，看來在單一頁面上放很多 video 的使用情形真是很少見啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/10/24/ie-video/</link>
+<guid>https://blog.othree.net/log/2014/10/24/ie-video/</guid>
+<category>web</category>
+<pubDate>2014-10-24 12:01</pubDate>
+</item>
+
+<item>
+<title>CommonMark</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14970705848/" title="Markdown by othree, on Flickr"><img src="https://farm4.staticflickr.com/3920/14970705848_5aba006fc2_m.jpg" width="208" height="128" alt="Markdown"   /></a></p>
+
+<p>一年前提過的 Markdown 標準化計畫沒想到真的有<a href="http://blog.codinghorror.com/standard-flavored-markdown/">成果</a>了，現在叫 <a href="http://commonmark.org/">CommonMark</a>，不過其實前兩天還叫 <a href="http://standardmarkdown.com/">Standard Flavored Markdown</a>，只是因為 Markdown 的作者 John Gruber 不爽這個名字<a href="http://blog.codinghorror.com/standard-markdown-is-now-common-markdown/">會造成混淆</a>，所以 Jeff Atwood 只好很不爽的改名成 CommonMark，有興趣的可以看看他們的 <a href="http://jgm.github.io/stmd/spec.html">spec</a>，其實與其說是 spec，我覺得根本就是 Test Suite，裡面主要的不同點是列出很多以前不知道該怎麼 parse 的語法，統一訂出應該轉成怎樣的 HTML，算是個讓各家自己實做的引擎可以依據的規範，而且這次 release 除了 spec 外還同時提供了用 C 和 JavaScript 然後照著 CommonMark 實做的兩個 <a href="https://github.com/jgm/stmd">Markdown 引擎</a>，我想 JavaScript 的版本應該很快就會有人拿去用了吧，另外就是 GitHub 應該會有人弄 Ruby 的版本才是。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/09/07/commonmark/</link>
+<guid>https://blog.othree.net/log/2014/09/07/commonmark/</guid>
+<category>web</category>
+<pubDate>2014-09-07 00:16</pubDate>
+</item>
+
+<item>
+<title>mozjpeg 2.0</title>
+<description><![CDATA[<p>昨天 Adobe 和 Google 聯手發表了<a href="http://blog.typekit.com/alternate/source-han-sans-cht/">思源黑體</a>，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 <a href="https://blog.mozilla.org/blog/2014/07/15/improving-jpeg-image-encoding/">mozjpeg 2.0</a>，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 <a href="http://blog.gslin.org/archives/2013/03/01/3228/google-%E7%99%BC%E8%A1%A8%E8%88%87-zlibdeflate-%E7%9B%B8%E5%AE%B9%E7%9A%84%E5%A3%93%E7%B8%AE%E7%A8%8B%E5%BC%8F%EF%BC%8C%E5%86%8D%E5%B0%8F-5/">Zopfli</a>，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。</p>
+
+<p>其實 Mozilla 在去年還有發表了一篇對於目前市場上破壞性壓縮圖片格式的<a href="https://people.mozilla.org/~josh/lossy_compressed_image_study_october_2013/">品質比較</a>，比較了 JPEG、JPEG XR、WebP 和 HEVC-MSP，結果表現不離預期，最好的是 HEVC-MSP4，這是 H.265 Profile 的靜態圖片格式，算是比較項目中最新的格式了，表現最好好像不意外，不過其實高壓縮比相對的來說解壓縮需要的運算資源就會多，所以 Mozilla 才不會完全往新技術走，而開了這個 branch，顧到的前提下相容度，盡量的減少網路傳輸，這個計畫目前看來是還會繼續發展，不知道接下來還能夠提升多少壓縮比，還蠻令人期待的。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/07/18/mozjpeg-2/</link>
+<guid>https://blog.othree.net/log/2014/07/18/mozjpeg-2/</guid>
+<category>web</category>
+<pubDate>2014-07-18 11:33</pubDate>
+</item>
 
 <item>
 <title>Chrome 開發工具的新模擬器</title>
@@ -351,67 +407,6 @@
 <guid>https://blog.othree.net/log/2011/10/04/bitbucket-rocks-with-git/</guid>
 <category>web</category>
 <pubDate>2011-10-04 01:43</pubDate>
-</item>
-
-<item>
-<title>Google Font 開始提供非拉丁語系字型</title>
-<description><![CDATA[<p>這兩天在修理調整 blog 時才發現到 Google 現在開始 <a href="http://googlewebfonts.blogspot.com/2010/09/international-fonts-launch-today.html">提供非拉丁語系的字型</a> ，不過不用太開心，因為還是沒有中日文漢字，目前只有 cyrillic、greek(希臘字)、khmer（高棉字）三種，先不說有漢字的幾種文字，我還蠻期待他們能提供一些符號的字型，像是占星符號、Rune 等等。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2010/10/04/google-font-non-latin/</link>
-<guid>https://blog.othree.net/log/2010/10/04/google-font-non-latin/</guid>
-<category>web</category>
-<pubDate>2010-10-04 18:02</pubDate>
-</item>
-
-<item>
-<title>WAI-ARIA</title>
-<description><![CDATA[<p><a href="http://www.w3.org/WAI/intro/aria.php"><span class="caps">WAI</span>-ARIA</a> 全名是 Accessible Rich Internet Applications Suite，是 <a href="http://www.w3.org/WAI/"><span class="caps">WAI</span></a> 正在制定中的規範之一，對象是網路應用程式，像是 gmail、各種 <span class="caps">CMS </span>等，它在WAI 制定的各種規範中，是唯一縮寫名稱用 <span class="caps">WAI</span>- 開頭的，一直很好奇為什麼，前幾天寫信去問也得到了答覆：</p>
-
-<blockquote>Short answer: Because the acronym <span class="caps">ARIA </span>is used for other things, we use <span class="caps">WAI</span>-ARIA.</blockquote>
-
-<p>結果和 J長輩 猜的一樣是因為 <a href="http://www.ariacompany.net/index2.htm">A</a> <a href="http://www.aria-soft.com/">R</a> <a href="http://en.wikipedia.org/wiki/Aria">I</a> <a href="http://www.google.com/search?q=aria">A</a>  太常見了，所以加上 <span class="caps">WAI</span>- 。</p>]]></description>
-<link>https://blog.othree.net/log/2010/02/09/wai-aria/</link>
-<guid>https://blog.othree.net/log/2010/02/09/wai-aria/</guid>
-<category>web</category>
-<pubDate>2010-02-09 23:35</pubDate>
-</item>
-
-<item>
-<title>Hate IE</title>
-<description><![CDATA[<p>昨天我才被微軟救到，今天它就用 IE 來討債了Q_Q，這件事要從 <a href="http://joysound.com/">JOYSOUND</a> 講起， JOYSOUND是日本的一個卡拉OK系統，前陣子推出了 Wii 版，讓使用者可以用便宜的月費就可以唱到數萬首日文歌曲，不過使用上有個問題，就是它的網頁沒有針對 Wii 版的搜尋功能，透過 Wii 介面來搜尋又不夠快，於是我就自己手寫了一個 <a href="http://joysound.othree.net/">http://joysound.othree.net/</a>，資料來源是他們網站，我定期去撈新增曲目，結果最近太混，才發現 7 週沒有去更新，網頁上又只保留 5 週份的更新資料，於是就趕快上 Google 看有沒有 cache，順利的找到4份中的3份，但是有一份找很久都找不到，過了幾十分，找了一堆日本的搜尋引擎，才在<a href="http://jp.msn.com/">日本 MSN</a> 找到那個網頁的 cache，於是心中一顆大石頭終於落地，也實在沒想到會讓微軟幫到這樣一個大忙。</p>
-
-<p>時光飛逝，歲月如梭，一下就來到了新的一週，早上九點半開始開了四小時的會，回到電腦前一看發現有 IE bug 要解，沒想到這一個 bug 讓我整整花了4個小時才解決掉，一開始看起來是 javascript 問題，搞到最後竟然是無法說明的 CSS 地雷，花了數小時，只砍掉下面這樣一行東西而已：</p>
-
-<pre><code>
-right: 0;
-</code></pre>
-
-<p>更讓人難過的是這個 bug 是在 IE7, 8才會發生的，講到這我就必須要抱怨一下 IE，這陣子處理不少問題根本都還是 IE7, 8 還在的，感覺上 IE 這兩次升級對於 javascript 相關的部分都沒什麼改善，這也是為什麼我決定把這裡弄的讓 IE 都看不到。</p>
-<p>最後就是提一下，大概要怎麼判斷是不是 CSS 地雷，和要怎麼找，基本上，會被稱為地雷，就是那種會看起來應該不會有問題，出了問題你也不知道問題在哪的狀況，如果是 javascript 的問題現在瀏覽器都可以妥善處理，不小心跑進無窮迴圈也不會跑到死，所以如果一直出現找不到的問題發生點的話，那就有可能是 CSS 地雷了，像我這次遇到的狀況是整個 IE 吃光 CPU，但是不會有訊息問我要不要停止執行 script，然後我找了很久，排除頁面上各種可能產生影響的 javascript，最後才懷疑到 CSS 上，這時候我已經浪費超過三小時了，要判斷是不是 CSS 問題到很簡單，先把 CSS disable 掉試試看就知道了，如果一 disable 掉問題就沒了，那很明顯就是 CSS 的問題，接下來就是用消去法來尋找造成問題的 CSS 定義，就不贅述了。</p>
-
-<p>真的最後了，就是其實 JOYSOUND 現在已經可以在網頁上<a href="http://joysound.com/ex/wii/search/index.htm">搜尋 Wii 版曲目</a>了XDD。</p>]]></description>
-<link>https://blog.othree.net/log/2009/04/27/hate-ie/</link>
-<guid>https://blog.othree.net/log/2009/04/27/hate-ie/</guid>
-<category>web</category>
-<pubDate>2009-04-27 10:14</pubDate>
-</item>
-
-<item>
-<title>Opera Face Gesture 與其它</title>
-<description><![CDATA[<p>首先來看一下 Opera 在今年愚人節推出的<a href="http://labs.opera.com/news/2009/04/01/">臉部表情控制</a>吧。</p>
-
-<p><iframe width="640" height="360" src="//www.youtube.com/embed/kkNxbyp6thM" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>]]><![CDATA[<p>應該很多人看過了，我想大部分人應該都會笑一笑看過去（聽說有人當真了@@），不過我確實覺得這東西有機會做出來，這想法是來自另外兩段影片，首先第一段是 <a href="http://johnnylee.net/projects/wii/">Jonny Lee</a> 的 <a href="http://www.ted.com/index.php/talks/johnny_lee_demos_wii_remote_hacks.html">TED Talk</a>，Jonny Lee 在 Wii 上市後，用它的控制器作為互動介面弄了不少有趣的玩意，他在 TED Talk 介紹了其中兩個，第二個是很有趣的 3D 應用，利用 Wii Remote 和 Sensor Bar 來判斷視點相對於螢幕的位置和角度，依據這些資訊來改變畫面，用單純的螢幕做出更接近真實的3D效果，機下來就來看看這段影片吧。</p>
-
-<p><iframe src="http://embed.ted.com/talks/lang/zh-tw/johnny_lee_demos_wii_remote_hacks.html" width="853" height="480" frameborder="0" scrolling="no" allowFullScreen="allowFullScreen"></iframe></p>
-
-<p>接著第三段影片做的事情和 Johnny Lee 做的事情一樣，不過用的技術和用途也不太一樣，這是日本 H-Game 公司 <a href="http://www.teatime.ne.jp/">TEATIME</a> 推出的 <a href="http://www.teatime.ne.jp/infor/tech48/tech48_index.htm">Face Tracking</a> 技術，不過他的原理是用 Web Cam 來做臉部辨識，然後判斷臉部和螢幕的相對位置，藉以改變視點，如果視點很低的話，遊戲中的女生也會有相對的反應出來，官方網頁上有影片可以下載來看，不過 YouTube 上也有人上傳了（已經被刪除）。</p>
-
-<p>看著第三影片後，就覺得這技術似乎有機會實現臉部表情控制，至於為什麼要實現，我是想過或許可以作為輔助的操控手，或是讓無法用手腳操控的人使用吧，現在相關的輔助控制我比較知道的是用眼球追蹤啦。</p>]]></description>
-<link>https://blog.othree.net/log/2009/04/25/opera-face-gesture-and-more/</link>
-<guid>https://blog.othree.net/log/2009/04/25/opera-face-gesture-and-more/</guid>
-<category>web</category>
-<pubDate>2009-04-25 10:11</pubDate>
 </item>
 
 

@@ -5,10 +5,31 @@
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
 <copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-06-06 14:47</lastBuildDate>
+<lastBuildDate>2014-10-23 14:18</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Resource Hints</title>
+<description><![CDATA[<p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，犯例如下：</p>
+
+<pre><code>&lt;link rel="preconnect" href="//example.com"&gt;
+&lt;link rel="preconnect" href="//cdn.example.com"&gt;
+&lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt;
+&lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt;
+</code></pre>
+
+<p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
+
+<p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/10/23/resource-hints/</link>
+<guid>https://blog.othree.net/log/2014/10/23/resource-hints/</guid>
+<category>css-html</category>
+<pubDate>2014-10-23 14:18</pubDate>
+</item>
 
 <item>
 <title>RGBA_ 控字慾</title>
@@ -573,17 +594,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <guid>https://blog.othree.net/log/2012/11/02/opengraph-protocol-twitter-card/</guid>
 <category>css-html</category>
 <pubDate>2012-11-02 11:07</pubDate>
-</item>
-
-<item>
-<title>WHATWG and W3C 版 HTML5 分家</title>
-<description><![CDATA[<p>WHATWG Blog 兩週前發出的 <a href="http://blog.whatwg.org/html-and-html5">文章</a> 正式宣告 WHATWG 和 W3C 的 HTML5 分家了，主編 Ian Hickson 有在 mainling list 發出一篇比較完整的 <a href="http://lists.w3.org/Archives/Public/public-whatwg-archive/2012Jul/0119.html">說明</a> ，主要還是兩邊方向不一樣，不過這篇文章也把一些過去的事情說的比較清楚，像是 WHATWG 的標準以前正式名稱是 Web Application，HTML5 只是別名，而現在的本版正式名稱則改成 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/">HTML Living Standard</a> ，還有把裡面一些標準拆分成子標準則是 W3C 那邊這樣做，WHATWG 則是一直維持全部東西塞在一起的作法，而最重要的差異，當然還是 WHATWG 不會讓 HTML 標準穩定下來，未來會有一個確定版本的 HTML5 會是 W3C 的， WHATWG 版的會隨時更新，只要有新需求，有錯誤。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/08/05/whatwg-and-w3c-html5/</link>
-<guid>https://blog.othree.net/log/2012/08/05/whatwg-and-w3c-html5/</guid>
-<category>css-html</category>
-<pubDate>2012-08-05 10:23</pubDate>
 </item>
 
 

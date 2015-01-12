@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000824" baseName="typescript-definition">關於 TypeScript</b:listData>
+
+			<b:previous>
+				<b:mTitle>隱藏 Apache 版本號</b:mTitle>
+				<b:mDate>2014-12-03</b:mDate>
+				<b:mBase>hide-apache-version</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Latest True Color Vim</b:mTitle>
+				<b:mDate>2014-12-10</b:mDate>
+				<b:mBase>latest-true-color-vim</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000824" baseName="typescript-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-12-04</b:date>
+				<b:time>23:06:48</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>關於 TypeScript</b:title>
+			<b:content>
+				<b:summary> 這幾年各種 compile to JavaScript language 盛行，大部分都是朝向讓程式碼更好寫的方向來前進，微軟在 2012 年也推出了 TypeScript 這個 compile to JavaScript language，不過他的方向卻不一樣，TypeScript 是一個 JavaScript 的 superset，意思就是所有的 JavaScript 都是合法的 TypeScript，而 TypeScript 多了一些語法，加入了一些新功能，不過這些新的語法完全都不用也是可以正常的寫程式，給 TypeScript compiler 編譯。 TypeScript 顧名思義，它著重的在資料型別這個部分，JavaScript 是 weak type （弱型別）的語言，寫起來算是很方便，不過這個特性卻也是一些問題的來源，首先最常見到的是因為資料型態不嚴謹而造成的 bug，第二個常被提出來的就是為了實做 weak type 而造成的 performance 下降，因此一直有一些聲音在對抗弱型別這個特性，第一個是 Douglas...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15756461070/" title="type-error by othree, on Flickr"><img src="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg" width="1024" height="261" alt="type-error" srcset="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca.jpg 768w, https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg 768w 2x" /></a></p>
+
+<p>這幾年各種 compile to JavaScript language 盛行，大部分都是朝向讓程式碼更好寫的方向來前進，微軟在 2012 年也推出了 <a href="http://www.typescriptlang.org/">TypeScript</a> 這個 compile to JavaScript language，不過他的方向卻不一樣，TypeScript 是一個 JavaScript 的 superset，意思就是所有的 JavaScript 都是合法的 TypeScript，而 TypeScript 多了一些語法，加入了一些新功能，不過這些新的語法完全都不用也是可以正常的寫程式，給 TypeScript compiler 編譯。</p>
+
+<p>TypeScript 顧名思義，它著重的在資料型別這個部分，JavaScript 是 weak type （弱型別）的語言，寫起來算是很方便，不過這個特性卻也是一些問題的來源，首先最常見到的是因為資料型態不嚴謹而造成的 bug，第二個常被提出來的就是為了實做 weak type 而造成的 performance 下降，因此一直有一些聲音在對抗弱型別這個特性，第一個是 Douglas Crockford 先出聲的，不過一開始是從程式碼的嚴謹和可靠性來說的，因為他當時主力在 <a href="http://www.jslint.com/">JSLint</a> 上，所以對於可靠的程式碼的要求比較高，JSLint 一度還把這項檢查放入，後來接著 Google V8 引擎也對沒有改變型別的變數作了最佳化，然後有 TypeScript，接著未來的 ES7 也可能會加入型別宣告的語法進來，這部分似乎是 Douglas 參與推動的，然後 Google 也打算推出 <a href="https://docs.google.com/document/d/11YUzC-1d0V1-Q3V0fQ7KSit97HnZoKVygDxpWzEYW0U/mobilebasic?pli=1&amp;viewopt=127">AtScript</a> 的樣子，AtScript 是 TypeScript 的 superset，更進一步增加了型別相關的特性進來。</p>
+
+<p>TypeScript 是一個介於中間的語言，當然為了支援  JavaScript 不能直接把整個環境都改成強型別的，所以 TypeScript 的作法是讓形別的宣告變為可省略的，如果沒有宣告型別，則一切和以前一樣，如果你的變數有宣告型別，那個變數才會是強型別，在編譯的時候，如果把不同型別的值給它，就會跑出警告訊息，像是 JSLint 一樣。TypeScript 的型別宣告語法中，一些比較簡單的可以和程式碼一起寫：</p>
+
+<pre><code>var str:string;
+</code></pre>
+
+<p>可是稍微複雜一點，和物件有關係的話，就要獨立寫一段宣告的程式碼了：</p>
+
+<pre><code>interface HotkeysProvider {
+    template: string;
+    includeCheatSheet: boolean;
+    get(combo: string): ng.hotkeys.Hotkey;
+    toggleCheatSheet(): void;
+}
+</code></pre>
+
+<p>這段宣告其實是完全獨立於程式碼的邏輯本身，全部砍掉程式也可以運作，本身不牽涉到任何邏輯，所以可以完全獨立出去，在 TypeScript 中稱為 type definition（型別定義） ，常用的副檔名是 <code>.d.ts</code>，感覺上很像是 C 語言的 header file，其實我對於 TypeScript 本身的發展是不太樂觀的，覺得他的佔有率永遠不會起來，但是它的型別定義這塊我到覺得是大有可為，主因是目前沒有比較在業界有使用的到型別定義的語言，寫標準所用的 <a href="http://www.w3.org/TR/WebIDL/#idl">WebIDL</a> 普極度實在很低，相關的工具開發和支援實在很少，反而 .d.ts 檔知道的人比較多，編譯器也都有了，而且多虧 TypeScript 有開放原碼，事實上也有其它專案有借助 TypeScript 定義檔，像是我在用的 <a href="http://ternjs.net/">TernJS</a> 這個 JavaScript 自動補完工具，就有提供一個 <a href="https://github.com/marijnh/tern/blob/master/bin/from_ts">from_ts 工具</a> 可以把 .d.ts 檔轉成它可以讀的定義檔案，加上有 <a href="http://definitelytyped.org/">DefinitelyType</a> 專案，各種不同 JavaScript Library 的定義檔都已經有了，所以 TernJS 就可以利用這些資源，提供各種 Library 的自動補完支援了，不過前提是使用者要知道有這些東西，官方文件其實沒有把這塊講得這麼連貫。</p>
+
+<p>除了 TernJS 的應用外，我相信這些定義檔還可以讓編輯器或是 IDE 可以提供更多的輔助功能，像是或許可以拿來產生編輯器用的 syntax 定義檔，在編寫程式時直接提出警告等等，其實現在想的到的這些功能微軟的 Visuall Studio 應該都有了，不過有個公定格式做中介還是比較方便第三方應用，雖然目前好像只有看到 TernJS 的第三方應用，有些可惜，而且微軟的 Compiler 常常偷改，TernJS 提供的 <code>from_ts</code> 是需要使用到一些 compiler 內部的 function 才能用的，而從我接觸 TernJS 以來，微軟至少已經改過兩次改很大造成 <code>from_ts</code>完全不能用的情形。</p>
+
+<p>總之微軟的 TypeScript 我覺得使用人數也不會有什麼大變化，但是定義檔 <code>.d.ts</code> 的部分倒是比較可以期待，變成半個 JS 用的標準介面定義文件格式，競爭對手的話應該是 WebIDL 吧，不過 WebIDL 比較不親切，也不太有人去實做和推廣他的應用，ES7 的型別暗示其實是只是針對那五個基本型別為主，沒有像 WebIDL 和 TypeScript 那樣完整。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -39,10 +39,10 @@
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" type='text/css' href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
         <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
-        <link rel="stylesheet" type='text/css' href="/stylesheets/othree.min.css" />
+        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/othree.min.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -126,7 +126,7 @@
             </xsl:otherwise>
 		</xsl:choose>
         <meta property="fb:admins" content="582724207" />
-        <script src="/scripts/jfont.js"></script>
+        <!-- <script src="/scripts/jfont.js"></script> -->
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
         <xsl:choose>
@@ -330,10 +330,13 @@
                 </p>
             </footer>
 		</div>
+        <script src="/scripts/all.min.js"></script>
+        <!--
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
         <script src="/scripts/nav-search.js"></script>
         <script src="/scripts/disable_pointer_events.js"></script>
+        -->
         <!-- <script src="/scripts/parallax.js"> </script> -->
         <!-- <xsl:if test="$listType = 's'"> -->
             <!-- <div id="fb-root"><xsl:text> </xsl:text></div> -->
@@ -341,7 +344,9 @@
             <!-- <script src="/scripts/facebook.js"> </script> -->
             <!-- <script src="/scripts/twitter.js"> </script> -->
         <!-- </xsl:if> -->
+        <!--
         <script src="/scripts/googleanalytic.js"> </script>
+        -->
 	</body>
 </html>
 </xsl:template>

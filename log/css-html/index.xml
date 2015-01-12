@@ -9,6 +9,39 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000814" baseName="resource-hints">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-10-23</b:date>
+				<b:time>14:18:35</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Resource Hints</b:title>
+			<b:content>
+				<b:summary>Resource Hints 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 &lt;link&gt; 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，犯例如下： &lt;link rel="preconnect" href="//example.com"&gt; &lt;link rel="preconnect" href="//cdn.example.com"&gt; &lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt; &lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt; 可以發現有兩種 hint，分別是 preconnect 和 preload，當然就照字面上的意思就可以理解了，preconnect 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake...</b:summary>
+				<b:mainContent><p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，犯例如下：</p>
+
+<pre><code>&lt;link rel="preconnect" href="//example.com"&gt;
+&lt;link rel="preconnect" href="//cdn.example.com"&gt;
+&lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt;
+&lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt;
+</code></pre>
+
+<p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
+
+<p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000799" baseName="rgba">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -411,35 +444,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <p>而除了 <code>&lt;main&gt;</code> 之外，其實還有一個新的 <code>&lt;data&gt;</code> <a href="http://www.w3.org/html/wg/drafts/html/master/text-level-semantics.html#the-data-element">標籤</a>，這個標籤是用來代替以前在使用 microdata、microformat 之類的格式化資料時，為了寫機器讀取用資料時，在行內加上的 <code>&lt;span&gt;</code> 標籤的，<code>&lt;data&gt;</code> 本身歸類在 Phrasing content，可以想成是 <code>display: inline;</code> 的使用方式，雖然第一眼看起很像是區塊等級的就是了。</p>
 
 <p>至於我為什麼會注意到有這些新標籤呢，其實我也沒閒閒沒事去關注 HTML 5.1 Draft 更新啦，是因為 <a href="https://github.com/othree/html5.vim">html5.vim</a> 會有人來報說有新東西要加，意外的好處～</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000729" baseName="webconf-2013-talk">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-01-12</b:date>
-				<b:time>20:40:58</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>WebConf 2013 talk</b:title>
-			<b:content>
-				<b:summary>題目是： Web Developer Tools in Modern Browsers 這次時間塞的很滿，投影片在下面，不過投影片不是本 Talk 重點，重點還是在 Demo 部分每個 Panel 的簡介，錄影不知道要等到何時，總之投影片的部分先放出了。 /* A_A */...</b:summary>
-				<b:mainContent><p>題目是： Web Developer Tools in Modern Browsers</p>
-
-<p>這次時間塞的很滿，投影片在下面，不過投影片不是本 Talk 重點，重點還是在 Demo 部分每個 Panel 的簡介，錄影不知道要等到何時，總之投影片的部分先放出了。</p>
-
-<p>
-<script async="async" class="speakerdeck-embed" data-id="cbfcdc603ee201304c57123138154bc3" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

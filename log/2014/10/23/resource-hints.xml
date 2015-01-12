@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000814" baseName="resource-hints">Resource Hints</b:listData>
+
+			<b:previous>
+				<b:mTitle>node-ffi</b:mTitle>
+				<b:mDate>2014-10-13</b:mDate>
+				<b:mBase>node-ffi</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>IE video 標籤記憶體問題</b:mTitle>
+				<b:mDate>2014-10-24</b:mDate>
+				<b:mBase>ie-video</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000814" baseName="resource-hints">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-10-23</b:date>
+				<b:time>14:18:35</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Resource Hints</b:title>
+			<b:content>
+				<b:summary>Resource Hints 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 &lt;link&gt; 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，犯例如下： &lt;link rel="preconnect" href="//example.com"&gt; &lt;link rel="preconnect" href="//cdn.example.com"&gt; &lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt; &lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt; 可以發現有兩種 hint，分別是 preconnect 和 preload，當然就照字面上的意思就可以理解了，preconnect 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake...</b:summary>
+				<b:mainContent><p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，犯例如下：</p>
+
+<pre><code>&lt;link rel="preconnect" href="//example.com"&gt;
+&lt;link rel="preconnect" href="//cdn.example.com"&gt;
+&lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt;
+&lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt;
+</code></pre>
+
+<p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
+
+<p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

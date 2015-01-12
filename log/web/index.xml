@@ -9,6 +9,110 @@
 			<b:listData listID="web">web</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000826" baseName="android-l-webview-fullscreen-api">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-01-05</b:date>
+				<b:time>21:20:32</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Android L WebView Fullscreen API</b:title>
+			<b:content>
+				<b:summary>今天遇到一個問題是，本來好好的全螢幕影片播放功能，到了 Android L 的 Facebook App 裡的 webview 瀏覽器就壞掉了，而且透過開發工具看沒有錯誤訊息出來，查了一陣子終於發現，最新的 webview 改成使用 Chrome 核心後，有些 API 雖然 Chrome 有支援，但是在 WebView 裡面是沒開啟的。 其實我本來已經有用 feature detection 的寫法了，不過這個情形實際上，requestFullscreen 是找的到，可以執行，也不會有錯誤的，只是就是什麼事情都不會發生，後來才 發現 是要用 document.fullscreenEnabled 來做判斷，這個東西我之前一直覺得在手機上都用不到的東西（桌面瀏覽器通常會先問使用者是否願意讓網頁進入全螢幕），沒想到會在這邊派上用場啊。...</b:summary>
+				<b:mainContent><p>今天遇到一個問題是，本來好好的全螢幕影片播放功能，到了 Android L 的 Facebook App 裡的 webview 瀏覽器就壞掉了，而且透過開發工具看沒有錯誤訊息出來，查了一陣子終於發現，最新的 webview 改成使用 Chrome 核心後，有些 API 雖然 Chrome 有支援，但是在 WebView 裡面是<a href="https://developer.chrome.com/multidevice/webview/overview#does_the_new_webview_have_feature_parity_with_chrome_for_android_">沒開啟</a>的。</p>
+
+<p>其實我本來已經有用 feature detection 的寫法了，不過這個情形實際上，<code>requestFullscreen</code> 是找的到，可以執行，也不會有錯誤的，只是就是什麼事情都不會發生，後來才 <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode#Other_information">發現</a> 是要用 <code>document.fullscreenEnabled</code> 來做判斷，這個東西我之前一直覺得在手機上都用不到的東西（桌面瀏覽器通常會先問使用者是否願意讓網頁進入全螢幕），沒想到會在這邊派上用場啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000815" baseName="ie-video">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-10-24</b:date>
+				<b:time>12:01:15</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>IE video 標籤記憶體問題</b:title>
+			<b:content>
+				<b:summary>最近遇到一個 IE 會 crash 的問題，找很久才發現是記憶體問題，然後因為那頁有用到大量的 &lt;video&gt; 標籤，所以就直接鎖定目標，結果發現果然 video 就是問題元兇，測試到 IE 11 還是同樣行為。 目前發現的問題有兩層，第一層問題是如果 IE 在遇到 video 沒有設定 poster 時，會自動初始化整個 video 元件，去把影片抓下來，只為了產生 poster 圖片，第二層問題，就是這個初始化 video 元件的動作，會吃掉很多的記憶體，即使我的影片只有五百多kb，IE 還是一個 video 就吃掉數十 mb 的記憶體，即使這些 video 都沒有播放，甚至還用 CSS 藏起來了，然後因為一個頁面上有很多的影片輪流播放，所以把記憶體吃光後就當掉了。 要解決這個問題，一開始是想說設定正確的 poster 圖片就好了，確實解決了第一層的問題，但是因為影片還是會輪撥，遲早會把記憶體吃光，所以試了幾個方法想要避免這種情形，像是把 dom node detach...</b:summary>
+				<b:mainContent><p>最近遇到一個 IE 會 crash 的問題，找很久才發現是記憶體問題，然後因為那頁有用到大量的 <code>&lt;video&gt;</code> 標籤，所以就直接鎖定目標，結果發現果然 video 就是問題元兇，測試到 IE 11 還是同樣行為。</p>
+
+<p>目前發現的問題有兩層，第一層問題是如果 IE 在遇到 video 沒有設定 poster 時，會自動初始化整個 video 元件，去把影片抓下來，只為了產生 poster 圖片，第二層問題，就是這個初始化 video 元件的動作，會吃掉很多的記憶體，即使我的影片只有五百多kb，IE 還是一個 video 就吃掉數十 mb 的記憶體，即使這些 video 都沒有播放，甚至還用 CSS 藏起來了，然後因為一個頁面上有很多的影片輪流播放，所以把記憶體吃光後就當掉了。</p>
+
+<p>要解決這個問題，一開始是想說設定正確的 poster 圖片就好了，確實解決了第一層的問題，但是因為影片還是會輪撥，遲早會把記憶體吃光，所以試了幾個方法想要避免這種情形，像是把 dom node detach 甚至砍掉之類的，不過都沒有效果，吃掉的記憶體不會還回來，最後只好讓 IE 不做輪撥了。</p>
+
+<p>這個問題我看 stackoverflow 好像也沒有，看來在單一頁面上放很多 video 的使用情形真是很少見啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000810" baseName="commonmark">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-09-07</b:date>
+				<b:time>00:16:44</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>CommonMark</b:title>
+			<b:content>
+				<b:summary> 一年前提過的 Markdown 標準化計畫沒想到真的有成果了，現在叫 CommonMark，不過其實前兩天還叫 Standard Flavored Markdown，只是因為 Markdown 的作者 John Gruber 不爽這個名字會造成混淆，所以 Jeff Atwood 只好很不爽的改名成 CommonMark，有興趣的可以看看他們的 spec，其實與其說是 spec，我覺得根本就是 Test Suite，裡面主要的不同點是列出很多以前不知道該怎麼 parse 的語法，統一訂出應該轉成怎樣的 HTML，算是個讓各家自己實做的引擎可以依據的規範，而且這次 release 除了 spec 外還同時提供了用 C 和 JavaScript 然後照著 CommonMark 實做的兩個 Markdown 引擎，我想 JavaScript 的版本應該很快就會有人拿去用了吧，另外就是 GitHub 應該會有人弄...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14970705848/" title="Markdown by othree, on Flickr"><img src="https://farm4.staticflickr.com/3920/14970705848_5aba006fc2_m.jpg" width="208" height="128" alt="Markdown"   /></a></p>
+
+<p>一年前提過的 Markdown 標準化計畫沒想到真的有<a href="http://blog.codinghorror.com/standard-flavored-markdown/">成果</a>了，現在叫 <a href="http://commonmark.org/">CommonMark</a>，不過其實前兩天還叫 <a href="http://standardmarkdown.com/">Standard Flavored Markdown</a>，只是因為 Markdown 的作者 John Gruber 不爽這個名字<a href="http://blog.codinghorror.com/standard-markdown-is-now-common-markdown/">會造成混淆</a>，所以 Jeff Atwood 只好很不爽的改名成 CommonMark，有興趣的可以看看他們的 <a href="http://jgm.github.io/stmd/spec.html">spec</a>，其實與其說是 spec，我覺得根本就是 Test Suite，裡面主要的不同點是列出很多以前不知道該怎麼 parse 的語法，統一訂出應該轉成怎樣的 HTML，算是個讓各家自己實做的引擎可以依據的規範，而且這次 release 除了 spec 外還同時提供了用 C 和 JavaScript 然後照著 CommonMark 實做的兩個 <a href="https://github.com/jgm/stmd">Markdown 引擎</a>，我想 JavaScript 的版本應該很快就會有人拿去用了吧，另外就是 GitHub 應該會有人弄 Ruby 的版本才是。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000805" baseName="mozjpeg-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-07-18</b:date>
+				<b:time>11:33:16</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>mozjpeg 2.0</b:title>
+			<b:content>
+				<b:summary>昨天 Adobe 和 Google 聯手發表了思源黑體，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 mozjpeg 2.0，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 Zopfli，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。...</b:summary>
+				<b:mainContent><p>昨天 Adobe 和 Google 聯手發表了<a href="http://blog.typekit.com/alternate/source-han-sans-cht/">思源黑體</a>，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 <a href="https://blog.mozilla.org/blog/2014/07/15/improving-jpeg-image-encoding/">mozjpeg 2.0</a>，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 <a href="http://blog.gslin.org/archives/2013/03/01/3228/google-%E7%99%BC%E8%A1%A8%E8%88%87-zlibdeflate-%E7%9B%B8%E5%AE%B9%E7%9A%84%E5%A3%93%E7%B8%AE%E7%A8%8B%E5%BC%8F%EF%BC%8C%E5%86%8D%E5%B0%8F-5/">Zopfli</a>，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。</p>
+
+<p>其實 Mozilla 在去年還有發表了一篇對於目前市場上破壞性壓縮圖片格式的<a href="https://people.mozilla.org/~josh/lossy_compressed_image_study_october_2013/">品質比較</a>，比較了 JPEG、JPEG XR、WebP 和 HEVC-MSP，結果表現不離預期，最好的是 HEVC-MSP4，這是 H.265 Profile 的靜態圖片格式，算是比較項目中最新的格式了，表現最好好像不意外，不過其實高壓縮比相對的來說解壓縮需要的運算資源就會多，所以 Mozilla 才不會完全往新技術走，而開了這個 branch，顧到的前提下相容度，盡量的減少網路傳輸，這個計畫目前看來是還會繼續發展，不知道接下來還能夠提升多少壓縮比，還蠻令人期待的。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000800" baseName="chrome-emulator">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -335,124 +439,6 @@
 <p>參加 Mozilla Summit 給我的感覺是雖然我們是沒有拿薪水的志工，不過 Mozilla 非常的重視我們，盡力的辦好這場活動，讓志工和員工在一樣的位置一起討論未來的方向，相信 Mozilla 這樣的付出會是有值得的。</p>
 
 <p><a class="thumbnail" href="http://www.flickr.com/photos/20404647@N07/10156638355/" title="_MG_4513_2 by btmoss, on Flickr"><img src="//farm8.staticflickr.com/7381/10156638355_62bb6cc3b9_b.jpg" width="1024" height="683" alt="_MG_4513_2" srcset="//farm8.staticflickr.com/7381/10156638355_62bb6cc3b9.jpg 768w, //farm8.staticflickr.com/7381/10156638355_62bb6cc3b9_b.jpg 768w 2x, //farm8.staticflickr.com/7381/10156638355_2f95e63770_k.jpg 2x" /></a></p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000756" baseName="markdown-resources">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-07-14</b:date>
-				<b:time>18:34:30</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Markdown 資源</b:title>
-			<b:content>
-				<b:summary>前兩天終於把 Markdown 資源 這頁弄上線了，其實想弄很久了，目標是收集不同領域的熱門資源，例如某某語言比較多人用的轉譯引擎。另外還有一些算是歷史紀錄，像是 shodown.js ，還有就是之前 Jeff Atwood 登高一呼 要訂 spec，雖然沒有正式的版本，不過也已經有 W3C Community Group，說到這邊，他們其實還收集了很大量的引擎實做，不過像這種不是我覺得有用的清單，內容太多東西了，所以並沒有阻止我把這頁生出來。 最後要感謝 WM 提供他收集的一份清單，然後有人覺得有什麼資源是值得刊上去的歡迎提供給我，也可以直接發 pull request 啦，不過基本上是我主觀決定適不適合的，目前這份清單應該偶爾會更新一下，因為像是 iOS 有非常多軟體支援 Markdown，和其他作業系統比起來，比例上有點不平衡，還不知道哪些比較好用，所以我目前是先列出我以前就看到過的，希望這份清單能夠越來越好。...</b:summary>
-				<b:mainContent><p>前兩天終於把 <a href="http://markdown.tw/resources.html">Markdown 資源</a> 這頁弄上線了，其實想弄很久了，目標是收集不同領域的熱門資源，例如某某語言比較多人用的轉譯引擎。另外還有一些算是歷史紀錄，像是 shodown.js ，還有就是之前 Jeff Atwood <a href="http://www.codinghorror.com/blog/2012/10/the-future-of-markdown.html">登高一呼</a> 要訂 spec，雖然沒有正式的版本，不過也已經有 <a href="http://www.w3.org/community/markdown/">W3C Community Group</a>，說到這邊，他們其實還收集了很大量的引擎<a href="http://www.w3.org/community/markdown/wiki/MarkdownImplementations">實做</a>，不過像這種不是我覺得有用的清單，內容太多東西了，所以並沒有阻止我把這頁生出來。</p>
-
-<p>最後要感謝 WM 提供他收集的一份清單，然後有人覺得有什麼資源是值得刊上去的歡迎提供給我，也可以直接發 <a href="https://github.com/othree/markdown-syntax-zhtw">pull request</a> 啦，不過基本上是我主觀決定適不適合的，目前這份清單應該偶爾會更新一下，因為像是 iOS 有非常多軟體支援 Markdown，和其他作業系統比起來，比例上有點不平衡，還不知道哪些比較好用，所以我目前是先列出我以前就看到過的，希望這份清單能夠越來越好。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000755" baseName="flickr-share-publidhed">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-07-13</b:date>
-				<b:time>01:13:42</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Flickr Share with Template Published</b:title>
-			<b:content>
-				<b:summary> 距離第一次說這東西其實好久了，最近終於把它推上 Chrome Store，其實上次徵求 icon 有徵到，不過對方不願具名所以沒有任何 attribute，還是很感激他就是，現在這版已經改用 Twitter 的 hogan，還用了 q 做 async flow control，然後還衍生出 sandbox-hogan 這個專案，不過目前用的是 prototype，等那邊發展成熟一點在換過去。 最後再次介紹一下 Flickr Share with Template，這是套可以用自訂的 template 來產生 Flickr 照片分享 HTML/BBCode 的套件，會開發的原因包括： flickr 原生的分享是 HTML，不是 XHTML 只有 HTML/BBCode 只有 http，但是 flickr 其實有 https...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9252437903/" title="Flickr Share with Template by othree, on Flickr"><img src="//farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg" width="982" height="606" alt="Flickr Share with Template" srcset="//farm3.staticflickr.com/2840/9252437903_e68a25280f.jpg 768w, //farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg 768w 2x" /></a></p>
-
-<p>距離第一次說<a href="https://blog.othree.net/log/2012/12/08/flickr-share-with-templat/">這東西</a>其實好久了，最近終於把它推上 <a href="https://chrome.google.com/webstore/detail/flickr-share-with-templat/dfnfhbapijahpaobcpojofokllocfpnc">Chrome Store</a>，其實上次徵求 icon 有徵到，不過對方不願具名所以沒有任何 attribute，還是很感激他就是，現在這版已經改用 Twitter 的 <a href="http://twitter.github.io/hogan.js/">hogan</a>，還用了 <a href="https://github.com/kriskowal/q">q</a> 做 async flow control，然後還衍生出 <a href="https://github.com/othree/sandbox-hogan">sandbox-hogan</a> 這個專案，不過目前用的是 prototype，等那邊發展成熟一點在換過去。</p>
-
-<p>最後再次介紹一下 <strong>Flickr Share with Template</strong>，這是套可以用自訂的 template 來產生 Flickr 照片分享 HTML/BBCode 的套件，會開發的原因包括：</p>
-
-<ul>
-<li>flickr 原生的分享是 HTML，不是 XHTML</li>
-<li>只有 HTML/BBCode</li>
-<li>只有 http，但是 flickr 其實有 https 支援</li>
-<li>只有一些尺寸，無法滿足我支援 retina disaply 的需求</li>
-<li>最重要的，不支援自訂 template </li>
-</ul>
-
-<p>如果你對以上任何一個問題有同感的話，歡迎你來試試看我的擴充套件，有任何問題歡迎回報。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000733" baseName="ie10-for-windows7">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-02-26</b:date>
-				<b:time>23:54:14</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>IE10 for Windows 7</b:title>
-			<b:content>
-				<b:summary> 剛剛正式 Release 了，第一眼印像是文字渲染方式不太一樣，和 Aurora 比一下。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8510660798/" title="Flickr 上 othree 的 IE10 vs Aurora on Text rendering"><img src="//farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg" width="996" height="610" alt="IE10 vs Aurora on Text rendering" srcset="//farm9.staticflickr.com/8509/8510660798_b86b070bef.jpg 768w, //farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg 768w 2x" /></a></p>
-
-<p>剛剛正式 Release 了，第一眼印像是文字渲染方式不太一樣，和 Aurora 比一下。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000719" baseName="nippon-colors">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2012-11-22</b:date>
-				<b:time>01:34:21</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Nippon Colors</b:title>
-			<b:content>
-				<b:summary> 最近看到一個很棒的網站，叫做 日本的傳統色，網站顧名思義，就是把日本古時候的一些衣服、器物、裝飾等等的顏色整理出來，提供傳統的顏色名稱還有該顏色的 CMYK、RGB、HEX RGB 等色碼，如果只是這樣那其實就是一些整理加輸入工作而已，不過這個網站做得很漂亮，剛看到時真是驚為天人，整個網站其實是用了不少技巧才弄起來的，像是每個顏色 CMYK 都有各自的圓圈表示百分比，便用到了 mask 和 transform，背景用的那張半透明 png 所產生的質感更是出色，它網站可以讓背景能同時有紙張的質感又讓顏色漸變便是要靠這張圖。 網站的作者是 ONO TAKEHIKO，顏色名稱和色碼的參考資料是 日本の伝統色 這本書，看到資料來源後，我就順手搜尋了一下，發現日本關於日本自己的傳統顏色的書籍意外的多，在 Amazon 搜尋 日本 伝統色 的書籍，結果可以看到 180 筆資料，看起來直接相關的也有 20 本左右。這個數量有多多呢？我在博客來搜尋 中國 傳統色 是找不多顏色相關的書的，改成用 中國 顏色 才找到一本，書名就叫 中國顏色，想說就這一本的話，那就買一下吧，結果我收到貨之後才發現這本書有抄襲的 問題，書中不少篇幅抄襲了雲林科技大學 曾啟雄 教授的 色言色語 系列專欄文章，該專欄文章可以在台灣藝術教育網的 期刊論文...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8205369955/" title="Flickr 上 othree 的 NIPPON COLORS - 日本-伝統色"><img src="//farm9.staticflickr.com/8209/8205369955_27810459ab_b.jpg" width="1024" height="700" alt="NIPPON COLORS - 日本-伝統色" srcset="//farm9.staticflickr.com/8209/8205369955_27810459ab.jpg 768w, //farm9.staticflickr.com/8209/8205369955_27810459ab_b.jpg 768w 2x" /></a></p>
-
-<p>最近看到一個很棒的網站，叫做 <a href="http://nipponcolors.com/">日本的傳統色</a>，網站顧名思義，就是把日本古時候的一些衣服、器物、裝飾等等的顏色整理出來，提供傳統的顏色名稱還有該顏色的 CMYK、RGB、HEX RGB 等色碼，如果只是這樣那其實就是一些整理加輸入工作而已，不過這個網站做得很漂亮，剛看到時真是驚為天人，整個網站其實是用了不少技巧才弄起來的，像是每個顏色 CMYK 都有各自的圓圈表示百分比，便用到了 mask 和 transform，背景用的那張半透明 png 所產生的質感更是出色，它網站可以讓背景能同時有紙張的質感又讓顏色漸變便是要靠這張圖。</p>
-
-<p>網站的作者是 <a href="http://onotakehiko.com/">ONO TAKEHIKO</a>，顏色名稱和色碼的參考資料是 <a href="http://www.amazon.co.jp/dp/475624100X/">日本の伝統色</a> 這本書，看到資料來源後，我就順手搜尋了一下，發現日本關於日本自己的傳統顏色的書籍意外的多，在 Amazon 搜尋 <strong>日本 伝統色</strong> 的書籍，結果可以看到 180 筆資料，看起來直接相關的也有 20 本左右。這個數量有多多呢？我在博客來搜尋 <strong>中國 傳統色</strong> 是找不多顏色相關的書的，改成用 <strong>中國 顏色</strong> 才找到一本，書名就叫 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010529206">中國顏色</a>，想說就這一本的話，那就買一下吧，結果我收到貨之後才發現這本書有抄襲的 <a href="https://www.facebook.com/events/296703853709997/">問題</a>，書中不少篇幅抄襲了雲林科技大學 <a href="http://www.vc.yuntech.edu.tw/program.php?po=member&amp;auth_id=8035991&amp;type=1">曾啟雄</a> 教授的 <strong>色言色語</strong> 系列專欄文章，該專欄文章可以在台灣藝術教育網的 <a href="http://ed.arte.gov.tw/ch/Periodical/list_1.aspx?PageNo=5">期刊論文</a> 區找到不少（找作者），而且都是 <a href="http://creativecommons.org/licenses/by-nc-nd/2.5/tw/">CC BY-NC-ND</a> 授權的，有興趣的人可以去找來看看。</p>
-
-<p>其實我會開始找這些資料，一個原因是我有想做個中國的傳統色彩網頁，因為日本的傳統色網站除了質感很高之外，日本這些顏色的名稱我覺得都漂亮，比較抽象一點的說法或許可以說很有意境、很有 fu，所以就很好奇中國傳統色彩的那些色彩名稱不知道有沒有這麼漂亮。那時候還沒看到 <a href="http://ylbook.com/cms/web/chuantongsecai/chuantongsecai.htm">中國傳統色彩</a> 這網站，所以動力比較高，就一路找到了曾教授那邊，發現他有成立一個 Facebook 社團叫 <a href="https://www.facebook.com/groups/314215438614691/">人民公色</a> ，還算蠻活躍的，而除此之外，曾教授也是有顏色相關的專書，其中一本「<strong>中國失落的色彩</strong>」特別吸引我，很可惜的是已經絕版了，不過我在尋找這些資訊的途中發現，其實在色彩學這塊，對岸的大陸同胞也很多人在探討，甚至專門書籍還比台灣這邊多，曾教授的文章被抄襲也有人幫忙打抱不平。</p>
-
-<p>總之，我開始找起簡體的中國傳統色彩書籍，結果找到一本 <a href="http://book.douban.com/subject/4091840/">中国传统色彩图鉴</a> 很符合我的目標，於是就下訂了，目前是還沒收到書，我之後又發現書中介紹的顏色已經有人把他放上 <a href="http://www.anfuture.cn/blog/?p=1091">網路</a> 了，所以我其實好像已經可以開始動工了，不過最近有懶，想到要自己動手輸入色碼就....</p>
-</b:mainContent>
-				<b:extendContent>
 </b:extendContent>
 			</b:content>
 

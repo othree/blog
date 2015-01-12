@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000802" baseName="es6-method-definition">ES6 Method Definition</b:listData>
+
+			<b:previous>
+				<b:mTitle>SIMD in JavaScript</b:mTitle>
+				<b:mDate>2014-06-26</b:mDate>
+				<b:mBase>simd-in-javascript</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>YAJS: Yet Another JavaScript Syntax for Vim</b:mTitle>
+				<b:mDate>2014-07-14</b:mDate>
+				<b:mBase>yajs</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000802" baseName="es6-method-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-07-14</b:date>
+				<b:time>16:47:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>ES6 Method Definition</b:title>
+			<b:content>
+				<b:summary>以前在產生 function 時，一定不外乎是 function declaration： function foo() { return; } 或是 function expression： var foo = function () { return; } 不過在 ES6 有一種新的特殊的語法可以使用，叫做 method definition，顧名思義，這個新的語法是專門用在產生物件的 method 上用的，所以嚴格說來不是用來做 function 的，然後也因此很特別的不需要使用到 function 這個關鍵字，基本的用法通常會在 class syntax 中使用： class foo { constructor() {...</b:summary>
+				<b:mainContent><p>以前在產生 function 時，一定不外乎是 function declaration：</p>
+
+<pre><code>function foo() { return; }
+</code></pre>
+
+<p>或是 function expression：</p>
+
+<pre><code>var foo = function () { return; }
+</code></pre>
+
+<p>不過在 ES6 有一種新的特殊的語法可以使用，叫做 <strong>method definition</strong>，顧名思義，這個新的語法是專門用在產生物件的 method 上用的，所以嚴格說來不是用來做 function 的，然後也因此很特別的不需要使用到 function 這個關鍵字，基本的用法通常會在 class syntax 中使用：</p>
+
+<pre><code>class foo {
+  constructor() {
+    //blah
+  }
+
+  fooMeth() {
+    //blah
+  }
+}
+</code></pre>
+
+<p>在上面這段程式碼中，<code>constructor</code> 和 <code>fooMeth</code> 都是 method definition，其實就很接近以前的 prototype method，但是大幅簡化了語法，而除了這樣使用，還可以配合 <code>get</code>、<code>set</code> 讓它變成 accessor function：</p>
+
+<pre><code>class foo {
+  get bar() {
+    return this._bar;      
+  }
+  set bar(v) {
+    this._bar = v + this._bar;
+  }
+}
+</code></pre>
+
+<p>Accessor 其實在 ES5 就已經有了，不過因為一直被 IE 卡著所以不太有人用，而且寫起來實在也麻煩很多，以前是要用 <code>defineProperty</code> 才能定義 accessor：</p>
+
+<pre><code>Object.defineProperty(foo.prototype, 'bar', {
+  get: function () {
+    return this._bar;
+  },
+  set: function (v) {
+    this._bar = v + this._bar;
+  }
+});
+</code></pre>
+
+<p>當然除了比較麻煩外，還有一個問題就是 <code>defineProperty</code> 只能用在實體物件上，所以上面的 class 範例，要做出一樣效果就要在 prototype 上使用，實在不直觀，加上 <code>defineProperty</code> 其他功能真的是很少看到使用需求，新的語法這樣設計真的是很不錯，不過看到 <code>defineProperty</code> 要在實體物件上用，就會讓人反過來想，method definition 可以不用在 class 上，而是用在普通物件上嗎？事實上是可以的，ES6 的物件語法多了簡化的寫法，其中一個就是支援 method definition，所以可以這樣寫：</p>
+
+<pre><code>var object = {
+  value: 42,
+  toString() {
+    return this.value;
+  }
+};
+</code></pre>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

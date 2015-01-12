@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000803" baseName="yajs">YAJS: Yet Another JavaScript Syntax for Vim</b:listData>
+
+			<b:previous>
+				<b:mTitle>ES6 Method Definition</b:mTitle>
+				<b:mDate>2014-07-14</b:mDate>
+				<b:mBase>es6-method-definition</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>ES6 的數字</b:mTitle>
+				<b:mDate>2014-07-15</b:mDate>
+				<b:mBase>es6-int</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000803" baseName="yajs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-07-14</b:date>
+				<b:time>18:35:34</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>YAJS: Yet Another JavaScript Syntax for Vim</b:title>
+			<b:content>
+				<b:summary>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 YAJS，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 github repo 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下： 用 javascript 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 SyntaxComplete 使用 完整重新整理過的 Web API、DOM、JS 關鍵字...</b:summary>
+				<b:mainContent><p>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 <a href="http://www.vim.org/scripts/script.php?script_id=4974">YAJS</a>，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 <a href="https://github.com/othree/yajs.vim">github repo</a> 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下：</p>
+
+<ul>
+<li>用 <code>javascript</code> 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 <code>SyntaxComplete</code> 使用</li>
+<li>完整重新整理過的 Web API、DOM、JS 關鍵字</li>
+<li>可以完美的和 javascript-libraries-syntax.vim 共用</li>
+<li>把許多歷史遺跡的 syntax rule 都砍掉了</li>
+<li>當然最後就是支援許多的 ES6 syntax，像是 arrow function、 method definition 等</li>
+</ul>
+
+<p>第一點這問題很久了，我好像之前也有說過，第二個一開始弄之前有點猶豫，因為關鍵字真的很多，目前整理了大概有 1800 個上下，不過後來看到 Vim 內建的 xs 的 <a href="https://code.google.com/p/vim/source/browse/runtime/syntax/xs.vim">syntax</a> 我就釋懷了，這個檔案有三千多行，而定義關鍵字的每行都有數個關鍵字，1800 其實還只整理了一部份，除了 Global 物件都有加上外，很多新 Spec 是還沒整理的，例如 Mozilla 為了 Firefox OS 定的那些和硬體溝通的 API 等。</p>
+
+<p>第三點是我重新整理的時候才注意到的，本來我的 javascript-libraries-syntax.vim 會把 <code>.</code> 的 group 取代掉，也就是原來的 syntax rule 裡面，和 <code>.</code> 有關的東西在套用過 libraries syntax 之後就會消失，只是不太容易注意到，這次修改就讓這個問題不會發生，不過 JS 僅限於 YAJS，，其他還有 CoffeeScript、LiveScript 其實不受影響，不過是因為他們本來在 <code>.</code> 之後就沒其他的 syntax highlight 了。</p>
+
+<p>第四點就是把一些不明用途或是過時的東西砍掉，最後就是 ES6 的語法了，目前大概知道會有的都已經做上去了像是 block scope、let、const、class、新的 number literal 等都支援，如果有缺什麼歡迎報 bug 摟。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

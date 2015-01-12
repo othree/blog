@@ -5,10 +5,72 @@
 <link>https://blog.othree.net//log/ server/</link>
 <description></description>
 <copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-04-08 23:00</lastBuildDate>
-<generator>http://www.movabletype.org/?v=4.38</generator>
+<lastBuildDate>2014-12-03 12:09</lastBuildDate>
+<generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>隱藏 Apache 版本號</title>
+<description><![CDATA[<p>之前有想過是不是能隱藏 HTTP Server 的資訊，不過 <strong>Server</strong> 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：</p>
+
+<pre><code>ServerSignature Off
+ServerTokens Prod
+</code></pre>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/12/03/hide-apache-version/</link>
+<guid>https://blog.othree.net/log/2014/12/03/hide-apache-version/</guid>
+<category>server</category>
+<pubDate>2014-12-03 12:09</pubDate>
+</item>
+
+<item>
+<title>SSL 設定更新</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" src-1="(max-width: 768px)  https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd.jpg 1x, https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 2x" src-2="https://farm8.staticflickr.com/7553/15059214463_0196757226_k.jpg 2x" /></a></p>
+
+<p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係調到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
+
+<pre><code>SSLProtocol all -SSLv2 -SSLv3
+</code></pre>
+
+<p>然後限制 Cipher Suite：</p>
+
+<pre><code>SSLCipherSuite AES256+EECDH:AES256+EDH
+</code></pre>
+
+<p>這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。</p>
+
+<p>光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。</p>
+
+<p>另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：</p>
+
+<pre><code>http://www.startssl.com/certs/sub.class1.server.ca.pem
+</code></pre>
+
+<p>在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：</p>
+
+<pre><code>http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
+</code></pre>
+
+<p>改成這個後看來就沒警告了，我想應該沒搞錯才是 :P</p>
+
+<p>到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">Strict Transport Security(HSTS)</a>，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。</p>
+
+<p>設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 <a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/">OCSP Stapling</a>，可以提昇效能，因為把 <a href="http://gca.nat.gov.tw/ocsp/index.html">OCSP</a> 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：</p>
+
+<pre><code>SSLUseStapling on
+SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
+</code></pre>
+
+<p>好像放這兩行就可以了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2014/11/01/ssl-config/</link>
+<guid>https://blog.othree.net/log/2014/11/01/ssl-config/</guid>
+<category>server</category>
+<pubDate>2014-11-01 16:45</pubDate>
+</item>
 
 <item>
 <title>OpenSSL 安全性問題 CVE-2014-0160</title>

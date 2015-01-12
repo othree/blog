@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000822" baseName="jspcvim">JavaScript Parameter Complete</b:listData>
+
+			<b:previous>
+				<b:mTitle>前端工程師都應該知道的 fetch</b:mTitle>
+				<b:mDate>2014-11-25</b:mDate>
+				<b:mBase>fetch</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>隱藏 Apache 版本號</b:mTitle>
+				<b:mDate>2014-12-03</b:mDate>
+				<b:mBase>hide-apache-version</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000822" baseName="jspcvim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-11-30</b:date>
+				<b:time>18:37:08</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JavaScript Parameter Complete</b:title>
+			<b:content>
+				<b:summary>前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 Web Crypto API，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 - 在裡面，像是 SHA-256 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 - 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 jspc.vim。 這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto...</b:summary>
+				<b:mainContent><p>前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.crypto">Web Crypto API</a>，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 <code>-</code> 在裡面，像是 <code>SHA-256</code> 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 <code>-</code> 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 <a href="https://github.com/othree/jspc.vim">jspc.vim</a>。</p>
+
+<p>這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto algorithm，還有各種事件名稱，Media Type 等，其實越做發現越多這類的選項，目前支援的東西包括：</p>
+
+<ul>
+<li>Web Crypto Algorithm Name</li>
+<li>Event Name for DOM, jQuery, Backbone</li>
+<li>HTTP Methods for XHR, fetch</li>
+<li>HTTP Headers, some values</li>
+<li>Locales for Intl</li>
+<li>HTML Tag Name for DOM API</li>
+<li>Image Type for canvas.toBlob, canvas.toDataURL</li>
+</ul>
+
+<p>這個 function 的原理還蠻簡單的，如果抓到游標位置看起來在字串內（以下用底線代表游標位置）：</p>
+
+<pre><code>n.addEventListener('cl_
+</code></pre>
+
+<p>然後就會往前找看看這是不是一個 function call 的內部，是的話去看看 function name，像是上面的範例就會找 <code>addEventListener</code>，然後就去內部先定義好的表單找看有沒有候選的項目，有的話就會根據字串內容去做過濾後然後給回來。</p>
+
+<p>如果前面有其他參數是不會受影響的，不過 function name 和字串要在同一行，然後除了 JavaScript 的語法用 <code>(</code> 做為判斷是不是 function call 之外，其實還有支援 CoffeeScript 那種只用空白接餐處的寫法：</p>
+
+<pre><code>n.addEventListener 'cl_
+</code></pre>
+
+<p>其實判斷方法很簡單，就是找空白前面不是 <code>,</code> 的話就是了，一時還想不到是不是有其他種語言的 function call 的語法跳脫這兩種寫法的，我想應該可以支援大部分的程式語言了，不過裡面的候選資料還需要人來做苦工，所以我只弄了 JavaScript 的 Web 相關的東西，然後同時給 CoffeeScript、LiveScript、TypeScript 用，安裝方法就照用 Pathogen 那套裝法就可以了裝起來直接用，因為實做上是把原本的 omni complete function 包起來，所以不用特別做什麼設定，就可以和其它自動補完的輔助工具合作，像是 <a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a> 和 <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache.vim</a>，其實本來是獨立一個 function 的，但是這樣要和 Neo Complete Cache 整合太難了，乾脆就走 Vim 的 omnicomplete 路線，結果意外的方便，最後就是有什麼問題歡迎提出摟～</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

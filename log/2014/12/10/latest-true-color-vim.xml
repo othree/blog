@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000825" baseName="latest-true-color-vim">Latest True Color Vim</b:listData>
+
+			<b:previous>
+				<b:mTitle>關於 TypeScript</b:mTitle>
+				<b:mDate>2014-12-04</b:mDate>
+				<b:mBase>typescript-definition</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Android L WebView Fullscreen API</b:mTitle>
+				<b:mDate>2015-01-05</b:mDate>
+				<b:mBase>android-l-webview-fullscreen-api</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000825" baseName="latest-true-color-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2014-12-10</b:date>
+				<b:time>01:46:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Latest True Color Vim</b:title>
+			<b:content>
+				<b:summary>上次文章的安裝方法已經過時了，更新一下： hg clone https://bitbucket.org/ZyX_I/vim cd vim cd src &amp;&amp; make autoconf &amp;&amp; cd .. ./configure \ --enable-gui=no \ --without-x \ --enable-multibyte \ --with-tlib=ncurses \ --enable-cscope \ --with-features=huge \ --disable-nls \ --enable-perlinterp \ --enable-pythoninterp \ --enable-rubyinterp \ --enable-termtruecolor make make install...</b:summary>
+				<b:mainContent><p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp \
+  --enable-termtruecolor
+
+make
+make install
+</code></pre>
+
+<p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
+
+<pre><code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
+let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
+</code></pre>
+
+<p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
+
+<p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
