@@ -146,7 +146,8 @@ if (preg_match("/Webkit/", $UA)) {
     $CSP = 'X-WebKit-CSP';
 }
 
-header($CSP.": default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.justfont.com justfont.s3.amazonaws.com *.disqus.com *.disquscdn.com https://ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; connect-src *.justfont.com *.disqus.com; font-src *.justfont.com themes.googleusercontent.com; img-src 'self' *.disqus.com *.disquscdn.com http://*.static.flickr.com *.static.flickr.com *.staticflickr.com https://ssl.google-analytics.com; frame-src disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com;");
+// header($CSP.": default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.disqus.com *.disquscdn.com ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; connect-src *.justfont.com *.disqus.com; font-src *.justfont.com themes.googleusercontent.com; img-src 'self' *.disqus.com *.disquscdn.com http://*.static.flickr.com *.static.flickr.com *.staticflickr.com https://ssl.google-analytics.com; frame-src disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com;");
+header($CSP.": default-src 'none'; script-src 'self' *.disqus.com *.disquscdn.com ssl.google-analytics.com speakerdeck.com apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' *.disqus.com *.disquscdn.com *.static.flickr.com *.static.flickr.com *.staticflickr.com ssl.google-analytics.com; frame-src disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com; font-src themes.googleusercontent.com; connect-src *.disqus.com");
 
 echo $output;
 
