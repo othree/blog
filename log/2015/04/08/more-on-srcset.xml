@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000840" baseName="more-on-srcset">srcset</b:listData>
+
+			<b:previous>
+				<b:mTitle>Loader</b:mTitle>
+				<b:mDate>2015-04-05</b:mDate>
+				<b:mBase>loader</b:mBase>
+			</b:previous>
+
+
+		</b:entriesMeta>
+		<b:entry entryID="000840" baseName="more-on-srcset">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-04-08</b:date>
+				<b:time>00:53:33</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>srcset</b:title>
+			<b:content>
+				<b:summary>Responsive Image 大概定案成 srcset 和 &lt;picture&gt; 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 srcset 和我當初介紹時已經差蠻多，中文資源有找到 Zhusee 有另外一篇介紹，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 w 和 density descriptor 用 x，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 x 或是全部用 w，所以： 不能在一張圖片裡面同時有 w 和...</b:summary>
+				<b:mainContent><p>Responsive Image 大概定案成 <code>srcset</code> 和 <code>&lt;picture&gt;</code> 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 <code>srcset</code> 和我當初<a href="https://blog.othree.net/log/2012/12/02/srcset/">介紹</a>時已經差蠻多，中文資源有找到 Zhusee 有另外一篇<a href="http://blog.zhusee.in/post/248199/basic-responsive-image-with-srcset-property">介紹</a>，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 <code>w</code> 和 density descriptor 用 <code>x</code>，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 <code>x</code> 或是全部用 <code>w</code>，所以：</p>
+
+<ol>
+<li>不能在一張圖片裡面同時有 <code>w</code> 和 <code>x</code></li>
+<li>全部都用 <code>w</code> 或是全部都用 <code>x</code></li>
+<li>不可有相同的數值，例如兩個 <code>1x</code> 或是兩個 <code>760w</code> </li>
+<li>Descriptor 可以算是該圖片的資訊</li>
+</ol>
+</b:mainContent>
+				<b:extendContent><p>不過最新的 spec 裡面少了第二點的限制，所以會有一組 srceset 混和 width descriptor 和 density descriptor 的情形，然後怎麼挑選圖片的<a href="https://html.spec.whatwg.org/multipage/embedded-content.html#select-an-image-source">地方</a>寫說：</p>
+
+<blockquote>
+  <p>In a user agent-specific manner, choose one image source from source set. Let this be selected source.</p>
+</blockquote>
+
+<p>就是叫瀏覽器自己想辦法的意思，我就很好奇，如果我想設定一組規則，要分成四個組合：</p>
+
+<ul>
+<li>小螢幕低密度</li>
+<li>小螢幕高密度</li>
+<li>大螢幕低密度</li>
+<li>大螢幕高密度</li>
+</ul>
+
+<p>的話，我要怎樣設定 srcset 才能達到目標，因為現在已經不是用 media query 來寫 srcset 了，不能直接寫這樣四組，所以我就去找了 Firefox 和 Chromium 的原始碼來看看他們怎麼做的，Firefox 的找沒多久就<a href="https://dxr.mozilla.org/mozilla-central/source/dom/base/ResponsiveImageSelector.cpp#274">找到</a>了，因為他們有 <a href="https://github.com/mozilla/dxr">dxr</a> 專案用來方便找程式碼，實際用過覺得真的好用，至於 Chromium 就找比較久了，後來是在 <a href="https://github.com/WebKit/webkit/blob/master/Source/WebCore/html/parser/HTMLSrcsetParser.cpp#L232">WebKit 裡面</a>有找到，然後發現兩個瀏覽器的原理其實都一樣，要處理同時有 width descriptor 和 density descriptor 的狀況，基本上就是都轉成 density 然後來挑最適合的，作法大致如下，細節可能有誤：</p>
+
+<ol>
+<li>先對圖片標籤排版，這邊可能會用到 <code>sizes</code> 屬性，不過 CSS 還是優先，然後會得到圖片在頁面上的寬度，稱為 computed width</li>
+<li>對每張候選圖片計算 effective pixel density，算法是： <code>圖片寬度 / computed width</code>，圖片寬度可以是 width descriptor 來的或是圖片的實際寬度，如果 descriptor 是 density descriptor 的話就不用計算，直接拿來用</li>
+<li>比對 effective pixel density 和現在 device 螢幕的 density，取最接近的</li>
+</ol>
+
+<p>其中第三步驟的比較，大概是考慮效能和記憶體問題，兩個瀏覽器都沒真的做很嚴謹，都是照順序跑過一遍而已，所以在寫 srcset 的時候建議也要照圖片的大小排，至於要大的先還是小的先，就看開發者希望是 density 略大的優先還是略小的優先了，所以如果我寫：</p>
+
+<pre><code>srcset="aaa.jpg 1x, bbb.jpg 1.4x, ccc.jpg 1.6x, ddd.jpg 2x"
+</code></pre>
+
+<p>然後我現在圖片需要 <code>1.5x</code> 的話，應該就會拿到 1.4x 的 <code>bbb.jpg</code>，而如果我偏好用 1.6x <code>ccc.jpg</code> 的話，就要改成：</p>
+
+<pre><code>srcset="ddd.jpg 2x, ccc.jpg 1.6x, bbb.jpg 1.4x, aaa.jpg 1x"
+</code></pre>
+
+<p>後來發現這個挑選圖片的原則，其實在 WHATWG 的 <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#embedded-content">HTML Spec 裡面有寫</a>，不過是 non-normative 的段落，就是說這不是一定要遵守，只是建議，而且前面也有提到 spec 內是寫說挑選的原則是瀏覽器自己處理，而會這樣設計相信是為了像 mobile device 之類的裝置，網路速度如果比較慢，或是需要節省流量時，就可以挑選比較小的檔案，而不一定是挑出顯示上最好的那張圖片。</p>
+
+<p>最後，其實 descriptor 除了 density 和 width 兩種之外，還有一種 height descriptor，不過目前只是保留可能性，spec 還沒定義要怎樣處理，其實還蠻能理解目前會以寬度為主的狀況，在 Matt Brubeck 的 Let's build a browser engine! 系列文章中的第六篇「<a href="http://limpet.net/mbrubeck/2014/09/17/toy-layout-engine-6-block.html">Block layout</a>」這篇文章有介紹到一般瀏覽器是怎樣排版畫 layout 的，而其處理的原則就是先從左上角開始把東西往右排，所以寬度一定先決定，然後才決定高度，相信這也是垂直置中搞這麼多年的原因吧。</p>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

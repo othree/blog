@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000829" baseName="more-fetch">fetch 二三事</b:listData>
+
+			<b:previous>
+				<b:mTitle>Tokyo Disney Land 一日遊</b:mTitle>
+				<b:mDate>2015-01-15</b:mDate>
+				<b:mBase>tokyo-disney-land</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>2014</b:mTitle>
+				<b:mDate>2015-01-22</b:mDate>
+				<b:mBase>2014</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000829" baseName="more-fetch">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-01-16</b:date>
+				<b:time>12:31:16</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>fetch 二三事</b:title>
+			<b:content>
+				<b:summary>之前介紹過 fetch 之後過了一段時間，有發現幾個目前 spec 上的一些細節要來分享一下。首先是上一篇文章說到的重複 header 的問題，詳細看下去後，發現 fetch 收的 header 參數有兩種，一個是 key value pair 的原生物件，另外一種是 Headers 物件，這個物件是 fetch spec 裡面新定義的： var h = new Headers(); h.append('X-Custom-Header', '1'); h.append('X-Custom-Header', '2'); h.append('X-Custom-Header', '3'); 就可以像這樣用 append 重複加上同樣名稱的 Header，其實丟原生的物件進去，也會在內部被轉成這個 Header 物件。 第二個要說的是關於回應 status code...</b:summary>
+				<b:mainContent><p>之前介紹過 fetch 之後過了一段時間，有發現幾個目前 spec 上的一些細節要來分享一下。首先是上一篇文章說到的重複 header 的問題，詳細看下去後，發現 fetch 收的 header 參數有兩種，一個是 key value pair 的原生物件，另外一種是 Headers 物件，這個物件是 fetch spec 裡面新定義的：</p>
+
+<pre><code>var h = new Headers();
+h.append('X-Custom-Header', '1');
+h.append('X-Custom-Header', '2');
+h.append('X-Custom-Header', '3');
+</code></pre>
+
+<p>就可以像這樣用 <code>append</code> 重複加上同樣名稱的 Header，其實丟原生的物件進去，也會在內部被轉成這個 Header 物件。</p>
+
+<p>第二個要說的是關於回應 status code 在 400 到 600 之間時，Promise 物件是 resolve 不是 reject，理由是 Error 和 Exception 不一樣，不過有人開 Issue 在討論，會不會有改變還不知道，倒是如果現在用 github polyfill 想要處理這個問題的話，除了可以自己處理之外，也有人寫了 <a href="https://github.com/matthew-andrews/fetchres">fetchres</a> 這個，wrapper 可以把 fetch 的一些行為弄得更接近大部分開發者的直覺，目前提供的功能除了這個之外，還有一個是如果回傳的 type 是 JSON，但是內容的 JSON 語法有錯，那也會被丟到 reject 那邊去。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

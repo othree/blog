@@ -4,15 +4,219 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-12-04 23:06</lastBuildDate>
+<copyright>Copyright 2015</copyright>
+<lastBuildDate>2015-04-05 14:50</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
 
 <item>
+<title>Loader</title>
+<description><![CDATA[<p>Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">AMD</a> 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。</p>
+]]><![CDATA[<p>Addy Osmani 有建立一個 Loader 的 polyfill 給 ES5 環境使用 Loader API，就叫做 <a href="https://github.com/ModuleLoader/es6-module-loader">ES6 Module Loader Polyfill</a>，這個 polyfill 內部實做是照當初 ES6 draft 來寫的，其實還蠻複雜，不過把讀取一個 module 的事情拆分一下，可以分成以下幾個步驟：</p>
+
+<ol>
+<li>Normalize：根據給的名稱取得實際的 module name</li>
+<li>Locate：根據實際的 module name 取得 module 的位置</li>
+<li>Fetch：根據 module 位置去取得檔案內容</li>
+<li>Translate：如果有需要對檔案內容作任何修改，就在這裡處理</li>
+<li>Instaniate：最後是根據檔案內容（程式碼），判斷有哪些相依模組和知道如何初始化這個模組</li>
+</ol>
+
+<p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
+
+<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 再接手<a href="https://github.com/whatwg/loader">繼續</a>，不過目前的最新版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
+
+<p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
+
+<p>本來我是想看看，是不是能夠只靠 Loader 就把 ES6 的 module 機制在現在的瀏覽器上建立起來，結果發現只靠 ES6 Module Loader Polyfill 是辦不到的，Loader API 並沒有定義模組的語法，如果用 ES6 的語法來定義模組還需要 transpiler 來從程式碼中分析出 module dependency，不過我不太想要把整包 transpiler 也放到 translate 裡面用，雖然可以自己寫一個什麼事情都不做的 translate function，但是要解決 dependency 的話還是會需要像 <code>System.register</code> 的幫助，總之到這邊，可以發現一個重點是，Loader 不管 module 定義的方法，雖然假想情境下是用 ES6 module 語法，每個檔案代表一個 module，然後用 <code>import</code> 和 <code>export</code> 來定義相依模組和提供的 method，不過其實 Loader 也是可以處理 AMD、<a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS</a> 甚至是 <a href="https://nodejs.org/api/modules.html">NodeJS</a> 型式的模組定義，只是要有人去實做這部分的 translate 和 instantiate 的部分，而 SystemJS最新版（0.16）就是這樣一個專案，它號稱是 universal module loader，支援 AMD、CommonJS、NodeJS 和 ES6 的模組定義，然後在最新的版本，改成使用 ES6 Module Loader Polyfill 的機制來做 module 的讀取、相依性的判斷和模組初始化，雖然有些地方沒有真的照之前的 spec 來實做。</p>
+
+<p>另外一個之前不太清楚的問題也藉此搞清楚了，ES6 module 有限制一個檔案定義一個 module，而現在的 web application 常常為了效能問題，都把多個檔案合併成一個檔案，這時就不能用 ES6 module 了，當然也可以用像現在 SystemJS 的作法來處理，不過其實再過一兩年 HTTP/2 普及後，也不需要這樣搞了，會變成只需要 minimize，這部分倒是還可以接受。</p>
+
+<p>ES6 裡面的 Loader 本身其實是一個 constructor，放在另外一個 ES6 提供的新東西 <code>Reflect</code> 下面，而用 <code>Reflect.Loader</code> 建立 Loader instance 時可以順便給他一些參數，像是前面提到的讀模組的五個步驟的實做，或是領域（realm），而 <code>System</code> 物件則是該 JS 環境下的預設的 Loader，理論上如果是瀏覽器環境，它就會知道怎樣去 fetch 遠端的程式碼回來，如果是 NodeJS 就會改用 file system 讀檔案，而且也知道要把模組放到那個 realm（理論上不同 frame 就是不同 realm），這樣大部分的使用都可以用 <code>System</code> 就好了，只有很少數的情形需要自己建立 Loader。其實上面說的 Loader API 不知道為什麼是移到 WHATWG 之後，幾乎是重新開始編寫，完整度欠佳，有些章節還是空的，另外也沒有定義 <code>System</code> 或是其它的新的替代方案，所以現在想要看看到底 Loader 內部怎麼做的話，要看舊版的 spec，可以去抓 2014 年 8 月的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#august_24_2014_draft_rev_27">ES6 draft rev 27</a> 然後看看 CH 26, 15，對照 ES6 Module Loader Polyfill 的程式碼可能比好懂。</p>
+]]></description>
+<link>https://blog.othree.net/log/2015/04/05/loader/</link>
+<guid>https://blog.othree.net/log/2015/04/05/loader/</guid>
+<category>script</category>
+<pubDate>2015-04-05 14:50</pubDate>
+</item>
+
+<item>
+<title>ECMAScript 6 Final Draft Approved</title>
+<description><![CDATA[<blockquote class="twitter-tweet" lang="zh-tw"><p>Ecma-TC39 just approved the final ES6 draft. It now goes to the Ecma General Assembly for approval in June</p>- Allen Wirfs-Brock (@awbjs) <a href="https://twitter.com/awbjs/status/580321916403216384">2015 3月 24日</a></blockquote>
+
+<p>剛剛看到說 ECMAScript 2015(ES6) 定稿了，最後一版草稿是 RC4（還沒 release），接下來會是 ECMA 認證流程的樣子，不過繼續下一版的討論也不會中斷，順便要說一下他們最後 approve 的地方是在 H.R. Giger 博物館的酒吧，超酷的，這是畫異形那位大師的博物館。</p>
+
+<blockquote class="twitter-tweet" lang="zh-tw"><p>Celebrated w/<a href="https://twitter.com/rebeccawb">@rebeccawb</a>  TC39 approval of ES6, at H.R. Giger Museum in Gruyère <a href="http://t.co/uEKzfozxX2">pic.twitter.com/uEKzfozxX2</a></p>- Allen Wirfs-Brock (@awbjs) <a href="https://twitter.com/awbjs/status/582239060539904000">2015 3月 29日</a></blockquote>
+
+<script async="async" src="//platform.twitter.com/widgets.js" charset="utf-8"><!-- --></script>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/03/30/ecmascript-6-final-draft/</link>
+<guid>https://blog.othree.net/log/2015/03/30/ecmascript-6-final-draft/</guid>
+<category>script</category>
+<pubDate>2015-03-30 18:34</pubDate>
+</item>
+
+<item>
+<title>CSP</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16440158642/" title="CSP by othree, on Flickr"><img src="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg" width="791" height="1024" alt="CSP" srcset="https://farm9.staticflickr.com/8598/16440158642_62042f3837.jpg 768w, https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg 2x" /></a></p>
+
+<p>Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 <a href="https://medium.com/@addyosmani/javascript-application-architecture-on-the-road-to-2015-d8125811101b">JavaScript Application Architecture On The Road To 2015</a> 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。</p>
+]]><![CDATA[<p>CSP 其實不是新東西，是 <a href="http://en.wikipedia.org/wiki/Tony_Hoare">C. A. R. Hoare</a> 在 1978 年就發表的<a href="http://www.cs.ucf.edu/courses/cop4020/sum2009/CSP-hoare.pdf">論文</a>(PDF)，1985 還出了整本書來介紹，而且<a href="http://www.usingcsp.com/cspbook.pdf">全文 PDF</a> 都有在網路上，可是這本書實在太理論了，看了一點點就看不下去，只好找其它資源，發現還真的蠻少的，但是確有找到一些近幾年的實做，像是 Go 的 routine 間用 channel 溝通，或是 Clojure 的 core.async，當然 Addy Osmani 那篇也有提到 JavaScript 的部分。</p>
+
+<p>根據我目前淺薄的理解，CSP 就是用 channel 的非同步溝通機制，channel 怎麼用呢，顧名思義，就是一個傳遞訊息用的頻道，不過我覺得用管線可以更精確的描述它，而且這是一個單向的管線，一邊只能傳訊息進去，一邊只能拿訊息出來，可以達成非同步的溝通最主要在於拿訊息這邊，當你在其中一個 process 中說你要跟某個 channel 拿一個訊息出來時，如果那個 channel 裡面沒有東西，則這邊的 process 就會停下來等到那個 channel 有訊息出現，這個等待的機制不同語言有各自的方法實做。</p>
+
+<p>先來看看 Go 的範例吧，因為實在是比 JavaScript 的直覺多了：</p>
+
+<pre><code>package main
+import "fmt"
+
+func main() {
+    messages := make(chan string, 1)
+
+    messages &lt;- "ping"
+
+    msg := &lt;-messages
+    fmt.Println(msg)
+}
+</code></pre>
+
+<p>這段程式碼是基於 Go by Example 說明 channel 的<a href="https://gobyexample.com/channels">範例</a>，程式碼很好理解，<code>messages := make(chan string, 1)</code>這行用 make 產生一個 channel 指派給 messages 這個變數，<code>messages &lt;- "ping"</code> 表示把 "ping" 這個字串丟進去 message 這個 channel 裡面，然後 <code>msg := &lt;-messages</code> 表示從 message channel 裡面抓訊息出來，丟到 msg 這個變數，<code>:=</code> 是指派同時宣告變數的運算子，<code>&lt;-</code> 則是用來描述操作中訊息傳遞方向用的運算子，當它是箭頭就很好理解，在 Go 裡面稱為 <a href="https://golang.org/ref/spec#Receive_operator">receive operator</a>。</p>
+
+<p>在第一個例子當中，因為是先送資料進去 channel 才拿出來，所以還不太有感覺，接下來看第二個例子，一樣是 Go by Example 的，這段是 <a href="https://gobyexample.com/channel-synchronization">Channel Synchronization</a> 的範例：</p>
+
+<pre><code>package main
+
+import "fmt"
+import "time"
+
+func worker(done chan bool) {
+    fmt.Print("working...")
+    time.Sleep(time.Second)
+    fmt.Println("done")
+
+    done &lt;- true
+}
+
+func main() {
+
+    done := make(chan bool, 1)
+    go worker(done)
+
+    &lt;-done
+}
+</code></pre>
+
+<p>這個範例稍微複雜一點，<code>done := make(chan bool, 1)</code> 先產生一個 done channel，然後用 <code>go worker(done)</code> 產生一個 concurrent routine，跑的是 worker 這個 function，內容在 main 的上面，基本上就是 sleep 一下然後傳訊息回 done channel，然後 main 最後的 <code>&lt;-done</code> 就是從 done channel 拿訊息出來，先不管平行出去的 routine，通常的程式跑到這行結束，整個程式就結束關閉了，不過，就是這個不過，正常情況下，有 <code>&lt;-channel</code> 的話，該 routine 程式執行到這邊就會暫停下來，直到有從 channel 裡面拿到訊息才會繼續跑下去（或是裡面已經有訊息，直接拿到就繼續往下）。</p>
+
+<p>Go 的 channel 還有一些細節可以參考 <a href="http://guzalexander.com/2013/12/06/golang-channels-tutorial.html">Golang channels tutorial</a> 這篇文章，其實就是一個可以跨 routine 的傳遞資料的管道，資料可以一直傳，沒有限制數量，不過還有一些相關的細節，像是 sync channel，還有 channel 的 buffer 等等。</p>
+
+<p>綜合以上的兩個範例，可以歸納出來，要支援 CSP 有兩個必要條件，第一個是可以做得出 channel 物件的機制，可以放資料進去，可以拿資料出來，是先進先出機制，這部分其實不是問題，問題是第二個條件，程式碼要能跑一跑停下來等訊息然後又繼續跑下去，這可不是用 <code>while (1)</code> 可以處理的狀況，用 recursive function call 效能也不太好，以前的 JavaScript 是無法良好的達成第二個條件的，直到 ES6 的 async function 出現。</p>
+
+<p>ES6 async function 之前有<a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">文章</a>介紹過，這邊就不再說明，不過總之就是執行到 <code>yield</code> 後，這個 function call 就會先停下來，把值傳出，直到下次再次執行該 function 才會繼續往下執行，這樣停下來的機制，正好可以利用來作為 CSP 等訊息的機制，不過利用 <code>yield</code> 的話有一個限制，就是一定要在 async function 裡面才可以利用 channel，不像 Go 由於是建在語言裡面的，main thread 也可以跟 channel 溝通。</p>
+
+<p>雖然說可以利用 async function 可以做出 CSP 的架構出來，不過要只用 async function 來寫出像 Go 那樣簡短的程式碼實在是很困難，中間還有很多機制需要補起來，所以就開始有 library 實做，目前最有名的是 <a href="https://github.com/ubolonton/js-csp">js-csp</a>，Facebook 最近的 React.js Conf 其中一場議程介紹 CSP 時也是用 js-csp 做範例，錄影在這，作為入門 CSP 我覺得是蠻不錯的一場演講：</p>
+
+<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+
+<p>js-csp 裡面其實做了很多事情，目前看起來像是參考 Go 來設計，例如這樣的 Go <a href="http://talks.golang.org/2013/advconc.slide#6">程式碼</a>：</p>
+
+<pre><code>package main
+import "fmt"
+import "time"
+
+type Ball struct{ hits int }
+
+func player(name string, table chan *Ball) {
+    for {
+        ball := &lt;-table
+        ball.hits++
+        fmt.Println(name, ball.hits)
+        time.Sleep(100 * time.Millisecond)
+        table &lt;- ball
+    }
+}
+
+func main() {
+    table := make(chan *Ball)
+    go player("ping", table)
+    go player("pong", table)
+
+    table &lt;- new(Ball) // game on; toss the ball
+    time.Sleep(1 * time.Second)
+    &lt;-table // game over; grab the ball
+}
+</code></pre>
+
+<p>改成用 js-csp 寫的話就變成：</p>
+
+<pre><code>function* player(name, table) {
+  while (true) {
+    var ball = yield csp.take(table);
+    if (ball === csp.CLOSED) {
+      console.log(name + ": table's gone");
+      return;
+    }
+    ball.hits += 1;
+    console.log(name + " " + ball.hits);
+    yield csp.timeout(100);
+    yield csp.put(table, ball);
+  }
+}
+
+csp.go(function* () {
+  var table = csp.chan();
+
+  csp.go(player, ["ping", table]);
+  csp.go(player, ["pong", table]);
+
+  yield csp.put(table, {hits: 0});
+  yield csp.timeout(1000);
+  table.close();
+});
+</code></pre>
+
+<p>用 <code>csp.chan</code> 產生 channel，用 <code>yield csp.take</code> 代替從 channel 取訊息，用 <code>yield csp.put</code> 代替送訊息到 channel，然後最重要的是用 <code>csp.go</code> 來代替從 Go 裡面用 <code>go</code> 產生 routine 的操作，然後不說可能沒人注意到，js-csp 把 routine(<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/process.js">process</a>)、<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/dispatch.js">ticker</a> 等比較底層的基礎建設都做起來了，也就是如此才能讓程式碼和 Go 的看起來這麼接近。</p>
+
+<p>js-csp 基本上就是仿照 Go 的的語法來設計，只是常常需要 yield，語法還是不如 Go 來的簡潔，至於何種情境比較適合使用 CSP 呢，以 channel 的特性來說，目前看起來是常常會發生的 event 比較適合，像是常常被拿出來講的 mousemove 事件，另外就是有要分 thread 做平行運算的話也不錯，不過目前看起來是無法接上 WebWorker，主要是因為 <code>postMessage</code> 無法傳遞物件 instance 過去，而是會<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/The_structured_clone_algorithm">複製</a>一份；另外因為 channel 可以關起來，所以要用來實做 Promise 也不是不行，不過就沒什麼必要如此搞就是。</p>
+
+<p>講到做事件的處理，應該會有人注意到實做上的細節問題，就是要怎麼讓多個 process 去讀取同一個 channel 呢，一般而言，channel 的訊息是只能讀取一次的，就是說雖然你可以多個 process 等同一個 channel 的訊息，但是只會有一個 process 會真的拿到新的訊息，而實務上，一個事件綁了多個 handler 的情形非常常見，照 channel 的機制，應該是不能用下去的，不然就要自己管裡 handler，又多繞了一圈，事實上，CSP 模型是有一些<a href="https://github.com/ubolonton/js-csp/blob/master/src/csp.operations.js">運算</a>可以用的，像要處理多個 handler 的問題，就可以用 <code>mult</code>，可以把一個 channel 轉成<a href="http://rupsshankar.tumblr.com/post/66648884392/demystifying-core-asyncs-tap-and-mult">一對多</a>，其它還有多對一的 share resource、Clojure 的 onto <a href="http://www.slideshare.net/borgesleonardo/clojure-reducers-cljsyd-aug-2012?ref=http://www.leonardoborges.com/writings/presentations/">等等</a>，應該是想的到的情形都已經有數學模型或是不同語言的實做可以處理了，不過 js-csp 在這部分還在開發中，像是 mult 就還在 beta 階段，其實還不太能真的用，作者有說現在的介面可能會改，也因此還沒寫到文件裡面。</p>
+
+<p>最後想要記錄一下 Clojure 所提出的 transducer，transducer 的目的是讓 reduce 的操作可以用 compose 來組合，什麼是 reduce  操作呢，其實包括像 map、filter 都可以算是，但是這些操作以前是無法用 function composition 來做組合的，直到有了 transducer，又加上 transducer 把處理資料的型別也 decouple 出去了，所以 channel message 也可以利用。有兩篇文章可以參考，第一篇文章是 <a href="http://phuu.net/2014/08/31/csp-and-transducers.html">CSP and transducers in JavaScript</a>，這篇講得非常清楚，他是從無到有把 transducer 建構起來，我是第二次認真看這篇文章才理解的，另外一篇文章是 <a href="http://jlongster.com/Transducers.js--A-JavaScript-Library-for-Transformation-of-Data">Transducers.js: A JavaScript Library for Transformation of Data</a>，是 Transducer.js 的作者寫的，從不太一樣的角度來看 Transducer 這個設計，有機會再來分享詳細一點。</p>
+
+<p>這篇文章其實也不算是介紹或教學 CSP on JavaScript，比較是記錄一些我花時間想辦法理解的問題，包括為什麼現在才有人用 JavaScript 實做 CSP，實際上怎麼實做，目前適用的地方，還有整理了對 transducer 的理解，如果單純是想理解 CSP，除了前面提到的文章之外，還有幾篇文章可以參考 <a href="https://swannodette.github.io/2013/08/24/es6-generators-and-csp/">ES6 Generators Deliver Go Style Concurrency</a>、<a href="http://jlongster.com/Taming-the-Asynchronous-Beast-with-CSP-in-JavaScript">Taming the Asynchronous Beast with CSP Channels in JavaScript</a>。</p>
+]]></description>
+<link>https://blog.othree.net/log/2015/02/14/csp/</link>
+<guid>https://blog.othree.net/log/2015/02/14/csp/</guid>
+<category>script</category>
+<pubDate>2015-02-14 15:26</pubDate>
+</item>
+
+<item>
+<title>fetch 二三事</title>
+<description><![CDATA[<p>之前介紹過 fetch 之後過了一段時間，有發現幾個目前 spec 上的一些細節要來分享一下。首先是上一篇文章說到的重複 header 的問題，詳細看下去後，發現 fetch 收的 header 參數有兩種，一個是 key value pair 的原生物件，另外一種是 Headers 物件，這個物件是 fetch spec 裡面新定義的：</p>
+
+<pre><code>var h = new Headers();
+h.append('X-Custom-Header', '1');
+h.append('X-Custom-Header', '2');
+h.append('X-Custom-Header', '3');
+</code></pre>
+
+<p>就可以像這樣用 <code>append</code> 重複加上同樣名稱的 Header，其實丟原生的物件進去，也會在內部被轉成這個 Header 物件。</p>
+
+<p>第二個要說的是關於回應 status code 在 400 到 600 之間時，Promise 物件是 resolve 不是 reject，理由是 Error 和 Exception 不一樣，不過有人開 Issue 在討論，會不會有改變還不知道，倒是如果現在用 github polyfill 想要處理這個問題的話，除了可以自己處理之外，也有人寫了 <a href="https://github.com/matthew-andrews/fetchres">fetchres</a> 這個，wrapper 可以把 fetch 的一些行為弄得更接近大部分開發者的直覺，目前提供的功能除了這個之外，還有一個是如果回傳的 type 是 JSON，但是內容的 JSON 語法有錯，那也會被丟到 reject 那邊去。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/01/16/more-fetch/</link>
+<guid>https://blog.othree.net/log/2015/01/16/more-fetch/</guid>
+<category>script</category>
+<pubDate>2015-01-16 12:31</pubDate>
+</item>
+
+<item>
 <title>關於 TypeScript</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15756461070/" title="type-error by othree, on Flickr"><img src="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg" width="1024" height="261" alt="type-error" srcset="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca.jpg 768w, https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg 768w 2x" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15756461070/" title="type-error by othree, on Flickr"><img src="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg" width="1024" height="261" alt="type-error" srcset="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca.jpg 768w, https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_b.jpg 2x" /></a></p>
 
 <p>這幾年各種 compile to JavaScript language 盛行，大部分都是朝向讓程式碼更好寫的方向來前進，微軟在 2012 年也推出了 <a href="http://www.typescriptlang.org/">TypeScript</a> 這個 compile to JavaScript language，不過他的方向卻不一樣，TypeScript 是一個 JavaScript 的 superset，意思就是所有的 JavaScript 都是合法的 TypeScript，而 TypeScript 多了一些語法，加入了一些新功能，不過這些新的語法完全都不用也是可以正常的寫程式，給 TypeScript compiler 編譯。</p>
 
@@ -327,7 +531,7 @@ oct2 = 0O17;
 <title>SIMD in JavaScript</title>
 <description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/14510706785/" title="SIMD in JavaScript by othree, on Flickr"><img src="//farm3.staticflickr.com/2922/14510706785_971714a962_b.jpg" width="800" height="389" alt="SIMD in JavaScript" srcset="//farm3.staticflickr.com/2922/14510706785_971714a962.jpg 768w, //farm3.staticflickr.com/2922/14510706785_971714a962_b.jpg 768w 2x" /></a></p>
 
-<p>Intel 前陣子推出了 SIMD in JavaScript 的概念以及實做後的<a href="https://01.org/zh/node/1495">效能比較</a>，SIMD 指的是下一個指令就能故做多個運算，基本上是 CPU、GPU 的指令，例如上圖那樣，本來的四個加法需要四個指令，改用 SIMD 就可以用兩個向量相加的方式把四個加法做好，效能可以提升不少，常見四維的向量和矩陣其實都是為了 3D 運算，所以這個新的提生效能的方式大概也會是 3D 相關的應用為主吧，本來以為這只是單純 Intel 在做些試驗，不過最近準備 COSCUP 的演講時，發現其實SIMD 也有打算標準化進 ECMAScript 裡面，不過不會太快，目前<a href="http://www.2ality.com/2011/09/es6-8.html">推斷</a>是 ES8 才會看到。</p>
+<p>Intel 前陣子推出了 SIMD in JavaScript 的概念以及實做後的<a href="https://01.org/zh/node/1495">效能比較</a>，SIMD 指的是下一個指令就能做多個運算，基本上是 CPU、GPU 的指令，例如上圖那樣，本來的四個加法需要四個指令，改用 SIMD 就可以用兩個向量相加的方式把四個加法做好，效能可以提升不少，常見四維的向量和矩陣其實都是為了 3D 運算，所以這個新的提升效能的方式大概也會是 3D 相關的應用為主吧，本來以為這只是單純 Intel 在做些試驗，不過最近準備 COSCUP 的演講時，發現其實SIMD 也有打算標準化進 ECMAScript 裡面，不過不會太快，目前<a href="http://www.2ality.com/2011/09/es6-8.html">推斷</a>是 ES8 才會看到。</p>
 ]]>
 </description>
 <link>https://blog.othree.net/log/2014/06/26/simd-in-javascript/</link>
@@ -408,89 +612,6 @@ myFunc(...myIterable); // myFunc(1, 2, 3)
 <guid>https://blog.othree.net/log/2014/05/24/es6-iterable/</guid>
 <category>script</category>
 <pubDate>2014-05-24 14:03</pubDate>
-</item>
-
-<item>
-<title>ES6 的 Map 與 Set</title>
-<description><![CDATA[<p>ECMAScript 6 多了兩個新的資料結構，分別是 Map 與 Set，剛開始看到時還因為太久沒接觸其他語言，整個想不起來是什麼東西，不過還是簡單介紹一下。</p>
-
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a> 我一開始想不起來到底和 Map 哪裡不一樣，後來還是看了說明才回憶起來，其實就是一組值，像是資料庫裡面的 enum 資料型態，也可以想像成是陣列那樣的結構，可是它沒辦法直接用索引取特定元素的值，只能用列舉的方法取值，常用的 method 有三個，<code>add</code>、<code>delete</code> 和 <code>clear</code>，預設是會幫你確保值都是唯一的，重複的值會被忽略，要列舉裡面的值基本上是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 語法，這和以前的 <code>for...in</code> 語法不一樣，是直接取值出來的，也是 ES6 新的東西。</p>
-
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a> 則是和原來的 JS 物件好像重複到，都是 key value mapping 的資料結構，不過其實還是有個很重要的差異點，就是 Map 的 key 的可以用字串以外的值，例如你可以用 DOM Node 來當 Map 裡面的 key，用法基本上就是 <code>set</code> 和 <code>get</code>，可以避免一些以前會遇到的問題，例如 jQuery 的 data，以前會需要幫每個 DOM Node 生 unique id，如果用 Map 來實做的話就不需要了。</p>
-
-<p>目前 Firefox 和 Chrome 都已經有把這兩個資料結構實做好了，不過 Chrome 還沒有把 <code>for...of</code> 實做好就是～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/05/19/es6-map-set/</link>
-<guid>https://blog.othree.net/log/2014/05/19/es6-map-set/</guid>
-<category>script</category>
-<pubDate>2014-05-19 21:07</pubDate>
-</item>
-
-<item>
-<title>process.nextTick, setImmediate, setTimeout, requestAnimationFrame</title>
-<description><![CDATA[<p>標題這幾個 API 是感覺功能有些接近的東西，<code>process.nextTick</code> 是 node 的，<code>setImmediate</code> 是微軟提出但是只有 IE 和 node 有實作，<code>setTimeout</code> 是最老牌的，感覺後面給它 0ms 延遲，效果和其他幾個很像，<code>requestAnimationFrame</code> 則是更新畫面作動畫時用的新 API，那細部這幾個 API 有什麼差異呢？</p>
-
-<p>要繼續之前可能要先了解一下 JavaScript Event Loop，和 Timer 還有瀏覽器更新 UI 的關係，可以參考 John Resig 的 <a href="http://ejohn.org/blog/how-javascript-timers-work/">How JavaScript Timers Work</a> 這篇文章，標題那四個 API 除了最後一個 requestAnimationFrame 一定是等到瀏覽器要更新 UI 了才會呼叫到，然後螢幕有個更新頻率，不管怎樣快都不會到千分之一秒叫一次，所以它基本上就是最慢的。</p>
-
-<p>那前面三個有什麼差別呢？先來看看 <code>setImmediate</code> 和 <code>setTimeout</code>，根據微軟的<a href="http://ie.microsoft.com/testdrive/Performance/setImmediateSorting/Default.html">說法</a>，因為 setTimeout 有個最小的 4ms 延遲，所以他們設計了 setImmediate 這個完全無延遲的 API 介面出來，不過其實根據 whatwg 的 <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout">spec</a>，其實要 nesting 的 setTimeout call 才要加上這個 4ms 最小延遲，也就是在 setTimeout 裡面又呼叫 setTimeout 這種狀況，而且要超過五層，會這樣設計是為了避免連續的 setTimout 會造成 UI 卡住，所以我猜是微軟的 setTimeout 實作不正確，而 <a href="https://code.google.com/p/chromium/issues/detail?id=146172">Webkit</a> 和 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=686201">Firefox</a> 也因此都沒實作它，總之要是正確的作 setTimout，不要連續呼叫超過五層，那他和 setImmediate 應該會是一樣快的，順代一題，微軟那個比較的網頁上就沒有設成 0ms 的 case 可以看在其他瀏覽器上的表現。</p>
-
-<p>最後一個是 <code>process.nextTick</code> 了，這是 node 才有的 API，它和後面三個的作法不太一樣，速度也是所有 API 裡面最快的，實際上它不是把 function 丟到 timer 的 queue 裡面等，而是跟系統說，現在這個 all stack 結束後，立即去執行這些 function，也就是它其實是獨立的 queue，所有丟到 nextTick 裡面的 function 都執行完後，才輪的到 setImmediate 或是其他 UI、系統 IO 的份，而這個 queue 是先進先出，所以其實還蠻好用的，難怪在 node 裡面感覺大家用得很兇，不過要注意。</p>
-
-<p>回頭看一下 setImmediate，其實網路上也是有不少 <a href="https://github.com/NobleJS/setImmediate">polyfill</a> 提供，這些實作都是用 postMessage 來避開 setTimeout 會產生的 4ms 最小延遲，無法使用 postMessage 時會 fallback 到 setTimout。其實會看這些東西是因為 browserify 的關係，因為 <a href="http://browserify.org/">browserify</a> 有說會提供 node 的東西到瀏覽器上，像是 <code>process.nextTick</code>，好奇了一下 <code>setImmediate</code> 有沒有也提供，結果看起來目前是沒有，不過深入研究之後也發現其實不是真的有這個需要就是了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/03/02/immediate-in-js/</link>
-<guid>https://blog.othree.net/log/2014/03/02/immediate-in-js/</guid>
-<category>script</category>
-<pubDate>2014-03-02 13:50</pubDate>
-</item>
-
-<item>
-<title>asm.js 效能再提昇</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11517198133/" title="asm1.5b by othree, on Flickr"><img src="//farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg" width="1024" height="509" alt="asm1.5b" src-1="(max-width: 768px)  //farm6.staticflickr.com/5520/11517198133_293174bb1e.jpg 1x, //farm6.staticflickr.com/5520/11517198133_293174bb1e_b.jpg 2x"  /></a></p>
-
-<p>Mozilla 之前發表 asm.js 後，公佈的速度大約是原生應用是的兩倍慢，不過最近這個數字又變好了，根據 20 日 Mozilla Hacks 發表的<a href="https://hacks.mozilla.org/2013/12/gap-between-asm-js-and-native-performance-gets-even-narrower-with-float32-optimizations/">文章</a>，現在這個數字已經變成 1.5 倍了，主要是歸功於  float32 數值處理最佳化，不過目前還不建議直接使用這個新的 float32 最佳化機制，Mozilla Blog 有一篇<a href="https://blog.mozilla.org/javascript/2013/11/07/efficient-float32-arithmetic-in-javascript/">文章</a>則是在講比較技術面的內容，大概看一下，應該是犧牲精確度來換取速度。本來我是覺的要真的和 native 一樣快不太可能，不過看到新的 benchmark 結果，覺的這天或許不會太久就會到來吧。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/12/24/asmjs-1half-x-slower-than-native/</link>
-<guid>https://blog.othree.net/log/2013/12/24/asmjs-1half-x-slower-than-native/</guid>
-<category>script</category>
-<pubDate>2013-12-24 00:59</pubDate>
-</item>
-
-<item>
-<title>JavaScript Promise</title>
-<description><![CDATA[<p>最近 JavaScript 圈很熱的一則<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">消息</a>就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。</p>
-
-<p>在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。</p>
-
-<p>之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於 CommonJS <a href="http://wiki.commonjs.org/wiki/Promises">Promise/A</a> 這個標準，不過其實去看 Promise/A 會發現他內容根本就很少，不知道怎麼和 jQuery Deferred 扯上邊的，最近才了解，Promise/A 其實只有最基本的 Promise 的功能定義，而它的定義就只有說有個值未來會拿到，然後你要給他 <code>then</code> 這個 method。</p>
-
-<p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
-
-<blockquote>
-  <p>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state. </p>
-</blockquote>
-
-<p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
-
-<p>由於 Promise/A 只有描述行為，而不是詳細的實作，於是就有了 <a href="http://promises-aplus.github.io/promises-spec/">Promise/A+</a>，這個 spec 不是 CommonJS 的 spec，而是由一群人自主發起的，把 Promise/A 裡面所缺的詳細規範補齊，像是 Promise fulfill 時要怎樣處理之類的，定義得很詳細，這份標準完全沒宣告著作權，用的是 CC0，像 <a href="https://github.com/tildeio/rsvp.js">rsvp.js</a> 和 <a href="https://github.com/kriskowal/q">Q</a> 用的就是 Promise/A+ 標準來實作，不過 Promise/A+ 還是只有定義 then 的部份，怎樣 fulfill，怎樣 reject 部分的 API 還是沒碰，所以不同的實作都還是會有些差異。其實 Promise/A+ 組織的 github 帳號上可以看到有關於這部份的<a href="https://github.com/promises-aplus/resolvers-spec">討論</a>，雖然是沒寫出任何草案，我想應該就是直接進了 TC39 的 <a href="https://github.com/domenic/promises-unwrapping">Promise spec</a> 了吧，畢竟好像編輯有重複的<a href="https://twitter.com/domenic">人</a>。</p>
-
-<p>TC39 的 Promise 就和 Promise/A+ 的差不多一樣，fulfill 和 reject 的 API 設計就是用他們討論時的其中一個選項，結果是和 rsvp.js 的時作比較接近，fulfill 和 reject function 是在 promise 物件的建構時給的 callback 裡面才會拿到，和 jQuery Deferred 物件可以從外面來 resolve/reject 的設計不一樣：</p>
-
-<pre><code>new Promise(function (fulfill, reject, progress) {
-    // blah....
-});
-</code></pre>
-
-<p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/12/21/javascript-promise/</link>
-<guid>https://blog.othree.net/log/2013/12/21/javascript-promise/</guid>
-<category>script</category>
-<pubDate>2013-12-21 00:13</pubDate>
 </item>
 
 

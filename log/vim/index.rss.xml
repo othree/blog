@@ -4,11 +4,136 @@
 <title>O3noBLOG - vim</title>
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
-<copyright>Copyright 2014</copyright>
-<lastBuildDate>2014-12-10 01:46</lastBuildDate>
+<copyright>Copyright 2015</copyright>
+<lastBuildDate>2015-03-18 18:45</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Vim Syntax and Regexp Note</title>
+<description><![CDATA[<p>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，<code>function</code> 關鍵字和後面 <code>()</code> 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 <code>skipwhite</code>、<code>skipempty</code> 然後加上 <code>nextgroup</code> 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說：</p>
+
+<pre><code>function fn (a) {}
+</code></pre>
+
+<p>這樣的程式碼我把他拆成四個部分，function keyword、function name、function parameter、function body，然後用 Vim syntax 語法設定：</p>
+
+<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName skipwhite
+syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam skipwhite
+syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody skipwhite
+syntax region  javascriptFuncBody    contained start=/{/ end=/}/
+</code></pre>
+
+<p>除了 function keyword 外都有 <code>contained</code>，用途是讓該 rule 不會在 TOP region 下生效，一個好處是減少 TOP region 下要檢查的 rule 數量，另一個好處是有些相同的 token pattern，但是其實語意上是不一樣的，可以盡量用這種機制拆分開來，到這裡都還很美好，但是加上 comment 後問題就變複雜了，先簡單寫一下 comment 的 syntax rule：</p>
+
+<pre><code>syntax region  javascriptComment     start=/\/\*/ end=/\*\//
+</code></pre>
+
+<p>然後 comment 可以放在哪些地方呢：</p>
+
+<pre><code>function /*cc*/ fn (a) {}
+function fn /*cc*/ (a) {}
+function fn (a) /*cc*/ {}
+</code></pre>
+
+<p>也就是本來 nextgroup 連接的地方都可以插入個 comment，可是只要插入了 comment，後面的 token 就不會被正確 highlight，因為 comment 的 rule 沒有 nextgroup，所以他的部分結束後就會回到用 TOP region 的情境，而後面應該符合的 rule 都有設上 <code>contained</code>，所以就沒機會對到。當然現在要解決這個問題也不是沒方法可以避開，但是非常不好看，就是如下的設計：</p>
+
+<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName,comment1 skipwhite
+syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam,comment2 skipwhite
+syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody,comment3 skipwhite
+syntax region  javascriptFuncBody    contained start=/{/ end=/}/
+
+syntax region  comment1     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncName,comment1 skipwhite
+syntax region  comment2     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncParam,comment2 skipwhite
+syntax region  comment3     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncBody,comment3 skipwhite
+</code></pre>
+
+<p>如此可以確保 comment 插入也不會讓後面的 token 沒 highlight，但是這樣的設計，實際寫起來會非常繁瑣，完全不想去研究 JavaScript 中會有多少類似的狀況。其實我是覺得 Vim syntax 應該是希望盡量都用前後獨立的 rule 來 highlight，盡量不要有前後相依的關係存在，就不會有上面的問題，也可以讓 highlight 過程比較單純，理想上是從頭開始，一個 token 一個 token 各自獨立的 highlight，不過是事情當然沒這麼簡單，第二個想記錄下來的事情也和這個有關係。</p>
+
+<p>假設目前 highlight 處理中，parse 到一個 <code>=</code>，然後看到一組小括號 <code>(a)</code>，連起來如下：</p>
+
+<pre><code>= (a)
+</code></pre>
+
+<p>這時你會覺得 <code>(a)</code> 是什麼呢？是小括號，裡面是一個 expression 然後回傳變數 <code>a</code> 嗎？相信很多人會這樣認為，如果他後面是接分號的話：</p>
+
+<pre><code>= (a);
+</code></pre>
+
+<p>但是其實也可能是這樣子的：</p>
+
+<pre><code>= (a) =&gt; {}
+</code></pre>
+
+<p>ES6 的 arrow function，也就是說，如果一個 token 一個 token 解析，一定無法直接知道目前 token 代表的正確意義，所以 compiler 把程式碼轉成 AST 的時候，有時候會先往後面看一下來判斷現在的 token 到底是什麼意義。然而 Vim syntax 系統並沒有這種能力，嚴格來說，是可以用 match 來達成，不過還是很受限制。再來則是往前看的問題，我在設定運算子的 match rule 的時候，會希望嚴謹一點，本來想在兩邊加上 word boundary 的 pattern，在 Vim 裡面是 <code>\&lt;</code> 和 <code>\&gt;</code>，不過測試幾回發現，我的字元本身不是文字字元的話，這個 pattern 是沒有用的：</p>
+
+<pre><code>/\&lt;word
+</code></pre>
+
+<p>這樣是有效的，但是下面想要 match <code>==</code> 的會沒用：</p>
+
+<pre><code>/\&lt;==
+</code></pre>
+
+<p>所以變成要自己寫往前看的 regexp，在 Vim 裡面有兩種類似的東西可以用，分別是 <code>\zs</code> 和 <code>\@&lt;=</code>，通常，<code>\zs</code> 效能比較好，會推薦使用，他的用途是標註你的 regexp 的 match 的起點，當然同時也有一個 <code>\ze</code> 是終點：</p>
+
+<pre><code>/abcd\zsefgh\zeijkl
+</code></pre>
+
+<p>上面這串 regexp 的目標是 <code>efgh</code>，但是他的前後分別是 <code>abcd</code> 和 <code>ijkl</code>，實際執行時會去找 <code>abcdefghijkl</code> 這串字串，完整比對到之後，只會回中間的 <code>efgh</code> 作為 match 的範圍，這設計要做一些操作的時候就會有差，像是文字取代。本來我就想要用這個來做 syntax，可是就發現還是不生效，所以改成用 <code>\@&lt;=</code> 試試看：</p>
+
+<pre><code>/\(abcd\)\@&lt;=efgh\@=\(ijkl\)
+</code></pre>
+
+<p>就發現成功了，想了許久才理解其原因，然後才瞭解，真的往前看的是 <code>\@&lt;=</code>，<code>\zs</code> 並沒有往前看，兩者最大的差異在於 pattern match 操作的起點，一般的使用大概感覺不太到差異，不過像是 syntax highlight 這種一個 token 一個 token 逐步處理的就會有差，當目標是 <code>efgh</code> 時，通常處理進度到 <code>e</code> 這個位置時，前面的 <code>abcd</code> 已經被處理過了，所以這時候會和 regexp 比對的字串就變成 <code>efghijkl</code>，使用 <code>\zs</code> 的話，因為它還是要完整比對到 <code>abcdefghijkl</code>，起點是 <code>a</code>，就不會和 <code>efghijkl</code> 相符，但是用 <code>\@&lt;=</code> 的話，pattern 的起點是 <code>efgh</code> 的 <code>e</code>，這樣就可以 match 到目前剩餘的字串了。</p>
+
+<p>前面說的個 token 一個 token 逐步處理的問題還有一個情形也讓我困擾很久，不過這次不是東西被用掉，問題是沒被用掉。這個狀況發生在巢狀結構的 region，像是 JavaScript 的 block：</p>
+
+<pre><code>syntax region  javascriptBlock start=/{/ end=/}/
+</code></pre>
+
+<p>然號要讓 block 裡面可已有 block 就要用 <code>contains</code>：</p>
+
+<pre><code>syntax region  javascriptBlock start=/{/ end=/}/ contains=javascriptBlock
+</code></pre>
+
+<p>這時候就會發生奇怪的現象了，因為外面的 region 包括了頭尾的括號，然後進入 block 內要做 syntax match 的時候，一開始的 <code>{</code> 又 match 到 block，結果 Vim 就直接覺得這已經是第二層的 block 了，雖然好像有其它機制讓他不會一直循環下去變成無限多層，不過這樣還是會造成後面的 code 有被判斷錯誤的機會，因為 block 的開關不 match，這裡的關鍵也是要讓 <code>{</code> 和 <code>}</code> 被處理掉，進入 region 內部就不會跑到上一層的起點，而這裡要用的就是 <code>matchgroup</code>：</p>
+
+<pre><code>syntax region  javascriptBlock matchgroup=bracks start=/{/ end=/}/ contains=javascriptBlock
+</code></pre>
+
+<p>如此就都會正常了，因為這樣的設定會讓 <code>{</code> 和 <code>}</code> 直接被當成 <code>bracks</code> 這個 group，然後就被當成已經被解析過的 token，從它的下一個 token 繼續 highlight 分析，但是千萬不要另外加上 <code>bracks</code> 的 syntax rule，剛好又 match 到 region 的起點和終點：</p>
+
+<pre><code>syntax match   bracks  /[{}]/
+</code></pre>
+
+<p>這樣的話也會發生其它的怪異現象，總之 nested region 的重點在於，要用 matchgroup，然後不要用和 matchgrouop 同樣名稱，同樣 pattern 另外又設定一組 rule。</p>
+
+<p>最後一個要紀錄的則是 Vim syntax 裡面的優先度，基本上是 keyoword 優先度最高，也就是有 match 到 keyword 的話，你的 match pattern 就都無效了，所以像是 JavaScript 裡面，label 雖然不可以用關鍵字，像是 <code>continue:</code> 就不合法，但是因為會先 match 到 <code>continue</code> 關鍵字，所以就很難用 syntax highlight 來標出這種錯誤，而在 keyword 比對完之後，才輪的到 region 和 match，兩者是同樣權重，但是後定義的優先，而且不受 <code>contains</code> 和 <code>nextgroup</code> 裡面的順序影響，搞清楚優先順序在做細部的 syntax highlight 的時候還蠻重要的。另外要順便說說 region contains 和 nextgroup 的差異，nextgroup 其實還蠻不錯的，他不是限制下一個 token 一定是哪些東西，而是改變優先順序，先檢查完 nextgroup 裡面的東西，再檢查該 region 下的其它可能性，region contains 就不一樣了，該 region 裡面只有在 contains 裡面的東西會出現，另外還要特別注意一點，region 的處理並不管該 region 能不能正確的關閉，只要 match 到起點，就會把 region 打開，然後剛剛有提到，region 和 match 是同樣權重的所以就要非常注意：</p>
+
+<pre><code>syntax match  javascriptLabel       /\k\+:/
+syntax region javascriptLabelblock  start=/\k\+: {/ end=/}/
+</code></pre>
+
+<p>這樣兩條 syntax highlight rule 然後配上下面的程式碼：</p>
+
+<pre><code>abcd: {
+  var ii = 1 + 1;
+
+var jj = 2 + 2;
+</code></pre>
+
+<p>要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 <code>var jj</code> 那行也是被認為在 block 內。</p>
+
+<p>最後的最後要推薦一下 <a href="https://github.com/gerw/vim-HiLinkTrace">gerw/vim-HiLinkTrace</a> 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/03/18/vim-syntax-regexp-note/</link>
+<guid>https://blog.othree.net/log/2015/03/18/vim-syntax-regexp-note/</guid>
+<category>vim</category>
+<pubDate>2015-03-18 18:45</pubDate>
+</item>
 
 <item>
 <title>Latest True Color Vim</title>
@@ -435,21 +560,6 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
 <guid>https://blog.othree.net/log/2012/01/23/coffee-check-vim/</guid>
 <category>vim</category>
 <pubDate>2012-01-23 00:00</pubDate>
-</item>
-
-<item>
-<title>Vim Plugin Deployment</title>
-<description><![CDATA[<p>
-<script async="async" class="speakerdeck-embed" data-id="4e9480b51c29c60051017171" data-ratio="1.3333333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</p>
-
-<p><a href="https://groups.google.com/forum/?hl=zh-TW_US#!forum/vim-taiwan">Vim-Taiwan</a> 第一次聚會我的分享題目：「Vim Plugin Deployment」，內容是在介紹怎樣發佈自己寫的 Vim Plugin，不是 Plugin Developer 才需要知道的東西，不論是偶爾會修改別人的 plugin，抑或是會在 vimrc 裡面寫 function 的人都可以了解一下的。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</link>
-<guid>https://blog.othree.net/log/2011/10/12/vim-plugin-deployment/</guid>
-<category>vim</category>
-<pubDate>2011-10-12 02:16</pubDate>
 </item>
 
 
