@@ -125,6 +125,7 @@
                 <meta property="og:image:height" content="240" />
             </xsl:otherwise>
 		</xsl:choose>
+        <meta name="twitter:widgets:csp" content="on" />
         <meta property="fb:admins" content="582724207" />
         <!-- <script src="/scripts/jfont.js"></script> -->
 	</head>
@@ -620,7 +621,7 @@ google_color_url = "008000";
 	<xsl:choose>
 		<xsl:when test="$listType != 's'">
 			<em class="extended">
-                <a href="{$permalink}">閱讀 「<xsl:value-of select="../b:title" />」 全文</a>
+                <a href="{$permalink}">閱讀「<xsl:value-of select="../b:title" />」全文</a>
             </em>
 		</xsl:when>
 		<xsl:otherwise>
