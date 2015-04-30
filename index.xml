@@ -9,6 +9,61 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000841" baseName="reactjs-conf">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-04-25</b:date>
+				<b:time>15:41:59</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>React.js Conf</b:title>
+			<b:content>
+				<b:summary>今年的 React.js Conf 雖然是單一 library 的研討會，不過議程的水準卻是蠻高的，而且蠻多內容並不是只限於 React.js，加上也是對於前端領域一些比較新的概念，所以我覺得是這兩年最讓人感到印象深刻的一場研討會了吧，下面介紹幾場我覺得收穫比較多的講題： React Native React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，Apache Cordova 的 plugin 也都可以使用，最近也正式對外公開了，有興趣的可以試試看。 CSP 之前我也有介紹過的...</b:summary>
+				<b:mainContent><p>今年的 React.js Conf 雖然是單一 library 的研討會，不過議程的水準卻是蠻高的，而且蠻多內容並不是只限於 React.js，加上也是對於前端領域一些比較新的概念，所以我覺得是這兩年最讓人感到印象深刻的一場研討會了吧，下面介紹幾場我覺得收穫比較多的講題：</p>
+
+<h4>React Native</h4>
+
+<p>React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，<a href="https://cordova.apache.org/">Apache Cordova</a> 的 plugin 也都可以使用，最近也正式對外<a href="https://facebook.github.io/react-native/">公開</a>了，有興趣的可以試試看。</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+
+<h4>CSP</h4>
+
+<p>之前我也有介紹過的 <a href="https://blog.othree.net/log/2015/02/14/csp/">CSP</a>，在 React.js Conf 也有講者介紹，雖然我覺得現在用 <a href="https://github.com/ubolonton/js-csp">js-csp</a> 來做 Channel 溝通還不是很好用，不過應該 async function 可以用之後會比較普遍吧，就算之後沒真的派上用場，要是轉行寫 Go 也會用的上才是。</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+
+<h4>Immutable</h4>
+
+<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+
+<h4>AST</h4>
+
+<p>這場演講是在講修改 Abstract Syntax Tree 來做一些程式碼的修改，算是把 AST 的應用講得很淺顯易懂的一場演講，還順便介紹到很多相關的工具，像是 <a href="https://github.com/estools">estools</a>，其實一個程式語言的 spec 通常只有定到語法的部分，後面 compiler 要產生什麼樣子的 AST 是他們自己決定的，不過通常會有個主流的格式，而目前 JavaScript 領域則是 Mozilla SpiderMonkey 的 AST 格式為主，不過其實因為應用太多，也有人在做標準化的工作，叫 <a href="https://github.com/estree/estree">estree</a>。</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000840" baseName="more-on-srcset">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -304,36 +359,6 @@ var jj = 2 + 2;
 <p>要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 <code>var jj</code> 那行也是被認為在 block 內。</p>
 
 <p>最後的最後要推薦一下 <a href="https://github.com/gerw/vim-HiLinkTrace">gerw/vim-HiLinkTrace</a> 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000835" baseName="macbook-2015">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-03-12</b:date>
-				<b:time>23:43:36</b:time>
-			</b:datetime>
-			<b:category>mac</b:category>
-			<b:title>MacBook 2015</b:title>
-			<b:content>
-				<b:summary>前兩天發表的 MacBook 很多人不看好，不過我倒是很看好的那邊，連我都想買了，不到一公斤但是確是台完整的 OSX 電腦，有正常大小的鍵盤、感壓觸控版，加上 Retina Display，買一台金色的去咖啡廳簡直要橫著走了，不過更讓我好奇的是它竟然沒取代 Air，Air 還比較重真是情何以堪，我推測比較可能的發展是 Air 產品線未來會收掉，回到之前兩條產品線的狀況。 另外還有一點讓我很好奇的就是觸控版的部分，一來是好奇他的感壓加上震動回饋操作起來的感覺 ，二來是 MacBook Pro 13 吋有更新，但是 15 吋卻沒更新，要知道相較於 13 吋 MBP，15 吋更新的頻率實在是低很多，在這個新觸控版的更新上竟然還沒有 15 吋的，實在不太合理，所以我猜蘋果是等另外一個產品出來：27 吋 5K 的 Cinema Display，可能很多人不知道，蘋果之前出的 iMac 5K 和以往不一樣，不能當作外接螢幕，其中一個最大的原因是目前通行的傳輸介面還不能傳輸到 5K 解析度，市場上的 DisplayPort 幾乎都是 1.2，至少要到 1.3 才有辦法處理...</b:summary>
-				<b:mainContent><p>前兩天發表的 MacBook 很多人不看好，不過我倒是很看好的那邊，連我都想買了，不到一公斤但是確是台完整的 OSX 電腦，有正常大小的鍵盤、感壓觸控版，加上 Retina Display，買一台金色的去咖啡廳簡直要橫著走了，不過更讓我好奇的是它竟然沒取代 Air，Air 還比較重真是情何以堪，我推測比較可能的發展是 Air 產品線未來會收掉，回到之前兩條產品線的狀況。</p>
-
-<p>另外還有一點讓我很好奇的就是觸控版的部分，一來是好奇他的感壓加上震動回饋操作起來的感覺
-，二來是 MacBook Pro 13 吋有更新，但是 15 吋卻沒更新，要知道相較於 13 吋 MBP，15 吋更新的頻率實在是低很多，在這個新觸控版的更新上竟然還沒有 15 吋的，實在不太合理，所以我猜蘋果是等另外一個產品出來：27 吋 5K 的 Cinema Display，可能很多人不知道，蘋果之前出的 iMac 5K 和以往不一樣，不能當作外接螢幕，其中一個最大的原因是目前通行的傳輸介面還不能傳輸到 5K 解析度，市場上的 DisplayPort 幾乎都是 1.2，至少要到 1.3 才有辦法處理 5K 解析度，iMac 5K 發表則只比 DisplayPort 1.3 晚一個月左右，蘋果除了要等 DisplayPort 1.3 之外，還有另外一個就是這次 MacBook 的主角之一：USB 3.1 Type-C，這條新的介面真的很強，除了向下相容外，可以反差，可以傳更多電力，傳輸資料量當然更大，還可以傳輸影像訊號，用的就是 DisplayPort 規格，嚴格說來是 DisplayPort  規範有個 Alternate Mode 可以使用其它線材做傳輸，而 DisplayPort 1.3 理想最高資料量的情況下（其實就是 5K 解析度）都還塞不滿 USB 3.1，可以邊傳完整 5K 畫面邊傳資料。我的猜測就是 15 吋 MBP 下次更新除了新的觸控版外，還有 USB 3.1 Type-C，更強的顯示卡，然後同場加映 27 吋 5K 的 Cinema Display，用 USB 3.1 Type-C 連接，同時供電，傳資料，以前 Cinema Display 那條三頭的線就一條 USB 解決了。</p>
-
-<p>最後話題回來 MacBook，其實我覺得這台打的目標消費者族群很明確，就是買 MacBook Air 的那個族群，MacBook Air 剛出來其實是比 MacBook 還要高級一點的，現在兩邊角色正好互換，其實也是蠻有趣的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16606304008/" title="MacBook_OP90_Tilt_Gld-PRINT by othree, on Flickr"><img src="https://farm8.staticflickr.com/7603/16606304008_fcb25667a4_b.jpg" width="607" height="1024" alt="MacBook_OP90_Tilt_Gld-PRINT" srcset="https://farm8.staticflickr.com/7603/16606304008_fcb25667a4.jpg 768w, https://farm8.staticflickr.com/7603/16606304008_35277c0292_k.jpg 2x" /></a></p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
