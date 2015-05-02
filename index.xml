@@ -9,6 +9,53 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000842" baseName="aster-postcss">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-05-02</b:date>
+				<b:time>11:35:38</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Aster 與 PostCSS</b:title>
+			<b:content>
+				<b:summary> 前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 Grunt 和 Gulp 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 aster，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8.jpg 768w, https://farm8.staticflickr.com/7771/17133620000_3c43ee797f_k.jpg 2x" /></a></p>
+
+<p>前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 <a href="http://gruntjs.com/">Grunt</a> 和 <a href="http://gulpjs.com/">Gulp</a> 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 <a href="http://asterjs.github.io/aster/">aster</a>，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/fF_jZ7ErwUY?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+</b:mainContent>
+				<b:extendContent><p>Aster 這個名稱的來由是 AST，Aster 的特別之處就在於他所有的修改都是在 AST 上做修改：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86.jpg 768w, https://farm8.staticflickr.com/7680/17141309009_9f903156ca_k.jpg 2x" /></a></p>
+
+<p>相較於 Gulp：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977.jpg 768w, https://farm8.staticflickr.com/7662/17327152261_ac75e48905_k.jpg 2x" /></a></p>
+
+<p>和 Grunt：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74.jpg 768w, https://farm8.staticflickr.com/7717/17327152081_04e77878ff_k.jpg 2x" /></a></p>
+
+<p>很明顯的是正確許多的設計，理論上 parse 成 AST 之後，一口氣在 AST 階段把需要的變更做完，然後再用 code generator 產生成果的程式碼，應該省去很多來回轉換的工作，不論是效能還是程式碼處理的正確性都應該是最好的，不過這看似正確設計下的產品，卻沒什麼人用，我嘗試使用過程中還發了幾個 PR 回去，結果到現在都還沒有回應，有種是不是作者都已經放棄的疑問。</p>
+
+<p>然後這兩天，又看到一個其實已經出來蠻久的 compile to CSS language，叫 <a href="https://github.com/postcss/postcss">PostCSS</a>，號稱比 SASS 之類的快上 3-30 倍，還可以做到一些 SASS/LESS 做不到功能，也有很多大企業採用，像是 Google、VK、Alibaba 之類的，應該就是目前最夯的 CSS 工具，然後我看介紹的投影片看到這張：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f.jpg 768w" /></a></p>
+
+<p>覺得，這根本和 Aster 是一樣的想法，不過一個處理 JavaScript，做 ES6 to ES5、concat、minimize 甚至是細微的程式碼修改，另外一個處理 CSS，也是做類似的工作，為什麼結果發展的差距會這麼大？想了一陣子之後，我覺得大概狀況是，SASS、LESS 之類的工具目前還是會造成一些讓開發者痛苦的問題，像是 nesting rule 讓 selector 太長太複雜、mixin 和 include 的混淆等等，所以開發者還會一直嘗試不同的新工具，甚至自己開發來解決這些問題，而相對於 CSS，JavaScript 的相關工具比較沒這些問題，二來 JavaScript 的 AST 比 CSS 的 AST 要複雜許多，要參與工具的開發難度是高上許多，Aster 作者的功力還蠻強的，除了 AST 操作之外，他的整個流程控制還用上很先進的 <a href="https://rxjs.codeplex.com/">RxJS</a>，其實也算是增加了參與的難度吧，而我想就是這沒有強烈需求加上進入難度高兩點，結果讓 Aster 並不太受到人注意，沒什麼人參與，開發的完整度不夠，我實際用起來，就覺得目前還只是核心完整，但是真的要離實用到專案上還有些距離，加上不知道還有沒有要繼續發展下去，覺得實在很可惜。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000841" baseName="reactjs-conf">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -30,7 +77,7 @@
 <p>React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，<a href="https://cordova.apache.org/">Apache Cordova</a> 的 plugin 也都可以使用，最近也正式對外<a href="https://facebook.github.io/react-native/">公開</a>了，有興趣的可以試試看。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>CSP</h4>
@@ -38,15 +85,15 @@
 <p>之前我也有介紹過的 <a href="https://blog.othree.net/log/2015/02/14/csp/">CSP</a>，在 React.js Conf 也有講者介紹，雖然我覺得現在用 <a href="https://github.com/ubolonton/js-csp">js-csp</a> 來做 Channel 溝通還不是很好用，不過應該 async function 可以用之後會比較普遍吧，就算之後沒真的派上用場，要是轉行寫 Go 也會用的上才是。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>Immutable</h4>
 
-<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。</p>
+<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。另外還要補充一點，Immutable Data 可能在下一版的 ES7(2016) 也會有，總之又是個先學起來不吃虧的。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>AST</h4>
@@ -54,7 +101,7 @@
 <p>這場演講是在講修改 Abstract Syntax Tree 來做一些程式碼的修改，算是把 AST 的應用講得很淺顯易懂的一場演講，還順便介紹到很多相關的工具，像是 <a href="https://github.com/estools">estools</a>，其實一個程式語言的 spec 通常只有定到語法的部分，後面 compiler 要產生什麼樣子的 AST 是他們自己決定的，不過通常會有個主流的格式，而目前 JavaScript 領域則是 Mozilla SpiderMonkey 的 AST 格式為主，不過其實因為應用太多，也有人在做標準化的工作，叫 <a href="https://github.com/estree/estree">estree</a>。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 </b:mainContent>
 				<b:extendContent>
@@ -222,143 +269,6 @@
 <p>可能有人會說，有沒有這些資源的投入應該差距也不大吧，最近就剛好有另外一件事情可以佐證，<a href="http://news.dartlang.org/2015/03/dart-for-entire-web.html">Dart for the Entire Web</a> 這篇 Dart 官方的公告說到，Dart VM 將不會進入到 Chrome 裡面，也就是說要在瀏覽器上跑 Dart，將還是只有轉成 JavaScript 這個選項，這件事其實是蠻大的一件事，上一個在網頁裡面跑的另外一種語言是微軟的 VBScript，最大的問題不在於好不好寫，而是在於他被單一企業把持，不過後來結果大家也都知道，所以當 Google 推出 Dart 而且說以後 Chrome 會可以直接跑 Dart 的時候，我想大部分人都是都不看好的，甚至部分人是覺得 Google 怎麼做微軟做過的蠢事。而剛好在這個官方公告出來後幾天內，Brendan Eich 在 Hacker News 上回應一串討論<a href="https://news.ycombinator.com/item?id=9269355">回應</a>的蠻激動的，這串本來是在說 ECMAScript 新版本有很多東西根本是從 Dart 來的，Brendan Eich 則是反駁說很多東西在 Dart 出來前就已經在討論有 Proposal 了，然後到後來寫了一篇幾乎都在抱怨 Dart，還提到 V8 team reset 的事情，從這邊看起來，似乎是因為新的 V8 team 不打算作 Dart VM 進去，才有了 Dart 那篇公告；而 Brendan Eich 抱怨的重點，其實就是前面那段提到的，Google 花了超多人力資源去搞 Dart，而不是來幫忙改進既有的 ECMAScript，而這確實有實際的影響，他舉了一個例子，就是大數(<a href="http://wiki.ecmascript.org/doku.php?id=strawman:bignums">bignums</a>)的支援，Dart 有支援，在 ES 這邊目前有一點可能性會在 ES7(2016) 中出來，但這東西其實從 2010 就已經開始有討論了，如果有人來將這些討論規格化，並實做起來，那大數應該在現在的 ES6(2015) 就有了。</p>
 
 <p>最後再回到 Terriable Idea 這篇文章，我雖然不完全認同他對 React 的看法，但是我認為他的重點沒錯，如果他拿 Dart 出來講可能就不會引出這麼多砲火吧（可是可能也比較沒人注意），其實 react-canvas 我覺得也是很有趣的實驗，不過做成正式產品上線就是另外一回事了，最大的問題，他為了終會被解決的次要問題（畫面不流暢）完全放棄了親和力的問題，而 Flipboard 這種內容為主的產品性質是不該放棄親和力的。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000836" baseName="vim-syntax-regexp-note">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-03-18</b:date>
-				<b:time>18:45:07</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Vim Syntax and Regexp Note</b:title>
-			<b:content>
-				<b:summary>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，function 關鍵字和後面 () 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 skipwhite、skipempty 然後加上 nextgroup 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說： function fn (a)...</b:summary>
-				<b:mainContent><p>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，<code>function</code> 關鍵字和後面 <code>()</code> 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 <code>skipwhite</code>、<code>skipempty</code> 然後加上 <code>nextgroup</code> 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說：</p>
-
-<pre><code>function fn (a) {}
-</code></pre>
-
-<p>這樣的程式碼我把他拆成四個部分，function keyword、function name、function parameter、function body，然後用 Vim syntax 語法設定：</p>
-
-<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
-</code></pre>
-
-<p>除了 function keyword 外都有 <code>contained</code>，用途是讓該 rule 不會在 TOP region 下生效，一個好處是減少 TOP region 下要檢查的 rule 數量，另一個好處是有些相同的 token pattern，但是其實語意上是不一樣的，可以盡量用這種機制拆分開來，到這裡都還很美好，但是加上 comment 後問題就變複雜了，先簡單寫一下 comment 的 syntax rule：</p>
-
-<pre><code>syntax region  javascriptComment     start=/\/\*/ end=/\*\//
-</code></pre>
-
-<p>然後 comment 可以放在哪些地方呢：</p>
-
-<pre><code>function /*cc*/ fn (a) {}
-function fn /*cc*/ (a) {}
-function fn (a) /*cc*/ {}
-</code></pre>
-
-<p>也就是本來 nextgroup 連接的地方都可以插入個 comment，可是只要插入了 comment，後面的 token 就不會被正確 highlight，因為 comment 的 rule 沒有 nextgroup，所以他的部分結束後就會回到用 TOP region 的情境，而後面應該符合的 rule 都有設上 <code>contained</code>，所以就沒機會對到。當然現在要解決這個問題也不是沒方法可以避開，但是非常不好看，就是如下的設計：</p>
-
-<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName,comment1 skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody,comment3 skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
-
-syntax region  comment1     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncName,comment1 skipwhite
-syntax region  comment2     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax region  comment3     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncBody,comment3 skipwhite
-</code></pre>
-
-<p>如此可以確保 comment 插入也不會讓後面的 token 沒 highlight，但是這樣的設計，實際寫起來會非常繁瑣，完全不想去研究 JavaScript 中會有多少類似的狀況。其實我是覺得 Vim syntax 應該是希望盡量都用前後獨立的 rule 來 highlight，盡量不要有前後相依的關係存在，就不會有上面的問題，也可以讓 highlight 過程比較單純，理想上是從頭開始，一個 token 一個 token 各自獨立的 highlight，不過是事情當然沒這麼簡單，第二個想記錄下來的事情也和這個有關係。</p>
-
-<p>假設目前 highlight 處理中，parse 到一個 <code>=</code>，然後看到一組小括號 <code>(a)</code>，連起來如下：</p>
-
-<pre><code>= (a)
-</code></pre>
-
-<p>這時你會覺得 <code>(a)</code> 是什麼呢？是小括號，裡面是一個 expression 然後回傳變數 <code>a</code> 嗎？相信很多人會這樣認為，如果他後面是接分號的話：</p>
-
-<pre><code>= (a);
-</code></pre>
-
-<p>但是其實也可能是這樣子的：</p>
-
-<pre><code>= (a) =&gt; {}
-</code></pre>
-
-<p>ES6 的 arrow function，也就是說，如果一個 token 一個 token 解析，一定無法直接知道目前 token 代表的正確意義，所以 compiler 把程式碼轉成 AST 的時候，有時候會先往後面看一下來判斷現在的 token 到底是什麼意義。然而 Vim syntax 系統並沒有這種能力，嚴格來說，是可以用 match 來達成，不過還是很受限制。再來則是往前看的問題，我在設定運算子的 match rule 的時候，會希望嚴謹一點，本來想在兩邊加上 word boundary 的 pattern，在 Vim 裡面是 <code>\&lt;</code> 和 <code>\&gt;</code>，不過測試幾回發現，我的字元本身不是文字字元的話，這個 pattern 是沒有用的：</p>
-
-<pre><code>/\&lt;word
-</code></pre>
-
-<p>這樣是有效的，但是下面想要 match <code>==</code> 的會沒用：</p>
-
-<pre><code>/\&lt;==
-</code></pre>
-
-<p>所以變成要自己寫往前看的 regexp，在 Vim 裡面有兩種類似的東西可以用，分別是 <code>\zs</code> 和 <code>\@&lt;=</code>，通常，<code>\zs</code> 效能比較好，會推薦使用，他的用途是標註你的 regexp 的 match 的起點，當然同時也有一個 <code>\ze</code> 是終點：</p>
-
-<pre><code>/abcd\zsefgh\zeijkl
-</code></pre>
-
-<p>上面這串 regexp 的目標是 <code>efgh</code>，但是他的前後分別是 <code>abcd</code> 和 <code>ijkl</code>，實際執行時會去找 <code>abcdefghijkl</code> 這串字串，完整比對到之後，只會回中間的 <code>efgh</code> 作為 match 的範圍，這設計要做一些操作的時候就會有差，像是文字取代。本來我就想要用這個來做 syntax，可是就發現還是不生效，所以改成用 <code>\@&lt;=</code> 試試看：</p>
-
-<pre><code>/\(abcd\)\@&lt;=efgh\@=\(ijkl\)
-</code></pre>
-
-<p>就發現成功了，想了許久才理解其原因，然後才瞭解，真的往前看的是 <code>\@&lt;=</code>，<code>\zs</code> 並沒有往前看，兩者最大的差異在於 pattern match 操作的起點，一般的使用大概感覺不太到差異，不過像是 syntax highlight 這種一個 token 一個 token 逐步處理的就會有差，當目標是 <code>efgh</code> 時，通常處理進度到 <code>e</code> 這個位置時，前面的 <code>abcd</code> 已經被處理過了，所以這時候會和 regexp 比對的字串就變成 <code>efghijkl</code>，使用 <code>\zs</code> 的話，因為它還是要完整比對到 <code>abcdefghijkl</code>，起點是 <code>a</code>，就不會和 <code>efghijkl</code> 相符，但是用 <code>\@&lt;=</code> 的話，pattern 的起點是 <code>efgh</code> 的 <code>e</code>，這樣就可以 match 到目前剩餘的字串了。</p>
-
-<p>前面說的個 token 一個 token 逐步處理的問題還有一個情形也讓我困擾很久，不過這次不是東西被用掉，問題是沒被用掉。這個狀況發生在巢狀結構的 region，像是 JavaScript 的 block：</p>
-
-<pre><code>syntax region  javascriptBlock start=/{/ end=/}/
-</code></pre>
-
-<p>然號要讓 block 裡面可已有 block 就要用 <code>contains</code>：</p>
-
-<pre><code>syntax region  javascriptBlock start=/{/ end=/}/ contains=javascriptBlock
-</code></pre>
-
-<p>這時候就會發生奇怪的現象了，因為外面的 region 包括了頭尾的括號，然後進入 block 內要做 syntax match 的時候，一開始的 <code>{</code> 又 match 到 block，結果 Vim 就直接覺得這已經是第二層的 block 了，雖然好像有其它機制讓他不會一直循環下去變成無限多層，不過這樣還是會造成後面的 code 有被判斷錯誤的機會，因為 block 的開關不 match，這裡的關鍵也是要讓 <code>{</code> 和 <code>}</code> 被處理掉，進入 region 內部就不會跑到上一層的起點，而這裡要用的就是 <code>matchgroup</code>：</p>
-
-<pre><code>syntax region  javascriptBlock matchgroup=bracks start=/{/ end=/}/ contains=javascriptBlock
-</code></pre>
-
-<p>如此就都會正常了，因為這樣的設定會讓 <code>{</code> 和 <code>}</code> 直接被當成 <code>bracks</code> 這個 group，然後就被當成已經被解析過的 token，從它的下一個 token 繼續 highlight 分析，但是千萬不要另外加上 <code>bracks</code> 的 syntax rule，剛好又 match 到 region 的起點和終點：</p>
-
-<pre><code>syntax match   bracks  /[{}]/
-</code></pre>
-
-<p>這樣的話也會發生其它的怪異現象，總之 nested region 的重點在於，要用 matchgroup，然後不要用和 matchgrouop 同樣名稱，同樣 pattern 另外又設定一組 rule。</p>
-
-<p>最後一個要紀錄的則是 Vim syntax 裡面的優先度，基本上是 keyoword 優先度最高，也就是有 match 到 keyword 的話，你的 match pattern 就都無效了，所以像是 JavaScript 裡面，label 雖然不可以用關鍵字，像是 <code>continue:</code> 就不合法，但是因為會先 match 到 <code>continue</code> 關鍵字，所以就很難用 syntax highlight 來標出這種錯誤，而在 keyword 比對完之後，才輪的到 region 和 match，兩者是同樣權重，但是後定義的優先，而且不受 <code>contains</code> 和 <code>nextgroup</code> 裡面的順序影響，搞清楚優先順序在做細部的 syntax highlight 的時候還蠻重要的。另外要順便說說 region contains 和 nextgroup 的差異，nextgroup 其實還蠻不錯的，他不是限制下一個 token 一定是哪些東西，而是改變優先順序，先檢查完 nextgroup 裡面的東西，再檢查該 region 下的其它可能性，region contains 就不一樣了，該 region 裡面只有在 contains 裡面的東西會出現，另外還要特別注意一點，region 的處理並不管該 region 能不能正確的關閉，只要 match 到起點，就會把 region 打開，然後剛剛有提到，region 和 match 是同樣權重的所以就要非常注意：</p>
-
-<pre><code>syntax match  javascriptLabel       /\k\+:/
-syntax region javascriptLabelblock  start=/\k\+: {/ end=/}/
-</code></pre>
-
-<p>這樣兩條 syntax highlight rule 然後配上下面的程式碼：</p>
-
-<pre><code>abcd: {
-  var ii = 1 + 1;
-
-var jj = 2 + 2;
-</code></pre>
-
-<p>要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 <code>var jj</code> 那行也是被認為在 block 內。</p>
-
-<p>最後的最後要推薦一下 <a href="https://github.com/gerw/vim-HiLinkTrace">gerw/vim-HiLinkTrace</a> 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

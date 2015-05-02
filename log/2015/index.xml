@@ -16,6 +16,53 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000842" baseName="aster-postcss">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-05-02</b:date>
+				<b:time>11:35:38</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Aster 與 PostCSS</b:title>
+			<b:content>
+				<b:summary> 前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 Grunt 和 Gulp 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 aster，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8.jpg 768w, https://farm8.staticflickr.com/7771/17133620000_3c43ee797f_k.jpg 2x" /></a></p>
+
+<p>前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 <a href="http://gruntjs.com/">Grunt</a> 和 <a href="http://gulpjs.com/">Gulp</a> 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 <a href="http://asterjs.github.io/aster/">aster</a>，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/fF_jZ7ErwUY?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+</b:mainContent>
+				<b:extendContent><p>Aster 這個名稱的來由是 AST，Aster 的特別之處就在於他所有的修改都是在 AST 上做修改：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86.jpg 768w, https://farm8.staticflickr.com/7680/17141309009_9f903156ca_k.jpg 2x" /></a></p>
+
+<p>相較於 Gulp：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977.jpg 768w, https://farm8.staticflickr.com/7662/17327152261_ac75e48905_k.jpg 2x" /></a></p>
+
+<p>和 Grunt：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74.jpg 768w, https://farm8.staticflickr.com/7717/17327152081_04e77878ff_k.jpg 2x" /></a></p>
+
+<p>很明顯的是正確許多的設計，理論上 parse 成 AST 之後，一口氣在 AST 階段把需要的變更做完，然後再用 code generator 產生成果的程式碼，應該省去很多來回轉換的工作，不論是效能還是程式碼處理的正確性都應該是最好的，不過這看似正確設計下的產品，卻沒什麼人用，我嘗試使用過程中還發了幾個 PR 回去，結果到現在都還沒有回應，有種是不是作者都已經放棄的疑問。</p>
+
+<p>然後這兩天，又看到一個其實已經出來蠻久的 compile to CSS language，叫 <a href="https://github.com/postcss/postcss">PostCSS</a>，號稱比 SASS 之類的快上 3-30 倍，還可以做到一些 SASS/LESS 做不到功能，也有很多大企業採用，像是 Google、VK、Alibaba 之類的，應該就是目前最夯的 CSS 工具，然後我看介紹的投影片看到這張：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f.jpg 768w" /></a></p>
+
+<p>覺得，這根本和 Aster 是一樣的想法，不過一個處理 JavaScript，做 ES6 to ES5、concat、minimize 甚至是細微的程式碼修改，另外一個處理 CSS，也是做類似的工作，為什麼結果發展的差距會這麼大？想了一陣子之後，我覺得大概狀況是，SASS、LESS 之類的工具目前還是會造成一些讓開發者痛苦的問題，像是 nesting rule 讓 selector 太長太複雜、mixin 和 include 的混淆等等，所以開發者還會一直嘗試不同的新工具，甚至自己開發來解決這些問題，而相對於 CSS，JavaScript 的相關工具比較沒這些問題，二來 JavaScript 的 AST 比 CSS 的 AST 要複雜許多，要參與工具的開發難度是高上許多，Aster 作者的功力還蠻強的，除了 AST 操作之外，他的整個流程控制還用上很先進的 <a href="https://rxjs.codeplex.com/">RxJS</a>，其實也算是增加了參與的難度吧，而我想就是這沒有強烈需求加上進入難度高兩點，結果讓 Aster 並不太受到人注意，沒什麼人參與，開發的完整度不夠，我實際用起來，就覺得目前還只是核心完整，但是真的要離實用到專案上還有些距離，加上不知道還有沒有要繼續發展下去，覺得實在很可惜。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000841" baseName="reactjs-conf">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -37,7 +84,7 @@
 <p>React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，<a href="https://cordova.apache.org/">Apache Cordova</a> 的 plugin 也都可以使用，最近也正式對外<a href="https://facebook.github.io/react-native/">公開</a>了，有興趣的可以試試看。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>CSP</h4>
@@ -45,15 +92,15 @@
 <p>之前我也有介紹過的 <a href="https://blog.othree.net/log/2015/02/14/csp/">CSP</a>，在 React.js Conf 也有講者介紹，雖然我覺得現在用 <a href="https://github.com/ubolonton/js-csp">js-csp</a> 來做 Channel 溝通還不是很好用，不過應該 async function 可以用之後會比較普遍吧，就算之後沒真的派上用場，要是轉行寫 Go 也會用的上才是。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>Immutable</h4>
 
-<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。</p>
+<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。另外還要補充一點，Immutable Data 可能在下一版的 ES7(2016) 也會有，總之又是個先學起來不吃虧的。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
 <h4>AST</h4>
@@ -61,7 +108,7 @@
 <p>這場演講是在講修改 Abstract Syntax Tree 來做一些程式碼的修改，算是把 AST 的應用講得很淺顯易懂的一場演講，還順便介紹到很多相關的工具，像是 <a href="https://github.com/estools">estools</a>，其實一個程式語言的 spec 通常只有定到語法的部分，後面 compiler 要產生什麼樣子的 AST 是他們自己決定的，不過通常會有個主流的格式，而目前 JavaScript 領域則是 Mozilla SpiderMonkey 的 AST 格式為主，不過其實因為應用太多，也有人在做標準化的工作，叫 <a href="https://github.com/estree/estree">estree</a>。</p>
 
 <div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
 </b:mainContent>
 				<b:extendContent>

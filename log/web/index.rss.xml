@@ -5,10 +5,45 @@
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
 <copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-03-28 13:25</lastBuildDate>
+<lastBuildDate>2015-05-02 11:35</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Aster 與 PostCSS</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8.jpg 768w, https://farm8.staticflickr.com/7771/17133620000_3c43ee797f_k.jpg 2x" /></a></p>
+
+<p>前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 <a href="http://gruntjs.com/">Grunt</a> 和 <a href="http://gulpjs.com/">Gulp</a> 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 <a href="http://asterjs.github.io/aster/">aster</a>，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/fF_jZ7ErwUY?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+]]><![CDATA[<p>Aster 這個名稱的來由是 AST，Aster 的特別之處就在於他所有的修改都是在 AST 上做修改：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86.jpg 768w, https://farm8.staticflickr.com/7680/17141309009_9f903156ca_k.jpg 2x" /></a></p>
+
+<p>相較於 Gulp：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977.jpg 768w, https://farm8.staticflickr.com/7662/17327152261_ac75e48905_k.jpg 2x" /></a></p>
+
+<p>和 Grunt：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74.jpg 768w, https://farm8.staticflickr.com/7717/17327152081_04e77878ff_k.jpg 2x" /></a></p>
+
+<p>很明顯的是正確許多的設計，理論上 parse 成 AST 之後，一口氣在 AST 階段把需要的變更做完，然後再用 code generator 產生成果的程式碼，應該省去很多來回轉換的工作，不論是效能還是程式碼處理的正確性都應該是最好的，不過這看似正確設計下的產品，卻沒什麼人用，我嘗試使用過程中還發了幾個 PR 回去，結果到現在都還沒有回應，有種是不是作者都已經放棄的疑問。</p>
+
+<p>然後這兩天，又看到一個其實已經出來蠻久的 compile to CSS language，叫 <a href="https://github.com/postcss/postcss">PostCSS</a>，號稱比 SASS 之類的快上 3-30 倍，還可以做到一些 SASS/LESS 做不到功能，也有很多大企業採用，像是 Google、VK、Alibaba 之類的，應該就是目前最夯的 CSS 工具，然後我看介紹的投影片看到這張：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f.jpg 768w" /></a></p>
+
+<p>覺得，這根本和 Aster 是一樣的想法，不過一個處理 JavaScript，做 ES6 to ES5、concat、minimize 甚至是細微的程式碼修改，另外一個處理 CSS，也是做類似的工作，為什麼結果發展的差距會這麼大？想了一陣子之後，我覺得大概狀況是，SASS、LESS 之類的工具目前還是會造成一些讓開發者痛苦的問題，像是 nesting rule 讓 selector 太長太複雜、mixin 和 include 的混淆等等，所以開發者還會一直嘗試不同的新工具，甚至自己開發來解決這些問題，而相對於 CSS，JavaScript 的相關工具比較沒這些問題，二來 JavaScript 的 AST 比 CSS 的 AST 要複雜許多，要參與工具的開發難度是高上許多，Aster 作者的功力還蠻強的，除了 AST 操作之外，他的整個流程控制還用上很先進的 <a href="https://rxjs.codeplex.com/">RxJS</a>，其實也算是增加了參與的難度吧，而我想就是這沒有強烈需求加上進入難度高兩點，結果讓 Aster 並不太受到人注意，沒什麼人參與，開發的完整度不夠，我實際用起來，就覺得目前還只是核心完整，但是真的要離實用到專案上還有些距離，加上不知道還有沒有要繼續發展下去，覺得實在很可惜。</p>
+]]></description>
+<link>https://blog.othree.net/log/2015/05/02/aster-postcss/</link>
+<guid>https://blog.othree.net/log/2015/05/02/aster-postcss/</guid>
+<category>web</category>
+<pubDate>2015-05-02 11:35</pubDate>
+</item>
 
 <item>
 <title>For the Entire Web</title>
@@ -408,19 +443,6 @@
 <guid>https://blog.othree.net/log/2013/07/13/flickr-share-publidhed/</guid>
 <category>web</category>
 <pubDate>2013-07-13 01:13</pubDate>
-</item>
-
-<item>
-<title>IE10 for Windows 7</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8510660798/" title="Flickr 上 othree 的 IE10 vs Aurora on Text rendering"><img src="//farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg" width="996" height="610" alt="IE10 vs Aurora on Text rendering" srcset="//farm9.staticflickr.com/8509/8510660798_b86b070bef.jpg 768w, //farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg 768w 2x" /></a></p>
-
-<p>剛剛正式 Release 了，第一眼印像是文字渲染方式不太一樣，和 Aurora 比一下。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/02/26/ie10-for-windows7/</link>
-<guid>https://blog.othree.net/log/2013/02/26/ie10-for-windows7/</guid>
-<category>web</category>
-<pubDate>2013-02-26 23:54</pubDate>
 </item>
 
 
