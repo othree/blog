@@ -125,6 +125,7 @@
                 <meta property="og:image:height" content="240" />
             </xsl:otherwise>
 		</xsl:choose>
+        <!-- <meta name="msvalidate.01" content="62AA6507373E88A43A75318B8AC8D885" /> -->
         <meta name="twitter:widgets:csp" content="on" />
         <meta property="fb:admins" content="582724207" />
         <!-- <script src="/scripts/jfont.js"></script> -->
@@ -148,9 +149,9 @@
         <nav class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="//www.google.com/search" role="search">
+                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
                         <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
-                        <input type="hidden"  name="sitesearch" value="blog.othree.net" />
+                        <input type="hidden"  name="sites" value="blog.othree.net" />
                     </form>
                     <ul class="nav pull-right">
                         <li>
@@ -204,9 +205,9 @@
                 <aside role="complementary" class="span3">
                     <hr />
                     <h2>其它資訊</h2>
-                    <form method="get" id="search-form" class="form-search" action="//www.google.com/search" role="search">
+                    <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
                         <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
-                        <input type="hidden"  name="sitesearch" value="blog.othree.net" />
+                        <input type="hidden"  name="sites" value="blog.othree.net" />
                         <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
                     </form>
                     <hr />
