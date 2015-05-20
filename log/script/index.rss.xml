@@ -35,7 +35,7 @@ class MyComponent {
 }
 </code></pre>
 
-<p>Annotation 簡單翻起來也是註解，不過他和 comment 不一樣，不是給人看，而是要給 compiler 和 JS engine 看的，而且實際上也會影響程式的一些運作，annotation 應該是一種完全沒有也不影響程式執行的 metadata，不過細分下去應該可以分為兩類，第一種是 Java 的 annotation，以 metadata 為主，像是物件的角色、物件間關係等，另外一種則是 decorator annotation，可以讓函數加上各種不同特性，其實就是 decorator pattern 的簡易語法，看到一些範例當中，最讓我覺得厲害的就是 memorize 了吧，如果程式引擎支援，加上一行 memorize 的 annotation 就可以讓那個函數自動有 memorize 特性，如果使用不支援此特性的引擎來執行程式，函數的輸出也不會有錯，就是沒有 memorize 的效果，效率會比較差，Python 中就有 [lru_cache[] 這個 decorator 可以做到這樣的效果（Python 的 decorator 語法是提供 syntax sugar，不過寫法和其它語言的 annotation 很像）:</p>
+<p>Annotation 簡單翻起來也是註解，不過他和 comment 不一樣，不是給人看，而是要給 compiler 和 JS engine 看的，而且實際上也會影響程式的一些運作，annotation 應該是一種完全沒有也不影響程式執行的 metadata，不過細分下去應該可以分為兩類，第一種是 Java 的 annotation，以 metadata 為主，像是物件的角色、物件間關係等，另外一種則是 decorator annotation，可以讓函數加上各種不同特性，其實就是 decorator pattern 的簡易語法，看到一些範例當中，最讓我覺得厲害的就是 memorize 了吧，如果程式引擎支援，加上一行 memorize 的 annotation 就可以讓那個函數自動有 memorize 特性，如果使用不支援此特性的引擎來執行程式，函數的輸出也不會有錯，就是沒有 memorize 的效果，效率會比較差，Python 中就有 <a href="https://docs.python.org/3/library/functools.html#functools.lru_cache">lru_cache</a> 這個 decorator 可以做到這樣的效果（Python 的 decorator 語法是提供 syntax sugar，不過寫法和其它語言的 annotation 很像）:</p>
 
 <pre><code>@lru_cache(maxsize=None)
 def fib(n):
@@ -86,9 +86,11 @@ function fib(n) {
 
 <p>在 <a href="http://ngeurope.org/">ng-europe</a> 研討會，就有一場關於 AtScript 的演講：</p>
 
+<div class="embed_16_9">
 <iframe width="853" height="480" src="https://www.youtube.com/embed/lGdnh8QSPPk?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
 
-<p>裡面除了基本的介紹，為什麼會發展 AtScript 之外，還有很重要的未來發展，Angular Team 是有打算把 Type、Annotation 等等特性推回 ECMAScript 未來的標準之中的。在 ECMAScript 標準的發展上，其實早在之前就有一些變數型別相關的功能在討論，包括了 <a href="http://wiki.ecmascript.org/doku.php?id=strawman:types">type</a>、<a href="http://wiki.ecmascript.org/doku.php?id=strawman:guards">guard</a>，不過都沒有進到目前的 ECMAScript 6(2015)，目前 AtScript 和 TypeScript 兩者正在逐漸互相同步，也有共同合作，而且 AtScript 還沒有嚴謹的 spec 文件，所以會看到官方發佈說 AngularJS 2 用 TypeScript 開發，而不是用 AtScript，目前看到 TC39 討論裡面，除了 type 之外，幫其它新東西提出 proposal 的，很令人意外，竟然是 Yehuda Katz，可以看到去年四月的<a href="https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-04/apr-10.md#decorators-for-es7">會議記錄</a>就有他提出 decorator 特性的討論，另外 TypeScript 的 Issue 1557 是關於在 TypeScript 中加入 AtScript 的 annotation 支援，Yehuda Katz 也有提到他正在整理相關資料，幾週後會在 TC39 會議提出，在他的 github 帳號上也可以找到相關的<a href="https://github.com/wycats/javascript-decorators">資訊</a>，我個人對 Yehuda Katz 評價很高，不過實在是想不太到為什麼會是他跑出來推動這部分的發展，不過總之 Yehuda Katz 打算提出的是比現在 metadata 為主更進一步的 annotation，也就是包含像 Python decorator 特性的 annotation，如果真的順利成案，其實也不知道是好是壞，好的是一些程式碼可以更簡潔，壞的是 JavaScript 語法越來越多，入門要學的東西也變多很多。</p>
+<p>裡面除了基本的介紹，為什麼會發展 AtScript 之外，還有很重要的未來發展，Angular Team 是有打算把 Type、Annotation 等等特性推回 ECMAScript 未來的標準之中的。在 ECMAScript 標準的發展上，其實早在之前就有一些變數型別相關的功能在討論，包括了 <a href="http://wiki.ecmascript.org/doku.php?id=strawman:types">type</a>、<a href="http://wiki.ecmascript.org/doku.php?id=strawman:guards">guard</a>，不過都沒有進到目前的 ECMAScript 6(2015)，目前 AtScript 和 TypeScript 兩者正在逐漸互相同步，也有共同合作，而且 AtScript 還沒有嚴謹的 spec 文件，所以會看到官方發佈說 AngularJS 2 用 TypeScript 開發，而不是用 AtScript，目前看到 TC39 討論裡面，除了 type 之外，幫其它新東西提出 proposal 的，很令人意外，竟然是 Yehuda Katz，可以看到去年四月的<a href="https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-04/apr-10.md#decorators-for-es7">會議記錄</a>就有他提出 decorator 特性的討論，另外 TypeScript 的 <a href="https://github.com/Microsoft/TypeScript/issues/1557#issuecomment-77709527">Issue 1557</a> 是關於在 TypeScript 中加入 AtScript 的 annotation 支援，Yehuda Katz 也有提到他正在整理相關資料，幾週後會在 TC39 會議提出，在他的 github 帳號上也可以找到相關的<a href="https://github.com/wycats/javascript-decorators">資訊</a>，我個人對 Yehuda Katz 評價很高，不過實在是想不太到為什麼會是他跑出來推動這部分的發展，不過總之 Yehuda Katz 打算提出的是比現在 metadata 為主更進一步的 annotation，也就是包含像 Python decorator 特性的 annotation，如果真的順利成案，其實也不知道是好是壞，好的是一些程式碼可以更簡潔，壞的是 JavaScript 語法越來越多，入門要學的東西也變多很多。</p>
 ]]>
 </description>
 <link>https://blog.othree.net/log/2015/05/18/typescript-atscript-es-decorator/</link>
