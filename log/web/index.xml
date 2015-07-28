@@ -9,6 +9,79 @@
 			<b:listData listID="web">web</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000846" baseName="webappsec">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-07-03</b:date>
+				<b:time>23:13:21</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>webappsec</b:title>
+			<b:content>
+				<b:summary> 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c.jpg 768w, https://farm3.staticflickr.com/2948/15191563939_771f265d3a_k.jpg 2x" /></a></p>
+
+<p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+
+<p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+
+<p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+
+<pre><code>navigator.credentials.get({ "password": true }).then(
+  function(credential) {
+    if (!credential) {
+      // The user either doesn't have credentials for this site, or
+      // refused to share them. Insert some code here to show a basic
+      // login form (or, ideally, do nothing, since this API should
+      // really be progressive enhancement on top of an existing form).
+      return;
+    }
+    if (credential.type == "password") {
+      credential.send("https://example.com/loginEndpoint")
+        .then(function (response) {
+          // Notify the user that signin succeeded! Do amazing, signed-in things!
+        });
+    } else {
+      // See the Federated Sign-in example
+    }
+  }
+);
+</code></pre>
+
+<p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+
+<p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+
+<pre><code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+        integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是指看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+
+<pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code></pre>
+
+<p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+
+<pre><code>HTTPS: 1
+</code></pre>
+
+<p>很簡潔不過還沒瀏覽器支援就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000842" baseName="aster-postcss">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -274,58 +347,6 @@
 <p>這次 OSDC 講的投影片，另外有兩個地方要補充一下，第一個是我的 Github 上的<a href="https://github.com/othree/web-component-test">範例</a>，因為用到 HTML Import 的關係，有安全性限制，一定要開個 HTTP Server，不然會出錯誤，然後我有用 gulp 設定好了，理論上裝好 gulp 就可以在 localhost 把開發用的 HTTP Server 開起來，然後現在的 Chrome Canary 無法跑，還不知道原因，所以請用 Chrome Stable。</p>
 
 <p>第二個是現在的參考資料，很大部份都是參考 HTML5 Rocks 的文章，可以參考我之前介紹 <a href="https://blog.othree.net/log/2013/11/27/web-component/">Web Component</a> 的文章最下面，這些文章的內容其實一直有在根據實做更新，所以會發現和 Spec Draft 定義不一樣。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000787" baseName="mixed-content">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-01-08</b:date>
-				<b:time>23:45:54</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Mixed Content</b:title>
-			<b:content>
-				<b:summary>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 ted.com 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客： IE 在開發工具內還會有紅字嚇人： 訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形： Chrome 則是會把 https 劃掉： 一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 TOSSUG HTML5 分享補充...</b:summary>
-				<b:mainContent><p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr"><img src="//farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" src-1="(max-width: 768px)  //farm6.staticflickr.com/5511/11834406594_683ec5e488.jpg 1x, //farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 2x"  /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr"><img src="//farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" src-1="(max-width: 768px)  //farm8.staticflickr.com/7415/11834272353_88d18f35c4.jpg 1x, //farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 2x"  /></a></p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3696/11820942545_45a9948590.jpg 1x, //farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 2x"  /></a></p>
-
-<p>IE 在開發工具內還會有紅字嚇人：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3742/11820942315_803c340984.jpg 1x, //farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 2x"  /></a></p>
-
-<p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr"><img src="//farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" src-1="(max-width: 768px)  //farm8.staticflickr.com/7290/11834407574_99c84f38d3.jpg 1x, //farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 2x"  /></a></p>
-
-<p>Chrome 則是會把 https 劃掉：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr"><img src="//farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" src-1="(max-width: 768px)  //farm4.staticflickr.com/3771/11834272603_5bf07439ea.jpg 1x, //farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 2x"  /></a></p>
-
-<p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
-
-<p>最後附上瀏覽器的說明：</p>
-
-<ul>
-<li><a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a></li>
-<li><a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a></li>
-<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a></li>
-<li><a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a></li>
-</ul>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

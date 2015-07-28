@@ -5,10 +5,71 @@
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
 <copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-05-02 11:35</lastBuildDate>
+<lastBuildDate>2015-07-03 23:13</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>webappsec</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c.jpg 768w, https://farm3.staticflickr.com/2948/15191563939_771f265d3a_k.jpg 2x" /></a></p>
+
+<p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+
+<p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+
+<p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+
+<pre><code>navigator.credentials.get({ "password": true }).then(
+  function(credential) {
+    if (!credential) {
+      // The user either doesn't have credentials for this site, or
+      // refused to share them. Insert some code here to show a basic
+      // login form (or, ideally, do nothing, since this API should
+      // really be progressive enhancement on top of an existing form).
+      return;
+    }
+    if (credential.type == "password") {
+      credential.send("https://example.com/loginEndpoint")
+        .then(function (response) {
+          // Notify the user that signin succeeded! Do amazing, signed-in things!
+        });
+    } else {
+      // See the Federated Sign-in example
+    }
+  }
+);
+</code></pre>
+
+<p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+
+<p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+
+<pre><code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+        integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是指看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+
+<pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code></pre>
+
+<p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+
+<pre><code>HTTPS: 1
+</code></pre>
+
+<p>很簡潔不過還沒瀏覽器支援就是了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/07/03/webappsec/</link>
+<guid>https://blog.othree.net/log/2015/07/03/webappsec/</guid>
+<category>web</category>
+<pubDate>2015-07-03 23:13</pubDate>
+</item>
 
 <item>
 <title>Aster 與 PostCSS</title>
@@ -418,31 +479,6 @@
 <guid>https://blog.othree.net/log/2013/07/14/markdown-resources/</guid>
 <category>web</category>
 <pubDate>2013-07-14 18:34</pubDate>
-</item>
-
-<item>
-<title>Flickr Share with Template Published</title>
-<description><![CDATA[<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/9252437903/" title="Flickr Share with Template by othree, on Flickr"><img src="//farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg" width="982" height="606" alt="Flickr Share with Template" srcset="//farm3.staticflickr.com/2840/9252437903_e68a25280f.jpg 768w, //farm3.staticflickr.com/2840/9252437903_e68a25280f_b.jpg 768w 2x" /></a></p>
-
-<p>距離第一次說<a href="https://blog.othree.net/log/2012/12/08/flickr-share-with-templat/">這東西</a>其實好久了，最近終於把它推上 <a href="https://chrome.google.com/webstore/detail/flickr-share-with-templat/dfnfhbapijahpaobcpojofokllocfpnc">Chrome Store</a>，其實上次徵求 icon 有徵到，不過對方不願具名所以沒有任何 attribute，還是很感激他就是，現在這版已經改用 Twitter 的 <a href="http://twitter.github.io/hogan.js/">hogan</a>，還用了 <a href="https://github.com/kriskowal/q">q</a> 做 async flow control，然後還衍生出 <a href="https://github.com/othree/sandbox-hogan">sandbox-hogan</a> 這個專案，不過目前用的是 prototype，等那邊發展成熟一點在換過去。</p>
-
-<p>最後再次介紹一下 <strong>Flickr Share with Template</strong>，這是套可以用自訂的 template 來產生 Flickr 照片分享 HTML/BBCode 的套件，會開發的原因包括：</p>
-
-<ul>
-<li>flickr 原生的分享是 HTML，不是 XHTML</li>
-<li>只有 HTML/BBCode</li>
-<li>只有 http，但是 flickr 其實有 https 支援</li>
-<li>只有一些尺寸，無法滿足我支援 retina disaply 的需求</li>
-<li>最重要的，不支援自訂 template </li>
-</ul>
-
-<p>如果你對以上任何一個問題有同感的話，歡迎你來試試看我的擴充套件，有任何問題歡迎回報。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/07/13/flickr-share-publidhed/</link>
-<guid>https://blog.othree.net/log/2013/07/13/flickr-share-publidhed/</guid>
-<category>web</category>
-<pubDate>2013-07-13 01:13</pubDate>
 </item>
 
 

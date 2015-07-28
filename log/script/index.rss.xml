@@ -5,10 +5,64 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-05-18 18:24</lastBuildDate>
+<lastBuildDate>2015-06-18 00:08</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>GHCJS</title>
+<description><![CDATA[<p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
+
+<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
+
+<pre><code>./cofigure
+make install
+</code></pre>
+
+<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
+
+<pre><code>cabal install cabal-install
+</code></pre>
+
+<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
+
+<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
+</code></pre>
+
+<p>接下來才是安裝 GHCJS：</p>
+
+<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
+git clone https://github.com/ghcjs/ghcjs.git
+cabal install ./ghcjs ./ghcjs-prim
+</code></pre>
+
+<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
+
+<pre><code>ghcjs-boot --dev
+</code></pre>
+
+<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
+
+<pre><code>cabal install --ghcjs pandoc
+</code></pre>
+
+<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
+
+<pre><code>git clone git@github.com:osener/pandoc.git
+cabal install --ghcjs ./pandoc
+</code></pre>
+
+<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
+
+<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/06/18/ghcjs/</link>
+<guid>https://blog.othree.net/log/2015/06/18/ghcjs/</guid>
+<category>script</category>
+<pubDate>2015-06-18 00:08</pubDate>
+</item>
 
 <item>
 <title>TypeScript, AtScript, ES Decorator</title>
@@ -170,7 +224,7 @@ function fib(n) {
 
 <p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
 
-<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 再接手<a href="https://github.com/whatwg/loader">繼續</a>，不過目前的最新版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
+<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 接手<a href="https://github.com/whatwg/loader">繼續</a>，最新的版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
 
 <p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
 
@@ -579,31 +633,6 @@ oct2 = 0O17;
 <guid>https://blog.othree.net/log/2014/07/15/es6-int/</guid>
 <category>script</category>
 <pubDate>2014-07-15 15:52</pubDate>
-</item>
-
-<item>
-<title>YAJS: Yet Another JavaScript Syntax for Vim</title>
-<description><![CDATA[<p>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 <a href="http://www.vim.org/scripts/script.php?script_id=4974">YAJS</a>，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 <a href="https://github.com/othree/yajs.vim">github repo</a> 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下：</p>
-
-<ul>
-<li>用 <code>javascript</code> 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 <code>SyntaxComplete</code> 使用</li>
-<li>完整重新整理過的 Web API、DOM、JS 關鍵字</li>
-<li>可以完美的和 javascript-libraries-syntax.vim 共用</li>
-<li>把許多歷史遺跡的 syntax rule 都砍掉了</li>
-<li>當然最後就是支援許多的 ES6 syntax，像是 arrow function、 method definition 等</li>
-</ul>
-
-<p>第一點這問題很久了，我好像之前也有說過，第二個一開始弄之前有點猶豫，因為關鍵字真的很多，目前整理了大概有 1800 個上下，不過後來看到 Vim 內建的 xs 的 <a href="https://code.google.com/p/vim/source/browse/runtime/syntax/xs.vim">syntax</a> 我就釋懷了，這個檔案有三千多行，而定義關鍵字的每行都有數個關鍵字，1800 其實還只整理了一部份，除了 Global 物件都有加上外，很多新 Spec 是還沒整理的，例如 Mozilla 為了 Firefox OS 定的那些和硬體溝通的 API 等。</p>
-
-<p>第三點是我重新整理的時候才注意到的，本來我的 javascript-libraries-syntax.vim 會把 <code>.</code> 的 group 取代掉，也就是原來的 syntax rule 裡面，和 <code>.</code> 有關的東西在套用過 libraries syntax 之後就會消失，只是不太容易注意到，這次修改就讓這個問題不會發生，不過 JS 僅限於 YAJS，，其他還有 CoffeeScript、LiveScript 其實不受影響，不過是因為他們本來在 <code>.</code> 之後就沒其他的 syntax highlight 了。</p>
-
-<p>第四點就是把一些不明用途或是過時的東西砍掉，最後就是 ES6 的語法了，目前大概知道會有的都已經做上去了像是 block scope、let、const、class、新的 number literal 等都支援，如果有缺什麼歡迎報 bug 摟。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/07/14/yajs/</link>
-<guid>https://blog.othree.net/log/2014/07/14/yajs/</guid>
-<category>script</category>
-<pubDate>2014-07-14 18:35</pubDate>
 </item>
 
 

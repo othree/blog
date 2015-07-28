@@ -9,6 +9,72 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000845" baseName="ghcjs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-06-18</b:date>
+				<b:time>00:08:03</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>GHCJS</b:title>
+			<b:content>
+				<b:summary>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 pandoc，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 GHCJS 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 markup.rocks，我後來也是基於他在 github 上公開的這些程式碼來研究。 要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去下載 GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行： ./cofigure make install 安裝完 GHC 後要更新 cabal 這個套件管理工具： cabal install cabal-install...</b:summary>
+				<b:mainContent><p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
+
+<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
+
+<pre><code>./cofigure
+make install
+</code></pre>
+
+<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
+
+<pre><code>cabal install cabal-install
+</code></pre>
+
+<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
+
+<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
+</code></pre>
+
+<p>接下來才是安裝 GHCJS：</p>
+
+<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
+git clone https://github.com/ghcjs/ghcjs.git
+cabal install ./ghcjs ./ghcjs-prim
+</code></pre>
+
+<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
+
+<pre><code>ghcjs-boot --dev
+</code></pre>
+
+<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
+
+<pre><code>cabal install --ghcjs pandoc
+</code></pre>
+
+<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
+
+<pre><code>git clone git@github.com:osener/pandoc.git
+cabal install --ghcjs ./pandoc
+</code></pre>
+
+<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
+
+<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000844" baseName="typescript-atscript-es-decorator">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -218,7 +284,7 @@ function fib(n) {
 
 <p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
 
-<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 再接手<a href="https://github.com/whatwg/loader">繼續</a>，不過目前的最新版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
+<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 接手<a href="https://github.com/whatwg/loader">繼續</a>，最新的版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
 
 <p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
 
@@ -540,99 +606,6 @@ xhr.send();
 <p>而除了 Response Body 外，其它的回傳資訊像是 Response Header 等，都有新定義的物件來儲存，不過沒有很複雜，設計的很直覺，和送出去的 Options Object 很接近。不過講到 Header 就有一點還是要說一下，其實 HTTP Header 是可以重複送出一樣的 key 的，先不管合不合規範，現實是 HTTP Protocol 的實作都還可以處理這種狀況，以前的 XHR 也可以做出這樣的行為，印象中也有 framework 會這樣用，不過不太確定，總之 fetch 因為 Header 是給 Options Object 中的一個物件，而物件的 key 不能重複，所以不會允許這種行為出現，我個人是覺得這樣其實也比較好啦。</p>
 
 <p>目前這個標準還未廣為人知，但是我是覺得前景非常看好，Spec 寫的也異常詳細，雖然不能把 XHR 的所有功能都取代，不過大部分的 XHR 應用都可以用的上了，也有 Github 提供的 polyfill，應該很容易吸引人進去使用，加上也沒其它的類似候選標準，除了沒有 progress 和回來的資料格式要自己判斷外，應該是沒什麼缺點了，而且判斷資料格式的部分也是可以自己寫點程式碼把他處理掉，所以嚴格一點說的話，問題就剩下沒有 progress 可以看這點了。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000819" baseName="es6-promise">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-11-13</b:date>
-				<b:time>23:54:08</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>ES6 Promise</b:title>
-			<b:content>
-				<b:summary>ES6 Promise 目前各家瀏覽器的支援程度雖然還沒到可以直接用的程度，但是目前已經有非常多的 polyfill，差不多是可以開始使用的時候了。 如果習慣了 jQuery 設計的 Deferred 物件，應該會對於 ES6 的 Promise 設計很不習慣吧，相較於 jQuery 是產生好物件然後提供一些 method 做操作，要不要封裝起來也是開發者的事，ES6 Promise 的設計更是強調了封裝的特性，要怎麼 resolve、reject，在一開始就要決定好了，只有在建構函數裡面碰的到 resolve 和 reject 的觸發點： new Promise(function (resolve, reject) { //... }); 這樣的設計雖然在物件封裝上比較嚴謹，但是其實會讓一些程式碼多了一層的縮排，例如本來用 jQuery Deferred 包起來的 XHR： function JQXHR(url) { var...</b:summary>
-				<b:mainContent><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">ES6 Promise</a> 目前各家瀏覽器的支援程度雖然還沒到可以直接用的程度，但是目前已經有非常多的 polyfill，差不多是可以開始使用的時候了。</p>
-
-<p>如果習慣了 jQuery 設計的 Deferred 物件，應該會對於 ES6 的 Promise 設計很不習慣吧，相較於 jQuery 是產生好物件然後提供一些 method 做操作，要不要封裝起來也是開發者的事，ES6 Promise 的設計更是強調了封裝的特性，要怎麼 resolve、reject，在一開始就要決定好了，只有在建構函數裡面碰的到 resolve 和 reject 的觸發點：</p>
-
-<pre><code>new Promise(function (resolve, reject) {
-  //...
-});
-</code></pre>
-
-<p>這樣的設計雖然在物件封裝上比較嚴謹，但是其實會讓一些程式碼多了一層的縮排，例如本來用 jQuery Deferred 包起來的 XHR：</p>
-
-<pre><code>function JQXHR(url) {
-  var xhr = new XMLHttpRequest();
-  var dfd = new $.Deferred();
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) { dfd.resolve(xhr.response); }
-  }
-  xhr.open('GET', url);
-  xhr.send();
-  return dfd.promise();
-}
-</code></pre>
-
-<p>用 ES6 Promise 就要改寫成：</p>
-
-<pre><code>function ESXHR(url) {
-  var xhr = new XMLHttpRequest();
-  var dfd = new Promise(function (resolve) {
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) { resolve(xhr.response); }
-    }
-  });
-  xhr.open('GET', url);
-  xhr.send();
-  return dfd;
-}
-</code></pre>
-
-<p>第二個差異就在於回傳的 thenable 物件要怎麼把結果改掉，以前 jQuery 的時候可以在 callback 裡面回傳新的 Deferred 物件改結果：</p>
-
-<pre><code>dfd.then(null, function () {
-  return $.Deferred().resolve();
-});
-</code></pre>
-
-<p>沒特別傳 Deferred 物件的話不管用 <code>then</code> 串接幾次的話結果都不會改變，不過 ES6 Promise 就不一樣了，不管是 resolve 狀況還是 reject 狀況，<code>then</code> 回傳的預設就是一個新的 resolved 狀態的 Promise 物件。那要怎樣改變狀態呢？這裡就要用 <code>throw new Error()</code> 了。在 ES6 Promise 的 <code>then</code> 裡面，不管是 resolve 還是 reject 的 handler，都是回傳任意值會讓後面拿到新的 resolved 的 Promise 物件，而如果在執行中 throw error 出去，就會讓後面拿到 rejected 的 Promise 物件：</p>
-
-<pre><code>dfd.then(function (val) {
-  if (val === 0) {
-    throw new Error('');
-  }
-});
-</code></pre>
-
-<p>然後就是 rejected 狀態的 Promise 也是有值的，如果是 throw error 產生的，那就是看 throw 什麼東西，那個東西就會變成新的 Promise 物件的值，而以往手動 throw error 時，為了相容性都會產生 Error 物件，在這邊就不必如此了，其實可以隨便傳想要給後面使用的值。</p>
-
-<p>再來，有時候只想要處理 reject 的狀況，會寫成：</p>
-
-<pre><code>dfd.then(null, function () {
-  //rejected handler
-});
-</code></pre>
-
-<p>有個 null 放前面其實蠻討厭的，不過 ES6 有提供一個 <code>catch</code> 可以用： </p>
-
-<pre><code>dfd.catch(function () {
-  //rejected handler
-});
-</code></pre>
-
-<p>這個以前倒是沒有類似的東西，蠻方便的。大概瞭解到這樣就可以使用 ES6 Promise 了，另外還有 <code>Promise.all</code> 和 <code>Promise.race</code> 可以做和 <code>jQuery.when</code> 類似的事情（race 是新的控制），至於我為什麼說現在差不多可以開始使用呢，除了 Polyfill 齊全外，其實還有一個原因是一些新的網路標準也開始使用 ES6 Promise 了，像是 <a href="http://www.w3.org/TR/WebCryptoAPI/">Web Crypto</a>，看 spec 比較不明顯，不過看 MDN 的<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto">介紹</a>，就有列出 encrypt、decrypt、sign 等花時間的 method 回傳都是 Promise 物件，實做就可以丟到背景的 Worker 去處理，才不會把 UI 卡住。而除了 Web Crypto 外，還有像是 ES7 可能會有的 <a href="http://jakearchibald.com/2014/es7-async-functions/">await</a> 語法也是要接 Promise 物件，總之是個未來趨勢，我覺得現在比較尷尬的是在 ES6 Promise 出來前的一堆標準都是用 event base 設計的，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">File Reader</a> 之類的，不知道有沒有機會慢慢都改到 Promise。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

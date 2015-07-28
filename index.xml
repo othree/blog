@@ -9,6 +9,145 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000846" baseName="webappsec">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-07-03</b:date>
+				<b:time>23:13:21</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>webappsec</b:title>
+			<b:content>
+				<b:summary> 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c.jpg 768w, https://farm3.staticflickr.com/2948/15191563939_771f265d3a_k.jpg 2x" /></a></p>
+
+<p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+
+<p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+
+<p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+
+<pre><code>navigator.credentials.get({ "password": true }).then(
+  function(credential) {
+    if (!credential) {
+      // The user either doesn't have credentials for this site, or
+      // refused to share them. Insert some code here to show a basic
+      // login form (or, ideally, do nothing, since this API should
+      // really be progressive enhancement on top of an existing form).
+      return;
+    }
+    if (credential.type == "password") {
+      credential.send("https://example.com/loginEndpoint")
+        .then(function (response) {
+          // Notify the user that signin succeeded! Do amazing, signed-in things!
+        });
+    } else {
+      // See the Federated Sign-in example
+    }
+  }
+);
+</code></pre>
+
+<p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+
+<p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+
+<pre><code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+        integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是指看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+
+<pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code></pre>
+
+<p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+
+<pre><code>HTTPS: 1
+</code></pre>
+
+<p>很簡潔不過還沒瀏覽器支援就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000845" baseName="ghcjs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-06-18</b:date>
+				<b:time>00:08:03</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>GHCJS</b:title>
+			<b:content>
+				<b:summary>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 pandoc，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 GHCJS 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 markup.rocks，我後來也是基於他在 github 上公開的這些程式碼來研究。 要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去下載 GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行： ./cofigure make install 安裝完 GHC 後要更新 cabal 這個套件管理工具： cabal install cabal-install...</b:summary>
+				<b:mainContent><p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
+
+<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
+
+<pre><code>./cofigure
+make install
+</code></pre>
+
+<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
+
+<pre><code>cabal install cabal-install
+</code></pre>
+
+<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
+
+<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
+</code></pre>
+
+<p>接下來才是安裝 GHCJS：</p>
+
+<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
+git clone https://github.com/ghcjs/ghcjs.git
+cabal install ./ghcjs ./ghcjs-prim
+</code></pre>
+
+<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
+
+<pre><code>ghcjs-boot --dev
+</code></pre>
+
+<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
+
+<pre><code>cabal install --ghcjs pandoc
+</code></pre>
+
+<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
+
+<pre><code>git clone git@github.com:osener/pandoc.git
+cabal install --ghcjs ./pandoc
+</code></pre>
+
+<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
+
+<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000844" baseName="typescript-atscript-es-decorator">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -231,114 +370,6 @@ function fib(n) {
 </div>
 </b:mainContent>
 				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000840" baseName="more-on-srcset">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-04-08</b:date>
-				<b:time>00:53:33</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>srcset</b:title>
-			<b:content>
-				<b:summary>Responsive Image 大概定案成 srcset 和 &lt;picture&gt; 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 srcset 和我當初介紹時已經差蠻多，中文資源有找到 Zhusee 有另外一篇介紹，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 w 和 density descriptor 用 x，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 x 或是全部用 w，所以： 不能在一張圖片裡面同時有 w 和...</b:summary>
-				<b:mainContent><p>Responsive Image 大概定案成 <code>srcset</code> 和 <code>&lt;picture&gt;</code> 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 <code>srcset</code> 和我當初<a href="https://blog.othree.net/log/2012/12/02/srcset/">介紹</a>時已經差蠻多，中文資源有找到 Zhusee 有另外一篇<a href="http://blog.zhusee.in/post/248199/basic-responsive-image-with-srcset-property">介紹</a>，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 <code>w</code> 和 density descriptor 用 <code>x</code>，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 <code>x</code> 或是全部用 <code>w</code>，所以：</p>
-
-<ol>
-<li>不能在一張圖片裡面同時有 <code>w</code> 和 <code>x</code></li>
-<li>全部都用 <code>w</code> 或是全部都用 <code>x</code></li>
-<li>不可有相同的數值，例如兩個 <code>1x</code> 或是兩個 <code>760w</code> </li>
-<li>Descriptor 可以算是該圖片的資訊</li>
-</ol>
-</b:mainContent>
-				<b:extendContent><p>不過最新的 spec 裡面少了第二點的限制，所以會有一組 srceset 混和 width descriptor 和 density descriptor 的情形，然後怎麼挑選圖片的<a href="https://html.spec.whatwg.org/multipage/embedded-content.html#select-an-image-source">地方</a>寫說：</p>
-
-<blockquote>
-  <p>In a user agent-specific manner, choose one image source from source set. Let this be selected source.</p>
-</blockquote>
-
-<p>就是叫瀏覽器自己想辦法的意思，我就很好奇，如果我想設定一組規則，要分成四個組合：</p>
-
-<ul>
-<li>小螢幕低密度</li>
-<li>小螢幕高密度</li>
-<li>大螢幕低密度</li>
-<li>大螢幕高密度</li>
-</ul>
-
-<p>的話，我要怎樣設定 srcset 才能達到目標，因為現在已經不是用 media query 來寫 srcset 了，不能直接寫這樣四組，所以我就去找了 Firefox 和 Chromium 的原始碼來看看他們怎麼做的，Firefox 的找沒多久就<a href="https://dxr.mozilla.org/mozilla-central/source/dom/base/ResponsiveImageSelector.cpp#274">找到</a>了，因為他們有 <a href="https://github.com/mozilla/dxr">dxr</a> 專案用來方便找程式碼，實際用過覺得真的好用，至於 Chromium 就找比較久了，後來是在 <a href="https://github.com/WebKit/webkit/blob/master/Source/WebCore/html/parser/HTMLSrcsetParser.cpp#L232">WebKit 裡面</a>有找到，然後發現兩個瀏覽器的原理其實都一樣，要處理同時有 width descriptor 和 density descriptor 的狀況，基本上就是都轉成 density 然後來挑最適合的，作法大致如下，細節可能有誤：</p>
-
-<ol>
-<li>先對圖片標籤排版，這邊可能會用到 <code>sizes</code> 屬性，不過 CSS 還是優先，然後會得到圖片在頁面上的寬度，稱為 computed width</li>
-<li>對每張候選圖片計算 effective pixel density，算法是： <code>圖片寬度 / computed width</code>，圖片寬度可以是 width descriptor 來的或是圖片的實際寬度，如果 descriptor 是 density descriptor 的話就不用計算，直接拿來用</li>
-<li>比對 effective pixel density 和現在 device 螢幕的 density，取最接近的</li>
-</ol>
-
-<p>其中第三步驟的比較，大概是考慮效能和記憶體問題，兩個瀏覽器都沒真的做很嚴謹，都是照順序跑過一遍而已，所以在寫 srcset 的時候建議也要照圖片的大小排，至於要大的先還是小的先，就看開發者希望是 density 略大的優先還是略小的優先了，所以如果我寫：</p>
-
-<pre><code>srcset="aaa.jpg 1x, bbb.jpg 1.4x, ccc.jpg 1.6x, ddd.jpg 2x"
-</code></pre>
-
-<p>然後我現在圖片需要 <code>1.5x</code> 的話，應該就會拿到 1.4x 的 <code>bbb.jpg</code>，而如果我偏好用 1.6x <code>ccc.jpg</code> 的話，就要改成：</p>
-
-<pre><code>srcset="ddd.jpg 2x, ccc.jpg 1.6x, bbb.jpg 1.4x, aaa.jpg 1x"
-</code></pre>
-
-<p>後來發現這個挑選圖片的原則，其實在 WHATWG 的 <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#embedded-content">HTML Spec 裡面有寫</a>，不過是 non-normative 的段落，就是說這不是一定要遵守，只是建議，而且前面也有提到 spec 內是寫說挑選的原則是瀏覽器自己處理，而會這樣設計相信是為了像 mobile device 之類的裝置，網路速度如果比較慢，或是需要節省流量時，就可以挑選比較小的檔案，而不一定是挑出顯示上最好的那張圖片。</p>
-
-<p>最後，其實 descriptor 除了 density 和 width 兩種之外，還有一種 height descriptor，不過目前只是保留可能性，spec 還沒定義要怎樣處理，其實還蠻能理解目前會以寬度為主的狀況，在 Matt Brubeck 的 Let's build a browser engine! 系列文章中的第六篇「<a href="http://limpet.net/mbrubeck/2014/09/17/toy-layout-engine-6-block.html">Block layout</a>」這篇文章有介紹到一般瀏覽器是怎樣排版畫 layout 的，而其處理的原則就是先從左上角開始把東西往右排，所以寬度一定先決定，然後才決定高度，相信這也是垂直置中搞這麼多年的原因吧。</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000839" baseName="loader">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-04-05</b:date>
-				<b:time>14:50:09</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>Loader</b:title>
-			<b:content>
-				<b:summary>Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 AMD 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。...</b:summary>
-				<b:mainContent><p>Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">AMD</a> 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。</p>
-</b:mainContent>
-				<b:extendContent><p>Addy Osmani 有建立一個 Loader 的 polyfill 給 ES5 環境使用 Loader API，就叫做 <a href="https://github.com/ModuleLoader/es6-module-loader">ES6 Module Loader Polyfill</a>，這個 polyfill 內部實做是照當初 ES6 draft 來寫的，其實還蠻複雜，不過把讀取一個 module 的事情拆分一下，可以分成以下幾個步驟：</p>
-
-<ol>
-<li>Normalize：根據給的名稱取得實際的 module name</li>
-<li>Locate：根據實際的 module name 取得 module 的位置</li>
-<li>Fetch：根據 module 位置去取得檔案內容</li>
-<li>Translate：如果有需要對檔案內容作任何修改，就在這裡處理</li>
-<li>Instaniate：最後是根據檔案內容（程式碼），判斷有哪些相依模組和知道如何初始化這個模組</li>
-</ol>
-
-<p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
-
-<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 再接手<a href="https://github.com/whatwg/loader">繼續</a>，不過目前的最新版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
-
-<p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
-
-<p>本來我是想看看，是不是能夠只靠 Loader 就把 ES6 的 module 機制在現在的瀏覽器上建立起來，結果發現只靠 ES6 Module Loader Polyfill 是辦不到的，Loader API 並沒有定義模組的語法，如果用 ES6 的語法來定義模組還需要 transpiler 來從程式碼中分析出 module dependency，不過我不太想要把整包 transpiler 也放到 translate 裡面用，雖然可以自己寫一個什麼事情都不做的 translate function，但是要解決 dependency 的話還是會需要像 <code>System.register</code> 的幫助，總之到這邊，可以發現一個重點是，Loader 不管 module 定義的方法，雖然假想情境下是用 ES6 module 語法，每個檔案代表一個 module，然後用 <code>import</code> 和 <code>export</code> 來定義相依模組和提供的 method，不過其實 Loader 也是可以處理 AMD、<a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS</a> 甚至是 <a href="https://nodejs.org/api/modules.html">NodeJS</a> 型式的模組定義，只是要有人去實做這部分的 translate 和 instantiate 的部分，而 SystemJS最新版（0.16）就是這樣一個專案，它號稱是 universal module loader，支援 AMD、CommonJS、NodeJS 和 ES6 的模組定義，然後在最新的版本，改成使用 ES6 Module Loader Polyfill 的機制來做 module 的讀取、相依性的判斷和模組初始化，雖然有些地方沒有真的照之前的 spec 來實做。</p>
-
-<p>另外一個之前不太清楚的問題也藉此搞清楚了，ES6 module 有限制一個檔案定義一個 module，而現在的 web application 常常為了效能問題，都把多個檔案合併成一個檔案，這時就不能用 ES6 module 了，當然也可以用像現在 SystemJS 的作法來處理，不過其實再過一兩年 HTTP/2 普及後，也不需要這樣搞了，會變成只需要 minimize，這部分倒是還可以接受。</p>
-
-<p>ES6 裡面的 Loader 本身其實是一個 constructor，放在另外一個 ES6 提供的新東西 <code>Reflect</code> 下面，而用 <code>Reflect.Loader</code> 建立 Loader instance 時可以順便給他一些參數，像是前面提到的讀模組的五個步驟的實做，或是領域（realm），而 <code>System</code> 物件則是該 JS 環境下的預設的 Loader，理論上如果是瀏覽器環境，它就會知道怎樣去 fetch 遠端的程式碼回來，如果是 NodeJS 就會改用 file system 讀檔案，而且也知道要把模組放到那個 realm（理論上不同 frame 就是不同 realm），這樣大部分的使用都可以用 <code>System</code> 就好了，只有很少數的情形需要自己建立 Loader。其實上面說的 Loader API 不知道為什麼是移到 WHATWG 之後，幾乎是重新開始編寫，完整度欠佳，有些章節還是空的，另外也沒有定義 <code>System</code> 或是其它的新的替代方案，所以現在想要看看到底 Loader 內部怎麼做的話，要看舊版的 spec，可以去抓 2014 年 8 月的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#august_24_2014_draft_rev_27">ES6 draft rev 27</a> 然後看看 CH 26, 15，對照 ES6 Module Loader Polyfill 的程式碼可能比好懂。</p>
 </b:extendContent>
 			</b:content>
 
