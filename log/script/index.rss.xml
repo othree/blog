@@ -5,10 +5,48 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-06-18 00:08</lastBuildDate>
+<lastBuildDate>2015-08-17 18:28</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>fetch is the new XHR</title>
+<description><![CDATA[<p>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。</p>
+
+<p>和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和 Open Source 相關的東西，而不是只是 Web 相關的而已。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="8f42a7c5ffad4c9cab284637e0bddbc2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/</link>
+<guid>https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/</guid>
+<category>script</category>
+<pubDate>2015-08-17 18:28</pubDate>
+</item>
+
+<item>
+<title>Electron 入門</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6.jpg 768w" /></a></p>
+
+<p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
+
+<p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
+
+<p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
+
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻文真的不知道是放在這名字下面。</p>
+
+<p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
+
+<p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/08/03/electron-intro/</link>
+<guid>https://blog.othree.net/log/2015/08/03/electron-intro/</guid>
+<category>script</category>
+<pubDate>2015-08-03 21:27</pubDate>
+</item>
 
 <item>
 <title>GHCJS</title>
@@ -598,41 +636,6 @@ xhr.send();
 <guid>https://blog.othree.net/log/2014/08/16/chrome_pointer_event/</guid>
 <category>script</category>
 <pubDate>2014-08-16 23:28</pubDate>
-</item>
-
-<item>
-<title>ECMAScript 6 at COSCUP</title>
-<description><![CDATA[<p>今天在 COSCUP 的投影片，因為前一場 delay 導致後面講的有點趕，小可惜，不過該說的都有說到了～</p>
-
-<script async="async" class="speakerdeck-embed" data-id="947e99f0f08f0131d797323063e9e5f4" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/07/19/ecmascript-6-cosup/</link>
-<guid>https://blog.othree.net/log/2014/07/19/ecmascript-6-cosup/</guid>
-<category>script</category>
-<pubDate>2014-07-19 22:50</pubDate>
-</item>
-
-<item>
-<title>ES6 的數字</title>
-<description><![CDATA[<p>這篇想要介紹的是 ES6 的整數規則上的一些變化，首先是 <code>parseInt</code>，看過 JavaScript Good Part 的話都會知道，這個函數的第二個參數 radix 一定要給，不然如果遇到 <code>0</code> 開頭的字串時，會自動被當成八進位的數字，這個被人詬病許久的設計終於在 ES6 中拿掉了，未來 <code>parseInt</code> 只會自動判斷 <code>0x</code> <code>0X</code> 為 16 進位，不然沒給 radix 就是當 10 進位。</p>
-
-<p>另外一個改變是多了可以直接表示 2 進位和 8 進位整數的語法：</p>
-
-<pre><code>bin1 = 0b11;
-bin2 = 0B1000;
-
-oct1 = 0o1199;
-oct2 = 0O17;
-</code></pre>
-
-<p>2 進位要 <code>0b</code> 或是 <code>0B</code> 開頭，8 進位則是 <code>0o</code> 或是 <code>0O</code>，雖然和 16 進位一樣設計，不過要注意的是 <code>parseInt</code> 目前的 spec 設計是只會自動判斷 16 進位的喔。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/07/15/es6-int/</link>
-<guid>https://blog.othree.net/log/2014/07/15/es6-int/</guid>
-<category>script</category>
-<pubDate>2014-07-15 15:52</pubDate>
 </item>
 
 

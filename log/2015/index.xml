@@ -16,6 +16,146 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000849" baseName="fetch-is-the-new-xhr">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-17</b:date>
+				<b:time>18:28:00</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>fetch is the new XHR</b:title>
+			<b:content>
+				<b:summary>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。 和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和...</b:summary>
+				<b:mainContent><p>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。</p>
+
+<p>和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和 Open Source 相關的東西，而不是只是 Web 相關的而已。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="8f42a7c5ffad4c9cab284637e0bddbc2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000848" baseName="first-patch-to-firefox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-07</b:date>
+				<b:time>09:06:43</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>My First Patch to Firefox</b:title>
+			<b:content>
+				<b:summary> OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 1089363，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale AB_CD 中的 AB 段而已，所以 zh_TW 和 zh_CN 就都會變成 zh，然後 OSX 的 zh 又會變成簡體中文，結果就變成這樣了。 其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_b.jpg" width="424" height="223" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e.jpg 768w" /></a></p>
+
+<p>OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1089363">1089363</a>，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale <code>AB_CD</code> 中的 <code>AB</code> 段而已，所以 <code>zh_TW</code> 和 <code>zh_CN</code> 就都會變成 <code>zh</code>，然後 OSX 的 <code>zh</code> 又會變成簡體中文，結果就變成這樣了。</p>
+
+<p>其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale 的 resource 目錄的名稱改成 <code>zh_TW</code>，大概 diff 如下：</p>
+
+<pre><code> AB_CD = $(MOZ_UI_LOCALE)
+
+-AB := $(firstword $(subst -, ,$(AB_CD)))
++ifeq (zh-TW,$(AB_CD))
++LPROJ_ROOT := $(subst -,_,$(AB_CD))
++else
++LPROJ_ROOT := $(firstword $(subst -, ,$(AB_CD)))
++endif
++LPROJ := Contents/Resources/$(LPROJ_ROOT).lproj</code></pre>
+
+<p>其實不會很難，不過因為 Firefox 的程式碼變動很快，連 build script 也常常變動，那個 patch 檔出來的時候已經不能用了，然後又沒人處理就這樣一直拖下去，前陣子 Moztw 那邊又被提出來一次，剛好我為了弄 WebIDL 相關應用的時候有 build 過 Firefox，想說應該可以處理看看，就接下來嘗試了，build 本身蠻簡單的，就照著網路上的<a href="https://developer.mozilla.org/en-US/docs/Simple_Firefox_build">文件</a>就好，比較難的是要 build 成特定語系的，找很久才在 Moztw 討論區找到<a href="https://forum.moztw.org/viewtopic.php?f=18&amp;t=34806">答案</a>，要在 <code>.mozconfig</code> 裡面加上：</p>
+
+<pre><code>ac_add_options --with-l10n-base=/d/lang
+ac_add_options --enable-ui-locale=zh-TW
+</code></pre>
+
+<p>其中第一行設定的路徑要指定到你指定的位置，而且要絕對路徑，然後在該目錄 clone 翻譯的 repository 下來，可以在 <a href="http://hg.mozilla.org/l10n-central/">l10n-central</a> 那邊找自己的語系，以 <code>zh-TW</code> 來說：</p>
+
+<pre><code>cd /d/lang
+git clone http://hg.mozilla.org/l10n-central/zh-TW/
+</code></pre>
+
+<p>然後這樣就可以 build 中文版了，build 完執行就看到精美的黃底紅字 XML 解析錯誤視窗。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
+
+<p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想倒是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
+
+<p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" src-1="(max-width: 768px)  https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a.jpg 1x, https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 2x"  /></a></p>
+
+<p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
+
+<p>其中 build 失敗是 b2g 的 build 失敗，原因是我有地方改錯，不過要測試也是要重新設定，參考的是 <a href="https://developer.mozilla.org/en-US/Firefox_OS/Building_the_Firefox_OS_simulator">Building the Firefox OS Simulator</a> 這份文件，把 <code>.mozconfig</code> 改成：</p>
+
+<pre><code>. "$topsrcdir/b2g/config/mozconfigs/common"
+
+mk_add_options MOZ_OBJDIR=../build
+mk_add_options MOZ_MAKE_FLAGS="-j9 -s"
+
+ac_add_options --enable-application=b2g
+ac_add_options --disable-libjpeg-turbo
+</code></pre>
+
+<p>重新 build 看能不能過。</p>
+
+<p>改完產生的 patch 檔上傳到 bugzilla 時，要勾選 Content Type 是 patch，然後 review flag 設定成 <code>?</code>，選一個 reviewer，通常會有 mentor 來跟你說選誰好，我的情形是 <a href="http://blog.timc.idv.tw/">timdream</a> 在幫忙，接著就等 reviewer review，他 review 過的話， review flag 就會變成 <code>+</code>，然後就會收到一封「Congratulations on having your first patch approved」的信件，說了一些後續可以做的事情，接著要做的就是讓 patch 真的進去 repository，可以在票的 keyword 加上 <code>checkin-needed</code>，就會有機器人自己來把你的 patch check in 進 mozilla-inbound 這個 repository，然後丟上機器人自動編譯和測試，例如這個我 B2G build 失敗的<a href="https://treeherder.mozilla.org/#/jobs?repo=mozilla-inbound&amp;revision=b1b8616162b4">例子</a>，都過了就會進 mozilla-central，之後才<a href="https://wiki.mozilla.org/Tree_Rules">照順序</a>進 mozilla-aurora、mozilla-beta、mozilla-release，現在進去 mozilla-central 的大概要等 Firefox 42 才會上線了，應該是和 OSX 10.11 同時吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000847" baseName="electron-intro">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-03</b:date>
+				<b:time>21:27:43</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Electron 入門</b:title>
+			<b:content>
+				<b:summary> 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6.jpg 768w" /></a></p>
+
+<p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
+
+<p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
+
+<p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
+
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻文真的不知道是放在這名字下面。</p>
+
+<p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
+
+<p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000846" baseName="webappsec">
 			<b:author>
 				<b:authorName>othree</b:authorName>

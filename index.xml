@@ -9,6 +9,146 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000849" baseName="fetch-is-the-new-xhr">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-17</b:date>
+				<b:time>18:28:00</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>fetch is the new XHR</b:title>
+			<b:content>
+				<b:summary>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。 和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和...</b:summary>
+				<b:mainContent><p>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。</p>
+
+<p>和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和 Open Source 相關的東西，而不是只是 Web 相關的而已。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="8f42a7c5ffad4c9cab284637e0bddbc2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000848" baseName="first-patch-to-firefox">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-07</b:date>
+				<b:time>09:06:43</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>My First Patch to Firefox</b:title>
+			<b:content>
+				<b:summary> OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 1089363，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale AB_CD 中的 AB 段而已，所以 zh_TW 和 zh_CN 就都會變成 zh，然後 OSX 的 zh 又會變成簡體中文，結果就變成這樣了。 其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_b.jpg" width="424" height="223" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e.jpg 768w" /></a></p>
+
+<p>OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1089363">1089363</a>，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale <code>AB_CD</code> 中的 <code>AB</code> 段而已，所以 <code>zh_TW</code> 和 <code>zh_CN</code> 就都會變成 <code>zh</code>，然後 OSX 的 <code>zh</code> 又會變成簡體中文，結果就變成這樣了。</p>
+
+<p>其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale 的 resource 目錄的名稱改成 <code>zh_TW</code>，大概 diff 如下：</p>
+
+<pre><code> AB_CD = $(MOZ_UI_LOCALE)
+
+-AB := $(firstword $(subst -, ,$(AB_CD)))
++ifeq (zh-TW,$(AB_CD))
++LPROJ_ROOT := $(subst -,_,$(AB_CD))
++else
++LPROJ_ROOT := $(firstword $(subst -, ,$(AB_CD)))
++endif
++LPROJ := Contents/Resources/$(LPROJ_ROOT).lproj</code></pre>
+
+<p>其實不會很難，不過因為 Firefox 的程式碼變動很快，連 build script 也常常變動，那個 patch 檔出來的時候已經不能用了，然後又沒人處理就這樣一直拖下去，前陣子 Moztw 那邊又被提出來一次，剛好我為了弄 WebIDL 相關應用的時候有 build 過 Firefox，想說應該可以處理看看，就接下來嘗試了，build 本身蠻簡單的，就照著網路上的<a href="https://developer.mozilla.org/en-US/docs/Simple_Firefox_build">文件</a>就好，比較難的是要 build 成特定語系的，找很久才在 Moztw 討論區找到<a href="https://forum.moztw.org/viewtopic.php?f=18&amp;t=34806">答案</a>，要在 <code>.mozconfig</code> 裡面加上：</p>
+
+<pre><code>ac_add_options --with-l10n-base=/d/lang
+ac_add_options --enable-ui-locale=zh-TW
+</code></pre>
+
+<p>其中第一行設定的路徑要指定到你指定的位置，而且要絕對路徑，然後在該目錄 clone 翻譯的 repository 下來，可以在 <a href="http://hg.mozilla.org/l10n-central/">l10n-central</a> 那邊找自己的語系，以 <code>zh-TW</code> 來說：</p>
+
+<pre><code>cd /d/lang
+git clone http://hg.mozilla.org/l10n-central/zh-TW/
+</code></pre>
+
+<p>然後這樣就可以 build 中文版了，build 完執行就看到精美的黃底紅字 XML 解析錯誤視窗。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
+
+<p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想倒是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
+
+<p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" src-1="(max-width: 768px)  https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a.jpg 1x, https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 2x"  /></a></p>
+
+<p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
+
+<p>其中 build 失敗是 b2g 的 build 失敗，原因是我有地方改錯，不過要測試也是要重新設定，參考的是 <a href="https://developer.mozilla.org/en-US/Firefox_OS/Building_the_Firefox_OS_simulator">Building the Firefox OS Simulator</a> 這份文件，把 <code>.mozconfig</code> 改成：</p>
+
+<pre><code>. "$topsrcdir/b2g/config/mozconfigs/common"
+
+mk_add_options MOZ_OBJDIR=../build
+mk_add_options MOZ_MAKE_FLAGS="-j9 -s"
+
+ac_add_options --enable-application=b2g
+ac_add_options --disable-libjpeg-turbo
+</code></pre>
+
+<p>重新 build 看能不能過。</p>
+
+<p>改完產生的 patch 檔上傳到 bugzilla 時，要勾選 Content Type 是 patch，然後 review flag 設定成 <code>?</code>，選一個 reviewer，通常會有 mentor 來跟你說選誰好，我的情形是 <a href="http://blog.timc.idv.tw/">timdream</a> 在幫忙，接著就等 reviewer review，他 review 過的話， review flag 就會變成 <code>+</code>，然後就會收到一封「Congratulations on having your first patch approved」的信件，說了一些後續可以做的事情，接著要做的就是讓 patch 真的進去 repository，可以在票的 keyword 加上 <code>checkin-needed</code>，就會有機器人自己來把你的 patch check in 進 mozilla-inbound 這個 repository，然後丟上機器人自動編譯和測試，例如這個我 B2G build 失敗的<a href="https://treeherder.mozilla.org/#/jobs?repo=mozilla-inbound&amp;revision=b1b8616162b4">例子</a>，都過了就會進 mozilla-central，之後才<a href="https://wiki.mozilla.org/Tree_Rules">照順序</a>進 mozilla-aurora、mozilla-beta、mozilla-release，現在進去 mozilla-central 的大概要等 Firefox 42 才會上線了，應該是和 OSX 10.11 同時吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000847" baseName="electron-intro">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-08-03</b:date>
+				<b:time>21:27:43</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Electron 入門</b:title>
+			<b:content>
+				<b:summary> 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6.jpg 768w" /></a></p>
+
+<p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
+
+<p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
+
+<p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
+
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻文真的不知道是放在這名字下面。</p>
+
+<p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
+
+<p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000846" baseName="webappsec">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -241,133 +381,6 @@ function fib(n) {
 </div>
 
 <p>裡面除了基本的介紹，為什麼會發展 AtScript 之外，還有很重要的未來發展，Angular Team 是有打算把 Type、Annotation 等等特性推回 ECMAScript 未來的標準之中的。在 ECMAScript 標準的發展上，其實早在之前就有一些變數型別相關的功能在討論，包括了 <a href="http://wiki.ecmascript.org/doku.php?id=strawman:types">type</a>、<a href="http://wiki.ecmascript.org/doku.php?id=strawman:guards">guard</a>，不過都沒有進到目前的 ECMAScript 6(2015)，目前 AtScript 和 TypeScript 兩者正在逐漸互相同步，也有共同合作，而且 AtScript 還沒有嚴謹的 spec 文件，所以會看到官方發佈說 AngularJS 2 用 TypeScript 開發，而不是用 AtScript，目前看到 TC39 討論裡面，除了 type 之外，幫其它新東西提出 proposal 的，很令人意外，竟然是 Yehuda Katz，可以看到去年四月的<a href="https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-04/apr-10.md#decorators-for-es7">會議記錄</a>就有他提出 decorator 特性的討論，另外 TypeScript 的 <a href="https://github.com/Microsoft/TypeScript/issues/1557#issuecomment-77709527">Issue 1557</a> 是關於在 TypeScript 中加入 AtScript 的 annotation 支援，Yehuda Katz 也有提到他正在整理相關資料，幾週後會在 TC39 會議提出，在他的 github 帳號上也可以找到相關的<a href="https://github.com/wycats/javascript-decorators">資訊</a>，我個人對 Yehuda Katz 評價很高，不過實在是想不太到為什麼會是他跑出來推動這部分的發展，不過總之 Yehuda Katz 打算提出的是比現在 metadata 為主更進一步的 annotation，也就是包含像 Python decorator 特性的 annotation，如果真的順利成案，其實也不知道是好是壞，好的是一些程式碼可以更簡潔，壞的是 JavaScript 語法越來越多，入門要學的東西也變多很多。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000843" baseName="typescript-future-and-past">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-05-16</b:date>
-				<b:time>15:03:02</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>TypeScript 過去、現在、未來</b:title>
-			<b:content>
-				<b:summary>今年 Modern Web Conf 的投影片喔，其實整份演講最重要的點就是 type 看來就是會進入 ECMAScript 了。 /* A_A */...</b:summary>
-				<b:mainContent><p>今年 Modern Web Conf 的投影片喔，其實整份演講最重要的點就是 type 看來就是會進入 ECMAScript 了。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="b551e3b068aa4babb798c5e61c799b19" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000842" baseName="aster-postcss">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-05-02</b:date>
-				<b:time>11:35:38</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Aster 與 PostCSS</b:title>
-			<b:content>
-				<b:summary> 前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 Grunt 和 Gulp 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 aster，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8.jpg 768w, https://farm8.staticflickr.com/7771/17133620000_3c43ee797f_k.jpg 2x" /></a></p>
-
-<p>前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 <a href="http://gruntjs.com/">Grunt</a> 和 <a href="http://gulpjs.com/">Gulp</a> 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 <a href="http://asterjs.github.io/aster/">aster</a>，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/fF_jZ7ErwUY?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-</b:mainContent>
-				<b:extendContent><p>Aster 這個名稱的來由是 AST，Aster 的特別之處就在於他所有的修改都是在 AST 上做修改：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86.jpg 768w, https://farm8.staticflickr.com/7680/17141309009_9f903156ca_k.jpg 2x" /></a></p>
-
-<p>相較於 Gulp：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977.jpg 768w, https://farm8.staticflickr.com/7662/17327152261_ac75e48905_k.jpg 2x" /></a></p>
-
-<p>和 Grunt：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74.jpg 768w, https://farm8.staticflickr.com/7717/17327152081_04e77878ff_k.jpg 2x" /></a></p>
-
-<p>很明顯的是正確許多的設計，理論上 parse 成 AST 之後，一口氣在 AST 階段把需要的變更做完，然後再用 code generator 產生成果的程式碼，應該省去很多來回轉換的工作，不論是效能還是程式碼處理的正確性都應該是最好的，不過這看似正確設計下的產品，卻沒什麼人用，我嘗試使用過程中還發了幾個 PR 回去，結果到現在都還沒有回應，有種是不是作者都已經放棄的疑問。</p>
-
-<p>然後這兩天，又看到一個其實已經出來蠻久的 compile to CSS language，叫 <a href="https://github.com/postcss/postcss">PostCSS</a>，號稱比 SASS 之類的快上 3-30 倍，還可以做到一些 SASS/LESS 做不到功能，也有很多大企業採用，像是 Google、VK、Alibaba 之類的，應該就是目前最夯的 CSS 工具，然後我看介紹的投影片看到這張：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f.jpg 768w" /></a></p>
-
-<p>覺得，這根本和 Aster 是一樣的想法，不過一個處理 JavaScript，做 ES6 to ES5、concat、minimize 甚至是細微的程式碼修改，另外一個處理 CSS，也是做類似的工作，為什麼結果發展的差距會這麼大？想了一陣子之後，我覺得大概狀況是，SASS、LESS 之類的工具目前還是會造成一些讓開發者痛苦的問題，像是 nesting rule 讓 selector 太長太複雜、mixin 和 include 的混淆等等，所以開發者還會一直嘗試不同的新工具，甚至自己開發來解決這些問題，而相對於 CSS，JavaScript 的相關工具比較沒這些問題，二來 JavaScript 的 AST 比 CSS 的 AST 要複雜許多，要參與工具的開發難度是高上許多，Aster 作者的功力還蠻強的，除了 AST 操作之外，他的整個流程控制還用上很先進的 <a href="https://rxjs.codeplex.com/">RxJS</a>，其實也算是增加了參與的難度吧，而我想就是這沒有強烈需求加上進入難度高兩點，結果讓 Aster 並不太受到人注意，沒什麼人參與，開發的完整度不夠，我實際用起來，就覺得目前還只是核心完整，但是真的要離實用到專案上還有些距離，加上不知道還有沒有要繼續發展下去，覺得實在很可惜。</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000841" baseName="reactjs-conf">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-04-25</b:date>
-				<b:time>15:41:59</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>React.js Conf</b:title>
-			<b:content>
-				<b:summary>今年的 React.js Conf 雖然是單一 library 的研討會，不過議程的水準卻是蠻高的，而且蠻多內容並不是只限於 React.js，加上也是對於前端領域一些比較新的概念，所以我覺得是這兩年最讓人感到印象深刻的一場研討會了吧，下面介紹幾場我覺得收穫比較多的講題： React Native React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，Apache Cordova 的 plugin 也都可以使用，最近也正式對外公開了，有興趣的可以試試看。 CSP 之前我也有介紹過的...</b:summary>
-				<b:mainContent><p>今年的 React.js Conf 雖然是單一 library 的研討會，不過議程的水準卻是蠻高的，而且蠻多內容並不是只限於 React.js，加上也是對於前端領域一些比較新的概念，所以我覺得是這兩年最讓人感到印象深刻的一場研討會了吧，下面介紹幾場我覺得收穫比較多的講題：</p>
-
-<h4>React Native</h4>
-
-<p>React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，<a href="https://cordova.apache.org/">Apache Cordova</a> 的 plugin 也都可以使用，最近也正式對外<a href="https://facebook.github.io/react-native/">公開</a>了，有興趣的可以試試看。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>CSP</h4>
-
-<p>之前我也有介紹過的 <a href="https://blog.othree.net/log/2015/02/14/csp/">CSP</a>，在 React.js Conf 也有講者介紹，雖然我覺得現在用 <a href="https://github.com/ubolonton/js-csp">js-csp</a> 來做 Channel 溝通還不是很好用，不過應該 async function 可以用之後會比較普遍吧，就算之後沒真的派上用場，要是轉行寫 Go 也會用的上才是。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>Immutable</h4>
-
-<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。另外還要補充一點，Immutable Data 可能在下一版的 ES7(2016) 也會有，總之又是個先學起來不吃虧的。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>AST</h4>
-
-<p>這場演講是在講修改 Abstract Syntax Tree 來做一些程式碼的修改，算是把 AST 的應用講得很淺顯易懂的一場演講，還順便介紹到很多相關的工具，像是 <a href="https://github.com/estools">estools</a>，其實一個程式語言的 spec 通常只有定到語法的部分，後面 compiler 要產生什麼樣子的 AST 是他們自己決定的，不過通常會有個主流的格式，而目前 JavaScript 領域則是 Mozilla SpiderMonkey 的 AST 格式為主，不過其實因為應用太多，也有人在做標準化的工作，叫 <a href="https://github.com/estree/estree">estree</a>。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
