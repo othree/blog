@@ -5,10 +5,34 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-08-17 18:28</lastBuildDate>
+<lastBuildDate>2015-08-21 00:38</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>React 入門</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13990963771/" title="京都嵐山 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg" width="1024" height="683" alt="京都嵐山" srcset="https://farm6.staticflickr.com/5237/13990963771_028f39af66.jpg 768w, https://farm6.staticflickr.com/5237/13990963771_221cae9d50_k.jpg 2x" /></a></p>
+
+<p>其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。</p>
+
+<p>先講結論，寫過目前一般 Web App 的人，要來寫 <a href="http://facebook.github.io/react/">React</a> 大概都要一些撞牆期吧，我的狀況是要寫 React + <a href="http://facebook.github.io/flux/">Flux</a> 架構的 Web App，但是一開始對 Flux 的介紹沒認真看，在一知半解的狀態下就開始做了，結果就一直出現些靈異現象，大部分是覺得應該要更新畫面了但是沒有，追到後來大概就兩個原因：</p>
+
+<ul>
+<li><p>亂用 props 和 state，總之就是 React 只會在 state 變化的時候更新畫面，props 變化的時候不會（其實設計上是 immutable 的），而用 props 的時機基本上是父層 component 要設定資料給子 component 的時候才會用，至於父層收到不同的資料給子 component 時，同樣是改 props，為什麼畫面就會更新了，事實上是因為父層 component 更新的時候，才有機會改動到子 component 的 prop，而因為有重新 render，子 component 的內容也會一起更新，也才更新了畫面。</p></li>
+<li><p>想要只更新子 component，這個問題就是沒把 flux 的設計弄清楚，Flux 的 store 其實有點代表所有的資料的意思，而不管是什麼動作，都要把整包的 store 資料更新回去，根 component 會綁事件在 store 的更新事件上，發現 store 資料有更新就開始重新 render component，然後跟著它的子 component 就會因為 prop 更新而跟著更新。</p></li>
+</ul>
+
+<p>當然 store 是可以有多個的，重點在於每次更新都要整個 store 的資料重新給根 component，不能從 store 裡面某一層開始送，然後想要只更新某個子 component，這樣結果就很容易發生靈異事件，當然 React 可以不用 Flux 架構，不過我覺得那條路走起來更困難，所以還是乖乖使用 Flux 架構，其實我後來做的結構很簡單，action 就只是一個事件，store 就是 POJSO 而已，沒用到一些市面上的 Flux framework。</p>
+
+<p>最後一點要提的就是每次都整包 store 更新，可能就會有人想到效能問題，當然 React 本身效能不錯，不過資料量要是超大，可能還是會有出現狀況，我想這也是為什麼 Facebook 要發展 <a href="https://facebook.github.io/immutable-js/">Immutable.js</a> 的原因，其實我仔細瞭解後，發現 Immutable 配合 Flux 架構真的是超適合的，而且他在大量資料更新的時候，可以保持蠻不錯的效能，因為只有 reference 的變化，而不是真的重新產生整包資料，沒變化的資料都是本來就已經在記憶體裡面的，整體的資源消耗少很多。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2015/08/21/react-intro/</link>
+<guid>https://blog.othree.net/log/2015/08/21/react-intro/</guid>
+<category>script</category>
+<pubDate>2015-08-21 00:38</pubDate>
+</item>
 
 <item>
 <title>fetch is the new XHR</title>
@@ -35,7 +59,7 @@
 
 <p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
 
-<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻文真的不知道是放在這名字下面。</p>
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻完真的不知道是放在這名字下面。</p>
 
 <p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
 
@@ -625,17 +649,6 @@ xhr.send();
 <guid>https://blog.othree.net/log/2014/10/13/node-ffi/</guid>
 <category>script</category>
 <pubDate>2014-10-13 22:48</pubDate>
-</item>
-
-<item>
-<title>Chrome 將不支援 Pointer Events</title>
-<description><![CDATA[<p>話說 W3C 預計要推出 <a href="http://www.w3.org/TR/pointerevents/">Pointer Events</a> 統一 mouse event 和 touch event，不過 Chorme 的引擎 Blink 說<a href="https://code.google.com/p/chromium/issues/detail?id=162757#c64">不打算支援這新東西了</a>，主要原因是在複雜度和效能問題，雖然在信件裡面也把 Firefox、IE、Safari 拉下水，不過其他幾家好像都還沒做出決定，而且看來接下來關鍵在 Safari，因為它掌控了大量的 iOS 用戶，不過其實 Pointer Events 不只是打算處理 mouse, touch，在現在的 CR 裡面其實還有觸控筆，基本上是目前想的到能在畫面上做輸入(pointer)的裝置都考慮進去了，再來應該是看 Safari 決定了吧。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/08/16/chrome_pointer_event/</link>
-<guid>https://blog.othree.net/log/2014/08/16/chrome_pointer_event/</guid>
-<category>script</category>
-<pubDate>2014-08-16 23:28</pubDate>
 </item>
 
 

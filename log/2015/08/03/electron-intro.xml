@@ -50,7 +50,7 @@
 
 <p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
 
-<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻文真的不知道是放在這名字下面。</p>
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻完真的不知道是放在這名字下面。</p>
 
 <p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
 
