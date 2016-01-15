@@ -149,12 +149,17 @@ if (preg_match("/Webkit/", $UA)) {
 // header($CSP.": default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.disqus.com *.disquscdn.com ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; connect-src *.justfont.com *.disqus.com; font-src *.justfont.com themes.googleusercontent.com; img-src 'self' *.disqus.com *.disquscdn.com http://*.static.flickr.com *.static.flickr.com *.staticflickr.com https://ssl.google-analytics.com; frame-src disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com;");
 header($CSP.": default-src 'none'; script-src 'self' *.twitter.com *.disqus.com *.disquscdn.com ssl.google-analytics.com speakerdeck.com apis.google.com; style-src 'self' platform.twitter.com *.disquscdn.com; img-src 'self' pbs.twimg.com *.twitter.com *.disqus.com *.disquscdn.com *.static.flickr.com *.static.flickr.com *.staticflickr.com ssl.google-analytics.com data:; frame-src embed-ssl.ted.com syndication.twitter.com disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com; font-src themes.googleusercontent.com; connect-src 'self' *.disqus.com");
 
+header('link: </stylesheets/bootstrap/css/bootstrap.min.css>; rel=preload; as=stylesheet', false);
+header('link: </stylesheets/bootstrap/css/bootstrap-responsive.min.css>; rel=preload; as=stylesheet', false);
+header('link: </stylesheets/othree.min.css>; rel=preload; as=stylesheet', false);
+
 echo $output;
 
 
 //xsl transform function
 function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
     if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
+    // if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl'))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);
         $xslo = new DOMDocument;
