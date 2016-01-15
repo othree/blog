@@ -5,150 +5,23 @@
 	<b:blogDescription></b:blogDescription>
 	<b:entries>
 		<b:entriesMeta>
-			<b:listType>m</b:listType>
-			<b:listData listID="2015-10">October 2015</b:listData>
+			<b:listType>s</b:listType>
+			<b:listData listID="000852" baseName="f2e-test">前端測試入門</b:listData>
 
 			<b:previous>
-				<b:mTitle>August 2015</b:mTitle>
-				<b:mDate>2015/08</b:mDate>
+				<b:mTitle>Transducer</b:mTitle>
+				<b:mDate>2015-10-03</b:mDate>
+				<b:mBase>transducer</b:mBase>
 			</b:previous>
 
 
 			<b:next>
-				<b:mTitle>November 2015</b:mTitle>
-				<b:mDate>2015/11</b:mDate>				
+				<b:mTitle>Apache2 and HTTP/2</b:mTitle>
+				<b:mDate>2015-10-19</b:mDate>
+				<b:mBase>apache2-http2</b:mBase>
 			</b:next>
 
 		</b:entriesMeta>
-
-		<b:entry entryID="000853" baseName="apache2-http2">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-10-19</b:date>
-				<b:time>23:04:03</b:time>
-			</b:datetime>
-			<b:category>server</b:category>
-			<b:title>Apache2 and HTTP/2</b:title>
-			<b:content>
-				<b:summary> 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_28857c25b9_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
-
-<pre><code>./config
-make
-sudo make install
-</code></pre>
-
-<p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
-
-<p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
-
-<pre><code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
-tar zxvf ./httpd-2.4.17.tar.gz
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
-tar zxvf ./apr-util-1.5.4.tar.gz
-mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
-ar zxvf ./apr-util-1.5.4.tar.gz 
-mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
-</code></pre>
-
-<p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
-
-<pre><code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
-make
-sudo make install
-</code></pre>
-
-<p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
-</code></pre>
-
-<p>或是：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
-</code></pre>
-
-<p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
-
-<pre><code>&lt;VirtualHost *:80&gt;
-    Protocols h2c http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>還有</p>
-
-<pre><code>&lt;VirtualHost *:443&gt;
-    Protocols h2 http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
-
-<pre><code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
-SSLProtocol All -SSLv2 -SSLv3
-</code></pre>
-
-<p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
-
-<ul>
-<li>Firefox 27</li>
-<li>Chrome 22</li>
-<li>IE 11</li>
-<li>Opera 14</li>
-<li>Safari 7</li>
-<li>Android 4.4</li>
-<li>Java 8 </li>
-</ul>
-
-<p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
-
-<p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
-
-<pre><code>brew install curl --with-nghttp2
-brew link curl
-
-/usr/local/bin/curl -v --http2 https://othree.net
-</code></pre>
-
-<p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
-
-<pre><code>brew install nghttp2
-
-nghttp -uv https://othree.net
-</code></pre>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9f6d1b9a08_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_5553a17fb8_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h_d.jpg" width="1022" height="53" alt="http1.1-1" /></a></p>
-
-<p>然後是 2.0：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h_d.jpg" width="1022" height="530" alt="http2-1" /></a></p>
-
-<p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
 		<b:entry entryID="000852" baseName="f2e-test">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -160,6 +33,12 @@ nghttp -uv https://othree.net
 				<b:time>20:06:44</b:time>
 			</b:datetime>
 			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
 			<b:title>前端測試入門</b:title>
 			<b:content>
 				<b:summary> 這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。 其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了下載檔案的自動檢查，就順便把相關的名詞和觀念弄清楚。 之前最搞不清楚的其實就是 Mocha（摩卡咖啡） 和 Chai（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 斷言 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha...</b:summary>
@@ -230,34 +109,12 @@ chai.use(chaiAsPromised);
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
+			<b:comments commentCount="0">
 
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
 
+			</b:trackbacks>
 		</b:entry>
-
-		<b:entry entryID="000851" baseName="transducer">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-10-03</b:date>
-				<b:time>15:47:29</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>Transducer</b:title>
-			<b:content>
-				<b:summary>今天在 JSDC 講的題目是 Transducer ， 是目前講過數學和程式碼最多的題目了，不過還是希望能用盡量簡單的範例來說明什麼是 Transducer。 /* A_A */...</b:summary>
-				<b:mainContent><p>今天在 JSDC 講的題目是 Transducer ， 是目前講過數學和程式碼最多的題目了，不過還是希望能用盡量簡單的範例來說明什麼是 Transducer。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="5a7ac6a8f7ae4e07999d407f675f65d9" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
 	</b:entries>
 </b:blog>

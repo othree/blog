@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000855" baseName="jsx-e4x">JSX 的前世</b:listData>
+
+			<b:previous>
+				<b:mTitle>ULA 雨傘</b:mTitle>
+				<b:mDate>2015-11-19</b:mDate>
+				<b:mBase>ula-umbrella</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>2015</b:mTitle>
+				<b:mDate>2016-01-03</b:mDate>
+				<b:mBase>2015</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000855" baseName="jsx-e4x">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2015-12-25</b:date>
+				<b:time>09:36:53</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JSX 的前世</b:title>
+			<b:content>
+				<b:summary> React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 &lt;div&gt; 標籤就要寫成： var divNode = React.DOM.div({attr1:"value"}); 如果還要加上子元素，像是一個 list： &lt;ol&gt; &lt;li&gt;Item A&lt;/li&gt; &lt;li&gt;Item B&lt;/li&gt; &lt;li&gt;Item C&lt;/li&gt; &lt;li&gt;Item D&lt;/li&gt; &lt;/ol&gt; 就要寫成： var listNode = React.DOM.div({}, React.DOM.li({}, "Item A"), React.DOM.li({},...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="362" height="512" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0.jpg 768w" /></a></p>
+
+<p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
+
+<pre><code>var divNode = React.DOM.div({attr1:"value"});
+</code></pre>
+
+<p>如果還要加上子元素，像是一個 list：</p>
+
+<pre><code>&lt;ol&gt;
+  &lt;li&gt;Item A&lt;/li&gt;
+  &lt;li&gt;Item B&lt;/li&gt;
+  &lt;li&gt;Item C&lt;/li&gt;
+  &lt;li&gt;Item D&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<p>就要寫成：</p>
+
+<pre><code>var listNode = React.DOM.div({},
+  React.DOM.li({}, "Item A"),
+  React.DOM.li({}, "Item B"),
+  React.DOM.li({}, "Item C"),
+  React.DOM.li({}, "Item D")
+);
+</code></pre>
+
+<p>雖然比起純 DOM 的語法要簡單很多了，不過其實類似這種寫法來快速產生文件樹節點的 library 已經早就有了，像是 <a href="https://github.com/eneko/mooml">Mooml</a>、<a href="https://github.com/dominictarr/hyperscript">hyperscript</a>（thanks WM），如果 React 當初就直接這樣子推出，大家會想嘗試的意願應該會低很多，Facebook 的工程師應該也知道這樣和直接寫 DOM 或是其他 library 的感覺差異不大，所以他們解決的方法就是建立了一個新的 syntax，看起來就像是讓 DOM 變成像是原生的資料型態一樣，也就是現在的 JSX syntax，然後當然要讓這種語法可以在瀏覽器執行，所以官方有提供了 transpiler，不過其實這個把 XML DOM 當成 JS 語言中的原生資料型態的想法不是第一次出現了，早在好幾年前，就有一個 ECMA-357，又稱為 <a href="https://developer.mozilla.org/zh-TW/docs/E4X/%E4%BD%BF%E7%94%A8_E4X_%E8%99%95%E7%90%86_XML">E4X</a> 的標準是在做這件事的，全名則是 ECMAScript for XML，早期的 Mozilla SpiderMonkey 是有支援的，約是在 2006 年的 JavaScript 1.6 中推出，不過到 Firefox 21 的時候已經完全移除了，所以現在基本上是已經無法體會到這套 JS 擴充的語法，不過其實這套語法還蠻不錯的，有類似 template string 的寫法：</p>
+
+<pre><code>var doc = &lt;{h}&gt;&lt;body&gt;{text}&lt;/body&gt;&lt;/{h}&gt;;
+</code></pre>
+
+<p>React 則因為同時導入了 immutable 的概念，所以其 Virtual DOM 設計上只有產生文件樹結構的部分，沒有刪除修改，相較於 JSX 只有建置（create）的語法，E4X 則是有更完整的 CRUD 操作（就像是操作 JS 資料一樣），另外還多了用來尋找目標節點的 selector syntax：</p>
+
+<pre><code>languages.lang[1]
+person..*
+people.person.(name == "Joe").age
+</code></pre>
+
+<p>而且目標對像是 XML，所以對於 namespace 的處理也都有，整體而言算是很完整的 XML 操作方案，使用起來也比 DOM 簡潔很多，可惜後來被放棄，我推測大概幾個原因：</p>
+
+<ol>
+<li>使用 XML 的應用越來越少</li>
+<li>實做 E4X 會增加 JS 引擎的複雜度</li>
+<li>相較於 DOM 不依存於單一程式語言，E4X 則是 JS extension</li>
+<li>用 E4X 產生的節點不是 DOM 物件，不直接相容</li>
+</ol>
+
+<p>沒想到後來會在 Facebook 的手上，把這個概念單存的套用在 HTML 文件樹之上而重生。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -4,7 +4,7 @@
 <title>O3noBLOG - web</title>
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
-<copyright>Copyright 2015</copyright>
+<copyright>Copyright 2016</copyright>
 <lastBuildDate>2015-08-07 09:06</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
@@ -44,7 +44,7 @@ git clone http://hg.mozilla.org/l10n-central/zh-TW/
 
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
 
-<p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想倒是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
+<p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想到是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
 
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
 
@@ -118,7 +118,7 @@ ac_add_options --disable-libjpeg-turbo
 
 <p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
 
-<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是指看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
 
 <pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
 </code></pre>

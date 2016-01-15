@@ -82,7 +82,7 @@
 
 <p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
 
-<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是指看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
 
 <pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
 </code></pre>
