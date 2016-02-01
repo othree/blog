@@ -25,7 +25,7 @@
 <!-- html5 DTD -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html>
 </xsl:text>
-<html lang="zh-tw" prefix="og: http://ogp.me/ns#">
+<html lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
 	<head>
 		<meta charset="UTF-8" />
 		<title>
