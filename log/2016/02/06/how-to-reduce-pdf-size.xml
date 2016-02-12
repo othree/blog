@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000858" baseName="how-to-reduce-pdf-size">How to Reduce PDF Size and Keep Text</b:listData>
+
+			<b:previous>
+				<b:mTitle>JSON Universe</b:mTitle>
+				<b:mDate>2016-01-11</b:mDate>
+				<b:mBase>json-universe</b:mBase>
+			</b:previous>
+
+
+		</b:entriesMeta>
+		<b:entry entryID="000858" baseName="how-to-reduce-pdf-size">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-02-06</b:date>
+				<b:time>10:10:15</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>How to Reduce PDF Size and Keep Text</b:title>
+			<b:content>
+				<b:summary>Requirement Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality. Expect Expect the PDF file size is a little bit larger than JPG file. Issue Use save as and choose Photoshop PDF will...</b:summary>
+				<b:mainContent><h4>Requirement</h4>
+
+<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
+
+<h4>Expect</h4>
+
+<p>Expect the PDF file size is a little bit larger than JPG file.</p>
+
+<h4>Issue</h4>
+
+<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
+
+<ul>
+<li>Page Size: 210mm*297mm (A4)</li>
+<li>Resolution: 1240px*1754px</li>
+<li>Fonts: 2 English font</li>
+</ul>
+
+<p>Sizes:</p>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>PSD</td>
+    <td></td>
+    <td>79.7MB</td>
+  </tr>
+  <tr>
+    <td>PNG</td>
+    <td></td>
+    <td>&#160;1.2MB</td>
+  </tr>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td>&#160;0.6MB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td>&#160;7.0MB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>File transformed on Adobe CC 2016 Jan </p>
+
+<p>Tried several methods to reduce the file size includes:</p>
+
+<ul>
+<li>Remove unused layers</li>
+<li>Merge and flatten all layers</li>
+<li>Use lower jpeg compression quality</li>
+<li>Not save meta data</li>
+<li>Not preserve Photoshop editing capability</li>
+<li>Use Photoshop autotool > PDF presentation</li>
+<li>Use Illustrator</li>
+<li>Use Acrobat Pro to optimize PDF</li>
+</ul>
+
+<p>But none of them can really make the PDF file as small as expected.</p>
+
+<h4>Solution</h4>
+
+<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
+
+<ol>
+<li>Hide all text layers</li>
+<li>Save as PNG file</li>
+<li>Open PNG file in Photoshop</li>
+<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
+<li>Save as Photoshop PDF file</li>
+</ol>
+
+<h5>Result</h5>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td style="text-align: right">618.0KB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td style="text-align: right">624.0KB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
