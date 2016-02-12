@@ -179,7 +179,7 @@ function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
         return $proc->transformToXML($xmlo); // actual transformation
     } else {
         header("Content-type: text/html; charset=UTF-8");
-        echo "We have some problem. Try <a href=\"http://blog.othree.net/xml\">alternative version</a>";
+        echo "We have some problem. Please try again later";
         exit;
     }
 }
