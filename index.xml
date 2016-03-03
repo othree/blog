@@ -9,6 +9,58 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000859" baseName="device-pixel-ratio-header">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-02-28</b:date>
+				<b:time>14:34:04</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Device Pixel Ratio Header</b:title>
+			<b:content>
+				<b:summary>之前文章有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 HTTP Client Hints，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了： DPR width viewport-width downlink 其中 DPR 就是 device pixel ratio；viewport-width 就和以前介紹過的 viewport width 一樣；width 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device...</b:summary>
+				<b:mainContent><p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
+
+<ul>
+<li>DPR</li>
+<li>width</li>
+<li>viewport-width</li>
+<li>downlink</li>
+</ul>
+
+<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
+
+<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
+
+<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
+
+<pre><code>Accept-CH: "DPR, Downlink"
+</code></pre>
+
+<p>或是加上 meta tag</p>
+
+<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
+</code></pre>
+
+<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
+
+<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
+
+<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
+
+<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000858" baseName="how-to-reduce-pdf-size">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -655,134 +707,6 @@ people.person.(name == "Joe").age
 <p>ULA 雨傘的包裝如下，在香港地鐵有販賣機在賣，要用八達通卡購買，而且不同站點還有各自的限定色，是蠻有趣的銷售方式，當然也有實體店面，價錢大約台幣三四百，如果有去香港的推薦可以買一隻回來試試，要送人的話，就要三思了～～</p>
 
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22525750458/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0.jpg 768w, https://farm1.staticflickr.com/710/22525750458_84b7929ec2_k.jpg 2x" /></a></p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000853" baseName="apache2-http2">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-10-19</b:date>
-				<b:time>23:04:03</b:time>
-			</b:datetime>
-			<b:category>server</b:category>
-			<b:title>Apache2 and HTTP/2</b:title>
-			<b:content>
-				<b:summary> 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_28857c25b9_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
-
-<pre><code>./config
-make
-sudo make install
-</code></pre>
-
-<p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
-
-<p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
-
-<pre><code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
-tar zxvf ./httpd-2.4.17.tar.gz
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
-tar zxvf ./apr-util-1.5.4.tar.gz
-mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
-ar zxvf ./apr-util-1.5.4.tar.gz 
-mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
-</code></pre>
-
-<p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
-
-<pre><code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
-make
-sudo make install
-</code></pre>
-
-<p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
-</code></pre>
-
-<p>或是：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
-</code></pre>
-
-<p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
-
-<pre><code>&lt;VirtualHost *:80&gt;
-    Protocols h2c http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>還有</p>
-
-<pre><code>&lt;VirtualHost *:443&gt;
-    Protocols h2 http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
-
-<pre><code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
-SSLProtocol All -SSLv2 -SSLv3
-</code></pre>
-
-<p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
-
-<ul>
-<li>Firefox 27</li>
-<li>Chrome 22</li>
-<li>IE 11</li>
-<li>Opera 14</li>
-<li>Safari 7</li>
-<li>Android 4.4</li>
-<li>Java 8 </li>
-</ul>
-
-<p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
-
-<p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
-
-<pre><code>brew install curl --with-nghttp2
-brew link curl
-
-/usr/local/bin/curl -v --http2 https://othree.net
-</code></pre>
-
-<p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
-
-<pre><code>brew install nghttp2
-
-nghttp -uv https://othree.net
-</code></pre>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9f6d1b9a08_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_5553a17fb8_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
-
-<p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h_d.jpg" width="1022" height="53" alt="http1.1-1" /></a></p>
-
-<p>然後是 2.0：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h_d.jpg" width="1022" height="530" alt="http2-1" /></a></p>
-
-<p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
-</b:mainContent>
-				<b:extendContent>
 </b:extendContent>
 			</b:content>
 

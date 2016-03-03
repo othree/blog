@@ -4,11 +4,51 @@
 <title>O3noBLOG - css-html</title>
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
-<copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-04-08 00:53</lastBuildDate>
+<copyright>Copyright 2016</copyright>
+<lastBuildDate>2016-02-28 14:34</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Device Pixel Ratio Header</title>
+<description><![CDATA[<p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
+
+<ul>
+<li>DPR</li>
+<li>width</li>
+<li>viewport-width</li>
+<li>downlink</li>
+</ul>
+
+<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
+
+<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
+
+<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
+
+<pre><code>Accept-CH: "DPR, Downlink"
+</code></pre>
+
+<p>或是加上 meta tag</p>
+
+<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
+</code></pre>
+
+<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
+
+<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
+
+<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
+
+<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/</link>
+<guid>https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/</guid>
+<category>css-html</category>
+<pubDate>2016-02-28 14:34</pubDate>
+</item>
 
 <item>
 <title>srcset</title>
@@ -519,81 +559,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <guid>https://blog.othree.net/log/2012/12/02/srcset/</guid>
 <category>css-html</category>
 <pubDate>2012-12-02 17:52</pubDate>
-</item>
-
-<item>
-<title>schema.org  </title>
-<description><![CDATA[<p>語意網基本的組成可以分成描述框架和知識本體，框架就是如 <a href="http://www.w3.org/RDF/">RDF</a> 或是 <a href="http://www.w3.org/2000/10/swap/doc/">N3</a> 那樣的標準規範，我一開始看到 RDF 規範的時候其實就很納悶，說是語意網很重要的標準，怎麼一點語意的知識都沒有，後來才了解，它只是一個框架，知識是由其他地方來的，在語意網設計下的知識，可以把它分為語彙 (vocabulary) 和關係 (relation)，舉例來說：<em>相機有鏡頭</em>，這句話之中就包含了三個語彙，分別是 <em>相機</em> 、 <em>鏡頭</em> 和 <em>有</em>，相機和鏡頭都是屬於某個特定領域（相機、攝影這個領域）的語彙，會由該領域的人編撰它的相關知識，在這邊就先當他們代表某個物體，而 <em>有</em> 則是一個不同領域來的語彙，它同時也是代表一個關係，代表前者內包含後者，和相機有關的這種關係不勝枚舉，例如相機有關景窗、有快門、要裝底片、標價多少等等，W3C 有一套標準專門是用來制定這些詞彙的意義以及之間的關係，稱作 <a href="http://www.w3.org/TR/owl-features/">Web Ontology Language</a>，簡稱為 OWL，應該會有人注意到它的縮寫字母順序不太對，我猜是故意取貓頭鷹的名稱來用的，因為在很多國家貓頭鷹是智慧的象徵。</p>
-
-<p>OWL 要編寫起來其實很辛苦，因為即使只是一個很小很專門的領域，要把特定領域的所有語彙和他們之間的關係整理出來就很不容易了，若不是由有公信力的機構或專家背書，甚至也會被質疑這些知識的可靠度，而且 OWL 語言本身也是很複雜的 XML 語言，是複雜到不會想用純文字編輯軟體寫的程度，另外還有一個我也不想用純文字編輯器編輯的 XML 文件，叫做 XML Schema Definition(XSD)，是用來定義 XML 文件格式的 XML 文件，兩者我都寧願用專門的編輯軟體來處理。</p>
-
-<p>不過回來先只看語彙的部分，目前可以應用的語彙其來源上都不是 W3C，有名的像是 <a href="http://www.foaf-project.org/">FOAF</a>, <a href="http://dublincore.org/">Dublin Core</a>，前者是用來描述人際關係的，FOAF 是 Friend Of A Friend 的意思，後者則是 1995 年的第一屆 Metadata Workshop 所制訂的，一整套通用性很高，專門用來描述電子資源的後設資料 (metadata) 語彙，W3C 的網站也有<a href="http://semanticweb.org/wiki/Ontology">整理</a>了不少現存 ontology 資源出來，不過有很多時候，即使只有語彙的定義就很有幫助了，像是 microformats 就是用了很多其他地方已經先定義好的語彙來讓結構化的資料值可以對應到不同的屬性上，而且現在的搜尋引擎不止支援 microformats 你也可以用 <a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a> 來在網頁中加入結構化的語意資料，去年，三大搜尋引擎龍頭：Google, Yahoo, Bing 宣布了一個合作計畫叫 <a href="http://schema.org/">schema.org</a>，制訂了非常多的語彙建議，像是文章、書、電影、電視、活動、聽眾、工作機會、醫療相關等等的主題都有，並且建議使用 HTML5 的 microdata 機制來內嵌在網頁內提供給搜尋引擎。</p>
-
-<p>舉一個例子，以前介紹 microformats 時的範例：</p>
-
-<pre><code>&lt;div class="hreview"&gt;
- &lt;span&gt;&lt;span class="rating"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
- &lt;h4 class="summary"&gt;&lt;span class="item fn"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
- &lt;span&gt;Reviewer: &lt;span class="reviewer fn"&gt;Tantek&lt;/span&gt; - 
- &lt;abbr class="dtreviewed" title="20050418T2300-0700"&gt;April 18, 2005&lt;/abbr&gt;&lt;/span&gt;
- &lt;blockquote class="description"&gt;&lt;p&gt;
-  Crepes on Cole is one of the best little creperies in San Francisco.
-  Excellent food and service. Plenty of tables in a variety of sizes 
-  for parties large and small.  Window seating makes for excellent 
-  people watching to/from the N-Judah which stops right outside.  
-  I've had many fun social gatherings here, as well as gotten 
-  plenty of work done thanks to neighborhood WiFi.
- &lt;/p&gt;&lt;/blockquote&gt;
- &lt;p&gt;Visit date: &lt;span&gt;April 2005&lt;/span&gt;&lt;/p&gt;
- &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>如果改成用 schema.org 建議的 microdata 寫法：</p>
-
-<pre><code>&lt;div itempscope itemtype="http://schema.org/Review"&gt;
- &lt;span&gt;&lt;span itemprop="ratingValue"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
- &lt;h4 itemprop="itemReviewed" itemscope itemtype="http://schema.org/Book"&gt;&lt;span itemprop="name"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
- &lt;span itemprop="author" itemscope itemtype="http://schema.org/Person"&gt;Reviewer: &lt;span itemprop="name"&gt;Tantek&lt;/span&gt;&lt;/span&gt; - 
- &lt;time itemprop="dateCreated" datetime="20050418T2300"&gt;April 18, 2005&lt;/time&gt;
- &lt;p itemprop="reviewBody"&gt;
-  Crepes on Cole is one of the best little creperies in San Francisco.
-  Excellent food and service. Plenty of tables in a variety of sizes 
-  for parties large and small.  Window seating makes for excellent 
-  people watching to/from the N-Judah which stops right outside.  
-  I've had many fun social gatherings here, as well as gotten 
-  plenty of work done thanks to neighborhood WiFi.
- &lt;/p&gt;
- &lt;p&gt;Visit date: &lt;time&gt;April 2005&lt;/span&gt;&lt;/p&gt;
- &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>用 microdata 的方法和 microformats 和 RDFa 兩種比起來，我覺得優點在：</p>
-
-<ol>
-<li>使用的是標準，設計語意上確實描述資料的屬性來用，這是 microformats 無法辦到的，我覺得 microformats 是屬於過渡時期的規範，所以多要求了最大的相容性</li>
-<li>撰寫起來也不會太複雜，且不要求使用 XHTML，這點則是相較於 RDFa，因為規範上，要使用 RDFa 來加註 metadata，是透過 XHTML 的擴充性達到的，如果是單純的 HTML 文件，其實是不能加入其他文件的標籤或屬性的</li>
-<li>使用了 URI 的概念作為資料類別的值，用 URI 取代普通單純的類別值有兩個好處，一是在網路上他是絕對唯一，二是未來如果要和其他的標準、後設資料等接軌，或是有人要補上這些資訊的 OWL 文件，都不會是問題</li>
-</ol>
-
-<p>基於這些優點，我現在也很推薦使用 schema.org 建議的格式化資料結構，然後我想說看看國內有沒有人用，發現清單上有個 <a href="http://schema.org/Recipe">食譜</a>，就上 <a href="http://icook.tw/">iCook</a> 看看，結果發現有耶！</p>
-
-<p>以下面這道<a href="http://icook.tw/recipes/16641">食譜</a>為例</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8153705385/" title="Flickr 上 othree 的 品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"><img src="//farm8.staticflickr.com/7254/8153705385_cf5b849f07.jpg" width="500" height="343" alt="品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"/></a></p>
-
-<p>丟進 Google 的<a href="http://www.google.com/webmasters/tools/richsnippets">結構化資料測試工具</a>，會產生如下的分析結果（可以自己 <a href="http://www.google.com/webmasters/tools/richsnippets?url=http%3A%2F%2Ficook.tw%2Frecipes%2F16641&amp;html=">試試看</a>，看圖要看原始大小也沒比較方便）：</p>
-
-<p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8153733486/" title="Flickr 上 othree 的 Google Structured Data Testing Tool"><img src="//farm9.staticflickr.com/8490/8153733486_c3527b34b5.jpg" width="207" height="500" alt="Google Structured Data Testing Tool"/></a></p>
-
-<p>這份結果可以很清楚的看到， Google 可以把 iCook 的食譜網頁的各項資訊包括菜名、作者、材料、步驟等都正確的抓出來。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/11/04/schemaorg/</link>
-<guid>https://blog.othree.net/log/2012/11/04/schemaorg/</guid>
-<category>css-html</category>
-<pubDate>2012-11-04 21:34</pubDate>
 </item>
 
 

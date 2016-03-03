@@ -5,17 +5,17 @@
 	<b:blogDescription></b:blogDescription>
 	<b:entries>
 		<b:entriesMeta>
-			<b:listType>m</b:listType>
-			<b:listData listID="2016-02">February 2016</b:listData>
+			<b:listType>s</b:listType>
+			<b:listData listID="000859" baseName="device-pixel-ratio-header">Device Pixel Ratio Header</b:listData>
 
 			<b:previous>
-				<b:mTitle>January 2016</b:mTitle>
-				<b:mDate>2016/01</b:mDate>
+				<b:mTitle>How to Reduce PDF Size and Keep Text</b:mTitle>
+				<b:mDate>2016-02-06</b:mDate>
+				<b:mBase>how-to-reduce-pdf-size</b:mBase>
 			</b:previous>
 
 
 		</b:entriesMeta>
-
 		<b:entry entryID="000859" baseName="device-pixel-ratio-header">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -27,6 +27,12 @@
 				<b:time>14:34:04</b:time>
 			</b:datetime>
 			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
 			<b:title>Device Pixel Ratio Header</b:title>
 			<b:content>
 				<b:summary>之前文章有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 HTTP Client Hints，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了： DPR width viewport-width downlink 其中 DPR 就是 device pixel ratio；viewport-width 就和以前介紹過的 viewport width 一樣；width 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device...</b:summary>
@@ -64,137 +70,12 @@
 				<b:extendContent>
 </b:extendContent>
 			</b:content>
+			<b:comments commentCount="0">
 
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
 
+			</b:trackbacks>
 		</b:entry>
-
-		<b:entry entryID="000858" baseName="how-to-reduce-pdf-size">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-02-06</b:date>
-				<b:time>10:10:15</b:time>
-			</b:datetime>
-			<b:category>software</b:category>
-			<b:title>How to Reduce PDF Size and Keep Text</b:title>
-			<b:content>
-				<b:summary>Requirement Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality. Expect Expect the PDF file size is a little bit larger than JPG file. Issue Use save as and choose Photoshop PDF will...</b:summary>
-				<b:mainContent><h4>Requirement</h4>
-
-<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
-
-<h4>Expect</h4>
-
-<p>Expect the PDF file size is a little bit larger than JPG file.</p>
-
-<h4>Issue</h4>
-
-<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
-
-<ul>
-<li>Page Size: 210mm*297mm (A4)</li>
-<li>Resolution: 1240px*1754px</li>
-<li>Fonts: 2 English font</li>
-</ul>
-
-<p>Sizes:</p>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>PSD</td>
-    <td></td>
-    <td>79.7MB</td>
-  </tr>
-  <tr>
-    <td>PNG</td>
-    <td></td>
-    <td>&#160;1.2MB</td>
-  </tr>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td>&#160;0.6MB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td>&#160;7.0MB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>File transformed on Adobe CC 2016 Jan </p>
-
-<p>Tried several methods to reduce the file size includes:</p>
-
-<ul>
-<li>Remove unused layers</li>
-<li>Merge and flatten all layers</li>
-<li>Use lower jpeg compression quality</li>
-<li>Not save meta data</li>
-<li>Not preserve Photoshop editing capability</li>
-<li>Use Photoshop autotool > PDF presentation</li>
-<li>Use Illustrator</li>
-<li>Use Acrobat Pro to optimize PDF</li>
-</ul>
-
-<p>But none of them can really make the PDF file as small as expected.</p>
-
-<h4>Solution</h4>
-
-<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
-
-<ol>
-<li>Hide all text layers</li>
-<li>Save as PNG file</li>
-<li>Open PNG file in Photoshop</li>
-<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
-<li>Save as Photoshop PDF file</li>
-</ol>
-
-<h5>Result</h5>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td style="text-align: right">618.0KB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td style="text-align: right">624.0KB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
 	</b:entries>
 </b:blog>
