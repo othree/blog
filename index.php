@@ -3,8 +3,6 @@
 error_reporting(0);
 // error_reporting(E_ALL);
 
-// include "XML_XSLT2Processor/XSLT2Processor.php";
-
 if (preg_match("/_/", getenv('QUERY_STRING'))) {
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: https://blog.othree.net".preg_replace("/_/", "-", getenv('QUERY_STRING')));
@@ -160,7 +158,7 @@ echo $output;
 
 //xsl transform function
 function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
-    if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
+    if (preg_match("/^7/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
     // if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl'))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);
