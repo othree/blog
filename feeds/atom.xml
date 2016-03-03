@@ -1,0 +1,1253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="zh-TW">
+<title>O3noBLOG</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/" />
+<modified>2016-02-28T06:34:24Z</modified>
+<tagline></tagline>
+<id>tag:blog.othree.net,2016://1</id>
+<generator url="http://www.movabletype.org/" version="4.381">Movable Type</generator>
+<copyright>Copyright (c) 2016, othree</copyright>
+
+<entry>
+<title>Device Pixel Ratio Header</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/" />
+<modified>2016-02-28T06:34:24Z</modified>
+<issued>2016-02-28T06:34:04Z</issued>
+<id>tag:blog.othree.net,2016://1.859</id>
+<created>2016-02-28T06:34:04Z</created>
+<summary type="text/plain">之前文章有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 HTTP Client Hints，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了： DPR width viewport-width downlink 其中 DPR 就是 device pixel ratio；viewport-width 就和以前介紹過的 viewport width 一樣；width 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>css-html</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
+
+<ul>
+<li>DPR</li>
+<li>width</li>
+<li>viewport-width</li>
+<li>downlink</li>
+</ul>
+
+<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
+
+<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
+
+<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
+
+<pre><code>Accept-CH: "DPR, Downlink"
+</code></pre>
+
+<p>或是加上 meta tag</p>
+
+<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
+</code></pre>
+
+<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
+
+<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
+
+<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
+
+<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>How to Reduce PDF Size and Keep Text</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/" />
+<modified>2016-02-06T04:22:16Z</modified>
+<issued>2016-02-06T02:10:15Z</issued>
+<id>tag:blog.othree.net,2016://1.858</id>
+<created>2016-02-06T02:10:15Z</created>
+<summary type="text/plain">Requirement Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality. Expect Expect the PDF file size is a little bit larger than JPG file. Issue Use save as and choose Photoshop PDF will...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>software</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<h4>Requirement</h4>
+
+<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
+
+<h4>Expect</h4>
+
+<p>Expect the PDF file size is a little bit larger than JPG file.</p>
+
+<h4>Issue</h4>
+
+<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
+
+<ul>
+<li>Page Size: 210mm*297mm (A4)</li>
+<li>Resolution: 1240px*1754px</li>
+<li>Fonts: 2 English font</li>
+</ul>
+
+<p>Sizes:</p>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>PSD</td>
+    <td></td>
+    <td>79.7MB</td>
+  </tr>
+  <tr>
+    <td>PNG</td>
+    <td></td>
+    <td>&#160;1.2MB</td>
+  </tr>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td>&#160;0.6MB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td>&#160;7.0MB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>File transformed on Adobe CC 2016 Jan </p>
+
+<p>Tried several methods to reduce the file size includes:</p>
+
+<ul>
+<li>Remove unused layers</li>
+<li>Merge and flatten all layers</li>
+<li>Use lower jpeg compression quality</li>
+<li>Not save meta data</li>
+<li>Not preserve Photoshop editing capability</li>
+<li>Use Photoshop autotool > PDF presentation</li>
+<li>Use Illustrator</li>
+<li>Use Acrobat Pro to optimize PDF</li>
+</ul>
+
+<p>But none of them can really make the PDF file as small as expected.</p>
+
+<h4>Solution</h4>
+
+<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
+
+<ol>
+<li>Hide all text layers</li>
+<li>Save as PNG file</li>
+<li>Open PNG file in Photoshop</li>
+<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
+<li>Save as Photoshop PDF file</li>
+</ol>
+
+<h5>Result</h5>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td style="text-align: right">618.0KB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td style="text-align: right">624.0KB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>JSON Universe</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/01/11/json-universe/" />
+<modified>2016-01-12T11:44:38Z</modified>
+<issued>2016-01-11T14:38:31Z</issued>
+<id>tag:blog.othree.net,2016://1.857</id>
+<created>2016-01-11T14:38:31Z</created>
+<summary type="text/plain">JSON 在這幾年不但標準化，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 [] 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下： 不支援註解 物件的 key 一定要用字串型式，就是一定要用引號框起來 字串一定要用雙引號，不能用單引號 陣列或物件的最後一個元素後面不能加逗點（ES5 允許） 當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 E4X 那篇文章開始來的，那篇文章有提到...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
+
+<ul>
+<li>不支援註解</li>
+<li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
+<li>字串一定要用雙引號，不能用單引號</li>
+<li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
+</ul>
+
+<p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
+]]>
+<![CDATA[<h4>JXON</h4>
+
+<p>第一個要介紹的就是剛剛提到的 <a href="https://developer.mozilla.org/en-US/docs/JXON">JXON</a>，JXON 全名是 lossless JavaScript XML Object Notation，是使用 JavaScript 語言的 syntax 來表示 XML 文件的資料，可以達到完整無失真的呈現，就是說可以還原成一模一樣的 XML，不過其實 JXON 並不是真的有個明確的標準，並沒有一個組織或單位來制訂，雖然如此，還是可以找到有人有<a href="https://github.com/tyrasd/jxon">實做</a>。</p>
+
+<h4>JSONx</h4>
+
+<p>第二個要介紹的是 <a href="https://www-01.ibm.com/support/knowledgecenter/SS9H2Y_7.1.0/com.ibm.dp.doc/json_jsonx.html">JSONx</a>，這是 IBM 推出的一種 XML 文件格式，目的非常有趣，和 JXON 剛好相反，是用 XML 文件來表示 JSON 文件的資料，namespace 是 <code>http://www.ibm.com/xmlns/prod/2009/jsonx</code>，講真的我想不到到底有誰會有需求使用到這個標準，隨便看個範例文件吧：</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;json:object xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:json="http://www.ibm.com/xmlns/prod/2009/jsonx"&gt;
+  &lt;json:string name="name"&gt;John Smith&lt;/json:string&gt;
+  &lt;json:object name="address"&gt;
+    &lt;json:string name="streetAddress"&gt;21 2nd Street&lt;/json:string&gt;
+    &lt;json:string name="city"&gt;New York&lt;/json:string&gt;
+    &lt;json:string name="state"&gt;NY&lt;/json:string&gt;
+    &lt;json:number name="postalCode"&gt;10021&lt;/json:number&gt;
+  &lt;/json:object&gt;
+  &lt;json:array name="phoneNumbers"&gt;
+    &lt;json:string&gt;212 555-1111&lt;/json:string&gt;
+    &lt;json:string&gt;212 555-2222&lt;/json:string&gt;
+  &lt;/json:array&gt;
+  &lt;json:null name="additionalInfo" /&gt;
+  &lt;json:boolean name="remote"&gt;false&lt;/json:boolean&gt;
+  &lt;json:number name="height"&gt;62.4&lt;/json:number&gt;
+  &lt;json:string name="ficoScore"&gt; &gt; 640&lt;/json:string&gt;
+&lt;/json:object&gt;
+</code></pre>
+
+<h4>MessagePack</h4>
+
+<p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_b.jpg" width="840" height="289" alt="MessagePack Try" /></a></p>
+
+<p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
+
+<h4>BSON, BJSON</h4>
+
+<p><a href="http://bsonspec.org/">BSON</a>、<a href="http://bjson.org/">BJSON</a> 也都是 Binary 的 JSON 表現格式，不過這兩個規格都不完全相容於 JSON，有多一些自定義的資料型態，像是 regular expression，然後大部分人都只有談到 BSON，不太有人講到 BJSON 的樣子。</p>
+
+<h4>UBJSON, Smile</h4>
+
+<p><a href="http://ubjson.org/">UBJSON</a>(Universal Binary JSON) 和 <a href="http://wiki.fasterxml.com/SmileFormatSpec">Smile</a> 也和上面幾個一樣是 Binary 的資料格式，和 BSON 比起來則是差在這兩個格式完全相容於 JSON，意思就是可以做到 <code>UBJSON -&gt; JSON -&gt; UBJSON</code> 這樣的資料轉而完全不會遺失資訊。</p>
+
+<p>Binanry 的 JSON 表現格式其實還有一個叫 <a href="https://componentality.com/xjson/">xJSON</a> 的比較沒知名度這樣。</p>
+
+<h4>Hjson</h4>
+
+<p><a href="http://hjson.org/">Hjson</a> 全名是 the Human JSON，顧名思義就是更人性化的 JSON 格式，是一個比 JSON 寬鬆的規範，例如允許註解，不用 <code>,</code> 改成用換行也可以分開不同元素：</p>
+
+<pre><code>[
+  1
+  2
+  3
+]
+</code></pre>
+
+<p>物件的 key 不需要字串的引號：</p>
+
+<pre><code>{ foo: 123 }
+</code></pre>
+
+<p>等等很多方便的語法，不過其實如果要用機器產生這些寬鬆的資料是不太好，比較適合的場合還是用人工維護的 JSON 檔案。</p>
+
+<h4>rson</h4>
+
+<p><a href="https://code.google.com/p/rson/">rson</a> 是一個 JSON 的 superset，和 Hjson 的目標有些接近，不過 rson 的一些新語法更接近 <a href="http://www.yaml.org/">YAML</a> 格式，專案是放在 Google Code 上，而且似乎已經沒維護了，是個總有一天會消失在網路上的東西吧。</p>
+
+<h4>LJSON</h4>
+
+<p><a href="https://github.com/MaiaVictor/LJSON">LJSON</a> 的 L 應該是 lambda 的意思，也是個 JSON 的擴充格式，改變只有一個，就是多了可以儲存 pure function 的能力，儲存 function 的形式是很像 ES6 arrow function 的樣子：</p>
+
+<pre><code>(v0)=&gt;({"author":"John","message":v0})
+</code></pre>
+
+<p>最大的差別在於 <code>=&gt;</code> 後面是接 <code>()</code>，並且還有個特色是它會想辦法最佳化，會有像是 dead code removal 的效果。如果要自己做到用 JSON 儲存 function 的話，一般是可以先用 <code>toString</code> 來輸出 function 的原始碼，要還原時再用 <code>new Function</code> 來還原，不過如果不是 pure function，例如有用到 closure 變數的話，就一定會失去這些 reference 到的變數了。</p>
+
+<p>另外還有一個 <a href="https://github.com/daviddengcn/ljson">LJSON</a> 是叫做 Loose JSON，就和上面介紹的 Hjson 目標差不多，就不再多介紹了。</p>
+
+<h4>JSON Lines</h4>
+
+<p><a href="http://jsonlines.org/">JSON Lines</a> 也是有點接近上面介紹的幾個東西，其實是個很簡單的東西，就是把多個 JSON 資料用換行接在同一個文件檔案內，例如：</p>
+
+<pre><code>[1,2,3]
+[4,5,6]
+[7,8,9]
+</code></pre>
+
+<p>三個 JSON 陣列接在一起，不是一個合法的 JSON string，一般 JSON Parser 都會說 Syntax Error，不過支援 JSON Lines 的環境下就可以把這串字串切開，分成三個陣列，支援的環境中我看到比較有名的大概就是 <a href="https://github.com/maxogden/dat/">dat</a> 了，這是一個蠻厲害的資料分享的工具，其中的串流模式傳輸資料就是用到 JSON Lines 格式（其實就是一個一個 JSON 資料輪流輸出）。</p>
+
+<h4>JSONH</h4>
+
+<p><a href="https://github.com/WebReflection/JSONH">JSONH</a> 就不是一個 JSON 的擴充格式了，它事實上是用來壓縮 JSON 的，特別適用於物件的陣列的資料集，像是：</p>
+
+<pre><code>[
+  {
+    "name": "John",
+    "gender": "Male",
+    "country": "USA"
+  },
+  {
+    "name": "Smith",
+    "gender": "Male",
+    "country": "Canada"
+  }
+]
+</code></pre>
+
+<p>透過用 JSONH 壓縮就會變成：</p>
+
+<pre><code>[3, "name", "gender", "country", "John", "Male", "USA", "Smith", "Male", "Canada"]
+</code></pre>
+
+<p>最主要節省的就是大量重複的屬性名稱，如果屬性名稱長，陣列又長，這樣壓縮前後的資料量大小差距就會很明顯，不過如果資料階層比較複雜的話，沒辦法整理得這麼漂亮，壓縮效果就會打折了。</p>
+
+<h4>Jsonnet</h4>
+
+<p><a href="http://jsonnet.org/">Jsonnet</a> 是 Google 所推出，帶著一點程式語言特性的 JSON 文件格式，例如多了個 <code>self</code>：</p>
+
+<pre><code>{
+    person1: {
+        name: "Alice",
+        welcome: "Hello " + self.name + "!",
+    },
+    person2: self.person1 { name: "Bob" },
+}
+</code></pre>
+
+<p>還有 tempalte string：</p>
+
+<pre><code>{
+    fmt2: "The word %(wd)s has %(le)d letters.  Go %(wd)s!"
+        % {wd: $.word, le: std.length($.word)},
+}
+</code></pre>
+
+<p>Array comprehension：</p>
+
+<pre><code>{
+    foo: [1, 2, 3],
+    bar: [x * x for x in self.foo if x &gt;= 2],
+    baz: { ["field" + x]: x for x in self.foo },
+    obj: { ["foo" + "bar"]: 3 },
+}
+</code></pre>
+
+<p>除了這些程式語法的特性之外， Jsonnet 還有像是 Hjson 的一些比較人性化的語法的支援，官網上則自稱是是一種 data template language，而不是單純的資料而已。</p>
+
+<h4>JSON3</h4>
+
+<p><a href="http://bestiejs.github.io/json3/">JSON3</a> 其實不是一個新版本的 JSON，而是一個更加穩健的 JavaScript 的 JSON 實做，多處理了一些不同瀏覽器的差異問題，3 的由來其實是相對於 Douglas 的 <a href="https://github.com/douglascrockford/JSON-js">json2.js</a>，這個 json2.js 是整個 JSON 進 ECMAScript 標準時最主要的依據，包括 Global Varibale 的名稱，API 的設計都是從這邊來的，至於這個 json2.js 的 2 的意思其實就是這是 Douglas 實做的第二版 JSON library。</p>
+
+<h4>JSONP</h4>
+
+<p><a href="https://zh.wikipedia.org/wiki/JSONP">JSONP</a> 其實不是一個標準，最早出處也不詳，不過早一點在 CORS 普及前就開始寫 Ajax 的人應該是很熟悉的東西，瀏覽器為了安全性問題，雖然可以跨直接用 XHR 做出 HTTP request，但是會限制跨 domain 的連線，現在有 CORS 可以讓網站所有者提供允許的白名單，但是在 CORS 普及前，基本上是完全被禁止的，不過有個方法就是插入 <code>&lt;script&gt;</code> 標籤去執行遠端的 js 檔案，這個方法的缺點就是只能執行，不能讀取檔案內容，JSONP 就是在這個限制下所設計出來可以用來跟遠端要資料的方法，基本上實做的方法就是在本地先產生好一個暫時的 callback function：</p>
+
+<pre><code>window.cb123456 = function (data) {
+  window.cb123456 = null; //clean up
+
+  //do something with data      
+};
+</code></pre>
+
+<p>然後把遠端資源加上參數指定 callback 名稱：</p>
+
+<pre><code>&lt;script type="text/javascript"
+     src="http://server2.example.com/RetrieveUser?UserId=1823&amp;jsonp=cb123456"&gt;
+&lt;/script&gt;
+</code></pre>
+
+<p>遠端收到 Request 後產生特別的 response，本來要回傳的資料如下：</p>
+
+<pre><code>{
+  "name": "John",
+  "gender": "Male",
+  "country": "USA"
+}
+</code></pre>
+
+<p>現在會變成一段 JavaScript 程式碼：</p>
+
+<pre><code>cb1231465({
+  "name": "John",
+  "gender": "Male",
+  "country": "USA"
+});
+</code></pre>
+
+<h4>JSON Schema</h4>
+
+<p>JSON 本身是很自由的資料格式，不過開發比較大型的應用程式，或是要做一些測試的時候，太過自由就不一定是優點了，所以很合理的就會有個來定義資料內容結構的描述語言出現，<a href="http://json-schema.org/">JSON Schema</a> 就是一個，而且似乎很合理的 JSON Schema 也是 JSON 文件：</p>
+
+<pre><code>{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Product",
+    "description": "A product from Acme's catalog",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "The unique identifier for a product",
+            "type": "integer"
+        }
+    },
+    "required": ["id"]
+}
+</code></pre>
+
+<p>這個文件格式也有在 <a href="http://raml.org/">RAML</a> 中被使用到，RAML 是個 RESTful API 的定義文件，如果 API 傳輸的資料是 JSON 的話，就可以內嵌 JSON Schema，都定義完整就可以用自動化工具來做一些測試了，或是也可以產生一些方便閱讀的文件等等。</p>
+
+<h4>JSON-LD</h4>
+
+<p><a href="http://json-ld.org/">JSON-LD</a> 是 JSON for Linked Data，所謂 Linked Data 其實就是語意網的一部分，基本上還是遵照 <a href="http://www.w3.org/RDF/">RDF</a> 架構去設計出來的文件，目前也很多網路服務都支援，像是 Google、Facebook 等等，甚至 Gmail 的一些特殊能力也是透過在信件內插入 JSON-LD 格式的資料才得以實現。</p>
+
+<h4>JSON-RPC</h4>
+
+<p><a href="http://json-rpc.org/">JSON-RPC</a> 基本上就是 XML-RPC 的 JSON 版本這樣，其實我也不知道有沒有人真的拿來應用就是，倒是 XML-RPC 現在還不少老東西有支援。</p>
+
+<h4>GeoJSON</h4>
+
+<p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="999" height="690" alt="twgeojson g0v" srcset="https://farm2.staticflickr.com/1657/24218757206_0bafdc4c24_o_d.png 2x" /></a></p>
+
+<p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
+
+<h4>JSON-stat</h4>
+
+<p><a href="http://json-stat.org/">JSON-stat</a> 是個把二維統計資訊表格用 JSON 表現的格式，而且不是只能夠處理兩個維度的資料而已，事實上可以儲存更多維度，JSON-stat 在儲存 raw data 的部分是用打平的一維陣列來儲存，所以也不用擔心太多層太過複雜的狀況，想詳細瞭解一點的可以參考官網右上角的投影片看看。</p>
+
+<h4>JSON Graph</h4>
+
+<p><a href="http://netflix.github.io/falcor/documentation/jsongraph.html">JSON Graph</a> 是 Netflix 推出的 <a href="http://netflix.github.io/falcor/">Falcor</a> 裡面用到的，Falcor 是一種用來取代 RESTful API 的新的前後端之間的溝通方式，這種方法和 RESTful 相比最大的差異就是不再是對單一的資源（resource）做操作，而是整個應用程式會用到的東西都組織定義好，放到一個大的 resource 內，然後再對這個大的資源做操作，而這個大的 resource 就是所謂的 JSON Graph 物件，Falcor 的出現是為了解決一些把 RESTful 用到很透徹時會出現的問題，不過真的要想用這套方法在自己的服務上其實是有些難度，因為要實做一個 Falcor Server，官方也只有提供 Node 版的。</p>
+
+<h4>JSONPath</h4>
+
+<p><a href="http://goessner.net/articles/JsonPath/">JSONPath</a> 是一個 JSON 的 query 語言，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/XPath">XPath</a> 之於 XML，語法 syntax 其實和普通 JavaScript 程式碼很像，不會太難理解，一些範例：</p>
+
+<pre><code>$.store.*
+$.store.book[*].author
+$.store..price
+</code></pre>
+
+<p>不過這些可不是程式碼，而是單純的字串，丟進 JSONPath 引擎再給它相對應的物件（不是 JSON 字串），就可以把目標位置的資料取出來。</p>
+
+<h4>JSONiq</h4>
+
+<p><a href="http://jsoniq.org/">JSONiq</a> 也是個用來 query JSON 資料用的語言，不過和上面的 JSONPath 不一樣，比較像是 SQL 那樣有點程式化，而且語法偏 functional programming，例如：</p>
+
+<pre><code>for $sarah in collection("users"),
+    $friend in collection("users")
+where $sarah.name eq "Sarah"
+      and
+      (some $name in $sarah.friends[]
+       satisfies $friend.name eq $name)
+return $friend
+</code></pre>
+
+<h4>JSON Pointer</h4>
+
+<p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> 是一個 2013 的 RFC 標準(RFC-6901)，用途和 JSON Path 有點像，也是用來取出 JSON 文件中的一部份資料，不過最主要的差異在於 JSON Pointer 一定是只能指向到一個節點，只能拿到一個 value，不像 JSONPath 或是 JSONip 可以一次 query 很多節點，然後用陣列的形式傳回值；另外還有一個和 JSONPath 的差異是 JSON Pointer 和 XPath 的語法很接近：</p>
+
+<pre><code>/foo/0
+/actors/4/name
+</code></pre>
+
+<h4>JSON Patch</h4>
+
+<p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> 是一個另 RFC 標準(RFC-6902)，緊接在 JSON Pointer 之後，這兩個標準都是都是在 <a href="https://blog.gslin.org/archives/2014/02/15/4261/json-patch/">gslin</a> 那邊看到的，JSON Patch 主要是定義了一組標準的對 JSON 的操作(operation)，提供了 add, remove, replace, move, copy, test 幾個操作，基本上看起來如下：</p>
+
+<pre><code>{"op": "add", "path": "/pets/0", "value": "dog"}
+</code></pre>
+
+<p>這行的意思是要在 pets 下的第一個元素的位置加上一個值，字串 "dog"，JSON Patch 基本上是設計來和 HTTP Patch 配合的，以前如果要用 Patch 修改某個特定網路 reource 的話，一定要把整個完整的，更新過後的 JSON 資料傳一次，但是如果用 JSON Patch 就可以只傳要做怎樣的更新就可以了，可以節省很多資料的傳輸量，而且還可以先用 test 做測試，然後也可以一次做一連串的修改動作：</p>
+
+<pre><code>[
+  { "op": "replace", "path": "/baz", "value": "boo" },
+  { "op": "add", "path": "/hello", "value": ["world"] },
+  { "op": "remove", "path": "/foo"}
+]
+</code></pre>
+
+<h4>JSONDiffPatch</h4>
+
+<p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch" srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16.jpg 768w" /></a></p>
+
+<p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
+
+<h4>JSONLint</h4>
+
+<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還可以用可以收展開的樹狀檢視模式來看 JSON 資料。</p>
+
+<h4>?JSON</h4>
+
+<p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
+]]>
+</content>
+</entry>
+
+<entry>
+<title>2015</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/01/03/2015/" />
+<modified>2016-01-03T10:22:42Z</modified>
+<issued>2016-01-03T07:20:10Z</issued>
+<id>tag:blog.othree.net,2016://1.856</id>
+<created>2016-01-03T07:20:10Z</created>
+<summary type="text/plain"> 又到了一年一度的照片回顧了，今年因為比較多事情，竟然有一個月沒有照片（除了開箱以外），所以就另外多挑了一張照片出來這樣。首先是一月在台南武廟前面碳烤吐司那邊拍的，台南的大大小小寺廟真的很多，隨便一條巷子進去就有間小廟。 二月是最後一次五月天到HTC的尾牙了，今年聽說五月天沒有要唱尾牙場這樣。 三月的是在摩茲工寮拍的，是 Kano 的 workshop，Kano 是讓小朋友能自己從硬體組裝電腦的一個 kit，之前和朋友湊團買了不少台，達到可以請官方支援開一場 workshop 的目標，所以就辦了一場，也是我難得有機會拍小孩子的照片。 四月是我今年印象最深刻的一杯飲料，台南凰商號的鳳梨冰茶。 五月的時候去了北京一趟，趁著有一天假日去觀光一下，其中頤和園還蠻不錯的，這張照片是園內的麒麟，做工精細，光是台座就很華麗，然後這尊我都稱他為標準麒麟，感覺是有人要畫麒麟時可以來參考用的標準版。 六月就是都沒照片可以挑，所以跳到七月，今年幫 HITCON 記錄了不少活動，最主力參與的就是 HITCON 本番活動的四天研討會加前面兩天 Training 了，然後拍完我就感冒接著一直咳嗽到11月底，明年大概不能這樣從頭參加到尾了，挑的這張是 HITCON Girls 的讀書會的照片，其實 HITCON Girls 的難易度對我來說好像還蠻剛好的(?)。 八月是慣例的 COSCUP，這張是 Jserv 講完他封麥演講後拍的，因為覺得他神情不太一般就拍下來了，後來看他的一些心情抒發才知道是怎麼回事。 九月去幫忙拍了 Open Street Map 的研討會（State of The Map），規模不大，不過是我拍的蠻開心的一場活動，就是一種小而美的 fu。 十月其實也沒拍什麼照片，這張是某天下班時在信義區空橋拍的簡單夜景。...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>diary</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16140518847/" title="武廟碳烤土司 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7492/16140518847_59717232dc_b.jpg" width="1024" height="683" alt="武廟碳烤土司" srcset="https://farm8.staticflickr.com/7492/16140518847_88848cf42f_k.jpg 2x" /></a></p>
+
+<p>又到了一年一度的照片回顧了，今年因為比較多事情，竟然有一個月沒有照片（除了開箱以外），所以就另外多挑了一張照片出來這樣。首先是一月在台南武廟前面碳烤吐司那邊拍的，台南的大大小小寺廟真的很多，隨便一條巷子進去就有間小廟。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16456098101/" title="HTC 2014 Year End Party by othree, on Flickr"><img src="https://farm8.staticflickr.com/7322/16456098101_3302c040ba_b.jpg" width="1024" height="683" alt="HTC 2014 Year End Party" srcset="https://farm8.staticflickr.com/7322/16456098101_b7740c3902_k.jpg 2x" /></a></p>
+
+<p>二月是最後一次五月天到HTC的尾牙了，今年聽說五月天沒有要唱尾牙場這樣。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16535116467/" title="Kano 小朋友的電腦自己動手作工作坊 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8602/16535116467_1e42f2e043_b.jpg" width="1024" height="683" alt="Kano 小朋友的電腦自己動手作工作坊" srcset="https://farm9.staticflickr.com/8602/16535116467_ba59ba6dcd_k.jpg 2x" /></a></p>
+
+<p>三月的是在摩茲工寮拍的，是 Kano 的 workshop，Kano 是讓小朋友能自己從硬體組裝電腦的一個 kit，之前和朋友湊團買了不少台，達到可以請官方支援開一場 workshop 的目標，所以就辦了一場，也是我難得有機會拍小孩子的照片。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133378048/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7669/17133378048_014e3ee6f2_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7669/17133378048_149a4f072d_k.jpg 2x" /></a></p>
+
+<p>四月是我今年印象最深刻的一杯飲料，台南凰商號的鳳梨冰茶。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/18732255206/" title="頤和園 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8873/18732255206_de78be9257_b.jpg" width="683" height="1024" alt="頤和園" srcset="https://farm9.staticflickr.com/8873/18732255206_8d341d52b8_k.jpg 2x" /></a></p>
+
+<p>五月的時候去了北京一趟，趁著有一天假日去觀光一下，其中頤和園還蠻不錯的，這張照片是園內的麒麟，做工精細，光是台座就很華麗，然後這尊我都稱他為標準麒麟，感覺是有人要畫麒麟時可以來參考用的標準版。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19502074628/" title="HITCON GIRLS 7月讀書會 by othree, on Flickr"><img src="https://farm1.staticflickr.com/413/19502074628_f5bd2785a1_b.jpg" width="1024" height="683" alt="HITCON GIRLS 7月讀書會" srcset="https://farm1.staticflickr.com/413/19502074628_54c3a5432f_k.jpg 2x" /></a></p>
+
+<p>六月就是都沒照片可以挑，所以跳到七月，今年幫 HITCON 記錄了不少活動，最主力參與的就是 HITCON 本番活動的四天研討會加前面兩天 Training 了，然後拍完我就感冒接著一直咳嗽到11月底，明年大概不能這樣從頭參加到尾了，挑的這張是 HITCON Girls 的讀書會的照片，其實 HITCON Girls 的難易度對我來說好像還蠻剛好的(?)。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21691691725/" title="COSCUP 2015 Day 2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/732/21691691725_0158744a48_b.jpg" width="1024" height="683" alt="COSCUP 2015 Day 2" srcset="https://farm1.staticflickr.com/732/21691691725_dbd49a1cb9_k.jpg 2x" /></a></p>
+
+<p>八月是慣例的 COSCUP，這張是 Jserv 講完他封麥演講後拍的，因為覺得他神情不太一般就拍下來了，後來看他的一些心情抒發才知道是怎麼回事。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21588592452/" title="SOTM Taiwan 2015 Day 2 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5666/21588592452_42ba1e0687_b.jpg" width="1024" height="683" alt="SOTM Taiwan 2015 Day 2" srcset="https://farm6.staticflickr.com/5666/21588592452_e277dc0763_k.jpg 2x" /></a></p>
+
+<p>九月去幫忙拍了 Open Street Map 的研討會（State of The Map），規模不大，不過是我拍的蠻開心的一場活動，就是一種小而美的 fu。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840706024/" title="信義區 by othree, on Flickr"><img src="https://farm1.staticflickr.com/774/21840706024_a5df54ab4a_b.jpg" width="1024" height="683" alt="信義區" srcset="https://farm1.staticflickr.com/774/21840706024_2997a2fa53_k.jpg 2x" /></a></p>
+
+<p>十月其實也沒拍什麼照片，這張是某天下班時在信義區空橋拍的簡單夜景。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23369387526/" title="菲貓 by othree, on Flickr"><img src="https://farm1.staticflickr.com/666/23369387526_c49aaa7eeb_b.jpg" width="1024" height="683" alt="菲貓" srcset="https://farm1.staticflickr.com/666/23369387526_4b65fa5c6f_k.jpg 2x" /></a></p>
+
+<p>十一月底幫家裡貓咪穿上正式服裝時拍的照片。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23459263613/" title="Kumamon Square by othree, on Flickr"><img src="https://farm6.staticflickr.com/5771/23459263613_d450468173_b.jpg" width="1024" height="683" alt="Kumamon Square" srcset="https://farm6.staticflickr.com/5771/23459263613_bae1c42d73_k.jpg 2x" /></a></p>
+
+<p>十二月去了一趟九州，還專程去拜訪了 Kumamon ，熊本真的是很多 Kumamon，去熊本的行程就是拜訪熊本熊、熊本城、吃豬排、吃燒肉，熊本城其實是重建的，然後現在還是有城主，用的是一口城主制度，簡單說就是有捐錢幫忙維護熊本城就能當城主。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16222124870/" title="FF25 Cosplay by othree, on Flickr"><img src="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_b.jpg" width="1024" height="683" alt="FF25 Cosplay" srcset="https://farm8.staticflickr.com/7352/16222124870_12ad7ac663_k.jpg 2x" /></a></p>
+
+<p>最後補一張 cosplay 的照片，今年後半年都沒有拍相關的活動，剛好上面也都沒挑到這個主題的照片，最近 FF 開始移師到花博園區，那邊腹地比較廣大，比較不會有在台大的的種種問題，不過還搞不太清楚要在哪裡找人拍照就是。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>JSX 的前世</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/12/25/jsx-e4x/" />
+<modified>2015-12-25T03:04:10Z</modified>
+<issued>2015-12-25T01:36:53Z</issued>
+<id>tag:blog.othree.net,2015://1.855</id>
+<created>2015-12-25T01:36:53Z</created>
+<summary type="text/plain"><![CDATA[ React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 &lt;div&gt; 標籤就要寫成： var divNode = React.DOM.div({attr1:"value"}); 如果還要加上子元素，像是一個 list： &lt;ol&gt; &lt;li&gt;Item A&lt;/li&gt; &lt;li&gt;Item B&lt;/li&gt; &lt;li&gt;Item C&lt;/li&gt; &lt;li&gt;Item D&lt;/li&gt; &lt;/ol&gt; 就要寫成： var listNode = React.DOM.div({}, React.DOM.li({}, "Item A"), React.DOM.li({},...]]></summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="362" height="512" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0.jpg 768w" /></a></p>
+
+<p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
+
+<pre><code>var divNode = React.DOM.div({attr1:"value"});
+</code></pre>
+
+<p>如果還要加上子元素，像是一個 list：</p>
+
+<pre><code>&lt;ol&gt;
+  &lt;li&gt;Item A&lt;/li&gt;
+  &lt;li&gt;Item B&lt;/li&gt;
+  &lt;li&gt;Item C&lt;/li&gt;
+  &lt;li&gt;Item D&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+
+<p>就要寫成：</p>
+
+<pre><code>var listNode = React.DOM.div({},
+  React.DOM.li({}, "Item A"),
+  React.DOM.li({}, "Item B"),
+  React.DOM.li({}, "Item C"),
+  React.DOM.li({}, "Item D")
+);
+</code></pre>
+
+<p>雖然比起純 DOM 的語法要簡單很多了，不過其實類似這種寫法來快速產生文件樹節點的 library 已經早就有了，像是 <a href="https://github.com/eneko/mooml">Mooml</a>、<a href="https://github.com/dominictarr/hyperscript">hyperscript</a>（thanks WM），如果 React 當初就直接這樣子推出，大家會想嘗試的意願應該會低很多，Facebook 的工程師應該也知道這樣和直接寫 DOM 或是其他 library 的感覺差異不大，所以他們解決的方法就是建立了一個新的 syntax，看起來就像是讓 DOM 變成像是原生的資料型態一樣，也就是現在的 JSX syntax，然後當然要讓這種語法可以在瀏覽器執行，所以官方有提供了 transpiler，不過其實這個把 XML DOM 當成 JS 語言中的原生資料型態的想法不是第一次出現了，早在好幾年前，就有一個 ECMA-357，又稱為 <a href="https://developer.mozilla.org/zh-TW/docs/E4X/%E4%BD%BF%E7%94%A8_E4X_%E8%99%95%E7%90%86_XML">E4X</a> 的標準是在做這件事的，全名則是 ECMAScript for XML，早期的 Mozilla SpiderMonkey 是有支援的，約是在 2006 年的 JavaScript 1.6 中推出，不過到 Firefox 21 的時候已經完全移除了，所以現在基本上是已經無法體會到這套 JS 擴充的語法，不過其實這套語法還蠻不錯的，有類似 template string 的寫法：</p>
+
+<pre><code>var doc = &lt;{h}&gt;&lt;body&gt;{text}&lt;/body&gt;&lt;/{h}&gt;;
+</code></pre>
+
+<p>React 則因為同時導入了 immutable 的概念，所以其 Virtual DOM 設計上只有產生文件樹結構的部分，沒有刪除修改，相較於 JSX 只有建置（create）的語法，E4X 則是有更完整的 CRUD 操作（就像是操作 JS 資料一樣），另外還多了用來尋找目標節點的 selector syntax：</p>
+
+<pre><code>languages.lang[1]
+person..*
+people.person.(name == "Joe").age
+</code></pre>
+
+<p>而且目標對像是 XML，所以對於 namespace 的處理也都有，整體而言算是很完整的 XML 操作方案，使用起來也比 DOM 簡潔很多，可惜後來被放棄，我推測大概幾個原因：</p>
+
+<ol>
+<li>使用 XML 的應用越來越少</li>
+<li>實做 E4X 會增加 JS 引擎的複雜度</li>
+<li>相較於 DOM 不依存於單一程式語言，E4X 則是 JS extension</li>
+<li>用 E4X 產生的節點不是 DOM 物件，不直接相容</li>
+</ol>
+
+<p>沒想到後來會在 Facebook 的手上，把這個概念單存的套用在 HTML 文件樹之上而重生。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>ULA 雨傘</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/11/19/ula-umbrella/" />
+<modified>2015-11-19T14:14:39Z</modified>
+<issued>2015-11-19T14:14:02Z</issued>
+<id>tag:blog.othree.net,2015://1.854</id>
+<created>2015-11-19T14:14:02Z</created>
+<summary type="text/plain"> 前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 ULA 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>buy</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22276626569/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/698/22276626569_c47da2bce3_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/698/22276626569_c47da2bce3.jpg 768w, https://farm1.staticflickr.com/698/22276626569_36ed7cdcc5_k.jpg 2x" /></a></p>
+
+<p>前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 <a href="http://www.ula-umbrella.com/">ULA</a> 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。</p>
+]]>
+<![CDATA[<p>首先第一印像是，雨傘綁起來時很緊，幾乎所有其它的雨傘都是，在我辛苦的把傘面整理好之後，要綁起來時，卻發現因為魔鬼沾或鈕釦的位置，綁起來會鬆鬆的，沒辦法綁緊，結果本來弄得很緊實的傘布就變的鬆鬆垮垮的。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275767928/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/571/22275767928_6ee17966fd_b.jpg" width="683" height="1024" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/571/22275767928_6ee17966fd.jpg 768w, https://farm1.staticflickr.com/571/22275767928_98a4d504ca_k.jpg 2x" /></a></p>
+
+<p>第二個是則是雨傘套的部分，其它雨傘幾乎都沒有考慮要撐傘時，隨附的雨傘套要放在哪的問題，以前我最常做的方法就是把他綁在手把的繩圈上，不過這個方法久了傘套的布就會變的很皺，ULA 則是設計了一個鈕釦在手把繩圈那邊，可以固定拿下來的傘套。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842288193/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9.jpg 768w, https://farm1.staticflickr.com/724/21842288193_522bcc5b31_k.jpg 2x" /></a></p>
+
+<p>第三個則是雨傘開關的地方，有一整塊軟橡膠墊讓手指不會因為要用力壓金屬片卡吮而不舒服，而且很顯眼，有畫龍點睛的效果，雖然都是素色的雨傘，不過整體設計是蠻好看的。另外一點和開關相關的特色，就是開關很好操作，不太會有力量出不去卡卡的狀況。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842283173/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/21842283173_7e44d94c85_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/771/21842283173_7e44d94c85.jpg 768w, https://farm1.staticflickr.com/771/21842283173_8bce12b29f_k.jpg 2x" /></a></p>
+
+<p>第四個則是收傘容易，雨傘支架末端都有設計過，配合頭蠻大的握把，很容易就把所有支架末端收好固定到握把內，再也不用一直橋來橋去的收傘了。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275764628/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/716/22275764628_1c69194dd2_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/716/22275764628_1c69194dd2.jpg 768w, https://farm1.staticflickr.com/716/22275764628_3b30e190a1_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840724334/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/773/21840724334_cd305357d7_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/773/21840724334_cd305357d7.jpg 768w, https://farm1.staticflickr.com/773/21840724334_97ebfd3d10_k.jpg 2x" /></a></p>
+
+<p>另外雨傘握把雖然不長，但是形狀也是設計過的，握起來感覺不會太差，</p>
+
+<p>而除了以上的特色之外，還有一個設計很不錯的是手把的繩圈其實是可以拆開套到其它東西上的，用的雖然是鈕釦不過可靠度蠻高的。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22474404621/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f.jpg 768w, https://farm6.staticflickr.com/5702/22474404621_0ddb29dbf5_k.jpg 2x" /></a></p>
+
+<p>最後要講的是耐用度，相信一定有人會有疑問，總之我覺得耐用度也不差，我現在手上這隻有經歷過一次颱風的攻擊，整個被吹翻，傘沒散掉，唯一的受損是有兩根拉桿有一點彎曲，不過我試著要彎回來才發現這拉桿其實很堅固，和一般折傘的拉桿比起來差蠻多，另外就是固定拉桿的方式好很多，我上一隻國產某算是名牌的雨傘後來固定拉桿的地方就常常脫落，要一直回去修理（不過最後是忘在電影院不見了）。傘布本身的防水性目前也都表現很不錯。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22450098812/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5633/22450098812_01311ee804_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5633/22450098812_01311ee804.jpg 768w, https://farm6.staticflickr.com/5633/22450098812_0961e69d48_k.jpg 2x" /></a></p>
+
+<p>ULA 雨傘的包裝如下，在香港地鐵有販賣機在賣，要用八達通卡購買，而且不同站點還有各自的限定色，是蠻有趣的銷售方式，當然也有實體店面，價錢大約台幣三四百，如果有去香港的推薦可以買一隻回來試試，要送人的話，就要三思了～～</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22525750458/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0.jpg 768w, https://farm1.staticflickr.com/710/22525750458_84b7929ec2_k.jpg 2x" /></a></p>
+]]>
+</content>
+</entry>
+
+<entry>
+<title>Apache2 and HTTP/2</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/10/19/apache2-http2/" />
+<modified>2015-10-19T15:38:56Z</modified>
+<issued>2015-10-19T15:04:03Z</issued>
+<id>tag:blog.othree.net,2015://1.853</id>
+<created>2015-10-19T15:04:03Z</created>
+<summary type="text/plain"> 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>server</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_28857c25b9_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+
+<p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
+
+<pre><code>./config
+make
+sudo make install
+</code></pre>
+
+<p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
+
+<p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
+
+<pre><code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
+tar zxvf ./httpd-2.4.17.tar.gz
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
+tar zxvf ./apr-util-1.5.4.tar.gz
+mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
+ar zxvf ./apr-util-1.5.4.tar.gz 
+mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
+</code></pre>
+
+<p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
+
+<pre><code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
+make
+sudo make install
+</code></pre>
+
+<p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
+
+<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
+</code></pre>
+
+<p>或是：</p>
+
+<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
+</code></pre>
+
+<p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    Protocols h2c http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+</code></pre>
+
+<p>還有</p>
+
+<pre><code>&lt;VirtualHost *:443&gt;
+    Protocols h2 http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+</code></pre>
+
+<p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
+
+<pre><code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+SSLProtocol All -SSLv2 -SSLv3
+</code></pre>
+
+<p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
+
+<ul>
+<li>Firefox 27</li>
+<li>Chrome 22</li>
+<li>IE 11</li>
+<li>Opera 14</li>
+<li>Safari 7</li>
+<li>Android 4.4</li>
+<li>Java 8 </li>
+</ul>
+
+<p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
+
+<p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
+
+<pre><code>brew install curl --with-nghttp2
+brew link curl
+
+/usr/local/bin/curl -v --http2 https://othree.net
+</code></pre>
+
+<p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
+
+<pre><code>brew install nghttp2
+
+nghttp -uv https://othree.net
+</code></pre>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9f6d1b9a08_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_5553a17fb8_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+
+<p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h_d.jpg" width="1022" height="53" alt="http1.1-1" /></a></p>
+
+<p>然後是 2.0：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h_d.jpg" width="1022" height="530" alt="http2-1" /></a></p>
+
+<p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>前端測試入門</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/10/17/f2e-test/" />
+<modified>2015-10-19T17:05:52Z</modified>
+<issued>2015-10-17T12:06:44Z</issued>
+<id>tag:blog.othree.net,2015://1.852</id>
+<created>2015-10-17T12:06:44Z</created>
+<summary type="text/plain"> 這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。 其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了下載檔案的自動檢查，就順便把相關的名詞和觀念弄清楚。 之前最搞不清楚的其實就是 Mocha（摩卡咖啡） 和 Chai（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 斷言 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_b.jpg" width="1024" height="1024" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab.jpg 768w" /></a></p>
+
+<p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
+
+<p>其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了<a href="https://github.com/othree/moztw-download-validation">下載檔案的自動檢查</a>，就順便把相關的名詞和觀念弄清楚。</p>
+
+<p>之前最搞不清楚的其實就是 <a href="https://mochajs.org/">Mocha</a>（摩卡咖啡） 和 <a href="http://chaijs.com/">Chai</a>（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 <strong>斷言</strong> 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha 網站上就列出了四套 assert library 供大家選擇，除此之外，像我之前在介紹 TypeScript 時提過的 <a href="http://angular.github.io/assert/">assert.js</a> 也可以使用，不過 assert.js 只能檢查型別就是。至於要挑選哪套 assert library 就看各人喜好了，主要是看要怎麼寫斷言，像我挑選 Chai 的原因是他的語法，支援 BDD ，可以寫的看起來很像一句英語：</p>
+
+<pre><code>foo.should.be.a('string');
+foo.should.equal('bar');
+foo.should.have.length(3);
+tea.should.have.property('flavors').with.length(3);
+</code></pre>
+
+<p>很容易就知道是什麼意思，而且自由度還蠻大的。另外一個原因則是他有支援 Promise，就是所謂的 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>，為什麼這個很重要呢，因為 JS 很常遇到需要非同步的操作流程，如果沒有支援，Test Framework 當下把他的 function 跑完，沒有 catch 到 error 就認為沒有錯誤了，當然像 mocha 是有支援非同步的，內建有個等待的機制，<code>done</code>：</p>
+
+<pre><code>describe('User', function() {
+  describe('#save()', function() {
+    it('should save without error', function(done) {
+      var user = new User('Luna');
+      user.save(function(err) {
+        if (err) throw err;
+        done();
+      });
+    });
+  });
+});
+</code></pre>
+
+<p>就是每個 <code>it</code> 區塊裡面，其實都會收到一個函數 <code>done</code>，如果有要測試非同步的程式，可以在非同步的部分測試完後，才執行 <code>done()</code>，這樣 Mocha 才有機會知道你的測試是不是有非同步的部分，還有什麼時候才是測試完成，不過 Chai 是 BDD，不會容許這樣不直觀的寫法的，所以 Domenic Denicola 開發了 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>：</p>
+
+<pre><code>promise.should.be.fulfilled;
+promise.should.eventually.deep.equal("foo");
+promise.should.become("foo"); // same as `.eventually.deep.equal`
+promise.should.be.rejected;
+</code></pre>
+
+<p>只是要這樣簡潔的寫法，還需要先設定一下：</p>
+
+<pre><code>var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+
+chai.use(chaiAsPromised);
+</code></pre>
+
+<p>其實 chai-as-promised 是 chai 的 plugin，然後用 <code>chai.use</code> 來使用它，底層怎樣運作我還沒深入研究，覺得還有點 magic，不過還算是想的到怎樣實做出來的程度，猜測可能有用到 function 的 <code>toString</code> 來判斷有沒有引用 <code>next</code> 參數。</p>
+
+<p>再來，測試蠻常會用到的假物件，mock 和 stub，兩者的差異其實蠻多文章有說明了，我個人覺得簡單分法就是 stub 沒有副作用，mock 則是有副作用的假物件，至於要說要用哪種物件來完成測試的話，基本上就是 stub 可以達成你的測試需求的話就用 stub，在 JavaScript 的測試環境下，好像只有看到 <a href="http://sinonjs.org/">Sinon.js</a> 這套比較多人用，去查了一下名稱典故，覺得一個比較可能的來源是特洛伊木馬故事中，騙特洛伊人把木馬搬進去城裡的那位（Mocha 和 Chai 的名稱應該是互相影響的，不過不確定誰先出來的）。另外還有個角色和 mock、stub 很常一起提到的叫 spy（常見用複數形 spies），最常用來當 callback 之類的，在非同步測試案例中，可以用來確保 callback 有被執行到，甚至可以偷看（spy）被執行了幾次，收到什麼參數等等，總之就是個可以測試函數被執行的次數和方式的物件。</p>
+
+<p>最後要說的則是 e2e test，因為 JS 很多時候都是用來在瀏覽器端實做 UI 和使用者行為的 handler，其實要做完整整合的測試不太容易，e2e 指的是 End to End，端點到端點，通常是說一個流程的起點到終點的意思，例如上網站註冊帳號，這樣算是一個流程，或是上網登入購買東西到結帳完成，這樣也是一個流程，由於 Web App 的環境下，跑 JS 的是瀏覽器，沒辦法簡單的介入，所以以往真的要做 e2e 測試幾乎都是要靠人工，後來有了 <a href="http://www.seleniumhq.org/">Selenium</a> 和 WebDriver，才開始可以讓這些測試自動化。</p>
+
+<p>以前的 Selenium 要控制瀏覽器靠的是 <a href="http://www.seleniumhq.org/projects/remote-control/">Selenium RC</a>，用比較暴力的方式介入瀏覽器，不過現在的 Selenium 2 則是透過 <a href="http://www.w3.org/TR/webdriver/">WebDriver</a> 這個 API 來操作，WebDriver 能進 W3C 標準化其實也是 Selenium 貢獻者的努力，背後也是有些大公司的影子在，目前主流的瀏覽器包括微軟最新的 Edge 也都支援，不過其實 Selenium 因為是 Java 寫的，雖然控制瀏覽器的 script 沒有限制要用 Java，我還是一直不太習慣，所以都沒深入，直到前陣子開始看到 Paul 在 Facebook 上<a href="https://www.facebook.com/notes/paul-li/protractor-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E7%AF%87/10152948608982211">連載</a>介紹 <a href="https://angular.github.io/protractor/#/">Protractor</a>，才又開始有想嘗試的動力，Protractor 的名稱由來也還蠻有趣的，意思是量角器，而 AngularJS 則有諧音 angle 的感覺在，當初出來也是為了要測試 AngularJS 的，Github 上 Protractor 是 AngularJS 下的一個專案，Protractor 和 Selenium 的差別就在於，Protractor 是一個 test framework，然後建好了 WebDriver binding，可以直接透過 WebDriver 來跟瀏覽器溝通，不再需要 Selenium 介面那塊了。</p>
+
+<p>後來 Carl 跟我說到有 <a href="http://webdriver.io/">WebdriverIO</a> 這個專案，是只有 WebDriver 介面的部分，可以寫 node script 來叫瀏覽器做事，當然也可以做測試，可以挑自己喜歡的 test framework 和 assert library 來搭配使用，於是我就做了一個可以去 moztw.org 下載安裝檔回來驗證正確性的<a href="https://github.com/othree/moztw-download-validation">專案</a>，在這個專案中，還用了一個特殊的寫法：</p>
+
+<pre><code>it('Download OSX Installer', function* () {
+  var data = yield hashes;
+  ...
+</code></pre>
+
+<p>其實就是 async function 加上 <code>yield</code> 來代替 ES2016 的 <code>await</code>，要達成這樣的效果其實會需要一個 async function runner，不是 node 可以直接跑起來的，實際測試過也是跑不起來，所以就只能 WebdriverIO 提供的 <code>wdio</code> 執行檔來執行。</p>
+
+<p>這篇還差一點東西沒講到，就是 test coverage，JS 這邊比較常看到的是 <a href="https://gotwarlost.github.io/istanbul/">istanbul.js</a>，名稱的來源是 carpet coverage，然後 Istanbul 是個生產優質地毯的地方～</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>Transducer</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/10/03/transducer/" />
+<modified>2015-10-22T13:38:12Z</modified>
+<issued>2015-10-03T07:47:29Z</issued>
+<id>tag:blog.othree.net,2015://1.851</id>
+<created>2015-10-03T07:47:29Z</created>
+<summary type="text/plain">今天在 JSDC 講的題目是 Transducer ， 是目前講過數學和程式碼最多的題目了，不過還是希望能用盡量簡單的範例來說明什麼是 Transducer。 /* A_A */...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>今天在 JSDC 講的題目是 Transducer ， 是目前講過數學和程式碼最多的題目了，不過還是希望能用盡量簡單的範例來說明什麼是 Transducer。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="5a7ac6a8f7ae4e07999d407f675f65d9" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>React 入門</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/08/21/react-intro/" />
+<modified>2015-08-22T14:34:17Z</modified>
+<issued>2015-08-20T16:38:04Z</issued>
+<id>tag:blog.othree.net,2015://1.850</id>
+<created>2015-08-20T16:38:04Z</created>
+<summary type="text/plain"> 其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。 先講結論，寫過目前一般 Web App 的人，要來寫 React 大概都要一些撞牆期吧，我的狀況是要寫 React + Flux 架構的 Web App，但是一開始對 Flux 的介紹沒認真看，在一知半解的狀態下就開始做了，結果就一直出現些靈異現象，大部分是覺得應該要更新畫面了但是沒有，追到後來大概就兩個原因： 亂用 props 和 state，總之就是 React 只會在 state 變化的時候更新畫面，props 變化的時候不會（其實設計上是 immutable 的），而用 props 的時機基本上是父層 component 要設定資料給子 component 的時候才會用，至於父層收到不同的資料給子 component 時，同樣是改 props，為什麼畫面就會更新了，事實上是因為父層...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13990963771/" title="京都嵐山 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg" width="1024" height="683" alt="京都嵐山" srcset="https://farm6.staticflickr.com/5237/13990963771_028f39af66.jpg 768w, https://farm6.staticflickr.com/5237/13990963771_221cae9d50_k.jpg 2x" /></a></p>
+
+<p>其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。</p>
+
+<p>先講結論，寫過目前一般 Web App 的人，要來寫 <a href="http://facebook.github.io/react/">React</a> 大概都要一些撞牆期吧，我的狀況是要寫 React + <a href="http://facebook.github.io/flux/">Flux</a> 架構的 Web App，但是一開始對 Flux 的介紹沒認真看，在一知半解的狀態下就開始做了，結果就一直出現些靈異現象，大部分是覺得應該要更新畫面了但是沒有，追到後來大概就兩個原因：</p>
+
+<ul>
+<li><p>亂用 props 和 state，總之就是 React 只會在 state 變化的時候更新畫面，props 變化的時候不會（其實設計上是 immutable 的），而用 props 的時機基本上是父層 component 要設定資料給子 component 的時候才會用，至於父層收到不同的資料給子 component 時，同樣是改 props，為什麼畫面就會更新了，事實上是因為父層 component 更新的時候，才有機會改動到子 component 的 prop，而因為有重新 render，子 component 的內容也會一起更新，也才更新了畫面。</p></li>
+<li><p>想要只更新子 component，這個問題就是沒把 flux 的設計弄清楚，Flux 的 store 其實有點代表所有的資料的意思，而不管是什麼動作，都要把整包的 store 資料更新回去，根 component 會綁事件在 store 的更新事件上，發現 store 資料有更新就開始重新 render component，然後跟著它的子 component 就會因為 prop 更新而跟著更新。</p></li>
+</ul>
+
+<p>當然 store 是可以有多個的，重點在於每次更新都要整個 store 的資料重新給根 component，不能從 store 裡面某一層開始送，然後想要只更新某個子 component，這樣結果就很容易發生靈異事件，當然 React 可以不用 Flux 架構，不過我覺得那條路走起來更困難，所以還是乖乖使用 Flux 架構，其實我後來做的結構很簡單，action 就只是一個事件，store 就是 POJSO 而已，沒用到一些市面上的 Flux framework。</p>
+
+<p>最後一點要提的就是每次都整包 store 更新，可能就會有人想到效能問題，當然 React 本身效能不錯，不過資料量要是超大，可能還是會有出現狀況，我想這也是為什麼 Facebook 要發展 <a href="https://facebook.github.io/immutable-js/">Immutable.js</a> 的原因，其實我仔細瞭解後，發現 Immutable 配合 Flux 架構真的是超適合的，而且他在大量資料更新的時候，可以保持蠻不錯的效能，因為只有 reference 的變化，而不是真的重新產生整包資料，沒變化的資料都是本來就已經在記憶體裡面的，整體的資源消耗少很多。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>fetch is the new XHR</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/" />
+<modified>2015-08-17T15:19:26Z</modified>
+<issued>2015-08-17T10:28:00Z</issued>
+<id>tag:blog.othree.net,2015://1.849</id>
+<created>2015-08-17T10:28:00Z</created>
+<summary type="text/plain">這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。 和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。</p>
+
+<p>和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和 Open Source 相關的東西，而不是只是 Web 相關的而已。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="8f42a7c5ffad4c9cab284637e0bddbc2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>My First Patch to Firefox</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/08/07/first-patch-to-firefox/" />
+<modified>2016-01-06T10:15:54Z</modified>
+<issued>2015-08-07T01:06:43Z</issued>
+<id>tag:blog.othree.net,2015://1.848</id>
+<created>2015-08-07T01:06:43Z</created>
+<summary type="text/plain"> OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 1089363，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale AB_CD 中的 AB 段而已，所以 zh_TW 和 zh_CN 就都會變成 zh，然後 OSX 的 zh 又會變成簡體中文，結果就變成這樣了。 其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>web</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_b.jpg" width="424" height="223" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e.jpg 768w" /></a></p>
+
+<p>OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1089363">1089363</a>，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale <code>AB_CD</code> 中的 <code>AB</code> 段而已，所以 <code>zh_TW</code> 和 <code>zh_CN</code> 就都會變成 <code>zh</code>，然後 OSX 的 <code>zh</code> 又會變成簡體中文，結果就變成這樣了。</p>
+
+<p>其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale 的 resource 目錄的名稱改成 <code>zh_TW</code>，大概 diff 如下：</p>
+
+<pre><code> AB_CD = $(MOZ_UI_LOCALE)
+
+-AB := $(firstword $(subst -, ,$(AB_CD)))
++ifeq (zh-TW,$(AB_CD))
++LPROJ_ROOT := $(subst -,_,$(AB_CD))
++else
++LPROJ_ROOT := $(firstword $(subst -, ,$(AB_CD)))
++endif
++LPROJ := Contents/Resources/$(LPROJ_ROOT).lproj</code></pre>
+
+<p>其實不會很難，不過因為 Firefox 的程式碼變動很快，連 build script 也常常變動，那個 patch 檔出來的時候已經不能用了，然後又沒人處理就這樣一直拖下去，前陣子 Moztw 那邊又被提出來一次，剛好我為了弄 WebIDL 相關應用的時候有 build 過 Firefox，想說應該可以處理看看，就接下來嘗試了，build 本身蠻簡單的，就照著網路上的<a href="https://developer.mozilla.org/en-US/docs/Simple_Firefox_build">文件</a>就好，比較難的是要 build 成特定語系的，找很久才在 Moztw 討論區找到<a href="https://forum.moztw.org/viewtopic.php?f=18&amp;t=34806">答案</a>，要在 <code>.mozconfig</code> 裡面加上：</p>
+
+<pre><code>ac_add_options --with-l10n-base=/d/lang
+ac_add_options --enable-ui-locale=zh-TW
+</code></pre>
+
+<p>其中第一行設定的路徑要指定到你指定的位置，而且要絕對路徑，然後在該目錄 clone 翻譯的 repository 下來，可以在 <a href="http://hg.mozilla.org/l10n-central/">l10n-central</a> 那邊找自己的語系，以 <code>zh-TW</code> 來說：</p>
+
+<pre><code>cd /d/lang
+git clone http://hg.mozilla.org/l10n-central/zh-TW/
+</code></pre>
+
+<p>然後這樣就可以 build 中文版了，build 完執行就看到精美的黃底紅字 XML 解析錯誤視窗。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
+
+<p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想到是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
+
+<p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" src-1="(max-width: 768px)  https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a.jpg 1x, https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 2x"  /></a></p>
+
+<p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
+
+<p>其中 build 失敗是 b2g 的 build 失敗，原因是我有地方改錯，不過要測試也是要重新設定，參考的是 <a href="https://developer.mozilla.org/en-US/Firefox_OS/Building_the_Firefox_OS_simulator">Building the Firefox OS Simulator</a> 這份文件，把 <code>.mozconfig</code> 改成：</p>
+
+<pre><code>. "$topsrcdir/b2g/config/mozconfigs/common"
+
+mk_add_options MOZ_OBJDIR=../build
+mk_add_options MOZ_MAKE_FLAGS="-j9 -s"
+
+ac_add_options --enable-application=b2g
+ac_add_options --disable-libjpeg-turbo
+</code></pre>
+
+<p>重新 build 看能不能過。</p>
+
+<p>改完產生的 patch 檔上傳到 bugzilla 時，要勾選 Content Type 是 patch，然後 review flag 設定成 <code>?</code>，選一個 reviewer，通常會有 mentor 來跟你說選誰好，我的情形是 <a href="http://blog.timc.idv.tw/">timdream</a> 在幫忙，接著就等 reviewer review，他 review 過的話， review flag 就會變成 <code>+</code>，然後就會收到一封「Congratulations on having your first patch approved」的信件，說了一些後續可以做的事情，接著要做的就是讓 patch 真的進去 repository，可以在票的 keyword 加上 <code>checkin-needed</code>，就會有機器人自己來把你的 patch check in 進 mozilla-inbound 這個 repository，然後丟上機器人自動編譯和測試，例如這個我 B2G build 失敗的<a href="https://treeherder.mozilla.org/#/jobs?repo=mozilla-inbound&amp;revision=b1b8616162b4">例子</a>，都過了就會進 mozilla-central，之後才<a href="https://wiki.mozilla.org/Tree_Rules">照順序</a>進 mozilla-aurora、mozilla-beta、mozilla-release，現在進去 mozilla-central 的大概要等 Firefox 42 才會上線了，應該是和 OSX 10.11 同時吧。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>Electron 入門</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/08/03/electron-intro/" />
+<modified>2015-09-15T12:32:22Z</modified>
+<issued>2015-08-03T13:27:43Z</issued>
+<id>tag:blog.othree.net,2015://1.847</id>
+<created>2015-08-03T13:27:43Z</created>
+<summary type="text/plain"> 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6.jpg 768w" /></a></p>
+
+<p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
+
+<p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
+
+<p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
+
+<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻完真的不知道是放在這名字下面。</p>
+
+<p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
+
+<p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>webappsec</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/07/03/webappsec/" />
+<modified>2015-12-23T06:05:14Z</modified>
+<issued>2015-07-03T15:13:21Z</issued>
+<id>tag:blog.othree.net,2015://1.846</id>
+<created>2015-07-03T15:13:21Z</created>
+<summary type="text/plain"> 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>web</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c.jpg 768w, https://farm3.staticflickr.com/2948/15191563939_771f265d3a_k.jpg 2x" /></a></p>
+
+<p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+
+<p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+
+<p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+
+<pre><code>navigator.credentials.get({ "password": true }).then(
+  function(credential) {
+    if (!credential) {
+      // The user either doesn't have credentials for this site, or
+      // refused to share them. Insert some code here to show a basic
+      // login form (or, ideally, do nothing, since this API should
+      // really be progressive enhancement on top of an existing form).
+      return;
+    }
+    if (credential.type == "password") {
+      credential.send("https://example.com/loginEndpoint")
+        .then(function (response) {
+          // Notify the user that signin succeeded! Do amazing, signed-in things!
+        });
+    } else {
+      // See the Federated Sign-in example
+    }
+  }
+);
+</code></pre>
+
+<p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+
+<p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+
+<pre><code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+        integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+
+<pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code></pre>
+
+<p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+
+<pre><code>HTTPS: 1
+</code></pre>
+
+<p>很簡潔不過還沒瀏覽器支援就是了。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>GHCJS</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/06/18/ghcjs/" />
+<modified>2015-06-17T16:09:25Z</modified>
+<issued>2015-06-17T16:08:03Z</issued>
+<id>tag:blog.othree.net,2015://1.845</id>
+<created>2015-06-17T16:08:03Z</created>
+<summary type="text/plain">最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 pandoc，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 GHCJS 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 markup.rocks，我後來也是基於他在 github 上公開的這些程式碼來研究。 要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去下載 GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行： ./cofigure make install 安裝完 GHC 後要更新 cabal 這個套件管理工具： cabal install cabal-install...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上以經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
+
+<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
+
+<pre><code>./cofigure
+make install
+</code></pre>
+
+<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
+
+<pre><code>cabal install cabal-install
+</code></pre>
+
+<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
+
+<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
+</code></pre>
+
+<p>接下來才是安裝 GHCJS：</p>
+
+<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
+git clone https://github.com/ghcjs/ghcjs.git
+cabal install ./ghcjs ./ghcjs-prim
+</code></pre>
+
+<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
+
+<pre><code>ghcjs-boot --dev
+</code></pre>
+
+<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
+
+<pre><code>cabal install --ghcjs pandoc
+</code></pre>
+
+<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
+
+<pre><code>git clone git@github.com:osener/pandoc.git
+cabal install --ghcjs ./pandoc
+</code></pre>
+
+<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
+
+<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
+]]>
+
+
+</content>
+</entry>
+
+</feed>
