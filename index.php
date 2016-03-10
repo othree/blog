@@ -3,9 +3,9 @@
 error_reporting(0);
 // error_reporting(E_ALL);
 
-if (preg_match("/_/", getenv('QUERY_STRING'))) {
+if (preg_match("/_/", $_SERVER['QUERY_STRING'])) {
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: https://blog.othree.net".preg_replace("/_/", "-", getenv('QUERY_STRING')));
+    header("Location: https://blog.othree.net".preg_replace("/_/", "-", $_SERVER['QUERY_STRING']));
     exit();
 }
 
@@ -24,39 +24,12 @@ if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
 }
 
 //get local path
-$self_path = preg_replace("!index\.php!", "", getenv('SCRIPT_NAME'));
-$query_string = preg_replace("!^".$self_path."!", "", getenv('QUERY_STRING'));
-$canonical = 'https://blog.othree.net/' . $query_string;
+$canonical = 'https://blog.othree.net' . $_SERVER['REQUEST_URI'];
 
-//get target file path
-if (preg_match("/^feeds|rss\/?$/", $query_string)) $format = "xml";
-else $format = (preg_match("/([^\.\/]+)$/", $query_string, $matches))?$matches[0]:"html";
-$ext = ($format == "html")?"xml":$format;
-if (preg_match("/rss\/?$/", $query_string)) {
-    $query_string = preg_replace("/rss\/?/", "", $query_string);
-    $ext = "rss.xml";
-}
+$format = "html";
+$target_file = substr($_SERVER['QUERY_STRING'], 1);
+$hash_file = substr($target_file, 0, -4) . '.md5';
 
-$query_string = preg_replace("/[\.\/]?(".$format.")?+$/", "", $query_string);
-if ($query_string == "") {
-    $hash_file = "index.md5";
-    $target_file = "index.".$ext;
-}
-else {
-    $hash_file = $query_string."/index.md5";
-    $target_file = $query_string."/index.".$ext;
-}
-if (!is_file($target_file)) {
-    $hash_file = $query_string.".md5";
-    $target_file = $query_string.".".$ext;
-}
-if (!is_file($target_file)) {
-    $hash_file = "about/404.md5";
-    $target_file = "about/404.".$ext;
-}
-if ($target_file == "about/404.".$ext) {
-    $not_found = true;
-}
 if (is_file($target_file)) {
     if (!is_file($hash_file) || filemtime($target_file) > filemtime($hash_file)) {
         $hash = hash_file('md5', $target_file);
@@ -76,11 +49,11 @@ if (isset($request_hash) && $request_hash == '"'.$hash.'"') {
     header("ETag: \"".$hash."\"");
 }
 
-$UA = getenv('HTTP_USER_AGENT');
+$UA = $_SERVER['HTTP_USER_AGENT'];
 
 //output string
 if ($format == "html") {
-    if (preg_match("/application\/xhtml\+xml/",getenv('HTTP_ACCEPT')) || preg_match("/W3C/", $UA)) $format = 'xhtml';
+    if (preg_match("/application\/xhtml\+xml/", $_SERVER['HTTP_ACCEPT'] || preg_match("/W3C/", $UA))) $format = 'xhtml';
     //compitable fix for IE or nonIE
     $patterns = array("/<(script|textarea|iframe)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)\/>/",
         "/([\"\'])\/>/",
@@ -128,31 +101,6 @@ if ($format == "html") {
     else header("Content-type: application/xml; charset=UTF-8");
 }
 
-if ($not_found) {
-    header("HTTP/1.0 404 Not Found");
-}
-
-header("Cache-Control: max-age=3600, public");
-// header("Cache-Control: no-cache");
-header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
-
-$CSP = 'Content-Security-Policy';
-if (preg_match("/MSIE/", $UA)) {
-    $CSP = 'X-Content-Security-Policy';
-}
-if (preg_match("/Webkit/", $UA)) {
-    $CSP = 'X-WebKit-CSP';
-}
-
-header('Accept-CH: DPR, Downlink', false);
-
-// header($CSP.": default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *.disqus.com *.disquscdn.com ssl.google-analytics.com https://speakerdeck.com https://apis.google.com; connect-src *.justfont.com *.disqus.com; font-src *.justfont.com themes.googleusercontent.com; img-src 'self' *.disqus.com *.disquscdn.com http://*.static.flickr.com *.static.flickr.com *.staticflickr.com https://ssl.google-analytics.com; frame-src disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com;");
-header($CSP.": default-src 'none'; script-src 'self' *.twitter.com *.disqus.com *.disquscdn.com ssl.google-analytics.com speakerdeck.com apis.google.com; style-src 'self' platform.twitter.com *.disquscdn.com; img-src 'self' pbs.twimg.com *.twitter.com *.disqus.com *.disquscdn.com *.static.flickr.com *.static.flickr.com *.staticflickr.com ssl.google-analytics.com data:; frame-src embed-ssl.ted.com syndication.twitter.com disqus.com *.google.com www.facebook.com platform.twitter.com speakerdeck.com www.youtube.com http://embed.ted.com; font-src themes.googleusercontent.com; connect-src 'self' *.disqus.com");
-
-header('link: </stylesheets/bootstrap/css/bootstrap.min.css>; rel=preload; as=stylesheet', false);
-header('link: </stylesheets/bootstrap/css/bootstrap-responsive.min.css>; rel=preload; as=stylesheet', false);
-header('link: </stylesheets/othree.min.css>; rel=preload; as=stylesheet', false);
-
 echo $output;
 
 
@@ -167,8 +115,6 @@ function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
 
         // Configure the transformer
         $proc = new XSLTProcessor;
-
-        // $proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
 
         $proc->importStyleSheet($xslo); // attach the xsl rules
         $proc->setParameter('blog.othree.net', 'ext', '');
