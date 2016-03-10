@@ -309,7 +309,7 @@
                     </ul>
                     <h3>訂閱本網誌</h3>
                     <ul id="feeds">
-                        <li><a href="http://feeds.feedburner.com/othree"><img src="/feedburner/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
+                        <li><a href="https://feeds.feedburner.com/othree"><img src="https://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
                     </ul>
                     <h3>貼紙</h3>
                     <p id="stickers">
