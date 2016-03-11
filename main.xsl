@@ -37,12 +37,12 @@
 			</xsl:attribute>
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/bootstrap/css/bootstrap-responsive.min.css" />
-        <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
-        <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/othree.min.css" />
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/pure-min.css" />
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/grids-responsive-min.css" />
+    <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/othree.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -131,78 +131,74 @@
         <!-- <script src="/scripts/jfont.js"></script> -->
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
-        <xsl:choose>
-            <xsl:when test="$listType = 'about'">
-                <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-                <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-                <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:choose>
+        <xsl:when test="$listType = 'about'">
+            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+            <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+            <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
+        </xsl:otherwise>
+    </xsl:choose>
 
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
 		</xsl:if>
 		<!--div id="skipnavigation"><a href="#content" title="跳過導覽列">跳過導覽列</a></div-->
-        <nav class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-                        <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
-                        <input type="hidden"  name="sites" value="blog.othree.net" />
-                    </form>
-                    <ul class="nav pull-right">
-                        <li>
-                            <xsl:if test="$listType = 'i'">
-                                <xsl:attribute name="id">active</xsl:attribute>
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a href="{$mainPath}{$ext}">首頁</a>
-                        </li>
-                        <li>
-                            <xsl:if test="$listType = 'm' or $listType = 'y' or $listType = 'c' or $listType = 's' or $listType = 'a' or $listType = 'ca' or $listType = 'archive'">
-                                <xsl:attribute name="id">active</xsl:attribute>
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a href="{$mainPath}log/{$ext}" accesskey="3">彙整</a>
-                        </li>
-                        <li>
-                            <xsl:if test="$listType = 'o'">
-                                <xsl:attribute name="id">active</xsl:attribute>
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a href="{$mainPath}blogroll/{$ext}" title="BLOGROLL">部落滾</a>
-                        </li>	
-                        <li>
-                            <xsl:if test="$listType = 'about'">
-                                <xsl:attribute name="id">active</xsl:attribute>
-                                <xsl:attribute name="class">active</xsl:attribute>
-                            </xsl:if>
-                            <a href="{$mainPath}about/me/{$ext}">關於</a>
-                        </li>
-                        <li class="icon github">
-                            <a href="https://github.com/othree">Github</a>
-                        </li>
-                    </ul>
-                </div>
+        <nav>
+          <div class="nav-inner">
+            <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+                <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
+                <input type="hidden"  name="sites" value="blog.othree.net" />
+            </form>
+            <div class="pure-menu pure-menu-horizontal">
+                <a href="{$mainPath}{$ext}" class="pure-menu-item">
+                    <xsl:if test="$listType = 'i'">
+                        <xsl:attribute name="id">pure-menu-selected</xsl:attribute>
+                        <xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
+                    </xsl:if>
+                    首頁
+                </a>
+                <a href="{$mainPath}log/{$ext}" accesskey="3" class="pure-menu-item">
+                    <xsl:if test="$listType = 'm' or $listType = 'y' or $listType = 'c' or $listType = 's' or $listType = 'a' or $listType = 'ca' or $listType = 'archive'">
+                        <xsl:attribute name="id">pure-menu-selected</xsl:attribute>
+                        <xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
+                    </xsl:if>
+                    彙整
+                </a>
+                <a href="{$mainPath}blogroll/{$ext}" title="BLOGROLL" class="pure-menu-item">
+                    <xsl:if test="$listType = 'o'">
+                        <xsl:attribute name="id">pure-menu-selected</xsl:attribute>
+                        <xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
+                    </xsl:if>
+                    部落滾
+                </a>	
+                <a href="{$mainPath}about/me/{$ext}" class="pure-menu-item">
+                    <xsl:if test="$listType = 'about'">
+                        <xsl:attribute name="id">pure-menu-selected</xsl:attribute>
+                        <xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
+                    </xsl:if>
+                    關於
+                </a>
+                <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
             </div>
+          </div>
         </nav>
         <div id="container" class="container">
-            <header role="banner" class="row">
-                <h1 class="span12">
-                    <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3noBLOG</a>
-                </h1>
+            <header role="banner" class="pure-g">
+              <h1 class="pure-u-1">
+                <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+              </h1>
             </header>
-            <div class="row">
+            <div class="pure-g">
                 
                 <xsl:apply-templates select="b:entries/b:entriesMeta" />
-                <main id="content" role="main" class="span9">
+                <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
                     <hr/>
                     <xsl:apply-templates select="b:entries"/>
                 </main>
-                <aside role="complementary" class="span3">
+                <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
                     <hr />
                     <h2>其它資訊</h2>
                     <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
@@ -314,13 +310,13 @@
                     <h3>貼紙</h3>
                     <p id="stickers">
                         <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
-                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/promotejshs.png' height='150' width='180' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
+                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/MDN_promoBanner_120x240px_v2.png' height='240' width='120' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
                     </p>
                 </aside>
             </div>
-            <footer class="row">
-                <h2 class="span12">使用技術、規範、服務</h2>
-                <p class="span12">
+            <footer class="pure-g">
+                <h2 class="pure-u-1">使用技術、規範、服務</h2>
+                <p class="pure-u-1">
                     <!--a href="http://validator.w3.org/check?uri=referer" xml:lang="en" title="本站所有頁面皆通過W3C檢測器的的檢測為合於規範的XHTML 1.1文件">XHTML</a-->
                     <!--a href="http://jigsaw.w3.org/css-validator/validator?uri=http://blog.othree.net/&amp;warning=2&amp;profile=css3&amp;usermedium=all" xml:lang="en" title="本站使用的CSS語法通過W3C檢測器的的檢測合於CSS 3的規範">CSS</a--> 
                     <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/" title="HTML 標準">HTML</a>
