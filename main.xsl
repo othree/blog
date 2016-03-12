@@ -269,9 +269,9 @@
                     </div>
 
                     <xsl:if test="$listType != 'about'">
-                        <h3>關於本網站</h3>
+                        <h3>關於本網誌</h3>
                         <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-                            <p class="vcard">本網站是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a>。</p>
+                            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
                         </address>
                     </xsl:if>
                     <xsl:if test="$listType = 'i'">
@@ -299,10 +299,10 @@
                             </xsl:call-template>
                         </ul>
                     </xsl:if>
-                    <h3>我在看什麼</h3>
+                    <!--h3>我在看什麼</h3>
                     <ul>
                         <li><a href="http://www.anobii.com/people/othree/">aNobii書櫃</a></li>
-                    </ul>
+                    </ul-->
                     <h3>訂閱本網誌</h3>
                     <ul id="feeds">
                         <li><a href="https://feeds.feedburner.com/othree"><img src="https://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
