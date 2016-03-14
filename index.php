@@ -3,6 +3,10 @@
 error_reporting(0);
 // error_reporting(E_ALL);
 
+if (!isset($xsl)) {
+  $xsl = 'main.xsl';
+}
+
 if (preg_match("/_/", $_SERVER['QUERY_STRING'])) {
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: https://blog.othree.net".preg_replace("/_/", "-", $_SERVER['QUERY_STRING']));
@@ -92,7 +96,7 @@ if ($format == "html") {
         header("Content-type: text/html; charset=UTF-8");
     }
     //xsl transform
-    $output = preg_replace($patterns, $replacements, xslt($target_file, "main.xsl", $canonical, $format, $dpr, $w) );
+    $output = preg_replace($patterns, $replacements, xslt($target_file, $xsl, $canonical, $format, $dpr, $w) );
 } else if ($format == "xml") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
