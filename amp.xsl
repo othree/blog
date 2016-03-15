@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:transform version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:str="http://exslt.org/strings" extension-element-prefixes="str" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo str">
+<xsl:transform version="2.0" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:str="http://exslt.org/strings" extension-element-prefixes="str" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="html b o xsi rdf link taxo str">
 <!-- <xsl:import href="calendar.xsl" /> -->
 <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
 <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
@@ -19,15 +19,16 @@
 <xsl:variable name="mainPath" select="'/'" />
 <xsl:variable name="logPath"><xsl:value-of select="$mainPath" />log/</xsl:variable>
 
+
 <!-- template blog -->
 
 <xsl:template match="b:blog">
 <!-- html5 DTD -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html>
 </xsl:text>
-<html lang="zh-cmn-Hant-TW" amp="amp">
+<html amp="amp">
 	<head>
-		<meta charset="UTF-8" />
+		<meta charset="utf-8" />
 		<title>
 			<xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" />
 		</title>
@@ -37,40 +38,19 @@
 			</xsl:attribute>
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
-			<xsl:when test="$listType = 'about'">
-				<link rel="prev" title="BLOGROLL" href="{$mainPath}blogroll/{$ext}" />
-			</xsl:when>
-			<xsl:when test="$listType = 'search'">
-				<link rel="prev" title="首頁" href="{$mainPath}{$ext}" />
-			</xsl:when>
-			<xsl:when test="$listType = 'i'">
-				<link rel="next" title="彙整" href="{$mainPath}log/{$ext}" />
-			</xsl:when>
-			<xsl:when test="$listType = 'a'">
-				<link rel="prev" title="首頁" href="{$mainPath}{$ext}" />
-				<link rel="next" title="BLOGROLL" href="{$mainPath}blogroll/{$ext}" />
-			</xsl:when>
-			<xsl:when test="$listType = 'o'">
-				<link rel="prev" title="彙整" href="{$mainPath}log/{$ext}" />
-				<link rel="next" title="關於" href="{$mainPath}about/me/{$ext}" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="prev_next">
-					<xsl:with-param name="porn" select="'prev'" />
-					<xsl:with-param name="type" select="'link'" />
-				</xsl:call-template>
-				<xsl:call-template name="prev_next">
-					<xsl:with-param name="porn" select="'next'" />
-					<xsl:with-param name="type" select="'link'" />
-				</xsl:call-template>
-				<link rel="up" title="上一層" href="../" />
-			</xsl:otherwise>
-		</xsl:choose>
-		<link rel="top" title="首頁" href="{$mainPath}{$ext}" />
+      <xsl:when test="$listType = 's'">
+        <link rel="canonical" href="{$canonical}" />
+      </xsl:when>
+    </xsl:choose>
+    <xsl:text disable-output-escaping='yes'>&lt;style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}&lt;/style>&lt;noscript>&lt;style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}&lt;/style>&lt;/noscript>
+
+    </xsl:text>
+    <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    <script async="async" src="https://cdn.ampproject.org/v0.js"></script>
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
     <xsl:choose>
@@ -90,10 +70,6 @@
 		<!--div id="skipnavigation"><a href="#content" title="跳過導覽列">跳過導覽列</a></div-->
         <nav>
           <div class="nav-inner">
-            <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-                <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
-                <input type="hidden"  name="sites" value="blog.othree.net" />
-            </form>
             <div class="pure-menu pure-menu-horizontal">
                 <a href="{$mainPath}{$ext}" class="pure-menu-item">
                     <xsl:if test="$listType = 'i'">
@@ -143,11 +119,6 @@
                 <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
                     <hr />
                     <h2>其它資訊</h2>
-                    <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-                        <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium" />
-                        <input type="hidden"  name="sites" value="blog.othree.net" />
-                        <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
-                    </form>
                     <hr />
                     <div role="contentinfo"><xsl:text> </xsl:text>
                     <xsl:if test="$listType = 's'">
@@ -181,13 +152,6 @@
                                     <xsl:with-param name="by" select="'%2F'" />
                                 </xsl:call-template>
                             </xsl:variable>
-                            <iframe id="fb-button" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"></iframe>
-                            <iframe id="gp-button" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"></iframe>
-                            <iframe id="tw-button" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?size=l&amp;count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"></iframe>
-                            <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
-                            <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
-                            <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
-                            <!-- <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://blog.othree.net{$permalink}" data-via="othree" data-lang="zh-tw" data-count="vertical">Tweet</a> -->
                         </div>
 
                         <xsl:if test="//b:blog/b:entries/b:entriesMeta/b:previous or //b:blog/b:entries/b:entriesMeta/b:next">
@@ -247,12 +211,12 @@
                     </ul-->
                     <h3>訂閱本網誌</h3>
                     <ul id="feeds">
-                        <li><a href="https://feeds.feedburner.com/othree"><img src="https://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
+                        <li><a href="https://feeds.feedburner.com/othree"><amp-img src="https://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格" /></a></li>
                     </ul>
                     <h3>貼紙</h3>
                     <p id="stickers">
-                        <a href="http://happybusy.googlepages.com/"><img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
-                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><img src='/images/MDN_promoBanner_120x240px_v2.png' height='240' width='120' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
+                        <a href="http://happybusy.googlepages.com/"><amp-img src="/images/busy_banner.png" width="200" height="40" alt="時間がない" /></a>
+                        <a href='https://developer.mozilla.org/en/JavaScript' title='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'><amp-img src='/images/MDN_promoBanner_120x240px_v2.png' height='240' width='120' alt='JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation'/></a>
                     </p>
                 </aside>
             </div>
@@ -270,23 +234,6 @@
                 </p>
             </footer>
 		</div>
-        <script src="/scripts/all.min.js"></script>
-        <!--
-        <script src="/scripts/detect_cleartype.js"></script>
-        <script src="/scripts/device-pixel-ratio.js"></script>
-        <script src="/scripts/nav-search.js"></script>
-        <script src="/scripts/disable_pointer_events.js"></script>
-        -->
-        <!-- <script src="/scripts/parallax.js"> </script> -->
-        <!-- <xsl:if test="$listType = 's'"> -->
-            <!-- <div id="fb-root"><xsl:text> </xsl:text></div> -->
-            <!-- <script src="/scripts/googleplusone.js"> </script> -->
-            <!-- <script src="/scripts/facebook.js"> </script> -->
-            <!-- <script src="/scripts/twitter.js"> </script> -->
-        <!-- </xsl:if> -->
-        <!--
-        <script src="/scripts/googleanalytic.js"> </script>
-        -->
 	</body>
 </html>
 </xsl:template>
@@ -541,10 +488,6 @@ google_color_url = "008000";
             <!--<xsl:with-param name="entryID" select="@entryID" />-->
             <!--<xsl:with-param name="accepted" select="b:PingsAccepted/text()" />-->
         <!--</xsl:apply-templates>-->
-        <xsl:apply-templates select="b:comments">
-            <xsl:with-param name="entryID" select="@entryID" />
-            <xsl:with-param name="accepted" select="b:CommentsAccepted/text()" />
-        </xsl:apply-templates>
     </xsl:if>
 </article>
 <hr/>
@@ -569,62 +512,6 @@ google_color_url = "008000";
 	</xsl:choose>
 </xsl:if>
 
-</xsl:template>
-
-<!-- template comments -->
-
-<xsl:template match="b:comments">
-<xsl:param name="entryID" />
-<xsl:param name="accepted" />
-<div id="comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript" src="/scripts/disqus.min.js">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = 'o3noblog'; // required: replace example with your forum shortname
-        var disqus_url = document.location.origin + document.location.pathname.replace(/\/$/, '.xml');
-
-
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-    
-</div>
-</xsl:template>
-
-<!-- template comment -->
-
-<xsl:template match="b:comment">
-<article id="comment{@commentID}">
-<xsl:attribute name="class">
-<xsl:choose>
-	<xsl:when test="b:author/b:authorUrl = 'http://blog.othree.net'">comment3 well</xsl:when>
-	<xsl:otherwise>comment<xsl:value-of select="position() mod 2"/> well</xsl:otherwise>
-</xsl:choose>
-</xsl:attribute>
-
-<h5><!--a href="#comment{@commentID}" class="num"><xsl:value-of select="position()" /></a-->
-	由
-	<xsl:choose>
-		<xsl:when test="b:author/b:authorUrl/text()">
-			<a href="{b:author/b:authorUrl}"><xsl:value-of select="b:author/b:authorName" /></a>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="b:author/b:authorName" />
-		</xsl:otherwise>
-	</xsl:choose>
-	在
-	<xsl:value-of select="b:datetime/b:date" /><xsl:text> </xsl:text><xsl:value-of select="b:datetime/b:time" />
-	發表：
-</h5>
-<hr/>
-<xsl:apply-templates select="b:content/b:mainContent" mode="content" />
-</article>
 </xsl:template>
 
 <!-- template blogData -->
@@ -667,43 +554,6 @@ google_color_url = "008000";
 </li>
 </xsl:template>
 
-<!-- template recentComments -->
-
-<xsl:template match="b:recentComments">
-<h3>近期迴響</h3>
-<ul class="relative">
-	<xsl:for-each select="b:comment">
-		<xsl:call-template name="b:comment-r" />
-
-	</xsl:for-each>
-</ul>
-</xsl:template>
-
-<!-- template comment-recent -->
-
-<xsl:template name="b:comment-r">
-<li>
-	<a href="{concat('/log/',translate(b:entry/b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext,'#comment',@commentID)}" title="{concat(translate(b:datetime/b:date,'\-','\/'),' ',b:datetime/b:time)}">
-		Re: <xsl:value-of select="b:entry/b:title" />
-	</a>
-	<xsl:text> </xsl:text><span>by <xsl:value-of select="b:author/b:authorName" /></span>
-	<span class="hideinfo">at <xsl:value-of select="concat(translate(b:datetime/b:date,'\-','\/'),' ',substring(b:datetime/b:time,1,5))" /></span>
-</li>
-</xsl:template>
-
-<xsl:template name="item">
-<li>
-	<a href="{link}"><xsl:value-of select="title" /></a>
-	<xsl:if test="description">
-		<span class="desc"><xsl:value-of select="description" /></span>
-	</xsl:if>
-	<xsl:if test="category">
-		<span class="hideinfo">
-			tags: <xsl:apply-templates select="category" />
-		</span>
-	</xsl:if>
-</li>
-</xsl:template>
 
 <!-- template link tag -->
 
@@ -890,55 +740,72 @@ google_color_url = "008000";
 <!-- template copy without namespace -->
 
 <xsl:template mode="copy-no-ns" match="*">
-<xsl:element name="{local-name()}">
-    <xsl:choose>
-        <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
+  <xsl:choose>
+    <xsl:when test="local-name() = 'iframe'">
+      <xsl:element name="amp-iframe">
+        <xsl:copy-of select="@*" />
+        <xsl:apply-templates mode="copy-no-ns" />
+      </xsl:element>
+    </xsl:when>
+    <xsl:when test="local-name() = 'img'">
+      <xsl:element name="amp-img">
+        <xsl:choose>
+          <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
             <xsl:call-template name="src-n">
-                <xsl:with-param name="set"><xsl:value-of select="substring(@*[local-name() = 'src-1'], 19)"/></xsl:with-param>
-                <xsl:with-param name="res">1x</xsl:with-param>
-                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+              <xsl:with-param name="set"><xsl:value-of select="substring(@*[local-name() = 'src-1'], 19)"/></xsl:with-param>
+              <xsl:with-param name="res">1x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
             <xsl:copy-of select="@*[local-name() != 'src']" />
-        </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src-2'], '2x')">
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src-2'], '2x')">
             <xsl:call-template name="src-n">
-                <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'src-2']"/></xsl:with-param>
-                <xsl:with-param name="res">2x</xsl:with-param>
-                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'src-2']"/></xsl:with-param>
+              <xsl:with-param name="res">2x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
             <xsl:copy-of select="@*[local-name() != 'src']" />
-        </xsl:when>
-        <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'srcset'], '')">
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'srcset'], '')">
             <xsl:call-template name="srcset">
-                <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
-                <xsl:with-param name="res">768w</xsl:with-param>
-                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
+              <xsl:with-param name="res">768w</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
             <xsl:copy-of select="@*[local-name() != 'src']" />
-        </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'srcset'], '768w 2x')">
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'srcset'], '768w 2x')">
             <xsl:call-template name="srcset">
-                <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
-                <xsl:with-param name="res">2x</xsl:with-param>
-                <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
+              <xsl:with-param name="res">2x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
             <xsl:copy-of select="@*[local-name() != 'src']" />
-        </xsl:when>
-        <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_') = false">
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_') = false">
             <xsl:attribute name="src">
-                <xsl:variable name="p" select="@*[local-name() = 'src']" />
-                <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
-                <xsl:text>_b</xsl:text>
-                <xsl:value-of select="substring($p, string-length($p)-3)"/>
+              <xsl:variable name="p" select="@*[local-name() = 'src']" />
+              <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
+              <xsl:text>_b</xsl:text>
+              <xsl:value-of select="substring($p, string-length($p)-3)"/>
             </xsl:attribute>
             <xsl:copy-of select="@*[local-name() != 'src']" />
-        </xsl:when>
-        <xsl:otherwise>
+          </xsl:when>
+          <xsl:otherwise>
             <xsl:copy-of select="@*" />
-        </xsl:otherwise>
-    </xsl:choose>
-	<xsl:apply-templates mode="copy-no-ns" />
-</xsl:element>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:copy-of select="@*" />
+        <xsl:apply-templates mode="copy-no-ns" />
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="{local-name()}">
+        <xsl:copy-of select="@*" />
+        <xsl:apply-templates mode="copy-no-ns" />
+      </xsl:element>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <!-- template previous & next -->

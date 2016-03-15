@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xsl:transform version="2.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net" xmlns:o="http://www.opml.org/spec2/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:link="http://purl.org/rss/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:str="http://exslt.org/strings" extension-element-prefixes="str" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd http://www.w3.org/1999/XSL/Transform xslt.xsd" xml:lang="en" exclude-result-prefixes="b o xsi rdf link taxo str">
 <!-- <xsl:import href="calendar.xsl" /> -->
 <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
-<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes" />
+<xsl:output method="xml" encoding="utf-8" omit-xml-declaration="yes" indent="yes" />
 <xsl:strip-space elements="*"/>
 <xsl:param name="ext"></xsl:param>
 <xsl:param name="canonical">https://blog.othree.net</xsl:param>
@@ -27,7 +27,7 @@
 </xsl:text>
 <html lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
 	<head>
-		<meta charset="UTF-8" />
+		<meta charset="utf-8" />
 		<title>
 			<xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" />
 		</title>
