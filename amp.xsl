@@ -40,7 +40,7 @@
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/amp.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/amp.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -109,7 +109,7 @@
             <header role="banner" class="pure-g">
               <h1 class="pure-u-1">
                 <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">
-                  <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65" style="enable-background:new 0 0 569 65;" xml:space="preserve">
+                  <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
                     <g>
                       <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
                     </g>
