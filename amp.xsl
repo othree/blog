@@ -557,6 +557,7 @@ google_color_url = "008000";
     </xsl:when>
     <xsl:when test="local-name() = 'img'">
       <xsl:element name="amp-img">
+        <xsl:attribute name="layout">responsive</xsl:attribute>
         <xsl:choose>
           <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
             <xsl:call-template name="src-n">
