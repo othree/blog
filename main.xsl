@@ -39,10 +39,7 @@
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/pure-min.css" />
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/grids-responsive-min.css" />
-    <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/othree.css" />
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css" />
 		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
@@ -329,7 +326,7 @@
                 </p>
             </footer>
 		</div>
-        <script src="/scripts/all.min.js"></script>
+        <script src="/scripts/all.js"></script>
         <!--
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
