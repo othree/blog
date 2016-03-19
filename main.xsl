@@ -73,8 +73,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<link rel="top" title="首頁" href="{$mainPath}{$ext}" />
-		<link rel="openid.server" href="http://www.myopenid.com/server" />
-		<link rel="openid.delegate" href="http://othree.myopenid.com/" />
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
                 <link rel="canonical" href="{$canonical}" />
