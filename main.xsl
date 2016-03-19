@@ -43,7 +43,7 @@
     <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/grids-responsive-min.css" />
     <!-- <link rel="stylesheet" type='text/css' href='//fonts.googleapis.com/css?family=Droid+Sans+Mono|Press+Start+2P' /> -->
     <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/othree.css" />
-		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
+		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
 			<xsl:when test="$listType = 'about'">
@@ -81,6 +81,7 @@
 		<xsl:choose>
             <xsl:when test="$listType = 's'">
                 <link rel="canonical" href="{$canonical}" />
+                <link rel="amphtml" href="{$canonical}amp/" />
                 <xsl:choose>
                     <xsl:when test="descendant::*[name() = 'p'][1]/descendant::*[name() = 'img']">
                         <meta name="twitter:card" content="summary_large_image" />

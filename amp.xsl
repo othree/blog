@@ -39,9 +39,9 @@
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <xsl:text disable-output-escaping='yes'>&lt;style amp-custom="amp-custom">.thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}&lt;/style></xsl:text>
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/amp.css" />
-		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://feeds.feedburner.com/othree" />
+		<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree" />
 		<link rel="made" href="mailto:othree@gmail.com" />
 		<xsl:choose>
       <xsl:when test="$listType = 's'">
@@ -118,17 +118,12 @@
               </h1>
             </header>
             <div class="pure-g">
-                
                 <xsl:apply-templates select="b:entries/b:entriesMeta" />
                 <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
                     <hr/>
                     <xsl:apply-templates select="b:entries"/>
                 </main>
             </div>
-            <footer class="pure-g">
-                <p class="pure-u-1">
-                </p>
-            </footer>
 		</div>
 	</body>
 </html>
@@ -334,26 +329,27 @@
         </xsl:apply-templates>
     </section>
     <footer>
-        <xsl:choose>
-            <xsl:when test="b:category != ''">
-                <a href="{$logPath}{b:category}/{$ext}" rel="tag">
-                    <xsl:variable name="temp" select="b:category" />
-                    <xsl:choose>
-                        <xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()">
-                            <xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription" />
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="b:category" />
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </a>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text> 無類別 </xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
+      文章分類：
+      <xsl:choose>
+          <xsl:when test="b:category != ''">
+              <a href="{$logPath}{b:category}/{$ext}" rel="tag">
+                  <xsl:variable name="temp" select="b:category" />
+                  <xsl:choose>
+                      <xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()">
+                          <xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription" />
+                      </xsl:when>
+                      <xsl:otherwise>
+                          <xsl:value-of select="b:category" />
+                      </xsl:otherwise>
+                  </xsl:choose>
+              </a>
+          </xsl:when>
+          <xsl:otherwise>
+              <xsl:text> 無類別 </xsl:text>
+          </xsl:otherwise>
+      </xsl:choose>
 
-        <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
+      <a class="canonical" href="{$permalink}" title="「{b:title}」的原始位置">原始位置</a>
     </footer>
     <xsl:if test="$listType = 's'">
         <xsl:if test="$mime = 'xhtml'">
@@ -558,6 +554,8 @@ google_color_url = "008000";
   <xsl:choose>
     <xsl:when test="local-name() = 'iframe'">
       <xsl:element name="amp-iframe">
+        <xsl:attribute name="sandbox">allow-scripts allow-same-origin</xsl:attribute>
+        <xsl:attribute name="layout">responsive</xsl:attribute>
         <xsl:copy-of select="@*" />
         <xsl:apply-templates mode="copy-no-ns" />
       </xsl:element>
@@ -567,20 +565,20 @@ google_color_url = "008000";
         <xsl:attribute name="layout">responsive</xsl:attribute>
         <xsl:choose>
           <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
-            <xsl:call-template name="src-n">
+            <xsl:call-template name="srcset">
               <xsl:with-param name="set"><xsl:value-of select="substring(@*[local-name() = 'src-1'], 19)"/></xsl:with-param>
               <xsl:with-param name="res">1x</xsl:with-param>
               <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
-            <xsl:copy-of select="@*[local-name() != 'src']" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
           </xsl:when>
           <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src-2'], '2x')">
-            <xsl:call-template name="src-n">
+            <xsl:call-template name="srcset">
               <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'src-2']"/></xsl:with-param>
               <xsl:with-param name="res">2x</xsl:with-param>
               <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
-            <xsl:copy-of select="@*[local-name() != 'src']" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
           </xsl:when>
           <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'srcset'], '')">
             <xsl:call-template name="srcset">
@@ -588,7 +586,7 @@ google_color_url = "008000";
               <xsl:with-param name="res">768w</xsl:with-param>
               <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
-            <xsl:copy-of select="@*[local-name() != 'src']" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
           </xsl:when>
           <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'srcset'], '768w 2x')">
             <xsl:call-template name="srcset">
@@ -596,7 +594,7 @@ google_color_url = "008000";
               <xsl:with-param name="res">2x</xsl:with-param>
               <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
             </xsl:call-template>
-            <xsl:copy-of select="@*[local-name() != 'src']" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
           </xsl:when>
           <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_') = false">
             <xsl:attribute name="src">
@@ -605,13 +603,13 @@ google_color_url = "008000";
               <xsl:text>_b</xsl:text>
               <xsl:value-of select="substring($p, string-length($p)-3)"/>
             </xsl:attribute>
-            <xsl:copy-of select="@*[local-name() != 'src']" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="@*" />
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]" />
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:copy-of select="@*" />
+        <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]" />
         <xsl:apply-templates mode="copy-no-ns" />
       </xsl:element>
     </xsl:when>
