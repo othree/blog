@@ -10,7 +10,7 @@ stylesheets/all.css.gz: stylesheets/all.css
 stylesheets/all.css: stylesheets/othree.min.css
 	cat stylesheets/pure-min.css stylesheets/grids-responsive-min.css stylesheets/othree.min.css > stylesheets/all.css
 
-stylesheets/othree.min.css:
+stylesheets/othree.min.css: stylesheets/othree.css 
 	cleancss stylesheets/othree.css > stylesheets/othree.min.css
 
 scripts/all.js.br: scripts/all.js
@@ -19,5 +19,5 @@ scripts/all.js.br: scripts/all.js
 scripts/all.js.gz: scripts/all.js
 	zopfli scripts/all.js
 
-scripts/all.js:
+scripts/all.js: scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/disable_pointer_events.js scripts/googleanalytic.js
 	uglifyjs scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/disable_pointer_events.js scripts/googleanalytic.js > scripts/all.js
