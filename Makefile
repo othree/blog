@@ -2,7 +2,7 @@
 all: stylesheets/all.css.br stylesheets/all.css.gz scripts/all.js.br scripts/all.js.gz
 
 stylesheets/all.css.br: stylesheets/all.css
-	bro --input stylesheets/all.css --output stylesheets/all.css.br
+	bro --force --input stylesheets/all.css --output stylesheets/all.css.br
 
 stylesheets/all.css.gz: stylesheets/all.css
 	zopfli stylesheets/all.css
@@ -14,7 +14,7 @@ stylesheets/othree.min.css:
 	cleancss stylesheets/othree.css > stylesheets/othree.min.css
 
 scripts/all.js.br: scripts/all.js
-	bro --input scripts/all.js --output scripts/all.js.br
+	bro --force --input scripts/all.js --output scripts/all.js.br
 
 scripts/all.js.gz: scripts/all.js
 	zopfli scripts/all.js
