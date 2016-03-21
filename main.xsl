@@ -33,8 +33,12 @@
 		</title>
 		<meta name="description">
 			<xsl:attribute name="content">
-        <xsl:if test="$listType = 's'"><xsl:value-of select="//b:blog/b:entries/b:entry/b:content/b:summary" /></xsl:if>
-				<!-- <xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" /> -->
+        <xsl:choose>
+          <xsl:when test="$listType = 's'">
+            <xsl:value-of select="//b:blog/b:entries/b:entry/b:content/b:summary" />
+          </xsl:when>
+          <xsl:otherwise>本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄</xsl:otherwise>
+        </xsl:choose>
 			</xsl:attribute>
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
