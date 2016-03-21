@@ -34,7 +34,8 @@
 		</title>
 		<meta name="description">
 			<xsl:attribute name="content">
-				<xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" />
+        <xsl:if test="$listType = 's'"><xsl:value-of select="//b:blog/b:entries/b:entry/b:content/b:summary" /></xsl:if>
+				<!-- <xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" /> -->
 			</xsl:attribute>
 		</meta>
 		<meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design" />
