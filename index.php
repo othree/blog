@@ -7,9 +7,11 @@ if (!isset($xsl)) {
   $xsl = 'main.xsl';
 }
 
-if (preg_match("/_/", $_SERVER['QUERY_STRING'])) {
+$query = $_GET['f'];
+
+if (preg_match("/_/", $query)) {
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: https://blog.othree.net".preg_replace("/_/", "-", $_SERVER['QUERY_STRING']));
+    header("Location: https://blog.othree.net".preg_replace("/_/", "-", $query));
     exit();
 }
 
@@ -28,10 +30,10 @@ if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
 }
 
 //get local path
-$canonical = 'https://blog.othree.net' . $_SERVER['REQUEST_URI'];
+$canonical = 'https://blog.othree.net' . explode('?', $_SERVER['REQUEST_URI'])[0];
 
 $format = "html";
-$target_file = substr($_SERVER['QUERY_STRING'], 1);
+$target_file = substr($query, 1);
 $hash_file = substr($target_file, 0, -4) . '.md5';
 
 if (is_file($target_file)) {
