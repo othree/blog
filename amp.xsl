@@ -30,7 +30,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>
-			<xsl:if test="$listType != 'i'"><xsl:value-of select="$listData" /> : </xsl:if><xsl:value-of select="b:blogTitle" />
+			<xsl:value-of select="b:blogTitle" />
 		</title>
 		<meta name="description">
 			<xsl:attribute name="content">
@@ -56,6 +56,56 @@
     </xsl:text>
     <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async="async" src="https://cdn.ampproject.org/v0.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "<xsl:value-of select="$canonical" />",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/O3-240x240.png",
+            "width": 240,
+            "height": 240
+          }
+        },
+        "headline": "<xsl:value-of select="b:blogTitle" />",
+        "datePublished": "<xsl:value-of select="//b:entries/b:entry/b:datetime/b:date" />T<xsl:value-of select="//b:entries/b:entry/b:datetime/b:time" />",
+        "dateModified": "<xsl:value-of select="//b:entries/b:entry/b:datetime/b:date" />T<xsl:value-of select="//b:entries/b:entry/b:datetime/b:time" />",
+        "author": {
+          "@type": "Person",
+          "name": "360TS"
+        },
+        <xsl:for-each select="descendant::*[local-name() = 'img'][1]">
+        "image": {
+          "@type": "ImageObject",
+            <xsl:choose>
+                <xsl:when test="starts-with(@src, '//')">
+          "url": "http:<xsl:value-of select="@src" />",
+          "width": <xsl:value-of select="@width" />,
+          "height": <xsl:value-of select="@height" />
+                </xsl:when>
+                <xsl:otherwise>
+          "url": "<xsl:value-of select="@src" />",
+          "width": <xsl:value-of select="@width" />,
+          "height": <xsl:value-of select="@height" />
+                </xsl:otherwise>
+            </xsl:choose>
+        }
+        </xsl:for-each>
+        <xsl:if test="not(descendant::*[local-name() = 'img'][1])">
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://blog.othree.net/images/O3-240x240.png",
+          "width": 240,
+          "height": 240
+        }
+        </xsl:if>
+        }
+      }
+    </script>
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
     <xsl:choose>
