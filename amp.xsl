@@ -107,18 +107,7 @@
       }
     </script>
 	</head>
-	<body itemscope="itemscope" itemtype="http://schema.org/Blog">
-    <xsl:choose>
-        <xsl:when test="$listType = 'about'">
-            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-            <xsl:attribute name="itemtype">http://schema.org/AboutPage</xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:attribute name="itemscope">itemscope</xsl:attribute>
-            <xsl:attribute name="itemtype">http://schema.org/Blog</xsl:attribute>
-        </xsl:otherwise>
-    </xsl:choose>
-
+	<body>
 		<xsl:if test="$listType = 'about' or $listType = 'archive' or $listType = 'o'  or $listType = 'ca' or $listType = 'a'  or $listType = 'y'">
 			<xsl:attribute name="class">layout-2</xsl:attribute>
 		</xsl:if>
@@ -349,9 +338,9 @@
 
 <xsl:param name="showdate"></xsl:param>
 <xsl:variable name="permalink" select="concat('/log/',translate(b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext)" />
-<article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-{@baseName}">
+<article id="entry-{@baseName}">
     <header>
-        <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}">
+        <time datetime="{b:datetime/b:date}T{b:datetime/b:time}">
             <xsl:choose>
                 <xsl:when test="$showdate != '1'">
                     <xsl:attribute name="class">same-date</xsl:attribute>
@@ -364,7 +353,7 @@
             <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" />日</span>
         </time>
         
-        <h3 itemprop="name">
+        <h3>
             <xsl:choose>
             <xsl:when test="$listType = 's'">
                 <xsl:value-of select="b:title" />
@@ -375,7 +364,7 @@
             </xsl:choose>
         </h3>
     </header>
-    <section itemprop="articleBody">
+    <section>
         <xsl:apply-templates select="b:content">
             <xsl:with-param name="entryID" select="@entryID" />
             <xsl:with-param name="permalink" select="$permalink" />
