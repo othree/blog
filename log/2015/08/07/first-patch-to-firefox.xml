@@ -42,7 +42,7 @@
 			<b:title>My First Patch to Firefox</b:title>
 			<b:content>
 				<b:summary> OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 1089363，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale AB_CD 中的 AB 段而已，所以 zh_TW 和 zh_CN 就都會變成 zh，然後 OSX 的 zh 又會變成簡體中文，結果就變成這樣了。 其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_b.jpg" width="424" height="223" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e.jpg 768w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_c.jpg" width="400" height="210" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_c.jpg 768w" /></a></p>
 
 <p>OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1089363">1089363</a>，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale <code>AB_CD</code> 中的 <code>AB</code> 段而已，所以 <code>zh_TW</code> 和 <code>zh_CN</code> 就都會變成 <code>zh</code>，然後 OSX 的 <code>zh</code> 又會變成簡體中文，結果就變成這樣了。</p>
 
@@ -72,15 +72,15 @@ git clone http://hg.mozilla.org/l10n-central/zh-TW/
 
 <p>然後這樣就可以 build 中文版了，build 完執行就看到精美的黃底紅字 XML 解析錯誤視窗。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_z.jpg" width="320" height="162" alt="Firefox Missing String" srcset="https://farm1.staticflickr.com/382/19687462694_626110d91c_z.jpg 768w" /></a></p>
 
 <p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想到是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_c.jpg" width="800" height="596" alt="Firefox l10n stat" srcset="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_c.jpg 768w" /></a></p>
 
 <p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" src-1="(max-width: 768px)  https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a.jpg 1x, https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 2x"  /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_c.jpg" width="800" height="639" alt="nightly zh_TW download dialog" srcset="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_c.jpg 768w" /></a></p>
 
 <p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
 

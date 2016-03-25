@@ -9,6 +9,69 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000862" baseName="brotli-gzip-alt">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-03-21</b:date>
+				<b:time>13:43:51</b:time>
+			</b:datetime>
+			<b:category>server</b:category>
+			<b:title>brotli, gzip 的替代格式</b:title>
+			<b:content>
+				<b:summary> 最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 brotli 了，brotli 是 Google 繼 Zopfli 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 2013 年 2 月發佈，Brotli 是在 2015 年 9 月發佈的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份測試數據了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_c.jpg" width="800" height="534" alt="湯布院" srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_c.jpg 768w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
+
+<p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
+</b:mainContent>
+				<b:extendContent><p>支援 brotli 格式的瀏覽器會使用 HTTP 協定跟 server 端溝通，送出的 header 會有：</p>
+
+<pre><code>Accept-Encoding: br
+</code></pre>
+
+<p>一般瀏覽器都已經支援 gzip 和 deflate 很久了，所以像是 Firefox 會送出：</p>
+
+<pre><code>Accept-Encoding: gzip, deflate, br
+</code></pre>
+
+<p>Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮效益會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 <a href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html">mod_deflate</a>，只要再設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來<a href="https://lyncd.com/2015/11/brotli-support-apache/">支援</a>：</p>
+
+<pre><code>&lt;Files *.js.br&gt;
+  AddType "text/javascript" .br
+  AddEncoding br .br
+&lt;/Files&gt;
+&lt;Files *.css.br&gt;
+  AddType "text/css" .br
+  AddEncoding br .br
+&lt;/Files&gt;
+
+RewriteEngine On
+
+RewriteCond %{HTTP:Accept-Encoding} br
+RewriteCond %{REQUEST_FILENAME}.br -f
+RewriteRule ^(.*)$ $1.br [L]
+
+RewriteCond %{HTTP:Accept-Encoding} gzip
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)$ $1.gz [L]
+</code></pre>
+
+<p>當然這種方法就只能針對純靜態檔案，對於 PHP 之類動態產生的內容就無法處理，可喜的是我有看到 Jim Jagielski 有打算 <a href="http://mail-archives.apache.org/mod_mbox/httpd-users/201601.mbox/%3C549EBED9-2E3F-43CC-BDED-198B8ED4E257@jaguNET.com%3E">實做</a> Apache 支援了，只可惜我等不下去，就把我的 web server 重灌（brotli 需要 64 位元作業系統）順便把 Apache 換成 nginx，nginx 上目前有兩個 brotli module，一個是 <a href="https://github.com/google/ngx_brotli">Google 的</a>，另外一個是 <a href="https://github.com/cloudflare/ngx_brotli_module">CloudFlare 的</a>，我挑的是 Google 的，不過現在覺得應該先試試看 CloudFlare 的才對，Google 的 ngx_brotli 是 depend on <a href="https://github.com/bagder/libbrotli">libbrotli</a> 的，libbrotli 很有趣，他是 cURL 的作者 <a href="https://daniel.haxx.se/">Daniel Stenberg</a> 去弄起來的，同時也是 Mozilla 的員工（不是 Google），然後 Google 的 ngx_brotli 卻是引用他的 lib，而不是去找自己的 brotli 專案下手，不知道這中間到底是怎麼回事，不過現在應該是快要<a href="https://github.com/google/brotli/issues/326">整</a><a href="https://github.com/google/brotli/issues/332">併</a>起來了。</p>
+
+<p>CloudFlare 的 <a href="https://github.com/cloudflare/ngx_brotli_module">ngx_brotli_module</a> 則是直接把 brotli encoder 的程式碼放進去，不用 libbrotli，不過也不是沒有缺點，首先就是它只有 encoder，不能解壓 brotli 格式的 request body，再來是支援的設定比較少，Google 的可以設定的項目比較多，和 gzip 的相當接近，而且提供了 <code>brotli_static</code> 這個設定可以讓 nginx 自己去找看看有沒有預先壓縮好的 <code>br</code> 檔案，就像是上面 Apache 用的設定做的事情。我目前對於一般靜態的 css, js 檔案也有使用這個方法來節省 CPU 和降低 request 的反應時間。</p>
+
+<p>結果當然是蠻不錯的，這邊之前是用 bootstrap 這個 css framework，壓縮前的 <code>bootstrap.min.css</code> 有 98.9KB，gzip 後是 19.9KB，用 zopfli 約是 15KB，用 brotli 可以再降低到 14.68KB，用的都是預設的壓縮密度，目前改用 Yahoo 的 <a href="http://purecss.io/">pure.css</a>，單看某一頁的 HTML + CSS + JS，資料量總共約 57.8 KB，使用 brotli 後，和 gzip(zopfli) 比可以再節省傳輸量到 25% 左右。</p>
+
+<p>最後補充一下 <a href="https://www.iispeed.com/pagespeed/products/iisbrotli">IIS 也有支援</a> 了，這篇文章還有 Alexa 前一萬名網站的檔案下去用 brotli 壓縮的結果比較。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000859" baseName="device-pixel-ratio-header">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -248,7 +311,7 @@
 
 <p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_b.jpg" width="840" height="289" alt="MessagePack Try" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w" /></a></p>
 
 <p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
 
@@ -437,7 +500,7 @@
 
 <p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="999" height="690" alt="twgeojson g0v" srcset="https://farm2.staticflickr.com/1657/24218757206_0bafdc4c24_o_d.png 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_c.jpg" width="999" height="690" alt="twgeojson g0v" srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_c.jpg 768w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
 
 <p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
 
@@ -501,7 +564,7 @@ return $friend
 
 <p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch" srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16.jpg 768w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_c.jpg" width="425" height="654" alt="JSONDiffPatch" srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_c.jpg 768w" /></a></p>
 
 <p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
 
@@ -532,51 +595,51 @@ return $friend
 			<b:title>2015</b:title>
 			<b:content>
 				<b:summary> 又到了一年一度的照片回顧了，今年因為比較多事情，竟然有一個月沒有照片（除了開箱以外），所以就另外多挑了一張照片出來這樣。首先是一月在台南武廟前面碳烤吐司那邊拍的，台南的大大小小寺廟真的很多，隨便一條巷子進去就有間小廟。 二月是最後一次五月天到HTC的尾牙了，今年聽說五月天沒有要唱尾牙場這樣。 三月的是在摩茲工寮拍的，是 Kano 的 workshop，Kano 是讓小朋友能自己從硬體組裝電腦的一個 kit，之前和朋友湊團買了不少台，達到可以請官方支援開一場 workshop 的目標，所以就辦了一場，也是我難得有機會拍小孩子的照片。 四月是我今年印象最深刻的一杯飲料，台南凰商號的鳳梨冰茶。 五月的時候去了北京一趟，趁著有一天假日去觀光一下，其中頤和園還蠻不錯的，這張照片是園內的麒麟，做工精細，光是台座就很華麗，然後這尊我都稱他為標準麒麟，感覺是有人要畫麒麟時可以來參考用的標準版。 六月就是都沒照片可以挑，所以跳到七月，今年幫 HITCON 記錄了不少活動，最主力參與的就是 HITCON 本番活動的四天研討會加前面兩天 Training 了，然後拍完我就感冒接著一直咳嗽到11月底，明年大概不能這樣從頭參加到尾了，挑的這張是 HITCON Girls 的讀書會的照片，其實 HITCON Girls 的難易度對我來說好像還蠻剛好的(?)。 八月是慣例的 COSCUP，這張是 Jserv 講完他封麥演講後拍的，因為覺得他神情不太一般就拍下來了，後來看他的一些心情抒發才知道是怎麼回事。 九月去幫忙拍了 Open Street Map 的研討會（State of The Map），規模不大，不過是我拍的蠻開心的一場活動，就是一種小而美的 fu。 十月其實也沒拍什麼照片，這張是某天下班時在信義區空橋拍的簡單夜景。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16140518847/" title="武廟碳烤土司 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7492/16140518847_59717232dc_b.jpg" width="1024" height="683" alt="武廟碳烤土司" srcset="https://farm8.staticflickr.com/7492/16140518847_88848cf42f_k.jpg 2x" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16140518847/" title="武廟碳烤土司 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7492/16140518847_59717232dc_c.jpg" width="800" height="534" alt="武廟碳烤土司" srcset="https://farm8.staticflickr.com/7492/16140518847_59717232dc_c.jpg 768w, https://farm8.staticflickr.com/7492/16140518847_245a05da67_h.jpg 1600w" /></a></p>
 
 <p>又到了一年一度的照片回顧了，今年因為比較多事情，竟然有一個月沒有照片（除了開箱以外），所以就另外多挑了一張照片出來這樣。首先是一月在台南武廟前面碳烤吐司那邊拍的，台南的大大小小寺廟真的很多，隨便一條巷子進去就有間小廟。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16456098101/" title="HTC 2014 Year End Party by othree, on Flickr"><img src="https://farm8.staticflickr.com/7322/16456098101_3302c040ba_b.jpg" width="1024" height="683" alt="HTC 2014 Year End Party" srcset="https://farm8.staticflickr.com/7322/16456098101_b7740c3902_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16456098101/" title="HTC 2014 Year End Party by othree, on Flickr"><img src="https://farm8.staticflickr.com/7322/16456098101_3302c040ba_c.jpg" width="800" height="534" alt="HTC 2014 Year End Party" srcset="https://farm8.staticflickr.com/7322/16456098101_3302c040ba_c.jpg 768w, https://farm8.staticflickr.com/7322/16456098101_bc349f389d_h.jpg 1600w" /></a></p>
 
 <p>二月是最後一次五月天到HTC的尾牙了，今年聽說五月天沒有要唱尾牙場這樣。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16535116467/" title="Kano 小朋友的電腦自己動手作工作坊 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8602/16535116467_1e42f2e043_b.jpg" width="1024" height="683" alt="Kano 小朋友的電腦自己動手作工作坊" srcset="https://farm9.staticflickr.com/8602/16535116467_ba59ba6dcd_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16535116467/" title="Kano 小朋友的電腦自己動手作工作坊 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8602/16535116467_1e42f2e043_c.jpg" width="800" height="534" alt="Kano 小朋友的電腦自己動手作工作坊" srcset="https://farm9.staticflickr.com/8602/16535116467_1e42f2e043_c.jpg 768w, https://farm9.staticflickr.com/8602/16535116467_26174e67bb_h.jpg 1600w" /></a></p>
 
 <p>三月的是在摩茲工寮拍的，是 Kano 的 workshop，Kano 是讓小朋友能自己從硬體組裝電腦的一個 kit，之前和朋友湊團買了不少台，達到可以請官方支援開一場 workshop 的目標，所以就辦了一場，也是我難得有機會拍小孩子的照片。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133378048/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7669/17133378048_014e3ee6f2_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7669/17133378048_149a4f072d_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133378048/" title="台南凰商號、鳳梨冰茶 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7669/17133378048_014e3ee6f2_c.jpg" width="800" height="534" alt="台南凰商號、鳳梨冰茶" srcset="https://farm8.staticflickr.com/7669/17133378048_014e3ee6f2_c.jpg 768w, https://farm8.staticflickr.com/7669/17133378048_dede7ec4d4_h.jpg 1600w" /></a></p>
 
 <p>四月是我今年印象最深刻的一杯飲料，台南凰商號的鳳梨冰茶。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/18732255206/" title="頤和園 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8873/18732255206_de78be9257_b.jpg" width="683" height="1024" alt="頤和園" srcset="https://farm9.staticflickr.com/8873/18732255206_8d341d52b8_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/18732255206/" title="頤和園 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8873/18732255206_de78be9257_c.jpg" width="534" height="800" alt="頤和園" srcset="https://farm9.staticflickr.com/8873/18732255206_de78be9257_c.jpg 768w, https://farm9.staticflickr.com/8873/18732255206_ecfa09195b_h.jpg 1600w" /></a></p>
 
 <p>五月的時候去了北京一趟，趁著有一天假日去觀光一下，其中頤和園還蠻不錯的，這張照片是園內的麒麟，做工精細，光是台座就很華麗，然後這尊我都稱他為標準麒麟，感覺是有人要畫麒麟時可以來參考用的標準版。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19502074628/" title="HITCON GIRLS 7月讀書會 by othree, on Flickr"><img src="https://farm1.staticflickr.com/413/19502074628_f5bd2785a1_b.jpg" width="1024" height="683" alt="HITCON GIRLS 7月讀書會" srcset="https://farm1.staticflickr.com/413/19502074628_54c3a5432f_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19502074628/" title="HITCON GIRLS 7月讀書會 by othree, on Flickr"><img src="https://farm1.staticflickr.com/413/19502074628_f5bd2785a1_c.jpg" width="800" height="534" alt="HITCON GIRLS 7月讀書會" srcset="https://farm1.staticflickr.com/413/19502074628_f5bd2785a1_c.jpg 768w, https://farm1.staticflickr.com/413/19502074628_6009dd3e0a_h.jpg 1600w" /></a></p>
 
 <p>六月就是都沒照片可以挑，所以跳到七月，今年幫 HITCON 記錄了不少活動，最主力參與的就是 HITCON 本番活動的四天研討會加前面兩天 Training 了，然後拍完我就感冒接著一直咳嗽到11月底，明年大概不能這樣從頭參加到尾了，挑的這張是 HITCON Girls 的讀書會的照片，其實 HITCON Girls 的難易度對我來說好像還蠻剛好的(?)。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21691691725/" title="COSCUP 2015 Day 2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/732/21691691725_0158744a48_b.jpg" width="1024" height="683" alt="COSCUP 2015 Day 2" srcset="https://farm1.staticflickr.com/732/21691691725_dbd49a1cb9_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21691691725/" title="COSCUP 2015 Day 2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/732/21691691725_0158744a48_c.jpg" width="800" height="534" alt="COSCUP 2015 Day 2" srcset="https://farm1.staticflickr.com/732/21691691725_0158744a48_c.jpg 768w, https://farm1.staticflickr.com/732/21691691725_78680cc694_h.jpg 1600w" /></a></p>
 
 <p>八月是慣例的 COSCUP，這張是 Jserv 講完他封麥演講後拍的，因為覺得他神情不太一般就拍下來了，後來看他的一些心情抒發才知道是怎麼回事。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21588592452/" title="SOTM Taiwan 2015 Day 2 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5666/21588592452_42ba1e0687_b.jpg" width="1024" height="683" alt="SOTM Taiwan 2015 Day 2" srcset="https://farm6.staticflickr.com/5666/21588592452_e277dc0763_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21588592452/" title="SOTM Taiwan 2015 Day 2 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5666/21588592452_42ba1e0687_c.jpg" width="800" height="534" alt="SOTM Taiwan 2015 Day 2" srcset="https://farm6.staticflickr.com/5666/21588592452_42ba1e0687_c.jpg 768w, https://farm6.staticflickr.com/5666/21588592452_7c2e08433b_h.jpg 1600w" /></a></p>
 
 <p>九月去幫忙拍了 Open Street Map 的研討會（State of The Map），規模不大，不過是我拍的蠻開心的一場活動，就是一種小而美的 fu。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840706024/" title="信義區 by othree, on Flickr"><img src="https://farm1.staticflickr.com/774/21840706024_a5df54ab4a_b.jpg" width="1024" height="683" alt="信義區" srcset="https://farm1.staticflickr.com/774/21840706024_2997a2fa53_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840706024/" title="信義區 by othree, on Flickr"><img src="https://farm1.staticflickr.com/774/21840706024_a5df54ab4a_c.jpg" width="800" height="534" alt="信義區" srcset="https://farm1.staticflickr.com/774/21840706024_a5df54ab4a_c.jpg 768w, https://farm1.staticflickr.com/774/21840706024_dd9bbe8e4a_h.jpg 1600w" /></a></p>
 
 <p>十月其實也沒拍什麼照片，這張是某天下班時在信義區空橋拍的簡單夜景。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23369387526/" title="菲貓 by othree, on Flickr"><img src="https://farm1.staticflickr.com/666/23369387526_c49aaa7eeb_b.jpg" width="1024" height="683" alt="菲貓" srcset="https://farm1.staticflickr.com/666/23369387526_4b65fa5c6f_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23369387526/" title="菲貓 by othree, on Flickr"><img src="https://farm1.staticflickr.com/666/23369387526_c49aaa7eeb_c.jpg" width="800" height="534" alt="菲貓" srcset="https://farm1.staticflickr.com/666/23369387526_c49aaa7eeb_c.jpg 768w, https://farm1.staticflickr.com/666/23369387526_cb6c4f9d2f_h.jpg 1600w" /></a></p>
 
 <p>十一月底幫家裡貓咪穿上正式服裝時拍的照片。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23459263613/" title="Kumamon Square by othree, on Flickr"><img src="https://farm6.staticflickr.com/5771/23459263613_d450468173_b.jpg" width="1024" height="683" alt="Kumamon Square" srcset="https://farm6.staticflickr.com/5771/23459263613_bae1c42d73_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23459263613/" title="Kumamon Square by othree, on Flickr"><img src="https://farm6.staticflickr.com/5771/23459263613_d450468173_c.jpg" width="800" height="534" alt="Kumamon Square" srcset="https://farm6.staticflickr.com/5771/23459263613_d450468173_c.jpg 768w, https://farm6.staticflickr.com/5771/23459263613_20f8262b93_h.jpg 1600w" /></a></p>
 
 <p>十二月去了一趟九州，還專程去拜訪了 Kumamon ，熊本真的是很多 Kumamon，去熊本的行程就是拜訪熊本熊、熊本城、吃豬排、吃燒肉，熊本城其實是重建的，然後現在還是有城主，用的是一口城主制度，簡單說就是有捐錢幫忙維護熊本城就能當城主。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16222124870/" title="FF25 Cosplay by othree, on Flickr"><img src="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_b.jpg" width="1024" height="683" alt="FF25 Cosplay" srcset="https://farm8.staticflickr.com/7352/16222124870_12ad7ac663_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16222124870/" title="FF25 Cosplay by othree, on Flickr"><img src="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_c.jpg" width="800" height="534" alt="FF25 Cosplay" srcset="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_c.jpg 768w, https://farm8.staticflickr.com/7352/16222124870_7d47d8872c_h.jpg 1600w" /></a></p>
 
 <p>最後補一張 cosplay 的照片，今年後半年都沒有拍相關的活動，剛好上面也都沒挑到這個主題的照片，最近 FF 開始移師到花博園區，那邊腹地比較廣大，比較不會有在台大的的種種問題，不過還搞不太清楚要在哪裡找人拍照就是。</p>
 </b:mainContent>
@@ -601,7 +664,7 @@ return $friend
 			<b:title>JSX 的前世</b:title>
 			<b:content>
 				<b:summary> React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 &lt;div&gt; 標籤就要寫成： var divNode = React.DOM.div({attr1:"value"}); 如果還要加上子元素，像是一個 list： &lt;ol&gt; &lt;li&gt;Item A&lt;/li&gt; &lt;li&gt;Item B&lt;/li&gt; &lt;li&gt;Item C&lt;/li&gt; &lt;li&gt;Item D&lt;/li&gt; &lt;/ol&gt; 就要寫成： var listNode = React.DOM.div({}, React.DOM.li({}, "Item A"), React.DOM.li({},...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="362" height="512" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0.jpg 768w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_c.jpg" width="565" height="800" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_c.jpg 768w, https://farm6.staticflickr.com/5679/23319631253_54870a2279_h.jpg 1600w" /></a></p>
 
 <p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
 
@@ -652,61 +715,6 @@ people.person.(name == "Joe").age
 <p>沒想到後來會在 Facebook 的手上，把這個概念單存的套用在 HTML 文件樹之上而重生。</p>
 </b:mainContent>
 				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000854" baseName="ula-umbrella">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-11-19</b:date>
-				<b:time>22:14:02</b:time>
-			</b:datetime>
-			<b:category>buy</b:category>
-			<b:title>ULA 雨傘</b:title>
-			<b:content>
-				<b:summary> 前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 ULA 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22276626569/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/698/22276626569_c47da2bce3_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/698/22276626569_c47da2bce3.jpg 768w, https://farm1.staticflickr.com/698/22276626569_36ed7cdcc5_k.jpg 2x" /></a></p>
-
-<p>前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 <a href="http://www.ula-umbrella.com/">ULA</a> 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。</p>
-</b:mainContent>
-				<b:extendContent><p>首先第一印像是，雨傘綁起來時很緊，幾乎所有其它的雨傘都是，在我辛苦的把傘面整理好之後，要綁起來時，卻發現因為魔鬼沾或鈕釦的位置，綁起來會鬆鬆的，沒辦法綁緊，結果本來弄得很緊實的傘布就變的鬆鬆垮垮的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275767928/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/571/22275767928_6ee17966fd_b.jpg" width="683" height="1024" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/571/22275767928_6ee17966fd.jpg 768w, https://farm1.staticflickr.com/571/22275767928_98a4d504ca_k.jpg 2x" /></a></p>
-
-<p>第二個是則是雨傘套的部分，其它雨傘幾乎都沒有考慮要撐傘時，隨附的雨傘套要放在哪的問題，以前我最常做的方法就是把他綁在手把的繩圈上，不過這個方法久了傘套的布就會變的很皺，ULA 則是設計了一個鈕釦在手把繩圈那邊，可以固定拿下來的傘套。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842288193/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9.jpg 768w, https://farm1.staticflickr.com/724/21842288193_522bcc5b31_k.jpg 2x" /></a></p>
-
-<p>第三個則是雨傘開關的地方，有一整塊軟橡膠墊讓手指不會因為要用力壓金屬片卡吮而不舒服，而且很顯眼，有畫龍點睛的效果，雖然都是素色的雨傘，不過整體設計是蠻好看的。另外一點和開關相關的特色，就是開關很好操作，不太會有力量出不去卡卡的狀況。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842283173/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/21842283173_7e44d94c85_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/771/21842283173_7e44d94c85.jpg 768w, https://farm1.staticflickr.com/771/21842283173_8bce12b29f_k.jpg 2x" /></a></p>
-
-<p>第四個則是收傘容易，雨傘支架末端都有設計過，配合頭蠻大的握把，很容易就把所有支架末端收好固定到握把內，再也不用一直橋來橋去的收傘了。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275764628/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/716/22275764628_1c69194dd2_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/716/22275764628_1c69194dd2.jpg 768w, https://farm1.staticflickr.com/716/22275764628_3b30e190a1_k.jpg 2x" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840724334/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/773/21840724334_cd305357d7_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/773/21840724334_cd305357d7.jpg 768w, https://farm1.staticflickr.com/773/21840724334_97ebfd3d10_k.jpg 2x" /></a></p>
-
-<p>另外雨傘握把雖然不長，但是形狀也是設計過的，握起來感覺不會太差，</p>
-
-<p>而除了以上的特色之外，還有一個設計很不錯的是手把的繩圈其實是可以拆開套到其它東西上的，用的雖然是鈕釦不過可靠度蠻高的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22474404621/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f.jpg 768w, https://farm6.staticflickr.com/5702/22474404621_0ddb29dbf5_k.jpg 2x" /></a></p>
-
-<p>最後要講的是耐用度，相信一定有人會有疑問，總之我覺得耐用度也不差，我現在手上這隻有經歷過一次颱風的攻擊，整個被吹翻，傘沒散掉，唯一的受損是有兩根拉桿有一點彎曲，不過我試著要彎回來才發現這拉桿其實很堅固，和一般折傘的拉桿比起來差蠻多，另外就是固定拉桿的方式好很多，我上一隻國產某算是名牌的雨傘後來固定拉桿的地方就常常脫落，要一直回去修理（不過最後是忘在電影院不見了）。傘布本身的防水性目前也都表現很不錯。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22450098812/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5633/22450098812_01311ee804_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5633/22450098812_01311ee804.jpg 768w, https://farm6.staticflickr.com/5633/22450098812_0961e69d48_k.jpg 2x" /></a></p>
-
-<p>ULA 雨傘的包裝如下，在香港地鐵有販賣機在賣，要用八達通卡購買，而且不同站點還有各自的限定色，是蠻有趣的銷售方式，當然也有實體店面，價錢大約台幣三四百，如果有去香港的推薦可以買一隻回來試試，要送人的話，就要三思了～～</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22525750458/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0.jpg 768w, https://farm1.staticflickr.com/710/22525750458_84b7929ec2_k.jpg 2x" /></a></p>
 </b:extendContent>
 			</b:content>
 

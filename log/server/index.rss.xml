@@ -4,11 +4,62 @@
 <title>O3noBLOG - server</title>
 <link>https://blog.othree.net//log/ server/</link>
 <description></description>
-<copyright>Copyright 2015</copyright>
-<lastBuildDate>2015-10-19 23:04</lastBuildDate>
+<copyright>Copyright 2016</copyright>
+<lastBuildDate>2016-03-21 13:43</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>brotli, gzip 的替代格式</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院麵包超人 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院" srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9.jpg 768w, https://farm2.staticflickr.com/1692/23998562432_d3131260da_k.jpg 2x" /></a></p>
+
+<p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
+]]><![CDATA[<p>支援 brotli 格式的瀏覽器會使用 HTTP 協定跟 server 端溝通，送出的 header 會有：</p>
+
+<pre><code>Accept-Encoding: br
+</code></pre>
+
+<p>一般瀏覽器都已經支援 gzip 和 deflate 很久了，所以像是 Firefox 會送出：</p>
+
+<pre><code>Accept-Encoding: gzip, deflate, br
+</code></pre>
+
+<p>Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮校議會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 [mod_deflate][]，只要再設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來<a href="https://lyncd.com/2015/11/brotli-support-apache/">支援</a>：</p>
+
+<pre><code>&lt;Files *.js.br&gt;
+  AddType "text/javascript" .br
+  AddEncoding br .br
+&lt;/Files&gt;
+&lt;Files *.css.br&gt;
+  AddType "text/css" .br
+  AddEncoding br .br
+&lt;/Files&gt;
+
+RewriteEngine On
+
+RewriteCond %{HTTP:Accept-Encoding} br
+RewriteCond %{REQUEST_FILENAME}.br -f
+RewriteRule ^(.*)$ $1.br [L]
+
+RewriteCond %{HTTP:Accept-Encoding} gzip
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)$ $1.gz [L]
+</code></pre>
+
+<p>當然這種方法就只能針對純靜態檔案，對於 PHP 之類動態產生的內容就無法處理，可喜的是我有看到 Jim Jagielski 有打算 <a href="http://mail-archives.apache.org/mod_mbox/httpd-users/201601.mbox/%3C549EBED9-2E3F-43CC-BDED-198B8ED4E257@jaguNET.com%3E">實做</a> Apache 支援了，只可惜我等不下去，就把我的 web server 重灌（brotli 需要 64 位元作業系統）順便把 Apache 換成 nginx，nginx 上目前有兩個 brotli module，一個是 <a href="https://github.com/google/ngx_brotli">Google 的</a>，另外一個是 <a href="https://github.com/cloudflare/ngx_brotli_module">CloudFlare 的</a>，我挑的是 Google 的，不過現在覺得應該先試試看 CloudFlare 的才對，Google 的 ngx_brotli 是 depend on <a href="https://github.com/bagder/libbrotli">libbrotli</a> 的，libbrotli 很有趣，他是 cURL 的作者 <a href="https://daniel.haxx.se/">Daniel Stenberg</a> 去弄起來的，同時也是 Mozilla 的員工（不是 Google），然後 Google 的 ngx_brotli 卻是引用他的 lib，而不是去找自己的 brotli 專案下手，不知道這中間到底是怎麼回事，不過現在應該是快要<a href="https://github.com/google/brotli/issues/326">整</a><a href="https://github.com/google/brotli/issues/332">併</a>起來了。</p>
+
+<p>CloudFlare 的 [ngx_brotli_module][] 則是直接把 brotli encoder 的程式碼放進去，不用 libbrotli，不過也不是沒有缺點，首先就是它只有 encoder，不能解壓 brotli 格式的 request body，再來是支援的設定比較少，Google 的可以設定的項目比較多，和 gzip 的相當接近，而且提供了 <code>brotli_static</code> 這個設定可以讓 nginx 自己去找看看有沒有預先壓縮好的 <code>br</code> 檔案，就像是上面 Apache 用的設定做的事情。我目前對於一般靜態的 css, js 檔案也有使用這個方法來節省 CPU 和降低 request 的反應時間。</p>
+
+<p>結果當然是蠻不錯的，這邊之前是用 bootstrap 這個 css framework，壓縮前的 <code>bootstrap.min.css</code> 有 98.9KB，gzip 後是 19.9KB，用 zopfli 約是 15KB，用 brotli 可以再降低到 14.68KB，用的都是預設的壓縮密度，目前改用 Yahoo 的 <a href="http://purecss.io/">pure.css</a>，單看某一頁的 HTML + CSS + JS，資料量總共約 57.8 KB，使用 brotli 後，和 gzip(zopfli) 比可以再節省傳輸量到 25% 左右。</p>
+
+<p>最後補充一下 <a href="https://www.iispeed.com/pagespeed/products/iisbrotli">IIS 也有支援</a> 了，這篇文章還有 Alexa 前一萬名網站的檔案下去用 brotli 壓縮的結果比較。</p>
+]]></description>
+<link>https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/</link>
+<guid>https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/</guid>
+<category>server</category>
+<pubDate>2016-03-21 13:43</pubDate>
+</item>
 
 <item>
 <title>Apache2 and HTTP/2</title>
