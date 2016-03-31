@@ -42,7 +42,7 @@
 			<b:title>Device Pixel Ratio</b:title>
 			<b:content>
 				<b:summary> 這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/8128174518/" title="Flickr 上 othree 的 2x compare to 1x"><img src="//farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" width="500" height="333" alt="2x compare to 1x"/></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8128174518/" title="2x compare to 1x by othree, on Flickr"><img src="https://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg" width="500" height="333" alt="2x compare to 1x" srcset="https://farm9.staticflickr.com/8463/8128174518_387a27b3dd.jpg 1024w" /></a></p>
 
 <p>這兩天又對 blog 做了一些加強，主要是處理 Device Pixel Ratio 和 OpenGraph Protocol 及 Twitter Card 的支援，這篇當然主要是要說 Device Pixel Ratio，這東西是隨著 Apple Device 的 Retina Display 上市後才有的，Retina Display 有著原來的四倍的點數，長寬的 DPI 都是原來的兩倍，但是網頁瀏覽不可能會是直接讓瀏覽器的 window size 變成兩倍寬，這樣的話字會小到難以閱讀，因此有了 Device Pixel Ratio 這樣的設計出現，以橫置的 iPad with Retina Display 為例，window 的 width 是 1024px，而其實際的螢幕點數有 2048 點，除上 Device Pixel Ratio 是 2，結果會剛好回到 1024，對於網頁製作上來說，直接當程式 1024px 寬的畫面來處理基本上就沒問題了。</p>
 
@@ -60,20 +60,11 @@
 
 <p>直接讀取這個值就可以知道現在的 device pixel ratio 了，然後根據讀到的值來選擇適當的圖片，不過講到網頁的圖片，其實最先應該想到的是 img 標籤才是，偏偏這兩個方法都不直接適用，而且實際上目前也還沒有針對這個問題，可直接使用的新機制，有人有寫 jQuery plugin 來把圖片換掉，我的作法則是第一次瀏覽不管，不過同時就把 device pixel ratio 數值寫進 cookie，這樣下次使用者來訪，或是他點到其他頁時，server 端就可以知道他用的 device pixel ratio，然後先一步把 img 要丟出的圖片網址處理好，以 flickr 的圖片為例，我平常貼的都是 500px 寬的縮圖，要給 ratio 2 的裝置看則需要 1000px 以上，flickr 最大的縮圖是 1024px，剛好很接近 1000px，又很幸運的兩者檔案路徑只有在檔名最後面差一個 _b ，所以我就很開心的拿來用了，在 XSLT parse 時把 img 標籤，src 是 flickrfarm 來的，檔名結尾不是 _o 的（代表原始檔）的圖片路徑都加上 _b ，結果的差異就是上面第一張圖那樣，其他還抓了不少比較圖，不過都要到 flickr 那去開原始檔比較才看得出差異。</p>
 
-<p><figure class="thumbnail">
-<a href="http://www.flickr.com/photos/othree/8128147819/" title="Flickr 上 othree 的 2x compare to 1x"><img src="//farm9.staticflickr.com/8043/8128147819_45f5f33352.jpg" width="500" height="333" alt="2x compare to 1x"/></a>
-<figcaption>比較圖原始大小</figcaption>
-</figure></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8128147819/" title="2x compare to 1x by othree, on Flickr"><img src="https://farm9.staticflickr.com/8043/8128147819_45f5f33352_b.jpg" width="1000" height="665" alt="2x compare to 1x" srcset="https://farm9.staticflickr.com/8043/8128147819_45f5f33352_b.jpg 1024w" /></a></p>
 
-<p><figure class="thumbnail">
-<a href="http://www.flickr.com/photos/othree/8127784377/" title="Flickr 上 othree 的 Support device pixel ratio 2x"><img src="//farm9.staticflickr.com/8052/8127784377_5db2831fb7.jpg" width="375" height="500" alt="Support device pixel ratio 2x"/></a>
-<figcaption>2x 圖片</figcaption>
-</figure></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8127784377/" title="Support device pixel ratio 2x by othree, on Flickr"><img src="https://farm9.staticflickr.com/8052/8127784377_5db2831fb7_b.jpg" width="768" height="1024" alt="Support device pixel ratio 2x" srcset="https://farm9.staticflickr.com/8052/8127784377_5db2831fb7_b.jpg 1024w, https://farm9.staticflickr.com/8052/8127784377_de9e5c23bc_h.jpg 1600w" /></a></p>
 
-<p><figure class="thumbnail">
-<a href="http://www.flickr.com/photos/othree/8127811546/" title="Flickr 上 othree 的 Not support device pixel ratio 2x"><img src="//farm9.staticflickr.com/8336/8127811546_4e62af122b.jpg" width="375" height="500" alt="Not support device pixel ratio 2x"/></a>
-<figcaption>1x 圖片</figcaption>
-</figure></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8127811546/" title="Not support device pixel ratio 2x by othree, on Flickr"><img src="https://farm9.staticflickr.com/8336/8127811546_4e62af122b_b.jpg" width="768" height="1024" alt="Not support device pixel ratio 2x" srcset="https://farm9.staticflickr.com/8336/8127811546_4e62af122b_b.jpg 1024w, https://farm9.staticflickr.com/8336/8127811546_c81183259d_h.jpg 1600w" /></a></p>
 
 <p>這支寫 device pixel ratio cookie 的程式很簡單，我也放上 github 了，就叫 <a href="https://github.com/othree/dpr-cookie">dpr-cookie</a>，完全 stand alone，不需要其他 Library，有需要的歡迎使用，還沒放上 License 宣告，不過會用 MIT License。</p>
 

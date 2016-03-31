@@ -23,7 +23,7 @@
 			<b:title>brotli, gzip 的替代格式</b:title>
 			<b:content>
 				<b:summary> 最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 brotli 了，brotli 是 Google 繼 Zopfli 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 2013 年 2 月發佈，Brotli 是在 2015 年 9 月發佈的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份測試數據了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_c.jpg" width="800" height="534" alt="湯布院" srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_c.jpg 768w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
 
 <p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
 </b:mainContent>
@@ -37,7 +37,7 @@
 <pre><code>Accept-Encoding: gzip, deflate, br
 </code></pre>
 
-<p>Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮效益會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 <a href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html">mod_deflate</a>，只要再設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來<a href="https://lyncd.com/2015/11/brotli-support-apache/">支援</a>：</p>
+<p>Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮效益會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 <a href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html">mod_deflate</a>，只要在設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來<a href="https://lyncd.com/2015/11/brotli-support-apache/">支援</a>：</p>
 
 <pre><code>&lt;Files *.js.br&gt;
   AddType "text/javascript" .br
@@ -500,7 +500,7 @@ RewriteRule ^(.*)$ $1.gz [L]
 
 <p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_c.jpg" width="999" height="690" alt="twgeojson g0v" srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_c.jpg 768w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
 
 <p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
 
@@ -564,7 +564,7 @@ return $friend
 
 <p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_c.jpg" width="425" height="654" alt="JSONDiffPatch" srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_c.jpg 768w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w" /></a></p>
 
 <p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
 
