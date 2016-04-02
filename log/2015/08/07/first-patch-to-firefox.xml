@@ -76,11 +76,11 @@ git clone http://hg.mozilla.org/l10n-central/zh-TW/
 
 <p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想到是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_c.jpg" width="800" height="596" alt="Firefox l10n stat" srcset="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_c.jpg 768w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" srcset="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 1024w" /></a></p>
 
 <p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_c.jpg" width="800" height="639" alt="nightly zh_TW download dialog" srcset="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_c.jpg 768w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" srcset="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 1024w" /></a></p>
 
 <p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
 
