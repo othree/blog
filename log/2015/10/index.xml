@@ -35,7 +35,7 @@
 			<b:title>Apache2 and HTTP/2</b:title>
 			<b:content>
 				<b:summary> 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_28857c25b9_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w" /></a></p>
 
 <p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
 
@@ -128,17 +128,17 @@ brew link curl
 nghttp -uv https://othree.net
 </code></pre>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9f6d1b9a08_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w" /></a></p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_5553a17fb8_o_d.png" width="520" height="427" alt="Apache HTTP/2" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w" /></a></p>
 
 <p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h_d.jpg" width="1022" height="53" alt="http1.1-1" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w" /></a></p>
 
 <p>然後是 2.0：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h_d.jpg" width="1022" height="530" alt="http2-1" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w" /></a></p>
 
 <p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
 </b:mainContent>
@@ -163,7 +163,7 @@ nghttp -uv https://othree.net
 			<b:title>前端測試入門</b:title>
 			<b:content>
 				<b:summary> 這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。 其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了下載檔案的自動檢查，就順便把相關的名詞和觀念弄清楚。 之前最搞不清楚的其實就是 Mocha（摩卡咖啡） 和 Chai（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 斷言 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_b.jpg" width="1024" height="1024" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab.jpg 768w" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w" /></a></p>
 
 <p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
 

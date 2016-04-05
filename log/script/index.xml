@@ -68,7 +68,7 @@
 
 <p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_b.jpg" width="840" height="289" alt="MessagePack Try" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w" /></a></p>
 
 <p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
 
@@ -257,7 +257,7 @@
 
 <p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="999" height="690" alt="twgeojson g0v" srcset="https://farm2.staticflickr.com/1657/24218757206_0bafdc4c24_o_d.png 2x" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
 
 <p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
 
@@ -321,7 +321,7 @@ return $friend
 
 <p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch" srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16.jpg 768w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w" /></a></p>
 
 <p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
 
@@ -352,7 +352,7 @@ return $friend
 			<b:title>JSX 的前世</b:title>
 			<b:content>
 				<b:summary> React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 &lt;div&gt; 標籤就要寫成： var divNode = React.DOM.div({attr1:"value"}); 如果還要加上子元素，像是一個 list： &lt;ol&gt; &lt;li&gt;Item A&lt;/li&gt; &lt;li&gt;Item B&lt;/li&gt; &lt;li&gt;Item C&lt;/li&gt; &lt;li&gt;Item D&lt;/li&gt; &lt;/ol&gt; 就要寫成： var listNode = React.DOM.div({}, React.DOM.li({}, "Item A"), React.DOM.li({},...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="362" height="512" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0.jpg 768w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_c.jpg" width="565" height="800" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_c.jpg 768w, https://farm6.staticflickr.com/5679/23319631253_54870a2279_h.jpg 1600w" /></a></p>
 
 <p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
 
@@ -423,7 +423,7 @@ people.person.(name == "Joe").age
 			<b:title>前端測試入門</b:title>
 			<b:content>
 				<b:summary> 這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。 其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了下載檔案的自動檢查，就順便把相關的名詞和觀念弄清楚。 之前最搞不清楚的其實就是 Mocha（摩卡咖啡） 和 Chai（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 斷言 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_b.jpg" width="1024" height="1024" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab.jpg 768w" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w" /></a></p>
 
 <p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
 
@@ -533,7 +533,7 @@ chai.use(chaiAsPromised);
 			<b:title>React 入門</b:title>
 			<b:content>
 				<b:summary> 其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。 先講結論，寫過目前一般 Web App 的人，要來寫 React 大概都要一些撞牆期吧，我的狀況是要寫 React + Flux 架構的 Web App，但是一開始對 Flux 的介紹沒認真看，在一知半解的狀態下就開始做了，結果就一直出現些靈異現象，大部分是覺得應該要更新畫面了但是沒有，追到後來大概就兩個原因： 亂用 props 和 state，總之就是 React 只會在 state 變化的時候更新畫面，props 變化的時候不會（其實設計上是 immutable 的），而用 props 的時機基本上是父層 component 要設定資料給子 component 的時候才會用，至於父層收到不同的資料給子 component 時，同樣是改 props，為什麼畫面就會更新了，事實上是因為父層...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13990963771/" title="京都嵐山 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg" width="1024" height="683" alt="京都嵐山" srcset="https://farm6.staticflickr.com/5237/13990963771_028f39af66.jpg 768w, https://farm6.staticflickr.com/5237/13990963771_221cae9d50_k.jpg 2x" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/13990963771/" title="京都嵐山 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg" width="1024" height="683" alt="京都嵐山" srcset="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg 1024w, https://farm6.staticflickr.com/5237/13990963771_477e5fdfe8_h.jpg 1600w" /></a></p>
 
 <p>其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。</p>
 
@@ -596,7 +596,7 @@ chai.use(chaiAsPromised);
 			<b:title>Electron 入門</b:title>
 			<b:content>
 				<b:summary> 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6.jpg 768w" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg 1024w, https://farm1.staticflickr.com/312/20249299982_ba032442b2_h.jpg 1600w" /></a></p>
 
 <p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
 
@@ -697,7 +697,7 @@ cabal install --ghcjs ./pandoc
 			<b:title>TypeScript, AtScript, ES Decorator</b:title>
 			<b:content>
 				<b:summary> 前陣子花了些時間研究了 TypeScript 和一些相關的發展，包括了 Google Angular Team 的 AtScript 和推進 ES 標準的部分，會開始感興趣深入研究主要是因為 Angular 2 說改用 TypeScript 寫，好奇為什麼會有這樣的發展才下去搜尋資料的，這篇文章算是記錄用的，不過其實離寫好已經一陣子了，因為剛好遇到 Modern Web Conf，想說拿這題目去分享，就讓文章晚點上線了，後來投影片還有補充些內容，這篇文章就沒再更新了，所以兩邊會有些差異就是～ ECMAScript 標準一直以來都是動態型別的，雖然資料有不同的型別，但是變數本身是沒限制型別的，而在 ECMAScript 發展的過程中，靜態型別第一次出現是在已經被廢棄的 ECMAScript 4 裡，網路上還可以找到一些資料，可以看看當時設計的語法，和現在常看到的 :type 的寫法很接近，後來這個設計也在 ActionScript 3 中被使用，微軟現在的 TypeScript 也是用這種寫法。那加入靜態型別的特性會有什麼好處呢，我認為有兩個主要的優點，第一個是可以讓程式碼更可靠，減少一些 bug 發生的機會，對於大型專案來說，多了這個限制的差距是蠻大的，另外一個優點則是 JS Engine 更好最佳化，以前也有提過現在的 V8...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16813714825/" title="AtScript by othree, on Flickr"><img src="https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg" width="1024" height="573" alt="AtScript" src-1="(max-width: 768px)  https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b.jpg 1x, https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg 2x"  /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/16813714825/" title="AtScript by othree, on Flickr"><img src="https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg" width="1024" height="573" alt="AtScript" srcset="https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg 1024w" /></a></p>
 
 <p>前陣子花了些時間研究了 TypeScript 和一些相關的發展，包括了 Google Angular Team 的 AtScript 和推進 ES 標準的部分，會開始感興趣深入研究主要是因為 <a href="http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx">Angular 2 說改用 TypeScript 寫</a>，好奇為什麼會有這樣的發展才下去搜尋資料的，這篇文章算是記錄用的，不過其實離寫好已經一陣子了，因為剛好遇到 Modern Web Conf，想說拿這題目去分享，就讓文章晚點上線了，後來投影片還有補充些內容，這篇文章就沒再更新了，所以兩邊會有些差異就是～</p>
 

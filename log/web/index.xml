@@ -23,7 +23,7 @@
 			<b:title>My First Patch to Firefox</b:title>
 			<b:content>
 				<b:summary> OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 1089363，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale AB_CD 中的 AB 段而已，所以 zh_TW 和 zh_CN 就都會變成 zh，然後 OSX 的 zh 又會變成簡體中文，結果就變成這樣了。 其實這個 bug 的解法， Steven Michaud 很早就提出了，就是把本來 locale...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_b.jpg" width="424" height="223" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e.jpg 768w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20310084805/" title="zh download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_c.jpg" width="400" height="210" alt="zh download dialog" srcset="https://farm1.staticflickr.com/261/20310084805_2c8ed51b8e_c.jpg 768w" /></a></p>
 
 <p>OSX 自從升級到 10.10 之後，繁體中文版 Firefox 就冒出了一個 bug，一堆使用到作業系統原生的視窗，像是下載圖片，開啟檔案等等的，都會變成簡體中文介面，這個問題在 Bugzilla 上的編號是 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1089363">1089363</a>，畫面看起來就像上面的圖一樣，這個問題的狀況，推測是 OSX 本來在這種系統對話框，會使用使用者現在設定的系統 locale，但是 10.10 改成應用程式正在運作的 locale，然後 Firefox 本來會用 locale <code>AB_CD</code> 中的 <code>AB</code> 段而已，所以 <code>zh_TW</code> 和 <code>zh_CN</code> 就都會變成 <code>zh</code>，然後 OSX 的 <code>zh</code> 又會變成簡體中文，結果就變成這樣了。</p>
 
@@ -53,15 +53,15 @@ git clone http://hg.mozilla.org/l10n-central/zh-TW/
 
 <p>然後這樣就可以 build 中文版了，build 完執行就看到精美的黃底紅字 XML 解析錯誤視窗。</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg" width="375" height="190" alt="Firefox Missing String" src-1="(max-width: 768px)  https://farm1.staticflickr.com/382/19687462694_626110d91c.jpg 1x, https://farm1.staticflickr.com/382/19687462694_626110d91c_b.jpg 2x"  /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19687462694/" title="Firefox Missing String by othree, on Flickr"><img src="https://farm1.staticflickr.com/382/19687462694_626110d91c_z.jpg" width="320" height="162" alt="Firefox Missing String" srcset="https://farm1.staticflickr.com/382/19687462694_626110d91c_z.jpg 768w" /></a></p>
 
 <p>還好我有點經驗，知道 Firefox 的介面是 XUL 寫的，然後字串是用 XML entity 方式存在，所以很快就想到是翻譯問題，於是上去找了 l10n dashboard 看看<a href="https://l10n.mozilla.org/teams/zh-TW">繁體中文</a>的狀況，看的是 <strong>fx_central</strong> 這棵樹下的字串：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" src-1="(max-width: 768px)  https://farm4.staticflickr.com/3682/20301676302_3c488073c1.jpg 1x, https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 2x"  /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/20301676302/" title="Firefox l10n stat by othree, on Flickr"><img src="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg" width="991" height="738" alt="Firefox l10n stat" srcset="https://farm4.staticflickr.com/3682/20301676302_3c488073c1_b.jpg 1024w" /></a></p>
 
 <p>可以看到目前有缺哪些字串，因為字串還沒穩定所以也還不會有翻譯，所以就需要手動進去把這些 entity 的定義補上，內容隨便填，然後重新 build 一次，結果就修好了！</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" src-1="(max-width: 768px)  https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a.jpg 1x, https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 2x"  /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/19689109663/" title="nightly zh_TW download dialog by othree, on Flickr"><img src="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg" width="973" height="777" alt="nightly zh_TW download dialog" srcset="https://farm1.staticflickr.com/517/19689109663_81ff6a8f9a_b.jpg 1024w" /></a></p>
 
 <p>然後就開始想辦法生 patch 檔案了，中間也有用過 <code>hg mq</code>，最後都固定改好，commit 後用 <code>hg export . &gt; fix.patch</code>，總之改好我就丟上 bugzilla 了，結果第一個 patch 只改到一個檔案，實際上應該有五個檔案要改，而且才隔一天，Makefile 就被別人改過了，只好重新找位置修改，重新生 patch，到最後一個 review 過，build 也過的 patch 中間還發生了不少事情，包括 Makefile 被別人又改動一次，用 <code>AB</code> or <code>LPROJ</code> 的命名問題，字串的變化造成假翻譯又要增加，還有 build 工具 mach 被人改壞，和推上去之後有 build 失敗的狀況等等，非常的一波三折。</p>
 
@@ -101,7 +101,7 @@ ac_add_options --disable-libjpeg-turbo
 			<b:title>webappsec</b:title>
 			<b:content>
 				<b:summary> 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c.jpg 768w, https://farm3.staticflickr.com/2948/15191563939_771f265d3a_k.jpg 2x" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg 1024w, https://farm3.staticflickr.com/2948/15191563939_42b2305e22_h.jpg 1600w" /></a></p>
 
 <p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
 
@@ -174,7 +174,7 @@ ac_add_options --disable-libjpeg-turbo
 			<b:title>Aster 與 PostCSS</b:title>
 			<b:content>
 				<b:summary> 前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 Grunt 和 Gulp 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 aster，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8.jpg 768w, https://farm8.staticflickr.com/7771/17133620000_3c43ee797f_k.jpg 2x" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/17133620000/" title="台南 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg" width="1024" height="683" alt="台南" srcset="https://farm8.staticflickr.com/7771/17133620000_64aac917c8_b.jpg 1024w, https://farm8.staticflickr.com/7771/17133620000_2536c112ef_h.jpg 1600w" /></a></p>
 
 <p>前端為了 performance 需求，把網站推上 server 時會需要把 JavaScript、CSS 之類的文字檔案合併和最小化，如果開發時寫的是 CoffeeScript 或是 SASS 之類的還需要先轉成 JavaScript 和 CSS 這些主流格式，要做這些動作其實第一個想到的是可以用 Makefile，優點是常見、各平台都有，不過寫起來並不像這幾年流行的 build tool 那樣直覺，而前端領域流行的主要是 <a href="http://gruntjs.com/">Grunt</a> 和 <a href="http://gulpjs.com/">Gulp</a> 這兩個，兩者之中我個人是比較喜歡後起的 Gulp，不過前陣子意外發現一個看起來超正確的 build tool，叫 <a href="http://asterjs.github.io/aster/">aster</a>，是 Ingvar Stepanyan 做的，他在 Zurich 的 Frontend Conference 2014 的演講算是比較大規模的發佈：</p>
 
@@ -184,21 +184,21 @@ ac_add_options --disable-libjpeg-turbo
 </b:mainContent>
 				<b:extendContent><p>Aster 這個名稱的來由是 AST，Aster 的特別之處就在於他所有的修改都是在 AST 上做修改：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86.jpg 768w, https://farm8.staticflickr.com/7680/17141309009_9f903156ca_k.jpg 2x" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/17141309009/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7680/17141309009_fac4a51d86_b.jpg 1024w, https://farm8.staticflickr.com/7680/17141309009_bbdc544510_h.jpg 1600w" /></a></p>
 
 <p>相較於 Gulp：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977.jpg 768w, https://farm8.staticflickr.com/7662/17327152261_ac75e48905_k.jpg 2x" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/17327152261/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7662/17327152261_6de37ae977_b.jpg 1024w, https://farm8.staticflickr.com/7662/17327152261_52b8bed2f1_h.jpg 1600w" /></a></p>
 
 <p>和 Grunt：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74.jpg 768w, https://farm8.staticflickr.com/7717/17327152081_04e77878ff_k.jpg 2x" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/17327152081/" title="Aster by othree, on Flickr"><img src="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg" width="1024" height="640" alt="Aster" srcset="https://farm8.staticflickr.com/7717/17327152081_7bd3f29f74_b.jpg 1024w, https://farm8.staticflickr.com/7717/17327152081_0d9d346ffc_h.jpg 1600w" /></a></p>
 
 <p>很明顯的是正確許多的設計，理論上 parse 成 AST 之後，一口氣在 AST 階段把需要的變更做完，然後再用 code generator 產生成果的程式碼，應該省去很多來回轉換的工作，不論是效能還是程式碼處理的正確性都應該是最好的，不過這看似正確設計下的產品，卻沒什麼人用，我嘗試使用過程中還發了幾個 PR 回去，結果到現在都還沒有回應，有種是不是作者都已經放棄的疑問。</p>
 
 <p>然後這兩天，又看到一個其實已經出來蠻久的 compile to CSS language，叫 <a href="https://github.com/postcss/postcss">PostCSS</a>，號稱比 SASS 之類的快上 3-30 倍，還可以做到一些 SASS/LESS 做不到功能，也有很多大企業採用，像是 Google、VK、Alibaba 之類的，應該就是目前最夯的 CSS 工具，然後我看介紹的投影片看到這張：</p>
 
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f.jpg 768w" /></a></p>
+<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/17301590026/" title="PostCSS by othree, on Flickr"><img src="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg" width="1024" height="638" alt="PostCSS" srcset="https://farm8.staticflickr.com/7763/17301590026_184c69e66f_b.jpg 1024w, https://farm8.staticflickr.com/7763/17301590026_3ebc26bdb7_h.jpg 1600w" /></a></p>
 
 <p>覺得，這根本和 Aster 是一樣的想法，不過一個處理 JavaScript，做 ES6 to ES5、concat、minimize 甚至是細微的程式碼修改，另外一個處理 CSS，也是做類似的工作，為什麼結果發展的差距會這麼大？想了一陣子之後，我覺得大概狀況是，SASS、LESS 之類的工具目前還是會造成一些讓開發者痛苦的問題，像是 nesting rule 讓 selector 太長太複雜、mixin 和 include 的混淆等等，所以開發者還會一直嘗試不同的新工具，甚至自己開發來解決這些問題，而相對於 CSS，JavaScript 的相關工具比較沒這些問題，二來 JavaScript 的 AST 比 CSS 的 AST 要複雜許多，要參與工具的開發難度是高上許多，Aster 作者的功力還蠻強的，除了 AST 操作之外，他的整個流程控制還用上很先進的 <a href="https://rxjs.codeplex.com/">RxJS</a>，其實也算是增加了參與的難度吧，而我想就是這沒有強烈需求加上進入難度高兩點，結果讓 Aster 並不太受到人注意，沒什麼人參與，開發的完整度不夠，我實際用起來，就覺得目前還只是核心完整，但是真的要離實用到專案上還有些距離，加上不知道還有沒有要繼續發展下去，覺得實在很可惜。</p>
 </b:extendContent>
@@ -372,7 +372,7 @@ ac_add_options --disable-libjpeg-turbo
 				<b:summary>昨天 Adobe 和 Google 聯手發表了思源黑體，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 mozjpeg 2.0，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 Zopfli，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。...</b:summary>
 				<b:mainContent><p>昨天 Adobe 和 Google 聯手發表了<a href="http://blog.typekit.com/alternate/source-han-sans-cht/">思源黑體</a>，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 <a href="https://blog.mozilla.org/blog/2014/07/15/improving-jpeg-image-encoding/">mozjpeg 2.0</a>，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 <a href="http://blog.gslin.org/archives/2013/03/01/3228/google-%E7%99%BC%E8%A1%A8%E8%88%87-zlibdeflate-%E7%9B%B8%E5%AE%B9%E7%9A%84%E5%A3%93%E7%B8%AE%E7%A8%8B%E5%BC%8F%EF%BC%8C%E5%86%8D%E5%B0%8F-5/">Zopfli</a>，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。</p>
 
-<p>其實 Mozilla 在去年還有發表了一篇對於目前市場上破壞性壓縮圖片格式的<a href="https://people.mozilla.org/~josh/lossy_compressed_image_study_october_2013/">品質比較</a>，比較了 JPEG、JPEG XR、WebP 和 HEVC-MSP，結果表現不離預期，最好的是 HEVC-MSP4，這是 H.265 Profile 的靜態圖片格式，算是比較項目中最新的格式了，表現最好好像不意外，不過其實高壓縮比相對的來說解壓縮需要的運算資源就會多，所以 Mozilla 才不會完全往新技術走，而開了這個 branch，顧到的前提下相容度，盡量的減少網路傳輸，這個計畫目前看來是還會繼續發展，不知道接下來還能夠提升多少壓縮比，還蠻令人期待的。</p>
+<p>其實 Mozilla 在去年還有發表了一篇對於目前市場上破壞性壓縮圖片格式的<a href="https://people.mozilla.org/~josh/lossy_compressed_image_study_october_2013/">品質比較</a>，比較了 JPEG、JPEG XR、WebP 和 HEVC-MSP，結果表現不離預期，最好的是 HEVC-MSP4，這是 H.265 Profile 的靜態圖片格式，算是比較項目中最新的格式了，表現最好好像不意外，不過其實高壓縮比相對的來說解壓縮需要的運算資源就會多，所以 Mozilla 才不會完全往新技術走，而開了這個 branch，顧到相容度的前提下，盡量的減少網路傳輸，這個計畫目前看來是還會繼續發展，不知道接下來還能夠提升多少壓縮比，還蠻令人期待的。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
@@ -395,7 +395,7 @@ ac_add_options --disable-libjpeg-turbo
 			<b:title>Chrome 開發工具的新模擬器</b:title>
 			<b:content>
 				<b:summary> Chrome 開發工具有個新的模擬器，介面改不少，其中最大的特點是多了網路模擬的功能，可以模擬網路速度了，目前在 Chrome Canary 已經可以用，可惜還沒有自定義選項的功能，不過我想到 Chrome 前應該會有～...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="http://www.flickr.com/photos/othree/14486840456/" title="Chrome Emulator by othree, on Flickr"><img src="//farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg" width="857" height="850" alt="Chrome Emulator" srcset="//farm4.staticflickr.com/3857/14486840456_74dce49944.jpg 768w, //farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg 768w 2x" /></a></p>
+				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/14486840456/" title="Chrome Emulator by othree, on Flickr"><img src="https://farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg" width="857" height="850" alt="Chrome Emulator" srcset="https://farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg 1024w" /></a></p>
 
 <p>Chrome 開發工具有個新的模擬器，介面改不少，其中最大的特點是多了網路模擬的功能，可以模擬網路速度了，目前在 Chrome Canary 已經可以用，可惜還沒有自定義選項的功能，不過我想到 Chrome 前應該會有～</p>
 </b:mainContent>
