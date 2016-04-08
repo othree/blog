@@ -66,9 +66,9 @@
           "name": "othree.net",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://blog.othree.net/images/O3-240x240.png",
-            "width": 240,
-            "height": 240
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
           }
         },
         "headline": "<xsl:value-of select="b:blogTitle" />",
