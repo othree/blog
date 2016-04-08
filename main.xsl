@@ -519,7 +519,7 @@
 <xsl:variable name="permalink" select="concat('/log/',translate(b:datetime/b:date,'-','/'),'/',@baseName,'/',$ext)" />
 <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-{@baseName}">
     <header>
-        <time itemprop="datePublished" datetime="{b:datetime/b:date}T{b:datetime/b:time}">
+        <time itemprop="datePublished dateModified" datetime="{b:datetime/b:date}T{b:datetime/b:time}">
             <xsl:choose>
                 <xsl:when test="$showdate != '1'">
                     <xsl:attribute name="class">same-date</xsl:attribute>
@@ -532,7 +532,7 @@
             <span class="day"><xsl:value-of select="substring(b:datetime/b:date,9,2)" />日</span>
         </time>
         
-        <h3 itemprop="name">
+        <h3 itemprop="name headline">
             <xsl:choose>
             <xsl:when test="$listType = 's'">
                 <xsl:value-of select="b:title" />

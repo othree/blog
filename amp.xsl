@@ -76,7 +76,7 @@
         "dateModified": "<xsl:value-of select="//b:entries/b:entry/b:datetime/b:date" />T<xsl:value-of select="//b:entries/b:entry/b:datetime/b:time" />",
         "author": {
           "@type": "Person",
-          "name": "360TS"
+          "name": "othree"
         },
         <xsl:for-each select="descendant::*[local-name() = 'img'][1]">
         "image": {
