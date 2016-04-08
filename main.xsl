@@ -535,7 +535,8 @@
         <h3 itemprop="name headline">
             <xsl:choose>
             <xsl:when test="$listType = 's'">
-                <xsl:value-of select="b:title" />
+                <!--xsl:value-of select="b:title" /-->
+                <a itemprop="mainEntityOfPage" href="{$permalink}"><xsl:value-of select="b:title" /></a>
             </xsl:when>
             <xsl:otherwise>
                 <a href="{$permalink}"><xsl:value-of select="b:title" /></a>
