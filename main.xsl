@@ -354,7 +354,7 @@
 
 <xsl:template match="b:entries">
 <xsl:if test="count(b:entry) = 0 and $listType = 'o'">
-	<xsl:variable name="blogRoll" select="document('blogroll.opml')" />
+	<xsl:variable name="blogRoll" select="document('feedly.opml')" />
 	<ul>
 		<xsl:apply-templates select="$blogRoll//o:opml/o:body/o:outline" />
 	</ul>
