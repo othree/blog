@@ -17,6 +17,7 @@
 <xsl:variable name="listData" select="b:blog/b:entries/b:entriesMeta/b:listData" />
 <xsl:variable name="listID" select="b:blog/b:entries/b:entriesMeta/b:listData/@listID" />
 <xsl:variable name="mainPath" select="'/'" />
+<xsl:variable name="dataImg" select="descendant::*[local-name() = 'img'][1]" />
 <xsl:variable name="logPath"><xsl:value-of select="$mainPath" />log/</xsl:variable>
 
 <!-- template blog -->
@@ -96,7 +97,7 @@
                 <meta property="og:description" content="{//b:blog/b:entries/b:entry/b:content/b:summary}" />
                 <meta property="og:url" content="{$canonical}" />
                 <meta property="og:type" content="article" />
-                <xsl:for-each select="descendant::*[local-name() = 'img'][1]">
+                <xsl:for-each select="$dataImg">
                     <xsl:choose>
                         <xsl:when test="starts-with(@src, '//')">
                             <meta property="og:image" content="http:{@src}" />
@@ -108,7 +109,7 @@
                     <meta property="og:image:width" content="{@width}" />
                     <meta property="og:image:height" content="{@height}" />
                 </xsl:for-each>
-                <xsl:if test="not(descendant::*[local-name() = 'img'][1])">
+                <xsl:if test="not($dataImg)">
                     <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png" />
                     <meta property="og:image:width" content="240" />
                     <meta property="og:image:height" content="240" />
@@ -951,6 +952,14 @@ google_color_url = "008000";
 
 <xsl:template mode="copy-no-ns" match="*">
 <xsl:element name="{local-name()}">
+    <xsl:if test="local-name() = 'a' and count(current()/*[local-name() = 'img']) = '1'">
+      <xsl:attribute name="itemprop">image</xsl:attribute>
+      <xsl:attribute name="itemscope">itemscope</xsl:attribute>
+      <xsl:attribute name="itemtype">http://schema.org/ImageObject</xsl:attribute>
+    </xsl:if>
+    <xsl:if test="local-name() = 'img'">
+      <xsl:attribute name="itemprop">url</xsl:attribute>
+    </xsl:if>
     <xsl:choose>
         <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
             <xsl:call-template name="src-n">
@@ -998,6 +1007,10 @@ google_color_url = "008000";
         </xsl:otherwise>
     </xsl:choose>
 	<xsl:apply-templates mode="copy-no-ns" />
+  <xsl:if test="local-name() = 'img'">
+    <i aria-hidden="true" style="display: none;" itemprop="width"><xsl:value-of select="@width" /></i>
+    <i aria-hidden="true" style="display: none;" itemprop="height"><xsl:value-of select="@height" /></i>
+  </xsl:if>
 </xsl:element>
 </xsl:template>
 
