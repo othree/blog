@@ -305,12 +305,20 @@
             <p class="pure-u-1">
               <!--a href="http://validator.w3.org/check?uri=referer" xml:lang="en" title="本站所有頁面皆通過W3C檢測器的的檢測為合於規範的XHTML 1.1文件">XHTML</a-->
               <!--a href="http://jigsaw.w3.org/css-validator/validator?uri=http://blog.othree.net/&amp;warning=2&amp;profile=css3&amp;usermedium=all" xml:lang="en" title="本站使用的CSS語法通過W3C檢測器的的檢測合於CSS 3的規範">CSS</a-->
-              <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/" title="HTML 標準">HTML</a>
-              <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 標準">CSS</a>
-              <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a>
-              <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a>
+              <!-- <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/" title="HTML 標準">HTML</a> -->
+              <!-- <a href="http://www.w3.org/Style/CSS/current-work" title="CSS 標準">CSS</a> -->
+              <!-- <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a> -->
+              <!-- <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a> -->
               <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
               <a href="https://plus.google.com/108698651587282496682?rel=author" rel="publisher">Google+</a>
+              <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+                <span itemprop="name">othree.net</span>
+                <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+                  <link itemprop="url" content="https://blog.othree.net/images/logo-amp-google.png" />
+                  <meta itemprop="width" content="600" />
+                  <meta itemprop="height" content="60" />
+                </span>
+              </a>
             </p>
           </footer>
         </div>
@@ -970,12 +978,8 @@ google_color_url = "008000";
       </xsl:choose>
       <xsl:apply-templates mode="copy-no-ns"/>
       <xsl:if test="local-name() = 'img'">
-        <i aria-hidden="true" style="display: none;" itemprop="width">
-          <xsl:value-of select="@width"/>
-        </i>
-        <i aria-hidden="true" style="display: none;" itemprop="height">
-          <xsl:value-of select="@height"/>
-        </i>
+        <meta itemprop="width" content="{@width}"/>
+        <meta itemprop="height" content="{@height}"/>
       </xsl:if>
     </xsl:element>
   </xsl:template>
