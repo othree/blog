@@ -314,7 +314,7 @@
               <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
                 <span itemprop="name">othree.net</span>
                 <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-                  <link itemprop="url" content="https://blog.othree.net/images/logo-amp-google.png" />
+                  <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png" />
                   <meta itemprop="width" content="600" />
                   <meta itemprop="height" content="60" />
                 </span>
@@ -912,7 +912,7 @@ google_color_url = "008000";
         <xsl:attribute name="itemtype">http://schema.org/ImageObject</xsl:attribute>
       </xsl:if>
       <xsl:if test="local-name() = 'img'">
-        <xsl:attribute name="itemprop">url</xsl:attribute>
+        <xsl:attribute name="itemprop">url image</xsl:attribute>
       </xsl:if>
       <xsl:choose>
         <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
