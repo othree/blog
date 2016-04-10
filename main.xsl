@@ -322,7 +322,8 @@
             </p>
           </footer>
         </div>
-        <script src="/scripts/all.js"></script>
+        <script async="async" src="/scripts/all.js"></script>
+        <script async="async" src="https://embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
         <!--
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
