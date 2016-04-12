@@ -33,7 +33,7 @@ if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
 $canonical = 'https://blog.othree.net' . explode('?', $_SERVER['REQUEST_URI'])[0];
 
 if ($xsl == 'amp.xsl') {
-  $canonical = preg_replace('amp/', '', $canonical);
+  $canonical = preg_replace('/amp\/$/', '', $canonical);
 }
 
 $format = "html";
