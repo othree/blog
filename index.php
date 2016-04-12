@@ -32,6 +32,10 @@ if (isset($_COOKIE['w']) && intval($_COOKIE['w']) < 768) {
 //get local path
 $canonical = 'https://blog.othree.net' . explode('?', $_SERVER['REQUEST_URI'])[0];
 
+if ($xsl == 'amp.xsl') {
+  $canonical = preg_replace('amp/', '', $canonical);
+}
+
 $format = "html";
 $target_file = substr($query, 1);
 $hash_file = substr($target_file, 0, -4) . '.md5';
