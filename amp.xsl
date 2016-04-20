@@ -53,9 +53,10 @@
         <xsl:text disable-output-escaping="yes">&lt;style amp-boilerplate&gt;body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}&lt;/style&gt;&lt;noscript&gt;&lt;style amp-boilerplate&gt;body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}&lt;/style&gt;&lt;/noscript&gt;
 
     </xsl:text>
-        <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"/>
-        <script async="async" src="https://cdn.ampproject.org/v0.js"/>
-        <script type="application/ld+json">
+    <script async="async" custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
+    <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+    <script async="async" src="https://cdn.ampproject.org/v0.js"></script>
+    <script type="application/ld+json">
       {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -611,6 +612,7 @@ google_color_url = "008000";
             <xsl:otherwise>
               <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]"/>
             </xsl:otherwise>
+<<<<<<< 19316f21839937a162c405963805a09258252fa4
           </xsl:choose>
           <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]"/>
           <xsl:apply-templates mode="copy-no-ns"/>
@@ -736,6 +738,109 @@ google_color_url = "008000";
           </xsl:choose>
           <xsl:if test="$porn = 'next'"> »</xsl:if>
         </xsl:if>
+=======
+        </xsl:choose>
+    </xsl:attribute>
+</xsl:template>
+
+<!-- template copy without namespace -->
+
+<xsl:template mode="copy-no-ns" match="*">
+  <xsl:choose>
+    <xsl:when test="local-name() = 'iframe'">
+      <xsl:element name="amp-iframe">
+        <xsl:attribute name="sandbox">allow-scripts allow-same-origin</xsl:attribute>
+        <xsl:attribute name="layout">responsive</xsl:attribute>
+        <xsl:copy-of select="@*" />
+        <xsl:apply-templates mode="copy-no-ns" />
+      </xsl:element>
+    </xsl:when>
+    <xsl:when test="local-name() = 'blockquote' and @class = 'twitter-tweet'">
+      <xsl:variable name="href">
+        <sl:value-of select="a[last()]/@href" />  
+      </xsl:variable>
+      <xsl:variable name="tweetid">
+        <sl:value-of select="@class" />  
+        <!-- <xsl:for-each select="str:tokenize($href, '/')"> -->
+          <!-- <xsl:if test="position() = last()"> -->
+            <!-- <xsl:value-of select="."/> -->
+          <!-- </xsl:if> -->
+        <!-- </xsl:for-each> -->
+      </xsl:variable>
+      <amp-twitter layout="responsive">
+        <xsl:attribute name="data-tweetid">
+          <xsl:for-each select="str:tokenize(child::*[local-name() = 'a'][last()]/@href, '/')">
+            <xsl:if test="position() = last()">
+              <xsl:value-of select="."/>
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:attribute>
+        <xsl:element name="{local-name()}">
+          <xsl:copy-of select="@*" />
+          <xsl:apply-templates mode="copy-no-ns" />
+        </xsl:element>
+      </amp-twitter>
+    </xsl:when>
+    <xsl:when test="local-name() = 'script'">
+    </xsl:when>
+    <xsl:when test="local-name() = 'img'">
+      <xsl:element name="amp-img">
+        <xsl:attribute name="layout">responsive</xsl:attribute>
+        <xsl:choose>
+          <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'src-1'], '')">
+            <xsl:call-template name="srcset">
+              <xsl:with-param name="set"><xsl:value-of select="substring(@*[local-name() = 'src-1'], 19)"/></xsl:with-param>
+              <xsl:with-param name="res">1x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src-2'], '2x')">
+            <xsl:call-template name="srcset">
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'src-2']"/></xsl:with-param>
+              <xsl:with-param name="res">2x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $w = 's' and contains(@*[local-name() = 'srcset'], '')">
+            <xsl:call-template name="srcset">
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
+              <xsl:with-param name="res">768w</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'srcset'], '768w 2x')">
+            <xsl:call-template name="srcset">
+              <xsl:with-param name="set"><xsl:value-of select="@*[local-name() = 'srcset']"/></xsl:with-param>
+              <xsl:with-param name="res">2x</xsl:with-param>
+              <xsl:with-param name="def"><xsl:value-of select="@*[local-name() = 'src']" /></xsl:with-param>
+            </xsl:call-template>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
+          </xsl:when>
+          <xsl:when test="local-name() = 'img' and $dpr >= 1.5 and contains(@*[local-name() = 'src'], 'staticflickr.com') and contains(@*[local-name() = 'src'], '_') = false">
+            <xsl:attribute name="src">
+              <xsl:variable name="p" select="@*[local-name() = 'src']" />
+              <xsl:value-of select="substring($p, 1, string-length($p)-4)"/>
+              <xsl:text>_b</xsl:text>
+              <xsl:value-of select="substring($p, string-length($p)-3)"/>
+            </xsl:attribute>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src'))]" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]" />
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:copy-of select="@*[not(starts-with(local-name(), 'src-'))]" />
+        <xsl:apply-templates mode="copy-no-ns" />
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="{local-name()}">
+        <xsl:copy-of select="@*" />
+        <xsl:apply-templates mode="copy-no-ns" />
+>>>>>>> Basic support of amp-twitter
       </xsl:element>
       <xsl:if test="$porn = 'prev' and $type= 'a'"> | </xsl:if>
     </xsl:if>
