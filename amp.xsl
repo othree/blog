@@ -544,6 +544,8 @@ google_color_url = "008000";
   <!-- template copy without namespace -->
   <xsl:template mode="copy-no-ns" match="*">
     <xsl:choose>
+      <xsl:when test="local-name() = 'script'">
+      </xsl:when>
       <xsl:when test="local-name() = 'iframe'">
         <xsl:element name="amp-iframe">
           <xsl:attribute name="sandbox">allow-scripts allow-same-origin</xsl:attribute>
@@ -553,17 +555,6 @@ google_color_url = "008000";
         </xsl:element>
       </xsl:when>
       <xsl:when test="local-name() = 'blockquote' and @class = 'twitter-tweet'">
-        <xsl:variable name="href">
-          <sl:value-of select="a[last()]/@href" />  
-        </xsl:variable>
-        <xsl:variable name="tweetid">
-          <sl:value-of select="@class" />  
-          <!-- <xsl:for-each select="str:tokenize($href, '/')"> -->
-            <!-- <xsl:if test="position() = last()"> -->
-              <!-- <xsl:value-of select="."/> -->
-            <!-- </xsl:if> -->
-          <!-- </xsl:for-each> -->
-        </xsl:variable>
         <amp-twitter layout="responsive">
           <xsl:attribute name="data-tweetid">
             <xsl:for-each select="str:tokenize(child::*[local-name() = 'a'][last()]/@href, '/')">
