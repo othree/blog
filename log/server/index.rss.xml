@@ -5,14 +5,155 @@
 <link>https://blog.othree.net//log/ server/</link>
 <description></description>
 <copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-03-21 13:43</lastBuildDate>
+<lastBuildDate>2016-04-22 21:52</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
 
 <item>
+<title>nginx &amp; fcgiwrap</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr"><img src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w" /></a></p>
+
+<p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
+
+<p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
+
+<pre><code>location ~ ^/path/to/mt/mt.*\.cgi {
+    gzip off;
+    fastcgi_index index.cgi;
+    fastcgi_split_path_info ^(.+?\.cgi)(/.*)$;
+    if (!-e $document_root$fastcgi_script_name) {
+        return 404;
+    }
+    include fastcgi.conf;
+
+    ## MT-related
+    fastcgi_param PERL5LIB $document_root/mt/lib;
+    fastcgi_param MT_HOME $document_root/mt/;
+    fastcgi_param MT_CONFIG $document_root/mt/mt-config.cgi;
+
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param PATH_TRANSLATED $fastcgi_path_info;
+    fastcgi_pass unix:/var/run/fcgiwrap.sock;
+}
+</code></pre>
+
+<p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
+
+<p>最後要說一下 conf 裡的這行：</p>
+
+<pre><code>    include fastcgi.conf;
+</code></pre>
+
+<p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
+
+<pre><code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+fastcgi_param  REQUEST_SCHEME     $scheme;
+fastcgi_param  HTTPS              $https if_not_empty;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only, required if PHP was built with --enable-force-cgi-redirect
+fastcgi_param  REDIRECT_STATUS    200;
+</code></pre>
+
+<p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2016/04/22/nginx-fcgiwrap/</link>
+<guid>https://blog.othree.net/log/2016/04/22/nginx-fcgiwrap/</guid>
+<category>server</category>
+<pubDate>2016-04-22 21:52</pubDate>
+</item>
+
+<item>
+<title>SSH Agent Forward</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr"><img src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w" /></a></p>
+
+<p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
+]]><![CDATA[<p>不過 http 這個帳號是沒有 shell 的，也就是不可以用這個帳號登入，當然會這樣預設也是安全性的考量，我並不想改掉他，所以第一個遇到的問題就是，我要怎樣用 http 帳號來執行指令，像是 <code>git commit</code> 之類的，研究一陣子之後，發現可以用 <code>sudo</code> 來辦到：</p>
+
+<pre><code>sudo -u http -s /bin/sh -c "git commit"
+</code></pre>
+
+<p>其中 <code>-u</code> 是設定要換到那個帳號， <code>-s</code> 就是關鍵的指定 shell 了，最後的 <code>-c</code> 則是要執行的指令，如果加上這個設定則不會真的換過去該帳號，而是只是用該帳號執行一次指令而已，解決第一個問題後，馬上來的就是第二個問題了，要 <code>git push</code> 時，要怎麼使用有權限的 ssh private key，最簡單的方法就是丟到 http 帳號的 home 目錄下，不過我覺得這不太安全，所以想著要用其他方法來把 key 傳過去，當然把其他帳號的 key 的檔案權限調寬鬆並不可行，權限不對的 key 會無法使用，找到唯一比較接近的設計就是 <a href="https://ihower.tw/blog/archives/7837">SSH Agent Forward</a> 了，可以把本機的 ssh key pair 帶上遠端主機，然後就可以從遠端主機利用這個帶上去的 key 連線到其他地方，使用方法很簡單，只要在連上遠端主機的時候，多加一個 <code>-A</code> 的參數就可以了：</p>
+
+<pre><code>ssh -A user@othree.net
+</code></pre>
+
+<p>或是修改 <code>.ssh/config</code> 的設定：</p>
+
+<pre><code>Host othree
+  HostName othree.net
+  ForwardAgent yes
+</code></pre>
+
+<p>不過可能會需要先把 key 加進去可以 forward 的清單中：</p>
+
+<pre><code>ssh-add
+</code></pre>
+
+<p>然後連上遠端主機之後，遠端的 login session 就會多一個環境變數 <code>$SSH_AUTH_SOCK</code>，印出來看內容會像是：</p>
+
+<pre><code> /tmp/ssh-7UJdnvSdy0/agent.18493
+</code></pre>
+
+<p>實際上是個檔案路徑，指到一個 unix socket 檔案，理論上 ssh 在連線時會去這邊找 key pair 然後用來做認證，不過我看 <code>ssh -vvv</code> 的時候是沒有相關訊息出現，連線是可以正確建立就是，透過 agent forward，的機制，我就可以達成某種程度的 key 共用，不過在遠端主機上要使用的帳號是個沒有 shell 也沒有密碼可以登入的帳號，這就成了另外一個問題，遠端能拿到 key 的帳號不是我要用的帳號，所以第三個問題就是我要如何讓這個 key 能夠轉移到 http 帳號下可用的狀態。</p>
+
+<p>這個問題的<a href="http://serverfault.com/questions/442048/accessing-ssh-auth-sock-from-another-non-root-user">解決方法</a>是在 StackOverflow 上找到的，用的其實是 <a href="http://linux.vbird.org/linux_basic/0410accountmanager.php#acl_talk">ACL</a> 這套比較新的檔案權限管理機制，指令大致如下，先把 unix socket 的檔案權限用 ACL 開給 http 帳號：</p>
+
+<pre><code>setfacl -m u:http:rw $SSH_AUTH_SOCK
+setfacl -m u:http:x $(dirname $SSH_AUTH_SOCK)
+</code></pre>
+
+<p>然後 sudo 時把 <code>$SSH_AUTH_SOCK</code> 帶過去：</p>
+
+<pre><code>sudo -u http env SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+</code></pre>
+
+<p>因為 http 帳號沒有 shell，所以實際上指令會變成：</p>
+
+<pre><code> sudo -u http -s /bin/sh -c "env SSH_AUTH_SOCK=$SSH_AUTH_SOCK git pull"
+</code></pre>
+
+<p>不過這樣執行起來有點麻煩，其實 sudo 可以設定要帶哪些環境變數過去，所以可以去修改 <code>/etc/sudoers</code> 加上一行：</p>
+
+<pre><code>Defaults    env_keep+=SSH_AUTH_SOCK
+</code></pre>
+
+<p>然後在遠端 <strong>user</strong> 帳號下的 <code>~/.ssh/rc</code> 檔案裡面加上 facl 那兩行指令（尚未確認可行性），加上本機端設定好自動 ForwardAgent，整個流程中比較麻煩一點的就只有 sudo 那行指令而已：</p>
+
+<pre><code> sudo -u http -s /bin/sh
+</code></pre>
+
+<p>就結果而言，這個作法的安全性反而比我本來的預期更進一步，因為我的 ssh key 就不用放上遠端主機，只要在本機端有一份就好了。</p>
+]]></description>
+<link>https://blog.othree.net/log/2016/04/05/ssh-agent-forward/</link>
+<guid>https://blog.othree.net/log/2016/04/05/ssh-agent-forward/</guid>
+<category>server</category>
+<pubDate>2016-04-05 22:22</pubDate>
+</item>
+
+<item>
 <title>brotli, gzip 的替代格式</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
 
 <p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
 ]]><![CDATA[<p>支援 brotli 格式的瀏覽器會使用 HTTP 協定跟 server 端溝通，送出的 header 會有：</p>
@@ -194,7 +335,7 @@ ServerTokens Prod
 
 <item>
 <title>SSL 設定更新</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w" /></a></p>
 
 <p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
 

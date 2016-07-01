@@ -142,11 +142,11 @@ xhr.send();
 			<b:title>OSX 10.10 紅綠燈</b:title>
 			<b:content>
 				<b:summary> 有用 OSX 的人可能都會有個感覺，就是左上角紅綠燈的 icon 裡面東西歪歪的，我會感覺紅色的往左上，綠色的往左下，不過用抓圖的抓下來放大看卻又發現其實是置中的，所以我想到的可能性就是螢幕的 subpixel 問題，找了手上能拍最大的鏡頭拍來看看： 發現排列是 RGB 從左到右，不過其實這只解釋了紅色叉叉往左偏而已，往上和綠色的完全無法解釋，尤其是綠色，綠色的點剛好是在中間，我覺得應該只剩下視覺錯覺的可能性了吧，不過其實我是想說，這個錯覺的感覺不知道是只有少部分人有，還是美國人都不會有感覺，最糟的情形是他們雖然有感覺，但是因為給的 asset 是正確的所以就沒進一步處理了。 在 Steve Jobs 過世之後，其實我不太喜歡網路上很多人說 Tim Cook 表現的差很多之類的言論，不過對於這個問題，如果是最後一種情形，我真的覺得少了 Jobs 有差，然後仔細想了一下，好像現在蘋果真的少了個對軟體介面細節這麼在意的人了，John Ive 是硬體工業設計那塊的，其他比較高層的好像就沒有聽說有誰是對這塊特別要求的人，突然覺得對蘋果未來有點擔心......</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/15602529787/" title="OSX 10.10 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7479/15602529787_c78310e49b_b.jpg" width="1024" height="267" alt="OSX 10.10" srcset="https://farm8.staticflickr.com/7479/15602529787_c78310e49b_b.jpg 1024w, https://farm8.staticflickr.com/7479/15602529787_28fd7867cf_h.jpg 1600w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15602529787/" title="OSX 10.10 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7479/15602529787_c78310e49b_b.jpg" width="1024" height="267" alt="OSX 10.10" srcset="https://farm8.staticflickr.com/7479/15602529787_c78310e49b_b.jpg 1024w, https://farm8.staticflickr.com/7479/15602529787_28fd7867cf_h.jpg 1600w" /></a></p>
 
 <p>有用 OSX 的人可能都會有個感覺，就是左上角紅綠燈的 icon 裡面東西歪歪的，我會感覺紅色的往左上，綠色的往左下，不過用抓圖的抓下來放大看卻又發現其實是置中的，所以我想到的可能性就是螢幕的 subpixel 問題，找了手上能拍最大的鏡頭拍來看看：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/15602529487/" title="OSX 10.10 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7544/15602529487_6961deea28_b.jpg" width="1022" height="1024" alt="OSX 10.10" srcset="https://farm8.staticflickr.com/7544/15602529487_6961deea28_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15602529487/" title="OSX 10.10 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7544/15602529487_6961deea28_b.jpg" width="1022" height="1024" alt="OSX 10.10" srcset="https://farm8.staticflickr.com/7544/15602529487_6961deea28_b.jpg 1024w" /></a></p>
 
 <p>發現排列是 RGB 從左到右，不過其實這只解釋了紅色叉叉往左偏而已，往上和綠色的完全無法解釋，尤其是綠色，綠色的點剛好是在中間，我覺得應該只剩下視覺錯覺的可能性了吧，不過其實我是想說，這個錯覺的感覺不知道是只有少部分人有，還是美國人都不會有感覺，最糟的情形是他們雖然有感覺，但是因為給的 asset 是正確的所以就沒進一步處理了。</p>
 
@@ -308,7 +308,7 @@ xhr.send();
 			<b:title>SSL 設定更新</b:title>
 			<b:content>
 				<b:summary> 因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉： SSLProtocol all -SSLv2 -SSLv3 然後限制 Cipher Suite： SSLCipherSuite AES256+EECDH:AES256+EDH 這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。 光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。 另外有個特別被 highlight 的項目是我的憑證的 trust...</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w" /></a></p>
 
 <p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
 

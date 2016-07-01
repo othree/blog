@@ -5,10 +5,25 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2016</copyright>
-<lastBuildDate>2015-03-18 18:45</lastBuildDate>
+<lastBuildDate>2016-07-01 17:05</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>YAJS.vim and Vim Syntax Highlight</title>
+<description><![CDATA[<p>上個週末在<a href="https://2016.opensource.hk/">香港 Open Source Conference</a> 分享的主題，第一次使用英文分享，結果表現不太好，不知道上場前喝點啤酒會不會比較好就是...</p>
+
+<p>這個主題本來是想要投 COSCUP 的，主要是想介紹一下之前在做 <a href="https://github.com/othree/yajs.vim">yajs.vim</a> 時遇到的比較有印象的問題，在這之前先介紹一下 Vim Syntax Highlight 的機制，因為這些問題很多都和 Vim 的 Syntax Highlight 機制的設計關係很大，然後最後就是有一個還沒辦法解的問題，這個問題就是 yajs.vim 目前還沒辦法完美的 highlight 有 default parameter 的 arrow function。</p>
+
+<script async="async" class="speakerdeck-embed" data-id="3294147a503d4079a6238296fc991a76" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+]]>
+</description>
+<link>https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/</link>
+<guid>https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/</guid>
+<category>vim</category>
+<pubDate>2016-07-01 17:05</pubDate>
+</item>
 
 <item>
 <title>Vim Syntax and Regexp Note</title>
@@ -527,39 +542,6 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
 <guid>https://blog.othree.net/log/2012/11/10/ctrlpvim/</guid>
 <category>vim</category>
 <pubDate>2012-11-10 00:11</pubDate>
-</item>
-
-<item>
-<title>coffee-check.vim</title>
-<description><![CDATA[<p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a> <a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
-
-<p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
-
-<pre><code>au BufRead,BufNewFile *.coffee set ft=coffee
-</code></pre>
-
-<p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
-
-<ol>
-<li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
-<li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
-<li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
-</ol>
-
-<p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
-
-<p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
-
-<pre><code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
-</code></pre>
-
-<p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/01/23/coffee-check-vim/</link>
-<guid>https://blog.othree.net/log/2012/01/23/coffee-check-vim/</guid>
-<category>vim</category>
-<pubDate>2012-01-23 00:00</pubDate>
 </item>
 
 

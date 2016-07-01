@@ -9,6 +9,33 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000865" baseName="purecss">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-04-08</b:date>
+				<b:time>22:48:28</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Pure.css</b:title>
+			<b:content>
+				<b:summary>最近做的修改還有一個就是把 Bootstrap 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 Pure.css。 Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是...</b:summary>
+				<b:mainContent><p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
+
+<p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
+
+<p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000859" baseName="device-pixel-ratio-header">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -461,46 +488,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <p>首先，<code>;</code> 前面那串稱為 size viewport list，理論上都會是單數個值，會是圖片寬度、viewport 中間點、圖片寬度、中間點這樣的循環，所以上面的 <code>(30em)</code> 和 <code>(50em)</code> 就是你的 responsive design layout 的不同 layout 切換的條件，另外三個值則是圖片在那個 layout 下希望的寬度。也就是螢幕寬度小於 30em 時，你這個版面這張圖片寬度會是 100%，如果螢幕介於 30-50em，那圖片寬度會是 50%，如果螢幕大於 50em，那圖片寬度就是 33%-100px。接著的 <code>;</code> 後面的內容則是你提供的各種大小的圖片和他的寬度，然後接著神奇的事情就發生了，瀏覽器會根據你的螢幕寬度決定要取哪個 layout，用那個 layout 的圖片寬度去計算實際上圖片大約的大小，乘上解析度，然後自己去後面那堆候選的圖片檔案找最適合的來用。</p>
 
 <p>第二種語法的缺點就是不能忽略 device pixel ratio，不然在大部分情形是方便簡單很多的。回頭看目前出現過的三種語法，目前我是最喜歡 src-N 的，雖然我是覺的一致性、整齊性比 srcset 還要差，不過比起 &lt;picture&gt; 實在都好很多，只是目前依然也還沒有瀏覽器支援，其實 srcset 之前也都沒人支援，webkit 的支援在發布前被檔下了，後來的討路就產生了現在的 src-N，目前看起來也沒其他候選標準，或許過陣子就會有瀏覽器開始支援這種寫法了吧。 </p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000767" baseName="bad-part-of-css-transition">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-11-05</b:date>
-				<b:time>15:59:22</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Transition 之惡</b:title>
-			<b:content>
-				<b:summary>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。 問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition： .case1.active { transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease; } .case2.active { transition: top 1s...</b:summary>
-				<b:mainContent><p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
-
-<p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
-
-<pre><code>.case1.active {
-    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease;
-}
-
-.case2.active {
-    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease;
-}
-</code></pre>
-
-<p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
-
-<p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
-
-<p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
