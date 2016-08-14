@@ -63,7 +63,7 @@
     <script type="application/ld+json">
       {
         "@context": "http://schema.org",
-        "@type": "Article",
+        "@type": "BlogPosting",
         "mainEntityOfPage": "<xsl:value-of select="$canonical"/>",
         "publisher": {
           "@type": "Organization",

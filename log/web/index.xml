@@ -9,6 +9,117 @@
 			<b:listData listID="web">web</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000871" baseName="7bit-encoding-and-email">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-07-19</b:date>
+				<b:time>13:28:23</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>7 Bit Encoding and Email</b:title>
+			<b:content>
+				<b:summary>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 MIME 就沒這樣限制，所以我應該可以這樣寫： Content-Type: text/html; charset=utf-8 然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。 Quoted-Printable encoding 的基本原理就是用 = 作為 escape 字元，然後可以把要轉換的字元轉成...</b:summary>
+				<b:mainContent><p>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 <a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95">MIME</a> 就沒這樣限制，所以我應該可以這樣寫：</p>
+
+<pre><code>Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。</p>
+
+<p>Quoted-Printable encoding 的基本原理就是用 <code>=</code> 作為 escape 字元，然後可以把要轉換的字元轉成 <code>=字碼</code> 的形式，例如 Big5 中文的 <code>我</code> 就要轉成 <code>=A7=DA</code>，規範上要轉換的是除了可見（printable）<a href="https://zh.wikipedia.org/wiki/ASCII">ASCII</a> 字元以外的字元都要轉，而 ASCII 是個 7bit 編碼，字碼只有從 0 到 127 而已，而 email 要用 Quoted-Printable encoding 的主要原因其實就是為了讓文件內的每個字元編碼都維持在 7bit 編碼範圍內，現在大家常用的編碼像是 UTF-8 和以前常用的 Big5 等都是 8bit 編碼，兩者差別就在於每個傳輸的 byte 中有沒有使用到第 8 個 bit，轉成二進位的時候，7bit 系統編碼不會用到最左（higher-order）邊的那個 bit。</p>
+
+<p>為什麼需要用 7bit 的文字編碼呢？主因是計算機和電信網路早期很多系統是只支援 7bit 編碼的，SMTP 的<a href="https://tools.ietf.org/html/rfc821#page-44">規範</a>就直接要求 TCP 傳輸時，每個 byte 最左邊的 higher-order bit 要填 0：</p>
+
+<blockquote>
+  <p>The TCP connection supports the transmission of 8-bit bytes.
+The SMTP data is 7-bit ASCII characters.  Each character is
+transmitted as an 8-bit byte with the high-order bit cleared to
+zero.</p>
+</blockquote>
+
+<p>當然這規範很落後時代，所以在 <a href="https://tools.ietf.org/html/rfc2045#section-6">MIME（Multipurpose Internet Mail Extensions）</a> 規範其實也有 <code>Content-Transfer-Encoding</code> 可以指定傳輸用的是什麼編碼：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+</code></pre>
+
+<p>不過為了相容舊系統，還是很少真的這樣使用的信件在傳遞，因為要是傳到了 7bit 系統，小則亂碼、大則程式當機。不過這就帶出另外一個問題了，難道 7bit 系統只能傳輸 ASCII 字集嗎？因為我還蠻常看到日文的純文字郵件，就去找了一些來看看，結果發現到有的是用 <code>ISO-2022-JP</code>，而且是使用 7bit 的傳輸：</p>
+
+<pre><code>Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+</code></pre>
+
+<p>信件內容的文字也都很正確，沒有亂碼：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27751195323/" title="iso-2022-jp by othree, on Flickr"><img src="https://farm8.staticflickr.com/7684/27751195323_a423fd4cb4_b.jpg" width="708" height="558" alt="iso-2022-jp" srcset="" /></a></p>
+
+<p>於是就看一下 <a href="https://zh.wikipedia.org/wiki/ISO/IEC_2022">ISO-2022</a> 的介紹，發現原來是個很早就有的 7bit 編碼方法，後來根據這方法有訂出了 CN、JP、KR 等語言的編碼，不過比較通行的看來只有 ISO-2022-JP，然後我也找到 HTML email 用 ISO-2022-JP 的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28366990615/" title="ISO-2022-JP by othree, on Flickr"><img src="https://farm9.staticflickr.com/8572/28366990615_bc76dcce70_b.jpg" width="708" height="558" alt="ISO-2022-JP" srcset="" /></a></p>
+
+<p>看起來就像是我理想中的 HTML email 原始碼啊，所以問題的癥結其實是，大家為了相容於舊系統，所以都用 7bit 傳輸，要 7bit safe 的 encoding 選擇有限，除了比較通行的 ISO-2022-JP 可以給日文用、字元太少只能給英文用的 ASCII 之外，其它語言就只能用 Base64 encoding 和 Quoted-Printable encoding 了，所以事實上其它 7bit 編碼的內容，也是可以直接透過 SMTP 協定來傳輸的，只是要看收信端的軟體能不能支援解碼，像是已經不太有人用的 <a href="https://zh.wikipedia.org/zh-tw/UTF-7">UTF-7</a> 就是 7bit 的 unicode 編碼。</p>
+
+<p>最後，就是假設我們已經不用擔心老舊系統的時候，其實只要這樣寫在 MIME header 裡就可以直接傳 UTF-8 的 HTML source，不用再經過任何編碼處理了：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>不過距離這一步不知道還有多遠就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000869" baseName="web-push">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-07-14</b:date>
+				<b:time>12:40:19</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Web Push</b:title>
+			<b:content>
+				<b:summary>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 Firebase Cloud Messaging(FCM)，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 Web Push Protocol，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。 整個 Web Push Protocol 的基本架構如下圖： User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線...</b:summary>
+				<b:mainContent><p>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 <a href="https://firebase.google.com/docs/cloud-messaging/">Firebase Cloud Messaging(FCM)</a>，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 <a href="https://tools.ietf.org/html/draft-ietf-webpush-protocol-07">Web Push Protocol</a>，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。</p>
+
+<p>整個 Web Push Protocol 的基本架構如下圖：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28277091075/" title="Web Push Protocol by othree, on Flickr"><img src="https://farm8.staticflickr.com/7633/28277091075_ecdf54fc60_b.jpg" width="493" height="263" alt="Web Push Protocol" srcset="" /></a></p>
+
+<p>User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線 Subscribe），然後會拿到一個 subscription resource，可能長成：</p>
+
+<pre><code>https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
+</code></pre>
+
+<p>另外還會拿到一個發訊息用的 push resource：</p>
+
+<pre><code>https://push.example.net/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV
+</code></pre>
+
+<p>可以注意到兩個 resource 後面的 token 是不一樣的，兩者之間的 mapping 就是 Push Service 來負責；然後 UA 拿到這兩個網址後，發訊息用的 push resource 要交給自家服務的後台，也就是圖上第三條橫線 Distribute Push Resource，另外一個 subscription resource 則是要自己使用，UA 用 HTTP/2 打 GET 到 subscription resource，然後 push service 會把連線保持住不關掉，這就是圖上的第二條橫線 Monitor；自家服務後台的要送訊息的時候，就打 POST 去 push resource，也就是第四條橫線，從 Application 到 Push Service 間的 Push Message，push service 收到這個訊息時，就利用 HTTP/2 的 Server Push 機制主動傳送訊息，最後這個動作就是第五條橫線的 Push Message 了。</p>
+
+<p>就這樣很漂亮的用 HTTP/1.1 + HTTP/2 把一個基本的 Cloud Message Service 的協定建構起來，而除了這最基本的訊息傳遞外，這份文件還有定義像是訊息重要度、訊息回條、群組訊息等等的方法，設計都還蠻漂亮的，安全性的部分則是限制走 HTTPS over TLS，還有 operation 相關的說明，像是實際上要跑起這個服務，需要大量的 TCP connection 等等（因為都走 HTTP 了），有興趣的可以加減看一下。</p>
+
+<p>補充：Firefox 目前實做的似乎就是這個協定更早版本的草案</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000848" baseName="first-patch-to-firefox">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -348,56 +459,6 @@ ac_add_options --disable-libjpeg-turbo
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14970705848/" title="Markdown by othree, on Flickr"><img src="https://farm4.staticflickr.com/3920/14970705848_5aba006fc2_m.jpg" width="208" height="128" alt="Markdown"   /></a></p>
 
 <p>一年前提過的 Markdown 標準化計畫沒想到真的有<a href="http://blog.codinghorror.com/standard-flavored-markdown/">成果</a>了，現在叫 <a href="http://commonmark.org/">CommonMark</a>，不過其實前兩天還叫 <a href="http://standardmarkdown.com/">Standard Flavored Markdown</a>，只是因為 Markdown 的作者 John Gruber 不爽這個名字<a href="http://blog.codinghorror.com/standard-markdown-is-now-common-markdown/">會造成混淆</a>，所以 Jeff Atwood 只好很不爽的改名成 CommonMark，有興趣的可以看看他們的 <a href="http://jgm.github.io/stmd/spec.html">spec</a>，其實與其說是 spec，我覺得根本就是 Test Suite，裡面主要的不同點是列出很多以前不知道該怎麼 parse 的語法，統一訂出應該轉成怎樣的 HTML，算是個讓各家自己實做的引擎可以依據的規範，而且這次 release 除了 spec 外還同時提供了用 C 和 JavaScript 然後照著 CommonMark 實做的兩個 <a href="https://github.com/jgm/stmd">Markdown 引擎</a>，我想 JavaScript 的版本應該很快就會有人拿去用了吧，另外就是 GitHub 應該會有人弄 Ruby 的版本才是。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000805" baseName="mozjpeg-2">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-07-18</b:date>
-				<b:time>11:33:16</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>mozjpeg 2.0</b:title>
-			<b:content>
-				<b:summary>昨天 Adobe 和 Google 聯手發表了思源黑體，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 mozjpeg 2.0，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 Zopfli，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。...</b:summary>
-				<b:mainContent><p>昨天 Adobe 和 Google 聯手發表了<a href="http://blog.typekit.com/alternate/source-han-sans-cht/">思源黑體</a>，算是亞洲資訊圈的一件大事，結果就把另外一個消息壓下去了，其實昨天 Mozilla 發表了 <a href="https://blog.mozilla.org/blog/2014/07/15/improving-jpeg-image-encoding/">mozjpeg 2.0</a>，這個專案的目標是在保持相容於市場上現有的 jpeg decoder 之下，想辦法讓 jpeg 檔案能夠更小，第一輪的成果發表是就是昨天的 2.0 了，結果而言平均可以讓 jpeg 圖片品質不變差的情況下減少 5% 的大小，看到這個 5% 數據讓我想到 Google 曾經推出相容於 gzip, deflate 的 <a href="http://blog.gslin.org/archives/2013/03/01/3228/google-%E7%99%BC%E8%A1%A8%E8%88%87-zlibdeflate-%E7%9B%B8%E5%AE%B9%E7%9A%84%E5%A3%93%E7%B8%AE%E7%A8%8B%E5%BC%8F%EF%BC%8C%E5%86%8D%E5%B0%8F-5/">Zopfli</a>，不過 mozjpeg 應該是不用花到 100 倍的壓縮時間啦，目前 Facebook 還有贊助這個計畫的下一輪發展，也就是 3.0 的開發。mozjpeg 目前是以 c lib 的形式釋出，可惜還沒有看到有命令列工具支援，希望能帶動一波圖片最佳化工具的更新潮啊。</p>
-
-<p>其實 Mozilla 在去年還有發表了一篇對於目前市場上破壞性壓縮圖片格式的<a href="https://people.mozilla.org/~josh/lossy_compressed_image_study_october_2013/">品質比較</a>，比較了 JPEG、JPEG XR、WebP 和 HEVC-MSP，結果表現不離預期，最好的是 HEVC-MSP4，這是 H.265 Profile 的靜態圖片格式，算是比較項目中最新的格式了，表現最好好像不意外，不過其實高壓縮比相對的來說解壓縮需要的運算資源就會多，所以 Mozilla 才不會完全往新技術走，而開了這個 branch，顧到相容度的前提下，盡量的減少網路傳輸，這個計畫目前看來是還會繼續發展，不知道接下來還能夠提升多少壓縮比，還蠻令人期待的。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000800" baseName="chrome-emulator">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-06-26</b:date>
-				<b:time>11:55:24</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Chrome 開發工具的新模擬器</b:title>
-			<b:content>
-				<b:summary> Chrome 開發工具有個新的模擬器，介面改不少，其中最大的特點是多了網路模擬的功能，可以模擬網路速度了，目前在 Chrome Canary 已經可以用，可惜還沒有自定義選項的功能，不過我想到 Chrome 前應該會有～...</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/14486840456/" title="Chrome Emulator by othree, on Flickr"><img src="https://farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg" width="857" height="850" alt="Chrome Emulator" srcset="https://farm4.staticflickr.com/3857/14486840456_74dce49944_b.jpg 1024w" /></a></p>
-
-<p>Chrome 開發工具有個新的模擬器，介面改不少，其中最大的特點是多了網路模擬的功能，可以模擬網路速度了，目前在 Chrome Canary 已經可以用，可惜還沒有自定義選項的功能，不過我想到 Chrome 前應該會有～</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

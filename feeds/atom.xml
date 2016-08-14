@@ -2,11 +2,362 @@
 <feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="zh-TW">
 <title>O3noBLOG</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/" />
-<modified>2016-07-01T14:19:02Z</modified>
+<modified>2016-08-13T15:40:32Z</modified>
 <tagline></tagline>
 <id>tag:blog.othree.net,2016://1</id>
 <generator url="http://www.movabletype.org/" version="4.381">Movable Type</generator>
 <copyright>Copyright (c) 2016, othree</copyright>
+
+<entry>
+<title>JSON Web Token</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/08/13/json-web-token/" />
+<modified>2016-08-13T15:40:32Z</modified>
+<issued>2016-08-13T10:46:54Z</issued>
+<id>tag:blog.othree.net,2016://1.872</id>
+<created>2016-08-13T10:46:54Z</created>
+<summary type="text/plain"> 之前的 JSON Universe 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 JSON Web Token(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 JOSE(JSON Object Signing and Encryption) Working Group 所制訂的 RFC 標準，目前包括了： JSON Web Signature JSON Web Encryption JSON Web Key JSON Web Algorithms JSON Web Token 共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>server</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w" /></a></p>
+
+<p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
+
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a></li>
+</ul>
+
+<p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
+
+<pre><code>{
+  "kty":"EC",
+  "crv":"P-256",
+  "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+  "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
+  "kid":"Public key used in JWS spec Appendix A.3 example"
+}
+</code></pre>
+
+<p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
+
+<p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
+
+<pre><code>{
+  "typ":"JWT",
+  "alg":"HS256"
+}
+</code></pre>
+
+<p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
+
+<pre><code>YWI/YmE=
+</code></pre>
+
+<p>用 base64url 的話就變成：</p>
+
+<pre><code>YWI_YmE
+</code></pre>
+
+<p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
+
+<pre><code>BASE64URL(UTF8(JOSE Header)) || '.' || 
+BASE64URL(JWS Payload))
+</code></pre>
+
+<p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
+
+<ul>
+<li>JOSE Header</li>
+<li>Payload</li>
+<li>Signature</li>
+</ul>
+
+<p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
+
+<pre><code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+BASE64URL(JWS Payload) || '.' ||
+BASE64URL(JWS Signature)
+</code></pre>
+
+<p>長的會看起來像是：</p>
+
+<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code></pre>
+
+<p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
+
+<pre><code>{
+  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
+  "signatures":[
+     {"protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+      "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"}]
+}
+</code></pre>
+
+<p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
+
+<pre><code>{
+  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
+  "protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+}
+</code></pre>
+
+<p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
+
+<p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
+
+<pre><code>{"alg":"none"}
+</code></pre>
+
+<p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
+
+<pre><code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code></pre>
+
+<p>最後是 <code>.</code> 結尾。</p>
+
+<p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
+
+<ul>
+<li>JOSE Header</li>
+<li>Encrypted Key</li>
+<li>Initialization Vector</li>
+<li>Ciphertext</li>
+<li>Authentication Tag</li>
+</ul>
+
+<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途。</p>
+
+<p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
+
+<pre><code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
+</code></pre>
+
+<p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
+
+<p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
+
+<ul>
+<li><code>iss</code>, Issuer</li>
+<li><code>sub</code>, Subject</li>
+<li><code>aud</code>, Audience</li>
+<li><code>exp</code>, Expiration Time</li>
+<li><code>nbf</code>, Not Before</li>
+<li><code>iat</code>, Issued At</li>
+<li><code>jti</code>, JWT ID</li>
+</ul>
+
+<p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
+
+<pre><code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code></pre>
+
+<p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
+
+<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+
+<p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>7 Bit Encoding and Email</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/07/19/7bit-encoding-and-email/" />
+<modified>2016-07-19T05:29:00Z</modified>
+<issued>2016-07-19T05:28:23Z</issued>
+<id>tag:blog.othree.net,2016://1.871</id>
+<created>2016-07-19T05:28:23Z</created>
+<summary type="text/plain">最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 MIME 就沒這樣限制，所以我應該可以這樣寫： Content-Type: text/html; charset=utf-8 然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。 Quoted-Printable encoding 的基本原理就是用 = 作為 escape 字元，然後可以把要轉換的字元轉成...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>web</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 <a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95">MIME</a> 就沒這樣限制，所以我應該可以這樣寫：</p>
+
+<pre><code>Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。</p>
+
+<p>Quoted-Printable encoding 的基本原理就是用 <code>=</code> 作為 escape 字元，然後可以把要轉換的字元轉成 <code>=字碼</code> 的形式，例如 Big5 中文的 <code>我</code> 就要轉成 <code>=A7=DA</code>，規範上要轉換的是除了可見（printable）<a href="https://zh.wikipedia.org/wiki/ASCII">ASCII</a> 字元以外的字元都要轉，而 ASCII 是個 7bit 編碼，字碼只有從 0 到 127 而已，而 email 要用 Quoted-Printable encoding 的主要原因其實就是為了讓文件內的每個字元編碼都維持在 7bit 編碼範圍內，現在大家常用的編碼像是 UTF-8 和以前常用的 Big5 等都是 8bit 編碼，兩者差別就在於每個傳輸的 byte 中有沒有使用到第 8 個 bit，轉成二進位的時候，7bit 系統編碼不會用到最左（higher-order）邊的那個 bit。</p>
+
+<p>為什麼需要用 7bit 的文字編碼呢？主因是計算機和電信網路早期很多系統是只支援 7bit 編碼的，SMTP 的<a href="https://tools.ietf.org/html/rfc821#page-44">規範</a>就直接要求 TCP 傳輸時，每個 byte 最左邊的 higher-order bit 要填 0：</p>
+
+<blockquote>
+  <p>The TCP connection supports the transmission of 8-bit bytes.
+The SMTP data is 7-bit ASCII characters.  Each character is
+transmitted as an 8-bit byte with the high-order bit cleared to
+zero.</p>
+</blockquote>
+
+<p>當然這規範很落後時代，所以在 <a href="https://tools.ietf.org/html/rfc2045#section-6">MIME（Multipurpose Internet Mail Extensions）</a> 規範其實也有 <code>Content-Transfer-Encoding</code> 可以指定傳輸用的是什麼編碼：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+</code></pre>
+
+<p>不過為了相容舊系統，還是很少真的這樣使用的信件在傳遞，因為要是傳到了 7bit 系統，小則亂碼、大則程式當機。不過這就帶出另外一個問題了，難道 7bit 系統只能傳輸 ASCII 字集嗎？因為我還蠻常看到日文的純文字郵件，就去找了一些來看看，結果發現到有的是用 <code>ISO-2022-JP</code>，而且是使用 7bit 的傳輸：</p>
+
+<pre><code>Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+</code></pre>
+
+<p>信件內容的文字也都很正確，沒有亂碼：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27751195323/" title="iso-2022-jp by othree, on Flickr"><img src="https://farm8.staticflickr.com/7684/27751195323_a423fd4cb4_b.jpg" width="708" height="558" alt="iso-2022-jp" srcset="" /></a></p>
+
+<p>於是就看一下 <a href="https://zh.wikipedia.org/wiki/ISO/IEC_2022">ISO-2022</a> 的介紹，發現原來是個很早就有的 7bit 編碼方法，後來根據這方法有訂出了 CN、JP、KR 等語言的編碼，不過比較通行的看來只有 ISO-2022-JP，然後我也找到 HTML email 用 ISO-2022-JP 的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28366990615/" title="ISO-2022-JP by othree, on Flickr"><img src="https://farm9.staticflickr.com/8572/28366990615_bc76dcce70_b.jpg" width="708" height="558" alt="ISO-2022-JP" srcset="" /></a></p>
+
+<p>看起來就像是我理想中的 HTML email 原始碼啊，所以問題的癥結其實是，大家為了相容於舊系統，所以都用 7bit 傳輸，要 7bit safe 的 encoding 選擇有限，除了比較通行的 ISO-2022-JP 可以給日文用、字元太少只能給英文用的 ASCII 之外，其它語言就只能用 Base64 encoding 和 Quoted-Printable encoding 了，所以事實上其它 7bit 編碼的內容，也是可以直接透過 SMTP 協定來傳輸的，只是要看收信端的軟體能不能支援解碼，像是已經不太有人用的 <a href="https://zh.wikipedia.org/zh-tw/UTF-7">UTF-7</a> 就是 7bit 的 unicode 編碼。</p>
+
+<p>最後，就是假設我們已經不用擔心老舊系統的時候，其實只要這樣寫在 MIME header 裡就可以直接傳 UTF-8 的 HTML source，不用再經過任何編碼處理了：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>不過距離這一步不知道還有多遠就是了。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>HKOSCON 2016</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/07/16/hkoscon-2016/" />
+<modified>2016-07-16T15:18:28Z</modified>
+<issued>2016-07-16T08:55:13Z</issued>
+<id>tag:blog.othree.net,2016://1.870</id>
+<created>2016-07-16T08:55:13Z</created>
+<summary type="text/plain"><![CDATA[ 今年有幸可以參與香港的 Open Source Conference，這趟還承蒙 Mozilla 贊助交通費用，另外因為是講者的關係，住宿的部分則是 HKOSCON 幫忙。其實至少去年就想去了，不過去年因為事情比較多就放棄了，今年還乾脆的投稿分享，不過因為工作的關係，只有參加週六的議程，週五的部分就沒參加到了，聽的議程如下： 回顧台灣自由開源軟體發展 by Jim Huang Interactive Dashboard Development with Plotly by Mart van de Ven Fluentd: Unified Logging Layer by Masahiro Nakagawa by Andy Shu Optimizing Chinese Webfont &amp; Typography by Andy...]]></summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>diary</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315015884/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7526/27315015884_dd95e637b1_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7526/27315015884_dd95e637b1_b.jpg 1024w, https://farm8.staticflickr.com/7526/27315015884_5f8f452616_h.jpg 1600w" /></a></p>
+
+<p>今年有幸可以參與<a href="https://2016.opensource.hk/">香港的 Open Source Conference</a>，這趟還承蒙 Mozilla 贊助交通費用，另外因為是講者的關係，住宿的部分則是 HKOSCON 幫忙。其實至少去年就想去了，不過去年因為事情比較多就放棄了，今年還乾脆的投稿分享，不過因為工作的關係，只有參加週六的議程，週五的部分就沒參加到了，聽的議程如下：</p>
+
+<ul>
+<li>回顧台灣自由開源軟體發展 by Jim Huang</li>
+<li>Interactive Dashboard Development with Plotly by Mart van de Ven</li>
+<li>Fluentd: Unified Logging Layer by Masahiro Nakagawa by Andy Shu</li>
+<li>Optimizing Chinese Webfont &amp; Typography by Andy Shu</li>
+<li>Mozilla Eir - Bring medical devices into the world of webby Kevin Hu</li>
+<li>From Open Source to Open Media by Hsin-Chan Chien</li>
+<li>My Mozilla Contributing Journey by Irvin Chen</li>
+</ul>
+
+<p>第一場就是 Jserv 介紹台灣以前的自由開源軟體的發展，我到會場的時候已經開始講的，介紹的比較是早期的發展，是我有參與到這個圈子前的時期，對我來說大部分都是，照我印象比在台灣之前說到的還要詳細些，不過我的聽幾次 Jserv 的分享感覺下來，就是大概進入 COSCUP 開始辦之後，參與發展在地化的自由開源軟體的人卻越來越少，當然我自己也是沒參與啦，其實曾經我本來要幫忙新酷音的網站（目前是 <a href="http://blog.kidwm.net/">WM</a> 維護），不過因為一些奇妙的原因我就沒幫上了。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27850155241/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7351/27850155241_5c22604d7e_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7351/27850155241_5c22604d7e_b.jpg 1024w, https://farm8.staticflickr.com/7351/27850155241_5f052102f4_h.jpg 1600w" /></a></p>
+
+<p><a href="https://plot.ly/">Plotly</a> 則是一個 plot library，我是沒很注意聽，有興趣可以自己研究一下優缺點，目前這市場似乎有點飽和，可能等真的有需求時再來研究吧。</p>
+
+<p><a href="http://www.fluentd.org/">Fluentd</a> 是最近蠻多人會用的 log 收集中間人，我目前工作上雖然沒有直接接觸，到是有間接使用到，不過我到來聽這場的這時候才知道，原來作者是日本人，不得不說有點意外，來講的是 Masahiro Nakagawa，是目前專案上排第二的開發者。</p>
+
+<p>Optimizing Chinese Webfont &amp; Typography 這場的重點其實就是動態組字形技術，以前台灣這邊也有人在弄，有商業化的就是 <a href="http://www.justfont.com/">justfont</a> 了吧，不過沒想到這技術現在也有開源專案提供了，這場 Andy 介紹的是 <a href="https://github.com/aui/font-spider">font-spider</a> 這個專案，有興趣的可以自己玩玩看。PS: 我覺得 justfont 不斷拓展方向的策略還蠻正確的，不然單靠 Webfont 就蠻危險的。</p>
+
+<p><a href="https://wiki.mozilla.org/Eir">Mozilla Eir</a> 則是第一場 Mozilla 相關的主題，主要是介紹 Mozilla 參與醫療器材平台發展的專案，目前還在蠻初期的，個人感覺還在規劃和討論的階段，所以還沒有實際的成果或是可以 demo 的東西。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27927183155/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7421/27927183155_b62eedb67d_b.jpg" width="683" height="1024" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7421/27927183155_b62eedb67d_b.jpg 683w, https://farm8.staticflickr.com/7421/27927183155_8da1d310a3_h.jpg 1067w" /></a></p>
+
+<p>From Open Source to Open Media 則是 HC 從 OSDC 到現在<a href="https://www.twreporter.org/">報導者</a>之間的歷程，聽完之後覺得經濟動能推升方案那支<a href="https://www.youtube.com/watch?v=RAbD3AGFX6I">廣告</a>，當時看覺得是什麼鬼，現在看覺得效用真的很大啊(?)，然後就讓我想到 g0v 有一個推人入坑的方法，就是先弄一個糟糕的版本推上線，然後就會有人受不了出來修改。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27648624360/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7414/27648624360_588fb64815_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7414/27648624360_588fb64815_b.jpg 1024w, https://farm8.staticflickr.com/7414/27648624360_fd2c5e426e_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27648621990/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7448/27648621990_061e86fb62_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7448/27648621990_061e86fb62_b.jpg 1024w, https://farm8.staticflickr.com/7448/27648621990_221a77e794_h.jpg 1600w" /></a></p>
+
+<p>My Mozilla Contributing Journey 這場則是 <a href="https://reps.mozilla.org/u/irvin/">Irvin</a> 自己從開始參與 Moztw 社群到現在一路的歷程，因為參與 Moztw 而有了什麼收穫等等，我印象中有這樣明確整理出因為參與開源社群而獲得的收穫的分享，好像是沒有，有興趣的話，他在 SITCON 夏令營還會再講一次，有興趣的或許...報名好像結束了就是。</p>
+
+<p>除了上面聽的兩場和 Mozilla 相關的題目之外，還有一場我沒聽的是 Gary 的演講，題目是之前講過的 Fuzzy Test，不過是 2016 年版，Fuzzy Test 我覺得真的是自動化整合測試最後一關了，基本上就是把所有正常的操作都測試完之後，就來測個不正常的操作吧，那怎樣產生不正常的操作流程呢，就是可以用 Fuzzy 的方法來產生，不過他自己有說今年 Mozilla 在這邊的資源變少了；其實我覺得 Mozilla 最近方向實在是不太明確，我印象中的整個轉捩點大概是 Brendan Eich 下台開始，然後 Firefox OS 的市佔率也起不來，Firefox 的發展也越來越跟不上 Chrome，像是 e10s 就一直都還不太行，真的是蠻讓人擔心的，好在是短時間還<a href="http://www.recode.net/2016/7/7/12116296/marissa-mayer-deal-mozilla-yahoo-payment">不需要擔心資金問題</a>的樣子。</p>
+
+<p>然後還有一場間接相關的就是我的<a href="https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/">分享</a>了，這個題目本來是有考慮投 COSCUP 的，後來還是投到 HKOSCON 這邊，也是我第一次嘗試用英文演講，可惜我練習不夠，講的實在不好，很多地方都覺得好像沒正確的講清楚，下次還有機會用英文演講的話應該還是會再試一次，希望下次練習更充分，表現正常些，不然就要上場前喝罐啤酒試試看了，根據我之前的試驗結果，好像喝過酒的情況下，講的會比較流暢XD。</p>
+
+<p>除了演講外，還有一區有廠商攤位，還有一個 Job Board 版面可以給人貼徵才資訊，攤位的部分，IBM、VLC、Google、HKLUG﹑自由香港字型等是我比較有印象的，IBM 是介紹他們的 AI as Service 的服務，紀念品當中還有一些 for Dummies 系列叢書：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27927181435/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7609/27927181435_4acfb018f0_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7609/27927181435_228502eb76_k.jpg 2x" /></a></p>
+
+<p>Google 不知道怎麼會願意來擺攤，沒跟他們聊聊，台灣 Google 好像還沒在社群擺過攤的樣子，如果有錯還請幫忙更正，不過總之我拿到 Chrome 貼紙了，這樣曾經的五大瀏覽器，Chrome、IE、Firefox、Opera 的紀念品我都有拿到過了，只差一個台灣實在很難碰到的 Apple 的 Safari 而已。</p>
+
+<p>自由香港字型則是一群人要造屬於香港字的自由字型而聚集起來的社群，主因是因為香港漢字其實有一些字的寫法、筆畫和台灣日本的不一樣，例如下圖中間的「周」：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315002094/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7408/27315002094_4a9bd2c75a_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7408/27315002094_38e0b5baee_k.jpg 2x" /></a></p>
+
+<p>然後過去又沒有可以自由使用的字型可以用，所以開始了這個計畫，相信大家也都知道要造一套字型有多大難度，所以這社群有些成果出來真的是很厲害。</p>
+
+<p>整個 HKOSCON 規模比台灣常參加的研討會還要小一些，不過參與的外國人比例感覺比較高，英文議程也多一些，相較來說是對外國會眾友善不少，當然我想英文在香港比較流通也是主因之一，在台灣要做到國際化的研討會實在不太容易，目前比較常見的問題包括：翻譯問題，雖然可以靠口譯解決，不過成本瞬間提升，光靠贊助很難，所以幾乎是要全商業化的形式才比較有可能，票價也會因此和國際接軌；入境問題，中國人要到台灣困難度很高（好像還有幾個國家要來也很困難，一時忘了），這也造成一些國際研討會亞洲場不考慮台灣的原因，這問題很難靠主辦解決就是。</p>
+
+<p>最後還是要感謝 Mozilla 的贊助，還有 HKOSCON 大會和 Sammy Fung 的協助讓這趟行程可以很順利的完成，Sammy 也是 COSCUP 的常客，前陣子還開始了 <a href="http://opensource.asia/">opensource.asia</a> 這個網站，收集亞洲相關的 Open Source 活動，大家有興趣可以 COSCUP 活動時找他聊聊。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315009874/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7415/27315009874_b5eec57431_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7415/27315009874_96c3e64b8c_k.jpg 2x" /></a></p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>Web Push</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/07/14/web-push/" />
+<modified>2016-07-14T06:02:46Z</modified>
+<issued>2016-07-14T04:40:19Z</issued>
+<id>tag:blog.othree.net,2016://1.869</id>
+<created>2016-07-14T04:40:19Z</created>
+<summary type="text/plain">前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 Firebase Cloud Messaging(FCM)，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 Web Push Protocol，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。 整個 Web Push Protocol 的基本架構如下圖： User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>web</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 <a href="https://firebase.google.com/docs/cloud-messaging/">Firebase Cloud Messaging(FCM)</a>，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 <a href="https://tools.ietf.org/html/draft-ietf-webpush-protocol-07">Web Push Protocol</a>，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。</p>
+
+<p>整個 Web Push Protocol 的基本架構如下圖：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28277091075/" title="Web Push Protocol by othree, on Flickr"><img src="https://farm8.staticflickr.com/7633/28277091075_ecdf54fc60_b.jpg" width="493" height="263" alt="Web Push Protocol" srcset="" /></a></p>
+
+<p>User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線 Subscribe），然後會拿到一個 subscription resource，可能長成：</p>
+
+<pre><code>https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
+</code></pre>
+
+<p>另外還會拿到一個發訊息用的 push resource：</p>
+
+<pre><code>https://push.example.net/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV
+</code></pre>
+
+<p>可以注意到兩個 resource 後面的 token 是不一樣的，兩者之間的 mapping 就是 Push Service 來負責；然後 UA 拿到這兩個網址後，發訊息用的 push resource 要交給自家服務的後台，也就是圖上第三條橫線 Distribute Push Resource，另外一個 subscription resource 則是要自己使用，UA 用 HTTP/2 打 GET 到 subscription resource，然後 push service 會把連線保持住不關掉，這就是圖上的第二條橫線 Monitor；自家服務後台的要送訊息的時候，就打 POST 去 push resource，也就是第四條橫線，從 Application 到 Push Service 間的 Push Message，push service 收到這個訊息時，就利用 HTTP/2 的 Server Push 機制主動傳送訊息，最後這個動作就是第五條橫線的 Push Message 了。</p>
+
+<p>就這樣很漂亮的用 HTTP/1.1 + HTTP/2 把一個基本的 Cloud Message Service 的協定建構起來，而除了這最基本的訊息傳遞外，這份文件還有定義像是訊息重要度、訊息回條、群組訊息等等的方法，設計都還蠻漂亮的，安全性的部分則是限制走 HTTPS over TLS，還有 operation 相關的說明，像是實際上要跑起這個服務，需要大量的 TCP connection 等等（因為都走 HTTP 了），有興趣的可以加減看一下。</p>
+
+<p>補充：Firefox 目前實做的似乎就是這個協定更早版本的草案</p>
+]]>
+
+
+</content>
+</entry>
 
 <entry>
 <title>YAJS.vim and Vim Syntax Highlight</title>
@@ -616,7 +967,7 @@ RewriteRule ^(.*)$ $1.gz [L]
 <entry>
 <title>JSON Universe</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/01/11/json-universe/" />
-<modified>2016-04-10T07:43:24Z</modified>
+<modified>2016-08-13T12:26:25Z</modified>
 <issued>2016-01-11T14:38:31Z</issued>
 <id>tag:blog.othree.net,2016://1.857</id>
 <created>2016-01-11T14:38:31Z</created>
@@ -932,11 +1283,13 @@ return $friend
 
 <h4>JSONLint</h4>
 
-<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還可以用可以收展開的樹狀檢視模式來看 JSON 資料。</p>
+<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還有可以收合展開的樹狀檢視模式。</p>
 
 <h4>?JSON</h4>
 
 <p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
+
+<p>PS: 還有一篇 <a href="https://blog.othree.net/log/2016/08/13/json-web-token/">JSON Web Token</a></p>
 ]]>
 </content>
 </entry>
@@ -1003,341 +1356,6 @@ return $friend
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16222124870/" title="FF25 Cosplay by othree, on Flickr"><img src="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_b.jpg" width="1024" height="683" alt="FF25 Cosplay" srcset="https://farm8.staticflickr.com/7352/16222124870_39dd508f76_b.jpg 1024w, https://farm8.staticflickr.com/7352/16222124870_7d47d8872c_h.jpg 1600w" /></a></p>
 
 <p>最後補一張 cosplay 的照片，今年後半年都沒有拍相關的活動，剛好上面也都沒挑到這個主題的照片，最近 FF 開始移師到花博園區，那邊腹地比較廣大，比較不會有在台大的的種種問題，不過還搞不太清楚要在哪裡找人拍照就是。</p>
-]]>
-
-
-</content>
-</entry>
-
-<entry>
-<title>JSX 的前世</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/12/25/jsx-e4x/" />
-<modified>2016-04-10T07:45:35Z</modified>
-<issued>2015-12-25T01:36:53Z</issued>
-<id>tag:blog.othree.net,2015://1.855</id>
-<created>2015-12-25T01:36:53Z</created>
-<summary type="text/plain"><![CDATA[ React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 &lt;div&gt; 標籤就要寫成： var divNode = React.DOM.div({attr1:"value"}); 如果還要加上子元素，像是一個 list： &lt;ol&gt; &lt;li&gt;Item A&lt;/li&gt; &lt;li&gt;Item B&lt;/li&gt; &lt;li&gt;Item C&lt;/li&gt; &lt;li&gt;Item D&lt;/li&gt; &lt;/ol&gt; 就要寫成： var listNode = React.DOM.div({}, React.DOM.li({}, "Item A"), React.DOM.li({},...]]></summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>script</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="723" height="1024" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg 723w, https://farm6.staticflickr.com/5679/23319631253_54870a2279_h.jpg 1130w" /></a></p>
-
-<p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
-
-<pre><code>var divNode = React.DOM.div({attr1:"value"});
-</code></pre>
-
-<p>如果還要加上子元素，像是一個 list：</p>
-
-<pre><code>&lt;ol&gt;
-  &lt;li&gt;Item A&lt;/li&gt;
-  &lt;li&gt;Item B&lt;/li&gt;
-  &lt;li&gt;Item C&lt;/li&gt;
-  &lt;li&gt;Item D&lt;/li&gt;
-&lt;/ol&gt;
-</code></pre>
-
-<p>就要寫成：</p>
-
-<pre><code>var listNode = React.DOM.div({},
-  React.DOM.li({}, "Item A"),
-  React.DOM.li({}, "Item B"),
-  React.DOM.li({}, "Item C"),
-  React.DOM.li({}, "Item D")
-);
-</code></pre>
-
-<p>雖然比起純 DOM 的語法要簡單很多了，不過其實類似這種寫法來快速產生文件樹節點的 library 已經早就有了，像是 <a href="https://github.com/eneko/mooml">Mooml</a>、<a href="https://github.com/dominictarr/hyperscript">hyperscript</a>（thanks WM），如果 React 當初就直接這樣子推出，大家會想嘗試的意願應該會低很多，Facebook 的工程師應該也知道這樣和直接寫 DOM 或是其他 library 的感覺差異不大，所以他們解決的方法就是建立了一個新的 syntax，看起來就像是讓 DOM 變成像是原生的資料型態一樣，也就是現在的 JSX syntax，然後當然要讓這種語法可以在瀏覽器執行，所以官方有提供了 transpiler，不過其實這個把 XML DOM 當成 JS 語言中的原生資料型態的想法不是第一次出現了，早在好幾年前，就有一個 ECMA-357，又稱為 <a href="https://developer.mozilla.org/zh-TW/docs/E4X/%E4%BD%BF%E7%94%A8_E4X_%E8%99%95%E7%90%86_XML">E4X</a> 的標準是在做這件事的，全名則是 ECMAScript for XML，早期的 Mozilla SpiderMonkey 是有支援的，約是在 2006 年的 JavaScript 1.6 中推出，不過到 Firefox 21 的時候已經完全移除了，所以現在基本上是已經無法體會到這套 JS 擴充的語法，不過其實這套語法還蠻不錯的，有類似 template string 的寫法：</p>
-
-<pre><code>var doc = &lt;{h}&gt;&lt;body&gt;{text}&lt;/body&gt;&lt;/{h}&gt;;
-</code></pre>
-
-<p>React 則因為同時導入了 immutable 的概念，所以其 Virtual DOM 設計上只有產生文件樹結構的部分，沒有刪除修改，相較於 JSX 只有建置（create）的語法，E4X 則是有更完整的 CRUD 操作（就像是操作 JS 資料一樣），另外還多了用來尋找目標節點的 selector syntax：</p>
-
-<pre><code>languages.lang[1]
-person..*
-people.person.(name == "Joe").age
-</code></pre>
-
-<p>而且目標對像是 XML，所以對於 namespace 的處理也都有，整體而言算是很完整的 XML 操作方案，使用起來也比 DOM 簡潔很多，可惜後來被放棄，我推測大概幾個原因：</p>
-
-<ol>
-<li>使用 XML 的應用越來越少</li>
-<li>實做 E4X 會增加 JS 引擎的複雜度</li>
-<li>相較於 DOM 不依存於單一程式語言，E4X 則是 JS extension</li>
-<li>用 E4X 產生的節點不是 DOM 物件，不直接相容</li>
-</ol>
-
-<p>沒想到後來會在 Facebook 的手上，把這個概念單存的套用在 HTML 文件樹之上而重生。</p>
-]]>
-
-
-</content>
-</entry>
-
-<entry>
-<title>ULA 雨傘</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/11/19/ula-umbrella/" />
-<modified>2016-04-10T07:46:22Z</modified>
-<issued>2015-11-19T14:14:02Z</issued>
-<id>tag:blog.othree.net,2015://1.854</id>
-<created>2015-11-19T14:14:02Z</created>
-<summary type="text/plain"> 前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 ULA 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>buy</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22276626569/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/698/22276626569_c47da2bce3_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/698/22276626569_c47da2bce3_b.jpg 1024w, https://farm1.staticflickr.com/698/22276626569_950a01861f_h.jpg 1600w" /></a></p>
-
-<p>前陣子因緣際會有朋友去香港，就請他幫忙買了隻香港有名（？）的 <a href="http://www.ula-umbrella.com/">ULA</a> 雨傘，收到之後覺得驚為天人，幾乎是我用折傘以來的遇到的各種小問題在 ULA 雨傘上都有處理，這篇文章就來介紹一下他們做了什麼處理，解決了什麼問題。</p>
-]]>
-<![CDATA[<p>首先第一印像是，雨傘綁起來時很緊，幾乎所有其它的雨傘都是，在我辛苦的把傘面整理好之後，要綁起來時，卻發現因為魔鬼沾或鈕釦的位置，綁起來會鬆鬆的，沒辦法綁緊，結果本來弄得很緊實的傘布就變的鬆鬆垮垮的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275767928/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/571/22275767928_6ee17966fd_b.jpg" width="683" height="1024" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/571/22275767928_6ee17966fd_b.jpg 683w, https://farm1.staticflickr.com/571/22275767928_37ff7c4854_h.jpg 1067w" /></a></p>
-
-<p>第二個是則是雨傘套的部分，其它雨傘幾乎都沒有考慮要撐傘時，隨附的雨傘套要放在哪的問題，以前我最常做的方法就是把他綁在手把的繩圈上，不過這個方法久了傘套的布就會變的很皺，ULA 則是設計了一個鈕釦在手把繩圈那邊，可以固定拿下來的傘套。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842288193/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/724/21842288193_3484a9d9c9_b.jpg 1024w, https://farm1.staticflickr.com/724/21842288193_5d827d7d55_h.jpg 1600w" /></a></p>
-
-<p>第三個則是雨傘開關的地方，有一整塊軟橡膠墊讓手指不會因為要用力壓金屬片卡吮而不舒服，而且很顯眼，有畫龍點睛的效果，雖然都是素色的雨傘，不過整體設計是蠻好看的。另外一點和開關相關的特色，就是開關很好操作，不太會有力量出不去卡卡的狀況。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21842283173/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/21842283173_7e44d94c85_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/771/21842283173_7e44d94c85_b.jpg 1024w, https://farm1.staticflickr.com/771/21842283173_c9e0f7f1b7_h.jpg 1600w" /></a></p>
-
-<p>第四個則是收傘容易，雨傘支架末端都有設計過，配合頭蠻大的握把，很容易就把所有支架末端收好固定到握把內，再也不用一直橋來橋去的收傘了。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22275764628/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/716/22275764628_1c69194dd2_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/716/22275764628_1c69194dd2_b.jpg 1024w, https://farm1.staticflickr.com/716/22275764628_812ee5b6a3_h.jpg 1600w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21840724334/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/773/21840724334_cd305357d7_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/773/21840724334_cd305357d7_b.jpg 1024w, https://farm1.staticflickr.com/773/21840724334_12b245f622_h.jpg 1600w" /></a></p>
-
-<p>另外雨傘握把雖然不長，但是形狀也是設計過的，握起來感覺不會太差，</p>
-
-<p>而除了以上的特色之外，還有一個設計很不錯的是手把的繩圈其實是可以拆開套到其它東西上的，用的雖然是鈕釦不過可靠度蠻高的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22474404621/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5702/22474404621_b7e797e13f_b.jpg 1024w, https://farm6.staticflickr.com/5702/22474404621_69bec2f2ba_h.jpg 1600w" /></a></p>
-
-<p>最後要講的是耐用度，相信一定有人會有疑問，總之我覺得耐用度也不差，我現在手上這隻有經歷過一次颱風的攻擊，整個被吹翻，傘沒散掉，唯一的受損是有兩根拉桿有一點彎曲，不過我試著要彎回來才發現這拉桿其實很堅固，和一般折傘的拉桿比起來差蠻多，另外就是固定拉桿的方式好很多，我上一隻國產某算是名牌的雨傘後來固定拉桿的地方就常常脫落，要一直回去修理（不過最後是忘在電影院不見了）。傘布本身的防水性目前也都表現很不錯。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22450098812/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5633/22450098812_01311ee804_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm6.staticflickr.com/5633/22450098812_01311ee804_b.jpg 1024w, https://farm6.staticflickr.com/5633/22450098812_c8f1c37936_h.jpg 1600w" /></a></p>
-
-<p>ULA 雨傘的包裝如下，在香港地鐵有販賣機在賣，要用八達通卡購買，而且不同站點還有各自的限定色，是蠻有趣的銷售方式，當然也有實體店面，價錢大約台幣三四百，如果有去香港的推薦可以買一隻回來試試，要送人的話，就要三思了～～</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22525750458/" title="ula 雨傘 by othree, on Flickr"><img src="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0_b.jpg" width="1024" height="683" alt="ula 雨傘" srcset="https://farm1.staticflickr.com/710/22525750458_8719d1e5e0_b.jpg 1024w, https://farm1.staticflickr.com/710/22525750458_d47b6011e5_h.jpg 1600w" /></a></p>
-]]>
-</content>
-</entry>
-
-<entry>
-<title>Apache2 and HTTP/2</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/10/19/apache2-http2/" />
-<modified>2016-04-02T03:41:00Z</modified>
-<issued>2015-10-19T15:04:03Z</issued>
-<id>tag:blog.othree.net,2015://1.853</id>
-<created>2015-10-19T15:04:03Z</created>
-<summary type="text/plain"> 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>server</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w" /></a></p>
-
-<p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
-
-<pre><code>./config
-make
-sudo make install
-</code></pre>
-
-<p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
-
-<p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
-
-<pre><code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
-tar zxvf ./httpd-2.4.17.tar.gz
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
-tar zxvf ./apr-util-1.5.4.tar.gz
-mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
-
-wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
-ar zxvf ./apr-util-1.5.4.tar.gz 
-mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
-</code></pre>
-
-<p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
-
-<pre><code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
-make
-sudo make install
-</code></pre>
-
-<p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
-</code></pre>
-
-<p>或是：</p>
-
-<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
-</code></pre>
-
-<p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
-
-<pre><code>&lt;VirtualHost *:80&gt;
-    Protocols h2c http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>還有</p>
-
-<pre><code>&lt;VirtualHost *:443&gt;
-    Protocols h2 http/1.1
-    ServerName blog.othree.net
-    ServerAdmin othree@gmail.com
-</code></pre>
-
-<p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
-
-<pre><code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
-SSLProtocol All -SSLv2 -SSLv3
-</code></pre>
-
-<p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
-
-<ul>
-<li>Firefox 27</li>
-<li>Chrome 22</li>
-<li>IE 11</li>
-<li>Opera 14</li>
-<li>Safari 7</li>
-<li>Android 4.4</li>
-<li>Java 8 </li>
-</ul>
-
-<p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
-
-<p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
-
-<pre><code>brew install curl --with-nghttp2
-brew link curl
-
-/usr/local/bin/curl -v --http2 https://othree.net
-</code></pre>
-
-<p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
-
-<pre><code>brew install nghttp2
-
-nghttp -uv https://othree.net
-</code></pre>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w" /></a></p>
-
-<p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w" /></a></p>
-
-<p>然後是 2.0：</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w" /></a></p>
-
-<p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
-]]>
-
-
-</content>
-</entry>
-
-<entry>
-<title>前端測試入門</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2015/10/17/f2e-test/" />
-<modified>2016-04-10T07:46:56Z</modified>
-<issued>2015-10-17T12:06:44Z</issued>
-<id>tag:blog.othree.net,2015://1.852</id>
-<created>2015-10-17T12:06:44Z</created>
-<summary type="text/plain"> 這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。 其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了下載檔案的自動檢查，就順便把相關的名詞和觀念弄清楚。 之前最搞不清楚的其實就是 Mocha（摩卡咖啡） 和 Chai（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 斷言 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>script</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w" /></a></p>
-
-<p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
-
-<p>其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了<a href="https://github.com/othree/moztw-download-validation">下載檔案的自動檢查</a>，就順便把相關的名詞和觀念弄清楚。</p>
-
-<p>之前最搞不清楚的其實就是 <a href="https://mochajs.org/">Mocha</a>（摩卡咖啡） 和 <a href="http://chaijs.com/">Chai</a>（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 <strong>斷言</strong> 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha 網站上就列出了四套 assert library 供大家選擇，除此之外，像我之前在介紹 TypeScript 時提過的 <a href="http://angular.github.io/assert/">assert.js</a> 也可以使用，不過 assert.js 只能檢查型別就是。至於要挑選哪套 assert library 就看各人喜好了，主要是看要怎麼寫斷言，像我挑選 Chai 的原因是他的語法，支援 BDD ，可以寫的看起來很像一句英語：</p>
-
-<pre><code>foo.should.be.a('string');
-foo.should.equal('bar');
-foo.should.have.length(3);
-tea.should.have.property('flavors').with.length(3);
-</code></pre>
-
-<p>很容易就知道是什麼意思，而且自由度還蠻大的。另外一個原因則是他有支援 Promise，就是所謂的 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>，為什麼這個很重要呢，因為 JS 很常遇到需要非同步的操作流程，如果沒有支援，Test Framework 當下把他的 function 跑完，沒有 catch 到 error 就認為沒有錯誤了，當然像 mocha 是有支援非同步的，內建有個等待的機制，<code>done</code>：</p>
-
-<pre><code>describe('User', function() {
-  describe('#save()', function() {
-    it('should save without error', function(done) {
-      var user = new User('Luna');
-      user.save(function(err) {
-        if (err) throw err;
-        done();
-      });
-    });
-  });
-});
-</code></pre>
-
-<p>就是每個 <code>it</code> 區塊裡面，其實都會收到一個函數 <code>done</code>，如果有要測試非同步的程式，可以在非同步的部分測試完後，才執行 <code>done()</code>，這樣 Mocha 才有機會知道你的測試是不是有非同步的部分，還有什麼時候才是測試完成，不過 Chai 是 BDD，不會容許這樣不直觀的寫法的，所以 Domenic Denicola 開發了 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>：</p>
-
-<pre><code>promise.should.be.fulfilled;
-promise.should.eventually.deep.equal("foo");
-promise.should.become("foo"); // same as `.eventually.deep.equal`
-promise.should.be.rejected;
-</code></pre>
-
-<p>只是要這樣簡潔的寫法，還需要先設定一下：</p>
-
-<pre><code>var chai = require("chai");
-var chaiAsPromised = require("chai-as-promised");
-
-chai.use(chaiAsPromised);
-</code></pre>
-
-<p>其實 chai-as-promised 是 chai 的 plugin，然後用 <code>chai.use</code> 來使用它，底層怎樣運作我還沒深入研究，覺得還有點 magic，不過還算是想的到怎樣實做出來的程度，猜測可能有用到 function 的 <code>toString</code> 來判斷有沒有引用 <code>next</code> 參數。</p>
-
-<p>再來，測試蠻常會用到的假物件，mock 和 stub，兩者的差異其實蠻多文章有說明了，我個人覺得簡單分法就是 stub 沒有副作用，mock 則是有副作用的假物件，至於要說要用哪種物件來完成測試的話，基本上就是 stub 可以達成你的測試需求的話就用 stub，在 JavaScript 的測試環境下，好像只有看到 <a href="http://sinonjs.org/">Sinon.js</a> 這套比較多人用，去查了一下名稱典故，覺得一個比較可能的來源是特洛伊木馬故事中，騙特洛伊人把木馬搬進去城裡的那位（Mocha 和 Chai 的名稱應該是互相影響的，不過不確定誰先出來的）。另外還有個角色和 mock、stub 很常一起提到的叫 spy（常見用複數形 spies），最常用來當 callback 之類的，在非同步測試案例中，可以用來確保 callback 有被執行到，甚至可以偷看（spy）被執行了幾次，收到什麼參數等等，總之就是個可以測試函數被執行的次數和方式的物件。</p>
-
-<p>最後要說的則是 e2e test，因為 JS 很多時候都是用來在瀏覽器端實做 UI 和使用者行為的 handler，其實要做完整整合的測試不太容易，e2e 指的是 End to End，端點到端點，通常是說一個流程的起點到終點的意思，例如上網站註冊帳號，這樣算是一個流程，或是上網登入購買東西到結帳完成，這樣也是一個流程，由於 Web App 的環境下，跑 JS 的是瀏覽器，沒辦法簡單的介入，所以以往真的要做 e2e 測試幾乎都是要靠人工，後來有了 <a href="http://www.seleniumhq.org/">Selenium</a> 和 WebDriver，才開始可以讓這些測試自動化。</p>
-
-<p>以前的 Selenium 要控制瀏覽器靠的是 <a href="http://www.seleniumhq.org/projects/remote-control/">Selenium RC</a>，用比較暴力的方式介入瀏覽器，不過現在的 Selenium 2 則是透過 <a href="http://www.w3.org/TR/webdriver/">WebDriver</a> 這個 API 來操作，WebDriver 能進 W3C 標準化其實也是 Selenium 貢獻者的努力，背後也是有些大公司的影子在，目前主流的瀏覽器包括微軟最新的 Edge 也都支援，不過其實 Selenium 因為是 Java 寫的，雖然控制瀏覽器的 script 沒有限制要用 Java，我還是一直不太習慣，所以都沒深入，直到前陣子開始看到 Paul 在 Facebook 上<a href="https://www.facebook.com/notes/paul-li/protractor-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E7%AF%87/10152948608982211">連載</a>介紹 <a href="https://angular.github.io/protractor/#/">Protractor</a>，才又開始有想嘗試的動力，Protractor 的名稱由來也還蠻有趣的，意思是量角器，而 AngularJS 則有諧音 angle 的感覺在，當初出來也是為了要測試 AngularJS 的，Github 上 Protractor 是 AngularJS 下的一個專案，Protractor 和 Selenium 的差別就在於，Protractor 是一個 test framework，然後建好了 WebDriver binding，可以直接透過 WebDriver 來跟瀏覽器溝通，不再需要 Selenium 介面那塊了。</p>
-
-<p>後來 Carl 跟我說到有 <a href="http://webdriver.io/">WebdriverIO</a> 這個專案，是只有 WebDriver 介面的部分，可以寫 node script 來叫瀏覽器做事，當然也可以做測試，可以挑自己喜歡的 test framework 和 assert library 來搭配使用，於是我就做了一個可以去 moztw.org 下載安裝檔回來驗證正確性的<a href="https://github.com/othree/moztw-download-validation">專案</a>，在這個專案中，還用了一個特殊的寫法：</p>
-
-<pre><code>it('Download OSX Installer', function* () {
-  var data = yield hashes;
-  ...
-</code></pre>
-
-<p>其實就是 async function 加上 <code>yield</code> 來代替 ES2016 的 <code>await</code>，要達成這樣的效果其實會需要一個 async function runner，不是 node 可以直接跑起來的，實際測試過也是跑不起來，所以就只能 WebdriverIO 提供的 <code>wdio</code> 執行檔來執行。</p>
-
-<p>這篇還差一點東西沒講到，就是 test coverage，JS 這邊比較常看到的是 <a href="https://gotwarlost.github.io/istanbul/">istanbul.js</a>，名稱的來源是 carpet coverage，然後 Istanbul 是個生產優質地毯的地方～</p>
 ]]>
 
 
