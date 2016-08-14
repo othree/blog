@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000871" baseName="7bit-encoding-and-email">7 Bit Encoding and Email</b:listData>
+
+			<b:previous>
+				<b:mTitle>HKOSCON 2016</b:mTitle>
+				<b:mDate>2016-07-16</b:mDate>
+				<b:mBase>hkoscon-2016</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>JSON Web Token</b:mTitle>
+				<b:mDate>2016-08-13</b:mDate>
+				<b:mBase>json-web-token</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000871" baseName="7bit-encoding-and-email">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-07-19</b:date>
+				<b:time>13:28:23</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>7 Bit Encoding and Email</b:title>
+			<b:content>
+				<b:summary>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 MIME 就沒這樣限制，所以我應該可以這樣寫： Content-Type: text/html; charset=utf-8 然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。 Quoted-Printable encoding 的基本原理就是用 = 作為 escape 字元，然後可以把要轉換的字元轉成...</b:summary>
+				<b:mainContent><p>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 <a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95">MIME</a> 就沒這樣限制，所以我應該可以這樣寫：</p>
+
+<pre><code>Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。</p>
+
+<p>Quoted-Printable encoding 的基本原理就是用 <code>=</code> 作為 escape 字元，然後可以把要轉換的字元轉成 <code>=字碼</code> 的形式，例如 Big5 中文的 <code>我</code> 就要轉成 <code>=A7=DA</code>，規範上要轉換的是除了可見（printable）<a href="https://zh.wikipedia.org/wiki/ASCII">ASCII</a> 字元以外的字元都要轉，而 ASCII 是個 7bit 編碼，字碼只有從 0 到 127 而已，而 email 要用 Quoted-Printable encoding 的主要原因其實就是為了讓文件內的每個字元編碼都維持在 7bit 編碼範圍內，現在大家常用的編碼像是 UTF-8 和以前常用的 Big5 等都是 8bit 編碼，兩者差別就在於每個傳輸的 byte 中有沒有使用到第 8 個 bit，轉成二進位的時候，7bit 系統編碼不會用到最左（higher-order）邊的那個 bit。</p>
+
+<p>為什麼需要用 7bit 的文字編碼呢？主因是計算機和電信網路早期很多系統是只支援 7bit 編碼的，SMTP 的<a href="https://tools.ietf.org/html/rfc821#page-44">規範</a>就直接要求 TCP 傳輸時，每個 byte 最左邊的 higher-order bit 要填 0：</p>
+
+<blockquote>
+  <p>The TCP connection supports the transmission of 8-bit bytes.
+The SMTP data is 7-bit ASCII characters.  Each character is
+transmitted as an 8-bit byte with the high-order bit cleared to
+zero.</p>
+</blockquote>
+
+<p>當然這規範很落後時代，所以在 <a href="https://tools.ietf.org/html/rfc2045#section-6">MIME（Multipurpose Internet Mail Extensions）</a> 規範其實也有 <code>Content-Transfer-Encoding</code> 可以指定傳輸用的是什麼編碼：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+</code></pre>
+
+<p>不過為了相容舊系統，還是很少真的這樣使用的信件在傳遞，因為要是傳到了 7bit 系統，小則亂碼、大則程式當機。不過這就帶出另外一個問題了，難道 7bit 系統只能傳輸 ASCII 字集嗎？因為我還蠻常看到日文的純文字郵件，就去找了一些來看看，結果發現到有的是用 <code>ISO-2022-JP</code>，而且是使用 7bit 的傳輸：</p>
+
+<pre><code>Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+</code></pre>
+
+<p>信件內容的文字也都很正確，沒有亂碼：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27751195323/" title="iso-2022-jp by othree, on Flickr"><img src="https://farm8.staticflickr.com/7684/27751195323_a423fd4cb4_b.jpg" width="708" height="558" alt="iso-2022-jp" srcset="" /></a></p>
+
+<p>於是就看一下 <a href="https://zh.wikipedia.org/wiki/ISO/IEC_2022">ISO-2022</a> 的介紹，發現原來是個很早就有的 7bit 編碼方法，後來根據這方法有訂出了 CN、JP、KR 等語言的編碼，不過比較通行的看來只有 ISO-2022-JP，然後我也找到 HTML email 用 ISO-2022-JP 的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28366990615/" title="ISO-2022-JP by othree, on Flickr"><img src="https://farm9.staticflickr.com/8572/28366990615_bc76dcce70_b.jpg" width="708" height="558" alt="ISO-2022-JP" srcset="" /></a></p>
+
+<p>看起來就像是我理想中的 HTML email 原始碼啊，所以問題的癥結其實是，大家為了相容於舊系統，所以都用 7bit 傳輸，要 7bit safe 的 encoding 選擇有限，除了比較通行的 ISO-2022-JP 可以給日文用、字元太少只能給英文用的 ASCII 之外，其它語言就只能用 Base64 encoding 和 Quoted-Printable encoding 了，所以事實上其它 7bit 編碼的內容，也是可以直接透過 SMTP 協定來傳輸的，只是要看收信端的軟體能不能支援解碼，像是已經不太有人用的 <a href="https://zh.wikipedia.org/zh-tw/UTF-7">UTF-7</a> 就是 7bit 的 unicode 編碼。</p>
+
+<p>最後，就是假設我們已經不用擔心老舊系統的時候，其實只要這樣寫在 MIME header 裡就可以直接傳 UTF-8 的 HTML source，不用再經過任何編碼處理了：</p>
+
+<pre><code>Content-Transfer-Encoding: 8bit
+Content-Type: text/html; charset=utf-8
+</code></pre>
+
+<p>不過距離這一步不知道還有多遠就是了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

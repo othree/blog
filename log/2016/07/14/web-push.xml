@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000869" baseName="web-push">Web Push</b:listData>
+
+			<b:previous>
+				<b:mTitle>YAJS.vim and Vim Syntax Highlight</b:mTitle>
+				<b:mDate>2016-07-01</b:mDate>
+				<b:mBase>yajs-and-vim-syntax-highlight</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>HKOSCON 2016</b:mTitle>
+				<b:mDate>2016-07-16</b:mDate>
+				<b:mBase>hkoscon-2016</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000869" baseName="web-push">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-07-14</b:date>
+				<b:time>12:40:19</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Web Push</b:title>
+			<b:content>
+				<b:summary>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 Firebase Cloud Messaging(FCM)，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 Web Push Protocol，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。 整個 Web Push Protocol 的基本架構如下圖： User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線...</b:summary>
+				<b:mainContent><p>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 <a href="https://firebase.google.com/docs/cloud-messaging/">Firebase Cloud Messaging(FCM)</a>，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 <a href="https://tools.ietf.org/html/draft-ietf-webpush-protocol-07">Web Push Protocol</a>，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。</p>
+
+<p>整個 Web Push Protocol 的基本架構如下圖：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28277091075/" title="Web Push Protocol by othree, on Flickr"><img src="https://farm8.staticflickr.com/7633/28277091075_ecdf54fc60_b.jpg" width="493" height="263" alt="Web Push Protocol" srcset="" /></a></p>
+
+<p>User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線 Subscribe），然後會拿到一個 subscription resource，可能長成：</p>
+
+<pre><code>https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
+</code></pre>
+
+<p>另外還會拿到一個發訊息用的 push resource：</p>
+
+<pre><code>https://push.example.net/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV
+</code></pre>
+
+<p>可以注意到兩個 resource 後面的 token 是不一樣的，兩者之間的 mapping 就是 Push Service 來負責；然後 UA 拿到這兩個網址後，發訊息用的 push resource 要交給自家服務的後台，也就是圖上第三條橫線 Distribute Push Resource，另外一個 subscription resource 則是要自己使用，UA 用 HTTP/2 打 GET 到 subscription resource，然後 push service 會把連線保持住不關掉，這就是圖上的第二條橫線 Monitor；自家服務後台的要送訊息的時候，就打 POST 去 push resource，也就是第四條橫線，從 Application 到 Push Service 間的 Push Message，push service 收到這個訊息時，就利用 HTTP/2 的 Server Push 機制主動傳送訊息，最後這個動作就是第五條橫線的 Push Message 了。</p>
+
+<p>就這樣很漂亮的用 HTTP/1.1 + HTTP/2 把一個基本的 Cloud Message Service 的協定建構起來，而除了這最基本的訊息傳遞外，這份文件還有定義像是訊息重要度、訊息回條、群組訊息等等的方法，設計都還蠻漂亮的，安全性的部分則是限制走 HTTPS over TLS，還有 operation 相關的說明，像是實際上要跑起這個服務，需要大量的 TCP connection 等等（因為都走 HTTP 了），有興趣的可以加減看一下。</p>
+
+<p>補充：Firefox 目前實做的似乎就是這個協定更早版本的草案</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
