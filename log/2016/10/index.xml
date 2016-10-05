@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2016-10">October 2016</b:listData>
+
+			<b:previous>
+				<b:mTitle>September 2016</b:mTitle>
+				<b:mDate>2016/09</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000877" baseName="native-true-color-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-03</b:date>
+				<b:time>23:44:12</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Native True Color Vim</b:title>
+			<b:content>
+				<b:summary>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 7.4.1784 開始，也不用加特別參數來編譯，只要 --with-features 的值是 big 或是更大的 huge 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為： git clone https://github.com/vim/vim.git cd vim cd src &amp;&amp; make autoconf &amp;&amp; cd .. ./configure \ --enable-gui=no \ --without-x \...</b:summary>
+				<b:mainContent><p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

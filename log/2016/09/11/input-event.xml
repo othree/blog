@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000874" baseName="input-event">Input Event</b:listData>
+
+			<b:previous>
+				<b:mTitle>Modern HTML Email Development</b:mTitle>
+				<b:mDate>2016-08-25</b:mDate>
+				<b:mBase>modern-html-email-develop</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>MRT &amp; GIT</b:mTitle>
+				<b:mDate>2016-09-17</b:mDate>
+				<b:mBase>git-mrt</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000874" baseName="input-event">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-09-11</b:date>
+				<b:time>00:21:40</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Input Event</b:title>
+			<b:content>
+				<b:summary> 今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 1234 完，準備要輸入 5 的時候，會在 4 後面補上一個 -，變成 1234-5，不過我預期做的完美一點，所以考慮了很多狀況，例如： 複製貼上沒有 - 的資料後會自動格式化 已經輸入一部分資料後，游標移到前面插入資料也會正確格式化 直接用 DEL 或 Backspace 來刪除資料，要讓使用者感覺不到 - 先選取一些字元然後用 DEL 或 Backspace 甚至是剪下來刪除資料後會重新格式化 以上幾種操作都不會讓游標亂跳 簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 -，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
+
+<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
+
+<ul>
+<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
+<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
+<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
+<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
+<li>以上幾種操作都不會讓游標亂跳</li>
+</ul>
+
+<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
+
+<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
+
+<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
+/*
+   The following function tests an element for oninput support in Firefox.  Many thanks to
+        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
+*/
+function checkEvent(el) {
+    // First check, for if Firefox fixes its issue with el.oninput = function
+    el.setAttribute("oninput", "return");
+    if (typeof el.oninput == "function")
+        return true;
+
+    // Second check, because Firefox doesn't map oninput attribute to oninput property
+    try {
+        var e  = document.createEvent("KeyboardEvent"),
+            ok = false,
+            tester = function(e) {
+                ok = true;
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
+        document.body.appendChild(el);
+        el.addEventListener("input", tester, false);
+        el.focus();
+        el.dispatchEvent(e);
+        el.removeEventListener("input", tester, false);
+        document.body.removeChild(el);
+        return ok;
+    } catch(e) {}
+}
+</code></pre>
+
+<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

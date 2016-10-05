@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000875" baseName="git-mrt">MRT &amp;amp; GIT</b:listData>
+
+			<b:previous>
+				<b:mTitle>Input Event</b:mTitle>
+				<b:mDate>2016-09-11</b:mDate>
+				<b:mBase>input-event</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Safari 10 for Developer</b:mTitle>
+				<b:mDate>2016-09-21</b:mDate>
+				<b:mBase>safari-10</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000875" baseName="git-mrt">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-09-17</b:date>
+				<b:time>11:41:49</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>MRT &amp; GIT</b:title>
+			<b:content>
+				<b:summary>/* A_A */ 今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：...</b:summary>
+				<b:mainContent><script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+
+<p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+</b:mainContent>
+				<b:extendContent><p>接著要來說一下當天省略的部分吧，就是 <code>git branch</code> 和 <code>git log</code> 我所學到的東西，不過要把這內容講清楚，需要先介紹一下 <code>.git</code> 這個資料匣，這是 git repository 的所有資料儲存的地方，包括所有的 branch、commit 資訊、檔案和目錄結構等等都在裡面，一般 <code>git clone</code> 也是先把這個目錄的內容抓下來，然後才把從裡面把工作目錄（working directory）的檔案弄出來，那麼，如果現在已經把 <code>.git</code> 的資料都抓下來後，要怎麼取出工作目錄的檔案呢，首先要看 <code>.git/HEAD</code> 這個檔案，一般而言，內容會是：</p>
+
+<pre><code>ref: refs/heads/master
+</code></pre>
+
+<p>意思是 reference 到 <code>.git/refs/heads/master</code>，所以就看一下這個檔案的內容，以 <a href="https://github.com/othree/immutable-quadtree-js">immutable-quadtree-js</a> 為例，<code>.git/refs/heads/master</code> 的內容如下：</p>
+
+<pre><code>4b5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>這是一段 sha-1 hash，那麼要到哪裡找這個 hash 的內容呢？其實這個檔案的位置就在：</p>
+
+<pre><code>.git/objects/4b/5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>檔案（又稱為 object）內容是用 zlib 壓縮過的，git 有簡單的工具可以幫忙檢視內容，就是 <code>git cat-file</code>，只要給他 hash 它就會自動去定位了，例如：</p>
+
+<pre><code>$ git cat-file -p 4b5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>或是</p>
+
+<pre><code>$ git cat-file -p 4b5c03
+</code></pre>
+
+<p>就會把上面那個 object 的內容印出來：</p>
+
+<pre><code>tree 96602375208c5d4f028bdbcd7873f049a70d9287
+parent 280142567c56235af3fc7c35513edeb978c1b465
+author othree &lt;othree@gmail.com&gt; 1429321581 +0800
+committer othree &lt;othree@gmail.com&gt; 1429321581 +0800
+
+Use same name in node and global module
+</code></pre>
+
+<p>這就是一個 commit 的內容，記錄了現在這個 commit 的檔案狀態（tree）、上一個 commit（parent）、還有作者、提交者及 commit message，要把工作目錄的內容抓出來會需要的是 tree，後面的值也是一個 object hash，所以就來看看內容吧：</p>
+
+<pre><code>100644 blob 31843d5c03e1a3a0618b40bdd2034b0c492f2132    .gitignore
+100644 blob 20fd86b6a5bee335c75b4efea34312ff7f3a039e    .travis.yml
+100644 blob fd7bce4d5095540e4cb83f56276b9cd831f9ec76    DOC.md
+100644 blob 3c983c1efb8ab258bca8b7a0aed13bd97cf1b47f    LICENSE
+100644 blob c11ab5fc05c2cc398f2be094451f34bf428e0a9e    Makefile
+100644 blob fa3477c3305c08116408aea0ad30520627598804    README.md
+040000 tree 61cc224cb5de89713ac3bdaddc7835ec2dbea129    dist
+100644 blob 3ceec31471c4e4d8e38e0f0e506762feda7b852c    package.json
+040000 tree 48614476be4f27aad0137d57170852a9d5bdd227    src
+040000 tree 05181d9234207ffcc34e0bc4574bd9fb4e3210ad    test
+</code></pre>
+
+<p>很容易可以理解這個內容的意思，它其實就是這個 commit (HEAD)，根目錄下的檔案和目錄，分成四個 column 紀錄，第一欄是檔案權限、第二欄是 object type，第三欄是 hash，最後一欄是檔案/目錄名稱，其中的 object type 如果是 <code>tree</code> 就是子目錄，<code>blob</code> 就是檔案，然後每一筆資料都透過 hash 指引到一個 object 檔案，如果是 tree  object 就會看到一樣結構的內容，如果是 blob object 就是該檔案本身，所以就可以透過遞迴操作來把整個工作目錄取出（這是我理解 git 資料結構後認為的作法，不是去看 git 原始碼得知的）。</p>
+
+<p>再回到前面的 commit object，裡面的 parent 屬性就是唯一可以連結每個 commit 之間關係的屬性，如果是 merge point 則會有多個 parent，例如 <a href="https://github.com/othree/taipei-mrt">taipei-mrt</a> 中的南京復興站：</p>
+
+<pre><code>$ git cat-file -p f747e466dd826ff6b81550505412f7bf4875fd68
+
+tree d6d7e908638af9bb8759870723c0c6deed174faf
+parent 460ff499e9917051e747a5305daa19bcd80a86ea
+parent 5f913238492d3b8ea5a15893b463492681ae59ff
+author othree &lt;othree@gmail.com&gt; 1455717204 +0800
+committer othree &lt;othree@gmail.com&gt; 1455717204 +0800
+
+南京復興
+</code></pre>
+
+<p>所以可以理解的是，git 不是紀錄每個 commit 間的 diff，而是記錄每個 commit 的狀態，然後 commit 間的關係只能透過 parent 來連接，是個單向的關係，每個 commit 都只能往上尋找自己的祖先，沒辦法從 commit 連結到自己的子孫，而這個單向的關係，也影響了 branch 的定義。</p>
+
+<p>Git 的 branch 嚴格說起來，其實只是進入 commit tree 的入口，一開始預設只有 master branch 這個入口，就如同上面介紹要怎麼把工作目錄的資料抓出來時一樣，git 會先去看 <code>.git/HEAD</code>，HEAD 是一個特殊的參考（reference），預設會指到 master branch，上面介紹時，master branch 的 reference 檔案位置在 <code>.git/refs/heads/</code>，事實上，所有的 branch 的 reference 都在這個位置：</p>
+
+<pre><code>$ ll .git/refs/heads/
+
+total 72
+drwxr-xr-x  11 othree  staff  374 Sep 10 00:02 .
+drwxr-xr-x   5 othree  staff  170 Feb 15  2016 ..
+-rw-r--r--   1 othree  staff   41 Aug 14 23:45 blue
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 brown
+-rw-r--r--   1 othree  staff   41 Feb 16  2016 green
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 green-a
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 orange
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 orange-a
+-rw-r--r--   1 othree  staff   41 Sep  9 00:06 orange-b
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red-27
+</code></pre>
+
+<p>每個檔案內容都是一個 commit hash：</p>
+
+<pre><code>$ cat .git/refs/heads/*
+
+1873fddf2b760cbb753f6d81076e50a079acd687
+1873fddf2b760cbb753f6d81076e50a079acd687
+91631c62df972ee49f7699eb6b15cbda913f50e3
+a245d40e28f75e3bed1b7a8d726906eb230bd6fe
+f861f243e367c15b681919ebc2b1d9d9ceccde17
+e73351a53945ebb3fcf0f9bbc078969bdb6dc29b
+c13ea61e77de42bc579ecf2a1cf32aa2a4a9d6e0
+9ad00b514fccdec7f7f5bb0a91e6d5cb678c2a6f
+99e31bceea7e9446e37603c00cafa04f8c4827a2
+</code></pre>
+
+<p>有這些入口後，就可以進到編輯歷史裡，然後透過每個 commit 的 parent 來串連起 branch 的修改歷史。事實上這種設計並沒有限制 branch 之間一定要有相連，所以就有了可以完全獨立的 <a href="https://ihower.tw/blog/archives/5691">orphan branch</a>，最常見被用來做 <a href="https://pages.github.com/">Github Pages</a>，也可以用來放一些相關的資料，不過實務上，會需要放相關資料在 repository 李的話，通常會在根目錄先建立好不同用途的子目錄，不然要查詢時還要切換 branch 實在也不方便，不過要畫捷運路網時， orphan branch 卻是幫助很大，可以簡單的建立不同路線的起點。</p>
+
+<p>在瞭解 branch 之後，就可以來用 Git 線圖建立路網的交錯了，其實原理很簡單，就是先把兩個分支 branch merge 起來，並且讓兩個 branch 都指向到同一個 merge commit 上，作法就是兩個 branch 互相 merge：</p>
+
+<pre><code>git merge orphan --allow-unrelated-historie
+git co orphan
+git merge master --allow-unrelated-historie
+</code></pre>
+
+<p>在 Git 2.9 之後需要加上 <code>--allow-unrelated-historie</code> 這個參數，第一個 merge 完成會變這樣：</p>
+
+<pre><code>M─┐ [master] Merge branch 'orphan'
+│ I [orphan] Commit B
+I Commit A
+</code></pre>
+
+<p>第二個 merge 會是 fast-forward ，然後結果就變成：</p>
+
+<pre><code>M─┐ [orphan] [master] Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>可以看到兩個 branch 現在都指向到同個 commit 了，然後分別在兩個 branch 建立新的 commit，就可以分支成兩條線出去了：</p>
+
+<pre><code>o [orphan] Commit D
+│ o [master] Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>不過由於 Git 的歷史紀錄只能靠 parent 屬性建立，branch 也只是一個進入編輯歷史的入口，所以追塑到 merge commit 後，就無法分辨更之前的 commit 是屬於那個 branch 了，我的 MRT 線圖也是如此，其實只能維持到 topology 正確，而沒辦法讓所有的 commit 都能分辨出來是哪條線的。</p>
+
+<p>第二個要說的則是 <code>git log</code> 的部分，當天的分享有講到用 <a href="https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html#_specifying_ranges">git log range</a> 來查詢捷運路線，主要用的是 <code>A..B</code> 和 <code>A...B</code>，其實在一般只有一條線的情形下用，<code>..</code> 和 <code>...</code> 都可以用來擷取 A 和 B 兩個 commit 中間的變化，但是用來查捷運路線，就會發現很多時候結果不如預期，事實上，這兩個 syntax 都有其代表的邏輯操作，如同上面所說，git 歷史的記錄只能靠 parent 來建構起來，一般的 <code>git log</code> 就會從 HEAD 指到的 commit 開始，透過 parent 屬性，把所有可以連結到的 commit 都列出來，而 <code>E..B</code> 的意思，則是從 E 開始，列出所有 E 能連結到的 commit，但是不列出 B 能連結到的 commit，只有一條線的情境來看：</p>
+
+<pre><code>E-D-C-B-A
+</code></pre>
+
+<p>E 能連結到的包括了：</p>
+
+<pre><code>E-D-C-B-A
+  ^ ^ ^ ^
+</code></pre>
+
+<p>B 能連結到的包括了：</p>
+
+<pre><code>E-D-C-B-A
+        ^
+</code></pre>
+
+<p>把上面的扣掉下面的就變成：</p>
+
+<pre><code>E-D-C-B-A
+  ^ ^ ^
+</code></pre>
+
+<p>看起來就剛好是 B 到 E 中間的變化歷程，至於 <code>...</code> 又有點不同，它的定義是列出所有 B 和 E 可以到達的 commit，但是不列出兩者都可以到達的 commit，單一條線的時候，結果會和 <code>..</code> 是一樣的，所以差異是在有分支的情形才會出現，舉例來說：</p>
+
+<pre><code>o [master] &lt;E&gt; Commit E
+│ o [orphan] &lt;F&gt; Commit F
+│ o Commit D
+o │ Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>如果用 <code>...</code> 看 E 到 F 的話：</p>
+
+<pre><code>$ git log E...F --oneline --graph
+
+* 8d6c4d5 Commit E
+* d2f593f Commit C
+* f4dad66 Commit F
+* c3ac3ca Commit D
+</code></pre>
+
+<p>就可以達成類似從 E 站到 F 站的效果，不過由於 Merge commit 是兩邊都可以到達的 commit，所以不會出現，另外就是出現的順序不會正確。所以我在未來發展那邊有提到可以開發一個工具來專門查詢捷運路線，大概要用的方法就是要從每個 branch 進去找，然後還要尋找 merge commit，再從 merge commit，實際上還要仔細想想才能確定查詢的流程就是。</p>
+
+<p>以上就是這次學習到的 git 相關知識，當時投影片上寫著下略五千字，沒想到寫起來真的蠻多的，這篇文章的字數統計還真的有達標。</p>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
