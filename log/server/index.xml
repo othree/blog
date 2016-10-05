@@ -135,7 +135,7 @@ BASE64URL(JWS Signature)
 <li>Authentication Tag</li>
 </ul>
 
-<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途。</p>
+<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
 
 <p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
 
@@ -163,7 +163,7 @@ BASE64URL(JWS Signature)
 
 <p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
 
-<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
 
 <p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
 </b:mainContent>
@@ -515,11 +515,11 @@ nghttp -uv https://othree.net
 
 <p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w" /></a></p>
 
 <p>然後是 2.0：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w" /></a></p>
 
 <p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
 </b:mainContent>
@@ -632,11 +632,11 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
 				<b:summary>今天資安的大新聞就是這個了，OpenSSL 的 新弱點，嚴重程度高到還有一個專站 heartbleed.com （心在流血）。也有人幫忙做了檢測工具可以看看你的網站有沒有在影響範圍內，不過因為弱點是在 OpenSSL 上，所以其實不是只有網站會受影響，總之有問題的看到會像是這樣： 沒問題的話會是： 第一時間有很多大站都中鏢了，像是 github 之類的，不過我剛剛看已經修好了，我的 server 用的是 Ubuntu 12 LTS 就是 apt 更新過後重開就好了，建議是連 key 也重新生就是，更詳細的資訊可以看看 Server Fault 的問答...</b:summary>
 				<b:mainContent><p>今天資安的大新聞就是這個了，OpenSSL 的 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160">新弱點</a>，嚴重程度高到還有一個專站 <a href="http://heartbleed.com/">heartbleed.com</a> （心在流血）。也有人幫忙做了<a href="http://filippo.io/Heartbleed/">檢測工具</a>可以看看你的網站有沒有在影響範圍內，不過因為弱點是在 OpenSSL 上，所以其實不是只有網站會受影響，總之有問題的看到會像是這樣：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637293/" title="CVE-2014-016 Vulnerable by othree, on Flickr"><img src="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg" width="1024" height="853" alt="CVE-2014-016 Vulnerable" srcset="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13717637293/" title="CVE-2014-016 Vulnerable by othree, on Flickr"><img src="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg" width="1024" height="853" alt="CVE-2014-016 Vulnerable" srcset="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg 1024w" /></a></p>
 
 <p>沒問題的話會是：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637123/" title="CVE-2014-0160 pass by othree, on Flickr"><img src="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg" width="1024" height="555" alt="CVE-2014-0160 pass" srcset="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13717637123/" title="CVE-2014-0160 pass by othree, on Flickr"><img src="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg" width="1024" height="555" alt="CVE-2014-0160 pass" srcset="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg 1024w" /></a></p>
 
 <p>第一時間有很多大站都中鏢了，像是 github 之類的，不過我剛剛看已經修好了，我的 server 用的是 Ubuntu 12 LTS 就是 apt 更新過後重開就好了，建議是連 key 也重新生就是，更詳細的資訊可以看看 Server Fault 的<a href="http://serverfault.com/questions/587329/heartbleed-what-is-it-and-what-are-options-to-mitigate-it">問答</a></p>
 </b:mainContent>
@@ -663,7 +663,7 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
 				<b:summary>今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。 在 StartSSL 上有看到相關 討論，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。...</b:summary>
 				<b:mainContent><p>今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr"><img src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr"><img src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w" /></a></p>
 
 <p>在 StartSSL 上有看到相關 <a href="https://forum.startcom.org/viewtopic.php?f=15&amp;t=2654">討論</a>，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。</p>
 </b:mainContent>
@@ -692,7 +692,7 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
 
 <p>還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 <a href="http://dnsviz.net/">DNSViz</a> 結果給我。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"><img src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"><img src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w" /></a></p>
 
 <p>其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：</p>
 
@@ -731,7 +731,7 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
 
 <p>這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w" /></a></p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

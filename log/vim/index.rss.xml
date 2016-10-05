@@ -5,10 +5,44 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-07-01 17:05</lastBuildDate>
+<lastBuildDate>2016-10-03 23:44</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Native True Color Vim</title>
+<description><![CDATA[<p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2016/10/03/native-true-color-vim/</link>
+<guid>https://blog.othree.net/log/2016/10/03/native-true-color-vim/</guid>
+<category>vim</category>
+<pubDate>2016-10-03 23:44</pubDate>
+</item>
 
 <item>
 <title>YAJS.vim and Vim Syntax Highlight</title>
@@ -268,9 +302,9 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
 
 <p>24-bit Vim 這篇文章說的是 Vim 有位 ZyX 有實做了 True Color 支援，而當時有個叫 <a href="http://konsole.kde.org/">Konsole</a> 的 KDE Terminal 支援 True Color，所以要是你是用 KDE，就可以有 True Color 的 Vim 環境了，只是我用的環境幾乎都還是 OSX 為主。最近 iTerm 2 的作者在 Twitter 上說<a href="https://twitter.com/gnachman/status/356902333424226304">他們的 24-bit color 支援 merge 到 master</a> 了，本來我一直在等 beta 版的更新，不過今天突然想到，可以去找 <a href="https://code.google.com/p/iterm2/">nightly build</a>，然後去抓了<a href="https://github.com/adaptee/konsole/blob/master/tests/color-spaces.pl">測試用的 perl 檔</a>來測試，發現真的可以用，下面兩張圖，上面那張是不支援的版本，下面的是支援的。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 1024w" /></a></p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 1024w" /></a></p>
 
 <p>接下來，就是 Vim 了，這部分我花了不少時間才弄出來，簡單說就是抓 <a href="https://bitbucket.org/ZyX_I/vim">ZyX 的 Vim</a> 來自己 compile，不過也不是 clone 下來直接編譯就好，要換 branch 加上 config 等等：</p>
 
@@ -303,13 +337,13 @@ make install
 
 <p>然後你的 Terminal Vim 就會去使用 GVim 用的顏色設定了，以 <a href="http://ethanschoonover.com/solarized">solarized</a> 為例，上面是 256 色的，下面是 True Color：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 1024w" /></a></p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 1024w" /></a></p>
 
 <p>其實，差異蠻大的，讓我蠻意外，最後我找了一些以前沒辦法看到真相的 Vim color 來用，目前暫時是用 <a href="https://github.com/nanotech/jellybeans.vim">jellybeans</a>：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 1024w" /></a></p>
 
 <p>至於 iTerm 2 和 Vim 官方何時會支援呢，前者比較樂觀，下次 release 就有了，後者的話，大約半年前 Bram 有說會加到 TODO，不過到目前的 7.4 看來都還沒有認真要面對它的樣子...</p>
 ]]>
@@ -322,13 +356,13 @@ make install
 
 <item>
 <title>vim-airline</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9203696971/" title="vim-airline by othree, on Flickr"><img src="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 1024w" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9203696971/" title="vim-airline by othree, on Flickr"><img src="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 1024w" /></a></p>
 
 <p>最近發現 <a href="https://github.com/bling/vim-airline">vim-airline</a> 這個 plugin，其實就是 <a href="https://github.com/Lokaltog/powerline">powerline</a> 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#'statusline'">statusline</a>，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。</p>
 
 <p>我以前都是用自己寫的設定，還接了 <a href="https://github.com/mattn/hahhah-vim">hahhah.vim</a>，長得比較簡單：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9205236137/" title="My Vim statusline by othree, on Flickr"><img src="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9205236137/" title="My Vim statusline by othree, on Flickr"><img src="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 1024w" /></a></p>
 
 <p>一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是：</p>
 
@@ -339,7 +373,7 @@ make install
 
 <p>而且它也支援 powerline patch 過的<a href="https://github.com/Lokaltog/powerline-fonts">字形</a>來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9204959479/" title="ambiguous by othree, on Flickr"><img src="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9204959479/" title="ambiguous by othree, on Flickr"><img src="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 1024w" /></a></p>
 
 <p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
 
@@ -354,7 +388,7 @@ make install
 
 <item>
 <title>autocomplpop + snipmate</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
 
 <p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
 
@@ -486,7 +520,7 @@ npm install -g coffeelint
 
 <item>
 <title>Vim JavaScript Libraries Syntax</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8462979359/" title="JavaScript Libraries Syntax by othree, on Flickr"><img src="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 1024w" /></a></p>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8462979359/" title="JavaScript Libraries Syntax by othree, on Flickr"><img src="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 1024w" /></a></p>
 
 <p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
 
@@ -525,23 +559,6 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
 <guid>https://blog.othree.net/log/2013/02/08/vim-syntax-complete/</guid>
 <category>vim</category>
 <pubDate>2013-02-08 21:25</pubDate>
-</item>
-
-<item>
-<title>ctrlp.vim </title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8157305010/" title="Ctrl + P on Vim with ctrlp.vim by othree, on Flickr"><img src="https://farm9.staticflickr.com/8339/8157305010_8f603b1e30_b.jpg" width="1003" height="775" alt="Ctrl + P on Vim with ctrlp.vim" srcset="https://farm9.staticflickr.com/8339/8157305010_8f603b1e30_b.jpg 1024w" /></a></p>
-
-<p>Mac 上很有名的編輯軟體 <a href="http://macromates.com/">TextMate</a> 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 <a href="https://github.com/textmate/textmate">open source</a> 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 <a href="http://www.vim.org/">Vim</a> 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 <a href="https://github.com/garbas/vim-snipmate">snipmate.vim</a>，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8166619003/" title="CMD + T on Textmate by othree, on Flickr"><img src="https://farm8.staticflickr.com/7262/8166619003_a615549145_b.jpg" width="1000" height="673" alt="CMD + T on Textmate" srcset="https://farm8.staticflickr.com/7262/8166619003_a615549145_b.jpg 1024w" /></a></p>
-
-<p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="http://kien.github.com/ctrlp.vim/">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2012/11/10/ctrlpvim/</link>
-<guid>https://blog.othree.net/log/2012/11/10/ctrlpvim/</guid>
-<category>vim</category>
-<pubDate>2012-11-10 00:11</pubDate>
 </item>
 
 

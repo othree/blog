@@ -13,7 +13,7 @@ xmlns="http://purl.org/rss/1.0/">
 <link>https://blog.othree.net/</link>
 <description></description>
 <dc:creator></dc:creator>
-<dc:date>2016-08-25T23:12:54+08:00</dc:date>
+<dc:date>2016-10-03T23:44:12+08:00</dc:date>
 <admin:generatorAgent rdf:resource="http://www.movabletype.org/?v=4.381" />
 
 <cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/1.0/" />
@@ -21,6 +21,14 @@ xmlns="http://purl.org/rss/1.0/">
 
 <items>
 <rdf:Seq>
+<rdf:li rdf:resource="https://blog.othree.net/log/2016/10/03/native-true-color-vim/" />
+
+<rdf:li rdf:resource="https://blog.othree.net/log/2016/09/21/safari-10/" />
+
+<rdf:li rdf:resource="https://blog.othree.net/log/2016/09/17/git-mrt/" />
+
+<rdf:li rdf:resource="https://blog.othree.net/log/2016/09/11/input-event/" />
+
 <rdf:li rdf:resource="https://blog.othree.net/log/2016/08/25/modern-html-email-develop/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2016/08/13/json-web-token/" />
@@ -42,19 +50,174 @@ xmlns="http://purl.org/rss/1.0/">
 <rdf:li rdf:resource="https://blog.othree.net/log/2016/04/05/ssh-agent-forward/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2016/04/05/kyushu-rail/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2016/01/11/json-universe/" />
 </rdf:Seq>
 </items>
 
 </channel>
 
+
+<item rdf:about="https://blog.othree.net/log/2016/10/03/native-true-color-vim/">
+<title>Native True Color Vim</title>
+<link>https://blog.othree.net/log/2016/10/03/native-true-color-vim/</link>
+<description><![CDATA[<p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+]]></description>
+<dc:subject>vim</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2016-10-03T23:44:12+08:00</dc:date>
+</item>
+
+<item rdf:about="https://blog.othree.net/log/2016/09/21/safari-10/">
+<title>Safari 10 for Developer</title>
+<link>https://blog.othree.net/log/2016/09/21/safari-10/</link>
+<description><![CDATA[<p>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份<a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html">文件</a>在他們的 Developer Library 裡面，以下列出我覺得比較有趣的：</p>
+
+<h4>CSP 2.0</h4>
+
+<p>CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。</p>
+
+<h4>Shadow DOM</h4>
+
+<p>Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。</p>
+
+<h4>ES 6</h4>
+
+<p>號稱支援度 100%，看起來是依據 <a href="http://kangax.github.io/compat-table/es6/#safari10">ECMAScript compatable table</a> 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和 Chrome 超過了，而 Chrome 看來也之差 tail call 而已，接下來應該又要開始效能比拼了吧。</p>
+
+<h4>Inline and Auto Video Playback in iOS</h4>
+
+<p>這也是等很久的功能，之前就有先開放靜音影片能直接在 iOS Safari 上自動播放，主要的考量是，gif 和 mp4 相比，還是 gif 比較吃資源啊。</p>
+
+<h4>ES Internationalization</h4>
+
+<p>ECMA-402 支援，這也是希望快點普及的東西啊，不然數字、日期什麼的搞本地化實在很麻煩。</p>
+
+<h4>WOFF 2.0 Support</h4>
+
+<p>令人意外的有點慢，不過還算很有誠意的把很新的 <a href="https://drafts.csswg.org/css-font-loading/">CSS Font Loading Module Level 3</a> 的 API 做好了。</p>
+
+<h4>#RRGGBBAA</h4>
+
+<p>新的 CSS color 格式，也是前陣子才 propose 出來而已，這樣以後就可以讓 CSS 裡的顏色格式統一點了。</p>
+
+<h4>Right-to-Left Language Support</h4>
+
+<p>主要是 RTL 頁面 scrollbar 的位置終於會換邊了。</p>
+
+<h4>Media Query for Wide Color Gamut Support</h4>
+
+<p>廣色域的 CSS media query，主要是因為最新的 iMac 和 iPhone 7 都有支援 P3 色域了。</p>
+
+<h4>WebDriver Support</h4>
+
+<p>主流瀏覽器最後一個支援的...</p>
+
+<h4>Apple Pay for the Web</h4>
+
+<p>這真的蠻兇狠的，不過 Google 也有在 Android 做類似的<a href="https://android.googleblog.com/2016/09/tap-pay-yes-android-pay-welcomes-chase.html">事</a>就是了。</p>
+
+<p>大概就這些了，其實也列出超過一半的項目了，Safari 這種更新頻率其實比起其它幾家來說吃虧不少，不過還是一直有跟上最新進度，其實也蠻厲害的，更何況現在 Google 都把人拉到 Blink 去，有回到 Webkit 的貢獻似乎比例上不高。</p>
+]]></description>
+<dc:subject>web</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2016-09-21T23:57:08+08:00</dc:date>
+</item>
+
+<item rdf:about="https://blog.othree.net/log/2016/09/17/git-mrt/">
+<title>MRT &amp; GIT</title>
+<link>https://blog.othree.net/log/2016/09/17/git-mrt/</link>
+<description><![CDATA[<script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+
+<p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+]]></description>
+<dc:subject>software</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2016-09-17T11:41:49+08:00</dc:date>
+</item>
+
+<item rdf:about="https://blog.othree.net/log/2016/09/11/input-event/">
+<title>Input Event</title>
+<link>https://blog.othree.net/log/2016/09/11/input-event/</link>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
+
+<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
+
+<ul>
+<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
+<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
+<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
+<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
+<li>以上幾種操作都不會讓游標亂跳</li>
+</ul>
+
+<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
+
+<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
+
+<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
+/*
+   The following function tests an element for oninput support in Firefox.  Many thanks to
+        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
+*/
+function checkEvent(el) {
+    // First check, for if Firefox fixes its issue with el.oninput = function
+    el.setAttribute("oninput", "return");
+    if (typeof el.oninput == "function")
+        return true;
+
+    // Second check, because Firefox doesn't map oninput attribute to oninput property
+    try {
+        var e  = document.createEvent("KeyboardEvent"),
+            ok = false,
+            tester = function(e) {
+                ok = true;
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
+        document.body.appendChild(el);
+        el.addEventListener("input", tester, false);
+        el.focus();
+        el.dispatchEvent(e);
+        el.removeEventListener("input", tester, false);
+        document.body.removeChild(el);
+        return ok;
+    } catch(e) {}
+}
+</code></pre>
+
+<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
+]]></description>
+<dc:subject>script</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2016-09-11T00:21:40+08:00</dc:date>
+</item>
 
 <item rdf:about="https://blog.othree.net/log/2016/08/25/modern-html-email-develop/">
 <title>Modern HTML Email Development</title>
@@ -198,7 +361,7 @@ BASE64URL(JWS Signature)
 <li>Authentication Tag</li>
 </ul>
 
-<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途。</p>
+<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
 
 <p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
 
@@ -226,7 +389,7 @@ BASE64URL(JWS Signature)
 
 <p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
 
-<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
 
 <p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
 ]]></description>
@@ -518,191 +681,6 @@ fastcgi_param  REDIRECT_STATUS    200;
 <dc:subject>diary</dc:subject>
 <dc:creator>othree</dc:creator>
 <dc:date>2016-04-05T10:26:33+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/">
-<title>brotli, gzip 的替代格式</title>
-<link>https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/</link>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
-
-<p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
-]]></description>
-<dc:subject>server</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2016-03-21T13:43:51+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">
-<title>Device Pixel Ratio Header</title>
-<link>https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/</link>
-<description><![CDATA[<p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
-
-<ul>
-<li>DPR</li>
-<li>width</li>
-<li>viewport-width</li>
-<li>downlink</li>
-</ul>
-
-<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
-
-<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
-
-<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
-
-<pre><code>Accept-CH: "DPR, Downlink"
-</code></pre>
-
-<p>或是加上 meta tag</p>
-
-<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
-</code></pre>
-
-<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
-
-<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
-
-<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
-
-<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
-]]></description>
-<dc:subject>css-html</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2016-02-28T14:34:04+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/">
-<title>How to Reduce PDF Size and Keep Text</title>
-<link>https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/</link>
-<description><![CDATA[<h4>Requirement</h4>
-
-<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
-
-<h4>Expect</h4>
-
-<p>Expect the PDF file size is a little bit larger than JPG file.</p>
-
-<h4>Issue</h4>
-
-<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
-
-<ul>
-<li>Page Size: 210mm*297mm (A4)</li>
-<li>Resolution: 1240px*1754px</li>
-<li>Fonts: 2 English font</li>
-</ul>
-
-<p>Sizes:</p>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>PSD</td>
-    <td></td>
-    <td>79.7MB</td>
-  </tr>
-  <tr>
-    <td>PNG</td>
-    <td></td>
-    <td>&#160;1.2MB</td>
-  </tr>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td>&#160;0.6MB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td>&#160;7.0MB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>File transformed on Adobe CC 2016 Jan </p>
-
-<p>Tried several methods to reduce the file size includes:</p>
-
-<ul>
-<li>Remove unused layers</li>
-<li>Merge and flatten all layers</li>
-<li>Use lower jpeg compression quality</li>
-<li>Not save meta data</li>
-<li>Not preserve Photoshop editing capability</li>
-<li>Use Photoshop autotool > PDF presentation</li>
-<li>Use Illustrator</li>
-<li>Use Acrobat Pro to optimize PDF</li>
-</ul>
-
-<p>But none of them can really make the PDF file as small as expected.</p>
-
-<h4>Solution</h4>
-
-<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
-
-<ol>
-<li>Hide all text layers</li>
-<li>Save as PNG file</li>
-<li>Open PNG file in Photoshop</li>
-<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
-<li>Save as Photoshop PDF file</li>
-</ol>
-
-<h5>Result</h5>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td style="text-align: right">618.0KB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td style="text-align: right">624.0KB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
-]]></description>
-<dc:subject>software</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2016-02-06T10:10:15+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2016/01/11/json-universe/">
-<title>JSON Universe</title>
-<link>https://blog.othree.net/log/2016/01/11/json-universe/</link>
-<description><![CDATA[<p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
-
-<ul>
-<li>不支援註解</li>
-<li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
-<li>字串一定要用雙引號，不能用單引號</li>
-<li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
-</ul>
-
-<p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
-]]></description>
-<dc:subject>script</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2016-01-11T22:38:31+08:00</dc:date>
 </item>
 
 

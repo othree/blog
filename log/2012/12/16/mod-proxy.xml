@@ -42,13 +42,13 @@
 			<b:title>mod_proxy 的注意事項</b:title>
 			<b:content>
 				<b:summary> 最近調整 HTTPS 支援的時候，啟用了 Apache 的 mod_proxy，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO： 到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。 在這邊奉勸大家要用 Apache 的 mod_proxy 的時候記得要把 ProxyRequests 設成 Off 啊，預設是 On 什麼的根本是蓄意謀殺啊！...</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973312/" title="Network when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network when open open propxy" srcset="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 1024w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8277973312/" title="Network when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network when open open propxy" srcset="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 1024w" /></a></p>
 
 <p>最近調整 HTTPS 支援的時候，啟用了 <a href="http://httpd.apache.org/">Apache</a> 的 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html">mod_proxy</a>，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8276915051/" title="CPU when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU when open open propxy" srcset="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8276915051/" title="CPU when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU when open open propxy" srcset="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 1024w" /></a></p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973240/" title="Disk IO when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO when open open propxy" srcset="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8277973240/" title="Disk IO when open open propxy by othree, on Flickr"><img src="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO when open open propxy" srcset="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 1024w" /></a></p>
 
 <p>到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。</p>
 

@@ -9,6 +9,52 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000877" baseName="native-true-color-vim">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-03</b:date>
+				<b:time>23:44:12</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Native True Color Vim</b:title>
+			<b:content>
+				<b:summary>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 7.4.1784 開始，也不用加特別參數來編譯，只要 --with-features 的值是 big 或是更大的 huge 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為： git clone https://github.com/vim/vim.git cd vim cd src &amp;&amp; make autoconf &amp;&amp; cd .. ./configure \ --enable-gui=no \ --without-x \...</b:summary>
+				<b:mainContent><p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000868" baseName="yajs-and-vim-syntax-highlight">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -351,9 +397,9 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
 
 <p>24-bit Vim 這篇文章說的是 Vim 有位 ZyX 有實做了 True Color 支援，而當時有個叫 <a href="http://konsole.kde.org/">Konsole</a> 的 KDE Terminal 支援 True Color，所以要是你是用 KDE，就可以有 True Color 的 Vim 環境了，只是我用的環境幾乎都還是 OSX 為主。最近 iTerm 2 的作者在 Twitter 上說<a href="https://twitter.com/gnachman/status/356902333424226304">他們的 24-bit color 支援 merge 到 master</a> 了，本來我一直在等 beta 版的更新，不過今天突然想到，可以去找 <a href="https://code.google.com/p/iterm2/">nightly build</a>，然後去抓了<a href="https://github.com/adaptee/konsole/blob/master/tests/color-spaces.pl">測試用的 perl 檔</a>來測試，發現真的可以用，下面兩張圖，上面那張是不支援的版本，下面的是支援的。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473947/" title="256 color terminal by othree, on Flickr"><img src="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg" width="810" height="998" alt="256 color terminal" srcset="https://farm4.staticflickr.com/3689/9367473947_69798edde0_b.jpg 1024w" /></a></p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473883/" title="true color terminal by othree, on Flickr"><img src="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg" width="810" height="998" alt="true color terminal" srcset="https://farm8.staticflickr.com/7289/9367473883_1b2ee32d17_b.jpg 1024w" /></a></p>
 
 <p>接下來，就是 Vim 了，這部分我花了不少時間才弄出來，簡單說就是抓 <a href="https://bitbucket.org/ZyX_I/vim">ZyX 的 Vim</a> 來自己 compile，不過也不是 clone 下來直接編譯就好，要換 branch 加上 config 等等：</p>
 
@@ -386,13 +432,13 @@ make install
 
 <p>然後你的 Terminal Vim 就會去使用 GVim 用的顏色設定了，以 <a href="http://ethanschoonover.com/solarized">solarized</a> 為例，上面是 256 色的，下面是 True Color：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473873/" title="256 solarized by othree, on Flickr"><img src="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg" width="810" height="998" alt="256 solarized" srcset="https://farm6.staticflickr.com/5548/9367473873_222b86f6ec_b.jpg 1024w" /></a></p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9370253776/" title="true color solarized by othree, on Flickr"><img src="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg" width="810" height="998" alt="true color solarized" srcset="https://farm8.staticflickr.com/7368/9370253776_54c4dafe85_b.jpg 1024w" /></a></p>
 
 <p>其實，差異蠻大的，讓我蠻意外，最後我找了一些以前沒辦法看到真相的 Vim color 來用，目前暫時是用 <a href="https://github.com/nanotech/jellybeans.vim">jellybeans</a>：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 1024w" /></a></p>
 
 <p>至於 iTerm 2 和 Vim 官方何時會支援呢，前者比較樂觀，下次 release 就有了，後者的話，大約半年前 Bram 有說會加到 TODO，不過到目前的 7.4 看來都還沒有認真要面對它的樣子...</p>
 </b:mainContent>
@@ -417,13 +463,13 @@ make install
 			<b:title>vim-airline</b:title>
 			<b:content>
 				<b:summary> 最近發現 vim-airline 這個 plugin，其實就是 powerline 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 statusline，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。 我以前都是用自己寫的設定，還接了 hahhah.vim，長得比較簡單： 一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是： airline 是 pure vim script，powerline 則有一些 python 簡單, 速度也比 powerline 快 而且它也支援 powerline patch 過的字形來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題： 在 iTerm...</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9203696971/" title="vim-airline by othree, on Flickr"><img src="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 1024w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9203696971/" title="vim-airline by othree, on Flickr"><img src="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 1024w" /></a></p>
 
 <p>最近發現 <a href="https://github.com/bling/vim-airline">vim-airline</a> 這個 plugin，其實就是 <a href="https://github.com/Lokaltog/powerline">powerline</a> 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#'statusline'">statusline</a>，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。</p>
 
 <p>我以前都是用自己寫的設定，還接了 <a href="https://github.com/mattn/hahhah-vim">hahhah.vim</a>，長得比較簡單：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9205236137/" title="My Vim statusline by othree, on Flickr"><img src="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9205236137/" title="My Vim statusline by othree, on Flickr"><img src="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 1024w" /></a></p>
 
 <p>一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是：</p>
 
@@ -434,7 +480,7 @@ make install
 
 <p>而且它也支援 powerline patch 過的<a href="https://github.com/Lokaltog/powerline-fonts">字形</a>來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題：</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9204959479/" title="ambiguous by othree, on Flickr"><img src="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9204959479/" title="ambiguous by othree, on Flickr"><img src="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 1024w" /></a></p>
 
 <p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
 
@@ -461,7 +507,7 @@ make install
 			<b:title>autocomplpop + snipmate</b:title>
 			<b:content>
 				<b:summary> 我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 snipmate，不過大改一陣子之後，原本兩者間可以合作的hack 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 autocomplpop 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。 其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。 這次不用改檔案，設定有設對： let g:acp_behaviorSnipmateLength = 1 輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。 最後要補充一下，我 fork 的 autocomplpop 是原作者...</b:summary>
-				<b:mainContent><p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
 
 <p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
 
@@ -484,56 +530,6 @@ make install
 <li><a href="https://github.com/garbas/vim-snipmate">vim-snipmate</a></li>
 <li><a href="https://github.com/honza/vim-snippets">vim-snippets</a></li>
 </ul>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000748" baseName="vim-variable-variables">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-06-21</b:date>
-				<b:time>17:32:28</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Vim Variable Variables</b:title>
-			<b:content>
-				<b:summary>上一篇文章介紹 Syntastic 的最後面，其實本來想順便介紹一個 Vim Plugin 設定的 pattern，後來想一想還是獨立一篇文章好了，剛好今年 COSCUP 要介紹一些 Vim 的東西，這篇文章也可以作些 Vim 的介紹，就先從上一篇文章最後面的那行 Vim 設定開始看起： let g:syntastic_coffee_coffeelint_args = "--csv -f ~/coffeelint-config.json" 在這行設定中，作的事情其實只是宣告並給一個變數值，而我想說的重點是這個變數的變數名稱：g:syntastic_coffee_coffeelint_args，這個變數其實是根據 Syntastic 的文件 5.2 節設定的，其實這個變數名稱裡面有 coffee、coffeelint、args 三個變數，在文件中是這樣描述這個變數的組成的： syntastic_[filetype]_[subchecker]_[option-name] 表示的是 coffee 這種檔案格式下面，用 coffeelint 時的 args 參數，這種階層式的設定，在其他程式語言通常會用 dictionary 這種資料型態比較多，可是在 Vim 的圈子卻不是這樣，而是比較多用上面這種...</b:summary>
-				<b:mainContent><p>上一篇文章介紹 Syntastic 的最後面，其實本來想順便介紹一個 Vim Plugin 設定的 pattern，後來想一想還是獨立一篇文章好了，剛好今年 COSCUP 要介紹一些 Vim 的東西，這篇文章也可以作些 Vim 的介紹，就先從上一篇文章最後面的那行 Vim 設定開始看起：</p>
-
-<pre><code>let g:syntastic_coffee_coffeelint_args = "--csv -f ~/coffeelint-config.json"
-</code></pre>
-
-<p>在這行設定中，作的事情其實只是宣告並給一個變數值，而我想說的重點是這個變數的變數名稱：<code>g:syntastic_coffee_coffeelint_args</code>，這個變數其實是根據 Syntastic 的<a href="https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt#L386">文件 5.2 節</a>設定的，其實這個變數名稱裡面有 <em>coffee</em>、<em>coffeelint</em>、<em>args</em> 三個變數，在文件中是這樣描述這個變數的組成的：</p>
-
-<pre><code>syntastic_[filetype]_[subchecker]_[option-name]
-</code></pre>
-
-<p>表示的是 coffee 這種檔案格式下面，用 coffeelint 時的 args 參數，這種階層式的設定，在其他程式語言通常會用 dictionary 這種資料型態比較多，可是在 Vim 的圈子卻不是這樣，而是比較多用上面這種 Variable Variables 的形式，我想可能原因是： Vim Script 要建立多階層的空 dictionary 不是很方便，要一層一層的建立，而這個問題不管是開發者自己不方便，使用者在 vimrc 裡面作設定也會變得很麻煩。</p>
-
-<p>那在 Vim Script 裡面，要怎樣實作這樣 variable variables 形式的程式呢？很簡單，和 <a href="http://php.net/manual/en/language.variables.variable.php">PHP 很像</a>，都是用<a href="http://vimdoc.sourceforge.net/htmldoc/eval.html#curly-braces-names">大括號</a>，所以要讀取最上面那個使用者設定的值很簡單：</p>
-
-<pre><code>g:syntastic_{filetype}_{subchecker}_{optionName}
-</code></pre>
-
-<p>這樣就好了，真的那麼簡單就好了...</p>
-
-<p>Vim Script 和現在主流的 Scripting 語言差異蠻大的，有很多不太方便的設計，像是設定 list, dictionary 時如果要在不同行寫不同項目的內容，每行間都要加一個反斜線 <code>\</code>，資料的型別是強型別，字串和數字都要自己手動作轉換，宣告和改變數的值都要用 <code>let</code> 等等，而這邊會遇到的限制是，無法存取任何一個不存在的變數，要是有存取到的話都會出現錯誤，即使只有讀取值也是，並不會直接給你 false value 或是像 JavaScript 那樣有 <code>undefined</code>，所以要是使用者沒設定過這個變數 <code>g:syntastic_coffee_coffeelint_args</code>，我在 Plugin 裡面就不能直接讀取他，不然只會看到紅色的錯誤訊息。</p>
-
-<p>要處理這個問題，要用的是 <a href="http://vimdoc.sourceforge.net/htmldoc/eval.html#exists()">exists</a> 這個內建的 function，這個 function 是專門用來檢查變數是否存在用的，如果變數存在才做事情，寫起來就像是：</p>
-
-<pre><code>if exists('g:syntastic_' . filetype . '_' . subchecker . '_' . optionName)
-    let args = g:syntastic_{filetype}_{subchecker}_{optionName}
-</code></pre>
-
-<p>實在是不太好看，不過寫 Vim Script 基本上就是常常要寫這樣難看的程式碼，做的都是一些土法煉鋼的事情，其實還蠻辛苦的，而且你現在應該可以想像，如果要用多階層的 dictionary 在 vimrc 裡面作設定會長什麼樣子了。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

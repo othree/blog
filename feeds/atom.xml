@@ -2,11 +2,401 @@
 <feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="zh-TW">
 <title>O3noBLOG</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/" />
-<modified>2016-08-25T15:13:37Z</modified>
+<modified>2016-10-03T15:57:31Z</modified>
 <tagline></tagline>
 <id>tag:blog.othree.net,2016://1</id>
 <generator url="http://www.movabletype.org/" version="4.381">Movable Type</generator>
 <copyright>Copyright (c) 2016, othree</copyright>
+
+<entry>
+<title>Native True Color Vim</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/10/03/native-true-color-vim/" />
+<modified>2016-10-03T15:57:31Z</modified>
+<issued>2016-10-03T15:44:12Z</issued>
+<id>tag:blog.othree.net,2016://1.877</id>
+<created>2016-10-03T15:44:12Z</created>
+<summary type="text/plain"><![CDATA[因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 7.4.1784 開始，也不用加特別參數來編譯，只要 --with-features 的值是 big 或是更大的 huge 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為： git clone https://github.com/vim/vim.git cd vim cd src &amp;&amp; make autoconf &amp;&amp; cd .. ./configure \ --enable-gui=no \ --without-x \...]]></summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>vim</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;&amp; make autoconf &amp;&amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>Safari 10 for Developer</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/09/21/safari-10/" />
+<modified>2016-09-21T16:00:16Z</modified>
+<issued>2016-09-21T15:57:08Z</issued>
+<id>tag:blog.othree.net,2016://1.876</id>
+<created>2016-09-21T15:57:08Z</created>
+<summary type="text/plain">Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份文件在他們的 Developer Library 裡面，以下列出我覺得比較有趣的： CSP 2.0 CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。 Shadow DOM Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。 ES 6 號稱支援度 100%，看起來是依據 ECMAScript compatable table 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>web</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份<a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html">文件</a>在他們的 Developer Library 裡面，以下列出我覺得比較有趣的：</p>
+
+<h4>CSP 2.0</h4>
+
+<p>CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。</p>
+
+<h4>Shadow DOM</h4>
+
+<p>Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。</p>
+
+<h4>ES 6</h4>
+
+<p>號稱支援度 100%，看起來是依據 <a href="http://kangax.github.io/compat-table/es6/#safari10">ECMAScript compatable table</a> 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和 Chrome 超過了，而 Chrome 看來也之差 tail call 而已，接下來應該又要開始效能比拼了吧。</p>
+
+<h4>Inline and Auto Video Playback in iOS</h4>
+
+<p>這也是等很久的功能，之前就有先開放靜音影片能直接在 iOS Safari 上自動播放，主要的考量是，gif 和 mp4 相比，還是 gif 比較吃資源啊。</p>
+
+<h4>ES Internationalization</h4>
+
+<p>ECMA-402 支援，這也是希望快點普及的東西啊，不然數字、日期什麼的搞本地化實在很麻煩。</p>
+
+<h4>WOFF 2.0 Support</h4>
+
+<p>令人意外的有點慢，不過還算很有誠意的把很新的 <a href="https://drafts.csswg.org/css-font-loading/">CSS Font Loading Module Level 3</a> 的 API 做好了。</p>
+
+<h4>#RRGGBBAA</h4>
+
+<p>新的 CSS color 格式，也是前陣子才 propose 出來而已，這樣以後就可以讓 CSS 裡的顏色格式統一點了。</p>
+
+<h4>Right-to-Left Language Support</h4>
+
+<p>主要是 RTL 頁面 scrollbar 的位置終於會換邊了。</p>
+
+<h4>Media Query for Wide Color Gamut Support</h4>
+
+<p>廣色域的 CSS media query，主要是因為最新的 iMac 和 iPhone 7 都有支援 P3 色域了。</p>
+
+<h4>WebDriver Support</h4>
+
+<p>主流瀏覽器最後一個支援的...</p>
+
+<h4>Apple Pay for the Web</h4>
+
+<p>這真的蠻兇狠的，不過 Google 也有在 Android 做類似的<a href="https://android.googleblog.com/2016/09/tap-pay-yes-android-pay-welcomes-chase.html">事</a>就是了。</p>
+
+<p>大概就這些了，其實也列出超過一半的項目了，Safari 這種更新頻率其實比起其它幾家來說吃虧不少，不過還是一直有跟上最新進度，其實也蠻厲害的，更何況現在 Google 都把人拉到 Blink 去，有回到 Webkit 的貢獻似乎比例上不高。</p>
+]]>
+
+
+</content>
+</entry>
+
+<entry>
+<title>MRT &amp; GIT</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/09/17/git-mrt/" />
+<modified>2016-09-17T11:37:49Z</modified>
+<issued>2016-09-17T03:41:49Z</issued>
+<id>tag:blog.othree.net,2016://1.875</id>
+<created>2016-09-17T03:41:49Z</created>
+<summary type="text/plain"><![CDATA[/* A_A */ 今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：...]]></summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>software</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+
+<p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+]]>
+<![CDATA[<p>接著要來說一下當天省略的部分吧，就是 <code>git branch</code> 和 <code>git log</code> 我所學到的東西，不過要把這內容講清楚，需要先介紹一下 <code>.git</code> 這個資料匣，這是 git repository 的所有資料儲存的地方，包括所有的 branch、commit 資訊、檔案和目錄結構等等都在裡面，一般 <code>git clone</code> 也是先把這個目錄的內容抓下來，然後才把從裡面把工作目錄（working directory）的檔案弄出來，那麼，如果現在已經把 <code>.git</code> 的資料都抓下來後，要怎麼取出工作目錄的檔案呢，首先要看 <code>.git/HEAD</code> 這個檔案，一般而言，內容會是：</p>
+
+<pre><code>ref: refs/heads/master
+</code></pre>
+
+<p>意思是 reference 到 <code>.git/refs/heads/master</code>，所以就看一下這個檔案的內容，以 <a href="https://github.com/othree/immutable-quadtree-js">immutable-quadtree-js</a> 為例，<code>.git/refs/heads/master</code> 的內容如下：</p>
+
+<pre><code>4b5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>這是一段 sha-1 hash，那麼要到哪裡找這個 hash 的內容呢？其實這個檔案的位置就在：</p>
+
+<pre><code>.git/objects/4b/5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>檔案（又稱為 object）內容是用 zlib 壓縮過的，git 有簡單的工具可以幫忙檢視內容，就是 <code>git cat-file</code>，只要給他 hash 它就會自動去定位了，例如：</p>
+
+<pre><code>$ git cat-file -p 4b5c03ea81e0e24714bea66de3892a40165fe56f
+</code></pre>
+
+<p>或是</p>
+
+<pre><code>$ git cat-file -p 4b5c03
+</code></pre>
+
+<p>就會把上面那個 object 的內容印出來：</p>
+
+<pre><code>tree 96602375208c5d4f028bdbcd7873f049a70d9287
+parent 280142567c56235af3fc7c35513edeb978c1b465
+author othree &lt;othree@gmail.com&gt; 1429321581 +0800
+committer othree &lt;othree@gmail.com&gt; 1429321581 +0800
+
+Use same name in node and global module
+</code></pre>
+
+<p>這就是一個 commit 的內容，記錄了現在這個 commit 的檔案狀態（tree）、上一個 commit（parent）、還有作者、提交者及 commit message，要把工作目錄的內容抓出來會需要的是 tree，後面的值也是一個 object hash，所以就來看看內容吧：</p>
+
+<pre><code>100644 blob 31843d5c03e1a3a0618b40bdd2034b0c492f2132    .gitignore
+100644 blob 20fd86b6a5bee335c75b4efea34312ff7f3a039e    .travis.yml
+100644 blob fd7bce4d5095540e4cb83f56276b9cd831f9ec76    DOC.md
+100644 blob 3c983c1efb8ab258bca8b7a0aed13bd97cf1b47f    LICENSE
+100644 blob c11ab5fc05c2cc398f2be094451f34bf428e0a9e    Makefile
+100644 blob fa3477c3305c08116408aea0ad30520627598804    README.md
+040000 tree 61cc224cb5de89713ac3bdaddc7835ec2dbea129    dist
+100644 blob 3ceec31471c4e4d8e38e0f0e506762feda7b852c    package.json
+040000 tree 48614476be4f27aad0137d57170852a9d5bdd227    src
+040000 tree 05181d9234207ffcc34e0bc4574bd9fb4e3210ad    test
+</code></pre>
+
+<p>很容易可以理解這個內容的意思，它其實就是這個 commit (HEAD)，根目錄下的檔案和目錄，分成四個 column 紀錄，第一欄是檔案權限、第二欄是 object type，第三欄是 hash，最後一欄是檔案/目錄名稱，其中的 object type 如果是 <code>tree</code> 就是子目錄，<code>blob</code> 就是檔案，然後每一筆資料都透過 hash 指引到一個 object 檔案，如果是 tree  object 就會看到一樣結構的內容，如果是 blob object 就是該檔案本身，所以就可以透過遞迴操作來把整個工作目錄取出（這是我理解 git 資料結構後認為的作法，不是去看 git 原始碼得知的）。</p>
+
+<p>再回到前面的 commit object，裡面的 parent 屬性就是唯一可以連結每個 commit 之間關係的屬性，如果是 merge point 則會有多個 parent，例如 <a href="https://github.com/othree/taipei-mrt">taipei-mrt</a> 中的南京復興站：</p>
+
+<pre><code>$ git cat-file -p f747e466dd826ff6b81550505412f7bf4875fd68
+
+tree d6d7e908638af9bb8759870723c0c6deed174faf
+parent 460ff499e9917051e747a5305daa19bcd80a86ea
+parent 5f913238492d3b8ea5a15893b463492681ae59ff
+author othree &lt;othree@gmail.com&gt; 1455717204 +0800
+committer othree &lt;othree@gmail.com&gt; 1455717204 +0800
+
+南京復興
+</code></pre>
+
+<p>所以可以理解的是，git 不是紀錄每個 commit 間的 diff，而是記錄每個 commit 的狀態，然後 commit 間的關係只能透過 parent 來連接，是個單向的關係，每個 commit 都只能往上尋找自己的祖先，沒辦法從 commit 連結到自己的子孫，而這個單向的關係，也影響了 branch 的定義。</p>
+
+<p>Git 的 branch 嚴格說起來，其實只是進入 commit tree 的入口，一開始預設只有 master branch 這個入口，就如同上面介紹要怎麼把工作目錄的資料抓出來時一樣，git 會先去看 <code>.git/HEAD</code>，HEAD 是一個特殊的參考（reference），預設會指到 master branch，上面介紹時，master branch 的 reference 檔案位置在 <code>.git/refs/heads/</code>，事實上，所有的 branch 的 reference 都在這個位置：</p>
+
+<pre><code>$ ll .git/refs/heads/
+
+total 72
+drwxr-xr-x  11 othree  staff  374 Sep 10 00:02 .
+drwxr-xr-x   5 othree  staff  170 Feb 15  2016 ..
+-rw-r--r--   1 othree  staff   41 Aug 14 23:45 blue
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 brown
+-rw-r--r--   1 othree  staff   41 Feb 16  2016 green
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 green-a
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 orange
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 orange-a
+-rw-r--r--   1 othree  staff   41 Sep  9 00:06 orange-b
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red-27
+</code></pre>
+
+<p>每個檔案內容都是一個 commit hash：</p>
+
+<pre><code>$ cat .git/refs/heads/*
+
+1873fddf2b760cbb753f6d81076e50a079acd687
+1873fddf2b760cbb753f6d81076e50a079acd687
+91631c62df972ee49f7699eb6b15cbda913f50e3
+a245d40e28f75e3bed1b7a8d726906eb230bd6fe
+f861f243e367c15b681919ebc2b1d9d9ceccde17
+e73351a53945ebb3fcf0f9bbc078969bdb6dc29b
+c13ea61e77de42bc579ecf2a1cf32aa2a4a9d6e0
+9ad00b514fccdec7f7f5bb0a91e6d5cb678c2a6f
+99e31bceea7e9446e37603c00cafa04f8c4827a2
+</code></pre>
+
+<p>有這些入口後，就可以進到編輯歷史裡，然後透過每個 commit 的 parent 來串連起 branch 的修改歷史。事實上這種設計並沒有限制 branch 之間一定要有相連，所以就有了可以完全獨立的 <a href="https://ihower.tw/blog/archives/5691">orphan branch</a>，最常見被用來做 <a href="https://pages.github.com/">Github Pages</a>，也可以用來放一些相關的資料，不過實務上，會需要放相關資料在 repository 李的話，通常會在根目錄先建立好不同用途的子目錄，不然要查詢時還要切換 branch 實在也不方便，不過要畫捷運路網時， orphan branch 卻是幫助很大，可以簡單的建立不同路線的起點。</p>
+
+<p>在瞭解 branch 之後，就可以來用 Git 線圖建立路網的交錯了，其實原理很簡單，就是先把兩個分支 branch merge 起來，並且讓兩個 branch 都指向到同一個 merge commit 上，作法就是兩個 branch 互相 merge：</p>
+
+<pre><code>git merge orphan --allow-unrelated-historie
+git co orphan
+git merge master --allow-unrelated-historie
+</code></pre>
+
+<p>在 Git 2.9 之後需要加上 <code>--allow-unrelated-historie</code> 這個參數，第一個 merge 完成會變這樣：</p>
+
+<pre><code>M─┐ [master] Merge branch 'orphan'
+│ I [orphan] Commit B
+I Commit A
+</code></pre>
+
+<p>第二個 merge 會是 fast-forward ，然後結果就變成：</p>
+
+<pre><code>M─┐ [orphan] [master] Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>可以看到兩個 branch 現在都指向到同個 commit 了，然後分別在兩個 branch 建立新的 commit，就可以分支成兩條線出去了：</p>
+
+<pre><code>o [orphan] Commit D
+│ o [master] Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>不過由於 Git 的歷史紀錄只能靠 parent 屬性建立，branch 也只是一個進入編輯歷史的入口，所以追塑到 merge commit 後，就無法分辨更之前的 commit 是屬於那個 branch 了，我的 MRT 線圖也是如此，其實只能維持到 topology 正確，而沒辦法讓所有的 commit 都能分辨出來是哪條線的。</p>
+
+<p>第二個要說的則是 <code>git log</code> 的部分，當天的分享有講到用 <a href="https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html#_specifying_ranges">git log range</a> 來查詢捷運路線，主要用的是 <code>A..B</code> 和 <code>A...B</code>，其實在一般只有一條線的情形下用，<code>..</code> 和 <code>...</code> 都可以用來擷取 A 和 B 兩個 commit 中間的變化，但是用來查捷運路線，就會發現很多時候結果不如預期，事實上，這兩個 syntax 都有其代表的邏輯操作，如同上面所說，git 歷史的記錄只能靠 parent 來建構起來，一般的 <code>git log</code> 就會從 HEAD 指到的 commit 開始，透過 parent 屬性，把所有可以連結到的 commit 都列出來，而 <code>E..B</code> 的意思，則是從 E 開始，列出所有 E 能連結到的 commit，但是不列出 B 能連結到的 commit，只有一條線的情境來看：</p>
+
+<pre><code>E-D-C-B-A
+</code></pre>
+
+<p>E 能連結到的包括了：</p>
+
+<pre><code>E-D-C-B-A
+  ^ ^ ^ ^
+</code></pre>
+
+<p>B 能連結到的包括了：</p>
+
+<pre><code>E-D-C-B-A
+        ^
+</code></pre>
+
+<p>把上面的扣掉下面的就變成：</p>
+
+<pre><code>E-D-C-B-A
+  ^ ^ ^
+</code></pre>
+
+<p>看起來就剛好是 B 到 E 中間的變化歷程，至於 <code>...</code> 又有點不同，它的定義是列出所有 B 和 E 可以到達的 commit，但是不列出兩者都可以到達的 commit，單一條線的時候，結果會和 <code>..</code> 是一樣的，所以差異是在有分支的情形才會出現，舉例來說：</p>
+
+<pre><code>o [master] &lt;E&gt; Commit E
+│ o [orphan] &lt;F&gt; Commit F
+│ o Commit D
+o │ Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+</code></pre>
+
+<p>如果用 <code>...</code> 看 E 到 F 的話：</p>
+
+<pre><code>$ git log E...F --oneline --graph
+
+* 8d6c4d5 Commit E
+* d2f593f Commit C
+* f4dad66 Commit F
+* c3ac3ca Commit D
+</code></pre>
+
+<p>就可以達成類似從 E 站到 F 站的效果，不過由於 Merge commit 是兩邊都可以到達的 commit，所以不會出現，另外就是出現的順序不會正確。所以我在未來發展那邊有提到可以開發一個工具來專門查詢捷運路線，大概要用的方法就是要從每個 branch 進去找，然後還要尋找 merge commit，再從 merge commit，實際上還要仔細想想才能確定查詢的流程就是。</p>
+
+<p>以上就是這次學習到的 git 相關知識，當時投影片上寫著下略五千字，沒想到寫起來真的蠻多的，這篇文章的字數統計還真的有達標。</p>
+]]>
+</content>
+</entry>
+
+<entry>
+<title>Input Event</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/09/11/input-event/" />
+<modified>2016-09-10T23:49:40Z</modified>
+<issued>2016-09-10T16:21:40Z</issued>
+<id>tag:blog.othree.net,2016://1.874</id>
+<created>2016-09-10T16:21:40Z</created>
+<summary type="text/plain"> 今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 1234 完，準備要輸入 5 的時候，會在 4 後面補上一個 -，變成 1234-5，不過我預期做的完美一點，所以考慮了很多狀況，例如： 複製貼上沒有 - 的資料後會自動格式化 已經輸入一部分資料後，游標移到前面插入資料也會正確格式化 直接用 DEL 或 Backspace 來刪除資料，要讓使用者感覺不到 - 先選取一些字元然後用 DEL 或 Backspace 甚至是剪下來刪除資料後會重新格式化 以上幾種操作都不會讓游標亂跳 簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 -，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>script</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
+
+<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
+
+<ul>
+<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
+<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
+<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
+<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
+<li>以上幾種操作都不會讓游標亂跳</li>
+</ul>
+
+<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
+
+<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
+
+<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
+/*
+   The following function tests an element for oninput support in Firefox.  Many thanks to
+        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
+*/
+function checkEvent(el) {
+    // First check, for if Firefox fixes its issue with el.oninput = function
+    el.setAttribute("oninput", "return");
+    if (typeof el.oninput == "function")
+        return true;
+
+    // Second check, because Firefox doesn't map oninput attribute to oninput property
+    try {
+        var e  = document.createEvent("KeyboardEvent"),
+            ok = false,
+            tester = function(e) {
+                ok = true;
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
+        document.body.appendChild(el);
+        el.addEventListener("input", tester, false);
+        el.focus();
+        el.dispatchEvent(e);
+        el.removeEventListener("input", tester, false);
+        document.body.removeChild(el);
+        return ok;
+    } catch(e) {}
+}
+</code></pre>
+
+<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
+]]>
+
+
+</content>
+</entry>
 
 <entry>
 <title>Modern HTML Email Development</title>
@@ -50,7 +440,7 @@
 <entry>
 <title>JSON Web Token</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/08/13/json-web-token/" />
-<modified>2016-08-13T15:40:32Z</modified>
+<modified>2016-08-26T01:38:19Z</modified>
 <issued>2016-08-13T10:46:54Z</issued>
 <id>tag:blog.othree.net,2016://1.872</id>
 <created>2016-08-13T10:46:54Z</created>
@@ -174,7 +564,7 @@ BASE64URL(JWS Signature)
 <li>Authentication Tag</li>
 </ul>
 
-<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途。</p>
+<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
 
 <p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
 
@@ -202,7 +592,7 @@ BASE64URL(JWS Signature)
 
 <p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
 
-<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
 
 <p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
 ]]>
@@ -759,576 +1149,6 @@ setfacl -m u:http:x $(dirname $SSH_AUTH_SOCK)
 <p>最後的最後就附上九州 JR 的吉祥物 KURO 吧。</p>
 
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24034362611/" title="九州 JR KURO by othree, on Flickr"><img src="https://farm2.staticflickr.com/1591/24034362611_2564c66b8a_b.jpg" width="1024" height="683" alt="九州 JR KURO" srcset="https://farm2.staticflickr.com/1591/24034362611_2564c66b8a_b.jpg 1024w, https://farm2.staticflickr.com/1591/24034362611_582caa91f6_h.jpg 1600w" /></a></p>
-]]>
-</content>
-</entry>
-
-<entry>
-<title>brotli, gzip 的替代格式</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/" />
-<modified>2016-04-10T07:42:37Z</modified>
-<issued>2016-03-21T05:43:51Z</issued>
-<id>tag:blog.othree.net,2016://1.862</id>
-<created>2016-03-21T05:43:51Z</created>
-<summary type="text/plain"> 最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 brotli 了，brotli 是 Google 繼 Zopfli 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 2013 年 2 月發佈，Brotli 是在 2015 年 9 月發佈的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份測試數據了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>server</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /></a></p>
-
-<p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
-]]>
-<![CDATA[<p>支援 brotli 格式的瀏覽器會使用 HTTP 協定跟 server 端溝通，送出的 header 會有：</p>
-
-<pre><code>Accept-Encoding: br
-</code></pre>
-
-<p>一般瀏覽器都已經支援 gzip 和 deflate 很久了，所以像是 Firefox 會送出：</p>
-
-<pre><code>Accept-Encoding: gzip, deflate, br
-</code></pre>
-
-<p>Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮效益會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 <a href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html">mod_deflate</a>，只要在設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來<a href="https://lyncd.com/2015/11/brotli-support-apache/">支援</a>：</p>
-
-<pre><code>&lt;Files *.js.br&gt;
-  AddType "text/javascript" .br
-  AddEncoding br .br
-&lt;/Files&gt;
-&lt;Files *.css.br&gt;
-  AddType "text/css" .br
-  AddEncoding br .br
-&lt;/Files&gt;
-
-RewriteEngine On
-
-RewriteCond %{HTTP:Accept-Encoding} br
-RewriteCond %{REQUEST_FILENAME}.br -f
-RewriteRule ^(.*)$ $1.br [L]
-
-RewriteCond %{HTTP:Accept-Encoding} gzip
-RewriteCond %{REQUEST_FILENAME}.gz -f
-RewriteRule ^(.*)$ $1.gz [L]
-</code></pre>
-
-<p>當然這種方法就只能針對純靜態檔案，對於 PHP 之類動態產生的內容就無法處理，可喜的是我有看到 Jim Jagielski 有打算 <a href="http://mail-archives.apache.org/mod_mbox/httpd-users/201601.mbox/%3C549EBED9-2E3F-43CC-BDED-198B8ED4E257@jaguNET.com%3E">實做</a> Apache 支援了，只可惜我等不下去，就把我的 web server 重灌（brotli 需要 64 位元作業系統）順便把 Apache 換成 nginx，nginx 上目前有兩個 brotli module，一個是 <a href="https://github.com/google/ngx_brotli">Google 的</a>，另外一個是 <a href="https://github.com/cloudflare/ngx_brotli_module">CloudFlare 的</a>，我挑的是 Google 的，不過現在覺得應該先試試看 CloudFlare 的才對，Google 的 ngx_brotli 是 depend on <a href="https://github.com/bagder/libbrotli">libbrotli</a> 的，libbrotli 很有趣，他是 cURL 的作者 <a href="https://daniel.haxx.se/">Daniel Stenberg</a> 去弄起來的，同時也是 Mozilla 的員工（不是 Google），然後 Google 的 ngx_brotli 卻是引用他的 lib，而不是去找自己的 brotli 專案下手，不知道這中間到底是怎麼回事，不過現在應該是快要<a href="https://github.com/google/brotli/issues/326">整</a><a href="https://github.com/google/brotli/issues/332">併</a>起來了。</p>
-
-<p>CloudFlare 的 <a href="https://github.com/cloudflare/ngx_brotli_module">ngx_brotli_module</a> 則是直接把 brotli encoder 的程式碼放進去，不用 libbrotli，不過也不是沒有缺點，首先就是它只有 encoder，不能解壓 brotli 格式的 request body，再來是支援的設定比較少，Google 的可以設定的項目比較多，和 gzip 的相當接近，而且提供了 <code>brotli_static</code> 這個設定可以讓 nginx 自己去找看看有沒有預先壓縮好的 <code>br</code> 檔案，就像是上面 Apache 用的設定做的事情。我目前對於一般靜態的 css, js 檔案也有使用這個方法來節省 CPU 和降低 request 的反應時間。</p>
-
-<p>結果當然是蠻不錯的，這邊之前是用 bootstrap 這個 css framework，壓縮前的 <code>bootstrap.min.css</code> 有 98.9KB，gzip 後是 19.9KB，用 zopfli 約是 15KB，用 brotli 可以再降低到 14.68KB，用的都是預設的壓縮密度，目前改用 Yahoo 的 <a href="http://purecss.io/">pure.css</a>，單看某一頁的 HTML + CSS + JS，資料量總共約 57.8 KB，使用 brotli 後，和 gzip(zopfli) 比可以再節省傳輸量到 25% 左右。</p>
-
-<p>最後補充一下 <a href="https://www.iispeed.com/pagespeed/products/iisbrotli">IIS 也有支援</a> 了，這篇文章還有 Alexa 前一萬名網站的檔案下去用 brotli 壓縮的結果比較。</p>
-]]>
-</content>
-</entry>
-
-<entry>
-<title>Device Pixel Ratio Header</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/" />
-<modified>2016-02-28T06:34:24Z</modified>
-<issued>2016-02-28T06:34:04Z</issued>
-<id>tag:blog.othree.net,2016://1.859</id>
-<created>2016-02-28T06:34:04Z</created>
-<summary type="text/plain">之前文章有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 HTTP Client Hints，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了： DPR width viewport-width downlink 其中 DPR 就是 device pixel ratio；viewport-width 就和以前介紹過的 viewport width 一樣；width 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>css-html</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
-
-<ul>
-<li>DPR</li>
-<li>width</li>
-<li>viewport-width</li>
-<li>downlink</li>
-</ul>
-
-<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
-
-<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
-
-<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
-
-<pre><code>Accept-CH: "DPR, Downlink"
-</code></pre>
-
-<p>或是加上 meta tag</p>
-
-<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
-</code></pre>
-
-<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
-
-<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
-
-<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
-
-<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
-]]>
-
-
-</content>
-</entry>
-
-<entry>
-<title>How to Reduce PDF Size and Keep Text</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/" />
-<modified>2016-02-06T04:22:16Z</modified>
-<issued>2016-02-06T02:10:15Z</issued>
-<id>tag:blog.othree.net,2016://1.858</id>
-<created>2016-02-06T02:10:15Z</created>
-<summary type="text/plain">Requirement Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality. Expect Expect the PDF file size is a little bit larger than JPG file. Issue Use save as and choose Photoshop PDF will...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>software</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<h4>Requirement</h4>
-
-<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
-
-<h4>Expect</h4>
-
-<p>Expect the PDF file size is a little bit larger than JPG file.</p>
-
-<h4>Issue</h4>
-
-<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
-
-<ul>
-<li>Page Size: 210mm*297mm (A4)</li>
-<li>Resolution: 1240px*1754px</li>
-<li>Fonts: 2 English font</li>
-</ul>
-
-<p>Sizes:</p>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>PSD</td>
-    <td></td>
-    <td>79.7MB</td>
-  </tr>
-  <tr>
-    <td>PNG</td>
-    <td></td>
-    <td>&#160;1.2MB</td>
-  </tr>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td>&#160;0.6MB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td>&#160;7.0MB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>File transformed on Adobe CC 2016 Jan </p>
-
-<p>Tried several methods to reduce the file size includes:</p>
-
-<ul>
-<li>Remove unused layers</li>
-<li>Merge and flatten all layers</li>
-<li>Use lower jpeg compression quality</li>
-<li>Not save meta data</li>
-<li>Not preserve Photoshop editing capability</li>
-<li>Use Photoshop autotool > PDF presentation</li>
-<li>Use Illustrator</li>
-<li>Use Acrobat Pro to optimize PDF</li>
-</ul>
-
-<p>But none of them can really make the PDF file as small as expected.</p>
-
-<h4>Solution</h4>
-
-<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
-
-<ol>
-<li>Hide all text layers</li>
-<li>Save as PNG file</li>
-<li>Open PNG file in Photoshop</li>
-<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
-<li>Save as Photoshop PDF file</li>
-</ol>
-
-<h5>Result</h5>
-
-<table>
-<thead>
-  <tr>
-    <th>Format</th>
-    <th>Option</th>
-    <th>Size</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>JPG</td>
-    <td>q: 100</td>
-    <td style="text-align: right">618.0KB</td>
-  </tr>
-  <tr>
-    <td>PDF</td>
-    <td>default</td>
-    <td style="text-align: right">624.0KB</td>
-  </tr>
-</tbody>
-</table>
-
-<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
-]]>
-
-
-</content>
-</entry>
-
-<entry>
-<title>JSON Universe</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2016/01/11/json-universe/" />
-<modified>2016-08-13T12:26:25Z</modified>
-<issued>2016-01-11T14:38:31Z</issued>
-<id>tag:blog.othree.net,2016://1.857</id>
-<created>2016-01-11T14:38:31Z</created>
-<summary type="text/plain">JSON 在這幾年不但標準化，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 [] 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下： 不支援註解 物件的 key 一定要用字串型式，就是一定要用引號框起來 字串一定要用雙引號，不能用單引號 陣列或物件的最後一個元素後面不能加逗點（ES5 允許） 當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 E4X 那篇文章開始來的，那篇文章有提到...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>script</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
-
-<ul>
-<li>不支援註解</li>
-<li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
-<li>字串一定要用雙引號，不能用單引號</li>
-<li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
-</ul>
-
-<p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
-]]>
-<![CDATA[<h4>JXON</h4>
-
-<p>第一個要介紹的就是剛剛提到的 <a href="https://developer.mozilla.org/en-US/docs/JXON">JXON</a>，JXON 全名是 lossless JavaScript XML Object Notation，是使用 JavaScript 語言的 syntax 來表示 XML 文件的資料，可以達到完整無失真的呈現，就是說可以還原成一模一樣的 XML，不過其實 JXON 並不是真的有個明確的標準，並沒有一個組織或單位來制訂，雖然如此，還是可以找到有人有<a href="https://github.com/tyrasd/jxon">實做</a>。</p>
-
-<h4>JSONx</h4>
-
-<p>第二個要介紹的是 <a href="https://www-01.ibm.com/support/knowledgecenter/SS9H2Y_7.1.0/com.ibm.dp.doc/json_jsonx.html">JSONx</a>，這是 IBM 推出的一種 XML 文件格式，目的非常有趣，和 JXON 剛好相反，是用 XML 文件來表示 JSON 文件的資料，namespace 是 <code>http://www.ibm.com/xmlns/prod/2009/jsonx</code>，講真的我想不到到底有誰會有需求使用到這個標準，隨便看個範例文件吧：</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;json:object xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:json="http://www.ibm.com/xmlns/prod/2009/jsonx"&gt;
-  &lt;json:string name="name"&gt;John Smith&lt;/json:string&gt;
-  &lt;json:object name="address"&gt;
-    &lt;json:string name="streetAddress"&gt;21 2nd Street&lt;/json:string&gt;
-    &lt;json:string name="city"&gt;New York&lt;/json:string&gt;
-    &lt;json:string name="state"&gt;NY&lt;/json:string&gt;
-    &lt;json:number name="postalCode"&gt;10021&lt;/json:number&gt;
-  &lt;/json:object&gt;
-  &lt;json:array name="phoneNumbers"&gt;
-    &lt;json:string&gt;212 555-1111&lt;/json:string&gt;
-    &lt;json:string&gt;212 555-2222&lt;/json:string&gt;
-  &lt;/json:array&gt;
-  &lt;json:null name="additionalInfo" /&gt;
-  &lt;json:boolean name="remote"&gt;false&lt;/json:boolean&gt;
-  &lt;json:number name="height"&gt;62.4&lt;/json:number&gt;
-  &lt;json:string name="ficoScore"&gt; &gt; 640&lt;/json:string&gt;
-&lt;/json:object&gt;
-</code></pre>
-
-<h4>MessagePack</h4>
-
-<p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w" /></a></p>
-
-<p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
-
-<h4>BSON, BJSON</h4>
-
-<p><a href="http://bsonspec.org/">BSON</a>、<a href="http://bjson.org/">BJSON</a> 也都是 Binary 的 JSON 表現格式，不過這兩個規格都不完全相容於 JSON，有多一些自定義的資料型態，像是 regular expression，然後大部分人都只有談到 BSON，不太有人講到 BJSON 的樣子。</p>
-
-<h4>UBJSON, Smile</h4>
-
-<p><a href="http://ubjson.org/">UBJSON</a>(Universal Binary JSON) 和 <a href="http://wiki.fasterxml.com/SmileFormatSpec">Smile</a> 也和上面幾個一樣是 Binary 的資料格式，和 BSON 比起來則是差在這兩個格式完全相容於 JSON，意思就是可以做到 <code>UBJSON -&gt; JSON -&gt; UBJSON</code> 這樣的資料轉而完全不會遺失資訊。</p>
-
-<p>Binanry 的 JSON 表現格式其實還有一個叫 <a href="https://componentality.com/xjson/">xJSON</a> 的比較沒知名度這樣。</p>
-
-<h4>Hjson</h4>
-
-<p><a href="http://hjson.org/">Hjson</a> 全名是 the Human JSON，顧名思義就是更人性化的 JSON 格式，是一個比 JSON 寬鬆的規範，例如允許註解，不用 <code>,</code> 改成用換行也可以分開不同元素：</p>
-
-<pre><code>[
-  1
-  2
-  3
-]
-</code></pre>
-
-<p>物件的 key 不需要字串的引號：</p>
-
-<pre><code>{ foo: 123 }
-</code></pre>
-
-<p>等等很多方便的語法，不過其實如果要用機器產生這些寬鬆的資料是不太好，比較適合的場合還是用人工維護的 JSON 檔案。</p>
-
-<h4>rson</h4>
-
-<p><a href="https://code.google.com/p/rson/">rson</a> 是一個 JSON 的 superset，和 Hjson 的目標有些接近，不過 rson 的一些新語法更接近 <a href="http://www.yaml.org/">YAML</a> 格式，專案是放在 Google Code 上，而且似乎已經沒維護了，是個總有一天會消失在網路上的東西吧。</p>
-
-<h4>LJSON</h4>
-
-<p><a href="https://github.com/MaiaVictor/LJSON">LJSON</a> 的 L 應該是 lambda 的意思，也是個 JSON 的擴充格式，改變只有一個，就是多了可以儲存 pure function 的能力，儲存 function 的形式是很像 ES6 arrow function 的樣子：</p>
-
-<pre><code>(v0)=&gt;({"author":"John","message":v0})
-</code></pre>
-
-<p>最大的差別在於 <code>=&gt;</code> 後面是接 <code>()</code>，並且還有個特色是它會想辦法最佳化，會有像是 dead code removal 的效果。如果要自己做到用 JSON 儲存 function 的話，一般是可以先用 <code>toString</code> 來輸出 function 的原始碼，要還原時再用 <code>new Function</code> 來還原，不過如果不是 pure function，例如有用到 closure 變數的話，就一定會失去這些 reference 到的變數了。</p>
-
-<p>另外還有一個 <a href="https://github.com/daviddengcn/ljson">LJSON</a> 是叫做 Loose JSON，就和上面介紹的 Hjson 目標差不多，就不再多介紹了。</p>
-
-<h4>JSON Lines</h4>
-
-<p><a href="http://jsonlines.org/">JSON Lines</a> 也是有點接近上面介紹的幾個東西，其實是個很簡單的東西，就是把多個 JSON 資料用換行接在同一個文件檔案內，例如：</p>
-
-<pre><code>[1,2,3]
-[4,5,6]
-[7,8,9]
-</code></pre>
-
-<p>三個 JSON 陣列接在一起，不是一個合法的 JSON string，一般 JSON Parser 都會說 Syntax Error，不過支援 JSON Lines 的環境下就可以把這串字串切開，分成三個陣列，支援的環境中我看到比較有名的大概就是 <a href="https://github.com/maxogden/dat/">dat</a> 了，這是一個蠻厲害的資料分享的工具，其中的串流模式傳輸資料就是用到 JSON Lines 格式（其實就是一個一個 JSON 資料輪流輸出）。</p>
-
-<h4>JSONH</h4>
-
-<p><a href="https://github.com/WebReflection/JSONH">JSONH</a> 就不是一個 JSON 的擴充格式了，它事實上是用來壓縮 JSON 的，特別適用於物件的陣列的資料集，像是：</p>
-
-<pre><code>[
-  {
-    "name": "John",
-    "gender": "Male",
-    "country": "USA"
-  },
-  {
-    "name": "Smith",
-    "gender": "Male",
-    "country": "Canada"
-  }
-]
-</code></pre>
-
-<p>透過用 JSONH 壓縮就會變成：</p>
-
-<pre><code>[3, "name", "gender", "country", "John", "Male", "USA", "Smith", "Male", "Canada"]
-</code></pre>
-
-<p>最主要節省的就是大量重複的屬性名稱，如果屬性名稱長，陣列又長，這樣壓縮前後的資料量大小差距就會很明顯，不過如果資料階層比較複雜的話，沒辦法整理得這麼漂亮，壓縮效果就會打折了。</p>
-
-<h4>Jsonnet</h4>
-
-<p><a href="http://jsonnet.org/">Jsonnet</a> 是 Google 所推出，帶著一點程式語言特性的 JSON 文件格式，例如多了個 <code>self</code>：</p>
-
-<pre><code>{
-    person1: {
-        name: "Alice",
-        welcome: "Hello " + self.name + "!",
-    },
-    person2: self.person1 { name: "Bob" },
-}
-</code></pre>
-
-<p>還有 tempalte string：</p>
-
-<pre><code>{
-    fmt2: "The word %(wd)s has %(le)d letters.  Go %(wd)s!"
-        % {wd: $.word, le: std.length($.word)},
-}
-</code></pre>
-
-<p>Array comprehension：</p>
-
-<pre><code>{
-    foo: [1, 2, 3],
-    bar: [x * x for x in self.foo if x &gt;= 2],
-    baz: { ["field" + x]: x for x in self.foo },
-    obj: { ["foo" + "bar"]: 3 },
-}
-</code></pre>
-
-<p>除了這些程式語法的特性之外， Jsonnet 還有像是 Hjson 的一些比較人性化的語法的支援，官網上則自稱是是一種 data template language，而不是單純的資料而已。</p>
-
-<h4>JSON3</h4>
-
-<p><a href="http://bestiejs.github.io/json3/">JSON3</a> 其實不是一個新版本的 JSON，而是一個更加穩健的 JavaScript 的 JSON 實做，多處理了一些不同瀏覽器的差異問題，3 的由來其實是相對於 Douglas 的 <a href="https://github.com/douglascrockford/JSON-js">json2.js</a>，這個 json2.js 是整個 JSON 進 ECMAScript 標準時最主要的依據，包括 Global Varibale 的名稱，API 的設計都是從這邊來的，至於這個 json2.js 的 2 的意思其實就是這是 Douglas 實做的第二版 JSON library。</p>
-
-<h4>JSONP</h4>
-
-<p><a href="https://zh.wikipedia.org/wiki/JSONP">JSONP</a> 其實不是一個標準，最早出處也不詳，不過早一點在 CORS 普及前就開始寫 Ajax 的人應該是很熟悉的東西，瀏覽器為了安全性問題，雖然可以跨直接用 XHR 做出 HTTP request，但是會限制跨 domain 的連線，現在有 CORS 可以讓網站所有者提供允許的白名單，但是在 CORS 普及前，基本上是完全被禁止的，不過有個方法就是插入 <code>&lt;script&gt;</code> 標籤去執行遠端的 js 檔案，這個方法的缺點就是只能執行，不能讀取檔案內容，JSONP 就是在這個限制下所設計出來可以用來跟遠端要資料的方法，基本上實做的方法就是在本地先產生好一個暫時的 callback function：</p>
-
-<pre><code>window.cb123456 = function (data) {
-  window.cb123456 = null; //clean up
-
-  //do something with data      
-};
-</code></pre>
-
-<p>然後把遠端資源加上參數指定 callback 名稱：</p>
-
-<pre><code>&lt;script type="text/javascript"
-     src="http://server2.example.com/RetrieveUser?UserId=1823&amp;jsonp=cb123456"&gt;
-&lt;/script&gt;
-</code></pre>
-
-<p>遠端收到 Request 後產生特別的 response，本來要回傳的資料如下：</p>
-
-<pre><code>{
-  "name": "John",
-  "gender": "Male",
-  "country": "USA"
-}
-</code></pre>
-
-<p>現在會變成一段 JavaScript 程式碼：</p>
-
-<pre><code>cb1231465({
-  "name": "John",
-  "gender": "Male",
-  "country": "USA"
-});
-</code></pre>
-
-<h4>JSON Schema</h4>
-
-<p>JSON 本身是很自由的資料格式，不過開發比較大型的應用程式，或是要做一些測試的時候，太過自由就不一定是優點了，所以很合理的就會有個來定義資料內容結構的描述語言出現，<a href="http://json-schema.org/">JSON Schema</a> 就是一個，而且似乎很合理的 JSON Schema 也是 JSON 文件：</p>
-
-<pre><code>{
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Product",
-    "description": "A product from Acme's catalog",
-    "type": "object",
-    "properties": {
-        "id": {
-            "description": "The unique identifier for a product",
-            "type": "integer"
-        }
-    },
-    "required": ["id"]
-}
-</code></pre>
-
-<p>這個文件格式也有在 <a href="http://raml.org/">RAML</a> 中被使用到，RAML 是個 RESTful API 的定義文件，如果 API 傳輸的資料是 JSON 的話，就可以內嵌 JSON Schema，都定義完整就可以用自動化工具來做一些測試了，或是也可以產生一些方便閱讀的文件等等。</p>
-
-<h4>JSON-LD</h4>
-
-<p><a href="http://json-ld.org/">JSON-LD</a> 是 JSON for Linked Data，所謂 Linked Data 其實就是語意網的一部分，基本上還是遵照 <a href="http://www.w3.org/RDF/">RDF</a> 架構去設計出來的文件，目前也很多網路服務都支援，像是 Google、Facebook 等等，甚至 Gmail 的一些特殊能力也是透過在信件內插入 JSON-LD 格式的資料才得以實現。</p>
-
-<h4>JSON-RPC</h4>
-
-<p><a href="http://json-rpc.org/">JSON-RPC</a> 基本上就是 XML-RPC 的 JSON 版本這樣，其實我也不知道有沒有人真的拿來應用就是，倒是 XML-RPC 現在還不少老東西有支援。</p>
-
-<h4>GeoJSON</h4>
-
-<p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
-
-<p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
-
-<h4>JSON-stat</h4>
-
-<p><a href="http://json-stat.org/">JSON-stat</a> 是個把二維統計資訊表格用 JSON 表現的格式，而且不是只能夠處理兩個維度的資料而已，事實上可以儲存更多維度，JSON-stat 在儲存 raw data 的部分是用打平的一維陣列來儲存，所以也不用擔心太多層太過複雜的狀況，想詳細瞭解一點的可以參考官網右上角的投影片看看。</p>
-
-<h4>JSON Graph</h4>
-
-<p><a href="http://netflix.github.io/falcor/documentation/jsongraph.html">JSON Graph</a> 是 Netflix 推出的 <a href="http://netflix.github.io/falcor/">Falcor</a> 裡面用到的，Falcor 是一種用來取代 RESTful API 的新的前後端之間的溝通方式，這種方法和 RESTful 相比最大的差異就是不再是對單一的資源（resource）做操作，而是整個應用程式會用到的東西都組織定義好，放到一個大的 resource 內，然後再對這個大的資源做操作，而這個大的 resource 就是所謂的 JSON Graph 物件，Falcor 的出現是為了解決一些把 RESTful 用到很透徹時會出現的問題，不過真的要想用這套方法在自己的服務上其實是有些難度，因為要實做一個 Falcor Server，官方也只有提供 Node 版的。</p>
-
-<h4>JSONPath</h4>
-
-<p><a href="http://goessner.net/articles/JsonPath/">JSONPath</a> 是一個 JSON 的 query 語言，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/XPath">XPath</a> 之於 XML，語法 syntax 其實和普通 JavaScript 程式碼很像，不會太難理解，一些範例：</p>
-
-<pre><code>$.store.*
-$.store.book[*].author
-$.store..price
-</code></pre>
-
-<p>不過這些可不是程式碼，而是單純的字串，丟進 JSONPath 引擎再給它相對應的物件（不是 JSON 字串），就可以把目標位置的資料取出來。</p>
-
-<h4>JSONiq</h4>
-
-<p><a href="http://jsoniq.org/">JSONiq</a> 也是個用來 query JSON 資料用的語言，不過和上面的 JSONPath 不一樣，比較像是 SQL 那樣有點程式化，而且語法偏 functional programming，例如：</p>
-
-<pre><code>for $sarah in collection("users"),
-    $friend in collection("users")
-where $sarah.name eq "Sarah"
-      and
-      (some $name in $sarah.friends[]
-       satisfies $friend.name eq $name)
-return $friend
-</code></pre>
-
-<h4>JSON Pointer</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> 是一個 2013 的 RFC 標準(RFC-6901)，用途和 JSON Path 有點像，也是用來取出 JSON 文件中的一部份資料，不過最主要的差異在於 JSON Pointer 一定是只能指向到一個節點，只能拿到一個 value，不像 JSONPath 或是 JSONip 可以一次 query 很多節點，然後用陣列的形式傳回值；另外還有一個和 JSONPath 的差異是 JSON Pointer 和 XPath 的語法很接近：</p>
-
-<pre><code>/foo/0
-/actors/4/name
-</code></pre>
-
-<h4>JSON Patch</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> 是一個另 RFC 標準(RFC-6902)，緊接在 JSON Pointer 之後，這兩個標準都是都是在 <a href="https://blog.gslin.org/archives/2014/02/15/4261/json-patch/">gslin</a> 那邊看到的，JSON Patch 主要是定義了一組標準的對 JSON 的操作(operation)，提供了 add, remove, replace, move, copy, test 幾個操作，基本上看起來如下：</p>
-
-<pre><code>{"op": "add", "path": "/pets/0", "value": "dog"}
-</code></pre>
-
-<p>這行的意思是要在 pets 下的第一個元素的位置加上一個值，字串 "dog"，JSON Patch 基本上是設計來和 HTTP Patch 配合的，以前如果要用 Patch 修改某個特定網路 reource 的話，一定要把整個完整的，更新過後的 JSON 資料傳一次，但是如果用 JSON Patch 就可以只傳要做怎樣的更新就可以了，可以節省很多資料的傳輸量，而且還可以先用 test 做測試，然後也可以一次做一連串的修改動作：</p>
-
-<pre><code>[
-  { "op": "replace", "path": "/baz", "value": "boo" },
-  { "op": "add", "path": "/hello", "value": ["world"] },
-  { "op": "remove", "path": "/foo"}
-]
-</code></pre>
-
-<h4>JSONDiffPatch</h4>
-
-<p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w" /></a></p>
-
-<p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
-
-<h4>JSONLint</h4>
-
-<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還有可以收合展開的樹狀檢視模式。</p>
-
-<h4>?JSON</h4>
-
-<p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
-
-<p>PS: 還有一篇 <a href="https://blog.othree.net/log/2016/08/13/json-web-token/">JSON Web Token</a></p>
 ]]>
 </content>
 </entry>

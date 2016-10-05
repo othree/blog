@@ -46,7 +46,7 @@
 
 <p>還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 <a href="http://dnsviz.net/">DNSViz</a> 結果給我。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"><img src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"><img src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w" /></a></p>
 
 <p>其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：</p>
 
@@ -85,7 +85,7 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
 
 <p>這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。</p>
 
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w" /></a></p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
