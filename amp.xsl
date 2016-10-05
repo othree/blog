@@ -59,6 +59,7 @@
     <xsl:if test="descendant::*[local-name() = 'iframe']">
       <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     </xsl:if>
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async="async" src="https://cdn.ampproject.org/v0.js"></script>
     <script type="application/ld+json">
       {
@@ -152,6 +153,21 @@
             </main>
           </div>
         </div>
+        <amp-analytics type="googleanalytics" id="analytics1">
+        <script type="application/json"><![CDATA[
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        ]]></script>
+        </amp-analytics>
       </body>
     </html>
   </xsl:template>
