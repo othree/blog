@@ -5,10 +5,196 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2016</copyright>
-<lastBuildDate>Mon, 03 Oct 2016 23:44:12 +0800</lastBuildDate>
+<lastBuildDate>Fri, 18 Nov 2016 00:00:52 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>20K for...of</title>
+<description><![CDATA[<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 <code>for...in</code> 或是用傳統的取長度，然後 <code>i++</code> 的方法：</p>
+
+<pre><code>var arr = [1, 2, 3];
+var i, v, len;
+
+for (i in arr) {
+    v = arr[i];
+    console.log(v);
+}
+
+for (i = 0, len = arr.length; i &lt; len; i++) {
+    v = arr[i];
+    console.log(v);
+}
+</code></pre>
+
+<p>現在只要用簡單的 <code>for...of</code> 就可以了：</p>
+
+<pre><code>var arr = [1, 2, 3];
+
+for (let v of arr) {
+    console.log(v);
+}
+</code></pre>
+
+<p>不過目前還是需要考慮只有 ECMAScript 5 的環境，例如 IE11，所以一般都還是會用像是 <a href="https://babeljs.io/">Babel</a> 之類的 transpiler 來把 ES2015 的 syntax 轉成 ES5 的 code，結果轉出來如下：</p>
+
+<pre><code>"use strict";
+
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+    for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var v = _step.value;
+
+        console.log(v);
+    }
+} catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+} finally {
+    try {
+        if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+            _iterator.return();
+        }
+    } finally {
+        if (_didIteratorError) {
+            throw _iteratorError;
+        }
+    }
+}
+</code></pre>
+
+<p>結果其實有點意外，一個簡單的 <code>for...of</code> 竟然變的這麼長，事實上是因為 <code>for...of</code> 其實沒想像中簡單，因為它可以用的地方其實不只是陣列，而是 <a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">iterable 物件</a>，不過為了要完整的支援 <code>for...of</code>，就變成需要有 iterator, generator, symbol 等等的支援，當然上面的程式碼不能在 ES5 環境下執行，而 Babel 依靠的是 <a href="https://babeljs.io/docs/usage/polyfill/">babel-polyfill</a>，裡面其實就是 <a href="https://github.com/zloirock/core-js">core-js</a> 和 <a href="https://facebook.github.io/regenerator/">regenerator</a>，不過這一整包，其實有點龐大，要 228KB，即使最小化之後也還要 95KB，所以，就想著是不是能夠只捆包進需要的部分就好了，研究過後，發現有 Babel plugin 叫做 <a href="https://babeljs.io/docs/plugins/transform-runtime/">transform-runtime</a>，套用上去後：</p>
+
+<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+  for (var _iterator = _getIterator(arr), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    var v = _step.value;
+
+    console.log(v);
+  }
+} catch (err) {
+  _didIteratorError = true;
+  _iteratorError = err;
+} finally {
+  try {
+    if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+      _iterator.return();
+    }
+  } finally {
+    if (_didIteratorError) {
+      throw _iteratorError;
+    }
+  }
+}
+</code></pre>
+
+<p>可以看到原來用 <code>Symbol</code> 取 iterator 的地方變成用 <code>_getIterator</code> 了，而且還有一行：</p>
+
+<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
+</code></pre>
+
+<p>如果要真的把這部分也打包進來，則需要讓 bundler 處理，我個人是偏好 <a href="http://rollupjs.org/">rollup</a>，搭配以下兩個 plugin：</p>
+
+<ul>
+<li><a href="https://github.com/rollup/rollup-plugin-node-resolve">rollup-plugin-node-resolve</a> 用來尋找 <code>node_modules</code> 目錄裡的模組</li>
+<li><a href="https://github.com/rollup/rollup-plugin-commonjs">rollup-plugin-commonjs</a> 用來解析 CommonJS 型式的模組</li>
+</ul>
+
+<p>然後用以下的設定：</p>
+
+<pre><code>babel({
+  exclude: 'node_modules/**',
+  plugins: ['transform-runtime'],
+  presets: ['es2015-loose-rollup'],
+  runtimeHelpers: true
+}),
+nodeResolve({ jsnext: true }),
+commonjs({
+  include: 'node_modules/**'
+})
+</code></pre>
+
+<p>結果，就可以得到夢寐以求的 20KB 的<a href="https://github.com/othree/20k-for-of/blob/master/out/bundle-all.js">程式碼</a>了，當然 20KB 的部分不是預期的啦，相較於一開始的程式碼只有 72Bytes，為了一個 <code>for...of</code> 變成 20KB 好像有點本末倒置，畢竟我只有要在 Array 上用，難道不能只是簡單的轉成 <code>for...in</code> 型式嗎。</p>
+
+<p>事實上是有辦法的，第一個就是改寫 <a href="https://www.typescriptlang.org/">TypeScript</a>，TypeScript 對於 <code>for...of</code> 只有兩種處理方法，而且結果都不會如此膨脹，第一種就是變成 <code>for...in</code>，第二種則是不變動，保留 <code>for...of</code> 的語法，後者是在 target 設定成 ES6 的時候使用的，官網也有相關的<a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#targeting-es5-and-es3">說明</a>。</p>
+
+<p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
+
+<p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2016/11/18/20k-for-of/</link>
+<guid>https://blog.othree.net/log/2016/11/18/20k-for-of/</guid>
+<category>script</category>
+<pubDate>Fri, 18 Nov 2016 00:00:52 +0800</pubDate>
+</item>
+
+<item>
+<title>Vim Filename Complete</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w" /></a></p>
+
+<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
+
+<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
+
+<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+:autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
+</code></pre>
+
+<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2016/10/29/vim-filename-complete/</link>
+<guid>https://blog.othree.net/log/2016/10/29/vim-filename-complete/</guid>
+<category>vim</category>
+<pubDate>Sat, 29 Oct 2016 15:36:02 +0800</pubDate>
+</item>
+
+<item>
+<title>SBB Mobile</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w" /></a></p>
+
+<p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2016/10/17/sbb-mobile/">閱讀 「SBB Mobile」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2016/10/17/sbb-mobile/</link>
+<guid>https://blog.othree.net/log/2016/10/17/sbb-mobile/</guid>
+<category>diary</category>
+<pubDate>Mon, 17 Oct 2016 22:51:45 +0800</pubDate>
+</item>
+
+<item>
+<title>Acclerated Mobile Pages</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w" /></a></p>
+
+<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">閱讀 「Acclerated Mobile Pages」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/</link>
+<guid>https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/</guid>
+<category>css-html</category>
+<pubDate>Fri, 14 Oct 2016 22:14:08 +0800</pubDate>
+</item>
 
 <item>
 <title>Native True Color Vim</title>
@@ -611,66 +797,6 @@ fastcgi_param  REDIRECT_STATUS    200;
 <guid>https://blog.othree.net/log/2016/04/22/nginx-fcgiwrap/</guid>
 <category>server</category>
 <pubDate>Fri, 22 Apr 2016 21:52:05 +0800</pubDate>
-</item>
-
-<item>
-<title>360 Test</title>
-<description><![CDATA[<p><a data-flickr-embed="true" data-vr="true"  href="https://www.flickr.com/photos/othree/25933704672/in/dateposted-public/" title="摩茲工寮"><img src="https://farm2.staticflickr.com/1478/25933704672_4e4641723f_b.jpg" width="1024" height="512" alt="摩茲工寮" /></a></p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2016/04/10/360-test/</link>
-<guid>https://blog.othree.net/log/2016/04/10/360-test/</guid>
-<category>diary</category>
-<pubDate>Sun, 10 Apr 2016 19:21:34 +0800</pubDate>
-</item>
-
-<item>
-<title>Pure.css</title>
-<description><![CDATA[<p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
-
-<p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
-
-<p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2016/04/08/purecss/</link>
-<guid>https://blog.othree.net/log/2016/04/08/purecss/</guid>
-<category>css-html</category>
-<pubDate>Fri, 08 Apr 2016 22:48:28 +0800</pubDate>
-</item>
-
-<item>
-<title>SSH Agent Forward</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr"><img src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w" /></a></p>
-
-<p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2016/04/05/ssh-agent-forward/">閱讀 「SSH Agent Forward」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2016/04/05/ssh-agent-forward/</link>
-<guid>https://blog.othree.net/log/2016/04/05/ssh-agent-forward/</guid>
-<category>server</category>
-<pubDate>Tue, 05 Apr 2016 22:22:39 +0800</pubDate>
-</item>
-
-<item>
-<title>九州鐵道</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23906413032/" title="九洲JR by othree, on Flickr"><img src="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg" width="1024" height="683" alt="九洲JR" srcset="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg 1024w, https://farm2.staticflickr.com/1631/23906413032_280443efa8_h.jpg 1600w" /></a></p>
-
-<p>之前去了一趟九州，順便觀察了一下聽說很厲害的九州鐵道（不只是 JR），覺得果然名不虛傳，整個就是設計的比較有質感，不論是普通車還是特急列車都感覺的出來比其他地區的還要搶眼些，這次搭到比較特別的列車是特急KAMOME（特急かもめ），從博多到長崎，還有由布院之森（ゆふいんの森），從久留米到由步院，首先就來看一下特急KAMOME（以下圖多）。</p>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2016/04/05/kyushu-rail/">閱讀 「九州鐵道」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2016/04/05/kyushu-rail/</link>
-<guid>https://blog.othree.net/log/2016/04/05/kyushu-rail/</guid>
-<category>diary</category>
-<pubDate>Tue, 05 Apr 2016 10:26:33 +0800</pubDate>
 </item>
 
 

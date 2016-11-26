@@ -16,6 +16,350 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="000881" baseName="20k-for-of">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-11-18</b:date>
+				<b:time>00:00:52</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>20K for...of</b:title>
+			<b:content>
+				<b:summary>for...of 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 for...in 或是用傳統的取長度，然後 i++ 的方法： var arr = [1, 2, 3]; var i, v, len; for (i in arr) { v = arr[i]; console.log(v); } for (i = 0, len = arr.length; i &lt; len; i++)...</b:summary>
+				<b:mainContent><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 <code>for...in</code> 或是用傳統的取長度，然後 <code>i++</code> 的方法：</p>
+
+<pre><code>var arr = [1, 2, 3];
+var i, v, len;
+
+for (i in arr) {
+    v = arr[i];
+    console.log(v);
+}
+
+for (i = 0, len = arr.length; i &lt; len; i++) {
+    v = arr[i];
+    console.log(v);
+}
+</code></pre>
+
+<p>現在只要用簡單的 <code>for...of</code> 就可以了：</p>
+
+<pre><code>var arr = [1, 2, 3];
+
+for (let v of arr) {
+    console.log(v);
+}
+</code></pre>
+
+<p>不過目前還是需要考慮只有 ECMAScript 5 的環境，例如 IE11，所以一般都還是會用像是 <a href="https://babeljs.io/">Babel</a> 之類的 transpiler 來把 ES2015 的 syntax 轉成 ES5 的 code，結果轉出來如下：</p>
+
+<pre><code>"use strict";
+
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+    for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var v = _step.value;
+
+        console.log(v);
+    }
+} catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+} finally {
+    try {
+        if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+            _iterator.return();
+        }
+    } finally {
+        if (_didIteratorError) {
+            throw _iteratorError;
+        }
+    }
+}
+</code></pre>
+
+<p>結果其實有點意外，一個簡單的 <code>for...of</code> 竟然變的這麼長，事實上是因為 <code>for...of</code> 其實沒想像中簡單，因為它可以用的地方其實不只是陣列，而是 <a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">iterable 物件</a>，不過為了要完整的支援 <code>for...of</code>，就變成需要有 iterator, generator, symbol 等等的支援，當然上面的程式碼不能在 ES5 環境下執行，而 Babel 依靠的是 <a href="https://babeljs.io/docs/usage/polyfill/">babel-polyfill</a>，裡面其實就是 <a href="https://github.com/zloirock/core-js">core-js</a> 和 <a href="https://facebook.github.io/regenerator/">regenerator</a>，不過這一整包，其實有點龐大，要 228KB，即使最小化之後也還要 95KB，所以，就想著是不是能夠只捆包進需要的部分就好了，研究過後，發現有 Babel plugin 叫做 <a href="https://babeljs.io/docs/plugins/transform-runtime/">transform-runtime</a>，套用上去後：</p>
+
+<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+  for (var _iterator = _getIterator(arr), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    var v = _step.value;
+
+    console.log(v);
+  }
+} catch (err) {
+  _didIteratorError = true;
+  _iteratorError = err;
+} finally {
+  try {
+    if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+      _iterator.return();
+    }
+  } finally {
+    if (_didIteratorError) {
+      throw _iteratorError;
+    }
+  }
+}
+</code></pre>
+
+<p>可以看到原來用 <code>Symbol</code> 取 iterator 的地方變成用 <code>_getIterator</code> 了，而且還有一行：</p>
+
+<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
+</code></pre>
+
+<p>如果要真的把這部分也打包進來，則需要讓 bundler 處理，我個人是偏好 <a href="http://rollupjs.org/">rollup</a>，搭配以下兩個 plugin：</p>
+
+<ul>
+<li><a href="https://github.com/rollup/rollup-plugin-node-resolve">rollup-plugin-node-resolve</a> 用來尋找 <code>node_modules</code> 目錄裡的模組</li>
+<li><a href="https://github.com/rollup/rollup-plugin-commonjs">rollup-plugin-commonjs</a> 用來解析 CommonJS 型式的模組</li>
+</ul>
+
+<p>然後用以下的設定：</p>
+
+<pre><code>babel({
+  exclude: 'node_modules/**',
+  plugins: ['transform-runtime'],
+  presets: ['es2015-loose-rollup'],
+  runtimeHelpers: true
+}),
+nodeResolve({ jsnext: true }),
+commonjs({
+  include: 'node_modules/**'
+})
+</code></pre>
+
+<p>結果，就可以得到夢寐以求的 20KB 的<a href="https://github.com/othree/20k-for-of/blob/master/out/bundle-all.js">程式碼</a>了，當然 20KB 的部分不是預期的啦，相較於一開始的程式碼只有 72Bytes，為了一個 <code>for...of</code> 變成 20KB 好像有點本末倒置，畢竟我只有要在 Array 上用，難道不能只是簡單的轉成 <code>for...in</code> 型式嗎。</p>
+
+<p>事實上是有辦法的，第一個就是改寫 <a href="https://www.typescriptlang.org/">TypeScript</a>，TypeScript 對於 <code>for...of</code> 只有兩種處理方法，而且結果都不會如此膨脹，第一種就是變成 <code>for...in</code>，第二種則是不變動，保留 <code>for...of</code> 的語法，後者是在 target 設定成 ES6 的時候使用的，官網也有相關的<a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#targeting-es5-and-es3">說明</a>。</p>
+
+<p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
+
+<p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000880" baseName="vim-filename-complete">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-29</b:date>
+				<b:time>15:36:02</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim Filename Complete</b:title>
+			<b:content>
+				<b:summary> Vim 有一個內建的自動補完功能是針對檔案名稱的，使用的方法是 &lt;C-X&gt;&lt;C-F&gt;，我目前在維護的 autocomplpop 也有支援這種補完模式，只要輸入 ./ 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄($PWD)，加上我會使用 ctrlp 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 path 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 path 值包括了 .，不過目前還沒有相關時程，就只能自救了。 最簡單的方法，其實就是開啟 autochdir，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到一篇，裡面有兩個人提供了解法，第一個是用 autocmd，然後在進入...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w" /></a></p>
+
+<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
+
+<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
+
+<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+:autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
+</code></pre>
+
+<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000879" baseName="sbb-mobile">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-17</b:date>
+				<b:time>22:51:45</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>SBB Mobile</b:title>
+			<b:content>
+				<b:summary> 之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：SBB Mobile，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w" /></a></p>
+
+<p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30325682056/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg 576w, https://farm9.staticflickr.com/8280/30325682056_b4a6e85cc7_h.jpg 900w" /></a></p>
+
+<p>列出符合條件四班車，然後可以看到更早和更晚的按鈕很顯眼，然後隨便選一個選項可以看到後面的細節：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30273224071/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg 576w, https://farm9.staticflickr.com/8131/30273224071_6d3d58d700_h.jpg 900w" /></a></p>
+
+<p>像是要不要轉車，會在哪個月台等等，隨便點其中一班列車會看到它的行車路線：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519365/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg 576w, https://farm6.staticflickr.com/5551/30359519365_3903bfb570_h.jpg 900w" /></a></p>
+
+<p>如果該班車已經在運行的話，就會有行車進度，而且延遲的時候也會馬上更新訊息，連後面站的時間差異也會顯示：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519005/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg 576w, https://farm6.staticflickr.com/5337/30359519005_690b78f4e3_h.jpg 900w" /></a></p>
+
+<p>而且根據觀察，如果有延遲的話，駕駛會想辦法追上本來的時間，如果沒辦法照新時刻跑，也會隨時更新資訊：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242964642/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg 576w, https://farm6.staticflickr.com/5511/30242964642_5f79df31d8_h.jpg 900w" /></a></p>
+
+<p>其實我本來一直以為它的功能就只有時刻表而已，直到有一天按到左上角的 menu：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965322/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg 576w, https://farm9.staticflickr.com/8275/30242965322_8b0760dc10_h.jpg 900w" /></a></p>
+
+<p>結果發現還有很多東西，像是搜尋歷史紀錄：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965082/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg 576w, https://farm9.staticflickr.com/8134/30242965082_90fcf903d3_h.jpg 900w" /></a></p>
+
+<p>車站資訊：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519425/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg 576w, https://farm9.staticflickr.com/8419/30359519425_2b8e47fa69_h.jpg 900w" /></a></p>
+
+<p>也還可以用來買票，不過因為我有買 Swiss Travel Pass 就沒機會用了，不過 SBB 還有提供 YouTube 的影片介紹，可以加減看一下，最後還有一個用搖晃手機顯示最新車票的功能，看起來蠻實用的～</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/hvH41daq8sw?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+
+<p>整體而言，我覺得 SBB Mobile 的介面真的做的很不錯，真的是畫面乾淨、該有的都有、控制元件也好懂、複雜的東西也有藏起來，幾乎是可以當範本了，有機會去瑞士的話，一定要裝來用一下的，另外他們最近準備推出新版的 SBB Mobile，已經有 preview 版可以用，還有一個<a href="http://www.micro.sbb.ch/mobile-preview/en/home/app.html">專頁介紹新功能</a>，也有好幾段介紹影片，看起來新版也相當不錯，而且開始有一些 material design 的元素也融合進去了。</p>
+
+<p>PS. SBB 是 Swiss Federal Railways（瑞士聯邦鐵路）的德語（Schweizerische Bundesbahnen）縮寫，一般在瑞士會看到 SBB CFF FFS 這樣的寫法，第二段的 CFF 是法語（Chemins de fer fédéraux suisses），FFS 則是義大利語（Ferrovie federali svizzere）</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000878" baseName="acclerated-mobile-pages">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-14</b:date>
+				<b:time>22:14:08</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Acclerated Mobile Pages</b:title>
+			<b:content>
+				<b:summary> Acclerated Mobile Pages 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 Extensible Web 宣言以來，第一個重要的里程碑。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w" /></a></p>
+
+<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
+</b:mainContent>
+				<b:extendContent><p>AMP 的目標是讓行動版網頁速度更快，照 Google 員工在 Google IO 的說法，假設認真的手工調校可以達到 95 分，那 AMP 的目標就是讓大家都有 90 分，它的做法說穿了其實也不複雜，就是把現有的各種調整 mobile web performance 的技巧做起來，基本上分成三個部分：</p>
+
+<ol>
+<li>CDN cache</li>
+<li>AMP HTML</li>
+<li>AMP runtime</li>
+</ol>
+
+<p>首先要提的就是 CDN 了，一般而言，都是網站所有人去花錢找 CDN 服務來使用，不過做成 AMP 的網頁，Google 會使用他們自家的 CDN 服務把你的 AMP 網頁都 cache 好，考慮到 Google CDN 的等級，應該可以不用擔心速度，這樣就先解決了網路速度的問題，而且這個部屬在 CDN 的方式還有幾個優點：</p>
+
+<ol>
+<li>全部的檔案都是同個 CDN domain，減少了 domain resolve 和 TCP 連線 warmup 的時間</li>
+<li>支援 HTTP/2.0，已經可以不用建立多次連線了，不過目前還不支援 brotli</li>
+<li>所有的 AMP 網頁都用相同的 JavaScript 檔案，大幅減少 runtime library 部分初次訪問的下載量</li>
+</ol>
+
+<p>事實上這個 CDN 服務沒有一定要由 Google 提供，照 AMP 的設計，這部分其實是獨立的，只是目前主力的推廣單位就是 Google，他們又控制著大量的 Android 手機和 Chrome 瀏覽器，所以由他們提供 AMP CDN 服務似乎再合理不過了，而 Google 提供的 AMP CDN 服務稱為 <a href="https://developers.google.com/amp/cache/">Google AMP Cache</a>，現在也可以透過 API 來查詢你的 AMP 網頁有沒有在 Google AMP Cache 上有快取，也可以實際查到 CDN 上的 URL，並且直接用那個 URL 來預覽也沒問題，當然這個 CDN 快取的 URL 是有一定<a href="https://developers.google.com/amp/cache/overview">格式</a>的，所以其實不透過 API 查也可以知道不同 AMP 網頁對應的 CDN 快取位置，例如：</p>
+
+<pre><code>https://example.com/amp_document.html
+</code></pre>
+
+<p>對應的就是：</p>
+
+<pre><code>https://cdn.ampproject.org/c/s/example.com/amp_document.html
+</code></pre>
+
+<p>CDN 之外，其它的最佳化就都和 code 相關了，像是圖片做延遲讀取、全部用 async 引入 JavaScript、internal style 減少取得 CSS 的時間，AMP 控制這些機制的方法，第一個就是限制的 coding 型式，沒有符合規範的頁面基本上就不會進到 CDN 上，所以你不能引用外部 CSS 檔案，要增加一些必要的標籤，不能自己寫 script 等等；另一個部分，就是大量的 Web Component 了，例如 <code>&lt;amp-img&gt;</code> 來取代 <code>&lt;img&gt;</code>，不能寫 script 但是還是可以加上 <code>&lt;amp-analytic&gt;</code> 來做數據統計、 <code>&lt;amp-social-share&gt;</code> 來放 Facebook 的分享按鈕等。因為都是新的自訂的標籤，整個元件的行為都是可以自訂的，所以像是圖片就可以從中做到延遲讀取，甚至更進一步，會算好 srcset 中最適合的圖片直接使用，而這層設計都是架構在 Web Component 和相關的標準之上，事實上，AMP 計畫當中，我目前看到不合網路標準的部分，其實只有一些自訂屬性，像是宣告是 AMP 網頁的：</p>
+
+<pre><code>&lt;html ⚡&gt;
+</code></pre>
+
+<p>考量到 <code>⚡</code> 可能在舊環境造成一些問題，所以也支援：</p>
+
+<pre><code>&lt;html amp&gt;
+</code></pre>
+
+<p>另外還有像是 <code>amp-boilerplate</code>、<code>amp-custom</code>、<code>custom-element</code> 等，其實沒很多，不過我深入看過目前的 HTML 5.2 草稿，搜尋看完所有的 <a href="https://tools.ietf.org/html/rfc2119#section-2"><strong>MUST NOT</strong></a> 後，其實找不到文字直接說 HTML 禁止自訂屬性，而對於 <strong>Content attributes</strong> 的<a href="http://w3c.github.io/html/single-page.html#content-attribute">說明</a>則是用 <a href="https://tools.ietf.org/html/rfc2119#section-5">MAY</a>：</p>
+
+<blockquote>
+  <p>A normative list of attributes that may be specified on the element (except where otherwise disallowed), along with non-normative descriptions of those attributes. (The content to the left of the dash is normative, the content to the right of the dash is not.)</p>
+</blockquote>
+
+<p>以前都以為自訂屬性是不合規範的，不過這次仔細研究過，實際上應該是，規範中定義到的，都是有意義的，例如 <code>aria-*</code> 是親和力相關的資訊和狀態，給輔具使用，<code>data-*</code> 的意義則是資料，所以有一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/HTMLElement/dataset">dataset</a> 屬性方便存取這些資料，而沒有規範到的屬性，其實也沒禁止，只是就是沒任何意義存在，不過規範文字敘述上雖然沒禁止，但是一般的 HTML validator 都會把沒定義的屬性當成錯誤來處理就是了。另外一個可以呼應這點的就是 <a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance">custom element</a> 的 spec 中說到 attribute 的部分了，custom element 對於沒有 namespace 的屬性限制是：</p>
+
+<blockquote>
+  <p>Any namespace-less attribute that is relevant to the element's functioning, as determined by the element's author, may be specified on an autonomous custom element, so long as the attribute name is XML-compatible and contains no uppercase ASCII letters. The exception is the is attribute, which must not be specified on an autonomous custom element (and which will have no effect if it is).</p>
+</blockquote>
+
+<p>大意就是，符合 XML 規範的全小寫字母屬性名稱，唯一不能用的只有 <code>is</code>，因為 <code>is</code> 在 custom element 中有特殊意義。如果照這樣來看的話，事實上 AMP 網頁是完全符合標準的，這點和我一開始的印象實在差很大（包括那個 <code>⚡</code> 也是 UTF-8 字元，所以也沒問題）；而能夠在完全符合網路標準的狀態下架構出像是 AMP 這樣的專案，依靠的就是之前幾年間發展的 Web Component 的標準，而 AMP 專案應用的規模也足以讓我將他視為 Extensible Web 的第一個重要里程碑。</p>
+
+<p>目前 AMP 的狀況是 Google 才<a href="https://blog.google/products/search/search-results-are-officially-ampd/">剛預設開啟</a>搜尋結果會導引到 AMP Page，而目前大部分支援的網站都是採用 paired 的方式來提供到 AMP 頁面的連結，也就是用一個 <code>&lt;link&gt;</code> 標籤來連結到 AMP 網頁，因為有兩個網頁在網路上成對，所以稱為 paired，除了 paired 之外，還有一個方法稱為 standalone，AMP 接下來也會開始推廣 standalone 的方式，Paul Bakaus 的文章 <a href="https://paulbakaus.com/2016/07/01/about-that-mobile-in-accelerated-mobile-pages/">About that 'mobile' in Accelerated Mobile Pages</a> 就有提到這件事情，standalone 版的 AMP 網頁，其實就是只提供 AMP 版本的頁面，因為 AMP 本身是架構在網路標準上的，所以一般 modern browser 都可以完整支援，<a href="https://www.ampproject.org/">AMP Project</a> 自己的網站就是最好的範例了。</p>
+
+<p>AMP 目前還在不斷的發展，有興趣的可以看看他們的 <a href="https://www.ampproject.org/roadmap/">roadmap</a>，每季會更新兩次，目前看到比較有趣的是在發展登入和購買的功能，而由於 AMP 不允許網站內放上非 AMP runtime 的 script，所以所有要用到 script 的功能都需要 AMP 提供 custom element，可以預期各式各樣的 element 會非常多種，像是 <code>&lt;amp-accordion&gt;</code>、<code>&lt;amp-carousel&gt;</code> 之類的 UI 元件，或是引用 tweet 的 <code>&lt;amp-twitter&gt;</code>，放 analytic code 的 <code>&lt;amp-analytics&gt;</code> 等，目前已經有 <a href="https://www.ampproject.org/docs/reference/components">49 個</a> custom element 可以用了，相信未來應該還是會繼續增加，當然因為整個 AMP runtime 的部分是 open source 的，所以其實也是開放貢獻，也有一些相關的文件，其中最讓人好奇的大概就是<a href="https://docs.google.com/document/d/19o7eDta6oqPGF4RQ17LvZ9CHVQN53whN-mCIeIMM8Qk/edit#">如何自己做一個 AMP custom element</a> 了吧，不過這份文件比較難找些，在官網和 Github 上的幾乎都是如何使用的文件，我猜是因為目前還沒正式開放外部提供 custom element，不過對於 AMP runtime 架構有興趣的還是可以參考看看，AMP 目前這種依靠 custom element 的方式還是會有些問題，最主要就是不斷成長的 custom element 會造成後續維護越來越困難，例如要升級修改架構的話，就會變的很麻煩，所以我在文章一開始說這其實是個暫時的解法，那正確的解法應該是怎樣呢？</p>
+
+<p>其實在 AMP 剛推出時，Tim Kadlec 就有提了一個不錯的方法，叫做 <a href="http://wicg.github.io/ContentPerformancePolicy/">Content Performance Policy</a>，目前也有簡單的草稿，Content Performancy Policy 的想法是，這些針對網路行動體驗最佳化的特殊模式，應該是由瀏覽器端來實做，然後網站可以透過 HTTP Header 來開關這些最佳化設定，使用的 synatx 基本上是借用 CSP 的格式來使用，我個人覺得這個想法其實蠻不錯的，可以減少許多問題，不過目前草稿還很不完整，瀏覽器廠商實做的意願也還不知道如何，前途未卜，其實 Tim Kadlec 本人是對 AMP 抱持一些負面的態度的，畢竟 AMP 還是有些問題在，最直接的問題大概就是，AMP 其實就是比較開放一點的 Facebook Instant Article 而已，如果不是 standalone 模式的話，目前就只有 Google 的服務會導引到 AMP 網頁，就和 Facebook 的 Instant Article 其實一樣，這點也是 Tim Kadlec 覺得最不好的點，可能 AMP 出來到消失之後都沒真的實質對網路標準有所改善，這也讓我想到很久之前 Dart 的<a href="https://blog.othree.net/log/2015/03/28/for-the-entire-web/">事情</a>（PS. 我都快想不起來 Dart 這名字了 and ES 的大數現在還是沒有影子），好像有點巧，都是同一間公司。</p>
+
+<p>還有另外一個很明顯的問題就是向下相容性的問題，例如為了控制圖片可以延遲讀取，所以 AMP 網頁要用 <code>&lt;amp-img&gt;</code> 來放圖片：</p>
+
+<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
+&lt;/amp-img&gt;
+</code></pre>
+
+<p>不過這很明顯的，不支援 JavaScript 或是關掉的時候，圖片自然就出不來，如果想要做 standalone 版的 AMP 網頁，這應該是不太行的，所以要加個 fallback，但是 AMP 又不允許直接放 <code>&lt;img&gt;</code> 標籤，結果就會變成：</p>
+
+<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
+  &lt;noscript&gt;
+    &lt;img width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""/&gt;
+  &lt;/noscript&gt;
+&lt;/amp-img&gt;
+</code></pre>
+
+<p>一是多了一層 <code>&lt;noscript&gt;</code>，二是所有圖片的資訊都會重複一份，如果還有 <code>srcset</code> 和 <code>sizes</code> 的話又會更可怕，而目前也因為向下相容比較麻煩的關係，所以我還不會考慮使用 standalone 模式的 AMP 網頁。並且如果用 paired 模式的話，則是讓網頁內容重複出現在網路上，可能就會造成一些不統一的情形，例如訪客看到 AMP 網頁直接分享，那就會和看到普通版網頁分享的結果不太一樣，雖然有指定 canonical URL，不過這部分資訊其實不會在這種地方產生效用，總之是個有點尷尬的情形。</p>
+
+<p>最後要說的是，AMP 因為現在是 Google 提供應用，所以很合理的，在中國境內無法使用，也很順便的就有了 Baidu 的 clone，叫做 <a href="https://www.mipengine.org/">Mobile Instant Pages</a>，簡稱 MIP，從官方網站上看起來基本上就是和 AMP 大同小異，只是用命名裡面的 <code>amp</code> 換成 <code>mip</code>，大概比較了一下目前最小化過的 MIP JavaScript 和 AMP 的 JavaScript，看起來是重新寫過的，官網上也有說過會公開原始碼，目前 Baidu 似乎是還沒大量啟用，大概還在很初期的推廣期吧，先不說 MIP 網站沒有任何地方提到 AMP，我對 MIP 還有一點不太滿意，就是他 paired 模式的 AMP 頁面指回一般頁面時用的標籤是：</p>
+
+<pre><code>&lt;link rel="standardhtml" href="xxx" &gt;
+</code></pre>
+
+<p>而不是使用已經語意很清楚且通用的 <code>canonical</code>，實在是非常可惜。</p>
+
+<p>AMP 的出現，對於一個前端工程師來說，最大的意義，大概就是又要產生一個版本的頁面出來，所以現在一份文字內容，就要產生標準的 HTML 文件，假設不特別讓 mobile 單獨一版，然後還有 RSS Feed、AMP HTML，如果要支援 <a href="https://developers.facebook.com/docs/instant-articles/guides/format-overview">Facebook Instant Article</a> 的話還要輸出一版 Instant Article 的 HTML，當然也可能是 RSS Feed 型式，然後然後如果要跑中國市場，就還要輸出一個 MIP 的版本，這樣算下來，一共是五個版本了，什麼，你說還有 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html#//apple_ref/doc/uid/TP40015408-CH110-SW1">Apple News</a>...</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000877" baseName="native-true-color-vim">
 			<b:author>
 				<b:authorName>othree</b:authorName>

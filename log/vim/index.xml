@@ -9,6 +9,39 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000880" baseName="vim-filename-complete">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2016-10-29</b:date>
+				<b:time>15:36:02</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim Filename Complete</b:title>
+			<b:content>
+				<b:summary> Vim 有一個內建的自動補完功能是針對檔案名稱的，使用的方法是 &lt;C-X&gt;&lt;C-F&gt;，我目前在維護的 autocomplpop 也有支援這種補完模式，只要輸入 ./ 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄($PWD)，加上我會使用 ctrlp 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 path 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 path 值包括了 .，不過目前還沒有相關時程，就只能自救了。 最簡單的方法，其實就是開啟 autochdir，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到一篇，裡面有兩個人提供了解法，第一個是用 autocmd，然後在進入...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w" /></a></p>
+
+<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
+
+<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
+
+<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+:autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
+</code></pre>
+
+<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000877" baseName="native-true-color-vim">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -485,51 +518,6 @@ make install
 <p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
 
 <p>powerline 自訂的這幾個 <a href="https://powerline.readthedocs.org/en/latest/fontpatching.html#glyph-table">新符號</a>，也是歸類在這些字元，剛好我以前都會用 iTerm 上工作站連 BBS，所以那個選項有開，結果就是如上圖下半部那樣，符號的右邊多了一個空白的寬度。這張圖上下的差異只有該選項有沒有打開而已，不過雖然搞清楚問題在哪，我最後還是決定不要用三角形，只用了 branch 的符號而已，結果就是本文的第一張圖那樣。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000749" baseName="autocomplpop-and-snipmate">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-06-25</b:date>
-				<b:time>00:46:07</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>autocomplpop + snipmate</b:title>
-			<b:content>
-				<b:summary> 我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 snipmate，不過大改一陣子之後，原本兩者間可以合作的hack 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 autocomplpop 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。 其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。 這次不用改檔案，設定有設對： let g:acp_behaviorSnipmateLength = 1 輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。 最後要補充一下，我 fork 的 autocomplpop 是原作者...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
-
-<p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
-
-<p>其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。</p>
-
-<p>這次不用改檔案，設定有<a href="https://github.com/othree/vim-autocomplpop/blob/master/doc/acp.txt#L82">設對</a>：</p>
-
-<pre><code>let g:acp_behaviorSnipmateLength = 1
-</code></pre>
-
-<p>輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。</p>
-
-<p>最後要補充一下，我 fork 的 autocomplpop 是原作者 ns9tks 拆出一些 component 的版本，所以會需要安裝 <a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a>，新的 snipmate 也有相依的 plugin：<a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a> 和 <a href="https://github.com/tomtom/tlib_vim">tlib</a>，而且它也不含 snippets，東西在另外一個 <a href="https://github.com/honza/vim-snippets">vim-snippets</a>，其實有點多，蠻混亂的，所以整理一下總共要裝哪些 plugin：</p>
-
-<ul>
-<li><a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a></li>
-<li><a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a></li>
-<li><a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a></li>
-<li><a href="https://github.com/tomtom/tlib_vim">tlib</a></li>
-<li><a href="https://github.com/garbas/vim-snipmate">vim-snipmate</a></li>
-<li><a href="https://github.com/honza/vim-snippets">vim-snippets</a></li>
-</ul>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>
