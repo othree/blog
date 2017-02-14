@@ -19,5 +19,5 @@ scripts/all.js.br: scripts/all.js
 scripts/all.js.gz: scripts/all.js
 	zopfli scripts/all.js
 
-scripts/all.js: scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/disable_pointer_events.js scripts/googleanalytic.js
-	uglifyjs scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/disable_pointer_events.js scripts/googleanalytic.js > scripts/all.js
+scripts/all.js: scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/googleanalytic.js
+	uglifyjs scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/googleanalytic.js > scripts/all.js
