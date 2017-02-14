@@ -4,11 +4,98 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-11-18 00:00</lastBuildDate>
+<copyright>Copyright 2017</copyright>
+<lastBuildDate>2017-01-14 12:22</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>NodeJS and ES Module</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w" /></a></p>
+
+<p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
+
+<pre><code>(function (root) {
+
+  root.lib = {};
+
+}(this));
+</code></pre>
+
+<p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code> <a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
+
+<pre><code>(function (root) {
+
+  root.lib = {};
+
+}(this));
+
+export {};
+</code></pre>
+
+<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type="module"&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</link>
+<guid>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</guid>
+<category>script</category>
+<pubDate>2017-01-14 12:22</pubDate>
+</item>
+
+<item>
+<title>smartypants.js</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31387550094/" title="大阪新年 by othree, on Flickr"><img src="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg" width="1024" height="683" alt="大阪新年" srcset="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg 1024w, https://farm1.staticflickr.com/293/31387550094_6f388b3f83_h.jpg 1600w" /></a></p>
+
+<p><a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 這個東西也是很久了，和 Markdown 差不多時期，都是 John Gruber 幫當時的網路文字出版軟體（ex: MovableType）所做的，而 SmartyPants 是用來處理一些標點符號的，其中，最容易被人注意到的就是引號「"」的轉換了。</p>
+
+<p>雖然鍵盤上的引號按鍵只有一個，但是傳統的文書寫作上，引號是有分左邊（開始）的「&#8220;」和右邊（結束）的「&#8221;」，只不過早期為了減少鍵盤按鍵數，還有字元編碼上的限制，所以合併成為只有一個，不過隨著計算機的發展，可以使用的字元編碼資料量增加後，就還是有定義了開始和結束的兩種引號，並且有單引號和雙引號兩種：</p>
+
+<ul>
+<li>左單引號 &#8216;</li>
+<li>右單引號 &#8217;</li>
+<li>左雙引號 &#8220;</li>
+<li>右雙引號 &#8221;</li>
+</ul>
+
+<p>理想上，寫作文章時也應該正確的使用這些引號，不過其實因為輸入上比較麻煩，一般人打字也不會特別注意，所以常常被忽略，比較常見的是軟體本身在使用者輸入文字時自動做轉換，例如 Apple 的 Pages、Keynote、微軟的 Skype 等等，講到 Keynote 自動轉換引號這點就要另外岔題一下，就是偶爾都會看到頭影片裡面的程式碼，其中的引號也被轉換過，其實就是因為貼上 code 到 Keynote 的時候被轉換了，如果作者沒有注意到的話就直接釋出，然後讀者 copy 程式碼出來試試看時，就會編譯失敗而無法執行。回到標點符號上，這類標點符號其實不止有引號，SmartyPants 可以處理的還包括：</p>
+
+<ul>
+<li><code>--</code> 轉成 en-dash &#8211;</li>
+<li><code>---</code> 轉成 em-dash &#8212;</li>
+<li><code>...</code> 轉成 ellipsis &#8230;</li>
+</ul>
+
+<p>而且它對於引號的轉換還算是聰明，會判斷是不是真的用來包起文字的，還支援用 backtick 來模擬的雙引號，看起來像：</p>
+
+<pre><code>``quoted string''
+</code></pre>
+
+<p>另為也會針對年代的特殊寫法做處理，例如 <code>'80s</code> 會轉成 &#8217;80s，並且會避開 HTML 標籤的部分，不會把 HTML 標籤裡面的屬性值的引號也做轉換，像是 <code>&lt;html lang="en"&gt;</code> 這種。前陣子因為工作上要處理翻譯字串，想要順便好好的處理這些符號，所以就想到了這個工具，因為我一般寫小 script 做事情是用 JavaScript 然後用 node 來執行，所以要用 SmartyPants 就沒辦法那麼直接了，一開始先找 JavaScript 的 solution，找到一個簡單的，只用幾條 regular epxression 的<a href="https://gist.github.com/danburzo/1cc866400cb4f810c493">版本</a>，其實運作的也還不錯，但是無法避開不處理 HTML 標籤，所以產生出來的結果也不能用，接著改成用 STDIO 丟給 John Gruber 的 Perl 版，結果這效率實在太差，所以又繼續研究一番，發現還有一套叫 <a href="https://www.npmjs.com/package/typogr">typogr</a> 的文字處理工具有實做，不過不想要太多功能，所以最後我決定自己把 Perl 版 SmartyPants 移植成 NPM module，也因此有了 <a href="https://github.com/othree/smartypants.js">smartypants.js</a>。</p>
+
+<p>這次開發我選擇的語言是 TypeScript，原因可以參考我上一篇文章 <a href="https://blog.othree.net/log/2016/11/18/20k-for-of/">20k-for-of</a>，然後用 Makefile 加上一些指令轉成類似 <a href="https://github.com/jquery/jquery/blob/master/src/wrapper.js">jQuery UMD</a> 形式的 JavaScript 檔案發佈到 NPM 上，目前的 smartypants.js 是完完全全把 Perl 版的邏輯翻過來，不過只有實作轉換編碼的部分加上 CLI 的介面，另外 Perl 版的只能轉換成 HTML entity 的格式，不過現在 UTF-8 已經算是很廣泛應用的文字編碼了，所以我還加上了一個轉成 UTF-8 字元的版本，用 UTF-8 編碼的雙引號其實很不錯，在 JSON 或是 csv 裡面也不用 escape，肉眼看起來也美觀許多。</p>
+
+<p>實做過程比較緊張的地方大概就是要把 Perl 的 regular expression 轉成 JavaScript 的版本了，一度看到沒看過的用法都覺得會不會沒辦法用 JavaScript 做起來，還好沒用到很神奇的語法。另外它處理 HTML 語法的部分，其實是先過一個簡單的 lexer 轉成 token list，裡面兩種 token 分別就是一般文字和 HTML 標籤兩種，接著只針對一般文字 token 來做標點符號轉換，不過其實這個 tokenize 的部分有 bug，例如：</p>
+
+<pre><code>&lt;span title="&gt;"&gt;HAHA&lt;/span&gt;
+</code></pre>
+
+<p>就會被分解成如下的 token：</p>
+
+<ul>
+<li><code>&lt;span title="&gt;</code></li>
+<li><code>"&gt;HAHA</code></li>
+<li><code>&lt;/span&gt;</code></li>
+</ul>
+
+<p>而且這種方法就也無法處理到一些文字內容的 HTML 屬性，例如 title 和 alt 等，所以接下來還可以做的改進，一個就是改進這部分的 lexer，然後也要對這些屬性值轉換標點符號，大概需要建立一個白名單，另外還有一個想加強的地方就是補上 test case 了，目前完全沒有相關的 test case 可以用，所以其實也沒很正式的驗證過，不過總之目前是都還運作正常，如果有相似需求的人可以參考一下。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/01/10/smartypants-js/</link>
+<guid>https://blog.othree.net/log/2017/01/10/smartypants-js/</guid>
+<category>script</category>
+<pubDate>2017-01-10 22:47</pubDate>
+</item>
 
 <item>
 <title>20K for...of</title>
@@ -923,54 +1010,6 @@ function fib(n) {
 <guid>https://blog.othree.net/log/2015/04/25/reactjs-conf/</guid>
 <category>script</category>
 <pubDate>2015-04-25 15:41</pubDate>
-</item>
-
-<item>
-<title>Loader</title>
-<description><![CDATA[<p>Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">AMD</a> 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。</p>
-]]><![CDATA[<p>Addy Osmani 有建立一個 Loader 的 polyfill 給 ES5 環境使用 Loader API，就叫做 <a href="https://github.com/ModuleLoader/es6-module-loader">ES6 Module Loader Polyfill</a>，這個 polyfill 內部實做是照當初 ES6 draft 來寫的，其實還蠻複雜，不過把讀取一個 module 的事情拆分一下，可以分成以下幾個步驟：</p>
-
-<ol>
-<li>Normalize：根據給的名稱取得實際的 module name</li>
-<li>Locate：根據實際的 module name 取得 module 的位置</li>
-<li>Fetch：根據 module 位置去取得檔案內容</li>
-<li>Translate：如果有需要對檔案內容作任何修改，就在這裡處理</li>
-<li>Instaniate：最後是根據檔案內容（程式碼），判斷有哪些相依模組和知道如何初始化這個模組</li>
-</ol>
-
-<p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
-
-<p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 接手<a href="https://github.com/whatwg/loader">繼續</a>，最新的版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
-
-<p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
-
-<p>本來我是想看看，是不是能夠只靠 Loader 就把 ES6 的 module 機制在現在的瀏覽器上建立起來，結果發現只靠 ES6 Module Loader Polyfill 是辦不到的，Loader API 並沒有定義模組的語法，如果用 ES6 的語法來定義模組還需要 transpiler 來從程式碼中分析出 module dependency，不過我不太想要把整包 transpiler 也放到 translate 裡面用，雖然可以自己寫一個什麼事情都不做的 translate function，但是要解決 dependency 的話還是會需要像 <code>System.register</code> 的幫助，總之到這邊，可以發現一個重點是，Loader 不管 module 定義的方法，雖然假想情境下是用 ES6 module 語法，每個檔案代表一個 module，然後用 <code>import</code> 和 <code>export</code> 來定義相依模組和提供的 method，不過其實 Loader 也是可以處理 AMD、<a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS</a> 甚至是 <a href="https://nodejs.org/api/modules.html">NodeJS</a> 型式的模組定義，只是要有人去實做這部分的 translate 和 instantiate 的部分，而 SystemJS最新版（0.16）就是這樣一個專案，它號稱是 universal module loader，支援 AMD、CommonJS、NodeJS 和 ES6 的模組定義，然後在最新的版本，改成使用 ES6 Module Loader Polyfill 的機制來做 module 的讀取、相依性的判斷和模組初始化，雖然有些地方沒有真的照之前的 spec 來實做。</p>
-
-<p>另外一個之前不太清楚的問題也藉此搞清楚了，ES6 module 有限制一個檔案定義一個 module，而現在的 web application 常常為了效能問題，都把多個檔案合併成一個檔案，這時就不能用 ES6 module 了，當然也可以用像現在 SystemJS 的作法來處理，不過其實再過一兩年 HTTP/2 普及後，也不需要這樣搞了，會變成只需要 minimize，這部分倒是還可以接受。</p>
-
-<p>ES6 裡面的 Loader 本身其實是一個 constructor，放在另外一個 ES6 提供的新東西 <code>Reflect</code> 下面，而用 <code>Reflect.Loader</code> 建立 Loader instance 時可以順便給他一些參數，像是前面提到的讀模組的五個步驟的實做，或是領域（realm），而 <code>System</code> 物件則是該 JS 環境下的預設的 Loader，理論上如果是瀏覽器環境，它就會知道怎樣去 fetch 遠端的程式碼回來，如果是 NodeJS 就會改用 file system 讀檔案，而且也知道要把模組放到那個 realm（理論上不同 frame 就是不同 realm），這樣大部分的使用都可以用 <code>System</code> 就好了，只有很少數的情形需要自己建立 Loader。其實上面說的 Loader API 不知道為什麼是移到 WHATWG 之後，幾乎是重新開始編寫，完整度欠佳，有些章節還是空的，另外也沒有定義 <code>System</code> 或是其它的新的替代方案，所以現在想要看看到底 Loader 內部怎麼做的話，要看舊版的 spec，可以去抓 2014 年 8 月的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#august_24_2014_draft_rev_27">ES6 draft rev 27</a> 然後看看 CH 26, 15，對照 ES6 Module Loader Polyfill 的程式碼可能比好懂。</p>
-]]></description>
-<link>https://blog.othree.net/log/2015/04/05/loader/</link>
-<guid>https://blog.othree.net/log/2015/04/05/loader/</guid>
-<category>script</category>
-<pubDate>2015-04-05 14:50</pubDate>
-</item>
-
-<item>
-<title>ECMAScript 6 Final Draft Approved</title>
-<description><![CDATA[<blockquote class="twitter-tweet" lang="zh-tw"><p>Ecma-TC39 just approved the final ES6 draft. It now goes to the Ecma General Assembly for approval in June</p>- Allen Wirfs-Brock (@awbjs) <a href="https://twitter.com/awbjs/status/580321916403216384">2015 3月 24日</a></blockquote>
-
-<p>剛剛看到說 ECMAScript 2015(ES6) 定稿了，最後一版草稿是 RC4（還沒 release），接下來會是 ECMA 認證流程的樣子，不過繼續下一版的討論也不會中斷，順便要說一下他們最後 approve 的地方是在 H.R. Giger 博物館的酒吧，超酷的，這是畫異形那位大師的博物館。</p>
-
-<blockquote class="twitter-tweet" lang="zh-tw"><p>Celebrated w/<a href="https://twitter.com/rebeccawb">@rebeccawb</a>  TC39 approval of ES6, at H.R. Giger Museum in Gruyère <a href="http://t.co/uEKzfozxX2">pic.twitter.com/uEKzfozxX2</a></p>- Allen Wirfs-Brock (@awbjs) <a href="https://twitter.com/awbjs/status/582239060539904000">2015 3月 29日</a></blockquote>
-
-<script async="async" src="//platform.twitter.com/widgets.js" charset="utf-8"><!-- --></script>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/03/30/ecmascript-6-final-draft/</link>
-<guid>https://blog.othree.net/log/2015/03/30/ecmascript-6-final-draft/</guid>
-<category>script</category>
-<pubDate>2015-03-30 18:34</pubDate>
 </item>
 
 
