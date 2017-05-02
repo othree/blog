@@ -9,455 +9,372 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
-		<b:entry entryID="000883" baseName="nodejs-es-module">
+		<b:entry entryID="000894" baseName="japan-self-drive">
 			<b:author>
 				<b:authorName>othree</b:authorName>
 				<b:authorEmail>othree@gmail.com</b:authorEmail>
 				<b:authorUrl></b:authorUrl>
 			</b:author>
 			<b:datetime>
-				<b:date>2017-01-14</b:date>
-				<b:time>12:22:32</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>NodeJS and ES Module</b:title>
-			<b:content>
-				<b:summary> 今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 CommonJS Module 和 ECMAScript Module(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 import/require 也沒 export/exports 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組： (function (root) { root.lib = {}; }(this)); 像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w" /></a></p>
-
-<p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
-
-<pre><code>(function (root) {
-
-  root.lib = {};
-
-}(this));
-</code></pre>
-
-<p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code> <a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
-
-<pre><code>(function (root) {
-
-  root.lib = {};
-
-}(this));
-
-export {};
-</code></pre>
-
-<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type="module"&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000882" baseName="smartypants-js">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-01-10</b:date>
-				<b:time>22:47:59</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>smartypants.js</b:title>
-			<b:content>
-				<b:summary> SmartyPants 這個東西也是很久了，和 Markdown 差不多時期，都是 John Gruber 幫當時的網路文字出版軟體（ex: MovableType）所做的，而 SmartyPants 是用來處理一些標點符號的，其中，最容易被人注意到的就是引號「"」的轉換了。 雖然鍵盤上的引號按鍵只有一個，但是傳統的文書寫作上，引號是有分左邊（開始）的「&#8220;」和右邊（結束）的「&#8221;」，只不過早期為了減少鍵盤按鍵數，還有字元編碼上的限制，所以合併成為只有一個，不過隨著計算機的發展，可以使用的字元編碼資料量增加後，就還是有定義了開始和結束的兩種引號，並且有單引號和雙引號兩種： 左單引號 &#8216; 右單引號 &#8217; 左雙引號 &#8220; 右雙引號 &#8221; 理想上，寫作文章時也應該正確的使用這些引號，不過其實因為輸入上比較麻煩，一般人打字也不會特別注意，所以常常被忽略，比較常見的是軟體本身在使用者輸入文字時自動做轉換，例如 Apple 的 Pages、Keynote、微軟的 Skype 等等，講到 Keynote 自動轉換引號這點就要另外岔題一下，就是偶爾都會看到頭影片裡面的程式碼，其中的引號也被轉換過，其實就是因為貼上 code 到 Keynote 的時候被轉換了，如果作者沒有注意到的話就直接釋出，然後讀者 copy 程式碼出來試試看時，就會編譯失敗而無法執行。回到標點符號上，這類標點符號其實不止有引號，SmartyPants 可以處理的還包括： -- 轉成 en-dash &#8211; ---...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31387550094/" title="大阪新年 by othree, on Flickr"><img src="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg" width="1024" height="683" alt="大阪新年" srcset="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg 1024w, https://farm1.staticflickr.com/293/31387550094_6f388b3f83_h.jpg 1600w" /></a></p>
-
-<p><a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 這個東西也是很久了，和 Markdown 差不多時期，都是 John Gruber 幫當時的網路文字出版軟體（ex: MovableType）所做的，而 SmartyPants 是用來處理一些標點符號的，其中，最容易被人注意到的就是引號「"」的轉換了。</p>
-
-<p>雖然鍵盤上的引號按鍵只有一個，但是傳統的文書寫作上，引號是有分左邊（開始）的「&#8220;」和右邊（結束）的「&#8221;」，只不過早期為了減少鍵盤按鍵數，還有字元編碼上的限制，所以合併成為只有一個，不過隨著計算機的發展，可以使用的字元編碼資料量增加後，就還是有定義了開始和結束的兩種引號，並且有單引號和雙引號兩種：</p>
-
-<ul>
-<li>左單引號 &#8216;</li>
-<li>右單引號 &#8217;</li>
-<li>左雙引號 &#8220;</li>
-<li>右雙引號 &#8221;</li>
-</ul>
-
-<p>理想上，寫作文章時也應該正確的使用這些引號，不過其實因為輸入上比較麻煩，一般人打字也不會特別注意，所以常常被忽略，比較常見的是軟體本身在使用者輸入文字時自動做轉換，例如 Apple 的 Pages、Keynote、微軟的 Skype 等等，講到 Keynote 自動轉換引號這點就要另外岔題一下，就是偶爾都會看到頭影片裡面的程式碼，其中的引號也被轉換過，其實就是因為貼上 code 到 Keynote 的時候被轉換了，如果作者沒有注意到的話就直接釋出，然後讀者 copy 程式碼出來試試看時，就會編譯失敗而無法執行。回到標點符號上，這類標點符號其實不止有引號，SmartyPants 可以處理的還包括：</p>
-
-<ul>
-<li><code>--</code> 轉成 en-dash &#8211;</li>
-<li><code>---</code> 轉成 em-dash &#8212;</li>
-<li><code>...</code> 轉成 ellipsis &#8230;</li>
-</ul>
-
-<p>而且它對於引號的轉換還算是聰明，會判斷是不是真的用來包起文字的，還支援用 backtick 來模擬的雙引號，看起來像：</p>
-
-<pre><code>``quoted string''
-</code></pre>
-
-<p>另為也會針對年代的特殊寫法做處理，例如 <code>'80s</code> 會轉成 &#8217;80s，並且會避開 HTML 標籤的部分，不會把 HTML 標籤裡面的屬性值的引號也做轉換，像是 <code>&lt;html lang="en"&gt;</code> 這種。前陣子因為工作上要處理翻譯字串，想要順便好好的處理這些符號，所以就想到了這個工具，因為我一般寫小 script 做事情是用 JavaScript 然後用 node 來執行，所以要用 SmartyPants 就沒辦法那麼直接了，一開始先找 JavaScript 的 solution，找到一個簡單的，只用幾條 regular epxression 的<a href="https://gist.github.com/danburzo/1cc866400cb4f810c493">版本</a>，其實運作的也還不錯，但是無法避開不處理 HTML 標籤，所以產生出來的結果也不能用，接著改成用 STDIO 丟給 John Gruber 的 Perl 版，結果這效率實在太差，所以又繼續研究一番，發現還有一套叫 <a href="https://www.npmjs.com/package/typogr">typogr</a> 的文字處理工具有實做，不過不想要太多功能，所以最後我決定自己把 Perl 版 SmartyPants 移植成 NPM module，也因此有了 <a href="https://github.com/othree/smartypants.js">smartypants.js</a>。</p>
-
-<p>這次開發我選擇的語言是 TypeScript，原因可以參考我上一篇文章 <a href="https://blog.othree.net/log/2016/11/18/20k-for-of/">20k-for-of</a>，然後用 Makefile 加上一些指令轉成類似 <a href="https://github.com/jquery/jquery/blob/master/src/wrapper.js">jQuery UMD</a> 形式的 JavaScript 檔案發佈到 NPM 上，目前的 smartypants.js 是完完全全把 Perl 版的邏輯翻過來，不過只有實作轉換編碼的部分加上 CLI 的介面，另外 Perl 版的只能轉換成 HTML entity 的格式，不過現在 UTF-8 已經算是很廣泛應用的文字編碼了，所以我還加上了一個轉成 UTF-8 字元的版本，用 UTF-8 編碼的雙引號其實很不錯，在 JSON 或是 csv 裡面也不用 escape，肉眼看起來也美觀許多。</p>
-
-<p>實做過程比較緊張的地方大概就是要把 Perl 的 regular expression 轉成 JavaScript 的版本了，一度看到沒看過的用法都覺得會不會沒辦法用 JavaScript 做起來，還好沒用到很神奇的語法。另外它處理 HTML 語法的部分，其實是先過一個簡單的 lexer 轉成 token list，裡面兩種 token 分別就是一般文字和 HTML 標籤兩種，接著只針對一般文字 token 來做標點符號轉換，不過其實這個 tokenize 的部分有 bug，例如：</p>
-
-<pre><code>&lt;span title="&gt;"&gt;HAHA&lt;/span&gt;
-</code></pre>
-
-<p>就會被分解成如下的 token：</p>
-
-<ul>
-<li><code>&lt;span title="&gt;</code></li>
-<li><code>"&gt;HAHA</code></li>
-<li><code>&lt;/span&gt;</code></li>
-</ul>
-
-<p>而且這種方法就也無法處理到一些文字內容的 HTML 屬性，例如 title 和 alt 等，所以接下來還可以做的改進，一個就是改進這部分的 lexer，然後也要對這些屬性值轉換標點符號，大概需要建立一個白名單，另外還有一個想加強的地方就是補上 test case 了，目前完全沒有相關的 test case 可以用，所以其實也沒很正式的驗證過，不過總之目前是都還運作正常，如果有相似需求的人可以參考一下。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000881" baseName="20k-for-of">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-11-18</b:date>
-				<b:time>00:00:52</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>20K for...of</b:title>
-			<b:content>
-				<b:summary>for...of 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 for...in 或是用傳統的取長度，然後 i++ 的方法： var arr = [1, 2, 3]; var i, v, len; for (i in arr) { v = arr[i]; console.log(v); } for (i = 0, len = arr.length; i &lt; len; i++)...</b:summary>
-				<b:mainContent><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 <code>for...in</code> 或是用傳統的取長度，然後 <code>i++</code> 的方法：</p>
-
-<pre><code>var arr = [1, 2, 3];
-var i, v, len;
-
-for (i in arr) {
-    v = arr[i];
-    console.log(v);
-}
-
-for (i = 0, len = arr.length; i &lt; len; i++) {
-    v = arr[i];
-    console.log(v);
-}
-</code></pre>
-
-<p>現在只要用簡單的 <code>for...of</code> 就可以了：</p>
-
-<pre><code>var arr = [1, 2, 3];
-
-for (let v of arr) {
-    console.log(v);
-}
-</code></pre>
-
-<p>不過目前還是需要考慮只有 ECMAScript 5 的環境，例如 IE11，所以一般都還是會用像是 <a href="https://babeljs.io/">Babel</a> 之類的 transpiler 來把 ES2015 的 syntax 轉成 ES5 的 code，結果轉出來如下：</p>
-
-<pre><code>"use strict";
-
-var arr = [1, 2, 3];
-
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-    for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var v = _step.value;
-
-        console.log(v);
-    }
-} catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-} finally {
-    try {
-        if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
-            _iterator.return();
-        }
-    } finally {
-        if (_didIteratorError) {
-            throw _iteratorError;
-        }
-    }
-}
-</code></pre>
-
-<p>結果其實有點意外，一個簡單的 <code>for...of</code> 竟然變的這麼長，事實上是因為 <code>for...of</code> 其實沒想像中簡單，因為它可以用的地方其實不只是陣列，而是 <a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">iterable 物件</a>，不過為了要完整的支援 <code>for...of</code>，就變成需要有 iterator, generator, symbol 等等的支援，當然上面的程式碼不能在 ES5 環境下執行，而 Babel 依靠的是 <a href="https://babeljs.io/docs/usage/polyfill/">babel-polyfill</a>，裡面其實就是 <a href="https://github.com/zloirock/core-js">core-js</a> 和 <a href="https://facebook.github.io/regenerator/">regenerator</a>，不過這一整包，其實有點龐大，要 228KB，即使最小化之後也還要 95KB，所以，就想著是不是能夠只捆包進需要的部分就好了，研究過後，發現有 Babel plugin 叫做 <a href="https://babeljs.io/docs/plugins/transform-runtime/">transform-runtime</a>，套用上去後：</p>
-
-<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
-var arr = [1, 2, 3];
-
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-  for (var _iterator = _getIterator(arr), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-    var v = _step.value;
-
-    console.log(v);
-  }
-} catch (err) {
-  _didIteratorError = true;
-  _iteratorError = err;
-} finally {
-  try {
-    if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
-      _iterator.return();
-    }
-  } finally {
-    if (_didIteratorError) {
-      throw _iteratorError;
-    }
-  }
-}
-</code></pre>
-
-<p>可以看到原來用 <code>Symbol</code> 取 iterator 的地方變成用 <code>_getIterator</code> 了，而且還有一行：</p>
-
-<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
-</code></pre>
-
-<p>如果要真的把這部分也打包進來，則需要讓 bundler 處理，我個人是偏好 <a href="http://rollupjs.org/">rollup</a>，搭配以下兩個 plugin：</p>
-
-<ul>
-<li><a href="https://github.com/rollup/rollup-plugin-node-resolve">rollup-plugin-node-resolve</a> 用來尋找 <code>node_modules</code> 目錄裡的模組</li>
-<li><a href="https://github.com/rollup/rollup-plugin-commonjs">rollup-plugin-commonjs</a> 用來解析 CommonJS 型式的模組</li>
-</ul>
-
-<p>然後用以下的設定：</p>
-
-<pre><code>babel({
-  exclude: 'node_modules/**',
-  plugins: ['transform-runtime'],
-  presets: ['es2015-loose-rollup'],
-  runtimeHelpers: true
-}),
-nodeResolve({ jsnext: true }),
-commonjs({
-  include: 'node_modules/**'
-})
-</code></pre>
-
-<p>結果，就可以得到夢寐以求的 20KB 的<a href="https://github.com/othree/20k-for-of/blob/master/out/bundle-all.js">程式碼</a>了，當然 20KB 的部分不是預期的啦，相較於一開始的程式碼只有 72Bytes，為了一個 <code>for...of</code> 變成 20KB 好像有點本末倒置，畢竟我只有要在 Array 上用，難道不能只是簡單的轉成 <code>for...in</code> 型式嗎。</p>
-
-<p>事實上是有辦法的，第一個就是改寫 <a href="https://www.typescriptlang.org/">TypeScript</a>，TypeScript 對於 <code>for...of</code> 只有兩種處理方法，而且結果都不會如此膨脹，第一種就是變成 <code>for...in</code>，第二種則是不變動，保留 <code>for...of</code> 的語法，後者是在 target 設定成 ES6 的時候使用的，官網也有相關的<a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#targeting-es5-and-es3">說明</a>。</p>
-
-<p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
-
-<p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000880" baseName="vim-filename-complete">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-10-29</b:date>
-				<b:time>15:36:02</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Vim Filename Complete</b:title>
-			<b:content>
-				<b:summary> Vim 有一個內建的自動補完功能是針對檔案名稱的，使用的方法是 &lt;C-X&gt;&lt;C-F&gt;，我目前在維護的 autocomplpop 也有支援這種補完模式，只要輸入 ./ 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄($PWD)，加上我會使用 ctrlp 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 path 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 path 值包括了 .，不過目前還沒有相關時程，就只能自救了。 最簡單的方法，其實就是開啟 autochdir，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到一篇，裡面有兩個人提供了解法，第一個是用 autocmd，然後在進入...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w" /></a></p>
-
-<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
-
-<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
-
-<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
-:autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
-</code></pre>
-
-<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000879" baseName="sbb-mobile">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-10-17</b:date>
-				<b:time>22:51:45</b:time>
+				<b:date>2017-04-29</b:date>
+				<b:time>22:58:39</b:time>
 			</b:datetime>
 			<b:category>diary</b:category>
-			<b:title>SBB Mobile</b:title>
+			<b:title>日本自駕</b:title>
 			<b:content>
-				<b:summary> 之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：SBB Mobile，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w" /></a></p>
+				<b:summary> 這篇想要記錄一下第一次去日本自駕，就前陣子去了沖繩一趟，當然就選擇租車自駕，這篇用條列式記錄一下： 租車公司是 OTS，因為第一次的關係，所以就盡量走大眾路線 不過 OTS 因為比較大間，位置離機場也比較遠，其實比較花時間 租的車款是 Toyota C-HR，看到有特價加上早鳥，不過也還是比一般車款貴 不免俗的離開租車公司時要刷一下雨刷 大約第二天就不太有左右駕習慣問題了，回國後也沒有左右問題 沖繩比較偏遠，部分路段的路面狀況其實也不好 幾乎所有路口都可以右轉，有右轉道，可能是沖繩才這樣 晚上山路其實沒什麼路燈，交通號誌反光效果超強的，強到覺得會刺眼 不過一部份應該是因為車燈很亮，倒是號誌都很乾淨是真的 以後應該還想要東北、北海道也去試試看自駕 針對 Toyota C-HR 的部分： 後座空間真的小、後座車窗也小 四人三個行李箱有點勉強，後行李箱只能放兩個中 size 的行李箱 一大一中也不行，剩下一個大的是把後座一個位子拉倒才放進去 有個自動切換遠光燈（AHB）的功能，正確性很高，實在很方便 不過車門在開動車子後不會自動上鎖 開鎖的時候地上會有投影，有點騷包(?) 開起來感覺其實是還不錯啦...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34028951701/" title="沖繩 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg" width="1024" height="683" alt="沖繩" srcset="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg 1024w, https://farm3.staticflickr.com/2805/34028951701_5720ab1710_h.jpg 1600w" /></a></p>
 
-<p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
+<p>這篇想要記錄一下第一次去日本自駕，就前陣子去了沖繩一趟，當然就選擇租車自駕，這篇用條列式記錄一下：</p>
+
+<ul>
+<li>租車公司是 OTS，因為第一次的關係，所以就盡量走大眾路線</li>
+<li>不過 OTS 因為比較大間，位置離機場也比較遠，其實比較花時間</li>
+<li>租的車款是 Toyota C-HR，看到有特價加上早鳥，不過也還是比一般車款貴</li>
+<li>不免俗的離開租車公司時要刷一下雨刷</li>
+<li>大約第二天就不太有左右駕習慣問題了，回國後也沒有左右問題</li>
+<li>沖繩比較偏遠，部分路段的路面狀況其實也不好</li>
+<li>幾乎所有路口都可以右轉，有右轉道，可能是沖繩才這樣</li>
+<li>晚上山路其實沒什麼路燈，交通號誌反光效果超強的，強到覺得會刺眼 <br />
+不過一部份應該是因為車燈很亮，倒是號誌都很乾淨是真的</li>
+<li>以後應該還想要東北、北海道也去試試看自駕</li>
+</ul>
+
+<p>針對 Toyota C-HR 的部分：</p>
+
+<ul>
+<li>後座空間真的小、後座車窗也小</li>
+<li>四人三個行李箱有點勉強，後行李箱只能放兩個中 size 的行李箱 <br />
+一大一中也不行，剩下一個大的是把後座一個位子拉倒才放進去</li>
+<li>有個自動切換遠光燈（<a href="http://www.toyota-global.com/innovation/safety_technology/safety_technology/technology_file/active/ahb.html">AHB</a>）的功能，正確性很高，實在很方便</li>
+<li>不過車門在開動車子後不會自動上鎖</li>
+<li>開鎖的時候地上會有投影，有點騷包(?)</li>
+<li>開起來感覺其實是還不錯啦</li>
+</ul>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33201465513/" title="沖繩 okinawa by othree, on Flickr"><img src="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg" width="1024" height="683" alt="沖繩 okinawa, " srcset="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg 1024w, https://farm3.staticflickr.com/2946/33201465513_ea0cd7f8c5_h.jpg 1600w" /></a></p>
 </b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30325682056/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg 576w, https://farm9.staticflickr.com/8280/30325682056_b4a6e85cc7_h.jpg 900w" /></a></p>
-
-<p>列出符合條件四班車，然後可以看到更早和更晚的按鈕很顯眼，然後隨便選一個選項可以看到後面的細節：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30273224071/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg 576w, https://farm9.staticflickr.com/8131/30273224071_6d3d58d700_h.jpg 900w" /></a></p>
-
-<p>像是要不要轉車，會在哪個月台等等，隨便點其中一班列車會看到它的行車路線：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519365/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg 576w, https://farm6.staticflickr.com/5551/30359519365_3903bfb570_h.jpg 900w" /></a></p>
-
-<p>如果該班車已經在運行的話，就會有行車進度，而且延遲的時候也會馬上更新訊息，連後面站的時間差異也會顯示：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519005/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg 576w, https://farm6.staticflickr.com/5337/30359519005_690b78f4e3_h.jpg 900w" /></a></p>
-
-<p>而且根據觀察，如果有延遲的話，駕駛會想辦法追上本來的時間，如果沒辦法照新時刻跑，也會隨時更新資訊：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242964642/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg 576w, https://farm6.staticflickr.com/5511/30242964642_5f79df31d8_h.jpg 900w" /></a></p>
-
-<p>其實我本來一直以為它的功能就只有時刻表而已，直到有一天按到左上角的 menu：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965322/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg 576w, https://farm9.staticflickr.com/8275/30242965322_8b0760dc10_h.jpg 900w" /></a></p>
-
-<p>結果發現還有很多東西，像是搜尋歷史紀錄：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965082/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg 576w, https://farm9.staticflickr.com/8134/30242965082_90fcf903d3_h.jpg 900w" /></a></p>
-
-<p>車站資訊：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519425/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg 576w, https://farm9.staticflickr.com/8419/30359519425_2b8e47fa69_h.jpg 900w" /></a></p>
-
-<p>也還可以用來買票，不過因為我有買 Swiss Travel Pass 就沒機會用了，不過 SBB 還有提供 YouTube 的影片介紹，可以加減看一下，最後還有一個用搖晃手機顯示最新車票的功能，看起來蠻實用的～</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/hvH41daq8sw?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<p>整體而言，我覺得 SBB Mobile 的介面真的做的很不錯，真的是畫面乾淨、該有的都有、控制元件也好懂、複雜的東西也有藏起來，幾乎是可以當範本了，有機會去瑞士的話，一定要裝來用一下的，另外他們最近準備推出新版的 SBB Mobile，已經有 preview 版可以用，還有一個<a href="http://www.micro.sbb.ch/mobile-preview/en/home/app.html">專頁介紹新功能</a>，也有好幾段介紹影片，看起來新版也相當不錯，而且開始有一些 material design 的元素也融合進去了。</p>
-
-<p>PS. SBB 是 Swiss Federal Railways（瑞士聯邦鐵路）的德語（Schweizerische Bundesbahnen）縮寫，一般在瑞士會看到 SBB CFF FFS 這樣的寫法，第二段的 CFF 是法語（Chemins de fer fédéraux suisses），FFS 則是義大利語（Ferrovie federali svizzere）</p>
+				<b:extendContent>
 </b:extendContent>
 			</b:content>
 
 
 		</b:entry>
 
-		<b:entry entryID="000878" baseName="acclerated-mobile-pages">
+		<b:entry entryID="000893" baseName="first-contribution-to-nginx">
 			<b:author>
 				<b:authorName>othree</b:authorName>
 				<b:authorEmail>othree@gmail.com</b:authorEmail>
 				<b:authorUrl></b:authorUrl>
 			</b:author>
 			<b:datetime>
-				<b:date>2016-10-14</b:date>
-				<b:time>22:14:08</b:time>
+				<b:date>2017-04-26</b:date>
+				<b:time>14:35:29</b:time>
 			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Acclerated Mobile Pages</b:title>
+			<b:category>unix</b:category>
+			<b:title>My First Contribution to Nginx</b:title>
 			<b:content>
-				<b:summary> Acclerated Mobile Pages 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 Extensible Web 宣言以來，第一個重要的里程碑。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w" /></a></p>
+				<b:summary> 因為工作上的需要，所以其實我還蠻常會編輯 nginx configuration file 的，理所當然的編輯器是用 vim，然後就會對 nginx 設定檔的支援有意見，一般人用的 nginx 設定檔的 vim script 其實是 nginx repository 的 contrib 目錄裡面的那份，這份 vim script 其實本來也是獨立的，不過原作者好像把他捐進去 nginx 裡面，之後就一直都在裡面了，也因此之後更新就很不頻繁。 然後因為檔案都放在 nginx repository 裡面，Vim 要使用其實不太方便，所以 Github 上還看的到不少人單獨抽出來，我一開始也是 fork mosky 的來用，後來就直接在自己的 repository 上面修改了，改一陣子之後就開始想要推回 upstream，也就是 nginx 的程式庫，然後就開始了這段協工旅程(?)。 要發修改上...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25580381505/" title="nginx conf by othree, on Flickr"><img src="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg" width="570" height="427" alt="nginx conf" srcset="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg 1024w" /></a></p>
 
-<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
+<p>因為工作上的需要，所以其實我還蠻常會編輯 nginx configuration file 的，理所當然的編輯器是用 vim，然後就會對 nginx 設定檔的支援有意見，一般人用的 nginx 設定檔的 vim script 其實是 nginx repository 的 contrib 目錄裡面的那份，這份 vim script 其實本來也是獨立的，不過原作者好像把他捐進去 nginx 裡面，之後就一直都在裡面了，也因此之後更新就很不頻繁。</p>
+
+<p>然後因為檔案都放在 nginx repository 裡面，Vim 要使用其實不太方便，所以 Github 上還看的到不少人單獨抽出來，我一開始也是 fork <a href="https://github.com/moskytw/nginx-contrib-vim">mosky</a> 的來用，後來就直接在<a href="https://github.com/othree/nginx-contrib-vim">自己的 repository</a> 上面修改了，改一陣子之後就開始想要推回 upstream，也就是 nginx 的程式庫，然後就開始了這段協工旅程(?)。</p>
+
+<p>要發修改上 upstream，第一步自然是看一下<a href="http://nginx.org/en/docs/contributing_changes.html">如何貢獻</a>，節錄這邊幾個重點：</p>
+
+<ol>
+<li>用 <a href="http://mailman.nginx.org/mailman/listinfo/nginx-devel">nginx-devel</a> 這個 mailing list 做討論</li>
+<li>發 patch 前有一些注意事項，不過我改 vim script 比較沒關係</li>
+<li>Patch 也是用 email 發到 nginx-devel，有範例</li>
+<li>推薦用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a></li>
+<li>要先簽 <a href="https://www.nginx.com/resources/wiki/contributing/cla/">CLA</a>（不過目前這條已經不見了，改成最後說發 patch 等於同意用他們專案的 LCIENSE）</li>
+</ol>
+
+<p>總之我就照這份，先去訂閱了 nginx-devel 觀察一陣子，然後就直接把我的<a href="http://mailman.nginx.org/pipermail/nginx-devel/2017-February/009489.html">修改</a>整個丟上去了，一開始是直接用 Gmail 發，把 patch 檔內容直接複製貼過去，產生 patch 檔的方法是：</p>
+
+<pre><code>hg export &gt; something.patch
+</code></pre>
+
+<p><code>hg export</code> 會直接輸出最後一個 commit 的 patch 內容到 STDOUT，然後就直接用 Gmail 發過去，結果 review 的 <a href="http://mdounin.ru/">Maxim Dounin</a> 說他沒辦法 apply patch，可能是因為我的 mail client 的關係，建議我用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a> 發，所以就研究搜尋了一下，發現他是直接發 email 的機制，所以要把帳號密碼都寫到設定內，找了一篇 Gmail 的<a href="http://blog.sidkalra.com/2009/02/using-gmail-with-hgs-patchbomb-extension/">設定範例</a>，搭配 Google account 的應用程式密碼，設定範例如下：</p>
+
+<pre><code>[extensions]
+hgext.patchbomb =
+
+[email]
+from=othree &lt;othree@gmail.com&gt;
+to=nginx-devel@nginx.org
+cc=othree@gmail.com
+method=smtp
+
+[smtp]
+host=smtp.gmail.com
+port=587
+username=othree@gmail.com
+password=[gmail_password]
+tls=True
+</code></pre>
+
+<p>把這些資訊填入 <code>.hg/hgrc</code> 這個檔案內，然後就可以用 <code>hg email -o --test</code> 來測試看看，這個指令會把完整的原始信件內容，包括 header 等都顯示出來（丟到 STDOUT），如果正式要發就把 <code>--test</code> 拿掉就好了。</p>
+
+<p>確認一切沒問題後，我就改用 patchbomb 發 patch 到 nginx-devel 了，結果還是被拒絕了，問題主要是這個 patch 一次修改太多，理想上應該是不同目的的修改放到不同 patch 內，當然這和我一開始的預想不一樣就是了，我一開始的想法是因為 contrib 這邊的東西，相對於 nginx 本體的原始碼來說比較次要，所以盡量減少 commit 數，其實如果我有先去問過應該是可以少繞這段路，總之，為了一個一個修改送出，我又開了一個 github repository，叫做 <a href="https://github.com/othree/nginx-contrib-vim-patch">nginx-contrib-vim-patch</a>，想要慢慢把我的 nginx-contrib-vim 內的更動搬過去，接著開始的，就是漫長的 review 和溝通了。</p>
+
+<p>其實我完全沒想到 Maxim Dounin 會這麼認真的 review，不止會看我這樣改是要達到什麼目的，還有認真測試，結果被抓出一堆問題，雖然都是奇妙的 conf 寫法，合語法，但是應該不會有人這樣寫的 case，這些 case 我也開始慢慢收集到 github 上的 <a href="https://github.com/othree/nginx-conf-test">nginx-conf-test</a>，方便之後測試用，總之來回許久，終於有一部分比較簡單的東西先進去 nginx repository 了，然後我發現外部貢獻者都會在 <a href="https://nginx.org/en/CHANGES">change log</a> 那邊被感謝，我貢獻進去的目前應該都在 1.11.11 那版，其實只有把新的 directive 補上（core modules, 3rd party modules）和幾個 protocol 參數的 highlight，至於其他的修改還進不去，目前看起來會是一場長期抗戰，主要是因為 reviewer 對於期望的目標和我不一樣，目前大概會維持兩個版本吧，一邊弄<a href="https://github.com/othree/nginx-contrib-vim">自己希望的</a>，一邊抽東西送回去 upstream，不得不說主事者控制太緊會讓貢獻者動力被削減不少。</p>
+
+<p>貢獻 nginx 的過程讓我體會到以前的開源協做的模式（應該是吧？），用 mailing list 溝通，發 Patch、code review、做討論，這些點來看，nginx 的流程其實是非常老派，和現在用 Github 做溝通、協做 的流程差很大，門檻也高不少，當然這不一定是壞事，還是要看專案性質，在 Github 這類平台上做這些協做流程的話，門檻降低了，其實可能隨之而來的問題就是太多人進來造成貢獻品質落差很大，反而會吃掉主力人員的時間，剛好今天也看到知乎上有一篇「<a href="https://www.zhihu.com/question/36292298/answer/160028010">維護一個大型開源專案是怎樣的體驗？</a>」，裡面就有提到 VSCode 的狀況，變成還需要排人專門處理 issue 和 PR，感覺就很可怕。</p>
+
+<p>順帶一題，nginx 的固定貢獻者當中不少中國人啊。</p>
 </b:mainContent>
-				<b:extendContent><p>AMP 的目標是讓行動版網頁速度更快，照 Google 員工在 Google IO 的說法，假設認真的手工調校可以達到 95 分，那 AMP 的目標就是讓大家都有 90 分，它的做法說穿了其實也不複雜，就是把現有的各種調整 mobile web performance 的技巧做起來，基本上分成三個部分：</p>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
 
-<ol>
-<li>CDN cache</li>
-<li>AMP HTML</li>
-<li>AMP runtime</li>
-</ol>
 
-<p>首先要提的就是 CDN 了，一般而言，都是網站所有人去花錢找 CDN 服務來使用，不過做成 AMP 的網頁，Google 會使用他們自家的 CDN 服務把你的 AMP 網頁都 cache 好，考慮到 Google CDN 的等級，應該可以不用擔心速度，這樣就先解決了網路速度的問題，而且這個部屬在 CDN 的方式還有幾個優點：</p>
+		</b:entry>
 
-<ol>
-<li>全部的檔案都是同個 CDN domain，減少了 domain resolve 和 TCP 連線 warmup 的時間</li>
-<li>支援 HTTP/2.0，已經可以不用建立多次連線了，不過目前還不支援 brotli</li>
-<li>所有的 AMP 網頁都用相同的 JavaScript 檔案，大幅減少 runtime library 部分初次訪問的下載量</li>
-</ol>
+		<b:entry entryID="000892" baseName="japan-new-year">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-04-11</b:date>
+				<b:time>22:06:08</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>日本跨年</b:title>
+			<b:content>
+				<b:summary> 去年年底臨時冒出了個去日本關西跨年的行程，由於之前有聽聞日本新年可能會變空城，所以就認真的研究了一下行程，主要擔心的是 12/31 和 1/1 兩天，這趟住的地點是在大阪，考慮了幾個行程，其中 12/31 的選項是： 晚上早點買超市的晚餐回飯店看紅白，要跨年再看要不要去神社參拜 去京都一天，因為 12/31 到 1/1 終夜交通不會中斷，所以還可以考慮跨年參拜完才回來 1/1 則是： 環球影城玩整天 去看還很白的姬路城，1/1 有特別免費開放 後來的決定是 12/31 去京都一天，不過結果沒待到跨年，大概十二點前就回到大阪了，然後 1/1 去姬路城，因為環球影城 1/1 預期人會很多，連 pass 都買不到了，加上以後來應該也還不會有損失，但是姬路城應該只會越來越不白，不過後來才發現環球影城有顆金氏世界記錄的聖誕樹 最後一年展出... 總之，以下是 12/31 的清水寺：...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32146540906/" title="八坂神社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/470/32146540906_eb9801be18_b.jpg" width="1024" height="683" alt="八坂神社, " srcset="https://farm1.staticflickr.com/470/32146540906_eb9801be18_b.jpg 1024w, https://farm1.staticflickr.com/470/32146540906_8915765235_h.jpg 1600w" /></a></p>
 
-<p>事實上這個 CDN 服務沒有一定要由 Google 提供，照 AMP 的設計，這部分其實是獨立的，只是目前主力的推廣單位就是 Google，他們又控制著大量的 Android 手機和 Chrome 瀏覽器，所以由他們提供 AMP CDN 服務似乎再合理不過了，而 Google 提供的 AMP CDN 服務稱為 <a href="https://developers.google.com/amp/cache/">Google AMP Cache</a>，現在也可以透過 API 來查詢你的 AMP 網頁有沒有在 Google AMP Cache 上有快取，也可以實際查到 CDN 上的 URL，並且直接用那個 URL 來預覽也沒問題，當然這個 CDN 快取的 URL 是有一定<a href="https://developers.google.com/amp/cache/overview">格式</a>的，所以其實不透過 API 查也可以知道不同 AMP 網頁對應的 CDN 快取位置，例如：</p>
+<p>去年年底臨時冒出了個去日本關西跨年的行程，由於之前有聽聞日本新年可能會變空城，所以就認真的研究了一下行程，主要擔心的是 12/31 和 1/1 兩天，這趟住的地點是在大阪，考慮了幾個行程，其中 12/31 的選項是：</p>
 
-<pre><code>https://example.com/amp_document.html
+<ul>
+<li>晚上早點買超市的晚餐回飯店看紅白，要跨年再看要不要去神社參拜</li>
+<li>去京都一天，因為 12/31 到 1/1 終夜交通不會中斷，所以還可以考慮跨年參拜完才回來</li>
+</ul>
+
+<p>1/1 則是：</p>
+
+<ul>
+<li>環球影城玩整天</li>
+<li>去看還很白的姬路城，1/1 有特別免費開放</li>
+</ul>
+
+<p>後來的決定是 12/31 去京都一天，不過結果沒待到跨年，大概十二點前就回到大阪了，然後 1/1 去姬路城，因為環球影城 1/1 預期人會很多，連 pass 都買不到了，加上以後來應該也還不會有損失，但是姬路城應該只會越來越不白，不過後來才發現環球影城有顆金氏世界記錄的<a href="https://twitter.com/hashtag/USJ%E3%83%A9%E3%82%B9%E3%83%88%E3%83%84%E3%83%AA%E3%83%BC?src=hash">聖誕樹</a> 最後一年展出...</p>
+
+<p>總之，以下是 12/31 的清水寺：</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31374251433/" title="清水寺 by othree, on Flickr"><img src="https://farm1.staticflickr.com/455/31374251433_6516d8d58c_b.jpg" width="1024" height="683" alt="清水寺" srcset="https://farm1.staticflickr.com/455/31374251433_6516d8d58c_b.jpg 1024w, https://farm1.staticflickr.com/455/31374251433_0e5c7490cb_h.jpg 1600w" /></a></p>
+
+<p>還有整修到一半的地方可以拍：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31343174914/" title="清水寺 by othree, on Flickr"><img src="https://farm1.staticflickr.com/681/31343174914_1c15753116_b.jpg" width="1024" height="683" alt="清水寺, " srcset="https://farm1.staticflickr.com/681/31343174914_1c15753116_b.jpg 1024w, https://farm1.staticflickr.com/681/31343174914_f777bcf9e3_h.jpg 1600w" /></a></p>
+
+<p>二年坂、三年坂：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31374231273/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/372/31374231273_9d0dd55e07_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/372/31374231273_9d0dd55e07_b.jpg 1024w, https://farm1.staticflickr.com/372/31374231273_ae454b0cb8_h.jpg 1600w" /></a></p>
+
+<p>人是很多，不過好像也沒比櫻花季多就是，午餐就在這邊路上的茶寮都路里吃的，沿路還買了不少東西吃，八坂神社那邊也不少攤販。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32146503696/" title="八坂神社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/632/32146503696_ebdb936c70_b.jpg" width="1024" height="683" alt="八坂神社, " srcset="https://farm1.staticflickr.com/632/32146503696_ebdb936c70_b.jpg 1024w, https://farm1.staticflickr.com/632/32146503696_a86795c18c_h.jpg 1600w" /></a></p>
+
+<p>然後很多車站都有貼當天限定的終夜電車時刻表，下面是在稻荷大社拍的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31809406240/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/769/31809406240_89f640caf8_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/769/31809406240_89f640caf8_b.jpg 1024w, https://farm1.staticflickr.com/769/31809406240_679d92aeb9_h.jpg 1600w" /></a></p>
+
+<p>還準備了臨時入口要應付人潮：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32184301305/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/259/32184301305_9297a52a44_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/259/32184301305_9297a52a44_b.jpg 1024w, https://farm1.staticflickr.com/259/32184301305_45cbb30bd6_h.jpg 1600w" /></a></p>
+
+<p>不過我們去的時間還蠻早的，所以還沒啟用，倒是有些攤位都已經開張了：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31809385180/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/760/31809385180_16ea7bf524_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/760/31809385180_16ea7bf524_b.jpg 1024w, https://farm1.staticflickr.com/760/31809385180_20fa389ed0_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32066349271/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/685/32066349271_9eaa940677_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/685/32066349271_9eaa940677_b.jpg 1024w, https://farm1.staticflickr.com/685/32066349271_70fa8d00ae_h.jpg 1600w" /></a></p>
+
+<p>特別要說這個就是所謂的厚切牛舌：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31343022084/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/31343022084_14ba10cdbb_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/261/31343022084_14ba10cdbb_b.jpg 1024w, https://farm1.staticflickr.com/261/31343022084_665fcb63a8_h.jpg 1600w" /></a></p>
+
+<p>烤好的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32066327651/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/634/32066327651_f573b06301_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/634/32066327651_f573b06301_b.jpg 1024w, https://farm1.staticflickr.com/634/32066327651_de5f4d1bfc_h.jpg 1600w" /></a></p>
+
+<p>要回大阪前，發現平常往觀光區（清水寺）的那排公車站，全部變成往北野天滿宮的專車：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31342958224/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/491/31342958224_41f40fd676_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/491/31342958224_41f40fd676_b.jpg 1024w, https://farm1.staticflickr.com/491/31342958224_60a74a1982_h.jpg 1600w" /></a></p>
+
+<p>據說北野天滿宮的新年參拜人潮是全日本最多的，看來所言不假。</p>
+
+<p>然後是 1/1 的姬路，雖然百貨商場都沒開，不過商店街還是有些店面和吃的有開，而且挑到還不錯吃的穴子魚專門店，<a href="http://www.himeji-anago-iccyoura.com/">一張羅</a>：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32060711152/" title="姬路 by othree, on Flickr"><img src="https://farm1.staticflickr.com/441/32060711152_a8487254e4_b.jpg" width="1024" height="683" alt="姬路, " srcset="https://farm1.staticflickr.com/441/32060711152_a8487254e4_b.jpg 1024w, https://farm1.staticflickr.com/441/32060711152_80efe75024_h.jpg 1600w" /></a></p>
+
+<p>姬路城城區很大，看起來保存的很完整，從車站出來就看的到，很漂亮：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31833769060/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/303/31833769060_d804c1c92b_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/303/31833769060_d804c1c92b_b.jpg 1024w, https://farm1.staticflickr.com/303/31833769060_351363a411_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32171317826/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/637/32171317826_e1ed4da92b_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/637/32171317826_e1ed4da92b_b.jpg 1024w, https://farm1.staticflickr.com/637/32171317826_c076c179ab_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31368031054/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/631/31368031054_aae9f81d44_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/631/31368031054_aae9f81d44_b.jpg 1024w, https://farm1.staticflickr.com/631/31368031054_03f7e53465_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399045233/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/721/31399045233_f8c12f10b4_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/721/31399045233_f8c12f10b4_b.jpg 1024w, https://farm1.staticflickr.com/721/31399045233_f8524d845c_h.jpg 1600w" /></a></p>
+
+<p>不過天守閣我就覺得沒這麼值得了，一來當天免費，所以排隊的人很多，花了很多時間在這，二來上去之後，窗戶的鐵網格子超小的，看外面的東西都覺得很受干擾：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399067753/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/665/31399067753_d268766291_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/665/31399067753_d268766291_b.jpg 1024w, https://farm1.staticflickr.com/665/31399067753_67e151a152_h.jpg 1600w" /></a></p>
+
+<p>回到大阪後發現 Yodobashi 梅田有開，所以晚餐就在那邊解決，順便逛了一下，還買到九折的 iTunes 點數（剛好有活動），就這樣順利的度過了 1/1，然後 1/2 開始各家百貨和商店就都開始營業了，到處都是福袋，日本人也都全部出來採買，看到比較特別的像是麵包店的、Mister Donut，還有 Pokemon Center 等都有，不過這次是都沒買啦，小可惜。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399160683/" title="姬路 by othree, on Flickr"><img src="https://farm1.staticflickr.com/402/31399160683_35252ba95d_b.jpg" width="1024" height="683" alt="姬路, " srcset="https://farm1.staticflickr.com/402/31399160683_35252ba95d_b.jpg 1024w, https://farm1.staticflickr.com/402/31399160683_edcc508d72_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31418206723/" title="Pokemon Center by othree, on Flickr"><img src="https://farm1.staticflickr.com/372/31418206723_715d2f3017_b.jpg" width="1024" height="683" alt="Pokemon Center, " srcset="https://farm1.staticflickr.com/372/31418206723_715d2f3017_b.jpg 1024w, https://farm1.staticflickr.com/372/31418206723_a1ee511845_h.jpg 1600w" /></a></p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000891" baseName="github-flavored-markdown">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-03-27</b:date>
+				<b:time>20:41:56</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>GitHub Flavored Markdown 標準規範</b:title>
+			<b:content>
+				<b:summary> 前陣子看到 DK 提到 GitHub 的 Markdown：GitHub Flavored Markdown 發表正式的 spec 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 spec 是基於 CommonMark 的，只是多了一些語法，包括： 刪除線 表格 待辦清單 自動連結（包括網址和 email） Raw HTML 黑名單： &lt;title&gt; &lt;textarea&gt; &lt;style&gt; &lt;xmp&gt; &lt;iframe&gt; &lt;noembed&gt; &lt;noframes&gt; &lt;script&gt; &lt;plaintext&gt; 新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 &lt;...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr"><img src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w" /></a></p>
+
+<p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a> <a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
+
+<ul>
+<li>刪除線</li>
+<li>表格</li>
+<li><a href="https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments">待辦清單</a></li>
+<li>自動連結（包括網址和 email）</li>
+<li>Raw HTML 黑名單：
+<ul>
+<li><code>&lt;title&gt;</code></li>
+<li><code>&lt;textarea&gt;</code></li>
+<li><code>&lt;style&gt;</code></li>
+<li><code>&lt;xmp&gt;</code></li>
+<li><code>&lt;iframe&gt;</code></li>
+<li><code>&lt;noembed&gt;</code></li>
+<li><code>&lt;noframes&gt;</code></li>
+<li><code>&lt;script&gt;</code></li>
+<li><code>&lt;plaintext&gt;</code></li>
+</ul></li>
+</ul>
+
+<p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
+
+<p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000890" baseName="github-license-summary">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-03-26</b:date>
+				<b:time>20:16:11</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>GitHub 提供專案授權簡介與概要</b:title>
+			<b:content>
+				<b:summary> 大概上週看到有人在 Twitter 講到 GitHub 現在會在專案上顯示該專案所使用授權條款的摘要，長的像是上面那樣，官方也有發表公告，其實這個修改是結合之前的授權偵測和 Choose a License。 Choose a License 也是一個 GitHub 的附加服務，用來協助使用者挑選適合的授權條款，現在在 GitHub 建立新的專案時，可以順便初始化專案，包括建立 README、產生 .gitignore 和挑選要使用的授權條款： 授權條款旁邊的 i 點下去其實就會送到 Choose a License 網站去了（不過兩邊沒有連動接起來就是），Choose a License 網站則針對每種條款都一份重點摘要，分為 Permissions、Conditions 和 Limitations 三個區塊，分別條列出該條款可以做什麼（例如商業使用）、有什麼條件（例如需要也使用相同條款授權）和條款的限制（例如免責），而現在 GitHub 上顯示的條款摘要其實就是這邊的資訊搬過來的： Choose a License 網站其實有很多授權條款的整理，而不是只有常見的幾種，可以看...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32722736844/" title="Do What The F*ck You Want To Public License by othree, on Flickr"><img src="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg" width="1024" height="595" alt="Do What The F*ck You Want To Public License, " srcset="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg 1024w, https://farm3.staticflickr.com/2898/32722736844_e56ae26374_h.jpg 1600w" /></a></p>
+
+<p>大概上週看到有人在 Twitter 講到 GitHub 現在會在專案上顯示該專案所使用授權條款的摘要，長的像是上面那樣，官方也有發表<a href="https://github.com/blog/2335-open-source-license-descriptions-and-metadata">公告</a>，其實這個修改是結合之前的<a href="https://github.com/blog/2252-license-now-displayed-on-repository-overview">授權偵測</a>和 <a href="https://choosealicense.com/">Choose a License</a>。</p>
+
+<p>Choose a License 也是一個 GitHub 的附加服務，用來協助使用者挑選適合的授權條款，現在在 GitHub 建立新的專案時，可以順便初始化專案，包括建立 README、產生 <code>.gitignore</code> 和挑選要使用的授權條款：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495590202/" title="Initialize Project by othree, on Flickr"><img src="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg" width="722" height="141" alt="Initialize Project" srcset="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg 1024w" /></a></p>
+
+<p>授權條款旁邊的 i 點下去其實就會送到 Choose a License 網站去了（不過兩邊沒有連動接起來就是），Choose a License 網站則針對每種條款都一份重點摘要，分為 Permissions、Conditions 和 Limitations 三個區塊，分別條列出該條款可以做什麼（例如商業使用）、有什麼條件（例如需要也使用相同條款授權）和條款的限制（例如免責），而現在 GitHub 上顯示的條款摘要其實就是這邊的資訊搬過來的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495653292/" title="Choose a License by othree, on Flickr"><img src="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg" width="1024" height="601" alt="Choose a License" srcset="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg 1024w, https://farm4.staticflickr.com/3770/33495653292_0a6bd0bf6e_h.jpg 1600w" /></a></p>
+
+<p>Choose a License 網站其實有很多授權條款的整理，而不是只有常見的幾種，可以看 <a href="https://choosealicense.com/appendix/">appendix</a> 頁面有完整清單，可惜裡面沒有 <a href="https://github.com/vim/vim/blob/master/runtime/doc/uganda.txt">Vim License</a>，另外特別想說的是 GitHub 自己（應該沒錯）提供的 <a href="https://choosealicense.com/licenses/unlicense/">Unlincense</a>，相似於創作領域的 <a href="http://creativecommons.tw/cc0">CC0</a>，就類似丟到 Public Domain 的意思，不過保留了免責條款，講到免責聲明，就還要順便提一下 <a href="https://choosealicense.com/licenses/wtfpl/">WTFPL</a>，它其實也是超自由的 License，差別就是連免責聲明都沒，其實是更加接近丟到 Public Domain 吧？</p>
+
+<p>最後想說的是 GitHub 用來判斷專案使用的授權，用的是 <a href="https://github.com/benbalter/licensee">licensee</a> 這個 Ruby Gem，看起來完全就是為了做這些事情寫的，我看好像也沒其他類似功能的專案，作者 Ben Balter 其實也是 GitHub 員工。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000889" baseName="gitdags-git">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-03-25</b:date>
+				<b:time>21:49:34</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Gitdags, Git 示意圖工具</b:title>
+			<b:content>
+				<b:summary> 最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 gitdags 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的樣子（v2 的樣版改的更簡潔了），看起來還蠻 ok 的，它是基於 TikZ 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣： \documentclass[preview]{standalone} \usepackage{gitdags} \begin{document}...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /></a></p>
+
+<p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
+
+<pre><code>\documentclass[preview]{standalone}
+\usepackage{gitdags}
+
+\begin{document}
+    \centering
+    \begin{tikzpicture}
+      % Commit DAG
+      \gitDAG[grow right sep = 2em]{
+        0 -- {
+          1 -- 2 -- 3 -- 4,
+          A
+        }
+      };
+      \gitbranch
+        {master}     % node name and text 
+        {above=of 4} % node placement
+        {4}          % target
+      \gitbranch
+        {for-rebase} % node name and text 
+        {below=of A} % node placement
+        {A}          % target
+      \gitHEAD
+        {below=of for-rebase} % node placement
+        {for-rebase} 
+      \end{tikzpicture}
+\end{document}
 </code></pre>
 
-<p>對應的就是：</p>
+<p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
 
-<pre><code>https://cdn.ampproject.org/c/s/example.com/amp_document.html
-</code></pre>
+<p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
 
-<p>CDN 之外，其它的最佳化就都和 code 相關了，像是圖片做延遲讀取、全部用 async 引入 JavaScript、internal style 減少取得 CSS 的時間，AMP 控制這些機制的方法，第一個就是限制的 coding 型式，沒有符合規範的頁面基本上就不會進到 CDN 上，所以你不能引用外部 CSS 檔案，要增加一些必要的標籤，不能自己寫 script 等等；另一個部分，就是大量的 Web Component 了，例如 <code>&lt;amp-img&gt;</code> 來取代 <code>&lt;img&gt;</code>，不能寫 script 但是還是可以加上 <code>&lt;amp-analytic&gt;</code> 來做數據統計、 <code>&lt;amp-social-share&gt;</code> 來放 Facebook 的分享按鈕等。因為都是新的自訂的標籤，整個元件的行為都是可以自訂的，所以像是圖片就可以從中做到延遲讀取，甚至更進一步，會算好 srcset 中最適合的圖片直接使用，而這層設計都是架構在 Web Component 和相關的標準之上，事實上，AMP 計畫當中，我目前看到不合網路標準的部分，其實只有一些自訂屬性，像是宣告是 AMP 網頁的：</p>
-
-<pre><code>&lt;html ⚡&gt;
-</code></pre>
-
-<p>考量到 <code>⚡</code> 可能在舊環境造成一些問題，所以也支援：</p>
-
-<pre><code>&lt;html amp&gt;
-</code></pre>
-
-<p>另外還有像是 <code>amp-boilerplate</code>、<code>amp-custom</code>、<code>custom-element</code> 等，其實沒很多，不過我深入看過目前的 HTML 5.2 草稿，搜尋看完所有的 <a href="https://tools.ietf.org/html/rfc2119#section-2"><strong>MUST NOT</strong></a> 後，其實找不到文字直接說 HTML 禁止自訂屬性，而對於 <strong>Content attributes</strong> 的<a href="http://w3c.github.io/html/single-page.html#content-attribute">說明</a>則是用 <a href="https://tools.ietf.org/html/rfc2119#section-5">MAY</a>：</p>
-
-<blockquote>
-  <p>A normative list of attributes that may be specified on the element (except where otherwise disallowed), along with non-normative descriptions of those attributes. (The content to the left of the dash is normative, the content to the right of the dash is not.)</p>
-</blockquote>
-
-<p>以前都以為自訂屬性是不合規範的，不過這次仔細研究過，實際上應該是，規範中定義到的，都是有意義的，例如 <code>aria-*</code> 是親和力相關的資訊和狀態，給輔具使用，<code>data-*</code> 的意義則是資料，所以有一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/HTMLElement/dataset">dataset</a> 屬性方便存取這些資料，而沒有規範到的屬性，其實也沒禁止，只是就是沒任何意義存在，不過規範文字敘述上雖然沒禁止，但是一般的 HTML validator 都會把沒定義的屬性當成錯誤來處理就是了。另外一個可以呼應這點的就是 <a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance">custom element</a> 的 spec 中說到 attribute 的部分了，custom element 對於沒有 namespace 的屬性限制是：</p>
-
-<blockquote>
-  <p>Any namespace-less attribute that is relevant to the element's functioning, as determined by the element's author, may be specified on an autonomous custom element, so long as the attribute name is XML-compatible and contains no uppercase ASCII letters. The exception is the is attribute, which must not be specified on an autonomous custom element (and which will have no effect if it is).</p>
-</blockquote>
-
-<p>大意就是，符合 XML 規範的全小寫字母屬性名稱，唯一不能用的只有 <code>is</code>，因為 <code>is</code> 在 custom element 中有特殊意義。如果照這樣來看的話，事實上 AMP 網頁是完全符合標準的，這點和我一開始的印象實在差很大（包括那個 <code>⚡</code> 也是 UTF-8 字元，所以也沒問題）；而能夠在完全符合網路標準的狀態下架構出像是 AMP 這樣的專案，依靠的就是之前幾年間發展的 Web Component 的標準，而 AMP 專案應用的規模也足以讓我將他視為 Extensible Web 的第一個重要里程碑。</p>
-
-<p>目前 AMP 的狀況是 Google 才<a href="https://blog.google/products/search/search-results-are-officially-ampd/">剛預設開啟</a>搜尋結果會導引到 AMP Page，而目前大部分支援的網站都是採用 paired 的方式來提供到 AMP 頁面的連結，也就是用一個 <code>&lt;link&gt;</code> 標籤來連結到 AMP 網頁，因為有兩個網頁在網路上成對，所以稱為 paired，除了 paired 之外，還有一個方法稱為 standalone，AMP 接下來也會開始推廣 standalone 的方式，Paul Bakaus 的文章 <a href="https://paulbakaus.com/2016/07/01/about-that-mobile-in-accelerated-mobile-pages/">About that 'mobile' in Accelerated Mobile Pages</a> 就有提到這件事情，standalone 版的 AMP 網頁，其實就是只提供 AMP 版本的頁面，因為 AMP 本身是架構在網路標準上的，所以一般 modern browser 都可以完整支援，<a href="https://www.ampproject.org/">AMP Project</a> 自己的網站就是最好的範例了。</p>
-
-<p>AMP 目前還在不斷的發展，有興趣的可以看看他們的 <a href="https://www.ampproject.org/roadmap/">roadmap</a>，每季會更新兩次，目前看到比較有趣的是在發展登入和購買的功能，而由於 AMP 不允許網站內放上非 AMP runtime 的 script，所以所有要用到 script 的功能都需要 AMP 提供 custom element，可以預期各式各樣的 element 會非常多種，像是 <code>&lt;amp-accordion&gt;</code>、<code>&lt;amp-carousel&gt;</code> 之類的 UI 元件，或是引用 tweet 的 <code>&lt;amp-twitter&gt;</code>，放 analytic code 的 <code>&lt;amp-analytics&gt;</code> 等，目前已經有 <a href="https://www.ampproject.org/docs/reference/components">49 個</a> custom element 可以用了，相信未來應該還是會繼續增加，當然因為整個 AMP runtime 的部分是 open source 的，所以其實也是開放貢獻，也有一些相關的文件，其中最讓人好奇的大概就是<a href="https://docs.google.com/document/d/19o7eDta6oqPGF4RQ17LvZ9CHVQN53whN-mCIeIMM8Qk/edit#">如何自己做一個 AMP custom element</a> 了吧，不過這份文件比較難找些，在官網和 Github 上的幾乎都是如何使用的文件，我猜是因為目前還沒正式開放外部提供 custom element，不過對於 AMP runtime 架構有興趣的還是可以參考看看，AMP 目前這種依靠 custom element 的方式還是會有些問題，最主要就是不斷成長的 custom element 會造成後續維護越來越困難，例如要升級修改架構的話，就會變的很麻煩，所以我在文章一開始說這其實是個暫時的解法，那正確的解法應該是怎樣呢？</p>
-
-<p>其實在 AMP 剛推出時，Tim Kadlec 就有提了一個不錯的方法，叫做 <a href="http://wicg.github.io/ContentPerformancePolicy/">Content Performance Policy</a>，目前也有簡單的草稿，Content Performancy Policy 的想法是，這些針對網路行動體驗最佳化的特殊模式，應該是由瀏覽器端來實做，然後網站可以透過 HTTP Header 來開關這些最佳化設定，使用的 synatx 基本上是借用 CSP 的格式來使用，我個人覺得這個想法其實蠻不錯的，可以減少許多問題，不過目前草稿還很不完整，瀏覽器廠商實做的意願也還不知道如何，前途未卜，其實 Tim Kadlec 本人是對 AMP 抱持一些負面的態度的，畢竟 AMP 還是有些問題在，最直接的問題大概就是，AMP 其實就是比較開放一點的 Facebook Instant Article 而已，如果不是 standalone 模式的話，目前就只有 Google 的服務會導引到 AMP 網頁，就和 Facebook 的 Instant Article 其實一樣，這點也是 Tim Kadlec 覺得最不好的點，可能 AMP 出來到消失之後都沒真的實質對網路標準有所改善，這也讓我想到很久之前 Dart 的<a href="https://blog.othree.net/log/2015/03/28/for-the-entire-web/">事情</a>（PS. 我都快想不起來 Dart 這名字了 and ES 的大數現在還是沒有影子），好像有點巧，都是同一間公司。</p>
-
-<p>還有另外一個很明顯的問題就是向下相容性的問題，例如為了控制圖片可以延遲讀取，所以 AMP 網頁要用 <code>&lt;amp-img&gt;</code> 來放圖片：</p>
-
-<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
-&lt;/amp-img&gt;
-</code></pre>
-
-<p>不過這很明顯的，不支援 JavaScript 或是關掉的時候，圖片自然就出不來，如果想要做 standalone 版的 AMP 網頁，這應該是不太行的，所以要加個 fallback，但是 AMP 又不允許直接放 <code>&lt;img&gt;</code> 標籤，結果就會變成：</p>
-
-<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
-  &lt;noscript&gt;
-    &lt;img width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""/&gt;
-  &lt;/noscript&gt;
-&lt;/amp-img&gt;
-</code></pre>
-
-<p>一是多了一層 <code>&lt;noscript&gt;</code>，二是所有圖片的資訊都會重複一份，如果還有 <code>srcset</code> 和 <code>sizes</code> 的話又會更可怕，而目前也因為向下相容比較麻煩的關係，所以我還不會考慮使用 standalone 模式的 AMP 網頁。並且如果用 paired 模式的話，則是讓網頁內容重複出現在網路上，可能就會造成一些不統一的情形，例如訪客看到 AMP 網頁直接分享，那就會和看到普通版網頁分享的結果不太一樣，雖然有指定 canonical URL，不過這部分資訊其實不會在這種地方產生效用，總之是個有點尷尬的情形。</p>
-
-<p>最後要說的是，AMP 因為現在是 Google 提供應用，所以很合理的，在中國境內無法使用，也很順便的就有了 Baidu 的 clone，叫做 <a href="https://www.mipengine.org/">Mobile Instant Pages</a>，簡稱 MIP，從官方網站上看起來基本上就是和 AMP 大同小異，只是用命名裡面的 <code>amp</code> 換成 <code>mip</code>，大概比較了一下目前最小化過的 MIP JavaScript 和 AMP 的 JavaScript，看起來是重新寫過的，官網上也有說過會公開原始碼，目前 Baidu 似乎是還沒大量啟用，大概還在很初期的推廣期吧，先不說 MIP 網站沒有任何地方提到 AMP，我對 MIP 還有一點不太滿意，就是他 paired 模式的 AMP 頁面指回一般頁面時用的標籤是：</p>
-
-<pre><code>&lt;link rel="standardhtml" href="xxx" &gt;
-</code></pre>
-
-<p>而不是使用已經語意很清楚且通用的 <code>canonical</code>，實在是非常可惜。</p>
-
-<p>AMP 的出現，對於一個前端工程師來說，最大的意義，大概就是又要產生一個版本的頁面出來，所以現在一份文字內容，就要產生標準的 HTML 文件，假設不特別讓 mobile 單獨一版，然後還有 RSS Feed、AMP HTML，如果要支援 <a href="https://developers.facebook.com/docs/instant-articles/guides/format-overview">Facebook Instant Article</a> 的話還要輸出一版 Instant Article 的 HTML，當然也可能是 RSS Feed 型式，然後然後如果要跑中國市場，就還要輸出一個 MIP 的版本，這樣算下來，一共是五個版本了，什麼，你說還有 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html#//apple_ref/doc/uid/TP40015408-CH110-SW1">Apple News</a>...</p>
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/~u91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+</b:mainContent>
+				<b:extendContent>
 </b:extendContent>
 			</b:content>
 

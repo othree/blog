@@ -4,11 +4,58 @@
 <title>O3noBLOG - software</title>
 <link>https://blog.othree.net//log/ software/</link>
 <description></description>
-<copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-09-17 11:41</lastBuildDate>
+<copyright>Copyright 2017</copyright>
+<lastBuildDate>2017-03-25 21:49</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Gitdags, Git 示意圖工具</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /></a></p>
+
+<p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
+
+<pre><code>\documentclass[preview]{standalone}
+\usepackage{gitdags}
+
+\begin{document}
+    \centering
+    \begin{tikzpicture}
+      % Commit DAG
+      \gitDAG[grow right sep = 2em]{
+        0 -- {
+          1 -- 2 -- 3 -- 4,
+          A
+        }
+      };
+      \gitbranch
+        {master}     % node name and text 
+        {above=of 4} % node placement
+        {4}          % target
+      \gitbranch
+        {for-rebase} % node name and text 
+        {below=of A} % node placement
+        {A}          % target
+      \gitHEAD
+        {below=of for-rebase} % node placement
+        {for-rebase} 
+      \end{tikzpicture}
+\end{document}
+</code></pre>
+
+<p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
+
+<p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
+
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/~u91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/25/gitdags-git/</link>
+<guid>https://blog.othree.net/log/2017/03/25/gitdags-git/</guid>
+<category>software</category>
+<pubDate>2017-03-25 21:49</pubDate>
+</item>
 
 <item>
 <title>MRT &amp; GIT</title>
@@ -567,15 +614,6 @@ I Commit A
 <guid>https://blog.othree.net/log/2008/06/07/opera_new_ui/</guid>
 <category>software</category>
 <pubDate>2008-06-07 20:53</pubDate>
-</item>
-
-<item>
-<title>Windows Vista的Meiryo字型</title>
-<description><![CDATA[<p>剛剛在IRC上<a href="http://jedi.org/blog/">Jedi</a>提到Windows Vista上新的日文字型Meiryo（メイリオ）體可以單獨<a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=f7d758d2-46ff-4c55-92f2-69ae834ac928&amp;displaylang=ja&amp;Hash=9QmPTiwvbGtcGoQvIf2UX3ueDzsnIoo0qyWFQqrVEK1mApNcC%2fMyUiBP8qcbIvjT77dGwr2K2hyt1m0wXtGqDA%3d%3d">下載</a>，XP使用者也可以安裝來使用，想不到微軟最近放出越來越多字型給一般使用者下載，像是我<a href="http://blog.othree.net/log/2008/04/23/cmd-font/">前兩篇文章</a>才提到的Consolas字型也是，不知道到底是什麼改變了他們的作法，這個字型有對Clear Type作過處理，沒記錯的話應該也是Vista的日文環境預設字型，配合起來顯示效果會比原來的Gothic字型好上不少，希望中文的正黑體和雅黑體也可以提供。</p>]]></description>
-<link>https://blog.othree.net/log/2008/05/08/meiryo/</link>
-<guid>https://blog.othree.net/log/2008/05/08/meiryo/</guid>
-<category>software</category>
-<pubDate>2008-05-08 01:34</pubDate>
 </item>
 
 

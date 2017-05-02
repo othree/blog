@@ -5,10 +5,722 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2017</copyright>
-<lastBuildDate>Sat, 14 Jan 2017 12:22:32 +0800</lastBuildDate>
+<lastBuildDate>Sat, 29 Apr 2017 22:58:39 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>日本自駕</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34028951701/" title="沖繩 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg" width="1024" height="683" alt="沖繩" srcset="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg 1024w, https://farm3.staticflickr.com/2805/34028951701_5720ab1710_h.jpg 1600w" /></a></p>
+
+<p>這篇想要記錄一下第一次去日本自駕，就前陣子去了沖繩一趟，當然就選擇租車自駕，這篇用條列式記錄一下：</p>
+
+<ul>
+<li>租車公司是 OTS，因為第一次的關係，所以就盡量走大眾路線</li>
+<li>不過 OTS 因為比較大間，位置離機場也比較遠，其實比較花時間</li>
+<li>租的車款是 Toyota C-HR，看到有特價加上早鳥，不過也還是比一般車款貴</li>
+<li>不免俗的離開租車公司時要刷一下雨刷</li>
+<li>大約第二天就不太有左右駕習慣問題了，回國後也沒有左右問題</li>
+<li>沖繩比較偏遠，部分路段的路面狀況其實也不好</li>
+<li>幾乎所有路口都可以右轉，有右轉道，可能是沖繩才這樣</li>
+<li>晚上山路其實沒什麼路燈，交通號誌反光效果超強的，強到覺得會刺眼 <br />
+不過一部份應該是因為車燈很亮，倒是號誌都很乾淨是真的</li>
+<li>以後應該還想要東北、北海道也去試試看自駕</li>
+</ul>
+
+<p>針對 Toyota C-HR 的部分：</p>
+
+<ul>
+<li>後座空間真的小、後座車窗也小</li>
+<li>四人三個行李箱有點勉強，後行李箱只能放兩個中 size 的行李箱 <br />
+一大一中也不行，剩下一個大的是把後座一個位子拉倒才放進去</li>
+<li>有個自動切換遠光燈（<a href="http://www.toyota-global.com/innovation/safety_technology/safety_technology/technology_file/active/ahb.html">AHB</a>）的功能，正確性很高，實在很方便</li>
+<li>不過車門在開動車子後不會自動上鎖</li>
+<li>開鎖的時候地上會有投影，有點騷包(?)</li>
+<li>開起來感覺其實是還不錯啦</li>
+</ul>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33201465513/" title="沖繩 okinawa by othree, on Flickr"><img src="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg" width="1024" height="683" alt="沖繩 okinawa, " srcset="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg 1024w, https://farm3.staticflickr.com/2946/33201465513_ea0cd7f8c5_h.jpg 1600w" /></a></p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/04/29/japan-self-drive/</link>
+<guid>https://blog.othree.net/log/2017/04/29/japan-self-drive/</guid>
+<category>diary</category>
+<pubDate>Sat, 29 Apr 2017 22:58:39 +0800</pubDate>
+</item>
+
+<item>
+<title>My First Contribution to Nginx</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25580381505/" title="nginx conf by othree, on Flickr"><img src="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg" width="570" height="427" alt="nginx conf" srcset="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg 1024w" /></a></p>
+
+<p>因為工作上的需要，所以其實我還蠻常會編輯 nginx configuration file 的，理所當然的編輯器是用 vim，然後就會對 nginx 設定檔的支援有意見，一般人用的 nginx 設定檔的 vim script 其實是 nginx repository 的 contrib 目錄裡面的那份，這份 vim script 其實本來也是獨立的，不過原作者好像把他捐進去 nginx 裡面，之後就一直都在裡面了，也因此之後更新就很不頻繁。</p>
+
+<p>然後因為檔案都放在 nginx repository 裡面，Vim 要使用其實不太方便，所以 Github 上還看的到不少人單獨抽出來，我一開始也是 fork <a href="https://github.com/moskytw/nginx-contrib-vim">mosky</a> 的來用，後來就直接在<a href="https://github.com/othree/nginx-contrib-vim">自己的 repository</a> 上面修改了，改一陣子之後就開始想要推回 upstream，也就是 nginx 的程式庫，然後就開始了這段協工旅程(?)。</p>
+
+<p>要發修改上 upstream，第一步自然是看一下<a href="http://nginx.org/en/docs/contributing_changes.html">如何貢獻</a>，節錄這邊幾個重點：</p>
+
+<ol>
+<li>用 <a href="http://mailman.nginx.org/mailman/listinfo/nginx-devel">nginx-devel</a> 這個 mailing list 做討論</li>
+<li>發 patch 前有一些注意事項，不過我改 vim script 比較沒關係</li>
+<li>Patch 也是用 email 發到 nginx-devel，有範例</li>
+<li>推薦用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a></li>
+<li>要先簽 <a href="https://www.nginx.com/resources/wiki/contributing/cla/">CLA</a>（不過目前這條已經不見了，改成最後說發 patch 等於同意用他們專案的 LCIENSE）</li>
+</ol>
+
+<p>總之我就照這份，先去訂閱了 nginx-devel 觀察一陣子，然後就直接把我的<a href="http://mailman.nginx.org/pipermail/nginx-devel/2017-February/009489.html">修改</a>整個丟上去了，一開始是直接用 Gmail 發，把 patch 檔內容直接複製貼過去，產生 patch 檔的方法是：</p>
+
+<pre><code>hg export &gt; something.patch
+</code></pre>
+
+<p><code>hg export</code> 會直接輸出最後一個 commit 的 patch 內容到 STDOUT，然後就直接用 Gmail 發過去，結果 review 的 <a href="http://mdounin.ru/">Maxim Dounin</a> 說他沒辦法 apply patch，可能是因為我的 mail client 的關係，建議我用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a> 發，所以就研究搜尋了一下，發現他是直接發 email 的機制，所以要把帳號密碼都寫到設定內，找了一篇 Gmail 的<a href="http://blog.sidkalra.com/2009/02/using-gmail-with-hgs-patchbomb-extension/">設定範例</a>，搭配 Google account 的應用程式密碼，設定範例如下：</p>
+
+<pre><code>[extensions]
+hgext.patchbomb =
+
+[email]
+from=othree &lt;othree@gmail.com&gt;
+to=nginx-devel@nginx.org
+cc=othree@gmail.com
+method=smtp
+
+[smtp]
+host=smtp.gmail.com
+port=587
+username=othree@gmail.com
+password=[gmail_password]
+tls=True
+</code></pre>
+
+<p>把這些資訊填入 <code>.hg/hgrc</code> 這個檔案內，然後就可以用 <code>hg email -o --test</code> 來測試看看，這個指令會把完整的原始信件內容，包括 header 等都顯示出來（丟到 STDOUT），如果正式要發就把 <code>--test</code> 拿掉就好了。</p>
+
+<p>確認一切沒問題後，我就改用 patchbomb 發 patch 到 nginx-devel 了，結果還是被拒絕了，問題主要是這個 patch 一次修改太多，理想上應該是不同目的的修改放到不同 patch 內，當然這和我一開始的預想不一樣就是了，我一開始的想法是因為 contrib 這邊的東西，相對於 nginx 本體的原始碼來說比較次要，所以盡量減少 commit 數，其實如果我有先去問過應該是可以少繞這段路，總之，為了一個一個修改送出，我又開了一個 github repository，叫做 <a href="https://github.com/othree/nginx-contrib-vim-patch">nginx-contrib-vim-patch</a>，想要慢慢把我的 nginx-contrib-vim 內的更動搬過去，接著開始的，就是漫長的 review 和溝通了。</p>
+
+<p>其實我完全沒想到 Maxim Dounin 會這麼認真的 review，不止會看我這樣改是要達到什麼目的，還有認真測試，結果被抓出一堆問題，雖然都是奇妙的 conf 寫法，合語法，但是應該不會有人這樣寫的 case，這些 case 我也開始慢慢收集到 github 上的 <a href="https://github.com/othree/nginx-conf-test">nginx-conf-test</a>，方便之後測試用，總之來回許久，終於有一部分比較簡單的東西先進去 nginx repository 了，然後我發現外部貢獻者都會在 <a href="https://nginx.org/en/CHANGES">change log</a> 那邊被感謝，我貢獻進去的目前應該都在 1.11.11 那版，其實只有把新的 directive 補上（core modules, 3rd party modules）和幾個 protocol 參數的 highlight，至於其他的修改還進不去，目前看起來會是一場長期抗戰，主要是因為 reviewer 對於期望的目標和我不一樣，目前大概會維持兩個版本吧，一邊弄<a href="https://github.com/othree/nginx-contrib-vim">自己希望的</a>，一邊抽東西送回去 upstream，不得不說主事者控制太緊會讓貢獻者動力被削減不少。</p>
+
+<p>貢獻 nginx 的過程讓我體會到以前的開源協做的模式（應該是吧？），用 mailing list 溝通，發 Patch、code review、做討論，這些點來看，nginx 的流程其實是非常老派，和現在用 Github 做溝通、協做 的流程差很大，門檻也高不少，當然這不一定是壞事，還是要看專案性質，在 Github 這類平台上做這些協做流程的話，門檻降低了，其實可能隨之而來的問題就是太多人進來造成貢獻品質落差很大，反而會吃掉主力人員的時間，剛好今天也看到知乎上有一篇「<a href="https://www.zhihu.com/question/36292298/answer/160028010">維護一個大型開源專案是怎樣的體驗？</a>」，裡面就有提到 VSCode 的狀況，變成還需要排人專門處理 issue 和 PR，感覺就很可怕。</p>
+
+<p>順帶一題，nginx 的固定貢獻者當中不少中國人啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</link>
+<guid>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</guid>
+<category>unix</category>
+<pubDate>Wed, 26 Apr 2017 14:35:29 +0800</pubDate>
+</item>
+
+<item>
+<title>日本跨年</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32146540906/" title="八坂神社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/470/32146540906_eb9801be18_b.jpg" width="1024" height="683" alt="八坂神社, " srcset="https://farm1.staticflickr.com/470/32146540906_eb9801be18_b.jpg 1024w, https://farm1.staticflickr.com/470/32146540906_8915765235_h.jpg 1600w" /></a></p>
+
+<p>去年年底臨時冒出了個去日本關西跨年的行程，由於之前有聽聞日本新年可能會變空城，所以就認真的研究了一下行程，主要擔心的是 12/31 和 1/1 兩天，這趟住的地點是在大阪，考慮了幾個行程，其中 12/31 的選項是：</p>
+
+<ul>
+<li>晚上早點買超市的晚餐回飯店看紅白，要跨年再看要不要去神社參拜</li>
+<li>去京都一天，因為 12/31 到 1/1 終夜交通不會中斷，所以還可以考慮跨年參拜完才回來</li>
+</ul>
+
+<p>1/1 則是：</p>
+
+<ul>
+<li>環球影城玩整天</li>
+<li>去看還很白的姬路城，1/1 有特別免費開放</li>
+</ul>
+
+<p>後來的決定是 12/31 去京都一天，不過結果沒待到跨年，大概十二點前就回到大阪了，然後 1/1 去姬路城，因為環球影城 1/1 預期人會很多，連 pass 都買不到了，加上以後來應該也還不會有損失，但是姬路城應該只會越來越不白，不過後來才發現環球影城有顆金氏世界記錄的<a href="https://twitter.com/hashtag/USJ%E3%83%A9%E3%82%B9%E3%83%88%E3%83%84%E3%83%AA%E3%83%BC?src=hash">聖誕樹</a> 最後一年展出...</p>
+
+<p>總之，以下是 12/31 的清水寺：</p>
+]]><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31374251433/" title="清水寺 by othree, on Flickr"><img src="https://farm1.staticflickr.com/455/31374251433_6516d8d58c_b.jpg" width="1024" height="683" alt="清水寺" srcset="https://farm1.staticflickr.com/455/31374251433_6516d8d58c_b.jpg 1024w, https://farm1.staticflickr.com/455/31374251433_0e5c7490cb_h.jpg 1600w" /></a></p>
+
+<p>還有整修到一半的地方可以拍：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31343174914/" title="清水寺 by othree, on Flickr"><img src="https://farm1.staticflickr.com/681/31343174914_1c15753116_b.jpg" width="1024" height="683" alt="清水寺, " srcset="https://farm1.staticflickr.com/681/31343174914_1c15753116_b.jpg 1024w, https://farm1.staticflickr.com/681/31343174914_f777bcf9e3_h.jpg 1600w" /></a></p>
+
+<p>二年坂、三年坂：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31374231273/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/372/31374231273_9d0dd55e07_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/372/31374231273_9d0dd55e07_b.jpg 1024w, https://farm1.staticflickr.com/372/31374231273_ae454b0cb8_h.jpg 1600w" /></a></p>
+
+<p>人是很多，不過好像也沒比櫻花季多就是，午餐就在這邊路上的茶寮都路里吃的，沿路還買了不少東西吃，八坂神社那邊也不少攤販。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32146503696/" title="八坂神社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/632/32146503696_ebdb936c70_b.jpg" width="1024" height="683" alt="八坂神社, " srcset="https://farm1.staticflickr.com/632/32146503696_ebdb936c70_b.jpg 1024w, https://farm1.staticflickr.com/632/32146503696_a86795c18c_h.jpg 1600w" /></a></p>
+
+<p>然後很多車站都有貼當天限定的終夜電車時刻表，下面是在稻荷大社拍的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31809406240/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/769/31809406240_89f640caf8_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/769/31809406240_89f640caf8_b.jpg 1024w, https://farm1.staticflickr.com/769/31809406240_679d92aeb9_h.jpg 1600w" /></a></p>
+
+<p>還準備了臨時入口要應付人潮：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32184301305/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/259/32184301305_9297a52a44_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/259/32184301305_9297a52a44_b.jpg 1024w, https://farm1.staticflickr.com/259/32184301305_45cbb30bd6_h.jpg 1600w" /></a></p>
+
+<p>不過我們去的時間還蠻早的，所以還沒啟用，倒是有些攤位都已經開張了：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31809385180/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/760/31809385180_16ea7bf524_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/760/31809385180_16ea7bf524_b.jpg 1024w, https://farm1.staticflickr.com/760/31809385180_20fa389ed0_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32066349271/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/685/32066349271_9eaa940677_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/685/32066349271_9eaa940677_b.jpg 1024w, https://farm1.staticflickr.com/685/32066349271_70fa8d00ae_h.jpg 1600w" /></a></p>
+
+<p>特別要說這個就是所謂的厚切牛舌：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31343022084/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/261/31343022084_14ba10cdbb_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/261/31343022084_14ba10cdbb_b.jpg 1024w, https://farm1.staticflickr.com/261/31343022084_665fcb63a8_h.jpg 1600w" /></a></p>
+
+<p>烤好的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32066327651/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/634/32066327651_f573b06301_b.jpg" width="1024" height="683" alt="伏見稻荷大社, " srcset="https://farm1.staticflickr.com/634/32066327651_f573b06301_b.jpg 1024w, https://farm1.staticflickr.com/634/32066327651_de5f4d1bfc_h.jpg 1600w" /></a></p>
+
+<p>要回大阪前，發現平常往觀光區（清水寺）的那排公車站，全部變成往北野天滿宮的專車：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31342958224/" title="京都 by othree, on Flickr"><img src="https://farm1.staticflickr.com/491/31342958224_41f40fd676_b.jpg" width="1024" height="683" alt="京都, " srcset="https://farm1.staticflickr.com/491/31342958224_41f40fd676_b.jpg 1024w, https://farm1.staticflickr.com/491/31342958224_60a74a1982_h.jpg 1600w" /></a></p>
+
+<p>據說北野天滿宮的新年參拜人潮是全日本最多的，看來所言不假。</p>
+
+<p>然後是 1/1 的姬路，雖然百貨商場都沒開，不過商店街還是有些店面和吃的有開，而且挑到還不錯吃的穴子魚專門店，<a href="http://www.himeji-anago-iccyoura.com/">一張羅</a>：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32060711152/" title="姬路 by othree, on Flickr"><img src="https://farm1.staticflickr.com/441/32060711152_a8487254e4_b.jpg" width="1024" height="683" alt="姬路, " srcset="https://farm1.staticflickr.com/441/32060711152_a8487254e4_b.jpg 1024w, https://farm1.staticflickr.com/441/32060711152_80efe75024_h.jpg 1600w" /></a></p>
+
+<p>姬路城城區很大，看起來保存的很完整，從車站出來就看的到，很漂亮：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31833769060/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/303/31833769060_d804c1c92b_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/303/31833769060_d804c1c92b_b.jpg 1024w, https://farm1.staticflickr.com/303/31833769060_351363a411_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32171317826/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/637/32171317826_e1ed4da92b_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/637/32171317826_e1ed4da92b_b.jpg 1024w, https://farm1.staticflickr.com/637/32171317826_c076c179ab_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31368031054/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/631/31368031054_aae9f81d44_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/631/31368031054_aae9f81d44_b.jpg 1024w, https://farm1.staticflickr.com/631/31368031054_03f7e53465_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399045233/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/721/31399045233_f8c12f10b4_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/721/31399045233_f8c12f10b4_b.jpg 1024w, https://farm1.staticflickr.com/721/31399045233_f8524d845c_h.jpg 1600w" /></a></p>
+
+<p>不過天守閣我就覺得沒這麼值得了，一來當天免費，所以排隊的人很多，花了很多時間在這，二來上去之後，窗戶的鐵網格子超小的，看外面的東西都覺得很受干擾：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399067753/" title="姬路城 by othree, on Flickr"><img src="https://farm1.staticflickr.com/665/31399067753_d268766291_b.jpg" width="1024" height="683" alt="姬路城, " srcset="https://farm1.staticflickr.com/665/31399067753_d268766291_b.jpg 1024w, https://farm1.staticflickr.com/665/31399067753_67e151a152_h.jpg 1600w" /></a></p>
+
+<p>回到大阪後發現 Yodobashi 梅田有開，所以晚餐就在那邊解決，順便逛了一下，還買到九折的 iTunes 點數（剛好有活動），就這樣順利的度過了 1/1，然後 1/2 開始各家百貨和商店就都開始營業了，到處都是福袋，日本人也都全部出來採買，看到比較特別的像是麵包店的、Mister Donut，還有 Pokemon Center 等都有，不過這次是都沒買啦，小可惜。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31399160683/" title="姬路 by othree, on Flickr"><img src="https://farm1.staticflickr.com/402/31399160683_35252ba95d_b.jpg" width="1024" height="683" alt="姬路, " srcset="https://farm1.staticflickr.com/402/31399160683_35252ba95d_b.jpg 1024w, https://farm1.staticflickr.com/402/31399160683_edcc508d72_h.jpg 1600w" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31418206723/" title="Pokemon Center by othree, on Flickr"><img src="https://farm1.staticflickr.com/372/31418206723_715d2f3017_b.jpg" width="1024" height="683" alt="Pokemon Center, " srcset="https://farm1.staticflickr.com/372/31418206723_715d2f3017_b.jpg 1024w, https://farm1.staticflickr.com/372/31418206723_a1ee511845_h.jpg 1600w" /></a></p>
+]]></description>
+<link>https://blog.othree.net/log/2017/04/11/japan-new-year/</link>
+<guid>https://blog.othree.net/log/2017/04/11/japan-new-year/</guid>
+<category>diary</category>
+<pubDate>Tue, 11 Apr 2017 22:06:08 +0800</pubDate>
+</item>
+
+<item>
+<title>GitHub Flavored Markdown 標準規範</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr"><img src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w" /></a></p>
+
+<p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a> <a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
+
+<ul>
+<li>刪除線</li>
+<li>表格</li>
+<li><a href="https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments">待辦清單</a></li>
+<li>自動連結（包括網址和 email）</li>
+<li>Raw HTML 黑名單：
+<ul>
+<li><code>&lt;title&gt;</code></li>
+<li><code>&lt;textarea&gt;</code></li>
+<li><code>&lt;style&gt;</code></li>
+<li><code>&lt;xmp&gt;</code></li>
+<li><code>&lt;iframe&gt;</code></li>
+<li><code>&lt;noembed&gt;</code></li>
+<li><code>&lt;noframes&gt;</code></li>
+<li><code>&lt;script&gt;</code></li>
+<li><code>&lt;plaintext&gt;</code></li>
+</ul></li>
+</ul>
+
+<p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
+
+<p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/27/github-flavored-markdown/</link>
+<guid>https://blog.othree.net/log/2017/03/27/github-flavored-markdown/</guid>
+<category>web</category>
+<pubDate>Mon, 27 Mar 2017 20:41:56 +0800</pubDate>
+</item>
+
+<item>
+<title>GitHub 提供專案授權簡介與概要</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32722736844/" title="Do What The F*ck You Want To Public License by othree, on Flickr"><img src="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg" width="1024" height="595" alt="Do What The F*ck You Want To Public License, " srcset="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg 1024w, https://farm3.staticflickr.com/2898/32722736844_e56ae26374_h.jpg 1600w" /></a></p>
+
+<p>大概上週看到有人在 Twitter 講到 GitHub 現在會在專案上顯示該專案所使用授權條款的摘要，長的像是上面那樣，官方也有發表<a href="https://github.com/blog/2335-open-source-license-descriptions-and-metadata">公告</a>，其實這個修改是結合之前的<a href="https://github.com/blog/2252-license-now-displayed-on-repository-overview">授權偵測</a>和 <a href="https://choosealicense.com/">Choose a License</a>。</p>
+
+<p>Choose a License 也是一個 GitHub 的附加服務，用來協助使用者挑選適合的授權條款，現在在 GitHub 建立新的專案時，可以順便初始化專案，包括建立 README、產生 <code>.gitignore</code> 和挑選要使用的授權條款：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495590202/" title="Initialize Project by othree, on Flickr"><img src="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg" width="722" height="141" alt="Initialize Project" srcset="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg 1024w" /></a></p>
+
+<p>授權條款旁邊的 i 點下去其實就會送到 Choose a License 網站去了（不過兩邊沒有連動接起來就是），Choose a License 網站則針對每種條款都一份重點摘要，分為 Permissions、Conditions 和 Limitations 三個區塊，分別條列出該條款可以做什麼（例如商業使用）、有什麼條件（例如需要也使用相同條款授權）和條款的限制（例如免責），而現在 GitHub 上顯示的條款摘要其實就是這邊的資訊搬過來的：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495653292/" title="Choose a License by othree, on Flickr"><img src="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg" width="1024" height="601" alt="Choose a License" srcset="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg 1024w, https://farm4.staticflickr.com/3770/33495653292_0a6bd0bf6e_h.jpg 1600w" /></a></p>
+
+<p>Choose a License 網站其實有很多授權條款的整理，而不是只有常見的幾種，可以看 <a href="https://choosealicense.com/appendix/">appendix</a> 頁面有完整清單，可惜裡面沒有 <a href="https://github.com/vim/vim/blob/master/runtime/doc/uganda.txt">Vim License</a>，另外特別想說的是 GitHub 自己（應該沒錯）提供的 <a href="https://choosealicense.com/licenses/unlicense/">Unlincense</a>，相似於創作領域的 <a href="http://creativecommons.tw/cc0">CC0</a>，就類似丟到 Public Domain 的意思，不過保留了免責條款，講到免責聲明，就還要順便提一下 <a href="https://choosealicense.com/licenses/wtfpl/">WTFPL</a>，它其實也是超自由的 License，差別就是連免責聲明都沒，其實是更加接近丟到 Public Domain 吧？</p>
+
+<p>最後想說的是 GitHub 用來判斷專案使用的授權，用的是 <a href="https://github.com/benbalter/licensee">licensee</a> 這個 Ruby Gem，看起來完全就是為了做這些事情寫的，我看好像也沒其他類似功能的專案，作者 Ben Balter 其實也是 GitHub 員工。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/26/github-license-summary/</link>
+<guid>https://blog.othree.net/log/2017/03/26/github-license-summary/</guid>
+<category>web</category>
+<pubDate>Sun, 26 Mar 2017 20:16:11 +0800</pubDate>
+</item>
+
+<item>
+<title>Gitdags, Git 示意圖工具</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /></a></p>
+
+<p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
+
+<pre><code>\documentclass[preview]{standalone}
+\usepackage{gitdags}
+
+\begin{document}
+    \centering
+    \begin{tikzpicture}
+      % Commit DAG
+      \gitDAG[grow right sep = 2em]{
+        0 -- {
+          1 -- 2 -- 3 -- 4,
+          A
+        }
+      };
+      \gitbranch
+        {master}     % node name and text 
+        {above=of 4} % node placement
+        {4}          % target
+      \gitbranch
+        {for-rebase} % node name and text 
+        {below=of A} % node placement
+        {A}          % target
+      \gitHEAD
+        {below=of for-rebase} % node placement
+        {for-rebase} 
+      \end{tikzpicture}
+\end{document}
+</code></pre>
+
+<p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
+
+<p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
+
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/~u91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/25/gitdags-git/</link>
+<guid>https://blog.othree.net/log/2017/03/25/gitdags-git/</guid>
+<category>software</category>
+<pubDate>Sat, 25 Mar 2017 21:49:34 +0800</pubDate>
+</item>
+
+<item>
+<title>Docker 雜談</title>
+<description><![CDATA[<p>最近使用的一些感想和疑問</p>
+
+<ul>
+<li><code>--name</code> 自動會變 network 內的 hostname，蠻方便</li>
+<li>Image build 失敗，還是會產生一個東西在那邊，要 rm 掉才能重新 build...</li>
+<li>Service 還不支援 update 修改 network</li>
+<li>DB container 的資料要開 volume 掛比較保險（免得不小心砍到 container）</li>
+<li>在多個 node 上開 replica，掛 volume 的話都是在該 node 上找，目前似乎沒有透過網路共享 volume container 這種事</li>
+<li>很多服務的官方 docker 都是用環境變數做設定，不知道是不是本來就有的慣例</li>
+<li>一直更新 registry 上的 image 好像會越來越多垃圾，不知道是不是有清理機制</li>
+<li>整體而言，我覺得 docker service 介面是個很容易讓 fat finger 造成服務爆炸設計，不過架構規劃的好的話，應該不會太難修復就是</li>
+</ul>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/18/docker/</link>
+<guid>https://blog.othree.net/log/2017/03/18/docker/</guid>
+<category>unix</category>
+<pubDate>Sat, 18 Mar 2017 23:46:02 +0800</pubDate>
+</item>
+
+<item>
+<title>Guetzli: A New Open Source JPEG Encoder</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33444227946/" title="Guetzli by othree, on Flickr"><img src="https://farm4.staticflickr.com/3665/33444227946_858cf890f3_b.jpg" width="773" height="699" alt="Guetzli" srcset="" /></a></p>
+
+<p>今天一早起來就看到 Google <a href="https://research.googleblog.com/2017/03/announcing-guetzli-new-open-source-jpeg.html">發表</a>的新的 JPEG 壓縮程式，叫 Guetzli（一種瑞士餅乾），這是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a>、<a href="https://github.com/google/brotli">Brotli</a> 之後，算是第三個比較容易被大家廣為使用的新的節省網路流量的工具，這次主要針對 JPEG 圖片格式，和之前 Mozilla 的 <a href="https://github.com/mozilla/mozjpeg">mozjpeg</a> 的作法一樣，保持目前 JPEG decoder 的相容性，然後看能加強 JPEG 圖檔到什麼程度，我稍微測試了一下，結果還不錯，目前還沒有 homebrew formula，如果要自己 build 的可以參考<a href="https://agileblaze.com/google-guetzli-image-compression-setup-on-macos/">這篇</a>，基本上就是用 bazel 來編譯，然後可能會需要先裝 libpng 和 gflags，這兩個可以用 homebrew 安裝：</p>
+
+<pre><code>brew install libpng gflags
+</code></pre>
+
+<p>然後裝 <a href="https://bazel.build/">bazel</a></p>
+
+<pre><code>brew install bazel
+</code></pre>
+
+<p>然後到專案目錄下執行編譯指令：</p>
+
+<pre><code>bazel build -c opt //:guetzli
+</code></pre>
+
+<p>結果就會把執行檔放到 <code>bazel-bin/guetzli</code> 這位置，就可以拿來用了，不過其實官方 GitHub repo 上的 <a href="https://github.com/google/guetzli/releases">release</a> 那邊就有編譯好的版本，抓下來用 Terminal 執行 <code>chmod +x</code> 也可以用（我是自己丟到 <code>/usr/local/bin/</code> 裡面），指令很簡單，可以加上 <code>--quality</code>，預設是 95，不過最小只能 84，設更小的值會跟你說，真的想要的話自己去改原始碼...</p>
+
+<p>速度就如大家所說的，和其它工具比起來真的慢很多，感覺是有一些 recursive 找最佳解的過程，輸出的結果我覺得最讓人印象深刻的是對於純色色塊的處理，也比 mozjpeg 好上不少，輸出檔案的大小不一定會是最小的，不過品質好很多，差異是達到我可以放棄這點容量差距，而寧願要這畫質改進，然後就是 Quality 100 可能會體積暴漲，我隨便測試了幾張圖片，看起來設到 90 品質就蠻不錯的，看來目前通行的圖片最佳化工具又要有一輪更新了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/17/guetzli-new-os-jpeg-encoder/</link>
+<guid>https://blog.othree.net/log/2017/03/17/guetzli-new-os-jpeg-encoder/</guid>
+<category>web</category>
+<pubDate>Fri, 17 Mar 2017 12:57:34 +0800</pubDate>
+</item>
+
+<item>
+<title>Visual Studio Code Copy with Syntax Highlighting</title>
+<description><![CDATA[<p>今天 <a href="https://code.visualstudio.com/">Visual Studio Code</a> 出了 1.10，包含了很多讓人期待的功能，其中讓我比較注意到的是 <a href="https://code.visualstudio.com/updates/v1_10#_copy-with-syntax-highlighting">Copy with syntax highlighting</a>，這在 Mac 上可是讓人等了很久，我的主要目的是做投影片時，可以不用再特別處理程式碼的顏色了，以前只有 <a href="https://www.codingmonkeys.de/subethaedit/">SubEthaEdit</a> 有支援，不過這款軟體真的蠻貴的，好不容易有免費版的軟體支援了，就趕快來測試一下，基本上步驟就是，先挑選一下顏色主題，看你的投影片背景是亮的還是暗的，選擇 Menubar 最左邊的 Code > 喜好設定 > 色彩布景主題，快速鍵是 <code>CMD + K</code>, <code>CMD + T</code>：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251516/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm4.staticflickr.com/3672/33159251516_61635294c4_b.jpg" width="1024" height="768" alt="VSCode Copy with Sytax Highlighting" srcset="https://farm4.staticflickr.com/3672/33159251516_bacbf3f4f1_k.jpg 2x" /></a></p>
+
+<p>選好程式碼，然後輸入 <code>CMD + Shift + P</code> 叫出命令面板，打入 <code>copysyn</code> 就可以找到 <strong>Copy with syntax highlighting</strong>：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251456/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm3.staticflickr.com/2838/33159251456_4946fca7f0_b.jpg" width="1024" height="768" alt="VSCode Copy with Sytax Highlighting" srcset="https://farm3.staticflickr.com/2838/33159251456_406eb36017_k.jpg 2x" /></a></p>
+
+<p>去 Word 貼上就可以了：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251396/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm1.staticflickr.com/608/33159251396_27f9174f1f_b.jpg" width="640" height="787" alt="VSCode Copy with Sytax Highlighting" srcset="" /></a></p>
+
+<p>不過我的目標其實是要貼上 Keynote，結果測試後發現貼到 Keynote 會沒有樣式，但是如果從 Word 那邊重新複製一次，就可以正確的貼到 Keynote 了：</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251346/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm1.staticflickr.com/749/33159251346_bfcf683406_b.jpg" width="875" height="711" alt="VSCode Copy with Sytax Highlighting" srcset="" /></a></p>
+
+<p>這個問題我已經去 GitHub 開 <a href="https://github.com/Microsoft/vscode/issues/21686#issuecomment-283558495">issue</a> 了，看起來是因為只有提供 HTML 內容而不是 RTF 內容的關係，希望之後能修正，就可以更方便的使用了。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/02/vscode-copy-with-syntax/</link>
+<guid>https://blog.othree.net/log/2017/03/02/vscode-copy-with-syntax/</guid>
+<category>mac</category>
+<pubDate>Thu, 02 Mar 2017 23:59:31 +0800</pubDate>
+</item>
+
+<item>
+<title>網路發佈資料之最佳實踐</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32951614622/" title="Data on the Web Best Practices by othree, on Flickr"><img src="https://farm3.staticflickr.com/2901/32951614622_395e8d1b32_b.jpg" width="1024" height="576" alt="Data on the Web Best Practices" srcset="https://farm3.staticflickr.com/2901/32951614622_395e8d1b32_b.jpg 1024w" /></a></p>
+
+<p>前幾天 W3C 發佈了這份文件 <a href="https://www.w3.org/TR/dwbp/">Data on the Web Best Practices</a> （DWBP），內容是關於在網路上發佈資料時的最佳實踐（公開或非公開的都適用），讓我想到了之前的 g0v summit 羅佩琪分享提到的一個重點，開放是有成本的，當時演講的影片：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/aIuHcEmKZ2I" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+
+<p>稍微看過這份文件後，覺得之前確實蠻缺乏這份整理好的文件，每點看了就都覺得，確實是應該要這樣的，不過沒有這種整理好的 checklist 其實真的要做的時候還蠻容易漏東漏西的，然後就是，每一點都是成本啊！！</p>
+
+<p>整份文件還蠻有翻譯的價值的，比較不像是 HTML Spec 會常常更新，不過我自然沒這麼多時間可以翻譯，所以就先把重點標題翻起來放，以後有人要開始就先有個基礎了，DWBP 整份文件有 35 點 Best Practice，每一點都有標題、簡述、原因、預期結果、可能實做方法、如何測試、證據、好處、範例等內容，其中好處的部分是分成八種：</p>
+
+<ul>
+<li>Comprehension，人類容易理解理解</li>
+<li>Processability，可程式自動處理</li>
+<li>Discoverability，可讓程式自動發現</li>
+<li>Reuse，容易重複使用</li>
+<li>Trust，可靠</li>
+<li>Linkability，可連結</li>
+<li>Access，容易存取</li>
+<li>Interoperability，容易互動（發佈者和使用者之間）</li>
+</ul>
+
+<p>我只翻譯了其中的標題和簡述，順便附上每一點的好處（上面的八種好處），以下就是這 35 點 Best Practice：</p>
+]]><![CDATA[<ul>
+<li>Metadata <br />
+詮釋資料
+<ul>
+<li>Provide metadata <br />
+提供詮釋資料(metadata) <br />
+Provide metadata for both human users and computer applications. <br />
+提供可讓人類閱讀和程式可處理的詮釋資料 <br />
+優點：R, C, D, P</li>
+<li>Provide descriptive metadata <br />
+提供資料介紹的詮釋資料 <br />
+Provide metadata that describes the overall features of datasets and distributions. <br />
+提供介紹資料集整體特性和發佈資訊的詮釋資料 <br />
+優點：R, C, D</li>
+<li>Provide structural metadata <br />
+提供資料結構的詮釋資料 <br />
+Provide metadata that describes the schema and internal structure of a distribution. <br />
+每次發佈都提供資料綱要(schema)和資料結構的詮釋資料 <br />
+優點：R, C, P</li>
+</ul></li>
+<li>Data Licenses <br />
+資料授權
+<ul>
+<li>Provide data license information <br />
+提供資料授權的資訊 <br />
+Provide a link to or copy of the license agreement that controls use of the data. <br />
+提供鏈節到資料所使用授權的協議文件 <br />
+優點：R, T</li>
+</ul></li>
+<li>Data Provenance <br />
+資料發佈者
+<ul>
+<li>Provide data provenance information <br />
+提供資料發佈者的訊息 <br />
+Provide complete information about the origins of the data and any changes you have made. <br />
+提供完整的資料發佈者的訊息以及所有的修改紀錄 <br />
+優點：R, C, T</li>
+</ul></li>
+<li>Data Quality <br />
+資料品質
+<ul>
+<li>Provide data quality information <br />
+提供資料品質資訊 <br />
+Provide information about data quality and fitness for particular purposes. <br />
+提供資料針對特定用途的品質和適應性資訊 <br />
+優點：R, T</li>
+</ul></li>
+<li>Data Versioning <br />
+資料版本
+<ul>
+<li>Provide a version indicator <br />
+提供明確版本號 <br />
+Assign and indicate a version number or date for each dataset. <br />
+提供每個資料集的明確版本號或是發佈日期 <br />
+優點：R, T</li>
+<li>Provide version history <br />
+提供版本歷史 <br />
+Provide a complete version history that explains the changes made in each version. <br />
+提供完整的版本歷史，說明每個版本的變動 <br />
+優點：R, T</li>
+</ul></li>
+<li>Data Identifiers <br />
+資料識別符
+<ul>
+<li>Use persistent URIs as identifiers of datasets <br />
+使用固定的 URI 作為資料集的識別符(identifier) <br />
+Identify each dataset by a carefully chosen, persistent URI. <br />
+為每個資料集都謹慎的挑選一個永久固定的 URI 作為識別用 <br />
+優點：R, L, D, I</li>
+<li>Use persistent URIs as identifiers within datasets <br />
+在資料集之間使用 URI 做為連結的識別符 <br />
+Reuse other people's URIs as identifiers within datasets where possible. <br />
+連結其它資料集時，盡可能使用其它資料集既存的 URI 作為資料集之間連結的識別符 <br />
+優點：R, L, D, I</li>
+<li>Assign URIs to dataset versions and series <br />
+提供特定版本和最新版本的的識別用 URI <br />
+Assign URIs to individual versions of datasets as well as to the overall series. <br />
+每個版本都提供一個獨立的識別用 URI，整個系列的資料也要提供一個特定的識別 URI <br />
+優點：R, D, T</li>
+</ul></li>
+<li>Data Formats <br />
+資料格式
+<ul>
+<li>Use machine-readable standardized data formats <br />
+使用程式可處理的標準格式 <br />
+Make data available in a machine-readable, standardized data format that is well suited to its intended or potential use. <br />
+提供程式可處理的標準資料格式，並且是適合資料預期及潛在應用的格式 <br />
+優點：R, P</li>
+<li>Use locale-neutral data representations <br />
+使用非地區性的資料表現形式 <br />
+Use locale-neutral data structures and values, or, where that is not possible, provide metadata about the locale used by data values. <br />
+使用非地區性的資料結構和形式，否則需提供所使用資料形式的詮釋資料 <br />
+優點：R, C</li>
+<li>Provide data in multiple formats <br />
+提供多種格式 <br />
+Make data available in multiple formats when more than one format suits its intended or potential use. <br />
+如果資料預期及潛在的應用有不只一種適合的格式，則都提供 <br />
+優點：R, P</li>
+</ul></li>
+<li>Data Vocabularies <br />
+資料詞彙
+<ul>
+<li>Reuse vocabularies, preferably standardized ones <br />
+盡量重複使用詞彙，並優先使用標準有定義的詞彙 <br />
+Use terms from shared vocabularies, preferably standardized ones, to encode data and metadata. <br />
+在資料本體和詮釋資料中，盡量使用已經有人使用的詞彙，並優先使用標準有定義的詞彙 <br />
+優點：R, P, C, T, I</li>
+<li>Choose the right formalization level <br />
+選擇正確的數據尺度 <br />
+Opt for a level of formal semantics that fits both data and the most likely applications. <br />
+為資料挑選一個適當的尺度，以符合資料本身的意義和它最可能的應用 <br />
+優點：R, C, I</li>
+</ul></li>
+<li>Data Access <br />
+資料取得
+<ul>
+<li>Provide bulk download <br />
+提供打包下載 <br />
+Enable consumers to retrieve the full dataset with a single request. <br />
+讓使用者可以只用一個請求就取得全部的資料集 <br />
+優點：R, A</li>
+<li>Provide Subsets for Large Datasets <br />
+大資料集要單獨提供子集 <br />
+If your dataset is large, enable users and applications to readily work with useful subsets of your data. <br />
+如果你的資料集很大，讓使用者可以針對他的應用只下載一部分的子集 <br />
+優點：R, L, A, P</li>
+<li>Use content negotiation for serving data available in multiple formats <br />
+使用內容協商機制來決定提供的資料格式 <br />
+Use content negotiation in addition to file extensions for serving data available in multiple formats. <br />
+除了副檔名之外，還可以使用 HTTP 的內容協商機制來決定提供的資料格式 <br />
+優點：R, A</li>
+<li>Provide real-time access <br />
+提供及時的存取 <br />
+When data is produced in real time, make it available on the Web in real time or near real-time. <br />
+如果資料是即時產生的，也提供可以取得即時資料的方法 <br />
+優點：R, A</li>
+<li>Provide data up to date <br />
+提供最新版的資料 <br />
+Make data available in an up-to-date manner, and make the update frequency explicit. <br />
+總是提供到最新版本的資料，並且固定更新的頻率 <br />
+優點：R, A</li>
+<li>Provide an explanation for data that is not available <br />
+無法提供的資料要說明原因 <br />
+For data that is not available, provide an explanation about how the data can be accessed and who can access it. <br />
+針對無法直接提供的資料，說明如何取得及誰可以取得 <br />
+優點：R, T</li>
+<li>Make data available through an API <br />
+讓資料可以透過 API 取得 <br />
+Offer an API to serve data if you have the resources to do so. <br />
+如果有足夠的資源，提供 API 服務來供應資料 <br />
+優點：R, P, I, A</li>
+<li>Use Web Standards as the foundation of APIs <br />
+使用網路標準作為 API 的基礎 <br />
+When designing APIs, use an architectural style that is founded on the technologies of the Web itself. <br />
+設計 API 服務時，使用網路基礎的技術作為架構核心 <br />
+優點：R, L, I, D, A, P</li>
+<li>Provide complete documentation for your API <br />
+提供完整的 API 文件 <br />
+Provide complete information on the Web about your API. Update documentation as you add features or make changes. <br />
+在網路上提供完整的 API 文件，並且在 API 有更新時即時更新文件 <br />
+優點：R, T</li>
+<li>Avoid Breaking Changes to Your API <br />
+避免 API 有不向前相容的變動 <br />
+Avoid changes to your API that break client code, and communicate any changes in your API to your developers when evolution happens. <br />
+避免重大的 API 更新造成應用端程式錯誤，更改 API 時都要跟開發人員溝通 <br />
+優點：T, I</li>
+</ul></li>
+<li>Data Preservation <br />
+資料保存
+<ul>
+<li>Preserve identifiers <br />
+保留識別符 <br />
+When removing data from the Web, preserve the identifier and provide information about the archived resource. <br />
+當從網路上移除資料時，保留該資料的識別符，並且提供該資料歸檔保存的資訊 <br />
+優點：R, T</li>
+<li>Assess dataset coverage <br />
+評估資料集覆蓋率 <br />
+Assess the coverage of a dataset prior to its preservation. <br />
+評估資料集的覆蓋率來做為歸檔保存時的參考 <br />
+優點：R, T</li>
+</ul></li>
+<li>Feedback <br />
+回饋
+<ul>
+<li>Gather feedback from data consumers <br />
+從資料使用者收集回饋意見 <br />
+Provide a readily discoverable means for consumers to offer feedback. <br />
+提供一個容易發現的方式讓使用者提供意見回饋 <br />
+優點：R, C, T</li>
+<li>Make feedback available <br />
+公開回饋意見 <br />
+Make consumer feedback about datasets and distributions publicly available. <br />
+公開使用者對資料集和發佈方式的回饋意見 <br />
+優點：R, T</li>
+</ul></li>
+<li>Data Enrichment <br />
+加強資料
+<ul>
+<li>Enrich data by generating new data <br />
+增加新資料來加強現有資料集 <br />
+Enrich your data by generating new data when doing so will enhance its value. <br />
+當新資料可以提升資料集的價值時，就著手產生新資料 <br />
+優點：R, C, T, P</li>
+<li>Provide Complementary Presentations <br />
+提供補充的內容來展示資料 <br />
+Enrich data by presenting it in complementary, immediately informative ways, such as visualizations, tables, Web applications, or summaries. <br />
+提供資料的各種用例，像是視覺化呈現、表格、網路應用程式或是摘要等來讓資料更多元 <br />
+優點：R, C, A, T</li>
+</ul></li>
+<li>Republication <br />
+再散佈
+<ul>
+<li>Provide Feedback to the Original Publisher <br />
+提供回饋意見給原發佈者 <br />
+Let the original publisher know when you are reusing their data. If you find an error or have suggestions or compliments, let them know. <br />
+讓資料的原發佈者資料你有再利用他的資料，如果有發現任何錯誤或可以改進的地方，也讓他知道 <br />
+優點：R, I, T</li>
+<li>Follow Licensing Terms <br />
+遵照授權條款 <br />
+Find and follow the licensing requirements from the original publisher of the dataset. <br />
+確認原始發佈資料集的授權條款，並遵守之 <br />
+優點：R, T</li>
+<li>Cite the Original Publication <br />
+標註原發佈者 <br />
+Acknowledge the source of your data in metadata. If you provide a user interface, include the citation visibly in the interface. <br />
+在詮釋資料內標註資料來源，如果有建立使用者介面，也要在上面顯示資料來源 <br />
+優點：R, D, T</li>
+</ul></li>
+</ul>
+
+<p>翻譯可能有問題，Patch Welcome。最後附上一些翻譯時參考的資料：</p>
+
+<ul>
+<li><a href="https://w3c-html-ig-zh.github.io/w3c-glossary/">https://w3c-html-ig-zh.github.io/w3c-glossary/</a>  </li>
+<li><a href="http://terms.naer.edu.tw/">http://terms.naer.edu.tw/</a></li>
+<li><a href="http://www.lac.org.tw/law/documents/02/06231.pdf">http://www.lac.org.tw/law/documents/02/06231.pdf</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2017/03/01/data-on-web-best-practice/</link>
+<guid>https://blog.othree.net/log/2017/03/01/data-on-web-best-practice/</guid>
+<category>web</category>
+<pubDate>Wed, 01 Mar 2017 00:02:14 +0800</pubDate>
+</item>
+
+<item>
+<title>2016</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25004748819/" title="北京天安門 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1532/25004748819_666aa8a544_b.jpg" width="1024" height="683" alt="北京天安門" srcset="https://farm2.staticflickr.com/1532/25004748819_a5173f01f5_k.jpg 2x" /></a></p>
+
+<p>又到了一年一度的照片回顧了，一樣也是一個月基本上挑一張。首先是一月的北京天安門，當時是去參加公司年會，這張照片拍攝的位置是無法步行走到的，我是搭巴士經過的時候拍的，那天的空氣也還不錯，隔天晚上空氣品質整個就爆炸了。</p>
+
+<p>二月則是我第一次參加的 SITCON，也是記錄組，其實我覺得 SITCON 這幾年的活動完成度都蠻高的啊，我想一部分原因也是因為學生比較有時間能投入吧，2016 的 SITCON 我印象最深刻的是整套的過場畫面，基本上觀眾是看不到切換畫面的，一切都有做到無縫轉換。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26152430382/" title="SITCON 2016 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1602/26152430382_64036500c8_b.jpg" width="1024" height="683" alt="SITCON 2016" srcset="https://farm2.staticflickr.com/1602/26152430382_e3b9c44c65_k.jpg 2x" /></a></p>
+
+<p>三月是剛購入的 Ricoh Theta 拍的，本來也想要寫篇文章介紹一下，不過目前難產中，之後看看有沒有時間吧。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26369570082/" title="101 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1450/26369570082_9afaaec8ee_b.jpg" width="1024" height="512" alt="101" srcset="https://farm2.staticflickr.com/1450/26369570082_4c45da1a96_k.jpg 2x" /></a></p>
+
+<p>四月的照片是五月舉辦的 g0v summit 在四月辦的工人同樂會，其實五月 g0v 也有 <a href="https://www.flickr.com/photos/othree/26634526804/in/album-72157665323715403/">一張</a> 很喜歡不過後來還是選了另外一張。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26402986700/" title="g0v summit 2016 工人同樂會 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1684/26402986700_26d5e78a85_b.jpg" width="1024" height="683" alt="g0v summit 2016 工人同樂會" srcset="https://farm2.staticflickr.com/1684/26402986700_e2da4e3684_k.jpg 2x" /></a></p>
+
+<p>五月的照片則是挑了 PF24 的綾波零的 cosplay，今年拍的 cosplayer 是比較沒有印象深刻的，最近也越來越少去了，去得太頻繁的話其實也會看到很多重複出場的玩家，感覺有點浪費時間XD。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26800559021/" title="PF24 Cosplay by othree, on Flickr"><img src="https://farm8.staticflickr.com/7023/26800559021_d2fb252a2b_b.jpg" width="683" height="1024" alt="PF24 Cosplay" srcset="https://farm8.staticflickr.com/7023/26800559021_980ba21c55_k.jpg 2x" /></a></p>
+
+<p>六月因為 HKOSC 的關係去了一趟香港。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27938866055/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7291/27938866055_d86c2c9a77_b.jpg" width="683" height="1024" alt="香港 2016, " srcset="https://farm8.staticflickr.com/7291/27938866055_d86c2c9a77_b.jpg 683w, https://farm8.staticflickr.com/7291/27938866055_e82afbe9a3_h.jpg 1067w" /></a></p>
+
+<p>七月是 HITCON CMT 的工人大會，實際上活動是八月辦的，今年我只有協助 CMT 的部分，年底的 Pacific 就沒進去幫忙了，主要是現在工作比較忙碌，而且常常去幫幾個整天後就會生病，只好減少場次。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28104209765/" title="HITCON 2016 CMT 工人大會 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7329/28104209765_ac1bea5d44_b.jpg" width="1024" height="683" alt="HITCON 2016 CMT 工人大會" srcset="https://farm8.staticflickr.com/7329/28104209765_a81d0d2930_k.jpg 2x" /></a></p>
+
+<p>八月是 iTHome 辦的 Modern Web 研討會會場，會場在松山菸廠那邊的台北文創大樓，平常不太有機會可以進去，會議廳那邊有大片落地窗可以看到停工的大巨蛋，主辦單位則是很善用這片玻璃窗，讓他變成留言板，可以用<a href="https://www.flickr.com/photos/othree/29171045152/in/album-72157673058020715/">白板筆留言</a>。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28656546354/" title="Modern Web by othree, on Flickr"><img src="https://farm9.staticflickr.com/8083/28656546354_aaae1debd6_b.jpg" width="1024" height="683" alt="Modern Web" srcset="https://farm9.staticflickr.com/8083/28656546354_2c82f6f554_k.jpg 2x" /></a></p>
+
+<p>九月整個月沒有拍照，所以改拿六月去的瑞士，特別挑的照片是歐洲最高峰少女峰，不過一共有三張，第一張是少女峰車站的近照，最左邊的山峰就是少女峰了，右下小點就是觀光客了。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29573834391/" title="Jungfraujoch by othree, on Flickr"><img src="https://farm9.staticflickr.com/8128/29573834391_d65bc44d32_b.jpg" width="1024" height="683" alt="Jungfraujoch" srcset="https://farm9.staticflickr.com/8128/29573834391_72591a2446_k.jpg 2x" /></a></p>
+
+<p>第二張則是回程在山腳下拍的少女峰車站，可以下載原始檔案找找看車站在哪，然後第三張是在差不多地方用望遠鏡頭拍的，可以比較一下大小差異。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29544124212/" title="Jungfraujoch by othree, on Flickr"><img src="https://farm9.staticflickr.com/8042/29544124212_4ac50870a0_b.jpg" width="1024" height="683" alt="Jungfraujoch" srcset="https://farm9.staticflickr.com/8042/29544124212_a015770bde_k.jpg 2x" /></a></p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29028819514/" title="Jungfraujoch by othree, on Flickr"><img src="https://farm9.staticflickr.com/8693/29028819514_9a3b2f6359_b.jpg" width="1024" height="683" alt="Jungfraujoch" srcset="https://farm9.staticflickr.com/8693/29028819514_b7b09c5d5f_k.jpg 2x" /></a></p>
+
+<p>十月是在往 MOPCON 的火車上，突然發現到，台鐵車上跑馬燈的點陣字形還蠻不錯的，字體蠻好看之外，中英文混排也沒也有不協調的問題（不過照片上沒有），有人說可能是以前倚天系統的點陣字集。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30483464980/" title="台鐵 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5723/30483464980_7d3a850342_b.jpg" width="1024" height="683" alt="台鐵" srcset="https://farm6.staticflickr.com/5723/30483464980_58b5f22986_k.jpg 2x" /></a></p>
+
+<p>十一月是 Firefox 慶生會，今年是第十二年了，地點是摩茲工寮。</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30843698921/" title="Happy Birthday Firefox by othree, on Flickr"><img src="https://farm6.staticflickr.com/5484/30843698921_f74ac860ff_b.jpg" width="1024" height="683" alt="Happy Birthday Firefox" srcset="https://farm6.staticflickr.com/5484/30843698921_2010d66bbb_k.jpg 2x" /></a></p>
+
+<p>十二月是月底去日本跨年的照片，這是第一次在日本跨年，也第一次逛了一下日本的神社祭典攤位，雖然時間比較早，和新年參拜的人潮錯開，不過也因此可以歸在 2016 年十二月～</p>
+
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32066349271/" title="伏見稻荷大社 by othree, on Flickr"><img src="https://farm1.staticflickr.com/685/32066349271_9eaa940677_b.jpg" width="1024" height="683" alt="伏見稻荷大社" srcset="https://farm1.staticflickr.com/685/32066349271_093f1e3a14_k.jpg 2x" /></a></p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/02/17/2016/</link>
+<guid>https://blog.othree.net/log/2017/02/17/2016/</guid>
+<category>diary</category>
+<pubDate>Fri, 17 Feb 2017 23:27:50 +0800</pubDate>
+</item>
 
 <item>
 <title>NodeJS and ES Module</title>
@@ -247,831 +959,6 @@ commonjs({
 <guid>https://blog.othree.net/log/2016/10/29/vim-filename-complete/</guid>
 <category>vim</category>
 <pubDate>Sat, 29 Oct 2016 15:36:02 +0800</pubDate>
-</item>
-
-<item>
-<title>SBB Mobile</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w" /></a></p>
-
-<p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
-]]><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30325682056/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8280/30325682056_9559c61d1a_b.jpg 576w, https://farm9.staticflickr.com/8280/30325682056_b4a6e85cc7_h.jpg 900w" /></a></p>
-
-<p>列出符合條件四班車，然後可以看到更早和更晚的按鈕很顯眼，然後隨便選一個選項可以看到後面的細節：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30273224071/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8131/30273224071_f984ed5827_b.jpg 576w, https://farm9.staticflickr.com/8131/30273224071_6d3d58d700_h.jpg 900w" /></a></p>
-
-<p>像是要不要轉車，會在哪個月台等等，隨便點其中一班列車會看到它的行車路線：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519365/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5551/30359519365_10c33b5a13_b.jpg 576w, https://farm6.staticflickr.com/5551/30359519365_3903bfb570_h.jpg 900w" /></a></p>
-
-<p>如果該班車已經在運行的話，就會有行車進度，而且延遲的時候也會馬上更新訊息，連後面站的時間差異也會顯示：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519005/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5337/30359519005_2aa3d8af6b_b.jpg 576w, https://farm6.staticflickr.com/5337/30359519005_690b78f4e3_h.jpg 900w" /></a></p>
-
-<p>而且根據觀察，如果有延遲的話，駕駛會想辦法追上本來的時間，如果沒辦法照新時刻跑，也會隨時更新資訊：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242964642/" title="SBB Mobile by othree, on Flickr"><img src="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5511/30242964642_f2fe0478fd_b.jpg 576w, https://farm6.staticflickr.com/5511/30242964642_5f79df31d8_h.jpg 900w" /></a></p>
-
-<p>其實我本來一直以為它的功能就只有時刻表而已，直到有一天按到左上角的 menu：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965322/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8275/30242965322_40bc90a1d0_b.jpg 576w, https://farm9.staticflickr.com/8275/30242965322_8b0760dc10_h.jpg 900w" /></a></p>
-
-<p>結果發現還有很多東西，像是搜尋歷史紀錄：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30242965082/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8134/30242965082_431d53f284_b.jpg 576w, https://farm9.staticflickr.com/8134/30242965082_90fcf903d3_h.jpg 900w" /></a></p>
-
-<p>車站資訊：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30359519425/" title="SBB Mobile by othree, on Flickr"><img src="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm9.staticflickr.com/8419/30359519425_bd9b1817e9_b.jpg 576w, https://farm9.staticflickr.com/8419/30359519425_2b8e47fa69_h.jpg 900w" /></a></p>
-
-<p>也還可以用來買票，不過因為我有買 Swiss Travel Pass 就沒機會用了，不過 SBB 還有提供 YouTube 的影片介紹，可以加減看一下，最後還有一個用搖晃手機顯示最新車票的功能，看起來蠻實用的～</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/hvH41daq8sw?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<p>整體而言，我覺得 SBB Mobile 的介面真的做的很不錯，真的是畫面乾淨、該有的都有、控制元件也好懂、複雜的東西也有藏起來，幾乎是可以當範本了，有機會去瑞士的話，一定要裝來用一下的，另外他們最近準備推出新版的 SBB Mobile，已經有 preview 版可以用，還有一個<a href="http://www.micro.sbb.ch/mobile-preview/en/home/app.html">專頁介紹新功能</a>，也有好幾段介紹影片，看起來新版也相當不錯，而且開始有一些 material design 的元素也融合進去了。</p>
-
-<p>PS. SBB 是 Swiss Federal Railways（瑞士聯邦鐵路）的德語（Schweizerische Bundesbahnen）縮寫，一般在瑞士會看到 SBB CFF FFS 這樣的寫法，第二段的 CFF 是法語（Chemins de fer fédéraux suisses），FFS 則是義大利語（Ferrovie federali svizzere）</p>
-]]></description>
-<link>https://blog.othree.net/log/2016/10/17/sbb-mobile/</link>
-<guid>https://blog.othree.net/log/2016/10/17/sbb-mobile/</guid>
-<category>diary</category>
-<pubDate>Mon, 17 Oct 2016 22:51:45 +0800</pubDate>
-</item>
-
-<item>
-<title>Acclerated Mobile Pages</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w" /></a></p>
-
-<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
-]]><![CDATA[<p>AMP 的目標是讓行動版網頁速度更快，照 Google 員工在 Google IO 的說法，假設認真的手工調校可以達到 95 分，那 AMP 的目標就是讓大家都有 90 分，它的做法說穿了其實也不複雜，就是把現有的各種調整 mobile web performance 的技巧做起來，基本上分成三個部分：</p>
-
-<ol>
-<li>CDN cache</li>
-<li>AMP HTML</li>
-<li>AMP runtime</li>
-</ol>
-
-<p>首先要提的就是 CDN 了，一般而言，都是網站所有人去花錢找 CDN 服務來使用，不過做成 AMP 的網頁，Google 會使用他們自家的 CDN 服務把你的 AMP 網頁都 cache 好，考慮到 Google CDN 的等級，應該可以不用擔心速度，這樣就先解決了網路速度的問題，而且這個部屬在 CDN 的方式還有幾個優點：</p>
-
-<ol>
-<li>全部的檔案都是同個 CDN domain，減少了 domain resolve 和 TCP 連線 warmup 的時間</li>
-<li>支援 HTTP/2.0，已經可以不用建立多次連線了，不過目前還不支援 brotli</li>
-<li>所有的 AMP 網頁都用相同的 JavaScript 檔案，大幅減少 runtime library 部分初次訪問的下載量</li>
-</ol>
-
-<p>事實上這個 CDN 服務沒有一定要由 Google 提供，照 AMP 的設計，這部分其實是獨立的，只是目前主力的推廣單位就是 Google，他們又控制著大量的 Android 手機和 Chrome 瀏覽器，所以由他們提供 AMP CDN 服務似乎再合理不過了，而 Google 提供的 AMP CDN 服務稱為 <a href="https://developers.google.com/amp/cache/">Google AMP Cache</a>，現在也可以透過 API 來查詢你的 AMP 網頁有沒有在 Google AMP Cache 上有快取，也可以實際查到 CDN 上的 URL，並且直接用那個 URL 來預覽也沒問題，當然這個 CDN 快取的 URL 是有一定<a href="https://developers.google.com/amp/cache/overview">格式</a>的，所以其實不透過 API 查也可以知道不同 AMP 網頁對應的 CDN 快取位置，例如：</p>
-
-<pre><code>https://example.com/amp_document.html
-</code></pre>
-
-<p>對應的就是：</p>
-
-<pre><code>https://cdn.ampproject.org/c/s/example.com/amp_document.html
-</code></pre>
-
-<p>CDN 之外，其它的最佳化就都和 code 相關了，像是圖片做延遲讀取、全部用 async 引入 JavaScript、internal style 減少取得 CSS 的時間，AMP 控制這些機制的方法，第一個就是限制的 coding 型式，沒有符合規範的頁面基本上就不會進到 CDN 上，所以你不能引用外部 CSS 檔案，要增加一些必要的標籤，不能自己寫 script 等等；另一個部分，就是大量的 Web Component 了，例如 <code>&lt;amp-img&gt;</code> 來取代 <code>&lt;img&gt;</code>，不能寫 script 但是還是可以加上 <code>&lt;amp-analytic&gt;</code> 來做數據統計、 <code>&lt;amp-social-share&gt;</code> 來放 Facebook 的分享按鈕等。因為都是新的自訂的標籤，整個元件的行為都是可以自訂的，所以像是圖片就可以從中做到延遲讀取，甚至更進一步，會算好 srcset 中最適合的圖片直接使用，而這層設計都是架構在 Web Component 和相關的標準之上，事實上，AMP 計畫當中，我目前看到不合網路標準的部分，其實只有一些自訂屬性，像是宣告是 AMP 網頁的：</p>
-
-<pre><code>&lt;html ⚡&gt;
-</code></pre>
-
-<p>考量到 <code>⚡</code> 可能在舊環境造成一些問題，所以也支援：</p>
-
-<pre><code>&lt;html amp&gt;
-</code></pre>
-
-<p>另外還有像是 <code>amp-boilerplate</code>、<code>amp-custom</code>、<code>custom-element</code> 等，其實沒很多，不過我深入看過目前的 HTML 5.2 草稿，搜尋看完所有的 <a href="https://tools.ietf.org/html/rfc2119#section-2"><strong>MUST NOT</strong></a> 後，其實找不到文字直接說 HTML 禁止自訂屬性，而對於 <strong>Content attributes</strong> 的<a href="http://w3c.github.io/html/single-page.html#content-attribute">說明</a>則是用 <a href="https://tools.ietf.org/html/rfc2119#section-5">MAY</a>：</p>
-
-<blockquote>
-  <p>A normative list of attributes that may be specified on the element (except where otherwise disallowed), along with non-normative descriptions of those attributes. (The content to the left of the dash is normative, the content to the right of the dash is not.)</p>
-</blockquote>
-
-<p>以前都以為自訂屬性是不合規範的，不過這次仔細研究過，實際上應該是，規範中定義到的，都是有意義的，例如 <code>aria-*</code> 是親和力相關的資訊和狀態，給輔具使用，<code>data-*</code> 的意義則是資料，所以有一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/HTMLElement/dataset">dataset</a> 屬性方便存取這些資料，而沒有規範到的屬性，其實也沒禁止，只是就是沒任何意義存在，不過規範文字敘述上雖然沒禁止，但是一般的 HTML validator 都會把沒定義的屬性當成錯誤來處理就是了。另外一個可以呼應這點的就是 <a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance">custom element</a> 的 spec 中說到 attribute 的部分了，custom element 對於沒有 namespace 的屬性限制是：</p>
-
-<blockquote>
-  <p>Any namespace-less attribute that is relevant to the element's functioning, as determined by the element's author, may be specified on an autonomous custom element, so long as the attribute name is XML-compatible and contains no uppercase ASCII letters. The exception is the is attribute, which must not be specified on an autonomous custom element (and which will have no effect if it is).</p>
-</blockquote>
-
-<p>大意就是，符合 XML 規範的全小寫字母屬性名稱，唯一不能用的只有 <code>is</code>，因為 <code>is</code> 在 custom element 中有特殊意義。如果照這樣來看的話，事實上 AMP 網頁是完全符合標準的，這點和我一開始的印象實在差很大（包括那個 <code>⚡</code> 也是 UTF-8 字元，所以也沒問題）；而能夠在完全符合網路標準的狀態下架構出像是 AMP 這樣的專案，依靠的就是之前幾年間發展的 Web Component 的標準，而 AMP 專案應用的規模也足以讓我將他視為 Extensible Web 的第一個重要里程碑。</p>
-
-<p>目前 AMP 的狀況是 Google 才<a href="https://blog.google/products/search/search-results-are-officially-ampd/">剛預設開啟</a>搜尋結果會導引到 AMP Page，而目前大部分支援的網站都是採用 paired 的方式來提供到 AMP 頁面的連結，也就是用一個 <code>&lt;link&gt;</code> 標籤來連結到 AMP 網頁，因為有兩個網頁在網路上成對，所以稱為 paired，除了 paired 之外，還有一個方法稱為 standalone，AMP 接下來也會開始推廣 standalone 的方式，Paul Bakaus 的文章 <a href="https://paulbakaus.com/2016/07/01/about-that-mobile-in-accelerated-mobile-pages/">About that 'mobile' in Accelerated Mobile Pages</a> 就有提到這件事情，standalone 版的 AMP 網頁，其實就是只提供 AMP 版本的頁面，因為 AMP 本身是架構在網路標準上的，所以一般 modern browser 都可以完整支援，<a href="https://www.ampproject.org/">AMP Project</a> 自己的網站就是最好的範例了。</p>
-
-<p>AMP 目前還在不斷的發展，有興趣的可以看看他們的 <a href="https://www.ampproject.org/roadmap/">roadmap</a>，每季會更新兩次，目前看到比較有趣的是在發展登入和購買的功能，而由於 AMP 不允許網站內放上非 AMP runtime 的 script，所以所有要用到 script 的功能都需要 AMP 提供 custom element，可以預期各式各樣的 element 會非常多種，像是 <code>&lt;amp-accordion&gt;</code>、<code>&lt;amp-carousel&gt;</code> 之類的 UI 元件，或是引用 tweet 的 <code>&lt;amp-twitter&gt;</code>，放 analytic code 的 <code>&lt;amp-analytics&gt;</code> 等，目前已經有 <a href="https://www.ampproject.org/docs/reference/components">49 個</a> custom element 可以用了，相信未來應該還是會繼續增加，當然因為整個 AMP runtime 的部分是 open source 的，所以其實也是開放貢獻，也有一些相關的文件，其中最讓人好奇的大概就是<a href="https://docs.google.com/document/d/19o7eDta6oqPGF4RQ17LvZ9CHVQN53whN-mCIeIMM8Qk/edit#">如何自己做一個 AMP custom element</a> 了吧，不過這份文件比較難找些，在官網和 Github 上的幾乎都是如何使用的文件，我猜是因為目前還沒正式開放外部提供 custom element，不過對於 AMP runtime 架構有興趣的還是可以參考看看，AMP 目前這種依靠 custom element 的方式還是會有些問題，最主要就是不斷成長的 custom element 會造成後續維護越來越困難，例如要升級修改架構的話，就會變的很麻煩，所以我在文章一開始說這其實是個暫時的解法，那正確的解法應該是怎樣呢？</p>
-
-<p>其實在 AMP 剛推出時，Tim Kadlec 就有提了一個不錯的方法，叫做 <a href="http://wicg.github.io/ContentPerformancePolicy/">Content Performance Policy</a>，目前也有簡單的草稿，Content Performancy Policy 的想法是，這些針對網路行動體驗最佳化的特殊模式，應該是由瀏覽器端來實做，然後網站可以透過 HTTP Header 來開關這些最佳化設定，使用的 synatx 基本上是借用 CSP 的格式來使用，我個人覺得這個想法其實蠻不錯的，可以減少許多問題，不過目前草稿還很不完整，瀏覽器廠商實做的意願也還不知道如何，前途未卜，其實 Tim Kadlec 本人是對 AMP 抱持一些負面的態度的，畢竟 AMP 還是有些問題在，最直接的問題大概就是，AMP 其實就是比較開放一點的 Facebook Instant Article 而已，如果不是 standalone 模式的話，目前就只有 Google 的服務會導引到 AMP 網頁，就和 Facebook 的 Instant Article 其實一樣，這點也是 Tim Kadlec 覺得最不好的點，可能 AMP 出來到消失之後都沒真的實質對網路標準有所改善，這也讓我想到很久之前 Dart 的<a href="https://blog.othree.net/log/2015/03/28/for-the-entire-web/">事情</a>（PS. 我都快想不起來 Dart 這名字了 and ES 的大數現在還是沒有影子），好像有點巧，都是同一間公司。</p>
-
-<p>還有另外一個很明顯的問題就是向下相容性的問題，例如為了控制圖片可以延遲讀取，所以 AMP 網頁要用 <code>&lt;amp-img&gt;</code> 來放圖片：</p>
-
-<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
-&lt;/amp-img&gt;
-</code></pre>
-
-<p>不過這很明顯的，不支援 JavaScript 或是關掉的時候，圖片自然就出不來，如果想要做 standalone 版的 AMP 網頁，這應該是不太行的，所以要加個 fallback，但是 AMP 又不允許直接放 <code>&lt;img&gt;</code> 標籤，結果就會變成：</p>
-
-<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
-  &lt;noscript&gt;
-    &lt;img width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""/&gt;
-  &lt;/noscript&gt;
-&lt;/amp-img&gt;
-</code></pre>
-
-<p>一是多了一層 <code>&lt;noscript&gt;</code>，二是所有圖片的資訊都會重複一份，如果還有 <code>srcset</code> 和 <code>sizes</code> 的話又會更可怕，而目前也因為向下相容比較麻煩的關係，所以我還不會考慮使用 standalone 模式的 AMP 網頁。並且如果用 paired 模式的話，則是讓網頁內容重複出現在網路上，可能就會造成一些不統一的情形，例如訪客看到 AMP 網頁直接分享，那就會和看到普通版網頁分享的結果不太一樣，雖然有指定 canonical URL，不過這部分資訊其實不會在這種地方產生效用，總之是個有點尷尬的情形。</p>
-
-<p>最後要說的是，AMP 因為現在是 Google 提供應用，所以很合理的，在中國境內無法使用，也很順便的就有了 Baidu 的 clone，叫做 <a href="https://www.mipengine.org/">Mobile Instant Pages</a>，簡稱 MIP，從官方網站上看起來基本上就是和 AMP 大同小異，只是用命名裡面的 <code>amp</code> 換成 <code>mip</code>，大概比較了一下目前最小化過的 MIP JavaScript 和 AMP 的 JavaScript，看起來是重新寫過的，官網上也有說過會公開原始碼，目前 Baidu 似乎是還沒大量啟用，大概還在很初期的推廣期吧，先不說 MIP 網站沒有任何地方提到 AMP，我對 MIP 還有一點不太滿意，就是他 paired 模式的 AMP 頁面指回一般頁面時用的標籤是：</p>
-
-<pre><code>&lt;link rel="standardhtml" href="xxx" &gt;
-</code></pre>
-
-<p>而不是使用已經語意很清楚且通用的 <code>canonical</code>，實在是非常可惜。</p>
-
-<p>AMP 的出現，對於一個前端工程師來說，最大的意義，大概就是又要產生一個版本的頁面出來，所以現在一份文字內容，就要產生標準的 HTML 文件，假設不特別讓 mobile 單獨一版，然後還有 RSS Feed、AMP HTML，如果要支援 <a href="https://developers.facebook.com/docs/instant-articles/guides/format-overview">Facebook Instant Article</a> 的話還要輸出一版 Instant Article 的 HTML，當然也可能是 RSS Feed 型式，然後然後如果要跑中國市場，就還要輸出一個 MIP 的版本，這樣算下來，一共是五個版本了，什麼，你說還有 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html#//apple_ref/doc/uid/TP40015408-CH110-SW1">Apple News</a>...</p>
-]]></description>
-<link>https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/</link>
-<guid>https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/</guid>
-<category>css-html</category>
-<pubDate>Fri, 14 Oct 2016 22:14:08 +0800</pubDate>
-</item>
-
-<item>
-<title>Native True Color Vim</title>
-<description><![CDATA[<p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
-
-<pre><code>git clone https://github.com/vim/vim.git
-
-cd vim
-cd src &amp;&amp; make autoconf &amp;&amp; cd ..
-
-./configure \
-  --enable-gui=no \
-  --without-x \
-  --enable-multibyte \
-  --with-tlib=ncurses \
-  --enable-cscope \
-  --with-features=huge \
-  --disable-nls \
-  --enable-perlinterp \
-  --enable-pythoninterp \
-  --enable-rubyinterp
-
-make
-make install
-</code></pre>
-
-<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/10/03/native-true-color-vim/</link>
-<guid>https://blog.othree.net/log/2016/10/03/native-true-color-vim/</guid>
-<category>vim</category>
-<pubDate>Mon, 03 Oct 2016 23:44:12 +0800</pubDate>
-</item>
-
-<item>
-<title>Safari 10 for Developer</title>
-<description><![CDATA[<p>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份<a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html">文件</a>在他們的 Developer Library 裡面，以下列出我覺得比較有趣的：</p>
-
-<h4>CSP 2.0</h4>
-
-<p>CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。</p>
-
-<h4>Shadow DOM</h4>
-
-<p>Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。</p>
-
-<h4>ES 6</h4>
-
-<p>號稱支援度 100%，看起來是依據 <a href="http://kangax.github.io/compat-table/es6/#safari10">ECMAScript compatable table</a> 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和 Chrome 超過了，而 Chrome 看來也之差 tail call 而已，接下來應該又要開始效能比拼了吧。</p>
-
-<h4>Inline and Auto Video Playback in iOS</h4>
-
-<p>這也是等很久的功能，之前就有先開放靜音影片能直接在 iOS Safari 上自動播放，主要的考量是，gif 和 mp4 相比，還是 gif 比較吃資源啊。</p>
-
-<h4>ES Internationalization</h4>
-
-<p>ECMA-402 支援，這也是希望快點普及的東西啊，不然數字、日期什麼的搞本地化實在很麻煩。</p>
-
-<h4>WOFF 2.0 Support</h4>
-
-<p>令人意外的有點慢，不過還算很有誠意的把很新的 <a href="https://drafts.csswg.org/css-font-loading/">CSS Font Loading Module Level 3</a> 的 API 做好了。</p>
-
-<h4>#RRGGBBAA</h4>
-
-<p>新的 CSS color 格式，也是前陣子才 propose 出來而已，這樣以後就可以讓 CSS 裡的顏色格式統一點了。</p>
-
-<h4>Right-to-Left Language Support</h4>
-
-<p>主要是 RTL 頁面 scrollbar 的位置終於會換邊了。</p>
-
-<h4>Media Query for Wide Color Gamut Support</h4>
-
-<p>廣色域的 CSS media query，主要是因為最新的 iMac 和 iPhone 7 都有支援 P3 色域了。</p>
-
-<h4>WebDriver Support</h4>
-
-<p>主流瀏覽器最後一個支援的...</p>
-
-<h4>Apple Pay for the Web</h4>
-
-<p>這真的蠻兇狠的，不過 Google 也有在 Android 做類似的<a href="https://android.googleblog.com/2016/09/tap-pay-yes-android-pay-welcomes-chase.html">事</a>就是了。</p>
-
-<p>大概就這些了，其實也列出超過一半的項目了，Safari 這種更新頻率其實比起其它幾家來說吃虧不少，不過還是一直有跟上最新進度，其實也蠻厲害的，更何況現在 Google 都把人拉到 Blink 去，有回到 Webkit 的貢獻似乎比例上不高。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/09/21/safari-10/</link>
-<guid>https://blog.othree.net/log/2016/09/21/safari-10/</guid>
-<category>web</category>
-<pubDate>Wed, 21 Sep 2016 23:57:08 +0800</pubDate>
-</item>
-
-<item>
-<title>MRT &amp; GIT</title>
-<description><![CDATA[<script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-
-<p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-]]><![CDATA[<p>接著要來說一下當天省略的部分吧，就是 <code>git branch</code> 和 <code>git log</code> 我所學到的東西，不過要把這內容講清楚，需要先介紹一下 <code>.git</code> 這個資料匣，這是 git repository 的所有資料儲存的地方，包括所有的 branch、commit 資訊、檔案和目錄結構等等都在裡面，一般 <code>git clone</code> 也是先把這個目錄的內容抓下來，然後才把從裡面把工作目錄（working directory）的檔案弄出來，那麼，如果現在已經把 <code>.git</code> 的資料都抓下來後，要怎麼取出工作目錄的檔案呢，首先要看 <code>.git/HEAD</code> 這個檔案，一般而言，內容會是：</p>
-
-<pre><code>ref: refs/heads/master
-</code></pre>
-
-<p>意思是 reference 到 <code>.git/refs/heads/master</code>，所以就看一下這個檔案的內容，以 <a href="https://github.com/othree/immutable-quadtree-js">immutable-quadtree-js</a> 為例，<code>.git/refs/heads/master</code> 的內容如下：</p>
-
-<pre><code>4b5c03ea81e0e24714bea66de3892a40165fe56f
-</code></pre>
-
-<p>這是一段 sha-1 hash，那麼要到哪裡找這個 hash 的內容呢？其實這個檔案的位置就在：</p>
-
-<pre><code>.git/objects/4b/5c03ea81e0e24714bea66de3892a40165fe56f
-</code></pre>
-
-<p>檔案（又稱為 object）內容是用 zlib 壓縮過的，git 有簡單的工具可以幫忙檢視內容，就是 <code>git cat-file</code>，只要給他 hash 它就會自動去定位了，例如：</p>
-
-<pre><code>$ git cat-file -p 4b5c03ea81e0e24714bea66de3892a40165fe56f
-</code></pre>
-
-<p>或是</p>
-
-<pre><code>$ git cat-file -p 4b5c03
-</code></pre>
-
-<p>就會把上面那個 object 的內容印出來：</p>
-
-<pre><code>tree 96602375208c5d4f028bdbcd7873f049a70d9287
-parent 280142567c56235af3fc7c35513edeb978c1b465
-author othree &lt;othree@gmail.com&gt; 1429321581 +0800
-committer othree &lt;othree@gmail.com&gt; 1429321581 +0800
-
-Use same name in node and global module
-</code></pre>
-
-<p>這就是一個 commit 的內容，記錄了現在這個 commit 的檔案狀態（tree）、上一個 commit（parent）、還有作者、提交者及 commit message，要把工作目錄的內容抓出來會需要的是 tree，後面的值也是一個 object hash，所以就來看看內容吧：</p>
-
-<pre><code>100644 blob 31843d5c03e1a3a0618b40bdd2034b0c492f2132    .gitignore
-100644 blob 20fd86b6a5bee335c75b4efea34312ff7f3a039e    .travis.yml
-100644 blob fd7bce4d5095540e4cb83f56276b9cd831f9ec76    DOC.md
-100644 blob 3c983c1efb8ab258bca8b7a0aed13bd97cf1b47f    LICENSE
-100644 blob c11ab5fc05c2cc398f2be094451f34bf428e0a9e    Makefile
-100644 blob fa3477c3305c08116408aea0ad30520627598804    README.md
-040000 tree 61cc224cb5de89713ac3bdaddc7835ec2dbea129    dist
-100644 blob 3ceec31471c4e4d8e38e0f0e506762feda7b852c    package.json
-040000 tree 48614476be4f27aad0137d57170852a9d5bdd227    src
-040000 tree 05181d9234207ffcc34e0bc4574bd9fb4e3210ad    test
-</code></pre>
-
-<p>很容易可以理解這個內容的意思，它其實就是這個 commit (HEAD)，根目錄下的檔案和目錄，分成四個 column 紀錄，第一欄是檔案權限、第二欄是 object type，第三欄是 hash，最後一欄是檔案/目錄名稱，其中的 object type 如果是 <code>tree</code> 就是子目錄，<code>blob</code> 就是檔案，然後每一筆資料都透過 hash 指引到一個 object 檔案，如果是 tree  object 就會看到一樣結構的內容，如果是 blob object 就是該檔案本身，所以就可以透過遞迴操作來把整個工作目錄取出（這是我理解 git 資料結構後認為的作法，不是去看 git 原始碼得知的）。</p>
-
-<p>再回到前面的 commit object，裡面的 parent 屬性就是唯一可以連結每個 commit 之間關係的屬性，如果是 merge point 則會有多個 parent，例如 <a href="https://github.com/othree/taipei-mrt">taipei-mrt</a> 中的南京復興站：</p>
-
-<pre><code>$ git cat-file -p f747e466dd826ff6b81550505412f7bf4875fd68
-
-tree d6d7e908638af9bb8759870723c0c6deed174faf
-parent 460ff499e9917051e747a5305daa19bcd80a86ea
-parent 5f913238492d3b8ea5a15893b463492681ae59ff
-author othree &lt;othree@gmail.com&gt; 1455717204 +0800
-committer othree &lt;othree@gmail.com&gt; 1455717204 +0800
-
-南京復興
-</code></pre>
-
-<p>所以可以理解的是，git 不是紀錄每個 commit 間的 diff，而是記錄每個 commit 的狀態，然後 commit 間的關係只能透過 parent 來連接，是個單向的關係，每個 commit 都只能往上尋找自己的祖先，沒辦法從 commit 連結到自己的子孫，而這個單向的關係，也影響了 branch 的定義。</p>
-
-<p>Git 的 branch 嚴格說起來，其實只是進入 commit tree 的入口，一開始預設只有 master branch 這個入口，就如同上面介紹要怎麼把工作目錄的資料抓出來時一樣，git 會先去看 <code>.git/HEAD</code>，HEAD 是一個特殊的參考（reference），預設會指到 master branch，上面介紹時，master branch 的 reference 檔案位置在 <code>.git/refs/heads/</code>，事實上，所有的 branch 的 reference 都在這個位置：</p>
-
-<pre><code>$ ll .git/refs/heads/
-
-total 72
-drwxr-xr-x  11 othree  staff  374 Sep 10 00:02 .
-drwxr-xr-x   5 othree  staff  170 Feb 15  2016 ..
--rw-r--r--   1 othree  staff   41 Aug 14 23:45 blue
--rw-r--r--   1 othree  staff   41 Sep 10 00:02 brown
--rw-r--r--   1 othree  staff   41 Feb 16  2016 green
--rw-r--r--   1 othree  staff   41 Feb 15  2016 green-a
--rw-r--r--   1 othree  staff   41 Feb 15  2016 orange
--rw-r--r--   1 othree  staff   41 Sep 10 00:02 orange-a
--rw-r--r--   1 othree  staff   41 Sep  9 00:06 orange-b
--rw-r--r--   1 othree  staff   41 Sep 10 00:02 red
--rw-r--r--   1 othree  staff   41 Sep 10 00:02 red-27
-</code></pre>
-
-<p>每個檔案內容都是一個 commit hash：</p>
-
-<pre><code>$ cat .git/refs/heads/*
-
-1873fddf2b760cbb753f6d81076e50a079acd687
-1873fddf2b760cbb753f6d81076e50a079acd687
-91631c62df972ee49f7699eb6b15cbda913f50e3
-a245d40e28f75e3bed1b7a8d726906eb230bd6fe
-f861f243e367c15b681919ebc2b1d9d9ceccde17
-e73351a53945ebb3fcf0f9bbc078969bdb6dc29b
-c13ea61e77de42bc579ecf2a1cf32aa2a4a9d6e0
-9ad00b514fccdec7f7f5bb0a91e6d5cb678c2a6f
-99e31bceea7e9446e37603c00cafa04f8c4827a2
-</code></pre>
-
-<p>有這些入口後，就可以進到編輯歷史裡，然後透過每個 commit 的 parent 來串連起 branch 的修改歷史。事實上這種設計並沒有限制 branch 之間一定要有相連，所以就有了可以完全獨立的 <a href="https://ihower.tw/blog/archives/5691">orphan branch</a>，最常見被用來做 <a href="https://pages.github.com/">Github Pages</a>，也可以用來放一些相關的資料，不過實務上，會需要放相關資料在 repository 李的話，通常會在根目錄先建立好不同用途的子目錄，不然要查詢時還要切換 branch 實在也不方便，不過要畫捷運路網時， orphan branch 卻是幫助很大，可以簡單的建立不同路線的起點。</p>
-
-<p>在瞭解 branch 之後，就可以來用 Git 線圖建立路網的交錯了，其實原理很簡單，就是先把兩個分支 branch merge 起來，並且讓兩個 branch 都指向到同一個 merge commit 上，作法就是兩個 branch 互相 merge：</p>
-
-<pre><code>git merge orphan --allow-unrelated-historie
-git co orphan
-git merge master --allow-unrelated-historie
-</code></pre>
-
-<p>在 Git 2.9 之後需要加上 <code>--allow-unrelated-historie</code> 這個參數，第一個 merge 完成會變這樣：</p>
-
-<pre><code>M─┐ [master] Merge branch 'orphan'
-│ I [orphan] Commit B
-I Commit A
-</code></pre>
-
-<p>第二個 merge 會是 fast-forward ，然後結果就變成：</p>
-
-<pre><code>M─┐ [orphan] [master] Merge branch 'orphan'
-│ I Commit B
-I Commit A
-</code></pre>
-
-<p>可以看到兩個 branch 現在都指向到同個 commit 了，然後分別在兩個 branch 建立新的 commit，就可以分支成兩條線出去了：</p>
-
-<pre><code>o [orphan] Commit D
-│ o [master] Commit C
-M─┘ Merge branch 'orphan'
-│ I Commit B
-I Commit A
-</code></pre>
-
-<p>不過由於 Git 的歷史紀錄只能靠 parent 屬性建立，branch 也只是一個進入編輯歷史的入口，所以追塑到 merge commit 後，就無法分辨更之前的 commit 是屬於那個 branch 了，我的 MRT 線圖也是如此，其實只能維持到 topology 正確，而沒辦法讓所有的 commit 都能分辨出來是哪條線的。</p>
-
-<p>第二個要說的則是 <code>git log</code> 的部分，當天的分享有講到用 <a href="https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html#_specifying_ranges">git log range</a> 來查詢捷運路線，主要用的是 <code>A..B</code> 和 <code>A...B</code>，其實在一般只有一條線的情形下用，<code>..</code> 和 <code>...</code> 都可以用來擷取 A 和 B 兩個 commit 中間的變化，但是用來查捷運路線，就會發現很多時候結果不如預期，事實上，這兩個 syntax 都有其代表的邏輯操作，如同上面所說，git 歷史的記錄只能靠 parent 來建構起來，一般的 <code>git log</code> 就會從 HEAD 指到的 commit 開始，透過 parent 屬性，把所有可以連結到的 commit 都列出來，而 <code>E..B</code> 的意思，則是從 E 開始，列出所有 E 能連結到的 commit，但是不列出 B 能連結到的 commit，只有一條線的情境來看：</p>
-
-<pre><code>E-D-C-B-A
-</code></pre>
-
-<p>E 能連結到的包括了：</p>
-
-<pre><code>E-D-C-B-A
-  ^ ^ ^ ^
-</code></pre>
-
-<p>B 能連結到的包括了：</p>
-
-<pre><code>E-D-C-B-A
-        ^
-</code></pre>
-
-<p>把上面的扣掉下面的就變成：</p>
-
-<pre><code>E-D-C-B-A
-  ^ ^ ^
-</code></pre>
-
-<p>看起來就剛好是 B 到 E 中間的變化歷程，至於 <code>...</code> 又有點不同，它的定義是列出所有 B 和 E 可以到達的 commit，但是不列出兩者都可以到達的 commit，單一條線的時候，結果會和 <code>..</code> 是一樣的，所以差異是在有分支的情形才會出現，舉例來說：</p>
-
-<pre><code>o [master] &lt;E&gt; Commit E
-│ o [orphan] &lt;F&gt; Commit F
-│ o Commit D
-o │ Commit C
-M─┘ Merge branch 'orphan'
-│ I Commit B
-I Commit A
-</code></pre>
-
-<p>如果用 <code>...</code> 看 E 到 F 的話：</p>
-
-<pre><code>$ git log E...F --oneline --graph
-
-* 8d6c4d5 Commit E
-* d2f593f Commit C
-* f4dad66 Commit F
-* c3ac3ca Commit D
-</code></pre>
-
-<p>就可以達成類似從 E 站到 F 站的效果，不過由於 Merge commit 是兩邊都可以到達的 commit，所以不會出現，另外就是出現的順序不會正確。所以我在未來發展那邊有提到可以開發一個工具來專門查詢捷運路線，大概要用的方法就是要從每個 branch 進去找，然後還要尋找 merge commit，再從 merge commit，實際上還要仔細想想才能確定查詢的流程就是。</p>
-
-<p>以上就是這次學習到的 git 相關知識，當時投影片上寫著下略五千字，沒想到寫起來真的蠻多的，這篇文章的字數統計還真的有達標。</p>
-]]></description>
-<link>https://blog.othree.net/log/2016/09/17/git-mrt/</link>
-<guid>https://blog.othree.net/log/2016/09/17/git-mrt/</guid>
-<category>software</category>
-<pubDate>Sat, 17 Sep 2016 11:41:49 +0800</pubDate>
-</item>
-
-<item>
-<title>Input Event</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
-
-<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
-
-<ul>
-<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
-<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
-<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
-<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
-<li>以上幾種操作都不會讓游標亂跳</li>
-</ul>
-
-<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
-
-<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
-
-<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
-/*
-   The following function tests an element for oninput support in Firefox.  Many thanks to
-        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
-*/
-function checkEvent(el) {
-    // First check, for if Firefox fixes its issue with el.oninput = function
-    el.setAttribute("oninput", "return");
-    if (typeof el.oninput == "function")
-        return true;
-
-    // Second check, because Firefox doesn't map oninput attribute to oninput property
-    try {
-        var e  = document.createEvent("KeyboardEvent"),
-            ok = false,
-            tester = function(e) {
-                ok = true;
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
-        document.body.appendChild(el);
-        el.addEventListener("input", tester, false);
-        el.focus();
-        el.dispatchEvent(e);
-        el.removeEventListener("input", tester, false);
-        document.body.removeChild(el);
-        return ok;
-    } catch(e) {}
-}
-</code></pre>
-
-<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/09/11/input-event/</link>
-<guid>https://blog.othree.net/log/2016/09/11/input-event/</guid>
-<category>script</category>
-<pubDate>Sun, 11 Sep 2016 00:21:40 +0800</pubDate>
-</item>
-
-<item>
-<title>Modern HTML Email Development</title>
-<description><![CDATA[<p>今天在 Modern Web 分享的主題</p>
-
-<script async="async" class="speakerdeck-embed" data-id="17350d3dd0d14841ba8dd055400bd96f" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"><!-- A_A --></script>
-
-<p>其實最主要是想介紹 <a href="https://mjml.io/">MJML</a> 這個工具，不過最後介紹的篇幅有些不夠，有些可惜，話說今天設備也有些狀況，一是投影機解析度和預期的不一樣，二是無線麥克風聲音會延遲，對於講者來說還蠻干擾的，最後時間還剩的比預期多，覺得愧疚啊。</p>
-
-<p>最後附上這次介紹的一些資源的連結，方便取用：</p>
-
-<ul>
-<li><a href="http://emailmarketingreactions.tumblr.com/">Email Marketing Reactions</a></li>
-<li><a href="https://stackoverflow.com/questions/14376783/list-of-mso-attributes">List of mso attributes</a></li>
-<li><a href="https://medium.com/cm-engineering/coding-mobile-first-emails-1513ac4673e#.ksru1wvbm">Coding Mobile First Emails</a></li>
-<li><a href="https://www.campaignmonitor.com/css/">The Ultimate Guide to CSS</a></li>
-<li><a href="https://www.campaignmonitor.com/dev-resources/will-it-work/">Will It Work</a></li>
-<li><a href="https://litmus.com/conference">The Email Design Conference</a></li>
-<li><a href="https://www.dropbox.com/s/qkh68xkz3vp5yvr/eis-design-innovation.pdf?dl=0">Innovations in Email Design</a></li>
-<li><a href="https://emailclientmarketshare.com/">Email Client Market Share</a></li>
-</ul>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/08/25/modern-html-email-develop/</link>
-<guid>https://blog.othree.net/log/2016/08/25/modern-html-email-develop/</guid>
-<category>css-html</category>
-<pubDate>Thu, 25 Aug 2016 23:12:54 +0800</pubDate>
-</item>
-
-<item>
-<title>JSON Web Token</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w" /></a></p>
-
-<p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
-
-<ul>
-<li><a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a></li>
-</ul>
-
-<p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
-
-<pre><code>{
-  "kty":"EC",
-  "crv":"P-256",
-  "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
-  "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
-  "kid":"Public key used in JWS spec Appendix A.3 example"
-}
-</code></pre>
-
-<p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
-
-<p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
-
-<pre><code>{
-  "typ":"JWT",
-  "alg":"HS256"
-}
-</code></pre>
-
-<p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
-
-<pre><code>YWI/YmE=
-</code></pre>
-
-<p>用 base64url 的話就變成：</p>
-
-<pre><code>YWI_YmE
-</code></pre>
-
-<p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
-
-<pre><code>BASE64URL(UTF8(JOSE Header)) || '.' || 
-BASE64URL(JWS Payload))
-</code></pre>
-
-<p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
-
-<ul>
-<li>JOSE Header</li>
-<li>Payload</li>
-<li>Signature</li>
-</ul>
-
-<p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
-
-<pre><code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
-BASE64URL(JWS Payload) || '.' ||
-BASE64URL(JWS Signature)
-</code></pre>
-
-<p>長的會看起來像是：</p>
-
-<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
-</code></pre>
-
-<p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
-
-<pre><code>{
-  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
-  "signatures":[
-     {"protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-      "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"}]
-}
-</code></pre>
-
-<p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
-
-<pre><code>{
-  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
-  "protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-  "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
-}
-</code></pre>
-
-<p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
-
-<p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
-
-<pre><code>{"alg":"none"}
-</code></pre>
-
-<p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
-
-<pre><code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code></pre>
-
-<p>最後是 <code>.</code> 結尾。</p>
-
-<p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
-
-<ul>
-<li>JOSE Header</li>
-<li>Encrypted Key</li>
-<li>Initialization Vector</li>
-<li>Ciphertext</li>
-<li>Authentication Tag</li>
-</ul>
-
-<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
-
-<p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
-
-<pre><code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
-</code></pre>
-
-<p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
-
-<p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
-
-<ul>
-<li><code>iss</code>, Issuer</li>
-<li><code>sub</code>, Subject</li>
-<li><code>aud</code>, Audience</li>
-<li><code>exp</code>, Expiration Time</li>
-<li><code>nbf</code>, Not Before</li>
-<li><code>iat</code>, Issued At</li>
-<li><code>jti</code>, JWT ID</li>
-</ul>
-
-<p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
-
-<pre><code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code></pre>
-
-<p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
-
-<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
-
-<p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/08/13/json-web-token/</link>
-<guid>https://blog.othree.net/log/2016/08/13/json-web-token/</guid>
-<category>server</category>
-<pubDate>Sat, 13 Aug 2016 18:46:54 +0800</pubDate>
-</item>
-
-<item>
-<title>7 Bit Encoding and Email</title>
-<description><![CDATA[<p>最近工作上比較常接觸到 email 的東西，然後比較認真的看了 HTML email 信件的內容，以前我以為都要用 base64 編碼來處理，可是用 base64 來處理 HTML email 我一直覺得很不合理，一來大小會變 1.33 倍，二來整個 HTML 原始碼傳送時會變的幾乎無法辨識，收信軟體還要先解碼一次才可以 parse HTML，感覺完全不需要多此一舉，總之就是覺得為什麼要做這麼愚蠢的事情，明明看起來 <a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95">MIME</a> 就沒這樣限制，所以我應該可以這樣寫：</p>
-
-<pre><code>Content-Type: text/html; charset=utf-8
-</code></pre>
-
-<p>然後內文直接放 HTML 原始碼，可是不知道為什麼沒人這樣做，事實上也不 work；最近多看了一些郵件原始碼才發現其實還有個 Quoted-Printable encoding 也很常用，看起來比 Base64 的結果還要接近原始碼許多了，所以就研究了一下它到底是什麼格式。</p>
-
-<p>Quoted-Printable encoding 的基本原理就是用 <code>=</code> 作為 escape 字元，然後可以把要轉換的字元轉成 <code>=字碼</code> 的形式，例如 Big5 中文的 <code>我</code> 就要轉成 <code>=A7=DA</code>，規範上要轉換的是除了可見（printable）<a href="https://zh.wikipedia.org/wiki/ASCII">ASCII</a> 字元以外的字元都要轉，而 ASCII 是個 7bit 編碼，字碼只有從 0 到 127 而已，而 email 要用 Quoted-Printable encoding 的主要原因其實就是為了讓文件內的每個字元編碼都維持在 7bit 編碼範圍內，現在大家常用的編碼像是 UTF-8 和以前常用的 Big5 等都是 8bit 編碼，兩者差別就在於每個傳輸的 byte 中有沒有使用到第 8 個 bit，轉成二進位的時候，7bit 系統編碼不會用到最左（higher-order）邊的那個 bit。</p>
-
-<p>為什麼需要用 7bit 的文字編碼呢？主因是計算機和電信網路早期很多系統是只支援 7bit 編碼的，SMTP 的<a href="https://tools.ietf.org/html/rfc821#page-44">規範</a>就直接要求 TCP 傳輸時，每個 byte 最左邊的 higher-order bit 要填 0：</p>
-
-<blockquote>
-  <p>The TCP connection supports the transmission of 8-bit bytes.
-The SMTP data is 7-bit ASCII characters.  Each character is
-transmitted as an 8-bit byte with the high-order bit cleared to
-zero.</p>
-</blockquote>
-
-<p>當然這規範很落後時代，所以在 <a href="https://tools.ietf.org/html/rfc2045#section-6">MIME（Multipurpose Internet Mail Extensions）</a> 規範其實也有 <code>Content-Transfer-Encoding</code> 可以指定傳輸用的是什麼編碼：</p>
-
-<pre><code>Content-Transfer-Encoding: 8bit
-</code></pre>
-
-<p>不過為了相容舊系統，還是很少真的這樣使用的信件在傳遞，因為要是傳到了 7bit 系統，小則亂碼、大則程式當機。不過這就帶出另外一個問題了，難道 7bit 系統只能傳輸 ASCII 字集嗎？因為我還蠻常看到日文的純文字郵件，就去找了一些來看看，結果發現到有的是用 <code>ISO-2022-JP</code>，而且是使用 7bit 的傳輸：</p>
-
-<pre><code>Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-</code></pre>
-
-<p>信件內容的文字也都很正確，沒有亂碼：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27751195323/" title="iso-2022-jp by othree, on Flickr"><img src="https://farm8.staticflickr.com/7684/27751195323_a423fd4cb4_b.jpg" width="708" height="558" alt="iso-2022-jp" srcset="" /></a></p>
-
-<p>於是就看一下 <a href="https://zh.wikipedia.org/wiki/ISO/IEC_2022">ISO-2022</a> 的介紹，發現原來是個很早就有的 7bit 編碼方法，後來根據這方法有訂出了 CN、JP、KR 等語言的編碼，不過比較通行的看來只有 ISO-2022-JP，然後我也找到 HTML email 用 ISO-2022-JP 的：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28366990615/" title="ISO-2022-JP by othree, on Flickr"><img src="https://farm9.staticflickr.com/8572/28366990615_bc76dcce70_b.jpg" width="708" height="558" alt="ISO-2022-JP" srcset="" /></a></p>
-
-<p>看起來就像是我理想中的 HTML email 原始碼啊，所以問題的癥結其實是，大家為了相容於舊系統，所以都用 7bit 傳輸，要 7bit safe 的 encoding 選擇有限，除了比較通行的 ISO-2022-JP 可以給日文用、字元太少只能給英文用的 ASCII 之外，其它語言就只能用 Base64 encoding 和 Quoted-Printable encoding 了，所以事實上其它 7bit 編碼的內容，也是可以直接透過 SMTP 協定來傳輸的，只是要看收信端的軟體能不能支援解碼，像是已經不太有人用的 <a href="https://zh.wikipedia.org/zh-tw/UTF-7">UTF-7</a> 就是 7bit 的 unicode 編碼。</p>
-
-<p>最後，就是假設我們已經不用擔心老舊系統的時候，其實只要這樣寫在 MIME header 裡就可以直接傳 UTF-8 的 HTML source，不用再經過任何編碼處理了：</p>
-
-<pre><code>Content-Transfer-Encoding: 8bit
-Content-Type: text/html; charset=utf-8
-</code></pre>
-
-<p>不過距離這一步不知道還有多遠就是了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/07/19/7bit-encoding-and-email/</link>
-<guid>https://blog.othree.net/log/2016/07/19/7bit-encoding-and-email/</guid>
-<category>web</category>
-<pubDate>Tue, 19 Jul 2016 13:28:23 +0800</pubDate>
-</item>
-
-<item>
-<title>HKOSCON 2016</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315015884/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7526/27315015884_dd95e637b1_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7526/27315015884_dd95e637b1_b.jpg 1024w, https://farm8.staticflickr.com/7526/27315015884_5f8f452616_h.jpg 1600w" /></a></p>
-
-<p>今年有幸可以參與<a href="https://2016.opensource.hk/">香港的 Open Source Conference</a>，這趟還承蒙 Mozilla 贊助交通費用，另外因為是講者的關係，住宿的部分則是 HKOSCON 幫忙。其實至少去年就想去了，不過去年因為事情比較多就放棄了，今年還乾脆的投稿分享，不過因為工作的關係，只有參加週六的議程，週五的部分就沒參加到了，聽的議程如下：</p>
-
-<ul>
-<li>回顧台灣自由開源軟體發展 by Jim Huang</li>
-<li>Interactive Dashboard Development with Plotly by Mart van de Ven</li>
-<li>Fluentd: Unified Logging Layer by Masahiro Nakagawa by Andy Shu</li>
-<li>Optimizing Chinese Webfont &amp; Typography by Andy Shu</li>
-<li>Mozilla Eir - Bring medical devices into the world of webby Kevin Hu</li>
-<li>From Open Source to Open Media by Hsin-Chan Chien</li>
-<li>My Mozilla Contributing Journey by Irvin Chen</li>
-</ul>
-
-<p>第一場就是 Jserv 介紹台灣以前的自由開源軟體的發展，我到會場的時候已經開始講的，介紹的比較是早期的發展，是我有參與到這個圈子前的時期，對我來說大部分都是，照我印象比在台灣之前說到的還要詳細些，不過我的聽幾次 Jserv 的分享感覺下來，就是大概進入 COSCUP 開始辦之後，參與發展在地化的自由開源軟體的人卻越來越少，當然我自己也是沒參與啦，其實曾經我本來要幫忙新酷音的網站（目前是 <a href="http://blog.kidwm.net/">WM</a> 維護），不過因為一些奇妙的原因我就沒幫上了。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27850155241/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7351/27850155241_5c22604d7e_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7351/27850155241_5c22604d7e_b.jpg 1024w, https://farm8.staticflickr.com/7351/27850155241_5f052102f4_h.jpg 1600w" /></a></p>
-
-<p><a href="https://plot.ly/">Plotly</a> 則是一個 plot library，我是沒很注意聽，有興趣可以自己研究一下優缺點，目前這市場似乎有點飽和，可能等真的有需求時再來研究吧。</p>
-
-<p><a href="http://www.fluentd.org/">Fluentd</a> 是最近蠻多人會用的 log 收集中間人，我目前工作上雖然沒有直接接觸，到是有間接使用到，不過我到來聽這場的這時候才知道，原來作者是日本人，不得不說有點意外，來講的是 Masahiro Nakagawa，是目前專案上排第二的開發者。</p>
-
-<p>Optimizing Chinese Webfont &amp; Typography 這場的重點其實就是動態組字形技術，以前台灣這邊也有人在弄，有商業化的就是 <a href="http://www.justfont.com/">justfont</a> 了吧，不過沒想到這技術現在也有開源專案提供了，這場 Andy 介紹的是 <a href="https://github.com/aui/font-spider">font-spider</a> 這個專案，有興趣的可以自己玩玩看。PS: 我覺得 justfont 不斷拓展方向的策略還蠻正確的，不然單靠 Webfont 就蠻危險的。</p>
-
-<p><a href="https://wiki.mozilla.org/Eir">Mozilla Eir</a> 則是第一場 Mozilla 相關的主題，主要是介紹 Mozilla 參與醫療器材平台發展的專案，目前還在蠻初期的，個人感覺還在規劃和討論的階段，所以還沒有實際的成果或是可以 demo 的東西。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27927183155/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7421/27927183155_b62eedb67d_b.jpg" width="683" height="1024" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7421/27927183155_b62eedb67d_b.jpg 683w, https://farm8.staticflickr.com/7421/27927183155_8da1d310a3_h.jpg 1067w" /></a></p>
-
-<p>From Open Source to Open Media 則是 HC 從 OSDC 到現在<a href="https://www.twreporter.org/">報導者</a>之間的歷程，聽完之後覺得經濟動能推升方案那支<a href="https://www.youtube.com/watch?v=RAbD3AGFX6I">廣告</a>，當時看覺得是什麼鬼，現在看覺得效用真的很大啊(?)，然後就讓我想到 g0v 有一個推人入坑的方法，就是先弄一個糟糕的版本推上線，然後就會有人受不了出來修改。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27648624360/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7414/27648624360_588fb64815_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7414/27648624360_588fb64815_b.jpg 1024w, https://farm8.staticflickr.com/7414/27648624360_fd2c5e426e_h.jpg 1600w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27648621990/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7448/27648621990_061e86fb62_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7448/27648621990_061e86fb62_b.jpg 1024w, https://farm8.staticflickr.com/7448/27648621990_221a77e794_h.jpg 1600w" /></a></p>
-
-<p>My Mozilla Contributing Journey 這場則是 <a href="https://reps.mozilla.org/u/irvin/">Irvin</a> 自己從開始參與 Moztw 社群到現在一路的歷程，因為參與 Moztw 而有了什麼收穫等等，我印象中有這樣明確整理出因為參與開源社群而獲得的收穫的分享，好像是沒有，有興趣的話，他在 SITCON 夏令營還會再講一次，有興趣的或許...報名好像結束了就是。</p>
-
-<p>除了上面聽的兩場和 Mozilla 相關的題目之外，還有一場我沒聽的是 Gary 的演講，題目是之前講過的 Fuzzy Test，不過是 2016 年版，Fuzzy Test 我覺得真的是自動化整合測試最後一關了，基本上就是把所有正常的操作都測試完之後，就來測個不正常的操作吧，那怎樣產生不正常的操作流程呢，就是可以用 Fuzzy 的方法來產生，不過他自己有說今年 Mozilla 在這邊的資源變少了；其實我覺得 Mozilla 最近方向實在是不太明確，我印象中的整個轉捩點大概是 Brendan Eich 下台開始，然後 Firefox OS 的市佔率也起不來，Firefox 的發展也越來越跟不上 Chrome，像是 e10s 就一直都還不太行，真的是蠻讓人擔心的，好在是短時間還<a href="http://www.recode.net/2016/7/7/12116296/marissa-mayer-deal-mozilla-yahoo-payment">不需要擔心資金問題</a>的樣子。</p>
-
-<p>然後還有一場間接相關的就是我的<a href="https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/">分享</a>了，這個題目本來是有考慮投 COSCUP 的，後來還是投到 HKOSCON 這邊，也是我第一次嘗試用英文演講，可惜我練習不夠，講的實在不好，很多地方都覺得好像沒正確的講清楚，下次還有機會用英文演講的話應該還是會再試一次，希望下次練習更充分，表現正常些，不然就要上場前喝罐啤酒試試看了，根據我之前的試驗結果，好像喝過酒的情況下，講的會比較流暢XD。</p>
-
-<p>除了演講外，還有一區有廠商攤位，還有一個 Job Board 版面可以給人貼徵才資訊，攤位的部分，IBM、VLC、Google、HKLUG﹑自由香港字型等是我比較有印象的，IBM 是介紹他們的 AI as Service 的服務，紀念品當中還有一些 for Dummies 系列叢書：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27927181435/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7609/27927181435_4acfb018f0_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7609/27927181435_228502eb76_k.jpg 2x" /></a></p>
-
-<p>Google 不知道怎麼會願意來擺攤，沒跟他們聊聊，台灣 Google 好像還沒在社群擺過攤的樣子，如果有錯還請幫忙更正，不過總之我拿到 Chrome 貼紙了，這樣曾經的五大瀏覽器，Chrome、IE、Firefox、Opera 的紀念品我都有拿到過了，只差一個台灣實在很難碰到的 Apple 的 Safari 而已。</p>
-
-<p>自由香港字型則是一群人要造屬於香港字的自由字型而聚集起來的社群，主因是因為香港漢字其實有一些字的寫法、筆畫和台灣日本的不一樣，例如下圖中間的「周」：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315002094/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7408/27315002094_4a9bd2c75a_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7408/27315002094_38e0b5baee_k.jpg 2x" /></a></p>
-
-<p>然後過去又沒有可以自由使用的字型可以用，所以開始了這個計畫，相信大家也都知道要造一套字型有多大難度，所以這社群有些成果出來真的是很厲害。</p>
-
-<p>整個 HKOSCON 規模比台灣常參加的研討會還要小一些，不過參與的外國人比例感覺比較高，英文議程也多一些，相較來說是對外國會眾友善不少，當然我想英文在香港比較流通也是主因之一，在台灣要做到國際化的研討會實在不太容易，目前比較常見的問題包括：翻譯問題，雖然可以靠口譯解決，不過成本瞬間提升，光靠贊助很難，所以幾乎是要全商業化的形式才比較有可能，票價也會因此和國際接軌；入境問題，中國人要到台灣困難度很高（好像還有幾個國家要來也很困難，一時忘了），這也造成一些國際研討會亞洲場不考慮台灣的原因，這問題很難靠主辦解決就是。</p>
-
-<p>最後還是要感謝 Mozilla 的贊助，還有 HKOSCON 大會和 Sammy Fung 的協助讓這趟行程可以很順利的完成，Sammy 也是 COSCUP 的常客，前陣子還開始了 <a href="http://opensource.asia/">opensource.asia</a> 這個網站，收集亞洲相關的 Open Source 活動，大家有興趣可以 COSCUP 活動時找他聊聊。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27315009874/" title="HKOSCON 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7415/27315009874_b5eec57431_b.jpg" width="1024" height="683" alt="HKOSCON 2016" srcset="https://farm8.staticflickr.com/7415/27315009874_96c3e64b8c_k.jpg 2x" /></a></p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/07/16/hkoscon-2016/</link>
-<guid>https://blog.othree.net/log/2016/07/16/hkoscon-2016/</guid>
-<category>diary</category>
-<pubDate>Sat, 16 Jul 2016 16:55:13 +0800</pubDate>
-</item>
-
-<item>
-<title>Web Push</title>
-<description><![CDATA[<p>前兩天要研究一下 Chrome 接 GCM 的實做，發現到 Google 又出一個新的服務叫 Firebase，然後新的 cloud messaging 服務就叫 <a href="https://firebase.google.com/docs/cloud-messaging/">Firebase Cloud Messaging(FCM)</a>，隨便看了一下 Google 官方的文件，結果發現有提到另外一個正在制訂中的 <a href="https://tools.ietf.org/html/draft-ietf-webpush-protocol-07">Web Push Protocol</a>，照文件的說法，FCM 也只是個過渡時期的方案，最終目標還是用這個 Web Push Protocol，於是我就研究了一下他的設計，發現設計的還蠻漂亮的。</p>
-
-<p>整個 Web Push Protocol 的基本架構如下圖：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28277091075/" title="Web Push Protocol by othree, on Flickr"><img src="https://farm8.staticflickr.com/7633/28277091075_ecdf54fc60_b.jpg" width="493" height="263" alt="Web Push Protocol" srcset="" /></a></p>
-
-<p>User Agent(UA) 通常是行動端的應用程式、Application 則是自家服務的後台；整個流程首先是 UA 透過 HTTP/1.1 POST 去跟 Push Service 訂閱（第一條橫線 Subscribe），然後會拿到一個 subscription resource，可能長成：</p>
-
-<pre><code>https://push.example.net/subscription/LBhhw0OohO-Wl4Oi971UG
-</code></pre>
-
-<p>另外還會拿到一個發訊息用的 push resource：</p>
-
-<pre><code>https://push.example.net/push/JzLQ3raZJfFBR0aqvOMsLrt54w4rJUsV
-</code></pre>
-
-<p>可以注意到兩個 resource 後面的 token 是不一樣的，兩者之間的 mapping 就是 Push Service 來負責；然後 UA 拿到這兩個網址後，發訊息用的 push resource 要交給自家服務的後台，也就是圖上第三條橫線 Distribute Push Resource，另外一個 subscription resource 則是要自己使用，UA 用 HTTP/2 打 GET 到 subscription resource，然後 push service 會把連線保持住不關掉，這就是圖上的第二條橫線 Monitor；自家服務後台的要送訊息的時候，就打 POST 去 push resource，也就是第四條橫線，從 Application 到 Push Service 間的 Push Message，push service 收到這個訊息時，就利用 HTTP/2 的 Server Push 機制主動傳送訊息，最後這個動作就是第五條橫線的 Push Message 了。</p>
-
-<p>就這樣很漂亮的用 HTTP/1.1 + HTTP/2 把一個基本的 Cloud Message Service 的協定建構起來，而除了這最基本的訊息傳遞外，這份文件還有定義像是訊息重要度、訊息回條、群組訊息等等的方法，設計都還蠻漂亮的，安全性的部分則是限制走 HTTPS over TLS，還有 operation 相關的說明，像是實際上要跑起這個服務，需要大量的 TCP connection 等等（因為都走 HTTP 了），有興趣的可以加減看一下。</p>
-
-<p>補充：Firefox 目前實做的似乎就是這個協定更早版本的草案</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/07/14/web-push/</link>
-<guid>https://blog.othree.net/log/2016/07/14/web-push/</guid>
-<category>web</category>
-<pubDate>Thu, 14 Jul 2016 12:40:19 +0800</pubDate>
 </item>
 
 

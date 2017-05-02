@@ -4,11 +4,92 @@
 <title>O3noBLOG - unix</title>
 <link>https://blog.othree.net//log/ unix/</link>
 <description></description>
-<copyright>Copyright 2016</copyright>
-<lastBuildDate>2014-11-03 17:42</lastBuildDate>
+<copyright>Copyright 2017</copyright>
+<lastBuildDate>2017-04-26 14:35</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>My First Contribution to Nginx</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25580381505/" title="nginx conf by othree, on Flickr"><img src="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg" width="570" height="427" alt="nginx conf" srcset="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg 1024w" /></a></p>
+
+<p>因為工作上的需要，所以其實我還蠻常會編輯 nginx configuration file 的，理所當然的編輯器是用 vim，然後就會對 nginx 設定檔的支援有意見，一般人用的 nginx 設定檔的 vim script 其實是 nginx repository 的 contrib 目錄裡面的那份，這份 vim script 其實本來也是獨立的，不過原作者好像把他捐進去 nginx 裡面，之後就一直都在裡面了，也因此之後更新就很不頻繁。</p>
+
+<p>然後因為檔案都放在 nginx repository 裡面，Vim 要使用其實不太方便，所以 Github 上還看的到不少人單獨抽出來，我一開始也是 fork <a href="https://github.com/moskytw/nginx-contrib-vim">mosky</a> 的來用，後來就直接在<a href="https://github.com/othree/nginx-contrib-vim">自己的 repository</a> 上面修改了，改一陣子之後就開始想要推回 upstream，也就是 nginx 的程式庫，然後就開始了這段協工旅程(?)。</p>
+
+<p>要發修改上 upstream，第一步自然是看一下<a href="http://nginx.org/en/docs/contributing_changes.html">如何貢獻</a>，節錄這邊幾個重點：</p>
+
+<ol>
+<li>用 <a href="http://mailman.nginx.org/mailman/listinfo/nginx-devel">nginx-devel</a> 這個 mailing list 做討論</li>
+<li>發 patch 前有一些注意事項，不過我改 vim script 比較沒關係</li>
+<li>Patch 也是用 email 發到 nginx-devel，有範例</li>
+<li>推薦用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a></li>
+<li>要先簽 <a href="https://www.nginx.com/resources/wiki/contributing/cla/">CLA</a>（不過目前這條已經不見了，改成最後說發 patch 等於同意用他們專案的 LCIENSE）</li>
+</ol>
+
+<p>總之我就照這份，先去訂閱了 nginx-devel 觀察一陣子，然後就直接把我的<a href="http://mailman.nginx.org/pipermail/nginx-devel/2017-February/009489.html">修改</a>整個丟上去了，一開始是直接用 Gmail 發，把 patch 檔內容直接複製貼過去，產生 patch 檔的方法是：</p>
+
+<pre><code>hg export &gt; something.patch
+</code></pre>
+
+<p><code>hg export</code> 會直接輸出最後一個 commit 的 patch 內容到 STDOUT，然後就直接用 Gmail 發過去，結果 review 的 <a href="http://mdounin.ru/">Maxim Dounin</a> 說他沒辦法 apply patch，可能是因為我的 mail client 的關係，建議我用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a> 發，所以就研究搜尋了一下，發現他是直接發 email 的機制，所以要把帳號密碼都寫到設定內，找了一篇 Gmail 的<a href="http://blog.sidkalra.com/2009/02/using-gmail-with-hgs-patchbomb-extension/">設定範例</a>，搭配 Google account 的應用程式密碼，設定範例如下：</p>
+
+<pre><code>[extensions]
+hgext.patchbomb =
+
+[email]
+from=othree &lt;othree@gmail.com&gt;
+to=nginx-devel@nginx.org
+cc=othree@gmail.com
+method=smtp
+
+[smtp]
+host=smtp.gmail.com
+port=587
+username=othree@gmail.com
+password=[gmail_password]
+tls=True
+</code></pre>
+
+<p>把這些資訊填入 <code>.hg/hgrc</code> 這個檔案內，然後就可以用 <code>hg email -o --test</code> 來測試看看，這個指令會把完整的原始信件內容，包括 header 等都顯示出來（丟到 STDOUT），如果正式要發就把 <code>--test</code> 拿掉就好了。</p>
+
+<p>確認一切沒問題後，我就改用 patchbomb 發 patch 到 nginx-devel 了，結果還是被拒絕了，問題主要是這個 patch 一次修改太多，理想上應該是不同目的的修改放到不同 patch 內，當然這和我一開始的預想不一樣就是了，我一開始的想法是因為 contrib 這邊的東西，相對於 nginx 本體的原始碼來說比較次要，所以盡量減少 commit 數，其實如果我有先去問過應該是可以少繞這段路，總之，為了一個一個修改送出，我又開了一個 github repository，叫做 <a href="https://github.com/othree/nginx-contrib-vim-patch">nginx-contrib-vim-patch</a>，想要慢慢把我的 nginx-contrib-vim 內的更動搬過去，接著開始的，就是漫長的 review 和溝通了。</p>
+
+<p>其實我完全沒想到 Maxim Dounin 會這麼認真的 review，不止會看我這樣改是要達到什麼目的，還有認真測試，結果被抓出一堆問題，雖然都是奇妙的 conf 寫法，合語法，但是應該不會有人這樣寫的 case，這些 case 我也開始慢慢收集到 github 上的 <a href="https://github.com/othree/nginx-conf-test">nginx-conf-test</a>，方便之後測試用，總之來回許久，終於有一部分比較簡單的東西先進去 nginx repository 了，然後我發現外部貢獻者都會在 <a href="https://nginx.org/en/CHANGES">change log</a> 那邊被感謝，我貢獻進去的目前應該都在 1.11.11 那版，其實只有把新的 directive 補上（core modules, 3rd party modules）和幾個 protocol 參數的 highlight，至於其他的修改還進不去，目前看起來會是一場長期抗戰，主要是因為 reviewer 對於期望的目標和我不一樣，目前大概會維持兩個版本吧，一邊弄<a href="https://github.com/othree/nginx-contrib-vim">自己希望的</a>，一邊抽東西送回去 upstream，不得不說主事者控制太緊會讓貢獻者動力被削減不少。</p>
+
+<p>貢獻 nginx 的過程讓我體會到以前的開源協做的模式（應該是吧？），用 mailing list 溝通，發 Patch、code review、做討論，這些點來看，nginx 的流程其實是非常老派，和現在用 Github 做溝通、協做 的流程差很大，門檻也高不少，當然這不一定是壞事，還是要看專案性質，在 Github 這類平台上做這些協做流程的話，門檻降低了，其實可能隨之而來的問題就是太多人進來造成貢獻品質落差很大，反而會吃掉主力人員的時間，剛好今天也看到知乎上有一篇「<a href="https://www.zhihu.com/question/36292298/answer/160028010">維護一個大型開源專案是怎樣的體驗？</a>」，裡面就有提到 VSCode 的狀況，變成還需要排人專門處理 issue 和 PR，感覺就很可怕。</p>
+
+<p>順帶一題，nginx 的固定貢獻者當中不少中國人啊。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</link>
+<guid>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</guid>
+<category>unix</category>
+<pubDate>2017-04-26 14:35</pubDate>
+</item>
+
+<item>
+<title>Docker 雜談</title>
+<description><![CDATA[<p>最近使用的一些感想和疑問</p>
+
+<ul>
+<li><code>--name</code> 自動會變 network 內的 hostname，蠻方便</li>
+<li>Image build 失敗，還是會產生一個東西在那邊，要 rm 掉才能重新 build...</li>
+<li>Service 還不支援 update 修改 network</li>
+<li>DB container 的資料要開 volume 掛比較保險（免得不小心砍到 container）</li>
+<li>在多個 node 上開 replica，掛 volume 的話都是在該 node 上找，目前似乎沒有透過網路共享 volume container 這種事</li>
+<li>很多服務的官方 docker 都是用環境變數做設定，不知道是不是本來就有的慣例</li>
+<li>一直更新 registry 上的 image 好像會越來越多垃圾，不知道是不是有清理機制</li>
+<li>整體而言，我覺得 docker service 介面是個很容易讓 fat finger 造成服務爆炸設計，不過架構規劃的好的話，應該不會太難修復就是</li>
+</ul>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/03/18/docker/</link>
+<guid>https://blog.othree.net/log/2017/03/18/docker/</guid>
+<category>unix</category>
+<pubDate>2017-03-18 23:46</pubDate>
+</item>
 
 <item>
 <title>Ubuntu 14.04 與 MovableType 4.x</title>
@@ -289,43 +370,6 @@ https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
 <guid>https://blog.othree.net/log/2009/12/29/closure-compiler-osx/</guid>
 <category>unix</category>
 <pubDate>2009-12-29 23:16</pubDate>
-</item>
-
-<item>
-<title>spidermonkey 的 UTF-8 支援</title>
-<description><![CDATA[<p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
-
-<p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
-
-<p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p>]]></description>
-<link>https://blog.othree.net/log/2009/12/27/spidermonkey-utf-8/</link>
-<guid>https://blog.othree.net/log/2009/12/27/spidermonkey-utf-8/</guid>
-<category>unix</category>
-<pubDate>2009-12-27 16:01</pubDate>
-</item>
-
-<item>
-<title>kakasi</title>
-<description><![CDATA[<p><a target="_blank" href="http://kakasi.namazu.org/">kakasi</a> 並不是火影忍者那位卡卡西，他的全名是 <strong>Kanji Kana Simple Inverter</strong>，用來轉換日文漢字、平假名、片假名和羅馬拼音的。</p>
-
-<p>最近因為在弄一些和日文搜尋相關的東西，要處理平假名片假名混和搜尋的問題，所以在 <span>IRC </span>上問人，在 <a target="_blank" href="http://zonble.twbbs.org/">zonble</a> 提供的幾個連結中，我最後用的是 kakasi，在 ubuntu 上只要執行 <code>apt-get install kakasi</code> 就可以了，這我還是在抓原始碼來編譯後才發現的@@。程式使用很簡單，就用 pipeline 丟字串進去，然後加上參數看要進行怎樣的轉換，不過有小問題是他只吃 sjis 編碼，所以在 <span>UTF</span>-8 下的環境要先過 iconv 轉編碼，輸出在轉回來，以下面的 code 為例：</p>
-
-<pre><code>
-echo '魔神英雄伝' | iconv -f utf8 -t sjis -c | kakasi -JK | iconv -f sjis -t utf8
-</code></pre>
-
-<p>就可以看到 <strong>マジンエイユウデン</strong> ，這樣我就可以在 python script 裡面呼叫一下命令列來轉字串，處理資料庫的資料，不過要放上網路的程式這樣呼叫其實蠻危險的，所以我又找了一下 <span>PHP </span>有沒有這東西可以用，沒想到還真的有，在 <a target="_blank" href="http://pecl.php.net/"><span>PECL</span></a> 裡面有人有 port，不過網站上看不到，我是從 google 搜尋到 mail list 的 <a target="_blank" href="http://marc.info/?l=php-i18n&amp;m=105914120819128&amp;w=2">舊文章</a> 才找到的，所以就照文內的安裝步驟抓下來 compile，ubuntu 記得要先 <code>apt-get install php5-dev</code> 才有辦法執行 <code>phpize</code> 初始化編譯環境，裝好後就可以在 phpinfo 裡面看到 kakasi 這個模組。</p>
-
-<p>然後測試的結果發現他也只能吃 sjis 字串，所以還是要用 iconv 轉一下碼，使用範例如下：</p>
-
-<pre><code>$roma = kakasi(iconv("UTF-8", "sjis", $qs[0]), array("-Hj", "-Jj", "-Kj"));
-</code></pre>
-
-<p>這串因為是轉成羅馬拼音的，所以最後沒在用一次 iconv 轉回 <span>UTF</span>-8，至於各種轉換的設定請參考 <code>kakasi -help</code>。</p>]]></description>
-<link>https://blog.othree.net/log/2009/01/20/kakasi/</link>
-<guid>https://blog.othree.net/log/2009/01/20/kakasi/</guid>
-<category>unix</category>
-<pubDate>2009-01-20 01:30</pubDate>
 </item>
 
 

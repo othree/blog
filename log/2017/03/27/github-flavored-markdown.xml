@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000891" baseName="github-flavored-markdown">GitHub Flavored Markdown 標準規範</b:listData>
+
+			<b:previous>
+				<b:mTitle>GitHub 提供專案授權簡介與概要</b:mTitle>
+				<b:mDate>2017-03-26</b:mDate>
+				<b:mBase>github-license-summary</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>日本跨年</b:mTitle>
+				<b:mDate>2017-04-11</b:mDate>
+				<b:mBase>japan-new-year</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000891" baseName="github-flavored-markdown">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-03-27</b:date>
+				<b:time>20:41:56</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>GitHub Flavored Markdown 標準規範</b:title>
+			<b:content>
+				<b:summary> 前陣子看到 DK 提到 GitHub 的 Markdown：GitHub Flavored Markdown 發表正式的 spec 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 spec 是基於 CommonMark 的，只是多了一些語法，包括： 刪除線 表格 待辦清單 自動連結（包括網址和 email） Raw HTML 黑名單： &lt;title&gt; &lt;textarea&gt; &lt;style&gt; &lt;xmp&gt; &lt;iframe&gt; &lt;noembed&gt; &lt;noframes&gt; &lt;script&gt; &lt;plaintext&gt; 新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 &lt;...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr"><img src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w" /></a></p>
+
+<p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a> <a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
+
+<ul>
+<li>刪除線</li>
+<li>表格</li>
+<li><a href="https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments">待辦清單</a></li>
+<li>自動連結（包括網址和 email）</li>
+<li>Raw HTML 黑名單：
+<ul>
+<li><code>&lt;title&gt;</code></li>
+<li><code>&lt;textarea&gt;</code></li>
+<li><code>&lt;style&gt;</code></li>
+<li><code>&lt;xmp&gt;</code></li>
+<li><code>&lt;iframe&gt;</code></li>
+<li><code>&lt;noembed&gt;</code></li>
+<li><code>&lt;noframes&gt;</code></li>
+<li><code>&lt;script&gt;</code></li>
+<li><code>&lt;plaintext&gt;</code></li>
+</ul></li>
+</ul>
+
+<p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
+
+<p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

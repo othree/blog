@@ -9,6 +9,65 @@
 			<b:listData listID="software">software</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000889" baseName="gitdags-git">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-03-25</b:date>
+				<b:time>21:49:34</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Gitdags, Git 示意圖工具</b:title>
+			<b:content>
+				<b:summary> 最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 gitdags 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的樣子（v2 的樣版改的更簡潔了），看起來還蠻 ok 的，它是基於 TikZ 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣： \documentclass[preview]{standalone} \usepackage{gitdags} \begin{document}...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /></a></p>
+
+<p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
+
+<pre><code>\documentclass[preview]{standalone}
+\usepackage{gitdags}
+
+\begin{document}
+    \centering
+    \begin{tikzpicture}
+      % Commit DAG
+      \gitDAG[grow right sep = 2em]{
+        0 -- {
+          1 -- 2 -- 3 -- 4,
+          A
+        }
+      };
+      \gitbranch
+        {master}     % node name and text 
+        {above=of 4} % node placement
+        {4}          % target
+      \gitbranch
+        {for-rebase} % node name and text 
+        {below=of A} % node placement
+        {A}          % target
+      \gitHEAD
+        {below=of for-rebase} % node placement
+        {for-rebase} 
+      \end{tikzpicture}
+\end{document}
+</code></pre>
+
+<p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
+
+<p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
+
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/~u91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000875" baseName="git-mrt">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -573,42 +632,6 @@ I Commit A
 <p>另外就是用的訊息蠻有趣的，除了讓一堆人<a href="http://www.flickr.com/photos/othree/2830629010/">重病</a>的「是不是我講錯什麼話讓你不開心了？」以外，確定反安裝後，還可以回他說「我沒有不高興（I am not unhappy）。」不過這些訊息在日文版似乎都修掉了，感覺有點可惜，又不過反正我也不會去用日文版，也覺得也沒差啦。</p>
 
 <p><a href="http://www.flickr.com/photos/othree/2824058623/" title="Flickr 上 othree 的 我沒有不高興"><img src="//farm4.static.flickr.com/3007/2824058623_1d1fda1eb9.jpg" width="500" height="374" alt="我沒有不高興" /></a></p></b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000535" baseName="picasa-3-and-picasaweb">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2008-09-04</b:date>
-				<b:time>01:09:03</b:time>
-			</b:datetime>
-			<b:category>software</b:category>
-			<b:title>Picasa 3 和 Picasa Web</b:title>
-			<b:content>
-				<b:summary>就在全世界都在關注Google瀏覽器的時候，Google其實還同時公開了新版的Picasa Web和桌機的Picasa 3 beta版，一如往常的我懶得花篇幅介紹各種新功能，不過現在Google超貼心，都會提供YouTube影片來介紹軟體的新功能：Picasa 3 beta、Picasa Web的新功能，人臉辨識（目前只有英文版有）。 新功能在Youtube的影片都介紹的很詳細了，所以我要介紹的就是比較其他的東西，首先是Picasa Web的人臉辨識可以抓到Mii的大頭，其實不只Mii的大頭，還有一堆有的沒的遊戲角色都抓的到XD。 另外一個則是Picasa 3內新附的圖片瀏覽器Picasa Photo Viewer，功能和設定選項還不多，不過介面實在蠻漂亮的，有裝Picasa 3的人可以順便玩玩。 Introducing Picasa 3.0...</b:summary>
-				<b:mainContent><p>就在全世界都在關注<a href="http://www.google.com/chrome/">Google瀏覽器</a>的時候，Google其實還同時公開了新版的<a href="http://picasaweb.google.com/home">Picasa Web</a>和桌機的<a href="http://picasa.google.com/intl/en_us/">Picasa 3 beta</a>版，一如往常的我懶得花篇幅介紹各種新功能，不過現在Google超貼心，都會提供YouTube影片來介紹軟體的新功能：<a href="http://tw.youtube.com/watch?v=rskC6c_5L1M">Picasa 3 beta</a>、<a href="http://tw.youtube.com/watch?v=teeGF-w5Cpw">Picasa Web的新功能，人臉辨識</a>（目前只有英文版有）。</p>
-
-<p>新功能在Youtube的影片都介紹的很詳細了，所以我要介紹的就是比較其他的東西，首先是Picasa Web的人臉辨識可以抓到Mii的大頭，其實不只Mii的大頭，還有一堆有的沒的遊戲角色都抓的到XD。</p>
-
-<p><a href="http://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/name-tag.png"><img src="//blog.othree.net/assets_c/2008/09/name-tag-thumb-400x314.png" alt="一堆Mii大頭" height="314" width="400" /></a></p>
-
-<p>另外一個則是Picasa 3內新附的圖片瀏覽器<strong>Picasa Photo Viewer</strong>，功能和設定選項還不多，不過介面實在蠻漂亮的，有裝Picasa 3的人可以順便玩玩。</p>
-
-<p><a href="http://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/picasa-photo-viewer.png"><img src="//blog.othree.net/assets_c/2008/09/picasa-photo-viewer-thumb-400x250.png" alt="光箱介面真不錯" height="250" width="400" /></a></p>
-
-
-<ul>
-<li><a href="http://googleblog.blogspot.com/2008/09/introducing-picasa-30-and-big-changes.html" title="and big changes for Picasa Web Albums">Introducing Picasa 3.0</a></li>
-</ul>
-
-</b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
 
