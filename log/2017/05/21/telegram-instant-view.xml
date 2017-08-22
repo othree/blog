@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000898" baseName="telegram-instant-view">Telegram Instant View</b:listData>
+
+			<b:previous>
+				<b:mTitle>MovableType and CommonMark</b:mTitle>
+				<b:mDate>2017-05-07</b:mDate>
+				<b:mBase>movabletype-and-commonmark</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Graceful Degradation Background</b:mTitle>
+				<b:mDate>2017-05-24</b:mDate>
+				<b:mBase>graceful-degradation-background</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000898" baseName="telegram-instant-view">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-21</b:date>
+				<b:time>23:45:17</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Telegram Instant View</b:title>
+			<b:content>
+				<b:summary> Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 Video Message、Payment for Bots 還有就是 Instant View 準備要開放給所有網頁使用了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34366696420/" title="Telegram Instant View by othree, on Flickr"><img src="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg" width="1024" height="592" alt="Telegram Instant View, " srcset="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg 1024w, https://farm5.staticflickr.com/4194/34366696420_83f48bbf29_h.jpg 1600w" /></a></p>
+<p>Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 <a href="https://telegram.org/blog/video-messages-and-telescope">Video Message</a>、<a href="https://telegram.org/blog/payments">Payment for Bots</a> 還有就是 <a href="https://telegram.org/blog/instant-view">Instant View</a> 準備要<a href="https://telegram.org/blog/instant-view-contest-200K">開放給所有網頁使用</a>了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page object），不完全算是程式語言，裡面比較像是一些定義，加上用 <a href="https://zh.wikipedia.org/zh-tw/XPath">XPath</a> 來做文件內容的選取，蠻意外會用 XPath 的，還好我對 XPath 有點經驗，就花了一點時間研究了一下，也把自己 blog 的 tempalte 基本版做出來了：</p>
+<pre><code>?exists:  //article/div[@id=&quot;comments&quot;]
+
+author:  &quot;othree&quot;
+channel: &quot;@othree&quot;
+
+body:     //article
+title:    $body//h3[1]
+
+cover: $body/section[@itemprop=&quot;articleBody&quot;]/p[1]/a[@itemprop=&quot;image&quot;]/img
+
+published_date: $body/header/time[@itemprop=&quot;datePublished dateModified&quot;]/@datetime
+
+@remove: //article/header
+@remove: //article/footer
+@remove: //article/div[@id=&quot;comments&quot;]
+@remove: //noscript
+@remove: //a[has-class(&quot;dsq-brlink&quot;)]
+</code></pre>
+<p>語法還算蠻好理解的，官方也提供了幾個有完整註解的<a href="https://instantview.telegram.org/samples/">範例</a>，仔細一看似乎之前其實也只有 medium 是非官方有支援的網站，也因為這個實做方式，對不同的網站就要有不同的 template 來處理，所以官方辦了個競賽，搶先替<a href="https://instantview.telegram.org/contest">清單上的網站</a>做出可用的 template 就會有獎金，目前個人網站雖然已經可以在官方的 editor 做 template、驗證並發測試連結，不過還要等 domain 被加進白名單後才會真的啟用，目前這個關卡還沒開放就是。</p>
+<p>其實我是比較喜歡這種實做方式的，不用為了增加支援一個新的網路服務就多做一個版本，不會影響原本的網頁原始碼，不會讓  <code>&lt;head&gt;</code> 越來越肥大，當然缺點就是網站改版，HTML 結構有變化的話就要跟著修改 template，不過我是認為這個實做方法對於網路生態是比較好一些的。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

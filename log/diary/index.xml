@@ -9,6 +9,122 @@
 			<b:listData listID="diary">diary</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000907" baseName="196">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-08-18</b:date>
+				<b:time>23:54:40</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>196</b:title>
+			<b:content>
+				<b:summary> 這篇文章是在寫 temporal 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個網站提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。 由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 John Walker，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是文章，其實就是 blog，看他結構感覺也是個 MovableType 站，還有閱讀清單，旅遊照片，例如他去過南極一趟，還有些他寫的書，例如 Hacker's Diet、The Autodesk File 等。 然後，我在 fourmilab.ch 上看到了「Three Years...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36512922821/" title="196 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg" width="1024" height="683" alt="196" srcset="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg 1024w, https://farm5.staticflickr.com/4360/36512922821_a17aefd061_h.jpg 1600w" /></a></p>
+<p>這篇文章是在寫 <a href="http://blog.othree.net/log/2017/08/12/temporal-is-next-date/">temporal</a> 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個<a href="http://www.fourmilab.ch/documents/calendar/">網站</a>提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。</p>
+<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="ttps://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
+<p>然後，我在 fourmilab.ch 上看到了「<a href="http://fourmilab.ch/documents/threeyears/threeyears.html">Three Years Of Computing</a>」這篇文章，標題就吸引了我進去仔細閱讀，這篇文章是在說迴文數（palindrome）挑戰，什麼是迴文數呢，「95277259」就是迴文數，不論是從頭開始還是反過來從尾開始都是相同的數字，那什麼是迴文數問題呢？首先你要拿到一個非迴文數的十進位數字，例如 <strong>362</strong> 好了，把他和自己的反轉相加：</p>
+<pre><code>&gt;
+   362
++  263
+------
+   625
+</code></pre>
+<p>結果不是迴文數，那繼續一樣的反轉相加運算：</p>
+<pre><code>&gt;
+   625
++  526
+------
+  1151
++ 1511
+------
+  1661
+</code></pre>
+<p>最後得到了一個迴文數 <strong>1661</strong>，迴文數問題就是，是否所有的正整數都可以透過這樣的運算，不管幾次，最終可以得到迴文數，如果有數字無法透過這個過程變成迴文數，那這數字也可以稱為 <a href="https://zh.wikipedia.org/wiki/%E5%88%A9%E5%85%8B%E7%91%9E%E5%B0%94%E6%95%B0">Lychrel Number</a>，不過因為目前無法從理論證明一個十進位數是 Lychrel Number，就只能想辦法反證它（註：我有看到說二進位數有證明）。</p>
+<p>文裡說到，所有小於一萬的數字都已經被測試過，大部分的數字都可以用很少的次數就得到迴文數，其中，最小的可能的 Lychrel Number: <strong>196</strong> ，到目前還無法讓它經由反轉相加的過程變為迴文數，John Walker 那個跑了三年的程式就是在驗證 196 到底能不能透過反轉相加的過程。他在 1987 年用他的 Sun 工作站開始跑，結果跑了三年後的 1990，達到他當初設的停止條件，100 萬位，總共反轉相加了 2415836 次，他還放上他的程式碼還有計算的結果，如果有人有興趣可以從這邊開始接手繼續算下去，事實上，當初他跑這程式的工作站性能和現在的電腦比起來差距實在很大，在其它人後來的<a href="http://jasondoucette.com/worldrecords.html">挑戰</a>當中，就有提到一些性能數字，例如 Ian J. Peter 的程式只需要 5 小時就可以計算到一百萬位，用的電腦大約是 500 MHz 的 CPU。</p>
+<p>John Walker 在 1990 年跑到一百萬位，結果還沒得到迴文數，那麼現在最新的紀錄是多少呢？<a href="http://www.p196.org/news.html">p196.org</a> 這網站收集了很多相關的資訊，對這議題有興趣的人還可以去看看，而它站上的紀錄是 <strong>413,930,770</strong>，四億多位，總共反轉相加了十億次；至於我目前看到的最高紀錄，是在「<a href="http://www.dolbeau.name/dolbeau/p196/p196.html">The p196_mpi page</a>」這裡，提供了平行版的程式，而據作者 Romain Dolbeau 所說，他在 2015 年 2 月已經計算到十億位了，不過他沒提供相關資料，有提供的只有 2012 年的六億位結果。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000903" baseName="nihombashi-ningyocho">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-08-01</b:date>
+				<b:time>22:00:29</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>日本橋人形町</b:title>
+			<b:content>
+				<b:summary> 前陣子去東京有些時間可以自己安排，後來因為也沒特別有什麼目標，就決定排個可以比較悠閒的行程，就是去人形町逛逛，其實很早之前就知道人形町了，後來真的比較有印像是看了新參者這部小說，這本小說的舞台就圍繞在人形町，後來阿部寬有主演日劇版，更是大大帶起該地區最近的知名度，除了新參者之外，我偶爾會看有吉君的正直散步，也是有一兩集散步到那附近，所以就把目標放在人形町了。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737121375/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg 1024w, https://farm5.staticflickr.com/4238/35737121375_659ce1f602_h.jpg 1600w" /></a></p>
+<p>前陣子去東京有些時間可以自己安排，後來因為也沒特別有什麼目標，就決定排個可以比較悠閒的行程，就是去人形町逛逛，其實很早之前就知道人形町了，後來真的比較有印像是看了新參者這部小說，這本小說的舞台就圍繞在人形町，後來阿部寬有主演日劇版，更是大大帶起該地區最近的知名度，除了新參者之外，我偶爾會看有吉君的正直散步，也是有一兩集散步到那附近，所以就把目標放在人形町了。</p>
+</b:mainContent>
+				<b:extendContent><p>當天到達人形町時其實中午了，所以第一個目標就是先去找午餐，人形町其實範圍不大，熱鬧的就是人形町站到水天宮之間那段，再加上橫向的甘酒橫丁，範圍不大，慢慢走也只要兩三個小時就可以晃完，我走沒兩下就發現甘酒橫丁，就灣進去找吃的了，結果發現有一間排了不少人的燒鳥，叫久助。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567894502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg" width="683" height="1024" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg 683w, https://farm5.staticflickr.com/4263/35567894502_f3811fa8fd_h.jpg 1067w" /></a></p>
+<p>我又繼續往前看了幾間，晃了一下回來發現排隊的人潮消化的差不多了，就決定吃這間，其實當時店內還蠻滿的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895894774/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg 1024w, https://farm5.staticflickr.com/4216/34895894774_4bd74d1d27_h.jpg 1600w" /></a></p>
+<p>吃的就是午間套餐的燒鳥飯</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567878502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg 1024w, https://farm5.staticflickr.com/4259/35567878502_fa88f2ce77_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567875592/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg 1024w, https://farm5.staticflickr.com/4258/35567875592_2dd4c91e07_h.jpg 1600w" /></a></p>
+<p>烤的很剛好，還有花椒粉芥末粉可以加，我覺得最厲害的是淋的醬汁的量超剛好，飯幾乎都有沾到醬汁，但是吃完整個飯盒就是表面濕濕的狀況，完全沒有醬汁積成一攤，所以完全不會吃到後來覺得太鹹之類的，飯量其實還可以選擇，這師傅實在是經驗老到，可以控制得這麼精準。</p>
+<p>吃完飯後，其實對面就是有名的草家屋煎餅了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349493920/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg 1024w, https://farm5.staticflickr.com/4258/35349493920_8dd2cdbe86_h.jpg 1600w" /></a></p>
+<p>還有柳屋鯛燒</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349486260/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg 1024w, https://farm5.staticflickr.com/4260/35349486260_df7a7504d5_h.jpg 1600w" /></a></p>
+<p>兩間都在新參者中出現過，不過我只有買些仙貝，因為剛吃完飯就沒買鯛燒，有點可惜，即使是中午剛過，店內都還是一直都是排著人。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737108935/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg 1024w, https://farm5.staticflickr.com/4098/35737108935_4d9a1c1cd5_h.jpg 1600w" /></a></p>
+<p>接著我就慢慢沿著人形町通逛，走到尾巴的水天宮，水天宮是很有名求子求安產的神社，回來才聽說前兩年還在整修，不過這新蓋好的水天宮實在很厲害，從對面看：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737107425/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg 1024w, https://farm5.staticflickr.com/4258/35737107425_9dec05af6a_h.jpg 1600w" /></a></p>
+<p>旁邊那條走道：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567844992/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg 1024w, https://farm5.staticflickr.com/4278/35567844992_016f383709_h.jpg 1600w" /></a></p>
+<p>門口，要爬樓梯往上：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696854726/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg 1024w, https://farm5.staticflickr.com/4133/35696854726_2c5c4bcc56_h.jpg 1600w" /></a></p>
+<p>到了上面才發現別有洞天。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35605763291/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg 1024w, https://farm5.staticflickr.com/4288/35605763291_eeb728066d_h.jpg 1600w" /></a></p>
+<p>事實上，整個神社木造建築是蓋在一層現在的防震結構上的，而且現代結構的部分也不是只有防震，而是還有做為辦公室、販賣商品等用途的部分在，我覺得他們這種結合兩種風格卻不衝突的設計真的是非常厲害，最後是從平台上往回拍大門的方向。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696855446/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg 1024w, https://farm5.staticflickr.com/4254/35696855446_cf87394e2c_h.jpg 1600w" /></a></p>
+<p>到達水天宮後我就往回走了，去了一開始就有看到的 RON 咖啡館。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737102345/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg" width="683" height="1024" alt="RON" srcset="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg 683w, https://farm5.staticflickr.com/4264/35737102345_ee380df5e2_h.jpg 1067w" /></a></p>
+<p>這間也是當地的老店，店內應該是完整開店當時的裝潢保存到現在吧：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895831914/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg 1024w, https://farm5.staticflickr.com/4287/34895831914_9a11659f3b_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927502753/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg 1024w, https://farm5.staticflickr.com/4212/34927502753_0ad220fc0d_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895826844/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg 1024w, https://farm5.staticflickr.com/4213/34895826844_624aa76f44_h.jpg 1600w" /></a></p>
+<p>店員也是老老的，是不是也是年輕做到現在的呢。</p>
+<p>在 RON 咖啡休息一陣子之後，因為時間還早，就決定去日本橋看看，日本橋</p>
+<p>是日本<a href="https://zh.wikipedia.org/wiki/File:The_Kilometre_Zero_of_road_in_Japan_in_Nihonbashi,_Chuo,_Tokyo.jpg">道路起點</a>，一直都是很繁榮的地方，是很有歷史意義的地點，不過 1964 年為了舉辦奧運而蓋的首都高，把日本橋蓋住了，之後就一直維持這樣的狀況。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696816036/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg 1024w, https://farm5.staticflickr.com/4285/35696816036_45589e1ca2_h.jpg 1600w" /></a></p>
+<p>橋上可以看到日本道路原標地點，不過人走不過去就是了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927459313/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg 683w, https://farm5.staticflickr.com/4033/34927459313_7727619d42_h.jpg 1067w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567779372/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg 1024w, https://farm5.staticflickr.com/4139/35567779372_3915bc5598_h.jpg 1600w" /></a></p>
+<p>現在的橋據說是 1911 年蓋的第十九代了，橋柱上有些非常華麗的裝飾，也常出現在電視上。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696808136/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg 1024w, https://farm5.staticflickr.com/4057/35696808136_555145da7a_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567766362/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg 683w, https://farm5.staticflickr.com/4014/35567766362_08fa80913a_h.jpg 1067w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895801964/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg 1024w, https://farm5.staticflickr.com/4259/34895801964_df476986e8_h.jpg 1600w" /></a></p>
+<p>最近日本有開始有些<a href="http://asahichinese-f.com/travel/scenery/11153530">聲音</a>說希望能夠恢復日本橋景區的天空，主要方法是把首都高地下化，東京其實已經有一些地下高速公路了，技術上不是問題，雖然經費很貴，我猜他們真的會做下去吧，如果成真的化應該就會找個藍天的日子再去個一趟了。</p>
+<p>日本橋的對面就是新光三越本館了：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567761352/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg 1024w, https://farm5.staticflickr.com/4068/35567761352_3abc7f27c5_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895760694/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg 1024w, https://farm5.staticflickr.com/4021/34895760694_fe57311267_h.jpg 1600w" /></a></p>
+<p>遠遠看就覺得氣勢不凡，進去逛一逛發現這間真的是不同凡響：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737023025/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg 1024w, https://farm5.staticflickr.com/4214/35737023025_131119eb13_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895759084/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg" width="683" height="1024" alt="三越 本館" srcset="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg 683w, https://farm5.staticflickr.com/4208/34895759084_5786a48d02_h.jpg 1067w" /></a></p>
+<p>在百貨公司裡面開了這麼大的挑高室內空間，還放這麼大的固定式藝術品，真的是完全無法想像，然後本來想說去逛一下生活用品那層好了，結果映入眼簾的都是高級進口餐具之類的，我一整個跑錯棚的感覺。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000894" baseName="japan-self-drive">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -598,158 +714,6 @@
 <p>最後補一張 cosplay 的照片，今年後半年都沒有拍相關的活動，剛好上面也都沒挑到這個主題的照片，最近 FF 開始移師到花博園區，那邊腹地比較廣大，比較不會有在台大的的種種問題，不過還搞不太清楚要在哪裡找人拍照就是。</p>
 </b:mainContent>
 				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000833" baseName="tokyo-illumination">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-02-10</b:date>
-				<b:time>23:49:05</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>東京點燈</b:title>
-			<b:content>
-				<b:summary> 去年底去那趟東京主要的目標之一是看聖誕的燈飾，日本人喜歡用 Illumination 這個字，如果是用這個字的話，翻譯起來就變成是點燈了，總之，本來主要的目標大概就是六本木 Midtown、Caretta 汐留和台場富士電視台三個，不過日本聖誕節前真的是到處都有燈飾，上面第一張照片就是 Midtown 裡面的景色了。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16179501782/" title="東京 Midtown Illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7469/16179501782_e2bf9e5441_b.jpg" width="1024" height="683" alt="東京 Midtown Illumination" srcset="https://farm8.staticflickr.com/7469/16179501782_e2bf9e5441_b.jpg 1024w, https://farm8.staticflickr.com/7469/16179501782_c42b181073_h.jpg 1600w" /></a></p>
-
-<p>去年底去那趟東京主要的目標之一是看聖誕的燈飾，日本人喜歡用 Illumination 這個字，如果是用這個字的話，翻譯起來就變成是點燈了，總之，本來主要的目標大概就是六本木 Midtown、Caretta  汐留和台場富士電視台三個，不過日本聖誕節前真的是到處都有燈飾，上面第一張照片就是 Midtown 裡面的景色了。</p>
-</b:mainContent>
-				<b:extendContent><p>其實在羽田機場就有了，用小燈點綴的樹枝。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16180233965/" title="東京 羽田機場 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7476/16180233965_30d7dd550d_b.jpg" width="683" height="1024" alt="東京 羽田機場" srcset="https://farm8.staticflickr.com/7476/16180233965_30d7dd550d_b.jpg 683w, https://farm8.staticflickr.com/7476/16180233965_e77b16ee19_h.jpg 1067w" /></a></p>
-
-<p>接著去了 Midtown，這邊排隊的人就很多，要繞來繞去，最後才走到展區，平常展區那塊草地和步道是直接可以走過去的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15994464187/" title="東京 Midtown Illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7503/15994464187_f9e10f6a73_b.jpg" width="1024" height="683" alt="東京 Midtown Illumination" srcset="https://farm8.staticflickr.com/7503/15994464187_f9e10f6a73_b.jpg 1024w, https://farm8.staticflickr.com/7503/15994464187_6d61f6920a_h.jpg 1600w" /></a></p>
-
-<p>主要展區，有不斷輪撥的表演，藍光配上音效營造出讓人置身未來世界的感覺。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15557892534/" title="東京 Midtown Illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7489/15557892534_a34eea8f8e_b.jpg" width="1024" height="683" alt="東京 Midtown Illumination" srcset="https://farm8.staticflickr.com/7489/15557892534_a34eea8f8e_b.jpg 1024w, https://farm8.staticflickr.com/7489/15557892534_f4179e5608_h.jpg 1600w" /></a></p>
-
-<p>去森大樓看東京鐵塔後，就在裡面發現天花板上的雪花燈飾。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16179485552/" title="東京 六本木 森大樓 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8678/16179485552_bcbfb958e5_b.jpg" width="683" height="1024" alt="東京 六本木 森大樓" srcset="https://farm9.staticflickr.com/8678/16179485552_bcbfb958e5_b.jpg 683w, https://farm9.staticflickr.com/8678/16179485552_8f87b5b969_h.jpg 1067w" /></a></p>
-
-<p>然後是森大樓外面的聖誕樹，很特別的設計，基本上是拍不太起來的設計，只能故意對不準焦來讓顏色顯現。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15560455013/" title="東京 六本木 森大樓 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8665/15560455013_79a812fdf6_b.jpg" width="683" height="1024" alt="東京 六本木 森大樓" srcset="https://farm9.staticflickr.com/8665/15560455013_79a812fdf6_b.jpg 683w, https://farm9.staticflickr.com/8665/15560455013_c5c1926110_h.jpg 1067w" /></a></p>
-
-<p>到箱根的小王子博物館也有聖誕樹和特別的投影表演。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15993952618/" title="箱根 小王子博物館 星の王子さまミュージアム by othree, on Flickr"><img src="https://farm8.staticflickr.com/7560/15993952618_d6f5768f3f_b.jpg" width="1024" height="683" alt="箱根 小王子博物館 星の王子さまミュージアム" srcset="https://farm8.staticflickr.com/7560/15993952618_d6f5768f3f_b.jpg 1024w, https://farm8.staticflickr.com/7560/15993952618_e40aceb304_h.jpg 1600w" /></a></p>
-
-<p>然後是之前介紹過的 Disney TIMELESS STORY。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15999327639/" title="新丸大樓 魔髮奇緣 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7531/15999327639_d7e1eef74b_b.jpg" width="1024" height="683" alt="新丸大樓 魔髮奇緣" srcset="https://farm8.staticflickr.com/7531/15999327639_d7e1eef74b_b.jpg 1024w, https://farm8.staticflickr.com/7531/15999327639_3355eb0917_h.jpg 1600w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15999578907/" title="丸大樓 Frozen by othree, on Flickr"><img src="https://farm9.staticflickr.com/8587/15999578907_2502cbddb4_b.jpg" width="1024" height="683" alt="丸大樓 Frozen" srcset="https://farm9.staticflickr.com/8587/15999578907_2502cbddb4_b.jpg 1024w, https://farm9.staticflickr.com/8587/15999578907_edabdcc82a_h.jpg 1600w" /></a></p>
-
-<p>兩棟丸大樓後面的仲通り也裝飾的很漂亮，本來在六本木沒看到的街道燈飾也在這邊看到了></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16185368255/" title="丸の内仲通り イルミネーション 丸之內仲通 illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7562/16185368255_7920432223_b.jpg" width="1024" height="683" alt="丸の内仲通り イルミネーション 丸之內仲通 illumination" srcset="https://farm8.staticflickr.com/7562/16185368255_7920432223_b.jpg 1024w, https://farm8.staticflickr.com/7562/16185368255_23a276e65a_h.jpg 1600w" /></a></p>
-
-<p>然後是東京郵政總局改的 Kitte 裡面也有聖誕樹，而且也有固定的表演。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16184598772/" title="Kitte by othree, on Flickr"><img src="https://farm9.staticflickr.com/8566/16184598772_751560bbd9_b.jpg" width="1024" height="683" alt="Kitte" srcset="https://farm9.staticflickr.com/8566/16184598772_751560bbd9_b.jpg 1024w, https://farm9.staticflickr.com/8566/16184598772_56eac1a650_h.jpg 1600w" /></a></p>
-
-<p>這是旅館附近的大樓，回去時剛好看到。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15562993324/" title="東京 田町 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8584/15562993324_591684a8a2_b.jpg" width="1024" height="683" alt="東京 田町" srcset="https://farm9.staticflickr.com/8584/15562993324_591684a8a2_b.jpg 1024w, https://farm9.staticflickr.com/8584/15562993324_d2e44a007a_h.jpg 1600w" /></a></p>
-
-<p>再來就是彩色的彩虹橋。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16007370108/" title="彩虹橋 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8563/16007370108_0e2501b4f9_b.jpg" width="1024" height="683" alt="彩虹橋" srcset="https://farm9.staticflickr.com/8563/16007370108_0e2501b4f9_b.jpg 1024w, https://farm9.staticflickr.com/8563/16007370108_833b4be184_h.jpg 1600w" /></a></p>
-
-<p>小小的台場點燈。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15575022383/" title="台場  illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7478/15575022383_44e08d2af3_b.jpg" width="1024" height="683" alt="台場  illumination" srcset="https://farm8.staticflickr.com/7478/15575022383_44e08d2af3_b.jpg 1024w, https://farm8.staticflickr.com/7478/15575022383_5ba23a4fb6_h.jpg 1600w" /></a></p>
-
-<p>目標之二的富士電視台，還蠻有趣的，不過其實內容都是在廣告，然後現場直接用肉眼看會發現畫面太大，點陣圖看不太出來是什麼，透過相機小螢幕反而可以看的出來。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16007364698/" title="富士電視台 illumination by othree, on Flickr"><img src="https://farm8.staticflickr.com/7524/16007364698_86a1606ecd_b.jpg" width="1024" height="683" alt="富士電視台 illumination, " srcset="https://farm8.staticflickr.com/7524/16007364698_86a1606ecd_b.jpg 1024w, https://farm8.staticflickr.com/7524/16007364698_929bc681f9_h.jpg 1600w" /></a></p>
-
-<p>第一次到台場 Decks，他外面也有一顆聖誕樹。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16194829755/" title="台場 Decks by othree, on Flickr"><img src="https://farm8.staticflickr.com/7552/16194829755_f9ae1de7dc_b.jpg" width="1024" height="683" alt="台場 Decks" srcset="https://farm8.staticflickr.com/7552/16194829755_f9ae1de7dc_b.jpg 1024w, https://farm8.staticflickr.com/7552/16194829755_f75b51cc79_h.jpg 1600w" /></a></p>
-
-<p>目標之三的 Caretta  汐留，最喜歡的點，剛好走天橋過去，從上面看的時候真的有種異世界的感覺，在下面人很多沒機會這樣感覺～</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16203842762/" title="Caretta  汐留 Illumination by othree, on Flickr"><img src="https://farm9.staticflickr.com/8610/16203842762_3a4695db7f_b.jpg" width="1024" height="683" alt="Caretta  汐留 Illumination" srcset="https://farm9.staticflickr.com/8610/16203842762_3a4695db7f_b.jpg 1024w, https://farm9.staticflickr.com/8610/16203842762_80fc2e73fd_h.jpg 1600w" /></a></p>
-
-<p>這裡其實還可以排隊去照相，幾乎都是情侶，然後表演很頻繁，大概 15 分一次，在表演間的空檔才輪流拍照，另外也可以去走走道，穿過燈光的隧道，也是表演間的空檔一次開放一批人。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16202775001/" title="Caretta  汐留 Illumination by othree, on Flickr"><img src="https://farm9.staticflickr.com/8658/16202775001_c0d468fa97_b.jpg" width="1024" height="683" alt="Caretta  汐留 Illumination" srcset="https://farm9.staticflickr.com/8658/16202775001_c0d468fa97_b.jpg 1024w, https://farm9.staticflickr.com/8658/16202775001_d0542c6dff_h.jpg 1600w" /></a></p>
-
-<p>Caretta  汐留點燈晚上很漂亮，不過白天經過的話，就會夢想破滅了～～</p>
-
-<p>迪士尼樂園裡面也有很大的聖誕樹。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16049979098/" title="Tokyo Disney Resort by othree, on Flickr"><img src="https://farm8.staticflickr.com/7564/16049979098_b79bdbaed1_b.jpg" width="1024" height="683" alt="Tokyo Disney Resort" srcset="https://farm8.staticflickr.com/7564/16049979098_b79bdbaed1_b.jpg 1024w, https://farm8.staticflickr.com/7564/16049979098_db7fb75ee0_h.jpg 1600w" /></a></p>
-
-<p>最後一天到銀座也看到一些特別的裝飾，像是 BVLGARI 的蛇。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16077055787/" title="BVLGARI 銀座 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7527/16077055787_c339145a3e_b.jpg" width="683" height="1024" alt="BVLGARI 銀座" srcset="https://farm8.staticflickr.com/7527/16077055787_c339145a3e_b.jpg 683w, https://farm8.staticflickr.com/7527/16077055787_0fccbe9877_h.jpg 1067w" /></a></p>
-
-<p>還有其中一條小路的路燈。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16261121991/" title="Ginza by othree, on Flickr"><img src="https://farm9.staticflickr.com/8572/16261121991_eef742a898_b.jpg" width="1024" height="683" alt="Ginza" srcset="https://farm9.staticflickr.com/8572/16261121991_eef742a898_b.jpg 1024w, https://farm9.staticflickr.com/8572/16261121991_c3b79e2d1a_h.jpg 1600w" /></a></p>
-
-<p>以上就是這趟看到的聖誕燈飾了，有一些聖誕節過後就沒有了，有一些會維持到新年過後，所以如果瞄準這個來看的話還是要聖誕節前就到，數量真的是很多，日本好浪費電的啊～～</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000832" baseName="tokyo-tower">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-02-03</b:date>
-				<b:time>23:29:21</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>Tokyo Tower</b:title>
-			<b:content>
-				<b:summary> 去年底去日本的主要目標是看聖誕燈飾，結果而言是真的看到很多各式各樣的聖誕燈飾，不過另外還有一個收穫是也看到很多的東京鐵塔，第一張是森大樓的標準色。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15557880724/" title="東京 六本木 森大樓 夜景 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7482/15557880724_a066ddf5df_b.jpg" width="1024" height="683" alt="東京 六本木 森大樓 夜景" srcset="https://farm8.staticflickr.com/7482/15557880724_a066ddf5df_b.jpg 1024w, https://farm8.staticflickr.com/7482/15557880724_c87370f081_h.jpg 1600w" /></a></p>
-
-<p>去年底去日本的主要目標是看聖誕燈飾，結果而言是真的看到很多各式各樣的聖誕燈飾，不過另外還有一個收穫是也看到很多的東京鐵塔，第一張是森大樓的標準色。</p>
-</b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16154446766/" title="東京 六本木 森大樓 夜景 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7463/16154446766_bef5a1c9d8_b.jpg" width="1024" height="683" alt="東京 六本木 森大樓 夜景" srcset="https://farm8.staticflickr.com/7463/16154446766_bef5a1c9d8_b.jpg 1024w, https://farm8.staticflickr.com/7463/16154446766_6320c2dc55_h.jpg 1600w" /></a></p>
-
-<p>鑽石點燈。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16154465746/" title="Tokyo Tower by othree, on Flickr"><img src="https://farm8.staticflickr.com/7560/16154465746_c0a1f43024_b.jpg" width="1024" height="683" alt="Tokyo Tower" srcset="https://farm8.staticflickr.com/7560/16154465746_c0a1f43024_b.jpg 1024w, https://farm8.staticflickr.com/7560/16154465746_7f5dd5821c_h.jpg 1600w" /></a></p>
-
-<p>從第一間旅館 Grand Arc 半藏門的房間就看的到了，這還是標準的色。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15999556357/" title="東京鐵塔 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7530/15999556357_70a6ab653c_b.jpg" width="683" height="1024" alt="東京鐵塔" srcset="https://farm8.staticflickr.com/7530/15999556357_70a6ab653c_b.jpg 683w, https://farm8.staticflickr.com/7530/15999556357_a653633b68_h.jpg 1067w" /></a></p>
-
-<p>接近聖誕節開始有鑽石點燈加上愛心，這邊是第二間 JAL CITY 田町看過去的，聽說另外一邊的房間看的到彩虹橋。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16194838915/" title="東京 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7534/16194838915_e918aa545a_b.jpg" width="1024" height="683" alt="東京" srcset="https://farm8.staticflickr.com/7534/16194838915_e918aa545a_b.jpg 1024w, https://farm8.staticflickr.com/7534/16194838915_e0ff7a0ed4_h.jpg 1600w" /></a></p>
-
-<p>白天看愛心的部分。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16007370108/" title="彩虹橋 by othree, on Flickr"><img src="https://farm9.staticflickr.com/8563/16007370108_0e2501b4f9_b.jpg" width="1024" height="683" alt="彩虹橋" srcset="https://farm9.staticflickr.com/8563/16007370108_0e2501b4f9_b.jpg 1024w, https://farm9.staticflickr.com/8563/16007370108_833b4be184_h.jpg 1600w" /></a></p>
-
-<p>然後去台場時還看到彩虹的彩虹橋加上東京鐵塔。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16207863888/" title="Tokyo Tower 2014 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7290/16207863888_019f8c7b5d_b.jpg" width="683" height="1024" alt="Tokyo Tower 2014" srcset="https://farm8.staticflickr.com/7290/16207863888_019f8c7b5d_b.jpg 683w, https://farm8.staticflickr.com/7290/16207863888_4308134cb9_h.jpg 1067w" /></a></p>
-
-<p>過聖誕節之後變成 2014，據說過元旦後會有 2015，只是就沒待到那時候就沒看到了。</p>
 </b:extendContent>
 			</b:content>
 

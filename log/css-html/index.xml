@@ -9,6 +9,154 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000902" baseName="svg">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-07-29</b:date>
+				<b:time>11:14:28</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>SVG</b:title>
+			<b:content>
+				<b:summary> 最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 Material Icons，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些問題，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。 GitHub 的用法是 inline SVG 為主，我自己則是用 &lt;picture&gt; 比較多： &lt;picture&gt; &lt;source srcset=&quot;/path/to/icon.svg&quot; type=&quot;image/svg+xml&quot;&gt; &lt;img src=&quot;/path/to/icon.png&quot; alt=&quot;&quot;...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35882767130/" title="SVG by othree, on Flickr"><img src="https://farm5.staticflickr.com/4300/35882767130_abb5a7e7b3_b.jpg" width="1024" height="782" alt="SVG" srcset="https://farm5.staticflickr.com/4300/35882767130_2848f09cbc_k.jpg 2x" /></a></p>
+<p>最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 <a href="https://material.io/icons/">Material Icons</a>，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些<a href="http://voormedia.com/blog/2012/10/creating-svg-vector-graphics-for-maximum-browser-compatibility">問題</a>，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。</p>
+<p>GitHub 的用法是 inline SVG 為主，我自己則是用 <code>&lt;picture&gt;</code> 比較多：</p>
+<pre><code class="language-html">&lt;picture&gt;
+  &lt;source srcset=&quot;/path/to/icon.svg&quot; type=&quot;image/svg+xml&quot;&gt;
+  &lt;img src=&quot;/path/to/icon.png&quot; alt=&quot;&quot; width=&quot;32&quot; height=&quot;32&quot; /&gt;
+&lt;/picture&gt;
+</code></pre>
+<p>CSS Trick 有一篇文章 <a href="https://css-tricks.com/a-complete-guide-to-svg-fallbacks/">A Complete Guide to SVG Fallbacks</a> 則介紹了各種在網頁內放入 SVG 圖檔的古老方法，用 <code>&lt;picture&gt;</code> 是比較新的，沒列在其中，而我是為了向下相容選擇用 <code>&lt;picture&gt;</code>，因為支援<code>&lt;picture&gt;</code>標籤的瀏覽器都很新了，對於 SVG 的支援度很夠，剩下少數（大概都是 IE）就讓他直接吃 png 之類的（PS: pngquant 處理過的 PNG 很多可以直接在 IE6 上顯示透明色），這樣用起來就像是一般 <code>&lt;img&gt;</code> 一樣，SVG 檔可以先用 <a href="https://github.com/svg/svgo">svgo</a> 工具處理過，除此之外，我通常會先用 Adobe Illustrator 把不必要的圖層階層刪除，圖層在 SVG 原始碼裡面通常是會 <code>&lt;g&gt;</code> 標籤，另外也記得要把圖層名稱（id）改成 ASCII only 的名稱，甚至直接編輯原始碼刪除 id，因為 svgo 不會處理這部分。</p>
+<p>用外部 SVG 檔案好處是可以善用 browser cache 減少傳輸量，尤其是大量重複使用的圖片，不過也會犧牲一些 SVG 的特性，例如會因此不能直接用 CSS 來調整樣式，做 transition，做動畫等等，所以有時候也是會用 inline SVG，就可以搭配 CSS、JS 弄出很多不錯的效果（Safari 偶爾還有遇到無解 bug），不過要讓 inline SVG fallback 回一般圖片就比較麻煩些了，在做這件事之前可以先看一下是不是有需要<a href="http://caniuse.com/#feat=svg-html5">支援</a>，以前是 iOS 不支援，現在還有機會碰到的大概還是 IE（6-8）吧，總之，如果有需要的話，就是參考 CSS Trick 的 <a href="https://css-tricks.com/svg-fallbacks/">SVG Fallbacks</a> 這篇文章，使用</p>
+<pre><code class="language-html">&lt;svg width=&quot;96&quot; height=&quot;96&quot;&gt;
+  &lt;image xlink:href=&quot;svg.svg&quot; src=&quot;svg.png&quot; width=&quot;96&quot; height=&quot;96&quot; /&gt;
+&lt;/svg&gt;
+</code></pre>
+<p>這是個很有趣的技巧，首先 <code>&lt;image&gt;</code> 標籤是<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image">合法的 SVG 元素</a>，所以放在 SVG 不成問題，但是不支援 SVG 的瀏覽器，照理說也不應該認得 <code>&lt;image&gt;</code> 標籤啊，其實，<code>&lt;image&gt;</code> 在很久以前就一直是 <code>&lt;img&gt;</code> 的別名了，甚至在 WHATWG 的 parse HTML 文件的<a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">流程</a>裡都還有提到處理的方式，而經過測試也都證實了以前的瀏覽器確實是這樣的行為，文裡也有各瀏覽器的行為和支援狀況，不支援 inline SVG 的就會顯示替代的 png 或 jpg 。</p>
+<p>文章裡面還有提到背景圖使用 SVG 的處理方式，不過因為我沒這樣使用，所以沒什麼實做到，另外最近也有人用外部 SVG 加上 CSS filter 來改變 <a href="https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images">SVG icon 顏色</a>，不過這太技巧太新了，考慮到支援度我也是沒有用過。</p>
+<p>親和力問題的部分，一樣 CSS Tricks 有篇文章 <a href="https://css-tricks.com/accessible-svgs/">Accessible SVG</a> 在講相關的作法，像是用 <code>&lt;title&gt;</code> 加替代文字，加上 <code>role=&quot;img&quot;</code> 等；如果要自己編寫 SVG，W3C 還有份 <a href="http://w3c.github.io/svgwg/specs/svg-authoring/">Authering Guide</a> 可以參考，除了親和力相關的資訊外還有不少技巧可以參考。</p>
+<p>最後整理一下，拿到 svg 檔案後我的處理過程：</p>
+<ol>
+<li>用 Adobe Illustrator 先開來整理一下，修改圖層名稱、刪去合併不必要的圖層</li>
+<li>輸出成 SVG 和 1x 解析度的 PNG</li>
+<li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
+</ol>
+<p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000901" baseName="form-practice">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-06-13</b:date>
+				<b:time>22:42:42</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>表單 Practice</b:title>
+			<b:content>
+				<b:summary> 這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。 首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 HTML5 的表單檢查，會這樣決定的主因是： JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的； 幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗； 支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34947056856/" title="Form Validation by othree, on Flickr"><img src="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg" width="500" height="270" alt="Form Validation" srcset="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg 500w" /></a></p>
+<p>這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。</p>
+<p>首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation">HTML5 的表單檢查</a>，會這樣決定的主因是：</p>
+<ol>
+<li>JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的；</li>
+<li>幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗；</li>
+<li>支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server side 檢查對付他們就好，使用體驗稍微差一點也還可以接受，這也是種 graceful degradation（優雅降級）；</li>
+<li>HTML5 的表單檢查可以說是 web developer 當年對抗網路標準發展遲緩一大勝利指標，當然應該要好好用一下。</li>
+</ol>
+<p>而用 HTML5 表單檢查還有個意外的好處是基本的錯誤訊息自動有翻譯（看使用者瀏覽器的語言），另外如果有自製的輸入元件，也有 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation#Validating_forms_using_JavaScript">API</a> 可以串接，當然訊息就要自己提供就是了。</p>
+<p>用 HTML5 表單檢查當然也不是完全沒有問題，例如目前 email 欄位還沒有瀏覽器支援 <a href="https://github.com/w3c/html/issues/538">IDN domain 的信箱</a>；另外就是上傳檔案的 file input 的值不能從 server 端直接給，這限制是因為會有安全性問題，而這限制所衍生的問題是：表單送到 server side 檢查後發現有錯誤時（例如 captcha 錯），使用者就一定要重新選取上傳的檔案，對於使用者體驗算是個扣分（而且上傳檔案大的話很花時間，然後另外還有個上傳檔案大小限制、就又是另外一個議題了），要解決這問題一般來說就是靠 JavaScript 做些加強，例如針對 captcha 可以先用 ajax call 檢查 captcha ，正確的話就換個 session token 之類的回來，不過即使這樣，還是逃不了完整的 server side 表單檢查，所以也還要處理 ajax submit 後的表單錯誤訊息顯示。</p>
+<p>不管是 server side 檢查後產生的錯誤訊息，還是 ajax call 之前檢查產生的錯誤訊息，理所當然都會放在欄位附近，不過還要讓訊息和欄位之間建立關聯，才好進一步做一些處理，例如使用者有更新欄位值之後會把錯誤訊息隱藏之類的，或許很多人會用父層 DOM 節點加上特殊的 class 包起來找，不過我比較偏好用 <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute"><code>aria-describedby</code></a>，大概會看起像是：</p>
+<pre><code class="language-html">&lt;input id=&quot;mail&quot; name=&quot;mail&quot; type=&quot;email&quot; aria-describedby=&quot;mail-field-info&quot; /&gt;
+&lt;span id=&quot;mail-field-info&quot;&gt;Required field!&lt;/span&gt;
+</code></pre>
+<p>這樣只要找的到 <code>#mail</code> 欄位，就可以透過他的 <code>aria-describedby</code> 屬性找到該欄位的相關訊息的 DOM 節點，另外值得注意的是，aria-describedby 值的格式是 <a href="https://www.w3.org/TR/wai-aria/states_and_properties#valuetype_idref_list">IDRefList</a>，不是單一個 ID，而是一個用空白切分的 ID 指標們，所以如果有這種情形，還可以在錯誤訊息的那個 DOM 節點加上  <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_alert_role"><code>role=&quot;alert&quot;</code></a> 給它用來辨識，其實就算只有一個 ID 也還是可以加上 role 屬性啦。如果真的需要用透過父層 DOM 節點來找的話，之前研究的結論是可以在預期的父層標籤用 <code>role=&quot;section&quot;</code>來方便定位，用 jQuery 大概會像是：</p>
+<pre><code class="language-javascript">$fieldSection = $field.closest('[role=&quot;section&quot;]');
+</code></pre>
+<p>這個標籤下應該會包括欄位的標籤（label）、欄位的 input element 以及相關的資訊（說明、錯誤訊息）等。</p>
+<p>另外還有一點，就是要用 ajax 上傳檔案的話，需要有支援 <a href="http://caniuse.com/#feat=xhr2">FormData</a> 的瀏覽器，並且如果用 jQuery 送 FormData 的話記得要加點設定：</p>
+<pre><code class="language-javaascript">contentType: false,
+processData: false
+</code></pre>
+<p>還有就是 ajax 送表單的目標 URL，我目前比較喜歡的作法是讀 <code>&lt;form&gt;</code> 的 <code>action</code> 屬性，也就是和瀏覽器自己送的 URL 一樣，然後透過 HTTP content negotiation 機制來決定回傳的格式，比較正確的作法是看 <code>Accept</code>，以 jQuery 來說，如果要 server 回 JSON 格式的話，可以加上：</p>
+<pre><code class="language-javascript">dataType: 'json'
+</code></pre>
+<p>這樣送出的 request 就會帶上正確的 <code>Accept</code> header，向 server 端要求 <code>application/json</code> ，不過 <code>Accept</code> 的值解析起來比較麻煩些，其實是可以送出說 client 端可以接受多種格式，然後還加上個優先度的，也因此也有很多人是看 <code>X-Requested-With</code>，一般 library 如果是透過 XHR 發的 request 都會有這個 header；還有就是送出的資料格式（Content-Type），即使是 ajax call，我目前也都不用 JSON 了，還是用 <code>application/x-www-form-urlencoded</code> 為主，另外要上傳檔案的話當然一定要用 <code>multipart/form-data</code>，主要是因為：</p>
+<ol>
+<li>送 JSON 的話就不會是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Simple_requests">simple request</a> 了，有些時候會比較麻煩，例如 Cross Origin 時會需要發 preflight，然後就可能遇到 AWS 以前不支援 preflight request 的 bug；</li>
+<li>用這幾個老的 Content-Type 支援度還是比較高，對於 server 端實做和 client 端實做其實都相對友善一點，例如 jQuery 預設就依然是 form-urlencoded，没特别需求還是用標準一點的格式，特殊需求是例如 GraphQL，不過一般表單發送應該不會走 GraphQL 吧。</li>
+</ol>
+<p>其實 JSON 雖然已經有 RFC 規範了，不過在 Web 標準的世界還沒相當深入內化，不知道以後有沒有機會更加的內化整合進去。</p>
+<p>前面有提到 ajax call 送出的目標 URL 我會偏好從，<code>&lt;form&gt;</code> 裡面讀，不過或許有的情境會讓 ajax call 必須要自己用不一樣的 API URL，這時候我建議還是把 API URL 寫在 <code>&lt;form&gt;</code> 的屬性裡面，這樣可以讓 JavaScript 的邏輯比較乾淨，也不用作什麼 mapping 或是常數來儲存 API 的 URL，維護修改時也不用兩邊檢查，屬性名稱可以用例如：<code>data-action</code> 之類的屬性，<code>data-*</code>屬性正好適合來做這些事情，不但有 DOM API 支援，jQuery 也可以用 <code>.data()</code> method 來讀取，命名上，如果覺得有個標準參考比較好，可以看看 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 的設計，雖然比較長一點，它用的是：<a href="https://github.com/rails/jquery-ujs/blob/master/src/rails.js#L117"><code>data-ujs:submit-button-formaction</code></a>，我是覺得有些不正確啦，畢竟要送出表單不一定是點擊 submit button。</p>
+<p>其實假設送出表單的動作都是滑鼠點擊 submit button 這是個親和力問題，如果只把 ajax call 送的函式 bind 在 submit button 的 click 事件上，這其實是不太好的，因為其實瀏覽器預設的行為是可以在很多地方用鍵盤送出表單，例如在 text input 上按下 Enter 鍵，或是在 submit button 上按下空白鍵之類的，所以針對表單還是要去 bind form submit 事件才是正解，至於 jQuery-ujs，其實也是這樣做的，它是用 delegate event 的形式去監聽傳遞到 document 上的 submit 事件，然後才去做後續的處理，只是命名上讓人覺得不太正確。</p>
+<p>最後一項，前面說不用 JavaScript 做表單檢查（不看自訂輸入元件的話），其實有一個例外，就是上傳檔案的大小檢查，因為沒做對使用體驗的影響比較大，然後就是要還要記得針對 ajax call 送表單加上 <a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">HTTP 413</a> Status Code 的錯誤訊息處理。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000899" baseName="graceful-degradation-background">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-24</b:date>
+				<b:time>22:05:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Graceful Degradation Background</b:title>
+			<b:content>
+				<b:summary> 昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 &lt;img /&gt; 標籤的圖片和用 CSS 設定的背景圖，對於 &lt;img /&gt; 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 &lt;picture&gt; 標籤、srcset 屬性和 Client Hints 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。 &lt;img /&gt; 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 background-image 就不是了，在 background-size 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 background-size 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr"><img src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w" /></a></p>
+<p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
+<p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
+<ul>
+<li>真的寫 Media Query</li>
+<li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
+<li>大家一起用標準解析度的圖</li>
+</ul>
+<p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
+<ul>
+<li>可以有兩張圖不同解析度的圖</li>
+<li>不要用 Media Query</li>
+<li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
+<li>舊瀏覽器顯示正確</li>
+</ul>
+<p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
+<pre><code class="language-css">background: #123456 url('the-bg.png') center center;
+background: #123456 url('the-bg@2x.png') center center/32px 32px;
+</code></pre>
+<p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
+<ul>
+<li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
+<li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
+<li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
+</ul>
+<p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000878" baseName="acclerated-mobile-pages">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -380,177 +528,6 @@
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14345645395/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5547/14345645395_a2e651b466_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm6.staticflickr.com/5547/14345645395_a2e651b466_b.jpg 1024w, https://farm6.staticflickr.com/5547/14345645395_4a02da2dcf_h.jpg 1600w" /></a></p>
 
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14365860773/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5154/14365860773_4a33f5f37b_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm6.staticflickr.com/5154/14365860773_4a33f5f37b_b.jpg 1024w, https://farm6.staticflickr.com/5154/14365860773_0aa176198f_h.jpg 1600w" /></a></p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000790" baseName="object-fit">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-01-28</b:date>
-				<b:time>22:32:51</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>object-fit</b:title>
-			<b:content>
-				<b:summary>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。 如果要純前端處理，其實目前最好用的作法是用 CSS3 Background 的 background-size: cover;，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 &lt;img&gt; 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。 要維持 &lt;img&gt; 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣： $.fn.cover = (selector) -&gt; $(@).each -&gt; $outer = $(@)...</b:summary>
-				<b:mainContent><p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
-
-<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
-
-<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
-
-<pre><code>$.fn.cover = (selector) -&gt;
-  $(@).each -&gt;
-    $outer = $(@)
-    ow = $outer.width()
-    oh = $outer.height()
-    or = ow / oh
-    $outer.find(selector).each -&gt;
-      $item = $(@)
-      iw = $item.width()
-      ih = $item.height()
-      ir = iw / ih
-      if ir &lt; or
-        w = ow
-        h = ow / ir
-        l = 0
-        t = (oh - h) / 2
-      else
-        h = oh
-        w = oh * ir
-        t = 0
-        l = (ow - w) / 2
-
-      $item.css(width: w, height: h, top: t, left: l)
-</code></pre>
-
-<p>使用範例：</p>
-
-<pre><code>$('.cell').cover('img')
-</code></pre>
-
-<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
-
-<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
-
-<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
-
-<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
-</code></pre>
-
-<p>配上 CSS：</p>
-
-<pre><code>img.cover {
-  object-fit: cover;
-}
-</code></pre>
-
-<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
-
-<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000786" baseName="more-twitter-cards">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-01-05</b:date>
-				<b:time>00:34:06</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>More Twitter Cards</b:title>
-			<b:content>
-				<b:summary>進入本題前，先岔題到 open graph 一下，就是前兩天才注意到要用 Open Graph protocol 的話，其實在 html 裡面要加上 prefix="og: http://ogp.me/ns#" 的屬性和值： &lt;!DOCTYPE html&gt; &lt;html xmlns="http://www.w3.org/1999/xhtml" lang="zh-tw" prefix="og: http://ogp.me/ns#" &gt; 這個 prefix 屬性其實是 RDFa 來的，所以其實 Open Graph Protocol 也是走 RDFa 系統，Twitter Card 就比較沒走的這麼語意網了。 這篇其實是要說 Twitter Card 的更新，首先是卡片的種類變多了，在一開始只有 Photo、Summary 和...</b:summary>
-				<b:mainContent><p>進入本題前，先岔題到 open graph 一下，就是前兩天才注意到要用 <a href="http://opengraphprotocol.org/">Open Graph protocol</a> 的話，其實在 html 裡面要加上 <code>prefix="og: http://ogp.me/ns#"</code> 的屬性和值：</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html
-    xmlns="http://www.w3.org/1999/xhtml"
-    lang="zh-tw"
-    prefix="og: http://ogp.me/ns#"
-&gt;
-</code></pre>
-
-<p>這個 prefix 屬性其實是 <a href="http://www.w3.org/TR/rdfa-syntax/#s_syntax">RDFa</a> 來的，所以其實 Open Graph Protocol 也是走 RDFa 系統，Twitter Card 就比較沒走的這麼語意網了。</p>
-
-<p>這篇其實是要說 Twitter Card 的更新，首先是卡片的種類變多了，在一開始只有 Photo、Summary 和 Player 三種，現在則又多了 App、Product、Gallery 和 Summary Large Image 四種。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/11754350766/" title="Twitter Card by othree, on Flickr"><img src="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg" width="666" height="800" alt="Twitter Card" srcset="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg 768w" /></a></p>
-
-<p>其中 App 還蠻早就有了，以前如果貼 iTunes Store 連結的話就可以看到，只是一開始沒開放申請的樣子，新的幾種卡片我最想要的其實是 Summary Large Image，這個其實就是最早的 Photo 卡片的樣子，和 Photo 其實只差 description，我一開始會偷用 Photo 卡片來讓文章的圖片比較大，只是他們後來改成不會顯示我提供的文章摘要，直到前幾天才發現有新的 Summary Large Image，完全就是當初的 Photo 卡啊，所以看到就立馬申請下去。</p>
-
-<p>申請的過程和以前也不一樣了，現在是在卡片<a href="https://dev.twitter.com/docs/cards/validation/validator">測試工具</a>那邊先測試，如果驗證格式沒問題就會出現黃色的通知和申請鈕可以按下去，如果是已經申請通過的話就會是綠色的。還有就是測試工具也多了組出 sample code 的功能，還算蠻不錯的，有些比較複雜的卡片格式就可以利用這個工具來搞清楚。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/11754351616/" title="Twitter Card by othree, on Flickr"><img src="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg" width="1024" height="694" alt="Twitter Card" srcset="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg 1024w, https://farm3.staticflickr.com/2806/11754351616_8849f50858_h.jpg 1600w" /></a></p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000785" baseName="scrolling-performance">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-01-01</b:date>
-				<b:time>01:49:24</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Scrolling Performance</b:title>
-			<b:content>
-				<b:summary>元旦就是要來發篇技術文章的啦。 一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，Fixing a parallax scrolling website to run in 60 FPS 這篇文章有整理成條目： Resize、scroll 事件不要在迴圈內綁 Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行 避免 resize 大張圖片 避免 background-size HTML5 Rocks 的 Scrolling Performance 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的...</b:summary>
-				<b:mainContent><p>元旦就是要來發篇技術文章的啦。</p>
-
-<p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
-
-<ol>
-<li>Resize、scroll 事件不要在迴圈內綁</li>
-<li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
-<li>避免 resize 大張圖片</li>
-<li>避免 background-size</li>
-</ol>
-
-<p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
-
-<p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr"><img src="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" srcset="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 1024w" /></a></p>
-
-<p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
-
-<p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
-
-<ul>
-<li><code>&lt;img&gt;</code> width/height 屬性</li>
-<li>CSS 相對長度定義（百分比、em）</li>
-<li>CSS 絕對長對定義（px）</li>
-<li>CSS 背景圖 + background-size</li>
-</ul>
-
-<p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

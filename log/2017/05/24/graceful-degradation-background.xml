@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000899" baseName="graceful-degradation-background">Graceful Degradation Background</b:listData>
+
+			<b:previous>
+				<b:mTitle>Telegram Instant View</b:mTitle>
+				<b:mDate>2017-05-21</b:mDate>
+				<b:mBase>telegram-instant-view</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>a11y</b:mTitle>
+				<b:mDate>2017-06-07</b:mDate>
+				<b:mBase>a11y</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000899" baseName="graceful-degradation-background">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-24</b:date>
+				<b:time>22:05:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Graceful Degradation Background</b:title>
+			<b:content>
+				<b:summary> 昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 &lt;img /&gt; 標籤的圖片和用 CSS 設定的背景圖，對於 &lt;img /&gt; 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 &lt;picture&gt; 標籤、srcset 屬性和 Client Hints 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。 &lt;img /&gt; 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 background-image 就不是了，在 background-size 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 background-size 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr"><img src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w" /></a></p>
+<p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
+<p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
+<ul>
+<li>真的寫 Media Query</li>
+<li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
+<li>大家一起用標準解析度的圖</li>
+</ul>
+<p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
+<ul>
+<li>可以有兩張圖不同解析度的圖</li>
+<li>不要用 Media Query</li>
+<li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
+<li>舊瀏覽器顯示正確</li>
+</ul>
+<p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
+<pre><code class="language-css">background: #123456 url('the-bg.png') center center;
+background: #123456 url('the-bg@2x.png') center center/32px 32px;
+</code></pre>
+<p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
+<ul>
+<li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
+<li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
+<li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
+</ul>
+<p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

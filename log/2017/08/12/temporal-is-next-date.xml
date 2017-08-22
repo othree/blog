@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000906" baseName="temporal-is-next-date">Temporal - 下個世代的 Date</b:listData>
+
+			<b:previous>
+				<b:mTitle>WAT JavaScript Date</b:mTitle>
+				<b:mDate>2017-08-12</b:mDate>
+				<b:mBase>wat-javascript-date</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>196</b:mTitle>
+				<b:mDate>2017-08-18</b:mDate>
+				<b:mBase>196</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000906" baseName="temporal-is-next-date">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-08-12</b:date>
+				<b:time>10:41:06</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Temporal - 下個世代的 Date</b:title>
+			<b:content>
+				<b:summary>這篇文章寫到快寫完的時候，決定到 Modern Web 2017 分享，所以就比較晚發佈 ，其實 Modern Web 演講內容比較多，文末有放相關參考資料。 JSConf EU 2017 前陣子放出演講影片，蠻多場次都不錯，這篇要主要是從其中的一場演講而來，演講是「 The Past, Present, and Future of JavaScript Date and Time APIs」，講者是 Matt Johnson，Moment.js 的作者，下面是這場演講的影片： 長度不長，推薦可以看一下，主要是在談 JavaScript 的 Datetime，提出這老東西的問題，我覺得可以稱為 WAT JavaScript 的 Datetime 篇，像是 0 起始的月份、不支援 Time Zone、難以運算、是...</b:summary>
+				<b:mainContent><p>這篇文章寫到快寫完的時候，決定到 <a href="http://modernweb.tw/">Modern Web 2017</a> 分享，所以就比較晚發佈 ，其實 Modern Web 演講內容比較多，文末有放相關參考資料。</p>
+<p>JSConf EU 2017 前陣子放出演講影片，蠻多場次都不錯，這篇要主要是從其中的一場演講而來，演講是「 The Past, Present, and Future of JavaScript Date and Time APIs」，講者是 Matt Johnson，<a href="http://momentjs.com/">Moment.js</a> 的作者，下面是這場演講的影片：</p>
+<div class="embed_16_9">
+  <iframe width="853" height="480" src="https://www.youtube.com/embed/aVuor-VAWTI?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>長度不長，推薦可以看一下，主要是在談 JavaScript 的 Datetime，提出這老東西的問題，我覺得可以稱為 WAT JavaScript 的 Datetime 篇，像是 0 起始的月份、不支援 Time Zone、難以運算、是 mutable 物件等等，接著介紹了目前檯面上比較多人用的幾個 library 和他們的特色，都是品質不錯的 library，有需求的可以從中選用，包括了：</p>
+<ul>
+<li><a href="http://momentjs.com/">Moment.js</a></li>
+<li><a href="https://date-fns.org/">date-fns</a></li>
+<li><a href="https://js-joda.github.io/js-joda/">js-joda</a></li>
+</ul>
+<p>最後則是提到他們目前在進行的，改進 JavaScript Datetime 的計畫，也就是新的 ECMAScript Datetime 的 proposal，叫 <a href="https://github.com/tc39/proposal-temporal">temporal</a>，除了 Matt Johnson 之外，還有一位 Microsoft 的 Maggie Pint 也是目前草案的主力推手，他的 blog 上就有兩篇相關的<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">文</a><a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">章</a>，裡面有列出目前 <code>Date</code> 的主要問題：</p>
+<ol>
+<li>不支援 timezone，只有 UTC 和 local</li>
+<li>Parser （轉譯日期字串轉成日期物件）的行為不可靠且難以使用</li>
+<li>Date object 是 mutable 物件</li>
+<li>日光節約時間的行為無法預期</li>
+<li>日期計算 API 很難用</li>
+<li>不支援 <a href="https://jonathanou.wordpress.com/2005/06/02/gregorian-calendar/">Gregorian</a> 以外的日曆（例如農曆）</li>
+</ol>
+<p>事實上，目前的 Date 物件，當初 Brendan Eich 因為時間緊迫，所以 Datetime 的 API 是直接參考 Java 的，當時是 1995，參考的應該是 Beta 版 Java 的 <code>java.util.Date</code>，後來 1996 年 1 月 Java 1.0 發佈，但是到了 1997 年 2 月的 Java 1.1 發佈時，<code>java.util.Date</code> 大部分的設計都被捨棄了，然後 1997 年 6 月，ECMAScript 標準 1.0 發佈，結果這個在 Java 語言只活了 1 年多的設計，就活在 JavaScript 世界活了 20 年之久，相信有用過的人都能多少都知道使用起來的痛苦。</p>
+<p>不過要改善 JavaScript 從來就不是一件容易的事情，最大的困難點就是你不能隨便改動任何已有的東西，像是已經存在 20 年的 <code>Date</code>，即使它設計不好，隨便改動都可能造成大量的網站壞掉，不像是 Java 1.0 升級到 Java 1.1 那樣，各自用各自的，在改善 JavaScript 時基本上就是要當成有人從不升級，不能有 broken change，最簡單的方法就是增加新的東西，而不要去修改舊的，這也是目前 temporal 的方向（其實 ES 5.1 後，舊有的東西該修的東西大概都修完，之後就是一直加新的而已），在 draft 文件已經有一點基礎和預期的 code sample 了：</p>
+<pre><code class="language-javascript">var ldt = new CivilDateTime(2017, 12, 31, 23, 59);
+
+var addHours = new CivilDateTime(2017, 12, 31, 23, 00)
+    .add(2, 'hours');
+
+var zdt = ldt.withZone('America/New_York');
+</code></pre>
+<p>可以看到有方便的加減時間的 API、immutable 特性、還有時區支援等等。事實上這份草案還非常初步而已，還缺非常多細節，預期會有的物件目前已經有八種了，不過這八種物件的 API 也都還沒定義完，不過也正因為如此，想參與的人反而這時候比較有機會提供想法，推薦有興趣的人可以關注關注，給點意見。</p>
+<p>最後列一些參考文件：</p>
+<ul>
+<li>Web Rebels 2017 <a href="https://twitter.com/jxxf">@jxxf</a> 的「<a href="https://www.webrebels.org/#talk-8">Time and Time Again: Fixing Dates in JS</a>」 花了很多時間在講 JavaScript Date 缺少的 concept</li>
+<li>林信良（良葛格）介紹 Java 的 Joda-Time 和 JSR310 的<a href="http://www.codedata.com.tw/tag/jodatime/">相關文章</a>，Joda-Time 是 Java 上很廣為使用的時間套件，由 Stephen Colebourne 為主開發的，他也參與了 <a href="https://jcp.org/en/jsr/detail?id=310">JSR 310: Date and Time API</a> 的制訂，並在 JDK 8 開始可以用</li>
+<li>temporal 目前主要作者之一的 Maggie Pint 的文章：<a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">Fixing JavaScript Date - Web Compatibility and Reality</a></li>
+<li><a href="https://www.youtube.com/watch?v=oVVXW7lmwtw">Understanding Dates, Times, and Time Zones, with Maggie Pint, Matt Johnson, and Jon Skeet</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

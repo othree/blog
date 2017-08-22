@@ -9,6 +9,46 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000895" baseName="vim-packages">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-02</b:date>
+				<b:time>23:05:39</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim Packages</b:title>
+			<b:content>
+				<b:summary>Vim 8 有兩個我覺得比較大的新功能，一是開始有 Asynchronous I/O，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 runtime 目錄下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 pathogen.vim 後才被解決，pathogen 是藉由修改 runtimepath 變數（有點像是系統的 PATH 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 Vundle、neobundle、vim-plug 等，基礎原理應該都是一樣的。 Vim...</b:summary>
+				<b:mainContent><p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+
+<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+
+<pre><code>~/.vim/bundle/html5.vim
+~/.vim/bundle/yajs.vim
+</code></pre>
+
+<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+
+<pre><code>~/.vim/pack/my-js/start/yajs.vim
+~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
+~/.vim/pack/my-js/start/simple-javascript-indenter
+</code></pre>
+
+<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+
+<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+</b:mainContent>
+				<b:extendContent>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000880" baseName="vim-filename-complete">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -474,50 +514,6 @@ make install
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9367473855/" title="true color jellybeans by othree, on Flickr"><img src="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg" width="810" height="998" alt="true color jellybeans" srcset="https://farm8.staticflickr.com/7282/9367473855_d576b3a7d8_b.jpg 1024w" /></a></p>
 
 <p>至於 iTerm 2 和 Vim 官方何時會支援呢，前者比較樂觀，下次 release 就有了，後者的話，大約半年前 Bram 有說會加到 TODO，不過到目前的 7.4 看來都還沒有認真要面對它的樣子...</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000754" baseName="vim-airline">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2013-07-04</b:date>
-				<b:time>18:15:37</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>vim-airline</b:title>
-			<b:content>
-				<b:summary> 最近發現 vim-airline 這個 plugin，其實就是 powerline 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 statusline，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。 我以前都是用自己寫的設定，還接了 hahhah.vim，長得比較簡單： 一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是： airline 是 pure vim script，powerline 則有一些 python 簡單, 速度也比 powerline 快 而且它也支援 powerline patch 過的字形來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題： 在 iTerm...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9203696971/" title="vim-airline by othree, on Flickr"><img src="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg" width="810" height="566" alt="vim-airline" srcset="https://farm6.staticflickr.com/5472/9203696971_8ffe6c5afd_b.jpg 1024w" /></a></p>
-
-<p>最近發現 <a href="https://github.com/bling/vim-airline">vim-airline</a> 這個 plugin，其實就是 <a href="https://github.com/Lokaltog/powerline">powerline</a> 的 copy，vim powerline 也出來蠻久了，大部分人其實都不會去深入研究要怎樣設定 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#'statusline'">statusline</a>，所以像這種可以很快速套用，又好看功能又好的 plugin 都很受歡迎。</p>
-
-<p>我以前都是用自己寫的設定，還接了 <a href="https://github.com/mattn/hahhah-vim">hahhah.vim</a>，長得比較簡單：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9205236137/" title="My Vim statusline by othree, on Flickr"><img src="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg" width="810" height="458" alt="My Vim statusline" srcset="https://farm4.staticflickr.com/3686/9205236137_d614de6369_b.jpg 1024w" /></a></p>
-
-<p>一直沒換到 powerline 其實主要原因是它要有裝 patch 過，加了幾個新符號的字型才好看，然後這有些麻煩所以一直沒嘗試。不過前兩天看到的 airline ，README 列出的一些差異讓我對它蠻感興趣的，讓我感興趣的點是：</p>
-
-<ul>
-<li>airline 是 pure vim script，powerline 則有一些 python</li>
-<li>簡單, 速度也比 powerline 快</li>
-</ul>
-
-<p>而且它也支援 powerline patch 過的<a href="https://github.com/Lokaltog/powerline-fonts">字形</a>來做類似的效果，只是一開始設定時發現右邊的三角形位置怎麼一直不太正確，研究了一下發現是全形半形的問題：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9204959479/" title="ambiguous by othree, on Flickr"><img src="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg" width="320" height="220" alt="ambiguous" srcset="https://farm8.staticflickr.com/7350/9204959479_6e20770b75.jpg 1024w" /></a></p>
-
-<p>在 iTerm 裡面有個設定是 <code>Treat ambiguous-width characters as double width</code>，開啟這個選項，iTerm 就會把沒有定義字寬的一些字元當成是兩倍寬，也就是全形字，會有這個選項是因為一些符號、標點，在 Unicode 裡面不論是中文英文都是共用的，但是在中文的世界會習慣是用全形，如果設定錯，會出現的問題其實也沒很大，通常是全行字的符號塞進半形的空間，或是反過來，不過如果有排版需求的話就很重要了，像是 BBS，所以要用 iTerm 上 BBS 這個選項就很重要了。</p>
-
-<p>powerline 自訂的這幾個 <a href="https://powerline.readthedocs.org/en/latest/fontpatching.html#glyph-table">新符號</a>，也是歸類在這些字元，剛好我以前都會用 iTerm 上工作站連 BBS，所以那個選項有開，結果就是如上圖下半部那樣，符號的右邊多了一個空白的寬度。這張圖上下的差異只有該選項有沒有打開而已，不過雖然搞清楚問題在哪，我最後還是決定不要用三角形，只用了 branch 的符號而已，結果就是本文的第一張圖那樣。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

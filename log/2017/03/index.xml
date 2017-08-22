@@ -36,9 +36,7 @@
 			<b:content>
 				<b:summary> 前陣子看到 DK 提到 GitHub 的 Markdown：GitHub Flavored Markdown 發表正式的 spec 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 spec 是基於 CommonMark 的，只是多了一些語法，包括： 刪除線 表格 待辦清單 自動連結（包括網址和 email） Raw HTML 黑名單： &lt;title&gt; &lt;textarea&gt; &lt;style&gt; &lt;xmp&gt; &lt;iframe&gt; &lt;noembed&gt; &lt;noframes&gt; &lt;script&gt; &lt;plaintext&gt; 新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 &lt;...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr"><img src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w" /></a></p>
-
 <p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a> <a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
-
 <ul>
 <li>刪除線</li>
 <li>表格</li>
@@ -55,15 +53,13 @@
 <li><code>&lt;noframes&gt;</code></li>
 <li><code>&lt;script&gt;</code></li>
 <li><code>&lt;plaintext&gt;</code></li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
-
 <p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -84,23 +80,15 @@
 			<b:content>
 				<b:summary> 大概上週看到有人在 Twitter 講到 GitHub 現在會在專案上顯示該專案所使用授權條款的摘要，長的像是上面那樣，官方也有發表公告，其實這個修改是結合之前的授權偵測和 Choose a License。 Choose a License 也是一個 GitHub 的附加服務，用來協助使用者挑選適合的授權條款，現在在 GitHub 建立新的專案時，可以順便初始化專案，包括建立 README、產生 .gitignore 和挑選要使用的授權條款： 授權條款旁邊的 i 點下去其實就會送到 Choose a License 網站去了（不過兩邊沒有連動接起來就是），Choose a License 網站則針對每種條款都一份重點摘要，分為 Permissions、Conditions 和 Limitations 三個區塊，分別條列出該條款可以做什麼（例如商業使用）、有什麼條件（例如需要也使用相同條款授權）和條款的限制（例如免責），而現在 GitHub 上顯示的條款摘要其實就是這邊的資訊搬過來的： Choose a License 網站其實有很多授權條款的整理，而不是只有常見的幾種，可以看...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32722736844/" title="Do What The F*ck You Want To Public License by othree, on Flickr"><img src="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg" width="1024" height="595" alt="Do What The F*ck You Want To Public License, " srcset="https://farm3.staticflickr.com/2898/32722736844_c977dc8ff8_b.jpg 1024w, https://farm3.staticflickr.com/2898/32722736844_e56ae26374_h.jpg 1600w" /></a></p>
-
 <p>大概上週看到有人在 Twitter 講到 GitHub 現在會在專案上顯示該專案所使用授權條款的摘要，長的像是上面那樣，官方也有發表<a href="https://github.com/blog/2335-open-source-license-descriptions-and-metadata">公告</a>，其實這個修改是結合之前的<a href="https://github.com/blog/2252-license-now-displayed-on-repository-overview">授權偵測</a>和 <a href="https://choosealicense.com/">Choose a License</a>。</p>
-
 <p>Choose a License 也是一個 GitHub 的附加服務，用來協助使用者挑選適合的授權條款，現在在 GitHub 建立新的專案時，可以順便初始化專案，包括建立 README、產生 <code>.gitignore</code> 和挑選要使用的授權條款：</p>
-
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495590202/" title="Initialize Project by othree, on Flickr"><img src="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg" width="722" height="141" alt="Initialize Project" srcset="https://farm4.staticflickr.com/3953/33495590202_f04d677f58_b.jpg 1024w" /></a></p>
-
 <p>授權條款旁邊的 i 點下去其實就會送到 Choose a License 網站去了（不過兩邊沒有連動接起來就是），Choose a License 網站則針對每種條款都一份重點摘要，分為 Permissions、Conditions 和 Limitations 三個區塊，分別條列出該條款可以做什麼（例如商業使用）、有什麼條件（例如需要也使用相同條款授權）和條款的限制（例如免責），而現在 GitHub 上顯示的條款摘要其實就是這邊的資訊搬過來的：</p>
-
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33495653292/" title="Choose a License by othree, on Flickr"><img src="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg" width="1024" height="601" alt="Choose a License" srcset="https://farm4.staticflickr.com/3770/33495653292_b2822ac569_b.jpg 1024w, https://farm4.staticflickr.com/3770/33495653292_0a6bd0bf6e_h.jpg 1600w" /></a></p>
-
 <p>Choose a License 網站其實有很多授權條款的整理，而不是只有常見的幾種，可以看 <a href="https://choosealicense.com/appendix/">appendix</a> 頁面有完整清單，可惜裡面沒有 <a href="https://github.com/vim/vim/blob/master/runtime/doc/uganda.txt">Vim License</a>，另外特別想說的是 GitHub 自己（應該沒錯）提供的 <a href="https://choosealicense.com/licenses/unlicense/">Unlincense</a>，相似於創作領域的 <a href="http://creativecommons.tw/cc0">CC0</a>，就類似丟到 Public Domain 的意思，不過保留了免責條款，講到免責聲明，就還要順便提一下 <a href="https://choosealicense.com/licenses/wtfpl/">WTFPL</a>，它其實也是超自由的 License，差別就是連免責聲明都沒，其實是更加接近丟到 Public Domain 吧？</p>
-
 <p>最後想說的是 GitHub 用來判斷專案使用的授權，用的是 <a href="https://github.com/benbalter/licensee">licensee</a> 這個 Ruby Gem，看起來完全就是為了做這些事情寫的，我看好像也沒其他類似功能的專案，作者 Ben Balter 其實也是 GitHub 員工。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -121,9 +109,7 @@
 			<b:content>
 				<b:summary> 最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 gitdags 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的樣子（v2 的樣版改的更簡潔了），看起來還蠻 ok 的，它是基於 TikZ 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣： \documentclass[preview]{standalone} \usepackage{gitdags} \begin{document}...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /></a></p>
-
 <p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
-
 <pre><code>\documentclass[preview]{standalone}
 \usepackage{gitdags}
 
@@ -151,15 +137,11 @@
       \end{tikzpicture}
 \end{document}
 </code></pre>
-
 <p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
-
 <p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
-
-<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/~u91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/%7Eu91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -180,7 +162,6 @@
 			<b:content>
 				<b:summary>最近使用的一些感想和疑問 --name 自動會變 network 內的 hostname，蠻方便 Image build 失敗，還是會產生一個東西在那邊，要 rm 掉才能重新 build... Service 還不支援 update 修改 network DB container 的資料要開 volume 掛比較保險（免得不小心砍到 container） 在多個 node 上開 replica，掛 volume 的話都是在該 node 上找，目前似乎沒有透過網路共享 volume container 這種事 很多服務的官方 docker 都是用環境變數做設定，不知道是不是本來就有的慣例 一直更新 registry 上的...</b:summary>
 				<b:mainContent><p>最近使用的一些感想和疑問</p>
-
 <ul>
 <li><code>--name</code> 自動會變 network 內的 hostname，蠻方便</li>
 <li>Image build 失敗，還是會產生一個東西在那邊，要 rm 掉才能重新 build...</li>
@@ -192,8 +173,7 @@
 <li>整體而言，我覺得 docker service 介面是個很容易讓 fat finger 造成服務爆炸設計，不過架構規劃的好的話，應該不會太難修復就是</li>
 </ul>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -214,28 +194,19 @@
 			<b:content>
 				<b:summary> 今天一早起來就看到 Google 發表的新的 JPEG 壓縮程式，叫 Guetzli（一種瑞士餅乾），這是 Google 繼 Zopfli、Brotli 之後，算是第三個比較容易被大家廣為使用的新的節省網路流量的工具，這次主要針對 JPEG 圖片格式，和之前 Mozilla 的 mozjpeg 的作法一樣，保持目前 JPEG decoder 的相容性，然後看能加強 JPEG 圖檔到什麼程度，我稍微測試了一下，結果還不錯，目前還沒有 homebrew formula，如果要自己 build 的可以參考這篇，基本上就是用 bazel 來編譯，然後可能會需要先裝 libpng 和 gflags，這兩個可以用 homebrew 安裝： brew install libpng gflags 然後裝 bazel brew...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33444227946/" title="Guetzli by othree, on Flickr"><img src="https://farm4.staticflickr.com/3665/33444227946_858cf890f3_b.jpg" width="773" height="699" alt="Guetzli" srcset="" /></a></p>
-
 <p>今天一早起來就看到 Google <a href="https://research.googleblog.com/2017/03/announcing-guetzli-new-open-source-jpeg.html">發表</a>的新的 JPEG 壓縮程式，叫 Guetzli（一種瑞士餅乾），這是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a>、<a href="https://github.com/google/brotli">Brotli</a> 之後，算是第三個比較容易被大家廣為使用的新的節省網路流量的工具，這次主要針對 JPEG 圖片格式，和之前 Mozilla 的 <a href="https://github.com/mozilla/mozjpeg">mozjpeg</a> 的作法一樣，保持目前 JPEG decoder 的相容性，然後看能加強 JPEG 圖檔到什麼程度，我稍微測試了一下，結果還不錯，目前還沒有 homebrew formula，如果要自己 build 的可以參考<a href="https://agileblaze.com/google-guetzli-image-compression-setup-on-macos/">這篇</a>，基本上就是用 bazel 來編譯，然後可能會需要先裝 libpng 和 gflags，這兩個可以用 homebrew 安裝：</p>
-
-<pre><code>brew install libpng gflags
+<pre><code class="language-bash">brew install libpng gflags 
 </code></pre>
-
 <p>然後裝 <a href="https://bazel.build/">bazel</a></p>
-
-<pre><code>brew install bazel
+<pre><code class="language-bash">brew install bazel
 </code></pre>
-
 <p>然後到專案目錄下執行編譯指令：</p>
-
-<pre><code>bazel build -c opt //:guetzli
+<pre><code class="language-bash">bazel build -c opt //:guetzli
 </code></pre>
-
 <p>結果就會把執行檔放到 <code>bazel-bin/guetzli</code> 這位置，就可以拿來用了，不過其實官方 GitHub repo 上的 <a href="https://github.com/google/guetzli/releases">release</a> 那邊就有編譯好的版本，抓下來用 Terminal 執行 <code>chmod +x</code> 也可以用（我是自己丟到 <code>/usr/local/bin/</code> 裡面），指令很簡單，可以加上 <code>--quality</code>，預設是 95，不過最小只能 84，設更小的值會跟你說，真的想要的話自己去改原始碼...</p>
-
 <p>速度就如大家所說的，和其它工具比起來真的慢很多，感覺是有一些 recursive 找最佳解的過程，輸出的結果我覺得最讓人印象深刻的是對於純色色塊的處理，也比 mozjpeg 好上不少，輸出檔案的大小不一定會是最小的，不過品質好很多，差異是達到我可以放棄這點容量差距，而寧願要這畫質改進，然後就是 Quality 100 可能會體積暴漲，我隨便測試了幾張圖片，看起來設到 90 品質就蠻不錯的，看來目前通行的圖片最佳化工具又要有一輪更新了。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -254,27 +225,18 @@
 			<b:category>mac</b:category>
 			<b:title>Visual Studio Code Copy with Syntax Highlighting</b:title>
 			<b:content>
-				<b:summary>今天 Visual Studio Code 出了 1.10，包含了很多讓人期待的功能，其中讓我比較注意到的是 Copy with syntax highlighting，這在 Mac 上可是讓人等了很久，我的主要目的是做投影片時，可以不用再特別處理程式碼的顏色了，以前只有 SubEthaEdit 有支援，不過這款軟體真的蠻貴的，好不容易有免費版的軟體支援了，就趕快來測試一下，基本上步驟就是，先挑選一下顏色主題，看你的投影片背景是亮的還是暗的，選擇 Menubar 最左邊的 Code > 喜好設定 > 色彩布景主題，快速鍵是 CMD + K, CMD + T： 選好程式碼，然後輸入 CMD + Shift + P 叫出命令面板，打入 copysyn 就可以找到 Copy with syntax highlighting：...</b:summary>
-				<b:mainContent><p>今天 <a href="https://code.visualstudio.com/">Visual Studio Code</a> 出了 1.10，包含了很多讓人期待的功能，其中讓我比較注意到的是 <a href="https://code.visualstudio.com/updates/v1_10#_copy-with-syntax-highlighting">Copy with syntax highlighting</a>，這在 Mac 上可是讓人等了很久，我的主要目的是做投影片時，可以不用再特別處理程式碼的顏色了，以前只有 <a href="https://www.codingmonkeys.de/subethaedit/">SubEthaEdit</a> 有支援，不過這款軟體真的蠻貴的，好不容易有免費版的軟體支援了，就趕快來測試一下，基本上步驟就是，先挑選一下顏色主題，看你的投影片背景是亮的還是暗的，選擇 Menubar 最左邊的 Code > 喜好設定 > 色彩布景主題，快速鍵是 <code>CMD + K</code>, <code>CMD + T</code>：</p>
-
+				<b:summary>今天 Visual Studio Code 出了 1.10，包含了很多讓人期待的功能，其中讓我比較注意到的是 Copy with syntax highlighting，這在 Mac 上可是讓人等了很久，我的主要目的是做投影片時，可以不用再特別處理程式碼的顏色了，以前只有 SubEthaEdit 有支援，不過這款軟體真的蠻貴的，好不容易有免費版的軟體支援了，就趕快來測試一下，基本上步驟就是，先挑選一下顏色主題，看你的投影片背景是亮的還是暗的，選擇 Menubar 最左邊的 Code &gt; 喜好設定 &gt; 色彩布景主題，快速鍵是 CMD + K, CMD + T： 選好程式碼，然後輸入 CMD + Shift + P 叫出命令面板，打入 copysyn 就可以找到 Copy with syntax highlighting：...</b:summary>
+				<b:mainContent><p>今天 <a href="https://code.visualstudio.com/">Visual Studio Code</a> 出了 1.10，包含了很多讓人期待的功能，其中讓我比較注意到的是 <a href="https://code.visualstudio.com/updates/v1_10#_copy-with-syntax-highlighting">Copy with syntax highlighting</a>，這在 Mac 上可是讓人等了很久，我的主要目的是做投影片時，可以不用再特別處理程式碼的顏色了，以前只有 <a href="https://www.codingmonkeys.de/subethaedit/">SubEthaEdit</a> 有支援，不過這款軟體真的蠻貴的，好不容易有免費版的軟體支援了，就趕快來測試一下，基本上步驟就是，先挑選一下顏色主題，看你的投影片背景是亮的還是暗的，選擇 Menubar 最左邊的 Code &gt; 喜好設定 &gt; 色彩布景主題，快速鍵是 <code>CMD + K</code>, <code>CMD + T</code>：</p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251516/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm4.staticflickr.com/3672/33159251516_61635294c4_b.jpg" width="1024" height="768" alt="VSCode Copy with Sytax Highlighting" srcset="https://farm4.staticflickr.com/3672/33159251516_bacbf3f4f1_k.jpg 2x" /></a></p>
-
 <p>選好程式碼，然後輸入 <code>CMD + Shift + P</code> 叫出命令面板，打入 <code>copysyn</code> 就可以找到 <strong>Copy with syntax highlighting</strong>：</p>
-
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251456/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm3.staticflickr.com/2838/33159251456_4946fca7f0_b.jpg" width="1024" height="768" alt="VSCode Copy with Sytax Highlighting" srcset="https://farm3.staticflickr.com/2838/33159251456_406eb36017_k.jpg 2x" /></a></p>
-
 <p>去 Word 貼上就可以了：</p>
-
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251396/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm1.staticflickr.com/608/33159251396_27f9174f1f_b.jpg" width="640" height="787" alt="VSCode Copy with Sytax Highlighting" srcset="" /></a></p>
-
 <p>不過我的目標其實是要貼上 Keynote，結果測試後發現貼到 Keynote 會沒有樣式，但是如果從 Word 那邊重新複製一次，就可以正確的貼到 Keynote 了：</p>
-
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33159251346/" title="VSCode Copy with Sytax Highlighting by othree, on Flickr"><img src="https://farm1.staticflickr.com/749/33159251346_bfcf683406_b.jpg" width="875" height="711" alt="VSCode Copy with Sytax Highlighting" srcset="" /></a></p>
-
 <p>這個問題我已經去 GitHub 開 <a href="https://github.com/Microsoft/vscode/issues/21686#issuecomment-283558495">issue</a> 了，看起來是因為只有提供 HTML 內容而不是 RTF 內容的關係，希望之後能修正，就可以更方便的使用了。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 
 
@@ -295,17 +257,12 @@
 			<b:content>
 				<b:summary> 前幾天 W3C 發佈了這份文件 Data on the Web Best Practices （DWBP），內容是關於在網路上發佈資料時的最佳實踐（公開或非公開的都適用），讓我想到了之前的 g0v summit 羅佩琪分享提到的一個重點，開放是有成本的，當時演講的影片： 稍微看過這份文件後，覺得之前確實蠻缺乏這份整理好的文件，每點看了就都覺得，確實是應該要這樣的，不過沒有這種整理好的 checklist 其實真的要做的時候還蠻容易漏東漏西的，然後就是，每一點都是成本啊！！ 整份文件還蠻有翻譯的價值的，比較不像是 HTML Spec 會常常更新，不過我自然沒這麼多時間可以翻譯，所以就先把重點標題翻起來放，以後有人要開始就先有個基礎了，DWBP 整份文件有 35 點 Best Practice，每一點都有標題、簡述、原因、預期結果、可能實做方法、如何測試、證據、好處、範例等內容，其中好處的部分是分成八種： Comprehension，人類容易理解理解 Processability，可程式自動處理 Discoverability，可讓程式自動發現 Reuse，容易重複使用 Trust，可靠 Linkability，可連結 Access，容易存取 Interoperability，容易互動（發佈者和使用者之間） 我只翻譯了其中的標題和簡述，順便附上每一點的好處（上面的八種好處），以下就是這 35 點 Best Practice：...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32951614622/" title="Data on the Web Best Practices by othree, on Flickr"><img src="https://farm3.staticflickr.com/2901/32951614622_395e8d1b32_b.jpg" width="1024" height="576" alt="Data on the Web Best Practices" srcset="https://farm3.staticflickr.com/2901/32951614622_395e8d1b32_b.jpg 1024w" /></a></p>
-
 <p>前幾天 W3C 發佈了這份文件 <a href="https://www.w3.org/TR/dwbp/">Data on the Web Best Practices</a> （DWBP），內容是關於在網路上發佈資料時的最佳實踐（公開或非公開的都適用），讓我想到了之前的 g0v summit 羅佩琪分享提到的一個重點，開放是有成本的，當時演講的影片：</p>
-
 <div class="embed_16_9">
 <iframe width="853" height="480" src="https://www.youtube.com/embed/aIuHcEmKZ2I" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 </div>
-
 <p>稍微看過這份文件後，覺得之前確實蠻缺乏這份整理好的文件，每點看了就都覺得，確實是應該要這樣的，不過沒有這種整理好的 checklist 其實真的要做的時候還蠻容易漏東漏西的，然後就是，每一點都是成本啊！！</p>
-
 <p>整份文件還蠻有翻譯的價值的，比較不像是 HTML Spec 會常常更新，不過我自然沒這麼多時間可以翻譯，所以就先把重點標題翻起來放，以後有人要開始就先有個基礎了，DWBP 整份文件有 35 點 Best Practice，每一點都有標題、簡述、原因、預期結果、可能實做方法、如何測試、證據、好處、範例等內容，其中好處的部分是分成八種：</p>
-
 <ul>
 <li>Comprehension，人類容易理解理解</li>
 <li>Processability，可程式自動處理</li>
@@ -316,243 +273,253 @@
 <li>Access，容易存取</li>
 <li>Interoperability，容易互動（發佈者和使用者之間）</li>
 </ul>
-
 <p>我只翻譯了其中的標題和簡述，順便附上每一點的好處（上面的八種好處），以下就是這 35 點 Best Practice：</p>
 </b:mainContent>
 				<b:extendContent><ul>
-<li>Metadata <br />
+<li>Metadata<br />
 詮釋資料
 <ul>
-<li>Provide metadata <br />
-提供詮釋資料(metadata) <br />
-Provide metadata for both human users and computer applications. <br />
-提供可讓人類閱讀和程式可處理的詮釋資料 <br />
+<li>Provide metadata<br />
+提供詮釋資料(metadata)<br />
+Provide metadata for both human users and computer applications.<br />
+提供可讓人類閱讀和程式可處理的詮釋資料<br />
 優點：R, C, D, P</li>
-<li>Provide descriptive metadata <br />
-提供資料介紹的詮釋資料 <br />
-Provide metadata that describes the overall features of datasets and distributions. <br />
-提供介紹資料集整體特性和發佈資訊的詮釋資料 <br />
+<li>Provide descriptive metadata<br />
+提供資料介紹的詮釋資料<br />
+Provide metadata that describes the overall features of datasets and distributions.<br />
+提供介紹資料集整體特性和發佈資訊的詮釋資料<br />
 優點：R, C, D</li>
-<li>Provide structural metadata <br />
-提供資料結構的詮釋資料 <br />
-Provide metadata that describes the schema and internal structure of a distribution. <br />
-每次發佈都提供資料綱要(schema)和資料結構的詮釋資料 <br />
+<li>Provide structural metadata<br />
+提供資料結構的詮釋資料<br />
+Provide metadata that describes the schema and internal structure of a distribution.<br />
+每次發佈都提供資料綱要(schema)和資料結構的詮釋資料<br />
 優點：R, C, P</li>
-</ul></li>
-<li>Data Licenses <br />
+</ul>
+</li>
+<li>Data Licenses<br />
 資料授權
 <ul>
-<li>Provide data license information <br />
-提供資料授權的資訊 <br />
-Provide a link to or copy of the license agreement that controls use of the data. <br />
-提供鏈節到資料所使用授權的協議文件 <br />
+<li>Provide data license information<br />
+提供資料授權的資訊<br />
+Provide a link to or copy of the license agreement that controls use of the data.<br />
+提供鏈節到資料所使用授權的協議文件<br />
 優點：R, T</li>
-</ul></li>
-<li>Data Provenance <br />
+</ul>
+</li>
+<li>Data Provenance<br />
 資料發佈者
 <ul>
-<li>Provide data provenance information <br />
-提供資料發佈者的訊息 <br />
-Provide complete information about the origins of the data and any changes you have made. <br />
-提供完整的資料發佈者的訊息以及所有的修改紀錄 <br />
+<li>Provide data provenance information<br />
+提供資料發佈者的訊息<br />
+Provide complete information about the origins of the data and any changes you have made.<br />
+提供完整的資料發佈者的訊息以及所有的修改紀錄<br />
 優點：R, C, T</li>
-</ul></li>
-<li>Data Quality <br />
+</ul>
+</li>
+<li>Data Quality<br />
 資料品質
 <ul>
-<li>Provide data quality information <br />
-提供資料品質資訊 <br />
-Provide information about data quality and fitness for particular purposes. <br />
-提供資料針對特定用途的品質和適應性資訊 <br />
+<li>Provide data quality information<br />
+提供資料品質資訊<br />
+Provide information about data quality and fitness for particular purposes.<br />
+提供資料針對特定用途的品質和適應性資訊<br />
 優點：R, T</li>
-</ul></li>
-<li>Data Versioning <br />
+</ul>
+</li>
+<li>Data Versioning<br />
 資料版本
 <ul>
-<li>Provide a version indicator <br />
-提供明確版本號 <br />
-Assign and indicate a version number or date for each dataset. <br />
-提供每個資料集的明確版本號或是發佈日期 <br />
+<li>Provide a version indicator<br />
+提供明確版本號<br />
+Assign and indicate a version number or date for each dataset.<br />
+提供每個資料集的明確版本號或是發佈日期<br />
 優點：R, T</li>
-<li>Provide version history <br />
-提供版本歷史 <br />
-Provide a complete version history that explains the changes made in each version. <br />
-提供完整的版本歷史，說明每個版本的變動 <br />
+<li>Provide version history<br />
+提供版本歷史<br />
+Provide a complete version history that explains the changes made in each version.<br />
+提供完整的版本歷史，說明每個版本的變動<br />
 優點：R, T</li>
-</ul></li>
-<li>Data Identifiers <br />
+</ul>
+</li>
+<li>Data Identifiers<br />
 資料識別符
 <ul>
-<li>Use persistent URIs as identifiers of datasets <br />
-使用固定的 URI 作為資料集的識別符(identifier) <br />
-Identify each dataset by a carefully chosen, persistent URI. <br />
-為每個資料集都謹慎的挑選一個永久固定的 URI 作為識別用 <br />
+<li>Use persistent URIs as identifiers of datasets<br />
+使用固定的 URI 作為資料集的識別符(identifier)<br />
+Identify each dataset by a carefully chosen, persistent URI.<br />
+為每個資料集都謹慎的挑選一個永久固定的 URI 作為識別用<br />
 優點：R, L, D, I</li>
-<li>Use persistent URIs as identifiers within datasets <br />
-在資料集之間使用 URI 做為連結的識別符 <br />
-Reuse other people's URIs as identifiers within datasets where possible. <br />
-連結其它資料集時，盡可能使用其它資料集既存的 URI 作為資料集之間連結的識別符 <br />
+<li>Use persistent URIs as identifiers within datasets<br />
+在資料集之間使用 URI 做為連結的識別符<br />
+Reuse other people's URIs as identifiers within datasets where possible.<br />
+連結其它資料集時，盡可能使用其它資料集既存的 URI 作為資料集之間連結的識別符<br />
 優點：R, L, D, I</li>
-<li>Assign URIs to dataset versions and series <br />
-提供特定版本和最新版本的的識別用 URI <br />
-Assign URIs to individual versions of datasets as well as to the overall series. <br />
-每個版本都提供一個獨立的識別用 URI，整個系列的資料也要提供一個特定的識別 URI <br />
+<li>Assign URIs to dataset versions and series<br />
+提供特定版本和最新版本的的識別用 URI<br />
+Assign URIs to individual versions of datasets as well as to the overall series.<br />
+每個版本都提供一個獨立的識別用 URI，整個系列的資料也要提供一個特定的識別 URI<br />
 優點：R, D, T</li>
-</ul></li>
-<li>Data Formats <br />
+</ul>
+</li>
+<li>Data Formats<br />
 資料格式
 <ul>
-<li>Use machine-readable standardized data formats <br />
-使用程式可處理的標準格式 <br />
-Make data available in a machine-readable, standardized data format that is well suited to its intended or potential use. <br />
-提供程式可處理的標準資料格式，並且是適合資料預期及潛在應用的格式 <br />
+<li>Use machine-readable standardized data formats<br />
+使用程式可處理的標準格式<br />
+Make data available in a machine-readable, standardized data format that is well suited to its intended or potential use.<br />
+提供程式可處理的標準資料格式，並且是適合資料預期及潛在應用的格式<br />
 優點：R, P</li>
-<li>Use locale-neutral data representations <br />
-使用非地區性的資料表現形式 <br />
-Use locale-neutral data structures and values, or, where that is not possible, provide metadata about the locale used by data values. <br />
-使用非地區性的資料結構和形式，否則需提供所使用資料形式的詮釋資料 <br />
+<li>Use locale-neutral data representations<br />
+使用非地區性的資料表現形式<br />
+Use locale-neutral data structures and values, or, where that is not possible, provide metadata about the locale used by data values.<br />
+使用非地區性的資料結構和形式，否則需提供所使用資料形式的詮釋資料<br />
 優點：R, C</li>
-<li>Provide data in multiple formats <br />
-提供多種格式 <br />
-Make data available in multiple formats when more than one format suits its intended or potential use. <br />
-如果資料預期及潛在的應用有不只一種適合的格式，則都提供 <br />
+<li>Provide data in multiple formats<br />
+提供多種格式<br />
+Make data available in multiple formats when more than one format suits its intended or potential use.<br />
+如果資料預期及潛在的應用有不只一種適合的格式，則都提供<br />
 優點：R, P</li>
-</ul></li>
-<li>Data Vocabularies <br />
+</ul>
+</li>
+<li>Data Vocabularies<br />
 資料詞彙
 <ul>
-<li>Reuse vocabularies, preferably standardized ones <br />
-盡量重複使用詞彙，並優先使用標準有定義的詞彙 <br />
-Use terms from shared vocabularies, preferably standardized ones, to encode data and metadata. <br />
-在資料本體和詮釋資料中，盡量使用已經有人使用的詞彙，並優先使用標準有定義的詞彙 <br />
+<li>Reuse vocabularies, preferably standardized ones<br />
+盡量重複使用詞彙，並優先使用標準有定義的詞彙<br />
+Use terms from shared vocabularies, preferably standardized ones, to encode data and metadata.<br />
+在資料本體和詮釋資料中，盡量使用已經有人使用的詞彙，並優先使用標準有定義的詞彙<br />
 優點：R, P, C, T, I</li>
-<li>Choose the right formalization level <br />
-選擇正確的數據尺度 <br />
-Opt for a level of formal semantics that fits both data and the most likely applications. <br />
-為資料挑選一個適當的尺度，以符合資料本身的意義和它最可能的應用 <br />
+<li>Choose the right formalization level<br />
+選擇正確的數據尺度<br />
+Opt for a level of formal semantics that fits both data and the most likely applications.<br />
+為資料挑選一個適當的尺度，以符合資料本身的意義和它最可能的應用<br />
 優點：R, C, I</li>
-</ul></li>
-<li>Data Access <br />
+</ul>
+</li>
+<li>Data Access<br />
 資料取得
 <ul>
-<li>Provide bulk download <br />
-提供打包下載 <br />
-Enable consumers to retrieve the full dataset with a single request. <br />
-讓使用者可以只用一個請求就取得全部的資料集 <br />
+<li>Provide bulk download<br />
+提供打包下載<br />
+Enable consumers to retrieve the full dataset with a single request.<br />
+讓使用者可以只用一個請求就取得全部的資料集<br />
 優點：R, A</li>
-<li>Provide Subsets for Large Datasets <br />
-大資料集要單獨提供子集 <br />
-If your dataset is large, enable users and applications to readily work with useful subsets of your data. <br />
-如果你的資料集很大，讓使用者可以針對他的應用只下載一部分的子集 <br />
+<li>Provide Subsets for Large Datasets<br />
+大資料集要單獨提供子集<br />
+If your dataset is large, enable users and applications to readily work with useful subsets of your data.<br />
+如果你的資料集很大，讓使用者可以針對他的應用只下載一部分的子集<br />
 優點：R, L, A, P</li>
-<li>Use content negotiation for serving data available in multiple formats <br />
-使用內容協商機制來決定提供的資料格式 <br />
-Use content negotiation in addition to file extensions for serving data available in multiple formats. <br />
-除了副檔名之外，還可以使用 HTTP 的內容協商機制來決定提供的資料格式 <br />
+<li>Use content negotiation for serving data available in multiple formats<br />
+使用內容協商機制來決定提供的資料格式<br />
+Use content negotiation in addition to file extensions for serving data available in multiple formats.<br />
+除了副檔名之外，還可以使用 HTTP 的內容協商機制來決定提供的資料格式<br />
 優點：R, A</li>
-<li>Provide real-time access <br />
-提供及時的存取 <br />
-When data is produced in real time, make it available on the Web in real time or near real-time. <br />
-如果資料是即時產生的，也提供可以取得即時資料的方法 <br />
+<li>Provide real-time access<br />
+提供及時的存取<br />
+When data is produced in real time, make it available on the Web in real time or near real-time.<br />
+如果資料是即時產生的，也提供可以取得即時資料的方法<br />
 優點：R, A</li>
-<li>Provide data up to date <br />
-提供最新版的資料 <br />
-Make data available in an up-to-date manner, and make the update frequency explicit. <br />
-總是提供到最新版本的資料，並且固定更新的頻率 <br />
+<li>Provide data up to date<br />
+提供最新版的資料<br />
+Make data available in an up-to-date manner, and make the update frequency explicit.<br />
+總是提供到最新版本的資料，並且固定更新的頻率<br />
 優點：R, A</li>
-<li>Provide an explanation for data that is not available <br />
-無法提供的資料要說明原因 <br />
-For data that is not available, provide an explanation about how the data can be accessed and who can access it. <br />
-針對無法直接提供的資料，說明如何取得及誰可以取得 <br />
+<li>Provide an explanation for data that is not available<br />
+無法提供的資料要說明原因<br />
+For data that is not available, provide an explanation about how the data can be accessed and who can access it.<br />
+針對無法直接提供的資料，說明如何取得及誰可以取得<br />
 優點：R, T</li>
-<li>Make data available through an API <br />
-讓資料可以透過 API 取得 <br />
-Offer an API to serve data if you have the resources to do so. <br />
-如果有足夠的資源，提供 API 服務來供應資料 <br />
+<li>Make data available through an API<br />
+讓資料可以透過 API 取得<br />
+Offer an API to serve data if you have the resources to do so.<br />
+如果有足夠的資源，提供 API 服務來供應資料<br />
 優點：R, P, I, A</li>
-<li>Use Web Standards as the foundation of APIs <br />
-使用網路標準作為 API 的基礎 <br />
-When designing APIs, use an architectural style that is founded on the technologies of the Web itself. <br />
-設計 API 服務時，使用網路基礎的技術作為架構核心 <br />
+<li>Use Web Standards as the foundation of APIs<br />
+使用網路標準作為 API 的基礎<br />
+When designing APIs, use an architectural style that is founded on the technologies of the Web itself.<br />
+設計 API 服務時，使用網路基礎的技術作為架構核心<br />
 優點：R, L, I, D, A, P</li>
-<li>Provide complete documentation for your API <br />
-提供完整的 API 文件 <br />
-Provide complete information on the Web about your API. Update documentation as you add features or make changes. <br />
-在網路上提供完整的 API 文件，並且在 API 有更新時即時更新文件 <br />
+<li>Provide complete documentation for your API<br />
+提供完整的 API 文件<br />
+Provide complete information on the Web about your API. Update documentation as you add features or make changes.<br />
+在網路上提供完整的 API 文件，並且在 API 有更新時即時更新文件<br />
 優點：R, T</li>
-<li>Avoid Breaking Changes to Your API <br />
-避免 API 有不向前相容的變動 <br />
-Avoid changes to your API that break client code, and communicate any changes in your API to your developers when evolution happens. <br />
-避免重大的 API 更新造成應用端程式錯誤，更改 API 時都要跟開發人員溝通 <br />
+<li>Avoid Breaking Changes to Your API<br />
+避免 API 有不向前相容的變動<br />
+Avoid changes to your API that break client code, and communicate any changes in your API to your developers when evolution happens.<br />
+避免重大的 API 更新造成應用端程式錯誤，更改 API 時都要跟開發人員溝通<br />
 優點：T, I</li>
-</ul></li>
-<li>Data Preservation <br />
+</ul>
+</li>
+<li>Data Preservation<br />
 資料保存
 <ul>
-<li>Preserve identifiers <br />
-保留識別符 <br />
-When removing data from the Web, preserve the identifier and provide information about the archived resource. <br />
-當從網路上移除資料時，保留該資料的識別符，並且提供該資料歸檔保存的資訊 <br />
+<li>Preserve identifiers<br />
+保留識別符<br />
+When removing data from the Web, preserve the identifier and provide information about the archived resource.<br />
+當從網路上移除資料時，保留該資料的識別符，並且提供該資料歸檔保存的資訊<br />
 優點：R, T</li>
-<li>Assess dataset coverage <br />
-評估資料集覆蓋率 <br />
-Assess the coverage of a dataset prior to its preservation. <br />
-評估資料集的覆蓋率來做為歸檔保存時的參考 <br />
+<li>Assess dataset coverage<br />
+評估資料集覆蓋率<br />
+Assess the coverage of a dataset prior to its preservation.<br />
+評估資料集的覆蓋率來做為歸檔保存時的參考<br />
 優點：R, T</li>
-</ul></li>
-<li>Feedback <br />
+</ul>
+</li>
+<li>Feedback<br />
 回饋
 <ul>
-<li>Gather feedback from data consumers <br />
-從資料使用者收集回饋意見 <br />
-Provide a readily discoverable means for consumers to offer feedback. <br />
-提供一個容易發現的方式讓使用者提供意見回饋 <br />
+<li>Gather feedback from data consumers<br />
+從資料使用者收集回饋意見<br />
+Provide a readily discoverable means for consumers to offer feedback.<br />
+提供一個容易發現的方式讓使用者提供意見回饋<br />
 優點：R, C, T</li>
-<li>Make feedback available <br />
-公開回饋意見 <br />
-Make consumer feedback about datasets and distributions publicly available. <br />
-公開使用者對資料集和發佈方式的回饋意見 <br />
+<li>Make feedback available<br />
+公開回饋意見<br />
+Make consumer feedback about datasets and distributions publicly available.<br />
+公開使用者對資料集和發佈方式的回饋意見<br />
 優點：R, T</li>
-</ul></li>
-<li>Data Enrichment <br />
+</ul>
+</li>
+<li>Data Enrichment<br />
 加強資料
 <ul>
-<li>Enrich data by generating new data <br />
-增加新資料來加強現有資料集 <br />
-Enrich your data by generating new data when doing so will enhance its value. <br />
-當新資料可以提升資料集的價值時，就著手產生新資料 <br />
+<li>Enrich data by generating new data<br />
+增加新資料來加強現有資料集<br />
+Enrich your data by generating new data when doing so will enhance its value.<br />
+當新資料可以提升資料集的價值時，就著手產生新資料<br />
 優點：R, C, T, P</li>
-<li>Provide Complementary Presentations <br />
-提供補充的內容來展示資料 <br />
-Enrich data by presenting it in complementary, immediately informative ways, such as visualizations, tables, Web applications, or summaries. <br />
-提供資料的各種用例，像是視覺化呈現、表格、網路應用程式或是摘要等來讓資料更多元 <br />
+<li>Provide Complementary Presentations<br />
+提供補充的內容來展示資料<br />
+Enrich data by presenting it in complementary, immediately informative ways, such as visualizations, tables, Web applications, or summaries.<br />
+提供資料的各種用例，像是視覺化呈現、表格、網路應用程式或是摘要等來讓資料更多元<br />
 優點：R, C, A, T</li>
-</ul></li>
-<li>Republication <br />
+</ul>
+</li>
+<li>Republication<br />
 再散佈
 <ul>
-<li>Provide Feedback to the Original Publisher <br />
-提供回饋意見給原發佈者 <br />
-Let the original publisher know when you are reusing their data. If you find an error or have suggestions or compliments, let them know. <br />
-讓資料的原發佈者資料你有再利用他的資料，如果有發現任何錯誤或可以改進的地方，也讓他知道 <br />
+<li>Provide Feedback to the Original Publisher<br />
+提供回饋意見給原發佈者<br />
+Let the original publisher know when you are reusing their data. If you find an error or have suggestions or compliments, let them know.<br />
+讓資料的原發佈者資料你有再利用他的資料，如果有發現任何錯誤或可以改進的地方，也讓他知道<br />
 優點：R, I, T</li>
-<li>Follow Licensing Terms <br />
-遵照授權條款 <br />
-Find and follow the licensing requirements from the original publisher of the dataset. <br />
-確認原始發佈資料集的授權條款，並遵守之 <br />
+<li>Follow Licensing Terms<br />
+遵照授權條款<br />
+Find and follow the licensing requirements from the original publisher of the dataset.<br />
+確認原始發佈資料集的授權條款，並遵守之<br />
 優點：R, T</li>
-<li>Cite the Original Publication <br />
-標註原發佈者 <br />
-Acknowledge the source of your data in metadata. If you provide a user interface, include the citation visibly in the interface. <br />
-在詮釋資料內標註資料來源，如果有建立使用者介面，也要在上面顯示資料來源 <br />
+<li>Cite the Original Publication<br />
+標註原發佈者<br />
+Acknowledge the source of your data in metadata. If you provide a user interface, include the citation visibly in the interface.<br />
+在詮釋資料內標註資料來源，如果有建立使用者介面，也要在上面顯示資料來源<br />
 優點：R, D, T</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>翻譯可能有問題，Patch Welcome。最後附上一些翻譯時參考的資料：</p>
-
 <ul>
-<li><a href="https://w3c-html-ig-zh.github.io/w3c-glossary/">https://w3c-html-ig-zh.github.io/w3c-glossary/</a>  </li>
+<li><a href="https://w3c-html-ig-zh.github.io/w3c-glossary/">https://w3c-html-ig-zh.github.io/w3c-glossary/</a></li>
 <li><a href="http://terms.naer.edu.tw/">http://terms.naer.edu.tw/</a></li>
 <li><a href="http://www.lac.org.tw/law/documents/02/06231.pdf">http://www.lac.org.tw/law/documents/02/06231.pdf</a></li>
 </ul>

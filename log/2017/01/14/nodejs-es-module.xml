@@ -43,19 +43,15 @@
 			<b:content>
 				<b:summary> 今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 CommonJS Module 和 ECMAScript Module(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 import/require 也沒 export/exports 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組： (function (root) { root.lib = {}; }(this)); 像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w" /></a></p>
-
 <p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
-
-<pre><code>(function (root) {
+<pre><code class="language-javascript">(function (root) {
 
   root.lib = {};
 
 }(this));
 </code></pre>
-
 <p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code> <a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
-
-<pre><code>(function (root) {
+<pre><code class="language-javascript">(function (root) {
 
   root.lib = {};
 
@@ -63,11 +59,9 @@
 
 export {};
 </code></pre>
-
-<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type="module"&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
+<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type=&quot;module&quot;&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
 </b:mainContent>
-				<b:extendContent>
-</b:extendContent>
+				<b:extendContent></b:extendContent>
 			</b:content>
 			<b:comments commentCount="0">
 

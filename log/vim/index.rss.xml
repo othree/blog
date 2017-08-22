@@ -1,14 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
 <title>O3noBLOG - vim</title>
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
-<copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-10-29 15:36</lastBuildDate>
+<copyright>Copyright 2017</copyright>
+<lastBuildDate>2017-05-02 23:05</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Vim Packages</title>
+<description><![CDATA[<p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+
+<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+
+<pre><code>~/.vim/bundle/html5.vim
+~/.vim/bundle/yajs.vim
+</code></pre>
+
+<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+
+<pre><code>~/.vim/pack/my-js/start/yajs.vim
+~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
+~/.vim/pack/my-js/start/simple-javascript-indenter
+</code></pre>
+
+<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+
+<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+]]>
+</description>
+<link>https://blog.othree.net/log/2017/05/02/vim-packages/</link>
+<guid>https://blog.othree.net/log/2017/05/02/vim-packages/</guid>
+<category>vim</category>
+<pubDate>2017-05-02 23:05</pubDate>
+</item>
 
 <item>
 <title>Vim Filename Complete</title>
@@ -537,23 +565,6 @@ npm install -g coffeelint
 <guid>https://blog.othree.net/log/2013/02/26/eregexvim-260/</guid>
 <category>vim</category>
 <pubDate>2013-02-26 00:59</pubDate>
-</item>
-
-<item>
-<title>Vim JavaScript Libraries Syntax</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8462979359/" title="JavaScript Libraries Syntax by othree, on Flickr"><img src="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 1024w" /></a></p>
-
-<p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
-
-<ul>
-<li><a href="https://github.com/othree/javascript-libraries-syntax.vim">Github othree/javascript-libraries-syntax.vim</a></li>
-</ul>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/02/11/vim-javascript-libraries/</link>
-<guid>https://blog.othree.net/log/2013/02/11/vim-javascript-libraries/</guid>
-<category>vim</category>
-<pubDate>2013-02-11 10:58</pubDate>
 </item>
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000897" baseName="movabletype-and-commonmark">MovableType and CommonMark</b:listData>
+
+			<b:previous>
+				<b:mTitle>Test CommonMark syntax</b:mTitle>
+				<b:mDate>2017-05-05</b:mDate>
+				<b:mBase>test-commonmark</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Telegram Instant View</b:mTitle>
+				<b:mDate>2017-05-21</b:mDate>
+				<b:mBase>telegram-instant-view</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000897" baseName="movabletype-and-commonmark">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-07</b:date>
+				<b:time>09:47:24</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>MovableType and CommonMark</b:title>
+			<b:content>
+				<b:summary> 我這邊用的 blog 系統是 MovableType 不是新聞了，然後也因為用 MovableType 我一直都只能用最初版的 markdown 引擎，沒錯，就是 Daring Fireball 作者 John Gruber 的那一版，這個版本其實已經可以滿足我大部分的需求了，不過當我想要用 Typora 寫文章的時候，就遇到問題了，Typora 在輸出成 Markdown 文件時，code block 只支援三個 ``` 包起來的 Fenced Code Block，而不支援 Indented Code Block，剛好初版的 Markdown 格式只有 Indented Code Block，兩者其實要比的話，我是比較喜歡 Indented Code Block 的，比較符合...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33655820694/" title="Typora by othree, on Flickr"><img src="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg" width="650" height="622" alt="Typora" srcset="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg 1024w" /></a></p>
+<p>我這邊用的 blog 系統是 <a href="https://www.movabletype.org/">MovableType</a> 不是新聞了，然後也因為用 MovableType 我一直都只能用最初版的 markdown 引擎，沒錯，就是 Daring Fireball 作者 John Gruber 的<a href="http://daringfireball.net/projects/markdown/">那一版</a>，這個版本其實已經可以滿足我大部分的需求了，不過當我想要用 <a href="https://typora.io/">Typora</a> 寫文章的時候，就遇到問題了，Typora 在輸出成 Markdown 文件時，code block 只支援三個 ``` 包起來的 <a href="http://spec.commonmark.org/0.27/#fenced-code-block">Fenced Code Block</a>，而不支援 <a href="http://spec.commonmark.org/0.27/#indented-code-block">Indented Code Block</a>，剛好初版的 Markdown 格式只有 Indented Code Block，兩者其實要比的話，我是比較喜歡 Indented Code Block 的，比較符合 Markdown 的 sense，不過用 Fenced Code Block 有個優點是可以指定程式碼的語言，也因此才能夠有 syntax highlight 的效果。</p>
+<p>總之，因為這個原因，用 Typora 寫技術文章對我來說就很不方便，一直以來都有想解決這個問題，前兩天還去 Typora 發 issue 說希望他們可以支援 Indented Code Block，結果發完沒多久，躺在床上快要睡覺的時候突然想到，CommonMark 這麼多語言有實做，搞不好有 Perl 的啊，結果快速搜尋了一下，還真的有一個 <a href="https://github.com/nwellnhof/perl-commonmark">perl-commonmark</a>，橋接 Perl 和 <a href="https://github.com/jgm/cmark">cmark</a>，也有發佈到 CPAN 上，當下心裡就盤算著，隔天起來要來把它接到 MovableType 去看看。</p>
+<p>結果隔天實做起來是沒花我太多時間，雖然對 Perl 不熟，但是可以直接拿初版 Markdown.pl 來修改，原本的 Markdown.pl 這個檔案裡面實際上自己是一個 Markdown 的 Perl Package，同時也可以作為 MovableType 的 plugin script，我只需要把 plugin script 的部分留下，然後把最後做轉換的 function 換掉就好了，當然系統要裝好 cmark 和 Perl 的 CommonMark，cmark 應該很多環境都有了，我在 archlinux 上是直接用 pacman 裝：</p>
+<pre><code class="language-bash">pacman -S cmark
+</code></pre>
+<p>然後 CommonMark 是用 CPAN 裝，本來要用 cpanminus 的不知道為何用它會抓不到 package：</p>
+<pre><code class="language-bash">sudo CPAN CommonMark
+</code></pre>
+<p>我的 nginx 跑 CGI 時用的 perl 不是系統預設位置的，所以 CPAN 執行檔的路徑我是特別指定給他的，這樣 MovableType 執行的時候才找的到 CommonMark Module，實際上沒花多少功夫，我就把 MovableType 和 CommonMark 串起來了，當下心情真的是非常難以言喻，一來是這個問題其實存在已經許久了，二是我竟然把第一個支援 Markdown 的部落格系統接上 2017 年最新的 CommonMark 實做，雖然現在應該是也幫不到什麼人了。不過沒高興多久，就發現在 UTF-8 字元似乎有些狀況，有中文的文章會爛掉，或是 Dashboard 那頁的文字會變亂碼，後來為了這個問題又弄了好幾個小時，推測問題應該是因為 cmark 那邊回來的字串已經失去編碼的 metadata，所以在做 summary 切文字的時候，就會出現切錯地方的狀況，花了很多時間交叉比對和測試，最後的結果只是用 Perl 的 Encoding 把 cmark 傳回來的字串重新 encode 過而已，其實很簡單。除此之外，我其實還有試著想接看看 <a href="https://github.com/github/cmark">cmark-gfm</a>，因為它還多支援了 Table，不過幾次測試都不太順利，就沒繼續嘗試下去了。</p>
+<p>目前的成果放在 GitHub 上，取名叫 <a href="https://github.com/othree/MT-CommonMark">MT-CommonMark</a>，附上簡單的安裝說明，暫時是沒打算發去 movabletype.org 那邊。</p>
+<p>做好之後 MT-CommonMark 之後，我就開始在部落格上測試程式碼的 syntax highlight了，研究一陣子之後選擇的是 <a href="http://prismjs.com/">prismjs</a>，選擇它的原因很多，不過有兩個是比較主要的：</p>
+<ul>
+<li>作者有 <a href="http://lea.verou.me/">Lea Verou</a></li>
+<li>支援的 class name 格式剛好和 cmark 輸出的一樣</li>
+</ul>
+<p>結果兩者也很順利的搭配起來，中間就沒有再遇到什麼問題了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

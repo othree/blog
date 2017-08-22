@@ -5,27 +5,80 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2017</copyright>
-<lastBuildDate>2017-01-14 12:22</lastBuildDate>
+<lastBuildDate>2017-08-12 10:41</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
 
 <item>
+<title>Temporal - 下個世代的 Date</title>
+<description><![CDATA[<p>這篇文章寫到快寫完的時候，決定到 <a href="http://modernweb.tw/">Modern Web 2017</a> 分享，所以就比較晚發佈 ，其實 Modern Web 演講內容比較多，文末有放相關參考資料。</p>
+<p>JSConf EU 2017 前陣子放出演講影片，蠻多場次都不錯，這篇要主要是從其中的一場演講而來，演講是「 The Past, Present, and Future of JavaScript Date and Time APIs」，講者是 Matt Johnson，<a href="http://momentjs.com/">Moment.js</a> 的作者，下面是這場演講的影片：</p>
+<div class="embed_16_9">
+  <iframe width="853" height="480" src="https://www.youtube.com/embed/aVuor-VAWTI?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>長度不長，推薦可以看一下，主要是在談 JavaScript 的 Datetime，提出這老東西的問題，我覺得可以稱為 WAT JavaScript 的 Datetime 篇，像是 0 起始的月份、不支援 Time Zone、難以運算、是 mutable 物件等等，接著介紹了目前檯面上比較多人用的幾個 library 和他們的特色，都是品質不錯的 library，有需求的可以從中選用，包括了：</p>
+<ul>
+<li><a href="http://momentjs.com/">Moment.js</a></li>
+<li><a href="https://date-fns.org/">date-fns</a></li>
+<li><a href="https://js-joda.github.io/js-joda/">js-joda</a></li>
+</ul>
+<p>最後則是提到他們目前在進行的，改進 JavaScript Datetime 的計畫，也就是新的 ECMAScript Datetime 的 proposal，叫 <a href="https://github.com/tc39/proposal-temporal">temporal</a>，除了 Matt Johnson 之外，還有一位 Microsoft 的 Maggie Pint 也是目前草案的主力推手，他的 blog 上就有兩篇相關的<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">文</a><a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">章</a>，裡面有列出目前 <code>Date</code> 的主要問題：</p>
+<ol>
+<li>不支援 timezone，只有 UTC 和 local</li>
+<li>Parser （轉譯日期字串轉成日期物件）的行為不可靠且難以使用</li>
+<li>Date object 是 mutable 物件</li>
+<li>日光節約時間的行為無法預期</li>
+<li>日期計算 API 很難用</li>
+<li>不支援 <a href="https://jonathanou.wordpress.com/2005/06/02/gregorian-calendar/">Gregorian</a> 以外的日曆（例如農曆）</li>
+</ol>
+<p>事實上，目前的 Date 物件，當初 Brendan Eich 因為時間緊迫，所以 Datetime 的 API 是直接參考 Java 的，當時是 1995，參考的應該是 Beta 版 Java 的 <code>java.util.Date</code>，後來 1996 年 1 月 Java 1.0 發佈，但是到了 1997 年 2 月的 Java 1.1 發佈時，<code>java.util.Date</code> 大部分的設計都被捨棄了，然後 1997 年 6 月，ECMAScript 標準 1.0 發佈，結果這個在 Java 語言只活了 1 年多的設計，就活在 JavaScript 世界活了 20 年之久，相信有用過的人都能多少都知道使用起來的痛苦。</p>
+<p>不過要改善 JavaScript 從來就不是一件容易的事情，最大的困難點就是你不能隨便改動任何已有的東西，像是已經存在 20 年的 <code>Date</code>，即使它設計不好，隨便改動都可能造成大量的網站壞掉，不像是 Java 1.0 升級到 Java 1.1 那樣，各自用各自的，在改善 JavaScript 時基本上就是要當成有人從不升級，不能有 broken change，最簡單的方法就是增加新的東西，而不要去修改舊的，這也是目前 temporal 的方向（其實 ES 5.1 後，舊有的東西該修的東西大概都修完，之後就是一直加新的而已），在 draft 文件已經有一點基礎和預期的 code sample 了：</p>
+<pre><code class="language-javascript">var ldt = new CivilDateTime(2017, 12, 31, 23, 59);
+
+var addHours = new CivilDateTime(2017, 12, 31, 23, 00)
+    .add(2, 'hours');
+
+var zdt = ldt.withZone('America/New_York');
+</code></pre>
+<p>可以看到有方便的加減時間的 API、immutable 特性、還有時區支援等等。事實上這份草案還非常初步而已，還缺非常多細節，預期會有的物件目前已經有八種了，不過這八種物件的 API 也都還沒定義完，不過也正因為如此，想參與的人反而這時候比較有機會提供想法，推薦有興趣的人可以關注關注，給點意見。</p>
+<p>最後列一些參考文件：</p>
+<ul>
+<li>Web Rebels 2017 <a href="https://twitter.com/jxxf">@jxxf</a> 的「<a href="https://www.webrebels.org/#talk-8">Time and Time Again: Fixing Dates in JS</a>」 花了很多時間在講 JavaScript Date 缺少的 concept</li>
+<li>林信良（良葛格）介紹 Java 的 Joda-Time 和 JSR310 的<a href="http://www.codedata.com.tw/tag/jodatime/">相關文章</a>，Joda-Time 是 Java 上很廣為使用的時間套件，由 Stephen Colebourne 為主開發的，他也參與了 <a href="https://jcp.org/en/jsr/detail?id=310">JSR 310: Date and Time API</a> 的制訂，並在 JDK 8 開始可以用</li>
+<li>temporal 目前主要作者之一的 Maggie Pint 的文章：<a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">Fixing JavaScript Date - Web Compatibility and Reality</a></li>
+<li><a href="https://www.youtube.com/watch?v=oVVXW7lmwtw">Understanding Dates, Times, and Time Zones, with Maggie Pint, Matt Johnson, and Jon Skeet</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</link>
+<guid>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</guid>
+<category>script</category>
+<pubDate>2017-08-12 10:41</pubDate>
+</item>
+
+<item>
+<title>WAT JavaScript Date</title>
+<description><![CDATA[<p>週四在 Modern Web 2017 分享的投影片</p>
+<script async="async" class="speakerdeck-embed" data-id="5cf2c2b7e3734425b660781da7a9e57a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+]]></description>
+<link>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</link>
+<guid>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</guid>
+<category>script</category>
+<pubDate>2017-08-12 00:13</pubDate>
+</item>
+
+<item>
 <title>NodeJS and ES Module</title>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w" /></a></p>
-
 <p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
-
-<pre><code>(function (root) {
+<pre><code class="language-javascript">(function (root) {
 
   root.lib = {};
 
 }(this));
 </code></pre>
-
 <p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code> <a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
-
-<pre><code>(function (root) {
+<pre><code class="language-javascript">(function (root) {
 
   root.lib = {};
 
@@ -33,10 +86,8 @@
 
 export {};
 </code></pre>
-
-<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type="module"&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
-]]>
-</description>
+<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type=&quot;module&quot;&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
+]]></description>
 <link>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</link>
 <guid>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</guid>
 <category>script</category>
@@ -954,62 +1005,6 @@ function fib(n) {
 <guid>https://blog.othree.net/log/2015/05/18/typescript-atscript-es-decorator/</guid>
 <category>script</category>
 <pubDate>2015-05-18 18:24</pubDate>
-</item>
-
-<item>
-<title>TypeScript 過去、現在、未來</title>
-<description><![CDATA[<p>今年 Modern Web Conf 的投影片喔，其實整份演講最重要的點就是 type 看來就是會進入 ECMAScript 了。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="b551e3b068aa4babb798c5e61c799b19" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/05/16/typescript-future-and-past/</link>
-<guid>https://blog.othree.net/log/2015/05/16/typescript-future-and-past/</guid>
-<category>script</category>
-<pubDate>2015-05-16 15:03</pubDate>
-</item>
-
-<item>
-<title>React.js Conf</title>
-<description><![CDATA[<p>今年的 React.js Conf 雖然是單一 library 的研討會，不過議程的水準卻是蠻高的，而且蠻多內容並不是只限於 React.js，加上也是對於前端領域一些比較新的概念，所以我覺得是這兩年最讓人感到印象深刻的一場研討會了吧，下面介紹幾場我覺得收穫比較多的講題：</p>
-
-<h4>React Native</h4>
-
-<p>React Native 是 React.js 最近最重大的發展，把本來抽出來的 DOM 底層換成 native app 的操作，原來寫 JavaScript 的開發者就可以直接用寫 React.js App 的方式來做原生介面的 Mobile App，發表時讓很多人眼睛一亮，沒想到會把 React.js 的 Virtual DOM 這樣用，而表現出來的效果也很讓人滿意，因為是用原生的控制元件，也不會有額外的親和力問題，加上現有的很多 JavaScript Library 都可以用，也不會有太多東西要自己從頭開始，<a href="https://cordova.apache.org/">Apache Cordova</a> 的 plugin 也都可以使用，最近也正式對外<a href="https://facebook.github.io/react-native/">公開</a>了，有興趣的可以試試看。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/KVZ-P-ZI6W4" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>CSP</h4>
-
-<p>之前我也有介紹過的 <a href="https://blog.othree.net/log/2015/02/14/csp/">CSP</a>，在 React.js Conf 也有講者介紹，雖然我覺得現在用 <a href="https://github.com/ubolonton/js-csp">js-csp</a> 來做 Channel 溝通還不是很好用，不過應該 async function 可以用之後會比較普遍吧，就算之後沒真的派上用場，要是轉行寫 Go 也會用的上才是。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>Immutable</h4>
-
-<p>Immutable Data 已經聽說很久了，不過這場演講算是讓我第一次真的能有些體會到底優點在哪，雖然 Facebook 有 JavaScript 的 <a href="http://facebook.github.io/immutable-js/">Immutable library</a> ，不過這場主要是在介紹資料結構的特性，而不是在介紹自家 library，如果對他們底層如何實做的話還可以看看 Polymatheia 的 <a href="http://hypirion.com/musings/understanding-persistent-vector-pt-1">Understanding Clojure's Persistent Vectors</a> 系列文章，單純要實做 Immutable Data 並不難，不過要考慮到不對效能產生影響其實還要考慮蠻多細節的，我後來也嘗試實做了一個 <a href="https://github.com/othree/immutable-quadtree-js">Immutable Quad Tree</a>，做的過程中則更實際的體會到所謂的只要簡單的 <code>==</code> 比對就可以知道資料是否相同的好處。另外還要補充一點，Immutable Data 可能在下一版的 ES7(2016) 也會有，總之又是個先學起來不吃虧的。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/I7IdS-PbEgI" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<h4>AST</h4>
-
-<p>這場演講是在講修改 Abstract Syntax Tree 來做一些程式碼的修改，算是把 AST 的應用講得很淺顯易懂的一場演講，還順便介紹到很多相關的工具，像是 <a href="https://github.com/estools">estools</a>，其實一個程式語言的 spec 通常只有定到語法的部分，後面 compiler 要產生什麼樣子的 AST 是他們自己決定的，不過通常會有個主流的格式，而目前 JavaScript 領域則是 Mozilla SpiderMonkey 的 AST 格式為主，不過其實因為應用太多，也有人在做標準化的工作，叫 <a href="https://github.com/estree/estree">estree</a>。</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/OZGgVxFxSIs" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/04/25/reactjs-conf/</link>
-<guid>https://blog.othree.net/log/2015/04/25/reactjs-conf/</guid>
-<category>script</category>
-<pubDate>2015-04-25 15:41</pubDate>
 </item>
 
 

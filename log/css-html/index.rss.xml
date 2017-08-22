@@ -4,11 +4,123 @@
 <title>O3noBLOG - css-html</title>
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
-<copyright>Copyright 2016</copyright>
-<lastBuildDate>2016-10-14 22:14</lastBuildDate>
+<copyright>Copyright 2017</copyright>
+<lastBuildDate>2017-07-29 11:14</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>SVG</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35882767130/" title="SVG by othree, on Flickr"><img src="https://farm5.staticflickr.com/4300/35882767130_abb5a7e7b3_b.jpg" width="1024" height="782" alt="SVG" srcset="https://farm5.staticflickr.com/4300/35882767130_2848f09cbc_k.jpg 2x" /></a></p>
+<p>最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 <a href="https://material.io/icons/">Material Icons</a>，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些<a href="http://voormedia.com/blog/2012/10/creating-svg-vector-graphics-for-maximum-browser-compatibility">問題</a>，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。</p>
+<p>GitHub 的用法是 inline SVG 為主，我自己則是用 <code>&lt;picture&gt;</code> 比較多：</p>
+<pre><code class="language-html">&lt;picture&gt;
+  &lt;source srcset=&quot;/path/to/icon.svg&quot; type=&quot;image/svg+xml&quot;&gt;
+  &lt;img src=&quot;/path/to/icon.png&quot; alt=&quot;&quot; width=&quot;32&quot; height=&quot;32&quot; /&gt;
+&lt;/picture&gt;
+</code></pre>
+<p>CSS Trick 有一篇文章 <a href="https://css-tricks.com/a-complete-guide-to-svg-fallbacks/">A Complete Guide to SVG Fallbacks</a> 則介紹了各種在網頁內放入 SVG 圖檔的古老方法，用 <code>&lt;picture&gt;</code> 是比較新的，沒列在其中，而我是為了向下相容選擇用 <code>&lt;picture&gt;</code>，因為支援<code>&lt;picture&gt;</code>標籤的瀏覽器都很新了，對於 SVG 的支援度很夠，剩下少數（大概都是 IE）就讓他直接吃 png 之類的（PS: pngquant 處理過的 PNG 很多可以直接在 IE6 上顯示透明色），這樣用起來就像是一般 <code>&lt;img&gt;</code> 一樣，SVG 檔可以先用 <a href="https://github.com/svg/svgo">svgo</a> 工具處理過，除此之外，我通常會先用 Adobe Illustrator 把不必要的圖層階層刪除，圖層在 SVG 原始碼裡面通常是會 <code>&lt;g&gt;</code> 標籤，另外也記得要把圖層名稱（id）改成 ASCII only 的名稱，甚至直接編輯原始碼刪除 id，因為 svgo 不會處理這部分。</p>
+<p>用外部 SVG 檔案好處是可以善用 browser cache 減少傳輸量，尤其是大量重複使用的圖片，不過也會犧牲一些 SVG 的特性，例如會因此不能直接用 CSS 來調整樣式，做 transition，做動畫等等，所以有時候也是會用 inline SVG，就可以搭配 CSS、JS 弄出很多不錯的效果（Safari 偶爾還有遇到無解 bug），不過要讓 inline SVG fallback 回一般圖片就比較麻煩些了，在做這件事之前可以先看一下是不是有需要<a href="http://caniuse.com/#feat=svg-html5">支援</a>，以前是 iOS 不支援，現在還有機會碰到的大概還是 IE（6-8）吧，總之，如果有需要的話，就是參考 CSS Trick 的 <a href="https://css-tricks.com/svg-fallbacks/">SVG Fallbacks</a> 這篇文章，使用</p>
+<pre><code class="language-html">&lt;svg width=&quot;96&quot; height=&quot;96&quot;&gt;
+  &lt;image xlink:href=&quot;svg.svg&quot; src=&quot;svg.png&quot; width=&quot;96&quot; height=&quot;96&quot; /&gt;
+&lt;/svg&gt;
+</code></pre>
+<p>這是個很有趣的技巧，首先 <code>&lt;image&gt;</code> 標籤是<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image">合法的 SVG 元素</a>，所以放在 SVG 不成問題，但是不支援 SVG 的瀏覽器，照理說也不應該認得 <code>&lt;image&gt;</code> 標籤啊，其實，<code>&lt;image&gt;</code> 在很久以前就一直是 <code>&lt;img&gt;</code> 的別名了，甚至在 WHATWG 的 parse HTML 文件的<a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">流程</a>裡都還有提到處理的方式，而經過測試也都證實了以前的瀏覽器確實是這樣的行為，文裡也有各瀏覽器的行為和支援狀況，不支援 inline SVG 的就會顯示替代的 png 或 jpg 。</p>
+<p>文章裡面還有提到背景圖使用 SVG 的處理方式，不過因為我沒這樣使用，所以沒什麼實做到，另外最近也有人用外部 SVG 加上 CSS filter 來改變 <a href="https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images">SVG icon 顏色</a>，不過這太技巧太新了，考慮到支援度我也是沒有用過。</p>
+<p>親和力問題的部分，一樣 CSS Tricks 有篇文章 <a href="https://css-tricks.com/accessible-svgs/">Accessible SVG</a> 在講相關的作法，像是用 <code>&lt;title&gt;</code> 加替代文字，加上 <code>role=&quot;img&quot;</code> 等；如果要自己編寫 SVG，W3C 還有份 <a href="http://w3c.github.io/svgwg/specs/svg-authoring/">Authering Guide</a> 可以參考，除了親和力相關的資訊外還有不少技巧可以參考。</p>
+<p>最後整理一下，拿到 svg 檔案後我的處理過程：</p>
+<ol>
+<li>用 Adobe Illustrator 先開來整理一下，修改圖層名稱、刪去合併不必要的圖層</li>
+<li>輸出成 SVG 和 1x 解析度的 PNG</li>
+<li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
+</ol>
+<p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/07/29/svg/</link>
+<guid>https://blog.othree.net/log/2017/07/29/svg/</guid>
+<category>css-html</category>
+<pubDate>2017-07-29 11:14</pubDate>
+</item>
+
+<item>
+<title>表單 Practice</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34947056856/" title="Form Validation by othree, on Flickr"><img src="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg" width="500" height="270" alt="Form Validation" srcset="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg 500w" /></a></p>
+<p>這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。</p>
+<p>首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation">HTML5 的表單檢查</a>，會這樣決定的主因是：</p>
+<ol>
+<li>JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的；</li>
+<li>幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗；</li>
+<li>支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server side 檢查對付他們就好，使用體驗稍微差一點也還可以接受，這也是種 graceful degradation（優雅降級）；</li>
+<li>HTML5 的表單檢查可以說是 web developer 當年對抗網路標準發展遲緩一大勝利指標，當然應該要好好用一下。</li>
+</ol>
+<p>而用 HTML5 表單檢查還有個意外的好處是基本的錯誤訊息自動有翻譯（看使用者瀏覽器的語言），另外如果有自製的輸入元件，也有 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation#Validating_forms_using_JavaScript">API</a> 可以串接，當然訊息就要自己提供就是了。</p>
+<p>用 HTML5 表單檢查當然也不是完全沒有問題，例如目前 email 欄位還沒有瀏覽器支援 <a href="https://github.com/w3c/html/issues/538">IDN domain 的信箱</a>；另外就是上傳檔案的 file input 的值不能從 server 端直接給，這限制是因為會有安全性問題，而這限制所衍生的問題是：表單送到 server side 檢查後發現有錯誤時（例如 captcha 錯），使用者就一定要重新選取上傳的檔案，對於使用者體驗算是個扣分（而且上傳檔案大的話很花時間，然後另外還有個上傳檔案大小限制、就又是另外一個議題了），要解決這問題一般來說就是靠 JavaScript 做些加強，例如針對 captcha 可以先用 ajax call 檢查 captcha ，正確的話就換個 session token 之類的回來，不過即使這樣，還是逃不了完整的 server side 表單檢查，所以也還要處理 ajax submit 後的表單錯誤訊息顯示。</p>
+<p>不管是 server side 檢查後產生的錯誤訊息，還是 ajax call 之前檢查產生的錯誤訊息，理所當然都會放在欄位附近，不過還要讓訊息和欄位之間建立關聯，才好進一步做一些處理，例如使用者有更新欄位值之後會把錯誤訊息隱藏之類的，或許很多人會用父層 DOM 節點加上特殊的 class 包起來找，不過我比較偏好用 <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute"><code>aria-describedby</code></a>，大概會看起像是：</p>
+<pre><code class="language-html">&lt;input id=&quot;mail&quot; name=&quot;mail&quot; type=&quot;email&quot; aria-describedby=&quot;mail-field-info&quot; /&gt;
+&lt;span id=&quot;mail-field-info&quot;&gt;Required field!&lt;/span&gt;
+</code></pre>
+<p>這樣只要找的到 <code>#mail</code> 欄位，就可以透過他的 <code>aria-describedby</code> 屬性找到該欄位的相關訊息的 DOM 節點，另外值得注意的是，aria-describedby 值的格式是 <a href="https://www.w3.org/TR/wai-aria/states_and_properties#valuetype_idref_list">IDRefList</a>，不是單一個 ID，而是一個用空白切分的 ID 指標們，所以如果有這種情形，還可以在錯誤訊息的那個 DOM 節點加上  <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_alert_role"><code>role=&quot;alert&quot;</code></a> 給它用來辨識，其實就算只有一個 ID 也還是可以加上 role 屬性啦。如果真的需要用透過父層 DOM 節點來找的話，之前研究的結論是可以在預期的父層標籤用 <code>role=&quot;section&quot;</code>來方便定位，用 jQuery 大概會像是：</p>
+<pre><code class="language-javascript">$fieldSection = $field.closest('[role=&quot;section&quot;]');
+</code></pre>
+<p>這個標籤下應該會包括欄位的標籤（label）、欄位的 input element 以及相關的資訊（說明、錯誤訊息）等。</p>
+<p>另外還有一點，就是要用 ajax 上傳檔案的話，需要有支援 <a href="http://caniuse.com/#feat=xhr2">FormData</a> 的瀏覽器，並且如果用 jQuery 送 FormData 的話記得要加點設定：</p>
+<pre><code class="language-javaascript">contentType: false,
+processData: false
+</code></pre>
+<p>還有就是 ajax 送表單的目標 URL，我目前比較喜歡的作法是讀 <code>&lt;form&gt;</code> 的 <code>action</code> 屬性，也就是和瀏覽器自己送的 URL 一樣，然後透過 HTTP content negotiation 機制來決定回傳的格式，比較正確的作法是看 <code>Accept</code>，以 jQuery 來說，如果要 server 回 JSON 格式的話，可以加上：</p>
+<pre><code class="language-javascript">dataType: 'json'
+</code></pre>
+<p>這樣送出的 request 就會帶上正確的 <code>Accept</code> header，向 server 端要求 <code>application/json</code> ，不過 <code>Accept</code> 的值解析起來比較麻煩些，其實是可以送出說 client 端可以接受多種格式，然後還加上個優先度的，也因此也有很多人是看 <code>X-Requested-With</code>，一般 library 如果是透過 XHR 發的 request 都會有這個 header；還有就是送出的資料格式（Content-Type），即使是 ajax call，我目前也都不用 JSON 了，還是用 <code>application/x-www-form-urlencoded</code> 為主，另外要上傳檔案的話當然一定要用 <code>multipart/form-data</code>，主要是因為：</p>
+<ol>
+<li>送 JSON 的話就不會是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Simple_requests">simple request</a> 了，有些時候會比較麻煩，例如 Cross Origin 時會需要發 preflight，然後就可能遇到 AWS 以前不支援 preflight request 的 bug；</li>
+<li>用這幾個老的 Content-Type 支援度還是比較高，對於 server 端實做和 client 端實做其實都相對友善一點，例如 jQuery 預設就依然是 form-urlencoded，没特别需求還是用標準一點的格式，特殊需求是例如 GraphQL，不過一般表單發送應該不會走 GraphQL 吧。</li>
+</ol>
+<p>其實 JSON 雖然已經有 RFC 規範了，不過在 Web 標準的世界還沒相當深入內化，不知道以後有沒有機會更加的內化整合進去。</p>
+<p>前面有提到 ajax call 送出的目標 URL 我會偏好從，<code>&lt;form&gt;</code> 裡面讀，不過或許有的情境會讓 ajax call 必須要自己用不一樣的 API URL，這時候我建議還是把 API URL 寫在 <code>&lt;form&gt;</code> 的屬性裡面，這樣可以讓 JavaScript 的邏輯比較乾淨，也不用作什麼 mapping 或是常數來儲存 API 的 URL，維護修改時也不用兩邊檢查，屬性名稱可以用例如：<code>data-action</code> 之類的屬性，<code>data-*</code>屬性正好適合來做這些事情，不但有 DOM API 支援，jQuery 也可以用 <code>.data()</code> method 來讀取，命名上，如果覺得有個標準參考比較好，可以看看 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 的設計，雖然比較長一點，它用的是：<a href="https://github.com/rails/jquery-ujs/blob/master/src/rails.js#L117"><code>data-ujs:submit-button-formaction</code></a>，我是覺得有些不正確啦，畢竟要送出表單不一定是點擊 submit button。</p>
+<p>其實假設送出表單的動作都是滑鼠點擊 submit button 這是個親和力問題，如果只把 ajax call 送的函式 bind 在 submit button 的 click 事件上，這其實是不太好的，因為其實瀏覽器預設的行為是可以在很多地方用鍵盤送出表單，例如在 text input 上按下 Enter 鍵，或是在 submit button 上按下空白鍵之類的，所以針對表單還是要去 bind form submit 事件才是正解，至於 jQuery-ujs，其實也是這樣做的，它是用 delegate event 的形式去監聽傳遞到 document 上的 submit 事件，然後才去做後續的處理，只是命名上讓人覺得不太正確。</p>
+<p>最後一項，前面說不用 JavaScript 做表單檢查（不看自訂輸入元件的話），其實有一個例外，就是上傳檔案的大小檢查，因為沒做對使用體驗的影響比較大，然後就是要還要記得針對 ajax call 送表單加上 <a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">HTTP 413</a> Status Code 的錯誤訊息處理。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/06/13/form-practice/</link>
+<guid>https://blog.othree.net/log/2017/06/13/form-practice/</guid>
+<category>css-html</category>
+<pubDate>2017-06-13 22:42</pubDate>
+</item>
+
+<item>
+<title>Graceful Degradation Background</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr"><img src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w" /></a></p>
+<p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
+<p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
+<ul>
+<li>真的寫 Media Query</li>
+<li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
+<li>大家一起用標準解析度的圖</li>
+</ul>
+<p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
+<ul>
+<li>可以有兩張圖不同解析度的圖</li>
+<li>不要用 Media Query</li>
+<li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
+<li>舊瀏覽器顯示正確</li>
+</ul>
+<p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
+<pre><code class="language-css">background: #123456 url('the-bg.png') center center;
+background: #123456 url('the-bg@2x.png') center center/32px 32px;
+</code></pre>
+<p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
+<ul>
+<li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
+<li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
+<li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
+</ul>
+<p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/05/24/graceful-degradation-background/</link>
+<guid>https://blog.othree.net/log/2017/05/24/graceful-degradation-background/</guid>
+<category>css-html</category>
+<pubDate>2017-05-24 22:05</pubDate>
+</item>
 
 <item>
 <title>Acclerated Mobile Pages</title>
@@ -496,74 +608,6 @@ src-3="(max-width: 3840px) //farm4.staticflickr.com/3820/11153957705_eafe482d62_
 <guid>https://blog.othree.net/log/2013/12/02/src-n/</guid>
 <category>css-html</category>
 <pubDate>2013-12-02 21:45</pubDate>
-</item>
-
-<item>
-<title>Transition 之惡</title>
-<description><![CDATA[<p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
-
-<p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
-
-<pre><code>.case1.active {
-    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease;
-}
-
-.case2.active {
-    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease;
-}
-</code></pre>
-
-<p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
-
-<p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
-
-<p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/11/05/bad-part-of-css-transition/</link>
-<guid>https://blog.othree.net/log/2013/11/05/bad-part-of-css-transition/</guid>
-<category>css-html</category>
-<pubDate>2013-11-05 15:59</pubDate>
-</item>
-
-<item>
-<title>消失的 video</title>
-<description><![CDATA[<p>最近遇到一個 CSS bug，主要是在 Chrome 上發生，一開始是有些元素在做 CSS Transition 時會不見，而且有時候 transition 結束還是看不到，要隨便作一些事情觸發瀏覽器 redraw 東西才會回來，作什麼事情又很不一定，而且去 access clientWidth 之類的屬性來想要叫瀏覽器重新畫在這個 bug 上是無效的，後來在網路上找到避開的作法：</p>
-
-<pre><code>-webkit-backface-visibility: hidden;
--webkit-transform: translateZ(0);
-</code></pre>
-
-<p>加上這兩個 CSS 屬性就可以讓會消失的元件不要消失了，後來才知道之前也有同事處理過一樣的問題。然後，接著又遇到另外一個神秘的現象，因為做的東西有投影片播放，動畫 transition 換頁和 video，加起來就是要作一個 transition 讓 video 進入頁面，然後自動播放的機制，結果就發生怪事了，如果 video 沒播過，還沒有 cache 的話，會發生 video 消失的狀況，一開始以為是抓檔案 loading 到真的開始播放之中間的這段時間，Chrome 實作不好，會讓影片節點變成透明的，然後因為其他的問題讓影片卡在那個狀況，所以就變成一直看不到。</p>
-
-<p>後來花了很多時間測試，最後發現影片根本就有在播，只是東西都看不到，進一步發現根本和上面講的是同一個 bug，加上同樣的 style 後，影片就不再消失了，而且連那開始 loading 到開始播放間的那段時間，畫面也完全不會消失了，就從原來給它的 poster 接到真的影片，一切都很順暢。</p>
-
-<p>至於什麼情況下會有這個 bug 出現，目前只知道是 <code>position: absolute;</code> 的元件加上 transition 後有發生的機會。</p>
-
-<p>Ref: <a href="http://help.dimsemenov.com/discussions/problems/858-weird-bug-in-chrome">Element disappearing during transition in Chrome</a></p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/08/26/blinked-video/</link>
-<guid>https://blog.othree.net/log/2013/08/26/blinked-video/</guid>
-<category>css-html</category>
-<pubDate>2013-08-26 18:17</pubDate>
-</item>
-
-<item>
-<title>Main</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9515736753/" title="Happy Designer Mini #3 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7356/9515736753_8fc717d9c0_b.jpg" width="1024" height="683" alt="Happy Designer Mini #3" srcset="https://farm8.staticflickr.com/7356/9515736753_8fc717d9c0_b.jpg 1024w, https://farm8.staticflickr.com/7356/9515736753_a2a0b34de7_h.jpg 1600w" /></a></p>
-
-<p>昨天參加 Happy Designer Mini #3，有人介紹了 <a href="http://lungo.tapquo.com/">lungo</a> 這個 framework，說到裡面一些 convention，可以用 <code>&lt;header&gt;</code> 就產生頁首，<code>&lt;footer&gt;</code> 就是頁尾，然後主要內容就是 article，不過對於 article 的使用其實我算蠻有意見的。畢竟 article 的語意還是比較偏文章，對於應用程式來說，主要的區塊應該要用 <a href="http://www.w3.org/TR/wai-aria/roles#main">WAI-ARIA</a> 的 <code>role="main"</code> 才是，不過其實這篇文章想要說的是 HTML 5.1 的 Draft 其實已經提出了 <code>&lt;main&gt;</code> 這個<a href="http://www.w3.org/html/wg/drafts/html/master/grouping-content.html#the-main-element">標籤</a>，用途就和 <code>role="main"</code> 一樣。</p>
-
-<p>而除了 <code>&lt;main&gt;</code> 之外，其實還有一個新的 <code>&lt;data&gt;</code> <a href="http://www.w3.org/html/wg/drafts/html/master/text-level-semantics.html#the-data-element">標籤</a>，這個標籤是用來代替以前在使用 microdata、microformat 之類的格式化資料時，為了寫機器讀取用資料時，在行內加上的 <code>&lt;span&gt;</code> 標籤的，<code>&lt;data&gt;</code> 本身歸類在 Phrasing content，可以想成是 <code>display: inline;</code> 的使用方式，雖然第一眼看起很像是區塊等級的就是了。</p>
-
-<p>至於我為什麼會注意到有這些新標籤呢，其實我也沒閒閒沒事去關注 HTML 5.1 Draft 更新啦，是因為 <a href="https://github.com/othree/html5.vim">html5.vim</a> 會有人來報說有新東西要加，意外的好處～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/08/17/main/</link>
-<guid>https://blog.othree.net/log/2013/08/17/main/</guid>
-<category>css-html</category>
-<pubDate>2013-08-17 00:22</pubDate>
 </item>
 
 

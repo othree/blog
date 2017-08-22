@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000895" baseName="vim-packages">Vim Packages</b:listData>
+
+			<b:previous>
+				<b:mTitle>日本自駕</b:mTitle>
+				<b:mDate>2017-04-29</b:mDate>
+				<b:mBase>japan-self-drive</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Test CommonMark syntax</b:mTitle>
+				<b:mDate>2017-05-05</b:mDate>
+				<b:mBase>test-commonmark</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000895" baseName="vim-packages">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-05-02</b:date>
+				<b:time>23:05:39</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Vim Packages</b:title>
+			<b:content>
+				<b:summary>Vim 8 有兩個我覺得比較大的新功能，一是開始有 Asynchronous I/O，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 runtime 目錄下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 pathogen.vim 後才被解決，pathogen 是藉由修改 runtimepath 變數（有點像是系統的 PATH 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 Vundle、neobundle、vim-plug 等，基礎原理應該都是一樣的。 Vim...</b:summary>
+				<b:mainContent><p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+<pre><code>~/.vim/bundle/html5.vim
+~/.vim/bundle/yajs.vim
+</code></pre>
+<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+<pre><code>~/.vim/pack/my-js/start/yajs.vim
+~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
+~/.vim/pack/my-js/start/simple-javascript-indenter
+</code></pre>
+<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

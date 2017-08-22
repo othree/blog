@@ -5,10 +5,102 @@
 <link>https://blog.othree.net//log/ diary/</link>
 <description></description>
 <copyright>Copyright 2017</copyright>
-<lastBuildDate>2017-04-29 22:58</lastBuildDate>
+<lastBuildDate>2017-08-18 23:54</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>196</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36512922821/" title="196 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg" width="1024" height="683" alt="196" srcset="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg 1024w, https://farm5.staticflickr.com/4360/36512922821_a17aefd061_h.jpg 1600w" /></a></p>
+<p>這篇文章是在寫 <a href="http://blog.othree.net/log/2017/08/12/temporal-is-next-date/">temporal</a> 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個<a href="http://www.fourmilab.ch/documents/calendar/">網站</a>提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。</p>
+<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="ttps://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
+<p>然後，我在 fourmilab.ch 上看到了「<a href="http://fourmilab.ch/documents/threeyears/threeyears.html">Three Years Of Computing</a>」這篇文章，標題就吸引了我進去仔細閱讀，這篇文章是在說迴文數（palindrome）挑戰，什麼是迴文數呢，「95277259」就是迴文數，不論是從頭開始還是反過來從尾開始都是相同的數字，那什麼是迴文數問題呢？首先你要拿到一個非迴文數的十進位數字，例如 <strong>362</strong> 好了，把他和自己的反轉相加：</p>
+<pre><code>&gt;
+   362
++  263
+------
+   625
+</code></pre>
+<p>結果不是迴文數，那繼續一樣的反轉相加運算：</p>
+<pre><code>&gt;
+   625
++  526
+------
+  1151
++ 1511
+------
+  1661
+</code></pre>
+<p>最後得到了一個迴文數 <strong>1661</strong>，迴文數問題就是，是否所有的正整數都可以透過這樣的運算，不管幾次，最終可以得到迴文數，如果有數字無法透過這個過程變成迴文數，那這數字也可以稱為 <a href="https://zh.wikipedia.org/wiki/%E5%88%A9%E5%85%8B%E7%91%9E%E5%B0%94%E6%95%B0">Lychrel Number</a>，不過因為目前無法從理論證明一個十進位數是 Lychrel Number，就只能想辦法反證它（註：我有看到說二進位數有證明）。</p>
+<p>文裡說到，所有小於一萬的數字都已經被測試過，大部分的數字都可以用很少的次數就得到迴文數，其中，最小的可能的 Lychrel Number: <strong>196</strong> ，到目前還無法讓它經由反轉相加的過程變為迴文數，John Walker 那個跑了三年的程式就是在驗證 196 到底能不能透過反轉相加的過程。他在 1987 年用他的 Sun 工作站開始跑，結果跑了三年後的 1990，達到他當初設的停止條件，100 萬位，總共反轉相加了 2415836 次，他還放上他的程式碼還有計算的結果，如果有人有興趣可以從這邊開始接手繼續算下去，事實上，當初他跑這程式的工作站性能和現在的電腦比起來差距實在很大，在其它人後來的<a href="http://jasondoucette.com/worldrecords.html">挑戰</a>當中，就有提到一些性能數字，例如 Ian J. Peter 的程式只需要 5 小時就可以計算到一百萬位，用的電腦大約是 500 MHz 的 CPU。</p>
+<p>John Walker 在 1990 年跑到一百萬位，結果還沒得到迴文數，那麼現在最新的紀錄是多少呢？<a href="http://www.p196.org/news.html">p196.org</a> 這網站收集了很多相關的資訊，對這議題有興趣的人還可以去看看，而它站上的紀錄是 <strong>413,930,770</strong>，四億多位，總共反轉相加了十億次；至於我目前看到的最高紀錄，是在「<a href="http://www.dolbeau.name/dolbeau/p196/p196.html">The p196_mpi page</a>」這裡，提供了平行版的程式，而據作者 Romain Dolbeau 所說，他在 2015 年 2 月已經計算到十億位了，不過他沒提供相關資料，有提供的只有 2012 年的六億位結果。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/08/18/196/</link>
+<guid>https://blog.othree.net/log/2017/08/18/196/</guid>
+<category>diary</category>
+<pubDate>2017-08-18 23:54</pubDate>
+</item>
+
+<item>
+<title>日本橋人形町</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737121375/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg 1024w, https://farm5.staticflickr.com/4238/35737121375_659ce1f602_h.jpg 1600w" /></a></p>
+<p>前陣子去東京有些時間可以自己安排，後來因為也沒特別有什麼目標，就決定排個可以比較悠閒的行程，就是去人形町逛逛，其實很早之前就知道人形町了，後來真的比較有印像是看了新參者這部小說，這本小說的舞台就圍繞在人形町，後來阿部寬有主演日劇版，更是大大帶起該地區最近的知名度，除了新參者之外，我偶爾會看有吉君的正直散步，也是有一兩集散步到那附近，所以就把目標放在人形町了。</p>
+]]><![CDATA[<p>當天到達人形町時其實中午了，所以第一個目標就是先去找午餐，人形町其實範圍不大，熱鬧的就是人形町站到水天宮之間那段，再加上橫向的甘酒橫丁，範圍不大，慢慢走也只要兩三個小時就可以晃完，我走沒兩下就發現甘酒橫丁，就灣進去找吃的了，結果發現有一間排了不少人的燒鳥，叫久助。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567894502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg" width="683" height="1024" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg 683w, https://farm5.staticflickr.com/4263/35567894502_f3811fa8fd_h.jpg 1067w" /></a></p>
+<p>我又繼續往前看了幾間，晃了一下回來發現排隊的人潮消化的差不多了，就決定吃這間，其實當時店內還蠻滿的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895894774/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg 1024w, https://farm5.staticflickr.com/4216/34895894774_4bd74d1d27_h.jpg 1600w" /></a></p>
+<p>吃的就是午間套餐的燒鳥飯</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567878502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg 1024w, https://farm5.staticflickr.com/4259/35567878502_fa88f2ce77_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567875592/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg 1024w, https://farm5.staticflickr.com/4258/35567875592_2dd4c91e07_h.jpg 1600w" /></a></p>
+<p>烤的很剛好，還有花椒粉芥末粉可以加，我覺得最厲害的是淋的醬汁的量超剛好，飯幾乎都有沾到醬汁，但是吃完整個飯盒就是表面濕濕的狀況，完全沒有醬汁積成一攤，所以完全不會吃到後來覺得太鹹之類的，飯量其實還可以選擇，這師傅實在是經驗老到，可以控制得這麼精準。</p>
+<p>吃完飯後，其實對面就是有名的草家屋煎餅了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349493920/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg 1024w, https://farm5.staticflickr.com/4258/35349493920_8dd2cdbe86_h.jpg 1600w" /></a></p>
+<p>還有柳屋鯛燒</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349486260/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg 1024w, https://farm5.staticflickr.com/4260/35349486260_df7a7504d5_h.jpg 1600w" /></a></p>
+<p>兩間都在新參者中出現過，不過我只有買些仙貝，因為剛吃完飯就沒買鯛燒，有點可惜，即使是中午剛過，店內都還是一直都是排著人。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737108935/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg 1024w, https://farm5.staticflickr.com/4098/35737108935_4d9a1c1cd5_h.jpg 1600w" /></a></p>
+<p>接著我就慢慢沿著人形町通逛，走到尾巴的水天宮，水天宮是很有名求子求安產的神社，回來才聽說前兩年還在整修，不過這新蓋好的水天宮實在很厲害，從對面看：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737107425/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg 1024w, https://farm5.staticflickr.com/4258/35737107425_9dec05af6a_h.jpg 1600w" /></a></p>
+<p>旁邊那條走道：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567844992/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg 1024w, https://farm5.staticflickr.com/4278/35567844992_016f383709_h.jpg 1600w" /></a></p>
+<p>門口，要爬樓梯往上：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696854726/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg 1024w, https://farm5.staticflickr.com/4133/35696854726_2c5c4bcc56_h.jpg 1600w" /></a></p>
+<p>到了上面才發現別有洞天。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35605763291/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg 1024w, https://farm5.staticflickr.com/4288/35605763291_eeb728066d_h.jpg 1600w" /></a></p>
+<p>事實上，整個神社木造建築是蓋在一層現在的防震結構上的，而且現代結構的部分也不是只有防震，而是還有做為辦公室、販賣商品等用途的部分在，我覺得他們這種結合兩種風格卻不衝突的設計真的是非常厲害，最後是從平台上往回拍大門的方向。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696855446/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg 1024w, https://farm5.staticflickr.com/4254/35696855446_cf87394e2c_h.jpg 1600w" /></a></p>
+<p>到達水天宮後我就往回走了，去了一開始就有看到的 RON 咖啡館。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737102345/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg" width="683" height="1024" alt="RON" srcset="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg 683w, https://farm5.staticflickr.com/4264/35737102345_ee380df5e2_h.jpg 1067w" /></a></p>
+<p>這間也是當地的老店，店內應該是完整開店當時的裝潢保存到現在吧：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895831914/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg 1024w, https://farm5.staticflickr.com/4287/34895831914_9a11659f3b_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927502753/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg 1024w, https://farm5.staticflickr.com/4212/34927502753_0ad220fc0d_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895826844/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg 1024w, https://farm5.staticflickr.com/4213/34895826844_624aa76f44_h.jpg 1600w" /></a></p>
+<p>店員也是老老的，是不是也是年輕做到現在的呢。</p>
+<p>在 RON 咖啡休息一陣子之後，因為時間還早，就決定去日本橋看看，日本橋</p>
+<p>是日本<a href="https://zh.wikipedia.org/wiki/File:The_Kilometre_Zero_of_road_in_Japan_in_Nihonbashi,_Chuo,_Tokyo.jpg">道路起點</a>，一直都是很繁榮的地方，是很有歷史意義的地點，不過 1964 年為了舉辦奧運而蓋的首都高，把日本橋蓋住了，之後就一直維持這樣的狀況。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696816036/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg 1024w, https://farm5.staticflickr.com/4285/35696816036_45589e1ca2_h.jpg 1600w" /></a></p>
+<p>橋上可以看到日本道路原標地點，不過人走不過去就是了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927459313/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg 683w, https://farm5.staticflickr.com/4033/34927459313_7727619d42_h.jpg 1067w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567779372/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg 1024w, https://farm5.staticflickr.com/4139/35567779372_3915bc5598_h.jpg 1600w" /></a></p>
+<p>現在的橋據說是 1911 年蓋的第十九代了，橋柱上有些非常華麗的裝飾，也常出現在電視上。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696808136/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg 1024w, https://farm5.staticflickr.com/4057/35696808136_555145da7a_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567766362/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg 683w, https://farm5.staticflickr.com/4014/35567766362_08fa80913a_h.jpg 1067w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895801964/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg 1024w, https://farm5.staticflickr.com/4259/34895801964_df476986e8_h.jpg 1600w" /></a></p>
+<p>最近日本有開始有些<a href="http://asahichinese-f.com/travel/scenery/11153530">聲音</a>說希望能夠恢復日本橋景區的天空，主要方法是把首都高地下化，東京其實已經有一些地下高速公路了，技術上不是問題，雖然經費很貴，我猜他們真的會做下去吧，如果成真的化應該就會找個藍天的日子再去個一趟了。</p>
+<p>日本橋的對面就是新光三越本館了：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567761352/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg 1024w, https://farm5.staticflickr.com/4068/35567761352_3abc7f27c5_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895760694/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg 1024w, https://farm5.staticflickr.com/4021/34895760694_fe57311267_h.jpg 1600w" /></a></p>
+<p>遠遠看就覺得氣勢不凡，進去逛一逛發現這間真的是不同凡響：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737023025/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg 1024w, https://farm5.staticflickr.com/4214/35737023025_131119eb13_h.jpg 1600w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895759084/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg" width="683" height="1024" alt="三越 本館" srcset="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg 683w, https://farm5.staticflickr.com/4208/34895759084_5786a48d02_h.jpg 1067w" /></a></p>
+<p>在百貨公司裡面開了這麼大的挑高室內空間，還放這麼大的固定式藝術品，真的是完全無法想像，然後本來想說去逛一下生活用品那層好了，結果映入眼簾的都是高級進口餐具之類的，我一整個跑錯棚的感覺。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</link>
+<guid>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</guid>
+<category>diary</category>
+<pubDate>2017-08-01 22:00</pubDate>
+</item>
 
 <item>
 <title>日本自駕</title>
@@ -890,83 +982,6 @@
 <guid>https://blog.othree.net/log/2015/01/07/disney-timeless-story-marunouchi/</guid>
 <category>diary</category>
 <pubDate>2015-01-07 13:56</pubDate>
-</item>
-
-<item>
-<title>Hubble Ultra Deep Field</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/gsfc/14159153437/" title="Hubble Team Unveils Most Colorful View of Universe Captured by Space Telescope by NASA Goddard Photo and Video, on Flickr"><img src="https://farm4.staticflickr.com/3838/14159153437_cffd2fa101_b.jpg" width="1024" height="935" alt="Hubble Team Unveils Most Colorful View of Universe Captured by Space Telescope" srcset="https://farm4.staticflickr.com/3838/14159153437_cffd2fa101_b.jpg 1024w, https://farm4.staticflickr.com/3838/14159153437_7ff20753c3_h.jpg 1600w" /></a></p>
-
-<p>前陣子在 Facebook 上看到一篇轉貼文章「<a href="http://mp.weixin.qq.com/s?__biz=MzA5NTAyNDEzNg%3D%3D&amp;mid=202642759&amp;idx=3&amp;sn=38d925941da74e2e40fc81eff5436736&amp;scene=4#rd">地球月球有多大？見過這些圖，你會有莫可名狀的恐懼！</a> 」是真的蠻震撼的，其實小時候對於宇宙和銀河系的差異是搞不太懂的，嚴格說來是大學畢業之後某個時間點我才搞懂差異，後來更有感覺是看到像是「Star Trek Voyage」，才慢慢有對於宇宙大小的認知，還有這幾年的「宇宙戰艦大河號 2199」，也是在這搞清楚宇宙和銀河系的差異，才瞭解它營造的悲壯感和故事間的關係，不過震撼歸震撼，我還是去查證了一下最後一張照片的真偽。根據我調查的結果，那張照片是真的～</p>
-
-<p>這張照片和文章內敘述的一樣是哈伯太空望遠鏡所拍下來的，稱為 <a href="http://hubblesite.org/newscenter/archive/releases/2004/07/">Hubble Ultra Deep Field</a>（HUDF），不過他的敘述不太正確，那張照片不是曝光四個月，而是花了四個月的時間，拍攝時間分為兩段，第一段是 2003 年 9 月 23 日到 10 月 28 日，第二段時間是同年 12 月 4 日到 2004 年 1 月 15 日，不能持續的拍是因為哈伯太空望遠鏡是在地球的衛星軌道上運行，所以每次公轉只有一些時間可以從固定的角度拍照，在這四個月內總共花了約 400 次的公轉，每次曝光 1200 秒，照片是分四種不同波長的光線曝光，最後疊在一起，合算起來總共的曝光時間大約 11 天。在 2009 年時，Hubble Site 又放出新的<a href="http://hubblesite.org/newscenter/archive/releases/2009/31/">版本</a>，這個版本多拍了三種波長的光線，在 HUDF 中，每個光點都是一個星系（galaxy），以太陽系所在的銀河系來說，估計有一千億到四千億顆恆星，而在 HUDF 中，估計有一萬個星系，而這張照片的範圍約佔天空的千萬分之一，所以在這張照片出來時，天文學家估計宇宙中有超過千億（10<sup>11</sup>）個星系，大家可以想像看看宇宙中會有多少個行星啊～</p>
-
-<p>在 2012 年時，天文學家們又發表了 <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/astro/deepfield.html">Hubble eXtreme Deep Field</a>（XDF），在 HUDF 的範圍內挑了一個區塊，更精細的把這些星系拍下來，而且還發表了一段影片讓大家能夠體會一下 XDF 的範圍在天空中到底多小。</p>
-
-<div class="embed_16_9">
-<iframe width="640" height="360" src="//www.youtube.com/embed/jmI9jyjfRLo?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<p>在今年，2014 年，其實又<a href="http://hubblesite.org/newscenter/archive/releases/2014/27">發表</a>了最新版本的 HUDF，這版集了 10 年來的成果，看起來疊加了 13 種波長的光線，重新上色後，得到的照片就是文章最上面那張了，這張是目前顏色最豐富的版本，不過沒有和 XDF 詳細的比較，也沒有文件說這張圖上可以找到多少星系，目前看到的宇宙中的星系的估計數量都還是可能大於 10<sup>11</sup> 個，不過想想這個估計值也是十年前就出來的，我卻到今年才知道這回事，也真是非常後知後覺啊。</p>
-
-<p>其實我對天文涉獵不多，不過今年倒是意外的有不少接觸，HUDF 是一個，另外還有一個是下面這段影片，個人認為是非常值得花時間看完的，是 <a href="http://zh.wikipedia.org/wiki/%E5%A5%88%E7%88%BE%C2%B7%E5%BE%B7%E8%91%9B%E6%8B%89%E5%8F%B8%C2%B7%E6%B3%B0%E6%A3%AE">Neil DeGrasse Tyson 博士</a>的一場訪談，約一個半小時，內容其實很有趣，最後分享給大家。</p>
-
-<div class="embed_4_3">
-<iframe width="640" height="480" src="//www.youtube.com/embed/7vyMSWHpD9o?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-]]>
-</description>
-<link>https://blog.othree.net/log/2014/09/10/hubble-ultra-deep-field/</link>
-<guid>https://blog.othree.net/log/2014/09/10/hubble-ultra-deep-field/</guid>
-<category>diary</category>
-<pubDate>2014-09-10 02:46</pubDate>
-</item>
-
-<item>
-<title>HITCON X 記錄記錄</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14866906540/" title="HITCON X by othree, on Flickr"><img src="https://farm4.staticflickr.com/3861/14866906540_5e439b502b_b.jpg" width="1024" height="683" alt="HITCON X" srcset="https://farm4.staticflickr.com/3861/14866906540_5e439b502b_b.jpg 1024w, https://farm4.staticflickr.com/3861/14866906540_80da071a35_h.jpg 1600w" /></a></p>
-
-<p>本來今年打算要暑假畢業，因此沒打算接會有太多事前準備工作的職位的，不過等到後來我發現論文來不及，無法這個學期畢業就看開了，還是接了 HITCON X 的攝影組，而且今年還想要試著解決以往的一些問題，實際做了些嘗試，這篇文章的目的就是記錄這些問題和這次的嘗試，可以給以後其他社群研討會的紀錄組參考。目前為止在這麼多社群研討會的紀錄工作中，我覺得一個很大的問題是發佈速度不夠快，以往的經驗讓我認為會眾特別想要回味的時間大概不超過兩天，但是官方釋出通常會要到一週甚至更久，如果能搶在這兩天內有照片放出，通常可以在社群網站上看到不少漣漪，再加上常常有些媒體報導會希望能夠有提供一些照片，目前都是透過公關管道由媒體提出需要的照片，記錄組這邊特別先找出來處理，某方面來說也是減少了報導的不同可能性，實在可惜。</p>
-]]><![CDATA[<p>回來看一下為什麼官方發佈的相簿會需要這麼多時間，其實最主要還是在後製耗時，去年還沒有拍 raw 回來調整色溫和曝光，現在回去看覺得照片都偏黃 T_T，然後再加上每個人都有不同的事情要處理，不可能逼組員把照片都處理還才繼續過他的生活，結果就是常常把相片收集回來已經過好幾天，然後理所當然的錯過回味的黃金期，而且有先交出的照片也會被卡著無法放出，這狀況實在是非常讓人苦惱，因此今年 HITCON X 我就決定要增加官方相片集發佈的速度，直接的想法就是把所有後制包括調整圖片和篩選的工作都抓到自己身上來，一開始的規劃是活動四天有時間就收照片，晚上就處理當天的照片，實際執行起來發現變的和去年 COSCUP 2013 海哥的角色很像，然後也和一開始計畫的流程有些不一樣，最後是變成中午和散場前收照片居多，偶爾早上開場前收。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14547841287/" title="COSCUP 2014 Day1 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5583/14547841287_5c6e2542fe_b.jpg" width="1024" height="683" alt="COSCUP 2014 Day1" srcset="https://farm6.staticflickr.com/5583/14547841287_5c6e2542fe_b.jpg 1024w, https://farm6.staticflickr.com/5583/14547841287_47c48ef161_h.jpg 1600w" /></a></p>
-
-<p>收集的照片一開始蠻多是在家裡處理的，用的是 Lightroom，後來也開始在白天時間處理，減少在外面亂晃拍照的時間，也不一定待在工人室，有一個早上我是在會議廳邊拍講者邊修圖的，不過我覺得這個角色以後應該要固定編制一兩個人（不知道該叫什麼，修圖手嗎？），三到四軌我覺得一個人可以處理，COSCUP 現在那規模的就不行了，不獨立出來的話他光處理圖片的時間就不夠了，根本無法排班做其他事情，再來處理照片的流程也有些調整來加速，以往我是習慣全部都調整好才來挑照片，因為看色溫曝光不對的照片有時候很難判斷優劣，不過面對這麼多的照片只好強迫訓練一下這方面的能力，然後可以直接用鍵盤的 <code>1</code> ~ <code>5</code> 給照片評等，之後用過濾器挑出比較好的照片來調整，這邊也學了一下快速鍵 <code>,</code> 和 <code>.</code> 可以快速的在色溫和色調那個區塊中切換調整項目，然後用 <code>+</code> <code>-</code> 就可以直接調整，不太需要用到滑鼠，不過把操作時間縮短後發現還很需要夠快的電腦，我這幾天用的是有 PCIe SSD 的 13 吋 MacBook Pro 了，檔案讀取速度已經最快了，剩下就是 CPU 和顯示卡的問題了，結果開 raw 檔都還是需要等，和 jpg 比可以感覺到明顯的差異，不管是開大圖還是開縮圖都是要等個一兩秒才能看到完整細節，挑選照片的速度也因此受到很大的影響，尤其像是連拍的照片要挑一個眼睛有正常睜開的，表情最好的照片時，用縮圖細節不夠，看大圖一張一張切換也是要等，有時候是只看縮圖來挑選，結果就出錯了，後來研究發現預覽圖可以設定格式，不過好像只能讀入檔案時設定，下次要來測試看看有沒有影響，如果有錢的話也可以弄台 15 吋 MBPR 來應該可以提升不少效率。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/15030666086/" title="HITCON X by othree, on Flickr"><img src="https://farm4.staticflickr.com/3917/15030666086_e900150489_b.jpg" width="1024" height="683" alt="HITCON X" srcset="https://farm4.staticflickr.com/3917/15030666086_e900150489_b.jpg 1024w, https://farm4.staticflickr.com/3917/15030666086_c9c15f39d1_h.jpg 1600w" /></a></p>
-
-<p>整體而言我的目標是希望照片的表現達到 80 分，但是讓釋出速度提升很多，今年算是初次嘗試，中間重複做了很多工，最後在活動結束後的第二天（週日）成功把照片送出了，總共照片約六千五百多張，放出的約九百張有，平均活動一天兩百張照片，如果讓我最後調整的工作流程能在一開始就使用上，應該還可以更快讓照片出爐，至於相片挑選品質我個人認為有八成 ok，只是還是有失誤，真的很對不起影中人，至少已經看到兩張完全不應該上去的照片，看到的時候是真的蠻難受的，主因還是一開始的操作流程還不穩定，結果篩選照片出錯，這部份應該可以藉由流程改善來增加工作效率，就會比較多機會可以檢查，另外一個避免的方式則是加上負向列表，這次我是以正向列表為主，就是分成沒評分的，評分不錯的兩種，以後應該要把不該上去的也加上評分，甚至直接刪掉，避免圖片意外被送出的情形；另外發現一個問題是挑選的照片中，自己拍的比例比較高，這點真是對不起組員們了，因為我嘗試好幾次要平衡一下比例結果都失敗，是還好攝影師還可以自己決定要不要放照片到自己的相簿，以後要避免這個狀況應該就是把這個修圖挑圖的角色獨立出來，就可以避免這種狀況發生。</p>
-
-<p>除了處理速度的問題，其實我還試著處理了另外一個問題，就是攝影師 attribution 的問題，畢竟著作人格權是不可拿走的，即使是官方放出的攝影，也要能回溯找出不同相片的攝影師是哪位，不過以前的處理流程，都有點難去追出照片是哪位拍的，我這次的試驗是用 Lightroom 寫在檔案的 meta data 內，輸出成 jpg 後會在 EXIF 資訊中可以找到，如果照片傳 flickr 是比較容易看到，不過 HITCON 歷來都是放在 picasa 相簿，經過測試，頁面上完全看不到XD，如果下載的到原始檔案的話確實資訊是有保留的，在某些情況下是有辦法抓到原始檔案的，只是一般訪客應該是抓不到就是，總之目前這部分的處理在官方相簿是 flickr 的話，是一般訪客也可以看到的，但是如果在其他相簿就不一定了，至少 picasa 在目前的測試是不行，還要想想看有什麼方法可以處理，不過資訊確實是有保留在相簿網站上，管理員是可以簡單找出作者是誰。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14867090697/" title="HITCON X by othree, on Flickr"><img src="https://farm6.staticflickr.com/5595/14867090697_365e60bbf0_b.jpg" width="1024" height="683" alt="HITCON X" srcset="https://farm6.staticflickr.com/5595/14867090697_365e60bbf0_b.jpg 1024w, https://farm6.staticflickr.com/5595/14867090697_36899edee1_h.jpg 1600w" /></a></p>
-
-<p>最後一個目前我覺得還有待改善的問題就是挑選照片的依據，這當然很主觀，不過我覺得可以透過一些執行的操作設計來讓結果呈現更好，其實這個照片的挑選有兩個不同的挑選目標，第一個當然就是官方相簿，另外一個則是活動閉幕用的，這個想改善的地方則是針對閉幕用照片來說，以往一般都是組長先收照片，然後挑選過一次後給負責的人，很多時候會是總招自己處理，不過這幾次活動下來我覺得蠻容易遇到組長挑選的和負責的人想的方向剛好錯開的情形，而且這幾年有趣的照片比例越來越低了，結果就更加惡化，我目前覺得要改善這方法可以就是請閉幕影片的負責人直接參與挑選照片，記錄組這邊只把拍失敗的，重複的照片挑掉，然後請負責的一起來挑選照片，接著才對這些照片調整後制再出給負責人，這樣大概是最省工又可以確保挑選的照片夠好的方法了，不過如果負責人很忙，像是總招，可以預期有些場子總招會很多事情，真的沒辦法直接下來挑照片的話，好像也還是只能走以前的流程，不過我想挑選出來的照片數量可以多一些，畢竟判斷一張照片可不可以用的時間很少，兩百張 jpg 在本機看過一輪也不用十分鐘。</p>
-
-<p>至於官方相簿的挑選準則問題，這主觀影響的比例還蠻大的，實在很難拿捏，例如一張有趣的照片到底適不適合放到官方相簿呢，我認為放一些有趣的照片是不錯的，但是多有趣可以接受呢？如果只是工作人員自己小圈圈的照片呢？這些問題實在都很難回答，一來「有趣」難以量化，二來不同的活動給人的感覺不一樣，其實也影響著官方相片可以接受的風格，而我個性偏嚴肅其實就會造成無意識下，我挑選的照片會讓人覺得有趣的比例較少，不一定和大會的期望，甚至是不符合大眾的期望，目前我的作法還是官方嚴謹保守一點，當然會有一些比較有趣的照片，不過會控制個比例，其餘的照片透過不同管道，基本上就是攝影師自己放出。至於官方的照片要怎麼拿捏目前也就只能每次調整一點，看何時會收斂吧。</p>
-
-<p>最後的最後紀錄一下這次掉球的部分：</p>
-
-<ul>
-<li>人力吃緊，至少還要在多一位才比較能休息到（不過後來其實已經找不到人幫忙兩天了）</li>
-<li>講者特寫有漏，下次要加註至少一張近（半身）一張遠</li>
-<li>挑選照片有失誤，上傳前至少還要每張在看過一次，正向負向表列（評分）都需要</li>
-</ul>
-
-<p>除了掉球之外，下次要改進的點：</p>
-
-<ul>
-<li>獨立的修圖手編制，缺點是要少一個不差的攝影師拍照</li>
-<li>修圖手要對操作流程熟悉、避免重工和時間浪費</li>
-<li>和閉幕影片(?)負責人一起挑照片，大概也是修圖手負責這塊</li>
-<li>閃燈使用，前面沒說，不過希望能改成弄出 spotlight 照講台，不然中研院 R0 真的是很難拍</li>
-</ul>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14867046408/" title="HITCON X by othree, on Flickr"><img src="https://farm4.staticflickr.com/3876/14867046408_391591ef13_b.jpg" width="1024" height="683" alt="HITCON X" srcset="https://farm4.staticflickr.com/3876/14867046408_391591ef13_b.jpg 1024w, https://farm4.staticflickr.com/3876/14867046408_89f6cb9f22_h.jpg 1600w" /></a></p>
-]]></description>
-<link>https://blog.othree.net/log/2014/08/28/hitcon-x-photographer/</link>
-<guid>https://blog.othree.net/log/2014/08/28/hitcon-x-photographer/</guid>
-<category>diary</category>
-<pubDate>2014-08-28 21:49</pubDate>
 </item>
 
 
