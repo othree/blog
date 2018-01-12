@@ -14,7 +14,322 @@
 			</b:previous>
 
 
+			<b:next>
+				<b:mTitle>2018</b:mTitle>
+				<b:mDate>2018</b:mDate>				
+			</b:next>
+
 		</b:entriesMeta>
+
+		<b:entry entryID="000913" baseName="web-f2e-and-python-syntax">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-12-05</b:date>
+				<b:time>18:39:38</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Web F2E 看 Python Syntax</b:title>
+			<b:content>
+				<b:summary> 雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 Flake8 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。 內建支援 String Formatting 第一個我覺得很棒的是，Python 內建有 String Formatting Operations 可以用，超方便的，所以我只要寫： '%d: The answer to the ultimate question of life, the universe and everything' % 42 就可以把...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr"><img src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w" /></a></p>
+<p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
+<h4>內建支援 String Formatting</h4>
+<p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
+<pre><code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
+</code></pre>
+<p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
+<pre><code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
+</code></pre>
+<p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
+<h4>Multiline String</h4>
+<p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
+<pre><code class="language-python">template_string = &quot;&quot;&quot;&lt;div&gt;
+                       Wow
+                     &lt;/div&gt;&quot;&quot;&quot;
+</code></pre>
+<p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
+<h4>Keyword Arguments</h4>
+<p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
+<pre><code class="language-python">def func(a, b, c, d):
+    return a + b + c + d
+</code></pre>
+<p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
+<pre><code class="language-python">func(a=1, b=2, c=3, d=4)
+</code></pre>
+<p>而且也可以混用：</p>
+<pre><code class="language-python">func(1, 2, c=3, d=4)
+</code></pre>
+<p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
+<p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
+<h4>Circular Dependency</h4>
+<p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
+<h4>Ternary Operator</h4>
+<p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
+<pre><code class="language-python">reality = True if isReal else False
+</code></pre>
+<p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+if file.hash
+  filename = filename + '-' + file.hash
+  
+if file.ext
+  filename = filename + '.' + file.ext
+</code></pre>
+<p>用了後置 <code>if</code> 的話可以寫成：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+filename = filename + '-' + file.hash if file.hash
+
+filename = filename + '.' + file.ext if file.ext
+</code></pre>
+<p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
+<pre><code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
+</code></pre>
+<p>就比較不喜歡這樣就是了。</p>
+<h4>Tuple</h4>
+<p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
+<p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
+<h4>in 運算</h4>
+<p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
+<pre><code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
+    ok()
+</code></pre>
+<p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
+<h4>Dict</h4>
+<p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
+<pre><code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
+</code></pre>
+<p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
+<pre><code class="language-coffeescript">data.attr1?.attr2?.attr3?
+</code></pre>
+<p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
+<h4>Unix Timestamp</h4>
+<p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
+<h4>PEP8, Flake8</h4>
+<p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
+<pre><code class="language-python">def hello(name='John'):
+  return 'Hello ' + name
+
+hello(name='Hancock')
+</code></pre>
+<p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
+<pre><code class="language-python">import pages  # noqa: F401
+</code></pre>
+<p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
+<h4>Python Enhancement Proposals (PEPs)</h4>
+<p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000912" baseName="question-mark-in-es">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-11-19</b:date>
+				<b:time>00:06:30</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>問號出頭天</b:title>
+			<b:content>
+				<b:summary> 剛剛掃了一下 TC39 新的草案，發現和 ? 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 CoffeeScript，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用： let zip = lottery.drawWinner?.()?.address?.zipcode 可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 ?.()，而不是 ?()，其實我覺得也比較醜一些。 第二個是 Nullish Coalescing，這是正港的用來設定變數 default 值用的，以前通常的作法是用 ||： function (option =...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
+<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
+<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
+</code></pre>
+<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
+<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick || true;
+}
+</code></pre>
+<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick ?? true;
+}
+</code></pre>
+<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
+<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
+<pre><code class="language-javascript">function add(x, y) { return x + y; }
+
+const addOne = add(1, ?); // apply from the left
+addOne(2); // 3
+</code></pre>
+<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000911" baseName="naming-cases">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-11-16</b:date>
+				<b:time>12:31:26</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Naming Cases</b:title>
+			<b:content>
+				<b:summary> 整理一下各種多單字 identifier 命名慣例（規則）： CamelCase CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"><img src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w" /></a></p>
+<p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
+<h5>CamelCase</h5>
+<p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
+<p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
+<h5>snake_case</h5>
+<p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
+<h5>MACRO_CASE</h5>
+<p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
+<p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
+<h5>lisp-case</h5>
+<p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
+<h5>COBOL-CASE</h5>
+<p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
+<h5>Train-Case</h5>
+<p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
+<p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
+<p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
+<p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
+<pre><code class="language-vim">let g:switch_custom_definitions =
+    \ [
+    \   {
+    \     '\&lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&gt;': '\=toupper(submatch(1)) . submatch(2)',
+    \     '\&lt;\(\u\l\+\)\(\u\l\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))&quot;,
+    \     '\&lt;\(\l\+\)\(_\l\+\)\+\&gt;': '\U\0',
+    \     '\&lt;\(\u\+\)\(_\u\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '_', '-', 'g'))&quot;,
+    \     '\&lt;\(\l\+\)\(-\l\+\)\+\&gt;': &quot;\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')&quot;,
+    \   }
+    \ ]
+</code></pre>
+<p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
+<p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a></li>
+<li><a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000910" baseName="apple-phone-support">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-10-23</b:date>
+				<b:time>23:02:46</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>Apple 電話支援</b:title>
+			<b:content>
+				<b:summary> 前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。 遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。 遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。 接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯ 等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。 然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34475448783/" title="Apple Store Taipei 101 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg" width="1024" height="683" alt="Apple Store Taipei 101, " srcset="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg 1024w, https://farm5.staticflickr.com/4198/34475448783_2de7ddb630_h.jpg 1600w" /></a></p>
+<p>前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。</p>
+<p>遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。</p>
+<p>遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。</p>
+<p>接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯</p>
+<p>等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。</p>
+<p>然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者 log 判斷是不是可以砍帳號吧。</p>
+<p>最後總結一下，這次過程我覺的蘋果電話客服有以下特色，不過大概也不會是每個公司都複製的起來的：</p>
+<ol>
+<li>由他們掌握主控權，但是又完全免費，而且填表後真的很快就會接到電話</li>
+<li>每個要等待的階段都會先讓使用者有預期</li>
+<li>除了第一位外言談都蠻誠懇的</li>
+<li>完全相信（至少表現起來是）客戶，不會強迫做一些嘗試過的操作</li>
+<li>連砍帳號都可以辦到</li>
+</ol>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000909" baseName="osx-admin-account-missing">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-09-16</b:date>
+				<b:time>23:02:54</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+			<b:title>OSX Admin Account 消失</b:title>
+			<b:content>
+				<b:summary> 昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。 首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上 Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！ 總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下： 重開機同時按著 cmd+s 進入 single user mode 用 single user mode 的 CLI 介面刪除 /var/db/.AppleSetupDone 這個檔案 執行...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37260875515/" title="Mac OSX single user mode by othree, on Flickr"><img src="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg" width="1024" height="683" alt="Mac OSX single user mode" srcset="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg 1024w, https://farm5.staticflickr.com/4367/37260875515_07dbc0b069_h.jpg 1600w" /></a></p>
+<p>昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。</p>
+<p>首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上  Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！</p>
+<p>總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下：</p>
+<ol>
+<li>重開機同時按著 <code>cmd</code>+<code>s</code> 進入 single user mode</li>
+<li>用 single user mode 的 CLI 介面刪除 <code>/var/db/.AppleSetupDone</code> 這個檔案</li>
+<li>執行 <code>reboot</code> 重開機，這樣會進入初次開機的狀態</li>
+<li>重新建立帳號，我是用相同的帳號名稱，會執行的有點久，最後會說失敗，原因應該是因為該帳號的 home 目錄已經存在了</li>
+<li>再次重開機，結果會進入正常的登入畫面，可以登入新建的帳號，發現 home 目錄的東西幾乎都可以正常讀入</li>
+</ol>
+<p>最後，為什麼會鑰匙圈損毀呢，我推測是硬碟東西塞太多加上當時在上傳資料才造成問題的，不過也就是個推測而已啦。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000908" baseName="sublime-text-3">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-09-14</b:date>
+				<b:time>22:59:57</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>Sublime Text 3</b:title>
+			<b:content>
+				<b:summary> 今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime Text 3 正式版 release 了，官網也整個更新了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 Command-T（不過我推薦用 ctrlp.vim）、Command Palette、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。 其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 Changelog...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w" /></a></p>
+<p>今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個<a href="https://www.sublimetext.com">更新</a>了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 <a href="https://github.com/wincent/command-t">Command-T</a>（不過我推薦用 <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a>）、<a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">Command Palette</a>、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w" /></a></p>
+<p>其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 <a href="https://www.sublimetext.com/3">Changelog</a> ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w" /></a></p>
+<p>似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w" /></a></p>
+<p>我今天也因此好幾次找不到就是了...</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
 
 		<b:entry entryID="000907" baseName="196">
 			<b:author>

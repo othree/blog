@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000912" baseName="question-mark-in-es">問號出頭天</b:listData>
+
+			<b:previous>
+				<b:mTitle>Naming Cases</b:mTitle>
+				<b:mDate>2017-11-16</b:mDate>
+				<b:mBase>naming-cases</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Web F2E 看 Python Syntax</b:mTitle>
+				<b:mDate>2017-12-05</b:mDate>
+				<b:mBase>web-f2e-and-python-syntax</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000912" baseName="question-mark-in-es">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2017-11-19</b:date>
+				<b:time>00:06:30</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>問號出頭天</b:title>
+			<b:content>
+				<b:summary> 剛剛掃了一下 TC39 新的草案，發現和 ? 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 CoffeeScript，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用： let zip = lottery.drawWinner?.()?.address?.zipcode 可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 ?.()，而不是 ?()，其實我覺得也比較醜一些。 第二個是 Nullish Coalescing，這是正港的用來設定變數 default 值用的，以前通常的作法是用 ||： function (option =...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
+<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
+<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
+</code></pre>
+<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
+<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick || true;
+}
+</code></pre>
+<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick ?? true;
+}
+</code></pre>
+<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
+<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
+<pre><code class="language-javascript">function add(x, y) { return x + y; }
+
+const addOne = add(1, ?); // apply from the left
+addOne(2); // 3
+</code></pre>
+<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

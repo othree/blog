@@ -4,11 +4,166 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2017</copyright>
-<lastBuildDate>2017-08-12 10:41</lastBuildDate>
+<copyright>Copyright 2018</copyright>
+<lastBuildDate>2018-01-12 10:54</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>分號大戰 again</title>
+<description><![CDATA[<p>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號：</p>
+<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.<a href="https://t.co/9FY4i29iqs">https://t.co/9FY4i29iqs</a></p>-- Daniel Ehrenberg (@littledan) <a href="https://twitter.com/littledan/status/951523844262637568?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
+<p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
+<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更重點，就是 TC39 的文件，作為 spec 似乎不該做<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
+<pre><code class="language-javascript">class Counter extends HTMLElement {
+  x = 0;
+
+  clicked() {
+    this.x++;
+    window.requestAnimationFrame(this.render.bind(this));
+  }
+}
+</code></pre>
+<p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
+<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還做建議開發者用的語法就很怪。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</link>
+<guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
+<category>script</category>
+<pubDate>2018-01-12 10:54</pubDate>
+</item>
+
+<item>
+<title>Web F2E 看 Python Syntax</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr"><img src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w" /></a></p>
+<p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
+<h4>內建支援 String Formatting</h4>
+<p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
+<pre><code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
+</code></pre>
+<p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
+<pre><code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
+</code></pre>
+<p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
+<h4>Multiline String</h4>
+<p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
+<pre><code class="language-python">template_string = &quot;&quot;&quot;&lt;div&gt;
+                       Wow
+                     &lt;/div&gt;&quot;&quot;&quot;
+</code></pre>
+<p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
+<h4>Keyword Arguments</h4>
+<p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
+<pre><code class="language-python">def func(a, b, c, d):
+    return a + b + c + d
+</code></pre>
+<p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
+<pre><code class="language-python">func(a=1, b=2, c=3, d=4)
+</code></pre>
+<p>而且也可以混用：</p>
+<pre><code class="language-python">func(1, 2, c=3, d=4)
+</code></pre>
+<p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
+<p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
+<h4>Circular Dependency</h4>
+<p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
+<h4>Ternary Operator</h4>
+<p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
+<pre><code class="language-python">reality = True if isReal else False
+</code></pre>
+<p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+if file.hash
+  filename = filename + '-' + file.hash
+  
+if file.ext
+  filename = filename + '.' + file.ext
+</code></pre>
+<p>用了後置 <code>if</code> 的話可以寫成：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+filename = filename + '-' + file.hash if file.hash
+
+filename = filename + '.' + file.ext if file.ext
+</code></pre>
+<p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
+<pre><code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
+</code></pre>
+<p>就比較不喜歡這樣就是了。</p>
+<h4>Tuple</h4>
+<p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
+<p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
+<h4>in 運算</h4>
+<p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
+<pre><code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
+    ok()
+</code></pre>
+<p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
+<h4>Dict</h4>
+<p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
+<pre><code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
+</code></pre>
+<p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
+<pre><code class="language-coffeescript">data.attr1?.attr2?.attr3?
+</code></pre>
+<p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
+<h4>Unix Timestamp</h4>
+<p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
+<h4>PEP8, Flake8</h4>
+<p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
+<pre><code class="language-python">def hello(name='John'):
+  return 'Hello ' + name
+
+hello(name='Hancock')
+</code></pre>
+<p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
+<pre><code class="language-python">import pages  # noqa: F401
+</code></pre>
+<p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
+<h4>Python Enhancement Proposals (PEPs)</h4>
+<p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</link>
+<guid>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</guid>
+<category>script</category>
+<pubDate>2017-12-05 18:39</pubDate>
+</item>
+
+<item>
+<title>問號出頭天</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
+<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
+<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
+</code></pre>
+<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
+<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick || true;
+}
+</code></pre>
+<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick ?? true;
+}
+</code></pre>
+<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
+<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
+<pre><code class="language-javascript">function add(x, y) { return x + y; }
+
+const addOne = add(1, ?); // apply from the left
+addOne(2); // 3
+</code></pre>
+<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
+]]></description>
+<link>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</link>
+<guid>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</guid>
+<category>script</category>
+<pubDate>2017-11-19 00:06</pubDate>
+</item>
 
 <item>
 <title>Temporal - 下個世代的 Date</title>
@@ -839,172 +994,6 @@ chai.use(chaiAsPromised);
 <guid>https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/</guid>
 <category>script</category>
 <pubDate>2015-08-17 18:28</pubDate>
-</item>
-
-<item>
-<title>Electron 入門</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr"><img src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg 1024w, https://farm1.staticflickr.com/312/20249299982_ba032442b2_h.jpg 1600w" /></a></p>
-
-<p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
-
-<p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
-
-<p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
-
-<p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻完真的不知道是放在這名字下面。</p>
-
-<p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
-
-<p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/08/03/electron-intro/</link>
-<guid>https://blog.othree.net/log/2015/08/03/electron-intro/</guid>
-<category>script</category>
-<pubDate>2015-08-03 21:27</pubDate>
-</item>
-
-<item>
-<title>GHCJS</title>
-<description><![CDATA[<p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上已經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
-
-<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
-
-<pre><code>./cofigure
-make install
-</code></pre>
-
-<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
-
-<pre><code>cabal install cabal-install
-</code></pre>
-
-<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
-
-<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
-</code></pre>
-
-<p>接下來才是安裝 GHCJS：</p>
-
-<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
-git clone https://github.com/ghcjs/ghcjs.git
-cabal install ./ghcjs ./ghcjs-prim
-</code></pre>
-
-<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
-
-<pre><code>ghcjs-boot --dev
-</code></pre>
-
-<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
-
-<pre><code>cabal install --ghcjs pandoc
-</code></pre>
-
-<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
-
-<pre><code>git clone git@github.com:osener/pandoc.git
-cabal install --ghcjs ./pandoc
-</code></pre>
-
-<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
-
-<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/06/18/ghcjs/</link>
-<guid>https://blog.othree.net/log/2015/06/18/ghcjs/</guid>
-<category>script</category>
-<pubDate>2015-06-18 00:08</pubDate>
-</item>
-
-<item>
-<title>TypeScript, AtScript, ES Decorator</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/16813714825/" title="AtScript by othree, on Flickr"><img src="https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg" width="1024" height="573" alt="AtScript" srcset="https://farm8.staticflickr.com/7639/16813714825_e15ff55b8b_b.jpg 1024w" /></a></p>
-
-<p>前陣子花了些時間研究了 TypeScript 和一些相關的發展，包括了 Google Angular Team 的 AtScript 和推進 ES 標準的部分，會開始感興趣深入研究主要是因為 <a href="http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx">Angular 2 說改用 TypeScript 寫</a>，好奇為什麼會有這樣的發展才下去搜尋資料的，這篇文章算是記錄用的，不過其實離寫好已經一陣子了，因為剛好遇到 Modern Web Conf，想說拿這題目去分享，就讓文章晚點上線了，後來投影片還有補充些內容，這篇文章就沒再更新了，所以兩邊會有些差異就是～</p>
-
-<p>ECMAScript 標準一直以來都是動態型別的，雖然資料有不同的型別，但是變數本身是沒限制型別的，而在 ECMAScript 發展的過程中，靜態型別第一次出現是在已經被廢棄的 ECMAScript 4 裡，網路上還可以找到一些<a href="http://www.ecmascript.org/es4/spec/overview.pdf">資料</a>，可以看看當時設計的語法，和現在常看到的 <code>:type</code> 的寫法很接近，後來這個設計也在 ActionScript 3 中被使用，微軟現在的 TypeScript 也是用這種寫法。那加入靜態型別的特性會有什麼好處呢，我認為有兩個主要的優點，第一個是可以讓程式碼更可靠，減少一些 bug 發生的機會，對於大型專案來說，多了這個限制的差距是蠻大的，另外一個優點則是 JS Engine 更好最佳化，以前也有提過現在的 V8 引擎就已經會判斷變數的型別會不會有變化來做最佳化了。</p>
-
-<p>或許是因為微軟對於大型專案開發的關注比較多吧，他們於 2012 年推出了 <a href="http://www.typescriptlang.org/">TypeScript</a>，為 JavaScript 加入了靜態型別，用的語法很簡潔：</p>
-
-<pre><code>var i:int;
-var message:string;
-</code></pre>
-
-<p>另外還提供了當時沒有的 class 和之前提過的<a href="https://blog.othree.net/log/2014/12/04/typescript-definition/">定義檔</a>等東西，TypeScript 一開始是基於 ECMAScript 5 設計的，不過在 ECMAScript 6 差不多定案後，微軟也開始著手把 ES5 based 改成 ES6 based，像是 class 就會改用 ES6 原生的，而 TypeScript 所提供的靜態型別檢查功能其實是靜態分析而已，也就是只有在把 .ts 檔案編譯成 .js 檔案時會做檢查，而由於 JavaScript 還沒有 type 的特性，所以這些型別的資訊其實在編譯過後都會被拿掉。目前除了 AngularJS 2 改用 TypeScript 之外，還有像 <a href="https://eng.asana.com/2014/11/asana-switching-typescript/">Asana</a> 和 Mozilla 的 <a href="https://github.com/mozilla/shumway">Shumway</a> 都是用 TypeScript。</p>
-
-<p>Google Angular Team 似乎對此還不夠滿足，因此他們開始發展 <a href="http://www.atscript.org/">AtScript</a>，在 TypeScript 上再加入 annotation 的功能，名稱的 At 代表的是 <code>@</code> 這個符號，因為這個符號是很多語言寫 annotation 用的符號，自然 AtScript 也是用這個符號來標記 Annotation：</p>
-
-<pre><code>@Component({selector: 'foo'})
-class MyComponent {
-  @Inject()
-  constructor(server:Server) {}
-}
-</code></pre>
-
-<p>Annotation 簡單翻起來也是註解，不過他和 comment 不一樣，不是給人看，而是要給 compiler 和 JS engine 看的，而且實際上也會影響程式的一些運作，annotation 應該是一種完全沒有也不影響程式執行的 metadata，不過細分下去應該可以分為兩類，第一種是 Java 的 annotation，以 metadata 為主，像是物件的角色、物件間關係等，另外一種則是 decorator annotation，可以讓函數加上各種不同特性，其實就是 decorator pattern 的簡易語法，看到一些範例當中，最讓我覺得厲害的就是 memorize 了吧，如果程式引擎支援，加上一行 memorize 的 annotation 就可以讓那個函數自動有 memorize 特性，如果使用不支援此特性的引擎來執行程式，函數的輸出也不會有錯，就是沒有 memorize 的效果，效率會比較差，Python 中就有 <a href="https://docs.python.org/3/library/functools.html#functools.lru_cache">lru_cache</a> 這個 decorator 可以做到這樣的效果（Python 的 decorator 語法是提供 syntax sugar，不過寫法和其它語言的 annotation 很像）:</p>
-
-<pre><code>@lru_cache(maxsize=None)
-def fib(n):
-    if n &lt; 2:
-        return n
-    return fib(n-1) + fib(n-2)
-</code></pre>
-
-<p>AtScript 一個很重要的原則是這些附加的資訊，都要在 runtime 可以使用，所以就不像 TypeScript 那樣只是把不支援的東西拿掉而已，像上面費氏數列的程式碼如果改用 AtScript 寫會變成：</p>
-
-<pre><code>@lru_cache()
-function fib(n) {
-  if (n &lt; 2) { return n; }
-  return fib(n - 1) + fib(n - 2);
-}
-</code></pre>
-
-<p>然後用 AtScript compiler 編譯過後會多上一段程式碼做類似下面的事情：</p>
-
-<pre><code>fib.annotations = [
-  new lru_cache(),
-];
-</code></pre>
-
-<p>這個 <code>annotations</code> 屬性在 runtime 時就是可以取用的資訊，目前 AtScript 的 annotation  就是比較偏重於 metadata 而不是 decorator，所以這些資料並不會直接讓函數有不同特性，而 AtScript 另外一個新東西 introspection 也是和 runtime 有關，是 TypeScript 所沒有的 runtime 時的型別檢查，JavaScript 要怎樣做執行階段的型別檢查呢？沒錯，基本上就是土法煉鋼，不過 AtScript 是引入一個 rtts（run time type assertion） 的 library 來做這件事，目前主要也是用 Angular Team 維護的 <a href="http://angular.github.io/assert/">assert.js</a>，本來的 fib 再改寫一下：</p>
-
-<pre><code>function fib(n:number):number {
-    if (n &lt; 2) { return n; }
-    return fib(n - 1) + fib(n - 2);
-}
-</code></pre>
-
-<p>然後編譯過後大概會變成：</p>
-
-<pre><code>function fib(n) {
-  assert.argumentTypes(n, number);
-  if (n &lt; 2) {
-    return assert.returnType((n), number);
-  }
-  return assert.returnType((fib(n - 1) + fib(n - 2)), number);
-}
-</code></pre>
-
-<p>可以看到不管是在函數開頭還是要回傳之前，都會多了用 assert.js 做型別檢查的程式碼，當然，多做的這些型別檢查是會造成效能影響的，所以 AtScript 把 runtime 的型別檢查分成兩個階段，開發階段和成品階段，成品階段，要上線的時候，就輸出不包含型別檢查的 js 程式碼，這樣就不會影響效能。AtScript 其實目前沒有自己的編譯器，而是使用 Google 的 <a href="https://github.com/google/traceur-compiler">Traceur</a>，Traceur 基本上是個 ES6 to ES5 compiler，不過實際上他還多一些非 ES6 標準的語法支援，包括了前面提到的 Type、Annotation，不過使用時要加些參數：</p>
-
-<pre><code>traceur --annotations true --type-assertions --types true fib.ats --out fib.js
-</code></pre>
-
-<p>在 <a href="http://ngeurope.org/">ng-europe</a> 研討會，就有一場關於 AtScript 的演講：</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/lGdnh8QSPPk?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<p>裡面除了基本的介紹，為什麼會發展 AtScript 之外，還有很重要的未來發展，Angular Team 是有打算把 Type、Annotation 等等特性推回 ECMAScript 未來的標準之中的。在 ECMAScript 標準的發展上，其實早在之前就有一些變數型別相關的功能在討論，包括了 <a href="http://wiki.ecmascript.org/doku.php?id=strawman:types">type</a>、<a href="http://wiki.ecmascript.org/doku.php?id=strawman:guards">guard</a>，不過都沒有進到目前的 ECMAScript 6(2015)，目前 AtScript 和 TypeScript 兩者正在逐漸互相同步，也有共同合作，而且 AtScript 還沒有嚴謹的 spec 文件，所以會看到官方發佈說 AngularJS 2 用 TypeScript 開發，而不是用 AtScript，目前看到 TC39 討論裡面，除了 type 之外，幫其它新東西提出 proposal 的，很令人意外，竟然是 Yehuda Katz，可以看到去年四月的<a href="https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-04/apr-10.md#decorators-for-es7">會議記錄</a>就有他提出 decorator 特性的討論，另外 TypeScript 的 <a href="https://github.com/Microsoft/TypeScript/issues/1557#issuecomment-77709527">Issue 1557</a> 是關於在 TypeScript 中加入 AtScript 的 annotation 支援，Yehuda Katz 也有提到他正在整理相關資料，幾週後會在 TC39 會議提出，在他的 github 帳號上也可以找到相關的<a href="https://github.com/wycats/javascript-decorators">資訊</a>，我個人對 Yehuda Katz 評價很高，不過實在是想不太到為什麼會是他跑出來推動這部分的發展，不過總之 Yehuda Katz 打算提出的是比現在 metadata 為主更進一步的 annotation，也就是包含像 Python decorator 特性的 annotation，如果真的順利成案，其實也不知道是好是壞，好的是一些程式碼可以更簡潔，壞的是 JavaScript 語法越來越多，入門要學的東西也變多很多。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/05/18/typescript-atscript-es-decorator/</link>
-<guid>https://blog.othree.net/log/2015/05/18/typescript-atscript-es-decorator/</guid>
-<category>script</category>
-<pubDate>2015-05-18 18:24</pubDate>
 </item>
 
 

@@ -4,11 +4,289 @@
 <title>O3noBLOG</title>
 <link>https://blog.othree.net/</link>
 <description></description>
-<copyright>Copyright 2017</copyright>
-<lastBuildDate>Fri, 18 Aug 2017 23:54:40 +0800</lastBuildDate>
+<copyright>Copyright 2018</copyright>
+<lastBuildDate>Fri, 12 Jan 2018 10:54:06 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>分號大戰 again</title>
+<description><![CDATA[<p>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號：</p>
+<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.<a href="https://t.co/9FY4i29iqs">https://t.co/9FY4i29iqs</a></p>-- Daniel Ehrenberg (@littledan) <a href="https://twitter.com/littledan/status/951523844262637568?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
+<p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
+<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更重點，就是 TC39 的文件，作為 spec 似乎不該做<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
+<pre><code class="language-javascript">class Counter extends HTMLElement {
+  x = 0;
+
+  clicked() {
+    this.x++;
+    window.requestAnimationFrame(this.render.bind(this));
+  }
+}
+</code></pre>
+<p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
+<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還做建議開發者用的語法就很怪。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</link>
+<guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
+<category>script</category>
+<pubDate>Fri, 12 Jan 2018 10:54:06 +0800</pubDate>
+</item>
+
+<item>
+<title>Web F2E 看 Python Syntax</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr"><img src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w" /></a></p>
+<p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
+<h4>內建支援 String Formatting</h4>
+<p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
+<pre><code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
+</code></pre>
+<p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
+<pre><code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
+</code></pre>
+<p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
+<h4>Multiline String</h4>
+<p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
+<pre><code class="language-python">template_string = &quot;&quot;&quot;&lt;div&gt;
+                       Wow
+                     &lt;/div&gt;&quot;&quot;&quot;
+</code></pre>
+<p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
+<h4>Keyword Arguments</h4>
+<p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
+<pre><code class="language-python">def func(a, b, c, d):
+    return a + b + c + d
+</code></pre>
+<p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
+<pre><code class="language-python">func(a=1, b=2, c=3, d=4)
+</code></pre>
+<p>而且也可以混用：</p>
+<pre><code class="language-python">func(1, 2, c=3, d=4)
+</code></pre>
+<p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
+<p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
+<h4>Circular Dependency</h4>
+<p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
+<h4>Ternary Operator</h4>
+<p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
+<pre><code class="language-python">reality = True if isReal else False
+</code></pre>
+<p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+if file.hash
+  filename = filename + '-' + file.hash
+  
+if file.ext
+  filename = filename + '.' + file.ext
+</code></pre>
+<p>用了後置 <code>if</code> 的話可以寫成：</p>
+<pre><code class="language-coffeescript">filename = file.name
+
+filename = filename + '-' + file.hash if file.hash
+
+filename = filename + '.' + file.ext if file.ext
+</code></pre>
+<p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
+<pre><code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
+</code></pre>
+<p>就比較不喜歡這樣就是了。</p>
+<h4>Tuple</h4>
+<p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
+<p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
+<h4>in 運算</h4>
+<p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
+<pre><code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
+    ok()
+</code></pre>
+<p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
+<h4>Dict</h4>
+<p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
+<pre><code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
+</code></pre>
+<p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
+<pre><code class="language-coffeescript">data.attr1?.attr2?.attr3?
+</code></pre>
+<p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
+<h4>Unix Timestamp</h4>
+<p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
+<h4>PEP8, Flake8</h4>
+<p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
+<pre><code class="language-python">def hello(name='John'):
+  return 'Hello ' + name
+
+hello(name='Hancock')
+</code></pre>
+<p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
+<pre><code class="language-python">import pages  # noqa: F401
+</code></pre>
+<p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
+<h4>Python Enhancement Proposals (PEPs)</h4>
+<p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</link>
+<guid>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</guid>
+<category>script</category>
+<pubDate>Tue, 05 Dec 2017 18:39:38 +0800</pubDate>
+</item>
+
+<item>
+<title>問號出頭天</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
+<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
+<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
+</code></pre>
+<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
+<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick || true;
+}
+</code></pre>
+<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
+<pre><code class="language-javascript">function (option = {}) {
+  let quick = option.quick ?? true;
+}
+</code></pre>
+<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
+<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
+<pre><code class="language-javascript">function add(x, y) { return x + y; }
+
+const addOne = add(1, ?); // apply from the left
+addOne(2); // 3
+</code></pre>
+<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</link>
+<guid>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</guid>
+<category>script</category>
+<pubDate>Sun, 19 Nov 2017 00:06:30 +0800</pubDate>
+</item>
+
+<item>
+<title>Naming Cases</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"><img src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w" /></a></p>
+<p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
+<h5>CamelCase</h5>
+<p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
+<p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
+<h5>snake_case</h5>
+<p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
+<h5>MACRO_CASE</h5>
+<p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
+<p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
+<h5>lisp-case</h5>
+<p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
+<h5>COBOL-CASE</h5>
+<p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
+<h5>Train-Case</h5>
+<p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
+<p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
+<p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
+<p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
+<pre><code class="language-vim">let g:switch_custom_definitions =
+    \ [
+    \   {
+    \     '\&lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&gt;': '\=toupper(submatch(1)) . submatch(2)',
+    \     '\&lt;\(\u\l\+\)\(\u\l\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))&quot;,
+    \     '\&lt;\(\l\+\)\(_\l\+\)\+\&gt;': '\U\0',
+    \     '\&lt;\(\u\+\)\(_\u\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '_', '-', 'g'))&quot;,
+    \     '\&lt;\(\l\+\)\(-\l\+\)\+\&gt;': &quot;\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')&quot;,
+    \   }
+    \ ]
+</code></pre>
+<p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
+<p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a></li>
+<li><a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a></li>
+</ul>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/11/16/naming-cases/</link>
+<guid>https://blog.othree.net/log/2017/11/16/naming-cases/</guid>
+<category>vim</category>
+<pubDate>Thu, 16 Nov 2017 12:31:26 +0800</pubDate>
+</item>
+
+<item>
+<title>Apple 電話支援</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34475448783/" title="Apple Store Taipei 101 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg" width="1024" height="683" alt="Apple Store Taipei 101, " srcset="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg 1024w, https://farm5.staticflickr.com/4198/34475448783_2de7ddb630_h.jpg 1600w" /></a></p>
+<p>前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。</p>
+<p>遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。</p>
+<p>遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。</p>
+<p>接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯</p>
+<p>等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。</p>
+<p>然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者 log 判斷是不是可以砍帳號吧。</p>
+<p>最後總結一下，這次過程我覺的蘋果電話客服有以下特色，不過大概也不會是每個公司都複製的起來的：</p>
+<ol>
+<li>由他們掌握主控權，但是又完全免費，而且填表後真的很快就會接到電話</li>
+<li>每個要等待的階段都會先讓使用者有預期</li>
+<li>除了第一位外言談都蠻誠懇的</li>
+<li>完全相信（至少表現起來是）客戶，不會強迫做一些嘗試過的操作</li>
+<li>連砍帳號都可以辦到</li>
+</ol>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/10/23/apple-phone-support/</link>
+<guid>https://blog.othree.net/log/2017/10/23/apple-phone-support/</guid>
+<category>mac</category>
+<pubDate>Mon, 23 Oct 2017 23:02:46 +0800</pubDate>
+</item>
+
+<item>
+<title>OSX Admin Account 消失</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37260875515/" title="Mac OSX single user mode by othree, on Flickr"><img src="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg" width="1024" height="683" alt="Mac OSX single user mode" srcset="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg 1024w, https://farm5.staticflickr.com/4367/37260875515_07dbc0b069_h.jpg 1600w" /></a></p>
+<p>昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。</p>
+<p>首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上  Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！</p>
+<p>總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下：</p>
+<ol>
+<li>重開機同時按著 <code>cmd</code>+<code>s</code> 進入 single user mode</li>
+<li>用 single user mode 的 CLI 介面刪除 <code>/var/db/.AppleSetupDone</code> 這個檔案</li>
+<li>執行 <code>reboot</code> 重開機，這樣會進入初次開機的狀態</li>
+<li>重新建立帳號，我是用相同的帳號名稱，會執行的有點久，最後會說失敗，原因應該是因為該帳號的 home 目錄已經存在了</li>
+<li>再次重開機，結果會進入正常的登入畫面，可以登入新建的帳號，發現 home 目錄的東西幾乎都可以正常讀入</li>
+</ol>
+<p>最後，為什麼會鑰匙圈損毀呢，我推測是硬碟東西塞太多加上當時在上傳資料才造成問題的，不過也就是個推測而已啦。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/09/16/osx-admin-account-missing/</link>
+<guid>https://blog.othree.net/log/2017/09/16/osx-admin-account-missing/</guid>
+<category>mac</category>
+<pubDate>Sat, 16 Sep 2017 23:02:54 +0800</pubDate>
+</item>
+
+<item>
+<title>Sublime Text 3</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w" /></a></p>
+<p>今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個<a href="https://www.sublimetext.com">更新</a>了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 <a href="https://github.com/wincent/command-t">Command-T</a>（不過我推薦用 <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a>）、<a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">Command Palette</a>、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w" /></a></p>
+<p>其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 <a href="https://www.sublimetext.com/3">Changelog</a> ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w" /></a></p>
+<p>似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w" /></a></p>
+<p>我今天也因此好幾次找不到就是了...</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2017/09/14/sublime-text-3/</link>
+<guid>https://blog.othree.net/log/2017/09/14/sublime-text-3/</guid>
+<category>software</category>
+<pubDate>Thu, 14 Sep 2017 22:59:57 +0800</pubDate>
+</item>
 
 <item>
 <title>196</title>
@@ -238,242 +516,6 @@ processData: false
 <guid>https://blog.othree.net/log/2017/06/07/a11y/</guid>
 <category>web</category>
 <pubDate>Wed, 07 Jun 2017 00:09:19 +0800</pubDate>
-</item>
-
-<item>
-<title>Graceful Degradation Background</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr"><img src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w" /></a></p>
-<p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
-<p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
-<ul>
-<li>真的寫 Media Query</li>
-<li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
-<li>大家一起用標準解析度的圖</li>
-</ul>
-<p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
-<ul>
-<li>可以有兩張圖不同解析度的圖</li>
-<li>不要用 Media Query</li>
-<li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
-<li>舊瀏覽器顯示正確</li>
-</ul>
-<p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
-<pre><code class="language-css">background: #123456 url('the-bg.png') center center;
-background: #123456 url('the-bg@2x.png') center center/32px 32px;
-</code></pre>
-<p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
-<ul>
-<li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
-<li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
-<li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
-</ul>
-<p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/05/24/graceful-degradation-background/</link>
-<guid>https://blog.othree.net/log/2017/05/24/graceful-degradation-background/</guid>
-<category>css-html</category>
-<pubDate>Wed, 24 May 2017 22:05:27 +0800</pubDate>
-</item>
-
-<item>
-<title>Telegram Instant View</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34366696420/" title="Telegram Instant View by othree, on Flickr"><img src="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg" width="1024" height="592" alt="Telegram Instant View, " srcset="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg 1024w, https://farm5.staticflickr.com/4194/34366696420_83f48bbf29_h.jpg 1600w" /></a></p>
-<p>Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 <a href="https://telegram.org/blog/video-messages-and-telescope">Video Message</a>、<a href="https://telegram.org/blog/payments">Payment for Bots</a> 還有就是 <a href="https://telegram.org/blog/instant-view">Instant View</a> 準備要<a href="https://telegram.org/blog/instant-view-contest-200K">開放給所有網頁使用</a>了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page object），不完全算是程式語言，裡面比較像是一些定義，加上用 <a href="https://zh.wikipedia.org/zh-tw/XPath">XPath</a> 來做文件內容的選取，蠻意外會用 XPath 的，還好我對 XPath 有點經驗，就花了一點時間研究了一下，也把自己 blog 的 tempalte 基本版做出來了：</p>
-<pre><code>?exists:  //article/div[@id=&quot;comments&quot;]
-
-author:  &quot;othree&quot;
-channel: &quot;@othree&quot;
-
-body:     //article
-title:    $body//h3[1]
-
-cover: $body/section[@itemprop=&quot;articleBody&quot;]/p[1]/a[@itemprop=&quot;image&quot;]/img
-
-published_date: $body/header/time[@itemprop=&quot;datePublished dateModified&quot;]/@datetime
-
-@remove: //article/header
-@remove: //article/footer
-@remove: //article/div[@id=&quot;comments&quot;]
-@remove: //noscript
-@remove: //a[has-class(&quot;dsq-brlink&quot;)]
-</code></pre>
-<p>語法還算蠻好理解的，官方也提供了幾個有完整註解的<a href="https://instantview.telegram.org/samples/">範例</a>，仔細一看似乎之前其實也只有 medium 是非官方有支援的網站，也因為這個實做方式，對不同的網站就要有不同的 template 來處理，所以官方辦了個競賽，搶先替<a href="https://instantview.telegram.org/contest">清單上的網站</a>做出可用的 template 就會有獎金，目前個人網站雖然已經可以在官方的 editor 做 template、驗證並發測試連結，不過還要等 domain 被加進白名單後才會真的啟用，目前這個關卡還沒開放就是。</p>
-<p>其實我是比較喜歡這種實做方式的，不用為了增加支援一個新的網路服務就多做一個版本，不會影響原本的網頁原始碼，不會讓  <code>&lt;head&gt;</code> 越來越肥大，當然缺點就是網站改版，HTML 結構有變化的話就要跟著修改 template，不過我是認為這個實做方法對於網路生態是比較好一些的。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/05/21/telegram-instant-view/</link>
-<guid>https://blog.othree.net/log/2017/05/21/telegram-instant-view/</guid>
-<category>web</category>
-<pubDate>Sun, 21 May 2017 23:45:17 +0800</pubDate>
-</item>
-
-<item>
-<title>MovableType and CommonMark</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33655820694/" title="Typora by othree, on Flickr"><img src="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg" width="650" height="622" alt="Typora" srcset="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg 1024w" /></a></p>
-<p>我這邊用的 blog 系統是 <a href="https://www.movabletype.org/">MovableType</a> 不是新聞了，然後也因為用 MovableType 我一直都只能用最初版的 markdown 引擎，沒錯，就是 Daring Fireball 作者 John Gruber 的<a href="http://daringfireball.net/projects/markdown/">那一版</a>，這個版本其實已經可以滿足我大部分的需求了，不過當我想要用 <a href="https://typora.io/">Typora</a> 寫文章的時候，就遇到問題了，Typora 在輸出成 Markdown 文件時，code block 只支援三個 ``` 包起來的 <a href="http://spec.commonmark.org/0.27/#fenced-code-block">Fenced Code Block</a>，而不支援 <a href="http://spec.commonmark.org/0.27/#indented-code-block">Indented Code Block</a>，剛好初版的 Markdown 格式只有 Indented Code Block，兩者其實要比的話，我是比較喜歡 Indented Code Block 的，比較符合 Markdown 的 sense，不過用 Fenced Code Block 有個優點是可以指定程式碼的語言，也因此才能夠有 syntax highlight 的效果。</p>
-<p>總之，因為這個原因，用 Typora 寫技術文章對我來說就很不方便，一直以來都有想解決這個問題，前兩天還去 Typora 發 issue 說希望他們可以支援 Indented Code Block，結果發完沒多久，躺在床上快要睡覺的時候突然想到，CommonMark 這麼多語言有實做，搞不好有 Perl 的啊，結果快速搜尋了一下，還真的有一個 <a href="https://github.com/nwellnhof/perl-commonmark">perl-commonmark</a>，橋接 Perl 和 <a href="https://github.com/jgm/cmark">cmark</a>，也有發佈到 CPAN 上，當下心裡就盤算著，隔天起來要來把它接到 MovableType 去看看。</p>
-<p>結果隔天實做起來是沒花我太多時間，雖然對 Perl 不熟，但是可以直接拿初版 Markdown.pl 來修改，原本的 Markdown.pl 這個檔案裡面實際上自己是一個 Markdown 的 Perl Package，同時也可以作為 MovableType 的 plugin script，我只需要把 plugin script 的部分留下，然後把最後做轉換的 function 換掉就好了，當然系統要裝好 cmark 和 Perl 的 CommonMark，cmark 應該很多環境都有了，我在 archlinux 上是直接用 pacman 裝：</p>
-<pre><code class="language-bash">pacman -S cmark
-</code></pre>
-<p>然後 CommonMark 是用 CPAN 裝，本來要用 cpanminus 的不知道為何用它會抓不到 package：</p>
-<pre><code class="language-bash">sudo CPAN CommonMark
-</code></pre>
-<p>我的 nginx 跑 CGI 時用的 perl 不是系統預設位置的，所以 CPAN 執行檔的路徑我是特別指定給他的，這樣 MovableType 執行的時候才找的到 CommonMark Module，實際上沒花多少功夫，我就把 MovableType 和 CommonMark 串起來了，當下心情真的是非常難以言喻，一來是這個問題其實存在已經許久了，二是我竟然把第一個支援 Markdown 的部落格系統接上 2017 年最新的 CommonMark 實做，雖然現在應該是也幫不到什麼人了。不過沒高興多久，就發現在 UTF-8 字元似乎有些狀況，有中文的文章會爛掉，或是 Dashboard 那頁的文字會變亂碼，後來為了這個問題又弄了好幾個小時，推測問題應該是因為 cmark 那邊回來的字串已經失去編碼的 metadata，所以在做 summary 切文字的時候，就會出現切錯地方的狀況，花了很多時間交叉比對和測試，最後的結果只是用 Perl 的 Encoding 把 cmark 傳回來的字串重新 encode 過而已，其實很簡單。除此之外，我其實還有試著想接看看 <a href="https://github.com/github/cmark">cmark-gfm</a>，因為它還多支援了 Table，不過幾次測試都不太順利，就沒繼續嘗試下去了。</p>
-<p>目前的成果放在 GitHub 上，取名叫 <a href="https://github.com/othree/MT-CommonMark">MT-CommonMark</a>，附上簡單的安裝說明，暫時是沒打算發去 movabletype.org 那邊。</p>
-<p>做好之後 MT-CommonMark 之後，我就開始在部落格上測試程式碼的 syntax highlight了，研究一陣子之後選擇的是 <a href="http://prismjs.com/">prismjs</a>，選擇它的原因很多，不過有兩個是比較主要的：</p>
-<ul>
-<li>作者有 <a href="http://lea.verou.me/">Lea Verou</a></li>
-<li>支援的 class name 格式剛好和 cmark 輸出的一樣</li>
-</ul>
-<p>結果兩者也很順利的搭配起來，中間就沒有再遇到什麼問題了。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/05/07/movabletype-and-commonmark/</link>
-<guid>https://blog.othree.net/log/2017/05/07/movabletype-and-commonmark/</guid>
-<category>web</category>
-<pubDate>Sun, 07 May 2017 09:47:24 +0800</pubDate>
-</item>
-
-<item>
-<title>Test CommonMark syntax</title>
-<description><![CDATA[<p>Fenced code block</p>
-<pre><code class="language-javascript">var a = 1;
-</code></pre>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/05/05/test-commonmark/</link>
-<guid>https://blog.othree.net/log/2017/05/05/test-commonmark/</guid>
-<category>about</category>
-<pubDate>Fri, 05 May 2017 11:17:36 +0800</pubDate>
-</item>
-
-<item>
-<title>Vim Packages</title>
-<description><![CDATA[<p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
-<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
-<pre><code>~/.vim/bundle/html5.vim
-~/.vim/bundle/yajs.vim
-</code></pre>
-<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
-<pre><code>~/.vim/pack/my-js/start/yajs.vim
-~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
-~/.vim/pack/my-js/start/simple-javascript-indenter
-</code></pre>
-<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
-<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/05/02/vim-packages/</link>
-<guid>https://blog.othree.net/log/2017/05/02/vim-packages/</guid>
-<category>vim</category>
-<pubDate>Tue, 02 May 2017 23:05:39 +0800</pubDate>
-</item>
-
-<item>
-<title>日本自駕</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34028951701/" title="沖繩 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg" width="1024" height="683" alt="沖繩" srcset="https://farm3.staticflickr.com/2805/34028951701_c6d1936940_b.jpg 1024w, https://farm3.staticflickr.com/2805/34028951701_5720ab1710_h.jpg 1600w" /></a></p>
-
-<p>這篇想要記錄一下第一次去日本自駕，就前陣子去了沖繩一趟，當然就選擇租車自駕，這篇用條列式記錄一下：</p>
-
-<ul>
-<li>租車公司是 OTS，因為第一次的關係，所以就盡量走大眾路線</li>
-<li>不過 OTS 因為比較大間，位置離機場也比較遠，其實比較花時間</li>
-<li>租的車款是 Toyota C-HR，看到有特價加上早鳥，不過也還是比一般車款貴</li>
-<li>不免俗的離開租車公司時要刷一下雨刷</li>
-<li>大約第二天就不太有左右駕習慣問題了，回國後也沒有左右問題</li>
-<li>沖繩比較偏遠，部分路段的路面狀況其實也不好</li>
-<li>幾乎所有路口都可以右轉，有右轉道，可能是沖繩才這樣</li>
-<li>晚上山路其實沒什麼路燈，交通號誌反光效果超強的，強到覺得會刺眼 <br />
-不過一部份應該是因為車燈很亮，倒是號誌都很乾淨是真的</li>
-<li>以後應該還想要東北、北海道也去試試看自駕</li>
-</ul>
-
-<p>針對 Toyota C-HR 的部分：</p>
-
-<ul>
-<li>後座空間真的小、後座車窗也小</li>
-<li>四人三個行李箱有點勉強，後行李箱只能放兩個中 size 的行李箱 <br />
-一大一中也不行，剩下一個大的是把後座一個位子拉倒才放進去</li>
-<li>有個自動切換遠光燈（<a href="http://www.toyota-global.com/innovation/safety_technology/safety_technology/technology_file/active/ahb.html">AHB</a>）的功能，正確性很高，實在很方便</li>
-<li>不過車門在開動車子後不會自動上鎖</li>
-<li>開鎖的時候地上會有投影，有點騷包(?)</li>
-<li>開起來感覺其實是還不錯啦</li>
-</ul>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/33201465513/" title="沖繩 okinawa by othree, on Flickr"><img src="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg" width="1024" height="683" alt="沖繩 okinawa, " srcset="https://farm3.staticflickr.com/2946/33201465513_939151304d_b.jpg 1024w, https://farm3.staticflickr.com/2946/33201465513_ea0cd7f8c5_h.jpg 1600w" /></a></p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/04/29/japan-self-drive/</link>
-<guid>https://blog.othree.net/log/2017/04/29/japan-self-drive/</guid>
-<category>diary</category>
-<pubDate>Sat, 29 Apr 2017 22:58:39 +0800</pubDate>
-</item>
-
-<item>
-<title>My First Contribution to Nginx</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25580381505/" title="nginx conf by othree, on Flickr"><img src="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg" width="570" height="427" alt="nginx conf" srcset="https://farm2.staticflickr.com/1525/25580381505_0825ef9c24_b.jpg 1024w" /></a></p>
-
-<p>因為工作上的需要，所以其實我還蠻常會編輯 nginx configuration file 的，理所當然的編輯器是用 vim，然後就會對 nginx 設定檔的支援有意見，一般人用的 nginx 設定檔的 vim script 其實是 nginx repository 的 contrib 目錄裡面的那份，這份 vim script 其實本來也是獨立的，不過原作者好像把他捐進去 nginx 裡面，之後就一直都在裡面了，也因此之後更新就很不頻繁。</p>
-
-<p>然後因為檔案都放在 nginx repository 裡面，Vim 要使用其實不太方便，所以 Github 上還看的到不少人單獨抽出來，我一開始也是 fork <a href="https://github.com/moskytw/nginx-contrib-vim">mosky</a> 的來用，後來就直接在<a href="https://github.com/othree/nginx-contrib-vim">自己的 repository</a> 上面修改了，改一陣子之後就開始想要推回 upstream，也就是 nginx 的程式庫，然後就開始了這段協工旅程(?)。</p>
-
-<p>要發修改上 upstream，第一步自然是看一下<a href="http://nginx.org/en/docs/contributing_changes.html">如何貢獻</a>，節錄這邊幾個重點：</p>
-
-<ol>
-<li>用 <a href="http://mailman.nginx.org/mailman/listinfo/nginx-devel">nginx-devel</a> 這個 mailing list 做討論</li>
-<li>發 patch 前有一些注意事項，不過我改 vim script 比較沒關係</li>
-<li>Patch 也是用 email 發到 nginx-devel，有範例</li>
-<li>推薦用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a></li>
-<li>要先簽 <a href="https://www.nginx.com/resources/wiki/contributing/cla/">CLA</a>（不過目前這條已經不見了，改成最後說發 patch 等於同意用他們專案的 LCIENSE）</li>
-</ol>
-
-<p>總之我就照這份，先去訂閱了 nginx-devel 觀察一陣子，然後就直接把我的<a href="http://mailman.nginx.org/pipermail/nginx-devel/2017-February/009489.html">修改</a>整個丟上去了，一開始是直接用 Gmail 發，把 patch 檔內容直接複製貼過去，產生 patch 檔的方法是：</p>
-
-<pre><code>hg export &gt; something.patch
-</code></pre>
-
-<p><code>hg export</code> 會直接輸出最後一個 commit 的 patch 內容到 STDOUT，然後就直接用 Gmail 發過去，結果 review 的 <a href="http://mdounin.ru/">Maxim Dounin</a> 說他沒辦法 apply patch，可能是因為我的 mail client 的關係，建議我用 <a href="https://www.mercurial-scm.org/wiki/PatchbombExtension">patchbomb</a> 發，所以就研究搜尋了一下，發現他是直接發 email 的機制，所以要把帳號密碼都寫到設定內，找了一篇 Gmail 的<a href="http://blog.sidkalra.com/2009/02/using-gmail-with-hgs-patchbomb-extension/">設定範例</a>，搭配 Google account 的應用程式密碼，設定範例如下：</p>
-
-<pre><code>[extensions]
-hgext.patchbomb =
-
-[email]
-from=othree &lt;othree@gmail.com&gt;
-to=nginx-devel@nginx.org
-cc=othree@gmail.com
-method=smtp
-
-[smtp]
-host=smtp.gmail.com
-port=587
-username=othree@gmail.com
-password=[gmail_password]
-tls=True
-</code></pre>
-
-<p>把這些資訊填入 <code>.hg/hgrc</code> 這個檔案內，然後就可以用 <code>hg email -o --test</code> 來測試看看，這個指令會把完整的原始信件內容，包括 header 等都顯示出來（丟到 STDOUT），如果正式要發就把 <code>--test</code> 拿掉就好了。</p>
-
-<p>確認一切沒問題後，我就改用 patchbomb 發 patch 到 nginx-devel 了，結果還是被拒絕了，問題主要是這個 patch 一次修改太多，理想上應該是不同目的的修改放到不同 patch 內，當然這和我一開始的預想不一樣就是了，我一開始的想法是因為 contrib 這邊的東西，相對於 nginx 本體的原始碼來說比較次要，所以盡量減少 commit 數，其實如果我有先去問過應該是可以少繞這段路，總之，為了一個一個修改送出，我又開了一個 github repository，叫做 <a href="https://github.com/othree/nginx-contrib-vim-patch">nginx-contrib-vim-patch</a>，想要慢慢把我的 nginx-contrib-vim 內的更動搬過去，接著開始的，就是漫長的 review 和溝通了。</p>
-
-<p>其實我完全沒想到 Maxim Dounin 會這麼認真的 review，不止會看我這樣改是要達到什麼目的，還有認真測試，結果被抓出一堆問題，雖然都是奇妙的 conf 寫法，合語法，但是應該不會有人這樣寫的 case，這些 case 我也開始慢慢收集到 github 上的 <a href="https://github.com/othree/nginx-conf-test">nginx-conf-test</a>，方便之後測試用，總之來回許久，終於有一部分比較簡單的東西先進去 nginx repository 了，然後我發現外部貢獻者都會在 <a href="https://nginx.org/en/CHANGES">change log</a> 那邊被感謝，我貢獻進去的目前應該都在 1.11.11 那版，其實只有把新的 directive 補上（core modules, 3rd party modules）和幾個 protocol 參數的 highlight，至於其他的修改還進不去，目前看起來會是一場長期抗戰，主要是因為 reviewer 對於期望的目標和我不一樣，目前大概會維持兩個版本吧，一邊弄<a href="https://github.com/othree/nginx-contrib-vim">自己希望的</a>，一邊抽東西送回去 upstream，不得不說主事者控制太緊會讓貢獻者動力被削減不少。</p>
-
-<p>貢獻 nginx 的過程讓我體會到以前的開源協做的模式（應該是吧？），用 mailing list 溝通，發 Patch、code review、做討論，這些點來看，nginx 的流程其實是非常老派，和現在用 Github 做溝通、協做 的流程差很大，門檻也高不少，當然這不一定是壞事，還是要看專案性質，在 Github 這類平台上做這些協做流程的話，門檻降低了，其實可能隨之而來的問題就是太多人進來造成貢獻品質落差很大，反而會吃掉主力人員的時間，剛好今天也看到知乎上有一篇「<a href="https://www.zhihu.com/question/36292298/answer/160028010">維護一個大型開源專案是怎樣的體驗？</a>」，裡面就有提到 VSCode 的狀況，變成還需要排人專門處理 issue 和 PR，感覺就很可怕。</p>
-
-<p>順帶一題，nginx 的固定貢獻者當中不少中國人啊。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</link>
-<guid>https://blog.othree.net/log/2017/04/26/first-contribution-to-nginx/</guid>
-<category>unix</category>
-<pubDate>Wed, 26 Apr 2017 14:35:29 +0800</pubDate>
 </item>
 
 
