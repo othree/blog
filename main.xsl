@@ -149,7 +149,7 @@
         <nav>
           <div class="nav-inner">
             <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-              <input id="search" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+              <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
               <input type="hidden" name="sites" value="blog.othree.net"/>
             </form>
             <div class="pure-menu pure-menu-horizontal">
@@ -185,7 +185,7 @@
               <hr/>
               <h2>其它資訊</h2>
               <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-                <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+                <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
                 <input type="hidden" name="sites" value="blog.othree.net"/>
                 <!-- <button type="submit" value="GO" tabindex="9" class="btn" >GO</button> -->
               </form>
@@ -206,9 +206,11 @@
                         <xsl:with-param name="by" select="'%2F'"/>
                       </xsl:call-template>
                     </xsl:variable>
-                    <iframe id="fb-button" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"/>
+                    <iframe id="fb-button" referrerpolicy="no-referrer" sandbox="allwo-scripts allow-popups" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"/>
+		    <!--
                     <iframe id="gp-button" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"/>
-                    <iframe id="tw-button" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?size=l&amp;count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"/>
+                    -->
+                    <iframe id="tw-button" referrerpolicy="no-referrer" sandbox="allwo-scripts allow-popups" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?size=l&amp;count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"/>
                     <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
                     <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
                     <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
