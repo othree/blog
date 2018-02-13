@@ -285,7 +285,7 @@
               <ul id="feeds">
                 <li>
                   <a href="https://feeds.feedburner.com/othree">
-                    <img src="https://feeds.feedburner.com/~fc/othree?bg=3366FF&amp;fg=FFFFCC&amp;anim=0" height="26" width="88" alt="訂閱本部絡格"/>
+                    FeedBurner
                   </a>
                 </li>
               </ul>
@@ -324,7 +324,9 @@
         </div>
         <script async="async" src="/scripts/all.js"></script>
         <script async="async" src="/scripts/prism.js"></script>
+	<!--
         <script async="async" src="https://embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+        -->
         <!--
         <script src="/scripts/detect_cleartype.js"></script>
         <script src="/scripts/device-pixel-ratio.js"></script>
