@@ -5,10 +5,33 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-01-12 10:54</lastBuildDate>
+<lastBuildDate>2018-02-07 12:29</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>CodeceptJS + puppeteer</title>
+<description><![CDATA[<p>看起來一切似乎都很美好，直到真的下去用。</p>
+<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
+<ul>
+<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
+<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
+<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
+<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
+<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
+</ul>
+<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
+<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
+</code></pre>
+<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
+<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</link>
+<guid>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</guid>
+<category>script</category>
+<pubDate>2018-02-07 12:29</pubDate>
+</item>
 
 <item>
 <title>分號大戰 again</title>
@@ -17,7 +40,7 @@
 <p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
 <blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
 <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更重點，就是 TC39 的文件，作為 spec 似乎不該做<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
+<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更有力，就是 TC39 的文件，做為 spec 似乎不該提出<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
 <pre><code class="language-javascript">class Counter extends HTMLElement {
   x = 0;
 
@@ -28,7 +51,7 @@
 }
 </code></pre>
 <p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
-<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還做建議開發者用的語法就很怪。</p>
+<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還提建議、警告開發者用的語法就很怪。</p>
 ]]></description>
 <link>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</link>
 <guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
@@ -979,21 +1002,6 @@ chai.use(chaiAsPromised);
 <guid>https://blog.othree.net/log/2015/08/21/react-intro/</guid>
 <category>script</category>
 <pubDate>2015-08-21 00:38</pubDate>
-</item>
-
-<item>
-<title>fetch is the new XHR</title>
-<description><![CDATA[<p>這次 COSCUP 講的是新的 Web API: fetch，其實這個東西要用只要看 HTML5 Rocks 那篇文章就好了，只是我在使用和做 fetch-er 的時候發覺很多的細節和問題（投影片裡面的 facts），有一些不跟最新進度也不知道狀況是怎樣，連 Stack Overflow 上也沒有，可能有人遇到但是不知道，所以就和我的 fetch-er 專案一起投稿。</p>
-
-<p>和 fetch-er 專案一起投稿的另一個考量是，在 COSCUP 和 OSDC 分享這麼多次，年初我突然才發現我的講題和 Open Source 的關連度實在太低（嚴格說來我在那時才認真意識到 open source 和社群的差異），只有 2013 的 COSCUP 是講我在 Vim Plugin 開發上的歷程，其他有一場有介紹到 underscore，之外就大部分是在介紹 Web 的新東西，所以認真的覺得今年要投和 Open Source 相關的東西，而不是只是 Web 相關的而已。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="8f42a7c5ffad4c9cab284637e0bddbc2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/</link>
-<guid>https://blog.othree.net/log/2015/08/17/fetch-is-the-new-xhr/</guid>
-<category>script</category>
-<pubDate>2015-08-17 18:28</pubDate>
 </item>
 
 

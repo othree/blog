@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000916" baseName="codeceptjs-puppeteer">CodeceptJS + puppeteer</b:listData>
+
+			<b:previous>
+				<b:mTitle>TC39 logo</b:mTitle>
+				<b:mDate>2018-02-02</b:mDate>
+				<b:mBase>tc39-logo</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>WebDriver Level 2</b:mTitle>
+				<b:mDate>2018-02-17</b:mDate>
+				<b:mBase>webdriver-level-2</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000916" baseName="codeceptjs-puppeteer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-02-07</b:date>
+				<b:time>12:29:49</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>CodeceptJS + puppeteer</b:title>
+			<b:content>
+				<b:summary>看起來一切似乎都很美好，直到真的下去用。 這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點： CodeceptJS 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。 每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。 Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log： env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose 開...</b:summary>
+				<b:mainContent><p>看起來一切似乎都很美好，直到真的下去用。</p>
+<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
+<ul>
+<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
+<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
+<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
+<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
+<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
+</ul>
+<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
+<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
+</code></pre>
+<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
+<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

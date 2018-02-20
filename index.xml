@@ -9,6 +9,97 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000917" baseName="webdriver-level-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-02-17</b:date>
+				<b:time>00:00:08</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>WebDriver Level 2</b:title>
+			<b:content>
+				<b:summary> 這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流： 第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 CR 了，由 Browser Testing and Tools 工作小組在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 WebDriverIO 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試 另外一條路線是 remote debugging，這個一開始是為了...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr"><img src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w" /></a></p>
+<p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
+<p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
+<p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
+<p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000916" baseName="codeceptjs-puppeteer">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-02-07</b:date>
+				<b:time>12:29:49</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>CodeceptJS + puppeteer</b:title>
+			<b:content>
+				<b:summary>看起來一切似乎都很美好，直到真的下去用。 這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點： CodeceptJS 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。 每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。 Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log： env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose 開...</b:summary>
+				<b:mainContent><p>看起來一切似乎都很美好，直到真的下去用。</p>
+<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
+<ul>
+<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
+<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
+<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
+<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
+<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
+</ul>
+<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
+<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
+</code></pre>
+<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
+<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000915" baseName="tc39-logo">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-02-02</b:date>
+				<b:time>12:29:18</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>TC39 logo</b:title>
+			<b:content>
+				<b:summary>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo： 這設計基本上就是參照 JS logo，顏色改成 ECMA 橘，之前那個 JS logo 其實不是官方的，而是社群發起的： 現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上 https://github.com/tc39/logo/ https://github.com/voodootikigod/logo.js/...</b:summary>
+				<b:mainContent><p>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28255675539/" title="TC39 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg" width="1024" height="1024" alt="TC39, " srcset="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg 1024w" /></a></p>
+<p>這設計基本上就是參照 JS logo，顏色改成 <a href="https://www.ecma-international.org/">ECMA</a> 橘，之前那個 JS logo 其實不是官方的，而是社群發起的：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40034835081/" title="JS by othree, on Flickr"><img src="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg" width="1024" height="1024" alt="JS, " srcset="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg 1024w" /></a></p>
+<p>現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上</p>
+<ul>
+<li><a href="https://github.com/tc39/logo/">https://github.com/tc39/logo/</a></li>
+<li><a href="https://github.com/voodootikigod/logo.js/">https://github.com/voodootikigod/logo.js/</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000914" baseName="recommend-semicolon">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -28,7 +119,7 @@
 <p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
 <blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
 <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更重點，就是 TC39 的文件，作為 spec 似乎不該做<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
+<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更有力，就是 TC39 的文件，做為 spec 似乎不該提出<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
 <pre><code class="language-javascript">class Counter extends HTMLElement {
   x = 0;
 
@@ -39,7 +130,7 @@
 }
 </code></pre>
 <p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
-<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還做建議開發者用的語法就很怪。</p>
+<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還提建議、警告開發者用的語法就很怪。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
@@ -193,134 +284,6 @@ const addOne = add(1, ?); // apply from the left
 addOne(2); // 3
 </code></pre>
 <p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000911" baseName="naming-cases">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-11-16</b:date>
-				<b:time>12:31:26</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Naming Cases</b:title>
-			<b:content>
-				<b:summary> 整理一下各種多單字 identifier 命名慣例（規則）： CamelCase CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"><img src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w" /></a></p>
-<p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
-<h5>CamelCase</h5>
-<p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
-<p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
-<h5>snake_case</h5>
-<p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
-<h5>MACRO_CASE</h5>
-<p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
-<p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
-<h5>lisp-case</h5>
-<p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
-<h5>COBOL-CASE</h5>
-<p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
-<h5>Train-Case</h5>
-<p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
-<p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
-<p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
-<p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
-<pre><code class="language-vim">let g:switch_custom_definitions =
-    \ [
-    \   {
-    \     '\&lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&gt;': '\=toupper(submatch(1)) . submatch(2)',
-    \     '\&lt;\(\u\l\+\)\(\u\l\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))&quot;,
-    \     '\&lt;\(\l\+\)\(_\l\+\)\+\&gt;': '\U\0',
-    \     '\&lt;\(\u\+\)\(_\u\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '_', '-', 'g'))&quot;,
-    \     '\&lt;\(\l\+\)\(-\l\+\)\+\&gt;': &quot;\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')&quot;,
-    \   }
-    \ ]
-</code></pre>
-<p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
-<p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a></li>
-<li><a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a></li>
-</ul>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000910" baseName="apple-phone-support">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-10-23</b:date>
-				<b:time>23:02:46</b:time>
-			</b:datetime>
-			<b:category>mac</b:category>
-			<b:title>Apple 電話支援</b:title>
-			<b:content>
-				<b:summary> 前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。 遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。 遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。 接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯ 等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。 然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34475448783/" title="Apple Store Taipei 101 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg" width="1024" height="683" alt="Apple Store Taipei 101, " srcset="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg 1024w, https://farm5.staticflickr.com/4198/34475448783_2de7ddb630_h.jpg 1600w" /></a></p>
-<p>前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。</p>
-<p>遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。</p>
-<p>遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。</p>
-<p>接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯</p>
-<p>等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。</p>
-<p>然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者 log 判斷是不是可以砍帳號吧。</p>
-<p>最後總結一下，這次過程我覺的蘋果電話客服有以下特色，不過大概也不會是每個公司都複製的起來的：</p>
-<ol>
-<li>由他們掌握主控權，但是又完全免費，而且填表後真的很快就會接到電話</li>
-<li>每個要等待的階段都會先讓使用者有預期</li>
-<li>除了第一位外言談都蠻誠懇的</li>
-<li>完全相信（至少表現起來是）客戶，不會強迫做一些嘗試過的操作</li>
-<li>連砍帳號都可以辦到</li>
-</ol>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000909" baseName="osx-admin-account-missing">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-09-16</b:date>
-				<b:time>23:02:54</b:time>
-			</b:datetime>
-			<b:category>mac</b:category>
-			<b:title>OSX Admin Account 消失</b:title>
-			<b:content>
-				<b:summary> 昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。 首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上 Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！ 總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下： 重開機同時按著 cmd+s 進入 single user mode 用 single user mode 的 CLI 介面刪除 /var/db/.AppleSetupDone 這個檔案 執行...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37260875515/" title="Mac OSX single user mode by othree, on Flickr"><img src="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg" width="1024" height="683" alt="Mac OSX single user mode" srcset="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg 1024w, https://farm5.staticflickr.com/4367/37260875515_07dbc0b069_h.jpg 1600w" /></a></p>
-<p>昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。</p>
-<p>首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上  Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！</p>
-<p>總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下：</p>
-<ol>
-<li>重開機同時按著 <code>cmd</code>+<code>s</code> 進入 single user mode</li>
-<li>用 single user mode 的 CLI 介面刪除 <code>/var/db/.AppleSetupDone</code> 這個檔案</li>
-<li>執行 <code>reboot</code> 重開機，這樣會進入初次開機的狀態</li>
-<li>重新建立帳號，我是用相同的帳號名稱，會執行的有點久，最後會說失敗，原因應該是因為該帳號的 home 目錄已經存在了</li>
-<li>再次重開機，結果會進入正常的登入畫面，可以登入新建的帳號，發現 home 目錄的東西幾乎都可以正常讀入</li>
-</ol>
-<p>最後，為什麼會鑰匙圈損毀呢，我推測是硬碟東西塞太多加上當時在上傳資料才造成問題的，不過也就是個推測而已啦。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>

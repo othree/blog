@@ -5,12 +5,12 @@
 	<b:blogDescription></b:blogDescription>
 	<b:entries>
 		<b:entriesMeta>
-			<b:listType>y</b:listType>
-			<b:listData listID="2018">2018</b:listData>
+			<b:listType>m</b:listType>
+			<b:listData listID="2018-02">February 2018</b:listData>
 
 			<b:previous>
-				<b:mTitle>2017</b:mTitle>
-				<b:mDate>2017</b:mDate>
+				<b:mTitle>January 2018</b:mTitle>
+				<b:mDate>2018/01</b:mDate>
 			</b:previous>
 
 
@@ -100,44 +100,6 @@
 <li><a href="https://github.com/tc39/logo/">https://github.com/tc39/logo/</a></li>
 <li><a href="https://github.com/voodootikigod/logo.js/">https://github.com/voodootikigod/logo.js/</a></li>
 </ul>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000914" baseName="recommend-semicolon">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-01-12</b:date>
-				<b:time>10:54:06</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>分號大戰 again</b:title>
-			<b:content>
-				<b:summary>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號： TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.https://t.co/9FY4i29iqs-- Daniel Ehrenberg (@littledan) 2018年1月11日 然後下面就一大串了，本來想說 standardjs 要哭哭了，難道 semistandard 要扶正了嗎？不過我仔細端詳了一下，發現這個 PR 還是 open 狀態，而且 Brendan Eich...</b:summary>
-				<b:mainContent><p>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.<a href="https://t.co/9FY4i29iqs">https://t.co/9FY4i29iqs</a></p>-- Daniel Ehrenberg (@littledan) <a href="https://twitter.com/littledan/status/951523844262637568?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更有力，就是 TC39 的文件，做為 spec 似乎不該提出<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
-<pre><code class="language-javascript">class Counter extends HTMLElement {
-  x = 0;
-
-  clicked() {
-    this.x++;
-    window.requestAnimationFrame(this.render.bind(this));
-  }
-}
-</code></pre>
-<p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
-<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還提建議、警告開發者用的語法就很怪。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
