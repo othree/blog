@@ -297,7 +297,7 @@
                   <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
                 </a>
                 <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-                  <img src="/images/MDN_promoBanner_120x240px_v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+                  <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
                 </a>
               </p>
             </aside>
