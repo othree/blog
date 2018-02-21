@@ -429,7 +429,7 @@
           <xsl:if test="$listType = 'c'">
             <a id="prev-link" href="/log/{//b:entriesMeta/b:listData}/all/{$ext}" class="center">此類別所有文章</a>
           </xsl:if>
-          <xsl:if test="$listType = 'm'">
+          <xsl:if test="$listType = 'm' and //b:entries/b:entriesMeta/b:previous">
             <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">➡ 前一個月的文章</a>
           </xsl:if>
         </xsl:otherwise>
