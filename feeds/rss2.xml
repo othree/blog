@@ -5,10 +5,41 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>Sat, 17 Feb 2018 00:00:08 +0800</lastBuildDate>
+<lastBuildDate>Sat, 24 Mar 2018 17:46:13 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>HTC U11+</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38956472765/" title="HTC U11+ by othree, on Flickr"><img src="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg" width="1024" height="683" alt="HTC U11+" srcset="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg 1024w, https://farm5.staticflickr.com/4704/38956472765_4c6a20240a_h.jpg 1600w" /></a></p>
+<p>去年想說要把用了兩三年的 HTC M9 換掉，在 M9 之前其實我 M8、M7 都有用，算是三代機皇的使用者，本來這次想要買 Google Pixel 2 的，不過台灣一直沒上市，直到前幾天 Google 才說要在台灣上市，不過總之，最後考量價錢、機能等等，決定買號稱本來是 Pixel 2 XL 的 HTC U11+，然後也決定要買主打的透明黑，不過可能因為生產問題，透明黑比較晚上市，其實當時差不多是去年的 1111，各家都有特價什麼的，但是卻買不到透明黑感覺實在有點尷尬，連 HTC 自家網站，當時也有些活動，買 U11+ 就可以用很好的折扣家買周邊，有限期間，於是我就每天上去看，看了好幾天覺得，應該沒這麼會做決策吧，結果一如預期的，特價活動結束隔天才有得下單預定透明黑... 我當然是不差買那些周邊啦，不過對於這種搞法實在是無法參透，總之我還是第一天就下定了，後來也比一堆開箱文還早兩三天拿到，不過拖到今天才來記錄一下。</p>
+<p>整體而言我覺得這台還蠻不錯的，透明黑玻璃很漂亮，價錢 ok，定價和五吋的高階機種（U11）一樣，對比於 Pixel 的價位真的是親切很多，而且規格和螢幕都比較大，電池電量表現也很不錯，出門一整天也不用擔心沒電，U11 開始主打的 Edge Sense，拿來單手拍照真的很不錯，相機表現也不錯，不過那個側框啟動叫出目錄的功能就不太行了，主要是反應太慢，還不如用指紋直接開畫面，另外一點就是指紋速度很快，還有防塵防水，然後初期宣傳有說全面屏，不過實際上只是正面的玻璃是全部覆蓋，沒有接縫，或許 Google 當初要捨棄實體鍵打的就是這個主意。</p>
+<p>不過 U11+ 還是有點問題，其中我比較有感的就是要用 Google Map 導航會進不了導航狀態，這問題在官方論壇上也有討論，暫時的解法是重開機可以修復，所以還可以接受，除此之外如果還要挑，大概就是螢幕還沒到 4K 吧，不過是廣色域的其實也蠻不錯了，聽說今年的 U12 就會是 4K 螢幕了，不過我應該下一台真的會買 Pixel 了吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/03/24/htc-u11plus/</link>
+<guid>https://blog.othree.net/log/2018/03/24/htc-u11plus/</guid>
+<category>buy</category>
+<pubDate>Sat, 24 Mar 2018 17:46:13 +0800</pubDate>
+</item>
+
+<item>
+<title>Accessibility Object Model</title>
+<description><![CDATA[<p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
+<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
+<ol>
+<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
+<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
+<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
+<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
+</ol>
+<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</link>
+<guid>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</guid>
+<category>web</category>
+<pubDate>Thu, 08 Mar 2018 08:25:17 +0800</pubDate>
+</item>
 
 <item>
 <title>WebDriver Level 2</title>
@@ -333,7 +364,7 @@ addOne(2); // 3
 <title>196</title>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36512922821/" title="196 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg" width="1024" height="683" alt="196" srcset="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg 1024w, https://farm5.staticflickr.com/4360/36512922821_a17aefd061_h.jpg 1600w" /></a></p>
 <p>這篇文章是在寫 <a href="http://blog.othree.net/log/2017/08/12/temporal-is-next-date/">temporal</a> 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個<a href="http://www.fourmilab.ch/documents/calendar/">網站</a>提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。</p>
-<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="ttps://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
+<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="https://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
 <p>然後，我在 fourmilab.ch 上看到了「<a href="http://fourmilab.ch/documents/threeyears/threeyears.html">Three Years Of Computing</a>」這篇文章，標題就吸引了我進去仔細閱讀，這篇文章是在說迴文數（palindrome）挑戰，什麼是迴文數呢，「95277259」就是迴文數，不論是從頭開始還是反過來從尾開始都是相同的數字，那什麼是迴文數問題呢？首先你要拿到一個非迴文數的十進位數字，例如 <strong>362</strong> 好了，把他和自己的反轉相加：</p>
 <pre><code>&gt;
    362
@@ -416,101 +447,6 @@ var zdt = ldt.withZone('America/New_York');
 <guid>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</guid>
 <category>script</category>
 <pubDate>Sat, 12 Aug 2017 00:13:59 +0800</pubDate>
-</item>
-
-<item>
-<title>iPad Pro 10.5-inch</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35936571200/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4353/35936571200_fc44613220_b.jpg" width="1024" height="683" alt="iPad Pro 10.5, " srcset="https://farm5.staticflickr.com/4353/35936571200_fc44613220_b.jpg 1024w, https://farm5.staticflickr.com/4353/35936571200_e0c6c415db_h.jpg 1600w" /></a></p>
-<p>本來其實就一直想要為了四喇叭升級 iPad Pro 了，不過手上機器還可以用就沒下手，最近因緣際會終於要下手升級了，考慮了一陣子卻遲遲無法決定要買 12.9 吋還是剛發表的新款 10.5 吋，直到前天終於我買了 10.5 吋，兩個推手：</p>
-<ol>
-<li>有 n 個人跟我說 12.9 吋太重，雖然我去店面拿起來感覺是還好；</li>
-<li>我自己店面試用有覺得體積是有點過大。</li>
-</ol>
-]]><![CDATA[<p>然後最後一根稻草是 Apple Store 沒有 12.9 吋的現貨，所以我最後是拿了 iPad Pro 玫瑰金、Wifi、256GB 的版本，回來之後覺得實在是有感升級，雖然我上一台是 Air ，不是 iPad Pro 9.7，還是來介紹一下這次的 10.5 有哪些地方不同。</p>
-<p>首先是尺寸，本來單獨看 10.5 吋機種，還以為是 9.7 吋的大小塞進比較大的螢幕，事實上 10.5 吋是比 9.7 吋大一點的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35524354283/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4345/35524354283_a0e736ea4d_b.jpg" width="1024" height="683" alt="iPad Pro 10.5, " srcset="https://farm5.staticflickr.com/4345/35524354283_a0e736ea4d_b.jpg 1024w, https://farm5.staticflickr.com/4345/35524354283_2330336dc7_h.jpg 1600w" /></a></p>
-<p>結果就是保護殼類的周邊例如 Smart Cover 都不能沿用，尺寸不對，我看<a href="https://www.cool3c.com/article/127342">癮科技</a>有測試鍵盤還是可以接上，就是大小不合而已。另外厚度比 Air 薄不是新聞了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35524353103/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4362/35524353103_692ba4dc52_b.jpg" width="1024" height="683" alt="iPad Pro 10.5" srcset="https://farm5.staticflickr.com/4362/35524353103_692ba4dc52_b.jpg 1024w, https://farm5.staticflickr.com/4362/35524353103_0f21f121d2_h.jpg 1600w" /></a></p>
-<p>重量其實照規格上寫的是沒比較輕，差個十來公克吧，不過我覺得整體拿起來感覺是比較輕盈的。</p>
-<p>再來四喇叭是我一開始主要想要升級 Pro 的原因，因為我現在使用很大比例是拿橫的看影片，這時候四喇叭就有差了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36164320082/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4401/36164320082_259c2422dd_b.jpg" width="1024" height="683" alt="iPad Pro 10.5" srcset="https://farm5.staticflickr.com/4401/36164320082_259c2422dd_b.jpg 1024w, https://farm5.staticflickr.com/4401/36164320082_cf26af2c73_h.jpg 1600w" /></a></p>
-<p>相機也有升級，可以錄到 4K 30fps，後相機還多了閃燈，有光學變焦和防手震，藍寶石水晶玻璃，相對的鏡頭有凸出，不過我是沒什麼拿 iPad 拍照啦。</p>
-<p>支援 Apple Pay，但是我不想要拿著 iPad 去付款..</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36164319222/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4415/36164319222_192e05cf58_b.jpg" width="1024" height="683" alt="iPad Pro 10.5" srcset="https://farm5.staticflickr.com/4415/36164319222_192e05cf58_b.jpg 1024w, https://farm5.staticflickr.com/4415/36164319222_4c8603e28b_h.jpg 1600w" /></a></p>
-<p>然後就是最大亮點的螢幕了，還可以分幾個特色來看：</p>
-<ol>
-<li>螢幕的抗指紋塗層似乎有升級，我看<a href="https://www.apple.com/tw/ipad-pro/specs/">產品規格</a>還有特別寫「防指印疏油外膜」，應該是和以前有差吧，觀察看看能撐多久；</li>
-<li>反光減少很多很多，規格也是有特別寫了一條「抗反射鍍膜」，不知道和 Pro 9.7 比如何，我找了一下以前的報導發現是 Air 2 開始有的，剛好我的 Air 還沒有（補充，根據 m01 上一篇<a href="https://www.mobile01.com/newsdetail/22121/10-5-ipad-pro-one-week-review">比較</a>，和 Pro 9.7 比也差很多）；</li>
-<li>P3 廣色域高亮度和 True Tone，True Tone 拍照的時候比較會有明顯感覺吧，基本上就是要讓肉眼感覺不到差異的功能；</li>
-<li>120 Hz 就是 120fps 的意思啦，之前看這麼高 frame rate 的就是去看李安的「比利·林恩的中場戰事」了，這規格的動畫真的有點有趣，我在店面玩得的時候還沒感覺，回來開始設定的時候，突然覺得好像哪裡不太一樣，大概就是當初看比利·林恩的中場戰事時的那種，有不一樣，大腦有感覺，但是那種差異實在是無法描述，蘋果網站上也說是 &quot;The world's most advanced display.&quot;</li>
-</ol>
-<p>綜合以上的特點，我覺得這次升級是很有感啦。</p>
-<p>最後來補個 Apple Store 消費記錄，發現他們查庫存全部都用手機終端查，即使重開軟體也不放棄！不過這是有原因的，要搶貨也要靠手機終端，甚至店員 A 點下去之後，就會有店員 B 把東西送過來！然後第二次用 Android Pay 總算成功了。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/</link>
-<guid>https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/</guid>
-<category>buy</category>
-<pubDate>Thu, 03 Aug 2017 22:17:48 +0800</pubDate>
-</item>
-
-<item>
-<title>日本橋人形町</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737121375/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg 1024w, https://farm5.staticflickr.com/4238/35737121375_659ce1f602_h.jpg 1600w" /></a></p>
-<p>前陣子去東京有些時間可以自己安排，後來因為也沒特別有什麼目標，就決定排個可以比較悠閒的行程，就是去人形町逛逛，其實很早之前就知道人形町了，後來真的比較有印像是看了新參者這部小說，這本小說的舞台就圍繞在人形町，後來阿部寬有主演日劇版，更是大大帶起該地區最近的知名度，除了新參者之外，我偶爾會看有吉君的正直散步，也是有一兩集散步到那附近，所以就把目標放在人形町了。</p>
-]]><![CDATA[<p>當天到達人形町時其實中午了，所以第一個目標就是先去找午餐，人形町其實範圍不大，熱鬧的就是人形町站到水天宮之間那段，再加上橫向的甘酒橫丁，範圍不大，慢慢走也只要兩三個小時就可以晃完，我走沒兩下就發現甘酒橫丁，就灣進去找吃的了，結果發現有一間排了不少人的燒鳥，叫久助。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567894502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg" width="683" height="1024" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4263/35567894502_0425356b57_b.jpg 683w, https://farm5.staticflickr.com/4263/35567894502_f3811fa8fd_h.jpg 1067w" /></a></p>
-<p>我又繼續往前看了幾間，晃了一下回來發現排隊的人潮消化的差不多了，就決定吃這間，其實當時店內還蠻滿的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895894774/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4216/34895894774_291cd15b71_b.jpg 1024w, https://farm5.staticflickr.com/4216/34895894774_4bd74d1d27_h.jpg 1600w" /></a></p>
-<p>吃的就是午間套餐的燒鳥飯</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567878502/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4259/35567878502_fe412df9b0_b.jpg 1024w, https://farm5.staticflickr.com/4259/35567878502_fa88f2ce77_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567875592/" title="日本橋 久助 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg" width="1024" height="683" alt="日本橋 久助, " srcset="https://farm5.staticflickr.com/4258/35567875592_4046348975_b.jpg 1024w, https://farm5.staticflickr.com/4258/35567875592_2dd4c91e07_h.jpg 1600w" /></a></p>
-<p>烤的很剛好，還有花椒粉芥末粉可以加，我覺得最厲害的是淋的醬汁的量超剛好，飯幾乎都有沾到醬汁，但是吃完整個飯盒就是表面濕濕的狀況，完全沒有醬汁積成一攤，所以完全不會吃到後來覺得太鹹之類的，飯量其實還可以選擇，這師傅實在是經驗老到，可以控制得這麼精準。</p>
-<p>吃完飯後，其實對面就是有名的草家屋煎餅了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349493920/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4258/35349493920_0402646e71_b.jpg 1024w, https://farm5.staticflickr.com/4258/35349493920_8dd2cdbe86_h.jpg 1600w" /></a></p>
-<p>還有柳屋鯛燒</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35349486260/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4260/35349486260_f4d721976c_b.jpg 1024w, https://farm5.staticflickr.com/4260/35349486260_df7a7504d5_h.jpg 1600w" /></a></p>
-<p>兩間都在新參者中出現過，不過我只有買些仙貝，因為剛吃完飯就沒買鯛燒，有點可惜，即使是中午剛過，店內都還是一直都是排著人。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737108935/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4098/35737108935_ddca1cb1a3_b.jpg 1024w, https://farm5.staticflickr.com/4098/35737108935_4d9a1c1cd5_h.jpg 1600w" /></a></p>
-<p>接著我就慢慢沿著人形町通逛，走到尾巴的水天宮，水天宮是很有名求子求安產的神社，回來才聽說前兩年還在整修，不過這新蓋好的水天宮實在很厲害，從對面看：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737107425/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4258/35737107425_d5b5c5d43b_b.jpg 1024w, https://farm5.staticflickr.com/4258/35737107425_9dec05af6a_h.jpg 1600w" /></a></p>
-<p>旁邊那條走道：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567844992/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4278/35567844992_7fbca9ec43_b.jpg 1024w, https://farm5.staticflickr.com/4278/35567844992_016f383709_h.jpg 1600w" /></a></p>
-<p>門口，要爬樓梯往上：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696854726/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4133/35696854726_2c4d79e580_b.jpg 1024w, https://farm5.staticflickr.com/4133/35696854726_2c5c4bcc56_h.jpg 1600w" /></a></p>
-<p>到了上面才發現別有洞天。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35605763291/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4288/35605763291_2e2645f1ca_b.jpg 1024w, https://farm5.staticflickr.com/4288/35605763291_eeb728066d_h.jpg 1600w" /></a></p>
-<p>事實上，整個神社木造建築是蓋在一層現在的防震結構上的，而且現代結構的部分也不是只有防震，而是還有做為辦公室、販賣商品等用途的部分在，我覺得他們這種結合兩種風格卻不衝突的設計真的是非常厲害，最後是從平台上往回拍大門的方向。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696855446/" title="水天宮 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg" width="1024" height="683" alt="水天宮, " srcset="https://farm5.staticflickr.com/4254/35696855446_36afcaa201_b.jpg 1024w, https://farm5.staticflickr.com/4254/35696855446_cf87394e2c_h.jpg 1600w" /></a></p>
-<p>到達水天宮後我就往回走了，去了一開始就有看到的 RON 咖啡館。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737102345/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg" width="683" height="1024" alt="RON" srcset="https://farm5.staticflickr.com/4264/35737102345_0b45307f57_b.jpg 683w, https://farm5.staticflickr.com/4264/35737102345_ee380df5e2_h.jpg 1067w" /></a></p>
-<p>這間也是當地的老店，店內應該是完整開店當時的裝潢保存到現在吧：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895831914/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4287/34895831914_a437d008e2_b.jpg 1024w, https://farm5.staticflickr.com/4287/34895831914_9a11659f3b_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927502753/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4212/34927502753_20624b18b6_b.jpg 1024w, https://farm5.staticflickr.com/4212/34927502753_0ad220fc0d_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895826844/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4213/34895826844_6007a7f647_b.jpg 1024w, https://farm5.staticflickr.com/4213/34895826844_624aa76f44_h.jpg 1600w" /></a></p>
-<p>店員也是老老的，是不是也是年輕做到現在的呢。</p>
-<p>在 RON 咖啡休息一陣子之後，因為時間還早，就決定去日本橋看看，日本橋</p>
-<p>是日本<a href="https://zh.wikipedia.org/wiki/File:The_Kilometre_Zero_of_road_in_Japan_in_Nihonbashi,_Chuo,_Tokyo.jpg">道路起點</a>，一直都是很繁榮的地方，是很有歷史意義的地點，不過 1964 年為了舉辦奧運而蓋的首都高，把日本橋蓋住了，之後就一直維持這樣的狀況。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696816036/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4285/35696816036_06150b18cb_b.jpg 1024w, https://farm5.staticflickr.com/4285/35696816036_45589e1ca2_h.jpg 1600w" /></a></p>
-<p>橋上可以看到日本道路原標地點，不過人走不過去就是了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927459313/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4033/34927459313_28eb8ebcff_b.jpg 683w, https://farm5.staticflickr.com/4033/34927459313_7727619d42_h.jpg 1067w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567779372/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4139/35567779372_eaaef3e123_b.jpg 1024w, https://farm5.staticflickr.com/4139/35567779372_3915bc5598_h.jpg 1600w" /></a></p>
-<p>現在的橋據說是 1911 年蓋的第十九代了，橋柱上有些非常華麗的裝飾，也常出現在電視上。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35696808136/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4057/35696808136_faf4f68e39_b.jpg 1024w, https://farm5.staticflickr.com/4057/35696808136_555145da7a_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567766362/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg" width="683" height="1024" alt="日本橋" srcset="https://farm5.staticflickr.com/4014/35567766362_07a50f6734_b.jpg 683w, https://farm5.staticflickr.com/4014/35567766362_08fa80913a_h.jpg 1067w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895801964/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4259/34895801964_c0ecd60ba9_b.jpg 1024w, https://farm5.staticflickr.com/4259/34895801964_df476986e8_h.jpg 1600w" /></a></p>
-<p>最近日本有開始有些<a href="http://asahichinese-f.com/travel/scenery/11153530">聲音</a>說希望能夠恢復日本橋景區的天空，主要方法是把首都高地下化，東京其實已經有一些地下高速公路了，技術上不是問題，雖然經費很貴，我猜他們真的會做下去吧，如果成真的化應該就會找個藍天的日子再去個一趟了。</p>
-<p>日本橋的對面就是新光三越本館了：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35567761352/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg" width="1024" height="683" alt="日本橋" srcset="https://farm5.staticflickr.com/4068/35567761352_df9c042901_b.jpg 1024w, https://farm5.staticflickr.com/4068/35567761352_3abc7f27c5_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895760694/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4021/34895760694_992703c33a_b.jpg 1024w, https://farm5.staticflickr.com/4021/34895760694_fe57311267_h.jpg 1600w" /></a></p>
-<p>遠遠看就覺得氣勢不凡，進去逛一逛發現這間真的是不同凡響：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737023025/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg" width="1024" height="683" alt="三越 本館" srcset="https://farm5.staticflickr.com/4214/35737023025_a821b3dde4_b.jpg 1024w, https://farm5.staticflickr.com/4214/35737023025_131119eb13_h.jpg 1600w" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34895759084/" title="三越 本館 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg" width="683" height="1024" alt="三越 本館" srcset="https://farm5.staticflickr.com/4208/34895759084_0a60ba06d8_b.jpg 683w, https://farm5.staticflickr.com/4208/34895759084_5786a48d02_h.jpg 1067w" /></a></p>
-<p>在百貨公司裡面開了這麼大的挑高室內空間，還放這麼大的固定式藝術品，真的是完全無法想像，然後本來想說去逛一下生活用品那層好了，結果映入眼簾的都是高級進口餐具之類的，我一整個跑錯棚的感覺。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</link>
-<guid>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</guid>
-<category>diary</category>
-<pubDate>Tue, 01 Aug 2017 22:00:29 +0800</pubDate>
 </item>
 
 

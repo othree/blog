@@ -5,10 +5,45 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>Sat, 17 Feb 2018 00:00:08 +0800</lastBuildDate>
+<lastBuildDate>Sat, 24 Mar 2018 17:46:13 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>HTC U11+</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38956472765/" title="HTC U11+ by othree, on Flickr"><img src="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg" width="1024" height="683" alt="HTC U11+" srcset="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg 1024w, https://farm5.staticflickr.com/4704/38956472765_4c6a20240a_h.jpg 1600w" /></a></p>
+<p>去年想說要把用了兩三年的 HTC M9 換掉，在 M9 之前其實我 M8、M7 都有用，算是三代機皇的使用者，本來這次想要買 Google Pixel 2 的，不過台灣一直沒上市，直到前幾天 Google 才說要在台灣上市，不過總之，最後考量價錢、機能等等，決定買號稱本來是 Pixel 2 XL 的 HTC U11+，然後也決定要買主打的透明黑，不過可能因為生產問題，透明黑比較晚上市，其實當時差不多是去年的 1111，各家都有特價什麼的，但是卻買不到透明黑感覺實在有點尷尬，連 HTC 自家網站，當時也有些活動，買 U11+ 就可以用很好的折扣家買周邊，有限期間，於是我就每天上去看，看了好幾天覺得，應該沒這麼會做決策吧，結果一如預期的，特價活動結束隔天才有得下單預定透明黑... 我當然是不差買那些周邊啦，不過對於這種搞法實在是無法參透，總之我還是第一天就下定了，後來也比一堆開箱文還早兩三天拿到，不過拖到今天才來記錄一下。</p>
+<p>整體而言我覺得這台還蠻不錯的，透明黑玻璃很漂亮，價錢 ok，定價和五吋的高階機種（U11）一樣，對比於 Pixel 的價位真的是親切很多，而且規格和螢幕都比較大，電池電量表現也很不錯，出門一整天也不用擔心沒電，U11 開始主打的 Edge Sense，拿來單手拍照真的很不錯，相機表現也不錯，不過那個側框啟動叫出目錄的功能就不太行了，主要是反應太慢，還不如用指紋直接開畫面，另外一點就是指紋速度很快，還有防塵防水，然後初期宣傳有說全面屏，不過實際上只是正面的玻璃是全部覆蓋，沒有接縫，或許 Google 當初要捨棄實體鍵打的就是這個主意。</p>
+<p>不過 U11+ 還是有點問題，其中我比較有感的就是要用 Google Map 導航會進不了導航狀態，這問題在官方論壇上也有討論，暫時的解法是重開機可以修復，所以還可以接受，除此之外如果還要挑，大概就是螢幕還沒到 4K 吧，不過是廣色域的其實也蠻不錯了，聽說今年的 U12 就會是 4K 螢幕了，不過我應該下一台真的會買 Pixel 了吧。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2018/03/24/htc-u11plus/</link>
+<guid>https://blog.othree.net/log/2018/03/24/htc-u11plus/</guid>
+<category>buy</category>
+<pubDate>Sat, 24 Mar 2018 17:46:13 +0800</pubDate>
+</item>
+
+<item>
+<title>Accessibility Object Model</title>
+<description><![CDATA[<p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
+<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
+<ol>
+<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
+<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
+<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
+<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
+</ol>
+<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</link>
+<guid>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</guid>
+<category>web</category>
+<pubDate>Thu, 08 Mar 2018 08:25:17 +0800</pubDate>
+</item>
 
 <item>
 <title>WebDriver Level 2</title>
@@ -353,7 +388,7 @@ addOne(2); // 3
 <title>196</title>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36512922821/" title="196 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg" width="1024" height="683" alt="196" srcset="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg 1024w, https://farm5.staticflickr.com/4360/36512922821_a17aefd061_h.jpg 1600w" /></a></p>
 <p>這篇文章是在寫 <a href="http://blog.othree.net/log/2017/08/12/temporal-is-next-date/">temporal</a> 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個<a href="http://www.fourmilab.ch/documents/calendar/">網站</a>提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。</p>
-<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="ttps://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
+<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="https://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
 <p>然後，我在 fourmilab.ch 上看到了「<a href="http://fourmilab.ch/documents/threeyears/threeyears.html">Three Years Of Computing</a>」這篇文章，標題就吸引了我進去仔細閱讀，這篇文章是在說迴文數（palindrome）挑戰，什麼是迴文數呢，「95277259」就是迴文數，不論是從頭開始還是反過來從尾開始都是相同的數字，那什麼是迴文數問題呢？首先你要拿到一個非迴文數的十進位數字，例如 <strong>362</strong> 好了，把他和自己的反轉相加：</p>
 <pre><code>&gt;
    362
@@ -442,40 +477,6 @@ var zdt = ldt.withZone('America/New_York');
 <guid>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</guid>
 <category>script</category>
 <pubDate>Sat, 12 Aug 2017 00:13:59 +0800</pubDate>
-</item>
-
-<item>
-<title>iPad Pro 10.5-inch</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35936571200/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4353/35936571200_fc44613220_b.jpg" width="1024" height="683" alt="iPad Pro 10.5, " srcset="https://farm5.staticflickr.com/4353/35936571200_fc44613220_b.jpg 1024w, https://farm5.staticflickr.com/4353/35936571200_e0c6c415db_h.jpg 1600w" /></a></p>
-<p>本來其實就一直想要為了四喇叭升級 iPad Pro 了，不過手上機器還可以用就沒下手，最近因緣際會終於要下手升級了，考慮了一陣子卻遲遲無法決定要買 12.9 吋還是剛發表的新款 10.5 吋，直到前天終於我買了 10.5 吋，兩個推手：</p>
-<ol>
-<li>有 n 個人跟我說 12.9 吋太重，雖然我去店面拿起來感覺是還好；</li>
-<li>我自己店面試用有覺得體積是有點過大。</li>
-</ol>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/">閱讀 「iPad Pro 10.5-inch」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/</link>
-<guid>https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/</guid>
-<category>buy</category>
-<pubDate>Thu, 03 Aug 2017 22:17:48 +0800</pubDate>
-</item>
-
-<item>
-<title>日本橋人形町</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35737121375/" title="日本橋 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg" width="1024" height="683" alt="日本橋, " srcset="https://farm5.staticflickr.com/4238/35737121375_528bc4b723_b.jpg 1024w, https://farm5.staticflickr.com/4238/35737121375_659ce1f602_h.jpg 1600w" /></a></p>
-<p>前陣子去東京有些時間可以自己安排，後來因為也沒特別有什麼目標，就決定排個可以比較悠閒的行程，就是去人形町逛逛，其實很早之前就知道人形町了，後來真的比較有印像是看了新參者這部小說，這本小說的舞台就圍繞在人形町，後來阿部寬有主演日劇版，更是大大帶起該地區最近的知名度，除了新參者之外，我偶爾會看有吉君的正直散步，也是有一兩集散步到那附近，所以就把目標放在人形町了。</p>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/">閱讀 「日本橋人形町」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</link>
-<guid>https://blog.othree.net/log/2017/08/01/nihombashi-ningyocho/</guid>
-<category>diary</category>
-<pubDate>Tue, 01 Aug 2017 22:00:29 +0800</pubDate>
 </item>
 
 

@@ -9,6 +9,36 @@
 			<b:listData listID="web">web</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000918" baseName="accessibility-object-model">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-03-08</b:date>
+				<b:time>08:25:17</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Accessibility Object Model</b:title>
+			<b:content>
+				<b:summary>很久以前介紹 AMP 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 aria-* 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 Chrome Platform Status 的時候，發現到了一個新的標準草稿叫做 Accessibility Object Model，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 Accessiblity API 下面。 這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是： Accessible Property，建立存取親和力相關屬性的標準界面，包括了 role 和 aria-*，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 accessibleNode； Accessible Action，建立和親和力相關的事件，擴充 accessibleNode 並且讓它會接收到這些親和力相關事件； Virtual Accessibility...</b:summary>
+				<b:mainContent><p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
+<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
+<ol>
+<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
+<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
+<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
+<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
+</ol>
+<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000917" baseName="webdriver-level-2">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -563,75 +593,6 @@ Acknowledge the source of your data in metadata. If you provide a user interface
 <li><a href="http://terms.naer.edu.tw/">http://terms.naer.edu.tw/</a></li>
 <li><a href="http://www.lac.org.tw/law/documents/02/06231.pdf">http://www.lac.org.tw/law/documents/02/06231.pdf</a></li>
 </ul>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000876" baseName="safari-10">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-09-21</b:date>
-				<b:time>23:57:08</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Safari 10 for Developer</b:title>
-			<b:content>
-				<b:summary>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份文件在他們的 Developer Library 裡面，以下列出我覺得比較有趣的： CSP 2.0 CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。 Shadow DOM Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。 ES 6 號稱支援度 100%，看起來是依據 ECMAScript compatable table 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和...</b:summary>
-				<b:mainContent><p>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份<a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html">文件</a>在他們的 Developer Library 裡面，以下列出我覺得比較有趣的：</p>
-
-<h4>CSP 2.0</h4>
-
-<p>CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。</p>
-
-<h4>Shadow DOM</h4>
-
-<p>Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。</p>
-
-<h4>ES 6</h4>
-
-<p>號稱支援度 100%，看起來是依據 <a href="http://kangax.github.io/compat-table/es6/#safari10">ECMAScript compatable table</a> 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和 Chrome 超過了，而 Chrome 看來也之差 tail call 而已，接下來應該又要開始效能比拼了吧。</p>
-
-<h4>Inline and Auto Video Playback in iOS</h4>
-
-<p>這也是等很久的功能，之前就有先開放靜音影片能直接在 iOS Safari 上自動播放，主要的考量是，gif 和 mp4 相比，還是 gif 比較吃資源啊。</p>
-
-<h4>ES Internationalization</h4>
-
-<p>ECMA-402 支援，這也是希望快點普及的東西啊，不然數字、日期什麼的搞本地化實在很麻煩。</p>
-
-<h4>WOFF 2.0 Support</h4>
-
-<p>令人意外的有點慢，不過還算很有誠意的把很新的 <a href="https://drafts.csswg.org/css-font-loading/">CSS Font Loading Module Level 3</a> 的 API 做好了。</p>
-
-<h4>#RRGGBBAA</h4>
-
-<p>新的 CSS color 格式，也是前陣子才 propose 出來而已，這樣以後就可以讓 CSS 裡的顏色格式統一點了。</p>
-
-<h4>Right-to-Left Language Support</h4>
-
-<p>主要是 RTL 頁面 scrollbar 的位置終於會換邊了。</p>
-
-<h4>Media Query for Wide Color Gamut Support</h4>
-
-<p>廣色域的 CSS media query，主要是因為最新的 iMac 和 iPhone 7 都有支援 P3 色域了。</p>
-
-<h4>WebDriver Support</h4>
-
-<p>主流瀏覽器最後一個支援的...</p>
-
-<h4>Apple Pay for the Web</h4>
-
-<p>這真的蠻兇狠的，不過 Google 也有在 Android 做類似的<a href="https://android.googleblog.com/2016/09/tap-pay-yes-android-pay-welcomes-chase.html">事</a>就是了。</p>
-
-<p>大概就這些了，其實也列出超過一半的項目了，Safari 這種更新頻率其實比起其它幾家來說吃虧不少，不過還是一直有跟上最新進度，其實也蠻厲害的，更何況現在 Google 都把人拉到 Blink 去，有回到 Webkit 的貢獻似乎比例上不高。</p>
-</b:mainContent>
-				<b:extendContent>
 </b:extendContent>
 			</b:content>
 
