@@ -9,6 +9,82 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000920" baseName="pegjs">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-04-09</b:date>
+				<b:time>21:15:01</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>PEG.js</b:title>
+			<b:content>
+				<b:summary> 知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。 總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 TernJS 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 PEG.js 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是： IdentifierName :: IdentifierStart IdentifierName IdentifierPart IdentifierStart :: UnicodeIDStart $...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /></a></p>
+<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
+<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
+<pre><code>IdentifierName ::
+    IdentifierStart
+    IdentifierName IdentifierPart
+
+IdentifierStart ::
+    UnicodeIDStart
+    $
+    _
+    \ UnicodeEscapeSequence
+
+IdentifierPart ::
+    UnicodeIDContinue
+    $
+    _
+    \ UnicodeEscapeSequence
+    &lt;ZWNJ&gt;
+    &lt;ZWJ&gt;
+
+UnicodeIDStart ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Start&amp;rdquo;
+
+UnicodeIDContinue ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
+</code></pre>
+<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
+<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
+<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
+<pre><code>keyword
+keyword1 and keyword2
+</code></pre>
+<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
+<pre><code class="language-pegjs">start
+  = orQuery?
+
+orQuery
+  = left:andQuery Or right:orQuery
+  / andQuery
+
+andQuery
+  = left:notQuery And right:andQuery
+  / notQuery
+
+notQuery
+  = Not right:subQuery
+  / subQuery
+
+subQuery
+  = '(' ws* query:orQuery ws* ')'
+  / queryValue
+</code></pre>
+<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
+<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000916" baseName="codeceptjs-puppeteer">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -556,77 +632,6 @@ commonjs({
 <p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
 
 <p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000874" baseName="input-event">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-09-11</b:date>
-				<b:time>00:21:40</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>Input Event</b:title>
-			<b:content>
-				<b:summary> 今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 1234 完，準備要輸入 5 的時候，會在 4 後面補上一個 -，變成 1234-5，不過我預期做的完美一點，所以考慮了很多狀況，例如： 複製貼上沒有 - 的資料後會自動格式化 已經輸入一部分資料後，游標移到前面插入資料也會正確格式化 直接用 DEL 或 Backspace 來刪除資料，要讓使用者感覺不到 - 先選取一些字元然後用 DEL 或 Backspace 甚至是剪下來刪除資料後會重新格式化 以上幾種操作都不會讓游標亂跳 簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 -，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
-
-<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
-
-<ul>
-<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
-<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
-<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
-<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
-<li>以上幾種操作都不會讓游標亂跳</li>
-</ul>
-
-<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
-
-<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
-
-<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
-/*
-   The following function tests an element for oninput support in Firefox.  Many thanks to
-        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
-*/
-function checkEvent(el) {
-    // First check, for if Firefox fixes its issue with el.oninput = function
-    el.setAttribute("oninput", "return");
-    if (typeof el.oninput == "function")
-        return true;
-
-    // Second check, because Firefox doesn't map oninput attribute to oninput property
-    try {
-        var e  = document.createEvent("KeyboardEvent"),
-            ok = false,
-            tester = function(e) {
-                ok = true;
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
-        document.body.appendChild(el);
-        el.addEventListener("input", tester, false);
-        el.focus();
-        el.dispatchEvent(e);
-        el.removeEventListener("input", tester, false);
-        document.body.removeChild(el);
-        return ok;
-    } catch(e) {}
-}
-</code></pre>
-
-<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

@@ -5,10 +5,74 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-02-07 12:29</lastBuildDate>
+<lastBuildDate>2018-04-09 21:15</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>PEG.js</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /></a></p>
+<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
+<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
+<pre><code>IdentifierName ::
+    IdentifierStart
+    IdentifierName IdentifierPart
+
+IdentifierStart ::
+    UnicodeIDStart
+    $
+    _
+    \ UnicodeEscapeSequence
+
+IdentifierPart ::
+    UnicodeIDContinue
+    $
+    _
+    \ UnicodeEscapeSequence
+    &lt;ZWNJ&gt;
+    &lt;ZWJ&gt;
+
+UnicodeIDStart ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Start&amp;rdquo;
+
+UnicodeIDContinue ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
+</code></pre>
+<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
+<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
+<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
+<pre><code>keyword
+keyword1 and keyword2
+</code></pre>
+<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
+<pre><code class="language-pegjs">start
+  = orQuery?
+
+orQuery
+  = left:andQuery Or right:orQuery
+  / andQuery
+
+andQuery
+  = left:notQuery And right:andQuery
+  / notQuery
+
+notQuery
+  = Not right:subQuery
+  / subQuery
+
+subQuery
+  = '(' ws* query:orQuery ws* ')'
+  / queryValue
+</code></pre>
+<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
+<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/09/pegjs/</link>
+<guid>https://blog.othree.net/log/2018/04/09/pegjs/</guid>
+<category>script</category>
+<pubDate>2018-04-09 21:15</pubDate>
+</item>
 
 <item>
 <title>CodeceptJS + puppeteer</title>
@@ -978,30 +1042,6 @@ chai.use(chaiAsPromised);
 <guid>https://blog.othree.net/log/2015/10/03/transducer/</guid>
 <category>script</category>
 <pubDate>2015-10-03 15:47</pubDate>
-</item>
-
-<item>
-<title>React 入門</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/13990963771/" title="京都嵐山 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg" width="1024" height="683" alt="京都嵐山" srcset="https://farm6.staticflickr.com/5237/13990963771_028f39af66_b.jpg 1024w, https://farm6.staticflickr.com/5237/13990963771_477e5fdfe8_h.jpg 1600w" /></a></p>
-
-<p>其實這篇想寫一陣子了，不過拖太久本來想放掉，是後來又看到 TonyQ 在說他的經驗，就覺得還是寫一下，搞不好可以幫到人(?)，然後其實我對 React 沒深入研究，目前也只寫過一次，也沒做到複雜的　App，所以這篇純粹是我的觀察啦。</p>
-
-<p>先講結論，寫過目前一般 Web App 的人，要來寫 <a href="http://facebook.github.io/react/">React</a> 大概都要一些撞牆期吧，我的狀況是要寫 React + <a href="http://facebook.github.io/flux/">Flux</a> 架構的 Web App，但是一開始對 Flux 的介紹沒認真看，在一知半解的狀態下就開始做了，結果就一直出現些靈異現象，大部分是覺得應該要更新畫面了但是沒有，追到後來大概就兩個原因：</p>
-
-<ul>
-<li><p>亂用 props 和 state，總之就是 React 只會在 state 變化的時候更新畫面，props 變化的時候不會（其實設計上是 immutable 的），而用 props 的時機基本上是父層 component 要設定資料給子 component 的時候才會用，至於父層收到不同的資料給子 component 時，同樣是改 props，為什麼畫面就會更新了，事實上是因為父層 component 更新的時候，才有機會改動到子 component 的 prop，而因為有重新 render，子 component 的內容也會一起更新，也才更新了畫面。</p></li>
-<li><p>想要只更新子 component，這個問題就是沒把 flux 的設計弄清楚，Flux 的 store 其實有點代表所有的資料的意思，而不管是什麼動作，都要把整包的 store 資料更新回去，根 component 會綁事件在 store 的更新事件上，發現 store 資料有更新就開始重新 render component，然後跟著它的子 component 就會因為 prop 更新而跟著更新。</p></li>
-</ul>
-
-<p>當然 store 是可以有多個的，重點在於每次更新都要整個 store 的資料重新給根 component，不能從 store 裡面某一層開始送，然後想要只更新某個子 component，這樣結果就很容易發生靈異事件，當然 React 可以不用 Flux 架構，不過我覺得那條路走起來更困難，所以還是乖乖使用 Flux 架構，其實我後來做的結構很簡單，action 就只是一個事件，store 就是 POJSO 而已，沒用到一些市面上的 Flux framework。</p>
-
-<p>最後一點要提的就是每次都整包 store 更新，可能就會有人想到效能問題，當然 React 本身效能不錯，不過資料量要是超大，可能還是會有出現狀況，我想這也是為什麼 Facebook 要發展 <a href="https://facebook.github.io/immutable-js/">Immutable.js</a> 的原因，其實我仔細瞭解後，發現 Immutable 配合 Flux 架構真的是超適合的，而且他在大量資料更新的時候，可以保持蠻不錯的效能，因為只有 reference 的變化，而不是真的重新產生整包資料，沒變化的資料都是本來就已經在記憶體裡面的，整體的資源消耗少很多。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/08/21/react-intro/</link>
-<guid>https://blog.othree.net/log/2015/08/21/react-intro/</guid>
-<category>script</category>
-<pubDate>2015-08-21 00:38</pubDate>
 </item>
 
 

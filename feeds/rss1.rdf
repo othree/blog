@@ -13,7 +13,7 @@ xmlns="http://purl.org/rss/1.0/">
 <link>https://blog.othree.net/</link>
 <description></description>
 <dc:creator></dc:creator>
-<dc:date>2018-03-24T17:46:13+08:00</dc:date>
+<dc:date>2018-04-09T21:15:01+08:00</dc:date>
 <admin:generatorAgent rdf:resource="http://www.movabletype.org/?v=4.381" />
 
 <cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/1.0/" />
@@ -21,6 +21,8 @@ xmlns="http://purl.org/rss/1.0/">
 
 <items>
 <rdf:Seq>
+<rdf:li rdf:resource="https://blog.othree.net/log/2018/04/09/pegjs/" />
+
 <rdf:li rdf:resource="https://blog.othree.net/log/2018/03/24/htc-u11plus/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2018/03/08/accessibility-object-model/" />
@@ -48,13 +50,75 @@ xmlns="http://purl.org/rss/1.0/">
 <rdf:li rdf:resource="https://blog.othree.net/log/2017/08/18/196/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2017/08/12/temporal-is-next-date/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2017/08/12/wat-javascript-date/" />
 </rdf:Seq>
 </items>
 
 </channel>
 
+
+<item rdf:about="https://blog.othree.net/log/2018/04/09/pegjs/">
+<title>PEG.js</title>
+<link>https://blog.othree.net/log/2018/04/09/pegjs/</link>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /></a></p>
+<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
+<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
+<pre><code>IdentifierName ::
+    IdentifierStart
+    IdentifierName IdentifierPart
+
+IdentifierStart ::
+    UnicodeIDStart
+    $
+    _
+    \ UnicodeEscapeSequence
+
+IdentifierPart ::
+    UnicodeIDContinue
+    $
+    _
+    \ UnicodeEscapeSequence
+    &lt;ZWNJ&gt;
+    &lt;ZWJ&gt;
+
+UnicodeIDStart ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Start&amp;rdquo;
+
+UnicodeIDContinue ::
+    any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
+</code></pre>
+<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
+<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
+<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
+<pre><code>keyword
+keyword1 and keyword2
+</code></pre>
+<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
+<pre><code class="language-pegjs">start
+  = orQuery?
+
+orQuery
+  = left:andQuery Or right:orQuery
+  / andQuery
+
+andQuery
+  = left:notQuery And right:andQuery
+  / notQuery
+
+notQuery
+  = Not right:subQuery
+  / subQuery
+
+subQuery
+  = '(' ws* query:orQuery ws* ')'
+  / queryValue
+</code></pre>
+<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
+<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
+]]></description>
+<dc:subject>script</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2018-04-09T21:15:01+08:00</dc:date>
+</item>
 
 <item rdf:about="https://blog.othree.net/log/2018/03/24/htc-u11plus/">
 <title>HTC U11+</title>
@@ -482,17 +546,6 @@ var zdt = ldt.withZone('America/New_York');
 <dc:subject>script</dc:subject>
 <dc:creator>othree</dc:creator>
 <dc:date>2017-08-12T10:41:06+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2017/08/12/wat-javascript-date/">
-<title>WAT JavaScript Date</title>
-<link>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</link>
-<description><![CDATA[<p>週四在 Modern Web 2017 分享的投影片</p>
-<script async="async" class="speakerdeck-embed" data-id="5cf2c2b7e3734425b660781da7a9e57a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]></description>
-<dc:subject>script</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2017-08-12T00:13:59+08:00</dc:date>
 </item>
 
 
