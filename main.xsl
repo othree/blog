@@ -63,7 +63,7 @@
           </xsl:when>
           <xsl:when test="$listType = 'o'">
             <link rel="prev" title="彙整" href="{$mainPath}log/{$ext}"/>
-            <link rel="next" title="關於" href="{$mainPath}about/me/{$ext}"/>
+            <link rel="next" title="About" href="{$mainPath}about/me/{$ext}"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="prev_next">
@@ -163,9 +163,9 @@
                     部落滾
                 </a>
               <a href="{$mainPath}about/me/{$ext}" class="pure-menu-item"><xsl:if test="$listType = 'about'"><xsl:attribute name="id">pure-menu-selected</xsl:attribute><xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute></xsl:if>
-                    關於
+                    About
                 </a>
-              <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
+              <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">GitHub</a>
             </div>
           </div>
         </nav>
