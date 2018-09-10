@@ -5,10 +5,148 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-04-09 21:15</lastBuildDate>
+<lastBuildDate>2018-09-08 10:24</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>eslint-plugin-pep8-blank-lines</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
+<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
+<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;standard&quot;,
+ 
+  &quot;plugins&quot;: [
+    &quot;pep8-blank-lines&quot;,
+    &quot;no-parameter-e&quot;
+  ],
+ 
+  &quot;rules&quot;: {
+    &quot;semi&quot;: [2, &quot;always&quot;],
+    &quot;no-extra-semi&quot;: 2,
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
+    &quot;no-multiple-empty-lines&quot;: 0,
+    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
+    &quot;no-parameter-e/no-parameter-e&quot;: 2
+  }
+}
+</code></pre>
+<p>這組其實也是我目前在用的設定啦～</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/09/08/eslint-plugin-pep8-blank-lines/</link>
+<guid>https://blog.othree.net/log/2018/09/08/eslint-plugin-pep8-blank-lines/</guid>
+<category>script</category>
+<pubDate>2018-09-08 10:24</pubDate>
+</item>
+
+<item>
+<title>Tern 0.22 released</title>
+<description><![CDATA[<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
+<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
+<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
+<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(&quot;:Symbol.iterator&quot;, [], null,
+                                           new HasMethodCall(&quot;next&quot;, [], null,
+                                                             new GetProp(&quot;value&quot;, target))))
+</code></pre>
+<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/09/02/tern-022-released/</link>
+<guid>https://blog.othree.net/log/2018/09/02/tern-022-released/</guid>
+<category>script</category>
+<pubDate>2018-09-02 17:41</pubDate>
+</item>
+
+<item>
+<title>命名記錄 1</title>
+<description><![CDATA[<p><a title="By Thorin Oakenshield II [CC BY-SA 4.0 
+(https://creativecommons.org/licenses/by-sa/4.0
+)], from Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg"><img width="512" alt="Карта Одинокой Горы " src="https://upload.wikimedia.org/wikipedia/commons/b/b3/%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg" /></a></p>
+<p>記錄一下這兩年自己覺得還不錯的命名，本來是想累積更多再貼的。</p>
+<h4>Herculus</h4>
+<p><a href="https://zh.wikipedia.org/zh-tw/%E8%B5%AB%E6%8B%89%E5%85%8B%E5%8B%92%E6%96%AF">海克力士</a>，用在測試服務名稱上，是希臘神話中的大力士，曾經完成十二偉業，這兩年還有部電影，取名源由其實是 Fate/stay night 中，他做為 Berserk 的 Servant 所持有的寶具，稱為 <strong>十二の試練</strong>，試練就聯想到 test ～</p>
+<h4>Erebor</h4>
+<p>用在資料庫相關的服務，哈比人歷險記的<a href="https://en.wikipedia.org/wiki/Lonely_Mountain">孤山</a>的精靈語，因為孤山裡面有很多矮人的寶物，資料庫內的資料某種層面來說也算是個寶物。</p>
+<h4>Olympus</h4>
+<p>應該不用介紹來源了，用在 client 端自己寫的 API helper，取這個名字的原因是覺的客戶端跟 server 端要資料就如同在跟眾神請求一樣。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/21/naming-1/</link>
+<guid>https://blog.othree.net/log/2018/07/21/naming-1/</guid>
+<category>script</category>
+<pubDate>2018-07-21 23:12</pubDate>
+</item>
+
+<item>
+<title>SmooshGate</title>
+<description><![CDATA[<p>之前應該沒在這邊提過這件事，總之就是之前 TC39 有個 flatten 的 proposal，搞一搞後，發現這東西實做啟用後 MooTools 會爛掉，詳細的原因 Google 那邊有一篇文章<a href="https://developers.google.com/web/updates/2018/03/smooshgate">解釋</a>，標題就是 SmooshGate，Smoosh 這個單字其實有點少見，我大概查一下，雖然有說是 flatten、squash 的意思，不過目前覺得應該是作畫時把顏料抹平那種動作感覺最對吧，總之，當初為了這個問題第一個提案的改名就是 <a href="https://github.com/tc39/proposal-flatMap/pull/56"><code>smoosh</code></a>，不過這個單字整體感覺和 flatten 差距實在太大，所以出現一堆聲音，有的是建議加上 <code>&quot;use es2019&quot;</code> 的 statement 來開啟 <code>flatten</code>，像是 stirct mode 一樣，有的建議其他名字，當然也有些人是覺得管 MooTools 去死的，不過因為 Don't Break the Web 的大原則所以還是要處理這個問題。</p>
+<p>其實我覺得當初提案 smoosh 的人搞不好是故意挑這個字的，藉此增加話題性引發討論和建議，效果其實很好，在 Twitter 上還出現了 <a href="https://twitter.com/hashtag/smooshgate">#SmooshGate</a> 這樣的 hashtag，不過，總之在最近一次五月的 TC39 會議，確定 proposal 改新的名稱：<code>flat</code> ，雖然詞性不同，不過大家都還蠻可以接受，或許也可能是相較於 smoosh 來說很可以接受吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/05/28/smooshgate/</link>
+<guid>https://blog.othree.net/log/2018/05/28/smooshgate/</guid>
+<category>script</category>
+<pubDate>2018-05-28 12:32</pubDate>
+</item>
+
+<item>
+<title>ESLint Plugin 入門</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr"><img src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w" /></a></p>
+<p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
+<p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
+<p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
+<p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
+<pre><code class="language-javascript">const rule = require('../rule.js')
+const RuleTester = require('eslint').RuleTester
+
+const ruleTester = new RuleTester();
+
+ruleTester.run('no-parameter-e', rule, {
+  valid: [
+    'function a (event) {}',
+  ],
+  invalid: [
+    {
+      code: 'function e (e) {}',
+      errors: [{ message }],
+    }
+  ],
+});
+</code></pre>
+<p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
+<p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
+<p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</link>
+<guid>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</guid>
+<category>script</category>
+<pubDate>2018-04-21 21:17</pubDate>
+</item>
+
+<item>
+<title>Immer 原理</title>
+<description><![CDATA[<p>前陣子有個蠻有趣的 library 叫 <a href="https://github.com/mweststrate/immer">Immer</a>，是 MobX 的開發者 Michel Weststrate 做的，這個 library 做的事情很有趣，它整合了 immutable 資料和原生資料的特性，反過來從缺點來看，immutable 資料型態的問題就是操作比較不方便，所有的修改動作都要透過 method 來執行，不能直接用 assign 的，有時候要改比較深層一點的資料就很麻煩，像 Facebook 的 <a href="https://github.com/facebook/immutable-js">immutable.js</a> 就需要用 <code>getIn</code>、<code>updateIn</code> 來處理：</p>
+<pre><code class="language-js">getIn({ x: { y: { z: 123 }}}, ['x', 'y', 'z']) // 123
+
+const original = { x: { y: { z: 123 }}}
+setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
+</code></pre>
+<p>用陣列丟每層的屬性名稱，也有一些是用 <code>.</code> 切分的 path 來處理這個問題（像是 <code>prop1.prop2.prop3</code> 這種結構），而原生資料的缺點，在這個場景來看當然就是不 immutable 了，Immer 就提出了一個新的構想，把這兩者的優點結合在一起，讓資料可以保持 immutable 特性，又可以直接修改，當然不能直接修改 JavaScript 行為，所以還是有些地方需要等價交換，就是修改資料的時候，要包進 produce function 內：</p>
+<pre><code class="language-js">const nextState = produce(baseState, draftState =&gt; {
+    draftState.push({ todo: &quot;Tweet about it&quot; })
+    draftState[1].done = true
+})
+</code></pre>
+<p>然後得到的 <code>nextState</code> 和 <code>baseState</code> 就會是不同物件，就像是 immutable 物件一樣行為，所以如果沒修改就還是同個物件，初看覺得有點黑魔法，不過思考過後覺得也不是不能做，有了些假想的實做方法後去研究了一下程式碼，不太意外的其實在 produce 裡面拿到的 draft 物件，是一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 包裝過的物件，然後 immutable 相關的邏輯都做在 Proxy 內，produce 跑完後再把新的值 finalize 取出用 plain object 傳回給 <code>nextState</code>，當然因為 Proxy 是比較新的東西，所以針對 ES5 也有另外的處理，我大致看一下就是比較土法煉鋼的下去比對，至於為什麼不全部都這樣做應該是效能考量吧。其實我覺得比起實做的原理，能想到這樣設計實在是很厲害，不像大部分人早就放棄了，還持續思考是不是有更好的作法可以整合兩種資料格式的優點才有機會找到這條路。</p>
+<p>最後，Immer 這名字的由來，雖然在德文有這單字，不過我判斷應該還是從 immersive 來的吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/19/immer/</link>
+<guid>https://blog.othree.net/log/2018/04/19/immer/</guid>
+<category>script</category>
+<pubDate>2018-04-19 23:11</pubDate>
+</item>
 
 <item>
 <title>PEG.js</title>
@@ -388,660 +526,6 @@ export {};
 <guid>https://blog.othree.net/log/2017/01/10/smartypants-js/</guid>
 <category>script</category>
 <pubDate>2017-01-10 22:47</pubDate>
-</item>
-
-<item>
-<title>20K for...of</title>
-<description><![CDATA[<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 <code>for...in</code> 或是用傳統的取長度，然後 <code>i++</code> 的方法：</p>
-
-<pre><code>var arr = [1, 2, 3];
-var i, v, len;
-
-for (i in arr) {
-    v = arr[i];
-    console.log(v);
-}
-
-for (i = 0, len = arr.length; i &lt; len; i++) {
-    v = arr[i];
-    console.log(v);
-}
-</code></pre>
-
-<p>現在只要用簡單的 <code>for...of</code> 就可以了：</p>
-
-<pre><code>var arr = [1, 2, 3];
-
-for (let v of arr) {
-    console.log(v);
-}
-</code></pre>
-
-<p>不過目前還是需要考慮只有 ECMAScript 5 的環境，例如 IE11，所以一般都還是會用像是 <a href="https://babeljs.io/">Babel</a> 之類的 transpiler 來把 ES2015 的 syntax 轉成 ES5 的 code，結果轉出來如下：</p>
-
-<pre><code>"use strict";
-
-var arr = [1, 2, 3];
-
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-    for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var v = _step.value;
-
-        console.log(v);
-    }
-} catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-} finally {
-    try {
-        if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
-            _iterator.return();
-        }
-    } finally {
-        if (_didIteratorError) {
-            throw _iteratorError;
-        }
-    }
-}
-</code></pre>
-
-<p>結果其實有點意外，一個簡單的 <code>for...of</code> 竟然變的這麼長，事實上是因為 <code>for...of</code> 其實沒想像中簡單，因為它可以用的地方其實不只是陣列，而是 <a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">iterable 物件</a>，不過為了要完整的支援 <code>for...of</code>，就變成需要有 iterator, generator, symbol 等等的支援，當然上面的程式碼不能在 ES5 環境下執行，而 Babel 依靠的是 <a href="https://babeljs.io/docs/usage/polyfill/">babel-polyfill</a>，裡面其實就是 <a href="https://github.com/zloirock/core-js">core-js</a> 和 <a href="https://facebook.github.io/regenerator/">regenerator</a>，不過這一整包，其實有點龐大，要 228KB，即使最小化之後也還要 95KB，所以，就想著是不是能夠只捆包進需要的部分就好了，研究過後，發現有 Babel plugin 叫做 <a href="https://babeljs.io/docs/plugins/transform-runtime/">transform-runtime</a>，套用上去後：</p>
-
-<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
-var arr = [1, 2, 3];
-
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-  for (var _iterator = _getIterator(arr), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-    var v = _step.value;
-
-    console.log(v);
-  }
-} catch (err) {
-  _didIteratorError = true;
-  _iteratorError = err;
-} finally {
-  try {
-    if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
-      _iterator.return();
-    }
-  } finally {
-    if (_didIteratorError) {
-      throw _iteratorError;
-    }
-  }
-}
-</code></pre>
-
-<p>可以看到原來用 <code>Symbol</code> 取 iterator 的地方變成用 <code>_getIterator</code> 了，而且還有一行：</p>
-
-<pre><code>import _getIterator from "babel-runtime/core-js/get-iterator";
-</code></pre>
-
-<p>如果要真的把這部分也打包進來，則需要讓 bundler 處理，我個人是偏好 <a href="http://rollupjs.org/">rollup</a>，搭配以下兩個 plugin：</p>
-
-<ul>
-<li><a href="https://github.com/rollup/rollup-plugin-node-resolve">rollup-plugin-node-resolve</a> 用來尋找 <code>node_modules</code> 目錄裡的模組</li>
-<li><a href="https://github.com/rollup/rollup-plugin-commonjs">rollup-plugin-commonjs</a> 用來解析 CommonJS 型式的模組</li>
-</ul>
-
-<p>然後用以下的設定：</p>
-
-<pre><code>babel({
-  exclude: 'node_modules/**',
-  plugins: ['transform-runtime'],
-  presets: ['es2015-loose-rollup'],
-  runtimeHelpers: true
-}),
-nodeResolve({ jsnext: true }),
-commonjs({
-  include: 'node_modules/**'
-})
-</code></pre>
-
-<p>結果，就可以得到夢寐以求的 20KB 的<a href="https://github.com/othree/20k-for-of/blob/master/out/bundle-all.js">程式碼</a>了，當然 20KB 的部分不是預期的啦，相較於一開始的程式碼只有 72Bytes，為了一個 <code>for...of</code> 變成 20KB 好像有點本末倒置，畢竟我只有要在 Array 上用，難道不能只是簡單的轉成 <code>for...in</code> 型式嗎。</p>
-
-<p>事實上是有辦法的，第一個就是改寫 <a href="https://www.typescriptlang.org/">TypeScript</a>，TypeScript 對於 <code>for...of</code> 只有兩種處理方法，而且結果都不會如此膨脹，第一種就是變成 <code>for...in</code>，第二種則是不變動，保留 <code>for...of</code> 的語法，後者是在 target 設定成 ES6 的時候使用的，官網也有相關的<a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#targeting-es5-and-es3">說明</a>。</p>
-
-<p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
-
-<p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/11/18/20k-for-of/</link>
-<guid>https://blog.othree.net/log/2016/11/18/20k-for-of/</guid>
-<category>script</category>
-<pubDate>2016-11-18 00:00</pubDate>
-</item>
-
-<item>
-<title>Input Event</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr"><img src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w" /></a></p>
-
-<p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
-
-<ul>
-<li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
-<li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
-<li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
-<li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
-<li>以上幾種操作都不會讓游標亂跳</li>
-</ul>
-
-<p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
-
-<p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
-
-<pre><code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
-/*
-   The following function tests an element for oninput support in Firefox.  Many thanks to
-        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
-*/
-function checkEvent(el) {
-    // First check, for if Firefox fixes its issue with el.oninput = function
-    el.setAttribute("oninput", "return");
-    if (typeof el.oninput == "function")
-        return true;
-
-    // Second check, because Firefox doesn't map oninput attribute to oninput property
-    try {
-        var e  = document.createEvent("KeyboardEvent"),
-            ok = false,
-            tester = function(e) {
-                ok = true;
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
-        document.body.appendChild(el);
-        el.addEventListener("input", tester, false);
-        el.focus();
-        el.dispatchEvent(e);
-        el.removeEventListener("input", tester, false);
-        document.body.removeChild(el);
-        return ok;
-    } catch(e) {}
-}
-</code></pre>
-
-<p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2016/09/11/input-event/</link>
-<guid>https://blog.othree.net/log/2016/09/11/input-event/</guid>
-<category>script</category>
-<pubDate>2016-09-11 00:21</pubDate>
-</item>
-
-<item>
-<title>JSON Universe</title>
-<description><![CDATA[<p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
-
-<ul>
-<li>不支援註解</li>
-<li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
-<li>字串一定要用雙引號，不能用單引號</li>
-<li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
-</ul>
-
-<p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
-]]><![CDATA[<h4>JXON</h4>
-
-<p>第一個要介紹的就是剛剛提到的 <a href="https://developer.mozilla.org/en-US/docs/JXON">JXON</a>，JXON 全名是 lossless JavaScript XML Object Notation，是使用 JavaScript 語言的 syntax 來表示 XML 文件的資料，可以達到完整無失真的呈現，就是說可以還原成一模一樣的 XML，不過其實 JXON 並不是真的有個明確的標準，並沒有一個組織或單位來制訂，雖然如此，還是可以找到有人有<a href="https://github.com/tyrasd/jxon">實做</a>。</p>
-
-<h4>JSONx</h4>
-
-<p>第二個要介紹的是 <a href="https://www-01.ibm.com/support/knowledgecenter/SS9H2Y_7.1.0/com.ibm.dp.doc/json_jsonx.html">JSONx</a>，這是 IBM 推出的一種 XML 文件格式，目的非常有趣，和 JXON 剛好相反，是用 XML 文件來表示 JSON 文件的資料，namespace 是 <code>http://www.ibm.com/xmlns/prod/2009/jsonx</code>，講真的我想不到到底有誰會有需求使用到這個標準，隨便看個範例文件吧：</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;json:object xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:json="http://www.ibm.com/xmlns/prod/2009/jsonx"&gt;
-  &lt;json:string name="name"&gt;John Smith&lt;/json:string&gt;
-  &lt;json:object name="address"&gt;
-    &lt;json:string name="streetAddress"&gt;21 2nd Street&lt;/json:string&gt;
-    &lt;json:string name="city"&gt;New York&lt;/json:string&gt;
-    &lt;json:string name="state"&gt;NY&lt;/json:string&gt;
-    &lt;json:number name="postalCode"&gt;10021&lt;/json:number&gt;
-  &lt;/json:object&gt;
-  &lt;json:array name="phoneNumbers"&gt;
-    &lt;json:string&gt;212 555-1111&lt;/json:string&gt;
-    &lt;json:string&gt;212 555-2222&lt;/json:string&gt;
-  &lt;/json:array&gt;
-  &lt;json:null name="additionalInfo" /&gt;
-  &lt;json:boolean name="remote"&gt;false&lt;/json:boolean&gt;
-  &lt;json:number name="height"&gt;62.4&lt;/json:number&gt;
-  &lt;json:string name="ficoScore"&gt; &gt; 640&lt;/json:string&gt;
-&lt;/json:object&gt;
-</code></pre>
-
-<h4>MessagePack</h4>
-
-<p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w" /></a></p>
-
-<p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
-
-<h4>BSON, BJSON</h4>
-
-<p><a href="http://bsonspec.org/">BSON</a>、<a href="http://bjson.org/">BJSON</a> 也都是 Binary 的 JSON 表現格式，不過這兩個規格都不完全相容於 JSON，有多一些自定義的資料型態，像是 regular expression，然後大部分人都只有談到 BSON，不太有人講到 BJSON 的樣子。</p>
-
-<h4>UBJSON, Smile</h4>
-
-<p><a href="http://ubjson.org/">UBJSON</a>(Universal Binary JSON) 和 <a href="http://wiki.fasterxml.com/SmileFormatSpec">Smile</a> 也和上面幾個一樣是 Binary 的資料格式，和 BSON 比起來則是差在這兩個格式完全相容於 JSON，意思就是可以做到 <code>UBJSON -&gt; JSON -&gt; UBJSON</code> 這樣的資料轉而完全不會遺失資訊。</p>
-
-<p>Binanry 的 JSON 表現格式其實還有一個叫 <a href="https://componentality.com/xjson/">xJSON</a> 的比較沒知名度這樣。</p>
-
-<h4>Hjson</h4>
-
-<p><a href="http://hjson.org/">Hjson</a> 全名是 the Human JSON，顧名思義就是更人性化的 JSON 格式，是一個比 JSON 寬鬆的規範，例如允許註解，不用 <code>,</code> 改成用換行也可以分開不同元素：</p>
-
-<pre><code>[
-  1
-  2
-  3
-]
-</code></pre>
-
-<p>物件的 key 不需要字串的引號：</p>
-
-<pre><code>{ foo: 123 }
-</code></pre>
-
-<p>等等很多方便的語法，不過其實如果要用機器產生這些寬鬆的資料是不太好，比較適合的場合還是用人工維護的 JSON 檔案。</p>
-
-<h4>rson</h4>
-
-<p><a href="https://code.google.com/p/rson/">rson</a> 是一個 JSON 的 superset，和 Hjson 的目標有些接近，不過 rson 的一些新語法更接近 <a href="http://www.yaml.org/">YAML</a> 格式，專案是放在 Google Code 上，而且似乎已經沒維護了，是個總有一天會消失在網路上的東西吧。</p>
-
-<h4>LJSON</h4>
-
-<p><a href="https://github.com/MaiaVictor/LJSON">LJSON</a> 的 L 應該是 lambda 的意思，也是個 JSON 的擴充格式，改變只有一個，就是多了可以儲存 pure function 的能力，儲存 function 的形式是很像 ES6 arrow function 的樣子：</p>
-
-<pre><code>(v0)=&gt;({"author":"John","message":v0})
-</code></pre>
-
-<p>最大的差別在於 <code>=&gt;</code> 後面是接 <code>()</code>，並且還有個特色是它會想辦法最佳化，會有像是 dead code removal 的效果。如果要自己做到用 JSON 儲存 function 的話，一般是可以先用 <code>toString</code> 來輸出 function 的原始碼，要還原時再用 <code>new Function</code> 來還原，不過如果不是 pure function，例如有用到 closure 變數的話，就一定會失去這些 reference 到的變數了。</p>
-
-<p>另外還有一個 <a href="https://github.com/daviddengcn/ljson">LJSON</a> 是叫做 Loose JSON，就和上面介紹的 Hjson 目標差不多，就不再多介紹了。</p>
-
-<h4>JSON Lines</h4>
-
-<p><a href="http://jsonlines.org/">JSON Lines</a> 也是有點接近上面介紹的幾個東西，其實是個很簡單的東西，就是把多個 JSON 資料用換行接在同一個文件檔案內，例如：</p>
-
-<pre><code>[1,2,3]
-[4,5,6]
-[7,8,9]
-</code></pre>
-
-<p>三個 JSON 陣列接在一起，不是一個合法的 JSON string，一般 JSON Parser 都會說 Syntax Error，不過支援 JSON Lines 的環境下就可以把這串字串切開，分成三個陣列，支援的環境中我看到比較有名的大概就是 <a href="https://github.com/maxogden/dat/">dat</a> 了，這是一個蠻厲害的資料分享的工具，其中的串流模式傳輸資料就是用到 JSON Lines 格式（其實就是一個一個 JSON 資料輪流輸出）。</p>
-
-<h4>JSONH</h4>
-
-<p><a href="https://github.com/WebReflection/JSONH">JSONH</a> 就不是一個 JSON 的擴充格式了，它事實上是用來壓縮 JSON 的，特別適用於物件的陣列的資料集，像是：</p>
-
-<pre><code>[
-  {
-    "name": "John",
-    "gender": "Male",
-    "country": "USA"
-  },
-  {
-    "name": "Smith",
-    "gender": "Male",
-    "country": "Canada"
-  }
-]
-</code></pre>
-
-<p>透過用 JSONH 壓縮就會變成：</p>
-
-<pre><code>[3, "name", "gender", "country", "John", "Male", "USA", "Smith", "Male", "Canada"]
-</code></pre>
-
-<p>最主要節省的就是大量重複的屬性名稱，如果屬性名稱長，陣列又長，這樣壓縮前後的資料量大小差距就會很明顯，不過如果資料階層比較複雜的話，沒辦法整理得這麼漂亮，壓縮效果就會打折了。</p>
-
-<h4>Jsonnet</h4>
-
-<p><a href="http://jsonnet.org/">Jsonnet</a> 是 Google 所推出，帶著一點程式語言特性的 JSON 文件格式，例如多了個 <code>self</code>：</p>
-
-<pre><code>{
-    person1: {
-        name: "Alice",
-        welcome: "Hello " + self.name + "!",
-    },
-    person2: self.person1 { name: "Bob" },
-}
-</code></pre>
-
-<p>還有 tempalte string：</p>
-
-<pre><code>{
-    fmt2: "The word %(wd)s has %(le)d letters.  Go %(wd)s!"
-        % {wd: $.word, le: std.length($.word)},
-}
-</code></pre>
-
-<p>Array comprehension：</p>
-
-<pre><code>{
-    foo: [1, 2, 3],
-    bar: [x * x for x in self.foo if x &gt;= 2],
-    baz: { ["field" + x]: x for x in self.foo },
-    obj: { ["foo" + "bar"]: 3 },
-}
-</code></pre>
-
-<p>除了這些程式語法的特性之外， Jsonnet 還有像是 Hjson 的一些比較人性化的語法的支援，官網上則自稱是是一種 data template language，而不是單純的資料而已。</p>
-
-<h4>JSON3</h4>
-
-<p><a href="http://bestiejs.github.io/json3/">JSON3</a> 其實不是一個新版本的 JSON，而是一個更加穩健的 JavaScript 的 JSON 實做，多處理了一些不同瀏覽器的差異問題，3 的由來其實是相對於 Douglas 的 <a href="https://github.com/douglascrockford/JSON-js">json2.js</a>，這個 json2.js 是整個 JSON 進 ECMAScript 標準時最主要的依據，包括 Global Varibale 的名稱，API 的設計都是從這邊來的，至於這個 json2.js 的 2 的意思其實就是這是 Douglas 實做的第二版 JSON library。</p>
-
-<h4>JSONP</h4>
-
-<p><a href="https://zh.wikipedia.org/wiki/JSONP">JSONP</a> 其實不是一個標準，最早出處也不詳，不過早一點在 CORS 普及前就開始寫 Ajax 的人應該是很熟悉的東西，瀏覽器為了安全性問題，雖然可以跨直接用 XHR 做出 HTTP request，但是會限制跨 domain 的連線，現在有 CORS 可以讓網站所有者提供允許的白名單，但是在 CORS 普及前，基本上是完全被禁止的，不過有個方法就是插入 <code>&lt;script&gt;</code> 標籤去執行遠端的 js 檔案，這個方法的缺點就是只能執行，不能讀取檔案內容，JSONP 就是在這個限制下所設計出來可以用來跟遠端要資料的方法，基本上實做的方法就是在本地先產生好一個暫時的 callback function：</p>
-
-<pre><code>window.cb123456 = function (data) {
-  window.cb123456 = null; //clean up
-
-  //do something with data      
-};
-</code></pre>
-
-<p>然後把遠端資源加上參數指定 callback 名稱：</p>
-
-<pre><code>&lt;script type="text/javascript"
-     src="http://server2.example.com/RetrieveUser?UserId=1823&amp;jsonp=cb123456"&gt;
-&lt;/script&gt;
-</code></pre>
-
-<p>遠端收到 Request 後產生特別的 response，本來要回傳的資料如下：</p>
-
-<pre><code>{
-  "name": "John",
-  "gender": "Male",
-  "country": "USA"
-}
-</code></pre>
-
-<p>現在會變成一段 JavaScript 程式碼：</p>
-
-<pre><code>cb1231465({
-  "name": "John",
-  "gender": "Male",
-  "country": "USA"
-});
-</code></pre>
-
-<h4>JSON Schema</h4>
-
-<p>JSON 本身是很自由的資料格式，不過開發比較大型的應用程式，或是要做一些測試的時候，太過自由就不一定是優點了，所以很合理的就會有個來定義資料內容結構的描述語言出現，<a href="http://json-schema.org/">JSON Schema</a> 就是一個，而且似乎很合理的 JSON Schema 也是 JSON 文件：</p>
-
-<pre><code>{
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Product",
-    "description": "A product from Acme's catalog",
-    "type": "object",
-    "properties": {
-        "id": {
-            "description": "The unique identifier for a product",
-            "type": "integer"
-        }
-    },
-    "required": ["id"]
-}
-</code></pre>
-
-<p>這個文件格式也有在 <a href="http://raml.org/">RAML</a> 中被使用到，RAML 是個 RESTful API 的定義文件，如果 API 傳輸的資料是 JSON 的話，就可以內嵌 JSON Schema，都定義完整就可以用自動化工具來做一些測試了，或是也可以產生一些方便閱讀的文件等等。</p>
-
-<h4>JSON-LD</h4>
-
-<p><a href="http://json-ld.org/">JSON-LD</a> 是 JSON for Linked Data，所謂 Linked Data 其實就是語意網的一部分，基本上還是遵照 <a href="http://www.w3.org/RDF/">RDF</a> 架構去設計出來的文件，目前也很多網路服務都支援，像是 Google、Facebook 等等，甚至 Gmail 的一些特殊能力也是透過在信件內插入 JSON-LD 格式的資料才得以實現。</p>
-
-<h4>JSON-RPC</h4>
-
-<p><a href="http://json-rpc.org/">JSON-RPC</a> 基本上就是 XML-RPC 的 JSON 版本這樣，其實我也不知道有沒有人真的拿來應用就是，倒是 XML-RPC 現在還不少老東西有支援。</p>
-
-<h4>GeoJSON</h4>
-
-<p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w" /></a></p>
-
-<p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
-
-<h4>JSON-stat</h4>
-
-<p><a href="http://json-stat.org/">JSON-stat</a> 是個把二維統計資訊表格用 JSON 表現的格式，而且不是只能夠處理兩個維度的資料而已，事實上可以儲存更多維度，JSON-stat 在儲存 raw data 的部分是用打平的一維陣列來儲存，所以也不用擔心太多層太過複雜的狀況，想詳細瞭解一點的可以參考官網右上角的投影片看看。</p>
-
-<h4>JSON Graph</h4>
-
-<p><a href="http://netflix.github.io/falcor/documentation/jsongraph.html">JSON Graph</a> 是 Netflix 推出的 <a href="http://netflix.github.io/falcor/">Falcor</a> 裡面用到的，Falcor 是一種用來取代 RESTful API 的新的前後端之間的溝通方式，這種方法和 RESTful 相比最大的差異就是不再是對單一的資源（resource）做操作，而是整個應用程式會用到的東西都組織定義好，放到一個大的 resource 內，然後再對這個大的資源做操作，而這個大的 resource 就是所謂的 JSON Graph 物件，Falcor 的出現是為了解決一些把 RESTful 用到很透徹時會出現的問題，不過真的要想用這套方法在自己的服務上其實是有些難度，因為要實做一個 Falcor Server，官方也只有提供 Node 版的。</p>
-
-<h4>JSONPath</h4>
-
-<p><a href="http://goessner.net/articles/JsonPath/">JSONPath</a> 是一個 JSON 的 query 語言，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/XPath">XPath</a> 之於 XML，語法 syntax 其實和普通 JavaScript 程式碼很像，不會太難理解，一些範例：</p>
-
-<pre><code>$.store.*
-$.store.book[*].author
-$.store..price
-</code></pre>
-
-<p>不過這些可不是程式碼，而是單純的字串，丟進 JSONPath 引擎再給它相對應的物件（不是 JSON 字串），就可以把目標位置的資料取出來。</p>
-
-<h4>JSONiq</h4>
-
-<p><a href="http://jsoniq.org/">JSONiq</a> 也是個用來 query JSON 資料用的語言，不過和上面的 JSONPath 不一樣，比較像是 SQL 那樣有點程式化，而且語法偏 functional programming，例如：</p>
-
-<pre><code>for $sarah in collection("users"),
-    $friend in collection("users")
-where $sarah.name eq "Sarah"
-      and
-      (some $name in $sarah.friends[]
-       satisfies $friend.name eq $name)
-return $friend
-</code></pre>
-
-<h4>JSON Pointer</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> 是一個 2013 的 RFC 標準(RFC-6901)，用途和 JSON Path 有點像，也是用來取出 JSON 文件中的一部份資料，不過最主要的差異在於 JSON Pointer 一定是只能指向到一個節點，只能拿到一個 value，不像 JSONPath 或是 JSONip 可以一次 query 很多節點，然後用陣列的形式傳回值；另外還有一個和 JSONPath 的差異是 JSON Pointer 和 XPath 的語法很接近：</p>
-
-<pre><code>/foo/0
-/actors/4/name
-</code></pre>
-
-<h4>JSON Patch</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> 是一個另 RFC 標準(RFC-6902)，緊接在 JSON Pointer 之後，這兩個標準都是都是在 <a href="https://blog.gslin.org/archives/2014/02/15/4261/json-patch/">gslin</a> 那邊看到的，JSON Patch 主要是定義了一組標準的對 JSON 的操作(operation)，提供了 add, remove, replace, move, copy, test 幾個操作，基本上看起來如下：</p>
-
-<pre><code>{"op": "add", "path": "/pets/0", "value": "dog"}
-</code></pre>
-
-<p>這行的意思是要在 pets 下的第一個元素的位置加上一個值，字串 "dog"，JSON Patch 基本上是設計來和 HTTP Patch 配合的，以前如果要用 Patch 修改某個特定網路 reource 的話，一定要把整個完整的，更新過後的 JSON 資料傳一次，但是如果用 JSON Patch 就可以只傳要做怎樣的更新就可以了，可以節省很多資料的傳輸量，而且還可以先用 test 做測試，然後也可以一次做一連串的修改動作：</p>
-
-<pre><code>[
-  { "op": "replace", "path": "/baz", "value": "boo" },
-  { "op": "add", "path": "/hello", "value": ["world"] },
-  { "op": "remove", "path": "/foo"}
-]
-</code></pre>
-
-<h4>JSONDiffPatch</h4>
-
-<p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w" /></a></p>
-
-<p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
-
-<h4>JSONLint</h4>
-
-<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還有可以收合展開的樹狀檢視模式。</p>
-
-<h4>?JSON</h4>
-
-<p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
-
-<p>PS: 還有一篇 <a href="https://blog.othree.net/log/2016/08/13/json-web-token/">JSON Web Token</a></p>
-]]></description>
-<link>https://blog.othree.net/log/2016/01/11/json-universe/</link>
-<guid>https://blog.othree.net/log/2016/01/11/json-universe/</guid>
-<category>script</category>
-<pubDate>2016-01-11 22:38</pubDate>
-</item>
-
-<item>
-<title>JSX 的前世</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/23319631253/" title="ECMA-357 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg" width="723" height="1024" alt="ECMA-357" srcset="https://farm6.staticflickr.com/5679/23319631253_52dfbeb5c0_b.jpg 723w, https://farm6.staticflickr.com/5679/23319631253_54870a2279_h.jpg 1130w" /></a></p>
-
-<p>React 的主要創新在於 Virtual DOM，而伴隨著 Virtual DOM 而來的，就是 Virtual DOM 的操作，由於 JavaScript 語言限制的關係，要產生一個簡單的 <code>&lt;div&gt;</code> 標籤就要寫成：</p>
-
-<pre><code>var divNode = React.DOM.div({attr1:"value"});
-</code></pre>
-
-<p>如果還要加上子元素，像是一個 list：</p>
-
-<pre><code>&lt;ol&gt;
-  &lt;li&gt;Item A&lt;/li&gt;
-  &lt;li&gt;Item B&lt;/li&gt;
-  &lt;li&gt;Item C&lt;/li&gt;
-  &lt;li&gt;Item D&lt;/li&gt;
-&lt;/ol&gt;
-</code></pre>
-
-<p>就要寫成：</p>
-
-<pre><code>var listNode = React.DOM.div({},
-  React.DOM.li({}, "Item A"),
-  React.DOM.li({}, "Item B"),
-  React.DOM.li({}, "Item C"),
-  React.DOM.li({}, "Item D")
-);
-</code></pre>
-
-<p>雖然比起純 DOM 的語法要簡單很多了，不過其實類似這種寫法來快速產生文件樹節點的 library 已經早就有了，像是 <a href="https://github.com/eneko/mooml">Mooml</a>、<a href="https://github.com/dominictarr/hyperscript">hyperscript</a>（thanks WM），如果 React 當初就直接這樣子推出，大家會想嘗試的意願應該會低很多，Facebook 的工程師應該也知道這樣和直接寫 DOM 或是其他 library 的感覺差異不大，所以他們解決的方法就是建立了一個新的 syntax，看起來就像是讓 DOM 變成像是原生的資料型態一樣，也就是現在的 JSX syntax，然後當然要讓這種語法可以在瀏覽器執行，所以官方有提供了 transpiler，不過其實這個把 XML DOM 當成 JS 語言中的原生資料型態的想法不是第一次出現了，早在好幾年前，就有一個 ECMA-357，又稱為 <a href="https://developer.mozilla.org/zh-TW/docs/E4X/%E4%BD%BF%E7%94%A8_E4X_%E8%99%95%E7%90%86_XML">E4X</a> 的標準是在做這件事的，全名則是 ECMAScript for XML，早期的 Mozilla SpiderMonkey 是有支援的，約是在 2006 年的 JavaScript 1.6 中推出，不過到 Firefox 21 的時候已經完全移除了，所以現在基本上是已經無法體會到這套 JS 擴充的語法，不過其實這套語法還蠻不錯的，有類似 template string 的寫法：</p>
-
-<pre><code>var doc = &lt;{h}&gt;&lt;body&gt;{text}&lt;/body&gt;&lt;/{h}&gt;;
-</code></pre>
-
-<p>React 則因為同時導入了 immutable 的概念，所以其 Virtual DOM 設計上只有產生文件樹結構的部分，沒有刪除修改，相較於 JSX 只有建置（create）的語法，E4X 則是有更完整的 CRUD 操作（就像是操作 JS 資料一樣），另外還多了用來尋找目標節點的 selector syntax：</p>
-
-<pre><code>languages.lang[1]
-person..*
-people.person.(name == "Joe").age
-</code></pre>
-
-<p>而且目標對像是 XML，所以對於 namespace 的處理也都有，整體而言算是很完整的 XML 操作方案，使用起來也比 DOM 簡潔很多，可惜後來被放棄，我推測大概幾個原因：</p>
-
-<ol>
-<li>使用 XML 的應用越來越少</li>
-<li>實做 E4X 會增加 JS 引擎的複雜度</li>
-<li>相較於 DOM 不依存於單一程式語言，E4X 則是 JS extension</li>
-<li>用 E4X 產生的節點不是 DOM 物件，不直接相容</li>
-</ol>
-
-<p>沒想到後來會在 Facebook 的手上，把這個概念單存的套用在 HTML 文件樹之上而重生。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/12/25/jsx-e4x/</link>
-<guid>https://blog.othree.net/log/2015/12/25/jsx-e4x/</guid>
-<category>script</category>
-<pubDate>2015-12-25 09:36</pubDate>
-</item>
-
-<item>
-<title>前端測試入門</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w" /></a></p>
-
-<p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
-
-<p>其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了<a href="https://github.com/othree/moztw-download-validation">下載檔案的自動檢查</a>，就順便把相關的名詞和觀念弄清楚。</p>
-
-<p>之前最搞不清楚的其實就是 <a href="https://mochajs.org/">Mocha</a>（摩卡咖啡） 和 <a href="http://chaijs.com/">Chai</a>（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 <strong>斷言</strong> 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha 網站上就列出了四套 assert library 供大家選擇，除此之外，像我之前在介紹 TypeScript 時提過的 <a href="http://angular.github.io/assert/">assert.js</a> 也可以使用，不過 assert.js 只能檢查型別就是。至於要挑選哪套 assert library 就看各人喜好了，主要是看要怎麼寫斷言，像我挑選 Chai 的原因是他的語法，支援 BDD ，可以寫的看起來很像一句英語：</p>
-
-<pre><code>foo.should.be.a('string');
-foo.should.equal('bar');
-foo.should.have.length(3);
-tea.should.have.property('flavors').with.length(3);
-</code></pre>
-
-<p>很容易就知道是什麼意思，而且自由度還蠻大的。另外一個原因則是他有支援 Promise，就是所謂的 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>，為什麼這個很重要呢，因為 JS 很常遇到需要非同步的操作流程，如果沒有支援，Test Framework 當下把他的 function 跑完，沒有 catch 到 error 就認為沒有錯誤了，當然像 mocha 是有支援非同步的，內建有個等待的機制，<code>done</code>：</p>
-
-<pre><code>describe('User', function() {
-  describe('#save()', function() {
-    it('should save without error', function(done) {
-      var user = new User('Luna');
-      user.save(function(err) {
-        if (err) throw err;
-        done();
-      });
-    });
-  });
-});
-</code></pre>
-
-<p>就是每個 <code>it</code> 區塊裡面，其實都會收到一個函數 <code>done</code>，如果有要測試非同步的程式，可以在非同步的部分測試完後，才執行 <code>done()</code>，這樣 Mocha 才有機會知道你的測試是不是有非同步的部分，還有什麼時候才是測試完成，不過 Chai 是 BDD，不會容許這樣不直觀的寫法的，所以 Domenic Denicola 開發了 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>：</p>
-
-<pre><code>promise.should.be.fulfilled;
-promise.should.eventually.deep.equal("foo");
-promise.should.become("foo"); // same as `.eventually.deep.equal`
-promise.should.be.rejected;
-</code></pre>
-
-<p>只是要這樣簡潔的寫法，還需要先設定一下：</p>
-
-<pre><code>var chai = require("chai");
-var chaiAsPromised = require("chai-as-promised");
-
-chai.use(chaiAsPromised);
-</code></pre>
-
-<p>其實 chai-as-promised 是 chai 的 plugin，然後用 <code>chai.use</code> 來使用它，底層怎樣運作我還沒深入研究，覺得還有點 magic，不過還算是想的到怎樣實做出來的程度，猜測可能有用到 function 的 <code>toString</code> 來判斷有沒有引用 <code>next</code> 參數。</p>
-
-<p>再來，測試蠻常會用到的假物件，mock 和 stub，兩者的差異其實蠻多文章有說明了，我個人覺得簡單分法就是 stub 沒有副作用，mock 則是有副作用的假物件，至於要說要用哪種物件來完成測試的話，基本上就是 stub 可以達成你的測試需求的話就用 stub，在 JavaScript 的測試環境下，好像只有看到 <a href="http://sinonjs.org/">Sinon.js</a> 這套比較多人用，去查了一下名稱典故，覺得一個比較可能的來源是特洛伊木馬故事中，騙特洛伊人把木馬搬進去城裡的那位（Mocha 和 Chai 的名稱應該是互相影響的，不過不確定誰先出來的）。另外還有個角色和 mock、stub 很常一起提到的叫 spy（常見用複數形 spies），最常用來當 callback 之類的，在非同步測試案例中，可以用來確保 callback 有被執行到，甚至可以偷看（spy）被執行了幾次，收到什麼參數等等，總之就是個可以測試函數被執行的次數和方式的物件。</p>
-
-<p>最後要說的則是 e2e test，因為 JS 很多時候都是用來在瀏覽器端實做 UI 和使用者行為的 handler，其實要做完整整合的測試不太容易，e2e 指的是 End to End，端點到端點，通常是說一個流程的起點到終點的意思，例如上網站註冊帳號，這樣算是一個流程，或是上網登入購買東西到結帳完成，這樣也是一個流程，由於 Web App 的環境下，跑 JS 的是瀏覽器，沒辦法簡單的介入，所以以往真的要做 e2e 測試幾乎都是要靠人工，後來有了 <a href="http://www.seleniumhq.org/">Selenium</a> 和 WebDriver，才開始可以讓這些測試自動化。</p>
-
-<p>以前的 Selenium 要控制瀏覽器靠的是 <a href="http://www.seleniumhq.org/projects/remote-control/">Selenium RC</a>，用比較暴力的方式介入瀏覽器，不過現在的 Selenium 2 則是透過 <a href="http://www.w3.org/TR/webdriver/">WebDriver</a> 這個 API 來操作，WebDriver 能進 W3C 標準化其實也是 Selenium 貢獻者的努力，背後也是有些大公司的影子在，目前主流的瀏覽器包括微軟最新的 Edge 也都支援，不過其實 Selenium 因為是 Java 寫的，雖然控制瀏覽器的 script 沒有限制要用 Java，我還是一直不太習慣，所以都沒深入，直到前陣子開始看到 Paul 在 Facebook 上<a href="https://www.facebook.com/notes/paul-li/protractor-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E7%AF%87/10152948608982211">連載</a>介紹 <a href="https://angular.github.io/protractor/#/">Protractor</a>，才又開始有想嘗試的動力，Protractor 的名稱由來也還蠻有趣的，意思是量角器，而 AngularJS 則有諧音 angle 的感覺在，當初出來也是為了要測試 AngularJS 的，Github 上 Protractor 是 AngularJS 下的一個專案，Protractor 和 Selenium 的差別就在於，Protractor 是一個 test framework，然後建好了 WebDriver binding，可以直接透過 WebDriver 來跟瀏覽器溝通，不再需要 Selenium 介面那塊了。</p>
-
-<p>後來 Carl 跟我說到有 <a href="http://webdriver.io/">WebdriverIO</a> 這個專案，是只有 WebDriver 介面的部分，可以寫 node script 來叫瀏覽器做事，當然也可以做測試，可以挑自己喜歡的 test framework 和 assert library 來搭配使用，於是我就做了一個可以去 moztw.org 下載安裝檔回來驗證正確性的<a href="https://github.com/othree/moztw-download-validation">專案</a>，在這個專案中，還用了一個特殊的寫法：</p>
-
-<pre><code>it('Download OSX Installer', function* () {
-  var data = yield hashes;
-  ...
-</code></pre>
-
-<p>其實就是 async function 加上 <code>yield</code> 來代替 ES2016 的 <code>await</code>，要達成這樣的效果其實會需要一個 async function runner，不是 node 可以直接跑起來的，實際測試過也是跑不起來，所以就只能 WebdriverIO 提供的 <code>wdio</code> 執行檔來執行。</p>
-
-<p>這篇還差一點東西沒講到，就是 test coverage，JS 這邊比較常看到的是 <a href="https://gotwarlost.github.io/istanbul/">istanbul.js</a>，名稱的來源是 carpet coverage，然後 Istanbul 是個生產優質地毯的地方～</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/10/17/f2e-test/</link>
-<guid>https://blog.othree.net/log/2015/10/17/f2e-test/</guid>
-<category>script</category>
-<pubDate>2015-10-17 20:06</pubDate>
-</item>
-
-<item>
-<title>Transducer</title>
-<description><![CDATA[<p>今天在 JSDC 講的題目是 Transducer ， 是目前講過數學和程式碼最多的題目了，不過還是希望能用盡量簡單的範例來說明什麼是 Transducer。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="5a7ac6a8f7ae4e07999d407f675f65d9" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]>
-</description>
-<link>https://blog.othree.net/log/2015/10/03/transducer/</link>
-<guid>https://blog.othree.net/log/2015/10/03/transducer/</guid>
-<category>script</category>
-<pubDate>2015-10-03 15:47</pubDate>
 </item>
 
 

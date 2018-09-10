@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000934" baseName="tern-022-released">Tern 0.22 released</b:listData>
+
+			<b:previous>
+				<b:mTitle>Web 前端文章廣播服務 ofrontend</b:mTitle>
+				<b:mDate>2018-08-22</b:mDate>
+				<b:mBase>web-fe-news-service-ofrontend</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>eslint-plugin-pep8-blank-lines</b:mTitle>
+				<b:mDate>2018-09-08</b:mDate>
+				<b:mBase>eslint-plugin-pep8-blank-lines</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000934" baseName="tern-022-released">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-02</b:date>
+				<b:time>17:41:32</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Tern 0.22 released</b:title>
+			<b:content>
+				<b:summary>First Tern release in a year and a half today https://t.co/1Ws7zYEJSd . All thanks to @othree picking up maintenance!-- Marijn Haverbeke (@MarijnJH) 2018年8月28日 大約七月初的時候，我開始接手幫忙維護 Tern，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是...</b:summary>
+				<b:mainContent><blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
+<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
+<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
+<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(&quot;:Symbol.iterator&quot;, [], null,
+                                           new HasMethodCall(&quot;next&quot;, [], null,
+                                                             new GetProp(&quot;value&quot;, target))))
+</code></pre>
+<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

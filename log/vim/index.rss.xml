@@ -5,10 +5,55 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>2017-11-16 12:31</lastBuildDate>
+<lastBuildDate>2018-07-28 23:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Language Server Protocol</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr"><img src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w" /></a></p>
+<p>最近才注意到 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> （<a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol">官方中文介紹</a>）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。</p>
+<p>LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> 了。</p>
+<p>LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  <a href="http://langserver.org/">langserver.org</a> 上有一份<a href="http://langserver.org/#implementations-server#implementations-client">清單</a>介紹各個 client 的支援狀況。</p>
+<p>送到 Language Server 的指令，目前 Protocol 可以提供以下功能：</p>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion">Completion</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">Hover Information</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp">Signature Help</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition">Goto Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition">Goto Type Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation">Goto Implementation</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references">Find References</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction">Action</a>, fix code</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens">Code Lens</a>, information for specific position</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting">Formatting</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics">Diagnostic</a>, 像是 code lint</li>
+</ul>
+<p>其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">官網的</a>，另一份則是 <a href="http://langserver.org#implementations-server">langserver.org</a> 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 <a href="https://about.sourcegraph.com/">Sourcegraph</a> 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。</p>
+<p>然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 <a href="http://typefox.io">TypeFox</a> 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in VS Code</a> 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 <a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio">JavaScript Language Service</a> 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關<a href="https://github.com/Microsoft/TypeScript/tree/master/src/services">程式碼</a>，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 <a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29">tsserver</a>，TypeScript 的大架構可以參考 <a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview">Architectural Overview</a> 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 <a href="https://github.com/sourcegraph/javascript-typescript-langserver">TypeScript Language Service</a> 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 <a href="https://github.com/theia-ide/typescript-language-server">TypeFox 的</a>比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 <a href="https://github.com/Microsoft/TypeScript/issues/11274">Issue 11274</a>，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。</p>
+<p>補充：另外有個 debugger 用的 <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/28/language-server-protocol/</link>
+<guid>https://blog.othree.net/log/2018/07/28/language-server-protocol/</guid>
+<category>vim</category>
+<pubDate>2018-07-28 23:59</pubDate>
+</item>
+
+<item>
+<title>Monokai Pro</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43359779851/" title="Monokai Pro VSCode by othree, on Flickr"><img src="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg" width="1024" height="637" alt="Monokai Pro VSCode" srcset="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg 1024w, https://farm1.staticflickr.com/841/43359779851_8253ea1d98_h.jpg 1600w" /></a></p>
+<p>因為用 <a href="http://blog.othree.net/log/2018/05/02/dank-mono/">Dank Mono</a> 字體的關係，最近開始有想要讓 Vim 支援斜體的 syntax highlight，於是又花了不少時間測試，過程中想起在 Twitter 上看到有人說過有一款付費的 Sublime/VSCode 佈景主題（印象中是 <a href="https://twitter.com/yorkxin">@yorkxin</a>），叫 <a href="https://www.monokai.pro/">Monokai Pro</a>，因為可以免費評估，可能是用幾天後才會出現 popup 吧，就一時興起就裝來玩玩看，結果還蠻滿意的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28490909197/" title="Monokai Pro Sublime by othree, on Flickr"><img src="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg" width="1024" height="636" alt="Monokai Pro Sublime" srcset="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg 1024w, https://farm1.staticflickr.com/917/28490909197_a9739e01cc_h.jpg 1600w" /></a></p>
+<p>雖然我主力是 Vim，但是 Sublime 和 VSCode 都還是有用，後來又繼續研究了一下，原來 Monokai 是在 <a href="http://wiki.macromates.com/Themes/UserSubmittedThemes">Textmate 2</a> 的佈景主題，還蠻有名的，也很多人 port 到不同環境，Vim 那邊比較多人用的應該是 <a href="https://github.com/tomasr/molokai">molokai</a>，然後 Monokai Pro 是同個作者做的，如果有 Vim 版的我會支持一下吧～</p>
+<p>然後弄一弄發現我用 jellybean 的配色用到 256 色的，結果把 True Color 支援打開之後發現有點難看，又開始我的探索之旅了，目前暫時是用 <a href="https://github.com/jacoborus/tender.vim">tender</a>：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29489585588/" title="tender.vim by othree, on Flickr"><img src="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg" width="1024" height="684" alt="tender.vim" srcset="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg 1024w, https://farm1.staticflickr.com/843/29489585588_bd4c88fe92_h.jpg 1600w" /></a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/15/monokai-pro/</link>
+<guid>https://blog.othree.net/log/2018/07/15/monokai-pro/</guid>
+<category>vim</category>
+<pubDate>2018-07-15 10:45</pubDate>
+</item>
 
 <item>
 <title>Naming Cases</title>
@@ -506,88 +551,6 @@ make install
 <guid>https://blog.othree.net/log/2013/06/25/autocomplpop-and-snipmate/</guid>
 <category>vim</category>
 <pubDate>2013-06-25 00:46</pubDate>
-</item>
-
-<item>
-<title>Vim Variable Variables</title>
-<description><![CDATA[<p>上一篇文章介紹 Syntastic 的最後面，其實本來想順便介紹一個 Vim Plugin 設定的 pattern，後來想一想還是獨立一篇文章好了，剛好今年 COSCUP 要介紹一些 Vim 的東西，這篇文章也可以作些 Vim 的介紹，就先從上一篇文章最後面的那行 Vim 設定開始看起：</p>
-
-<pre><code>let g:syntastic_coffee_coffeelint_args = "--csv -f ~/coffeelint-config.json"
-</code></pre>
-
-<p>在這行設定中，作的事情其實只是宣告並給一個變數值，而我想說的重點是這個變數的變數名稱：<code>g:syntastic_coffee_coffeelint_args</code>，這個變數其實是根據 Syntastic 的<a href="https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt#L386">文件 5.2 節</a>設定的，其實這個變數名稱裡面有 <em>coffee</em>、<em>coffeelint</em>、<em>args</em> 三個變數，在文件中是這樣描述這個變數的組成的：</p>
-
-<pre><code>syntastic_[filetype]_[subchecker]_[option-name]
-</code></pre>
-
-<p>表示的是 coffee 這種檔案格式下面，用 coffeelint 時的 args 參數，這種階層式的設定，在其他程式語言通常會用 dictionary 這種資料型態比較多，可是在 Vim 的圈子卻不是這樣，而是比較多用上面這種 Variable Variables 的形式，我想可能原因是： Vim Script 要建立多階層的空 dictionary 不是很方便，要一層一層的建立，而這個問題不管是開發者自己不方便，使用者在 vimrc 裡面作設定也會變得很麻煩。</p>
-
-<p>那在 Vim Script 裡面，要怎樣實作這樣 variable variables 形式的程式呢？很簡單，和 <a href="http://php.net/manual/en/language.variables.variable.php">PHP 很像</a>，都是用<a href="http://vimdoc.sourceforge.net/htmldoc/eval.html#curly-braces-names">大括號</a>，所以要讀取最上面那個使用者設定的值很簡單：</p>
-
-<pre><code>g:syntastic_{filetype}_{subchecker}_{optionName}
-</code></pre>
-
-<p>這樣就好了，真的那麼簡單就好了...</p>
-
-<p>Vim Script 和現在主流的 Scripting 語言差異蠻大的，有很多不太方便的設計，像是設定 list, dictionary 時如果要在不同行寫不同項目的內容，每行間都要加一個反斜線 <code>\</code>，資料的型別是強型別，字串和數字都要自己手動作轉換，宣告和改變數的值都要用 <code>let</code> 等等，而這邊會遇到的限制是，無法存取任何一個不存在的變數，要是有存取到的話都會出現錯誤，即使只有讀取值也是，並不會直接給你 false value 或是像 JavaScript 那樣有 <code>undefined</code>，所以要是使用者沒設定過這個變數 <code>g:syntastic_coffee_coffeelint_args</code>，我在 Plugin 裡面就不能直接讀取他，不然只會看到紅色的錯誤訊息。</p>
-
-<p>要處理這個問題，要用的是 <a href="http://vimdoc.sourceforge.net/htmldoc/eval.html#exists()">exists</a> 這個內建的 function，這個 function 是專門用來檢查變數是否存在用的，如果變數存在才做事情，寫起來就像是：</p>
-
-<pre><code>if exists('g:syntastic_' . filetype . '_' . subchecker . '_' . optionName)
-    let args = g:syntastic_{filetype}_{subchecker}_{optionName}
-</code></pre>
-
-<p>實在是不太好看，不過寫 Vim Script 基本上就是常常要寫這樣難看的程式碼，做的都是一些土法煉鋼的事情，其實還蠻辛苦的，而且你現在應該可以想像，如果要用多階層的 dictionary 在 vimrc 裡面作設定會長什麼樣子了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/06/21/vim-variable-variables/</link>
-<guid>https://blog.othree.net/log/2013/06/21/vim-variable-variables/</guid>
-<category>vim</category>
-<pubDate>2013-06-21 17:32</pubDate>
-</item>
-
-<item>
-<title>使用 Syntastic 執行 CoffeeLint 檢驗 CoffeeScript</title>
-<description><![CDATA[<p>我之前有 fork jslint.vim 出來做了一個 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>，不過前陣子開始改用 <a href="https://github.com/scrooloose/syntastic">Syntastic</a>，作者 Martin Grenfell 也是個蠻有名的 Vim plugin 作者，最有名的應該 <a href="https://github.com/scrooloose/nerdtree">nerdtree</a> 了吧，Syntastic 則是一個通用的 syntax checker plugin，使用的是外部的 syntax checker，設計成可以任意擴充支援不同檔案類型，而且支援一個檔案類型多種 checker，並且沒有限制 syntax 檢查，只要外部程式會跟你說哪裡有問題就可以。</p>
-
-<p>Syntastic 預設就已經有 CoffeeScript 用的設定，支援 CoffeeScript Compiler 和 <a href="http://www.coffeelint.org/">CoffeeLint</a>，前者可以用來作 syntax checker，後者則是 <a href="http://zh.wikipedia.org/wiki/Lint">lint</a>，實際上安裝起來蠻簡單的，系統的 coffee 和 coffeelint 指令都可以透過 npm 安裝：</p>
-
-<pre><code>npm install -g coffee-script
-npm install -g coffeelint
-</code></pre>
-
-<p>Synatastic 用 Vundle 或 pathogen 安裝，然後你編輯完 CoffeeScript 檔案存檔時，就會出現檢查的結果了。</p>
-
-<p>不過雖然安裝簡單，但是我還是遇到一個問題，就是 CoffeeLint 的其中一項檢查項目是每行的程式碼不要太長，預設是 80 個字元，不過這個數值對我來說太小了，所以我就必須要想辦法修改這個限制，CoffeeLint 有提供設定這些規定的選項，有點複雜，首先你必須要先有一個設定檔，而這個設定檔要 CoffeeLint 0.5.5 以後才有辦法用指令產生，運氣很不好的，npm 現在的 stable 版卻是 0.5.4，還不支援產生設定檔，我又不想要自己 compile 一份，所以只好上網搜尋，結果還真的給我找到範例，趕緊丟 <a href="https://gist.github.com/othree/5820021">gist 備份</a>。</p>
-
-<p>設定檔內容就是個 JSON：</p>
-
-<pre><code>{
-    "max_line_length": {
-      "value": 80,
-      "level": "ignore",
-      "message": "Line exceeds maximum allowed length"
-    }
-}
-</code></pre>
-
-<p>還蠻好理解的（可是沒範例我怎麼知道格式是怎樣啊！怒！），改好我要的設定後，執行 coffeelint 指令時還要加上參數來指定設定檔：</p>
-
-<pre><code>coffeelint -f ~/coffeelint-configuration.json route.coffee
-</code></pre>
-
-<p>之前做到這步後我就卡住了，因為不知道怎樣設定成讓 Syntastic 執行時也接一樣的參數，直到今天早上跟 joseph 推薦 Syntastic 之後，才又花時間研究一次，終於發現其實可以在 vimrc 裡面<a href="https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt#L386">設定</a>特定檔案、特定 checker、特定設定的值：</p>
-
-<pre><code>let g:syntastic_coffee_coffeelint_args = "--csv -f ~/coffeelint-config.json"
-</code></pre>
-
-<p>前面的 <code>--csv</code> 是一定要的，這樣設好，我終於可以不用一直看到 CoffeeLint 跟我說我的程式碼太長了。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/06/21/syntastic-coffeelint/</link>
-<guid>https://blog.othree.net/log/2013/06/21/syntastic-coffeelint/</guid>
-<category>vim</category>
-<pubDate>2013-06-21 00:29</pubDate>
 </item>
 
 

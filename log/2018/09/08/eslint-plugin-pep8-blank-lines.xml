@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000935" baseName="eslint-plugin-pep8-blank-lines">eslint-plugin-pep8-blank-lines</b:listData>
+
+			<b:previous>
+				<b:mTitle>Tern 0.22 released</b:mTitle>
+				<b:mDate>2018-09-02</b:mDate>
+				<b:mBase>tern-022-released</b:mBase>
+			</b:previous>
+
+
+		</b:entriesMeta>
+		<b:entry entryID="000935" baseName="eslint-plugin-pep8-blank-lines">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-08</b:date>
+				<b:time>10:24:24</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>eslint-plugin-pep8-blank-lines</b:title>
+			<b:content>
+				<b:summary> 我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 PEP8 coding style 中關於空行的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。 於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 padding-line-between-statements 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 sourceCode 來一行一行看，不過同時也要知道該行的 context...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
+<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
+<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;standard&quot;,
+ 
+  &quot;plugins&quot;: [
+    &quot;pep8-blank-lines&quot;,
+    &quot;no-parameter-e&quot;
+  ],
+ 
+  &quot;rules&quot;: {
+    &quot;semi&quot;: [2, &quot;always&quot;],
+    &quot;no-extra-semi&quot;: 2,
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
+    &quot;no-multiple-empty-lines&quot;: 0,
+    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
+    &quot;no-parameter-e/no-parameter-e&quot;: 2
+  }
+}
+</code></pre>
+<p>這組其實也是我目前在用的設定啦～</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

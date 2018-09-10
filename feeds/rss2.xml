@@ -5,501 +5,393 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>Mon, 09 Apr 2018 21:15:01 +0800</lastBuildDate>
+<lastBuildDate>Sat, 08 Sep 2018 10:24:24 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
 
 <item>
-<title>PEG.js</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /></a></p>
-<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
-<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
-<pre><code>IdentifierName ::
-    IdentifierStart
-    IdentifierName IdentifierPart
-
-IdentifierStart ::
-    UnicodeIDStart
-    $
-    _
-    \ UnicodeEscapeSequence
-
-IdentifierPart ::
-    UnicodeIDContinue
-    $
-    _
-    \ UnicodeEscapeSequence
-    &lt;ZWNJ&gt;
-    &lt;ZWJ&gt;
-
-UnicodeIDStart ::
-    any Unicode code point with the Unicode property &amp;ldquo;ID_Start&amp;rdquo;
-
-UnicodeIDContinue ::
-    any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
-</code></pre>
-<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
-<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
-<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
-<pre><code>keyword
-keyword1 and keyword2
-</code></pre>
-<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
-<pre><code class="language-pegjs">start
-  = orQuery?
-
-orQuery
-  = left:andQuery Or right:orQuery
-  / andQuery
-
-andQuery
-  = left:notQuery And right:andQuery
-  / notQuery
-
-notQuery
-  = Not right:subQuery
-  / subQuery
-
-subQuery
-  = '(' ws* query:orQuery ws* ')'
-  / queryValue
-</code></pre>
-<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
-<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/04/09/pegjs/</link>
-<guid>https://blog.othree.net/log/2018/04/09/pegjs/</guid>
-<category>script</category>
-<pubDate>Mon, 09 Apr 2018 21:15:01 +0800</pubDate>
-</item>
-
-<item>
-<title>HTC U11+</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38956472765/" title="HTC U11+ by othree, on Flickr"><img src="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg" width="1024" height="683" alt="HTC U11+" srcset="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg 1024w, https://farm5.staticflickr.com/4704/38956472765_4c6a20240a_h.jpg 1600w" /></a></p>
-<p>去年想說要把用了兩三年的 HTC M9 換掉，在 M9 之前其實我 M8、M7 都有用，算是三代機皇的使用者，本來這次想要買 Google Pixel 2 的，不過台灣一直沒上市，直到前幾天 Google 才說要在台灣上市，不過總之，最後考量價錢、機能等等，決定買號稱本來是 Pixel 2 XL 的 HTC U11+，然後也決定要買主打的透明黑，不過可能因為生產問題，透明黑比較晚上市，其實當時差不多是去年的 1111，各家都有特價什麼的，但是卻買不到透明黑感覺實在有點尷尬，連 HTC 自家網站，當時也有些活動，買 U11+ 就可以用很好的折扣家買周邊，有限期間，於是我就每天上去看，看了好幾天覺得，應該沒這麼會做決策吧，結果一如預期的，特價活動結束隔天才有得下單預定透明黑... 我當然是不差買那些周邊啦，不過對於這種搞法實在是無法參透，總之我還是第一天就下定了，後來也比一堆開箱文還早兩三天拿到，不過拖到今天才來記錄一下。</p>
-<p>整體而言我覺得這台還蠻不錯的，透明黑玻璃很漂亮，價錢 ok，定價和五吋的高階機種（U11）一樣，對比於 Pixel 的價位真的是親切很多，而且規格和螢幕都比較大，電池電量表現也很不錯，出門一整天也不用擔心沒電，U11 開始主打的 Edge Sense，拿來單手拍照真的很不錯，相機表現也不錯，不過那個側框啟動叫出目錄的功能就不太行了，主要是反應太慢，還不如用指紋直接開畫面，另外一點就是指紋速度很快，還有防塵防水，然後初期宣傳有說全面屏，不過實際上只是正面的玻璃是全部覆蓋，沒有接縫，或許 Google 當初要捨棄實體鍵打的就是這個主意。</p>
-<p>不過 U11+ 還是有點問題，其中我比較有感的就是要用 Google Map 導航會進不了導航狀態，這問題在官方論壇上也有討論，暫時的解法是重開機可以修復，所以還可以接受，除此之外如果還要挑，大概就是螢幕還沒到 4K 吧，不過是廣色域的其實也蠻不錯了，聽說今年的 U12 就會是 4K 螢幕了，不過我應該下一台真的會買 Pixel 了吧。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/03/24/htc-u11plus/</link>
-<guid>https://blog.othree.net/log/2018/03/24/htc-u11plus/</guid>
-<category>buy</category>
-<pubDate>Sat, 24 Mar 2018 17:46:13 +0800</pubDate>
-</item>
-
-<item>
-<title>Accessibility Object Model</title>
-<description><![CDATA[<p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
-<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
-<ol>
-<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
-<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
-<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
-<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
-</ol>
-<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</link>
-<guid>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</guid>
-<category>web</category>
-<pubDate>Thu, 08 Mar 2018 08:25:17 +0800</pubDate>
-</item>
-
-<item>
-<title>WebDriver Level 2</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr"><img src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w" /></a></p>
-<p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
-<p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
-<p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
-<p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/17/webdriver-level-2/</link>
-<guid>https://blog.othree.net/log/2018/02/17/webdriver-level-2/</guid>
-<category>web</category>
-<pubDate>Sat, 17 Feb 2018 00:00:08 +0800</pubDate>
-</item>
-
-<item>
-<title>CodeceptJS + puppeteer</title>
-<description><![CDATA[<p>看起來一切似乎都很美好，直到真的下去用。</p>
-<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
-<ul>
-<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
-<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
-<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
-<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
-<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
-</ul>
-<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
-<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
-</code></pre>
-<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
-<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</link>
-<guid>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</guid>
-<category>script</category>
-<pubDate>Wed, 07 Feb 2018 12:29:49 +0800</pubDate>
-</item>
-
-<item>
-<title>TC39 logo</title>
-<description><![CDATA[<p>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28255675539/" title="TC39 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg" width="1024" height="1024" alt="TC39, " srcset="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg 1024w" /></a></p>
-<p>這設計基本上就是參照 JS logo，顏色改成 <a href="https://www.ecma-international.org/">ECMA</a> 橘，之前那個 JS logo 其實不是官方的，而是社群發起的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40034835081/" title="JS by othree, on Flickr"><img src="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg" width="1024" height="1024" alt="JS, " srcset="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg 1024w" /></a></p>
-<p>現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上</p>
-<ul>
-<li><a href="https://github.com/tc39/logo/">https://github.com/tc39/logo/</a></li>
-<li><a href="https://github.com/voodootikigod/logo.js/">https://github.com/voodootikigod/logo.js/</a></li>
-</ul>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/02/tc39-logo/</link>
-<guid>https://blog.othree.net/log/2018/02/02/tc39-logo/</guid>
-<category>web</category>
-<pubDate>Fri, 02 Feb 2018 12:29:18 +0800</pubDate>
-</item>
-
-<item>
-<title>分號大戰 again</title>
-<description><![CDATA[<p>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.<a href="https://t.co/9FY4i29iqs">https://t.co/9FY4i29iqs</a></p>-- Daniel Ehrenberg (@littledan) <a href="https://twitter.com/littledan/status/951523844262637568?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更有力，就是 TC39 的文件，做為 spec 似乎不該提出<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
-<pre><code class="language-javascript">class Counter extends HTMLElement {
-  x = 0;
-
-  clicked() {
-    this.x++;
-    window.requestAnimationFrame(this.render.bind(this));
+<title>eslint-plugin-pep8-blank-lines</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
+<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
+<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;standard&quot;,
+ 
+  &quot;plugins&quot;: [
+    &quot;pep8-blank-lines&quot;,
+    &quot;no-parameter-e&quot;
+  ],
+ 
+  &quot;rules&quot;: {
+    &quot;semi&quot;: [2, &quot;always&quot;],
+    &quot;no-extra-semi&quot;: 2,
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
+    &quot;no-multiple-empty-lines&quot;: 0,
+    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
+    &quot;no-parameter-e/no-parameter-e&quot;: 2
   }
 }
 </code></pre>
-<p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
-<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還提建議、警告開發者用的語法就很怪。</p>
+<p>這組其實也是我目前在用的設定啦～</p>
 ]]></description>
-<link>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</link>
-<guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
+<link>https://blog.othree.net/log/2018/09/08/eslint-plugin-pep8-blank-lines/</link>
+<guid>https://blog.othree.net/log/2018/09/08/eslint-plugin-pep8-blank-lines/</guid>
 <category>script</category>
-<pubDate>Fri, 12 Jan 2018 10:54:06 +0800</pubDate>
+<pubDate>Sat, 08 Sep 2018 10:24:24 +0800</pubDate>
 </item>
 
 <item>
-<title>Web F2E 看 Python Syntax</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr"><img src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w" /></a></p>
-<p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
-<h4>內建支援 String Formatting</h4>
-<p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
-<pre><code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
+<title>Tern 0.22 released</title>
+<description><![CDATA[<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
+<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
+<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
+<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(&quot;:Symbol.iterator&quot;, [], null,
+                                           new HasMethodCall(&quot;next&quot;, [], null,
+                                                             new GetProp(&quot;value&quot;, target))))
 </code></pre>
-<p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
-<pre><code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
-</code></pre>
-<p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
-<h4>Multiline String</h4>
-<p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
-<pre><code class="language-python">template_string = &quot;&quot;&quot;&lt;div&gt;
-                       Wow
-                     &lt;/div&gt;&quot;&quot;&quot;
-</code></pre>
-<p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
-<h4>Keyword Arguments</h4>
-<p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
-<pre><code class="language-python">def func(a, b, c, d):
-    return a + b + c + d
-</code></pre>
-<p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
-<pre><code class="language-python">func(a=1, b=2, c=3, d=4)
-</code></pre>
-<p>而且也可以混用：</p>
-<pre><code class="language-python">func(1, 2, c=3, d=4)
-</code></pre>
-<p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
-<p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
-<h4>Circular Dependency</h4>
-<p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
-<h4>Ternary Operator</h4>
-<p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
-<pre><code class="language-python">reality = True if isReal else False
-</code></pre>
-<p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
-<pre><code class="language-coffeescript">filename = file.name
-
-if file.hash
-  filename = filename + '-' + file.hash
-  
-if file.ext
-  filename = filename + '.' + file.ext
-</code></pre>
-<p>用了後置 <code>if</code> 的話可以寫成：</p>
-<pre><code class="language-coffeescript">filename = file.name
-
-filename = filename + '-' + file.hash if file.hash
-
-filename = filename + '.' + file.ext if file.ext
-</code></pre>
-<p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
-<pre><code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
-</code></pre>
-<p>就比較不喜歡這樣就是了。</p>
-<h4>Tuple</h4>
-<p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
-<p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
-<h4>in 運算</h4>
-<p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
-<pre><code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
-    ok()
-</code></pre>
-<p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
-<h4>Dict</h4>
-<p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
-<pre><code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
-</code></pre>
-<p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
-<pre><code class="language-coffeescript">data.attr1?.attr2?.attr3?
-</code></pre>
-<p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
-<h4>Unix Timestamp</h4>
-<p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
-<h4>PEP8, Flake8</h4>
-<p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
-<pre><code class="language-python">def hello(name='John'):
-  return 'Hello ' + name
-
-hello(name='Hancock')
-</code></pre>
-<p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
-<pre><code class="language-python">import pages  # noqa: F401
-</code></pre>
-<p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
-<h4>Python Enhancement Proposals (PEPs)</h4>
-<p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
+<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
 ]]></description>
-<link>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</link>
-<guid>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</guid>
+<link>https://blog.othree.net/log/2018/09/02/tern-022-released/</link>
+<guid>https://blog.othree.net/log/2018/09/02/tern-022-released/</guid>
 <category>script</category>
-<pubDate>Tue, 05 Dec 2017 18:39:38 +0800</pubDate>
+<pubDate>Sun, 02 Sep 2018 17:41:32 +0800</pubDate>
 </item>
 
 <item>
-<title>問號出頭天</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
-<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
-<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
-</code></pre>
-<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
-<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
-<pre><code class="language-javascript">function (option = {}) {
-  let quick = option.quick || true;
-}
-</code></pre>
-<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
-<pre><code class="language-javascript">function (option = {}) {
-  let quick = option.quick ?? true;
-}
-</code></pre>
-<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
-<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
-<pre><code class="language-javascript">function add(x, y) { return x + y; }
-
-const addOne = add(1, ?); // apply from the left
-addOne(2); // 3
-</code></pre>
-<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</link>
-<guid>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</guid>
-<category>script</category>
-<pubDate>Sun, 19 Nov 2017 00:06:30 +0800</pubDate>
-</item>
-
-<item>
-<title>Naming Cases</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"><img src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w" /></a></p>
-<p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
-<h5>CamelCase</h5>
-<p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
-<p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
-<h5>snake_case</h5>
-<p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
-<h5>MACRO_CASE</h5>
-<p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
-<p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
-<h5>lisp-case</h5>
-<p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
-<h5>COBOL-CASE</h5>
-<p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
-<h5>Train-Case</h5>
-<p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
-<p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
-<p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
-<p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
-<pre><code class="language-vim">let g:switch_custom_definitions =
-    \ [
-    \   {
-    \     '\&lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&gt;': '\=toupper(submatch(1)) . submatch(2)',
-    \     '\&lt;\(\u\l\+\)\(\u\l\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))&quot;,
-    \     '\&lt;\(\l\+\)\(_\l\+\)\+\&gt;': '\U\0',
-    \     '\&lt;\(\u\+\)\(_\u\+\)\+\&gt;': &quot;\\=tolower(substitute(submatch(0), '_', '-', 'g'))&quot;,
-    \     '\&lt;\(\l\+\)\(-\l\+\)\+\&gt;': &quot;\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')&quot;,
-    \   }
-    \ ]
-</code></pre>
-<p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
-<p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
+<title>Web 前端文章廣播服務 ofrontend</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30332209388/" title="frontend-news by othree, on Flickr"><img src="https://farm2.staticflickr.com/1897/30332209388_f956381a2d_b.jpg" width="512" height="512" alt="frontend-news" srcset="https://farm2.staticflickr.com/1897/30332209388_f956381a2d_b.jpg 1024w" /></a></p>
+<p>前陣子弄了一個 web 前端文章的廣播服務，現在沒有正式的服務名稱，不過 code base 和一些帳號都叫 <a href="https://github.com/othree/ofrontend">ofrontend</a>，所以就先這樣稱呼它吧，現在這服務有兩個末端：</p>
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a></li>
-<li><a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a></li>
+<li><a href="https://twitter.com/ofrontend">Twitter</a></li>
+<li><a href="https://t.me/ofrontend">Telegram Channel</a></li>
 </ul>
+<p>會轉發的文章主要就是我看到和前端相關的為主，也會有少量其他的技術文章，大約 80% 英文、20 % 中文，不過不一定是我讀過覺得要推薦的，也是有過一些剛看標題覺得好像不錯，結果找到時間看完覺得沒什麼的文章，不介意的話可以 follow 一下。</p>
+<p>目前資訊來源包括了：</p>
+<ul>
+<li>Twitter 上的 <a href="https://twitter.com/following">follows</a> 和 Facebook 上自己的 Timeline</li>
+<li>GitHub 上的 <a href="https://github.com/othree?tab=following">follows</a>、watching（沒有 public 的頁面）我有 watch 一些標準文件的 repository，像是 TC39、CSS-WG 等，現在蠻多資訊可以在 GitHub issue 內看到了，以前都要訂閱 mailing-list</li>
+<li>跟的 <a href="https://blog.othree.net/blogroll/">Feed</a>，有記得才會去看，線上這份 Feed 清單沒有隨時更新</li>
+<li>Facebook 上的社團：
+<ul>
+<li><a href="https://www.facebook.com/groups/enjoyfonts/">字嗨</a></li>
+<li><a href="https://www.facebook.com/groups/javascript.tw/">JavaScript.tw</a></li>
+<li><a href="https://www.facebook.com/groups/vim.tw/">Vim 正體中文社群</a></li>
+<li><a href="https://www.facebook.com/groups/augularjs.tw/">Angular Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/1249720198386038/">Fire-and-Forget 前端轉貼總部</a></li>
+<li><a href="https://www.facebook.com/groups/142197385837507/">Ruby Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/521085554595481/">Front-End Developers Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/168537393167684/">Perl 台灣</a></li>
+<li><a href="https://www.facebook.com/groups/830853873715381/">Markdown 台灣</a></li>
+<li><a href="https://www.facebook.com/groups/262800543746083/">node.js台灣</a></li>
+<li><a href="https://www.facebook.com/groups/1439747729634154/">ReactJS.tw</a></li>
+<li>...等</li>
+</ul>
+</li>
+<li>訂閱的電子報：
+<ul>
+<li><a href="https://weekly.codetengu.com/">碼天狗</a></li>
+<li><a href="https://weekly.techbridge.cc/">TechBridge 技術週刊</a></li>
+<li><a href="https://javascriptweekly.com/">JavaScript Weekly</a></li>
+<li><a href="https://nodeweekly.com/">Node Weekly</a></li>
+<li><a href="https://frontendfoc.us/">Frontend Focus</a></li>
+<li><a href="https://mobiledevweekly.com/">Mobile Dev Weekly</a></li>
+<li><a href="https://webopsweekly.com/">WebOps Weekly</a></li>
+<li><a href="https://www.pycoders.com/">Pycoder's Weekly</a></li>
+<li><a href="https://rubyweekly.com/">Ruby Weekly</a></li>
+<li><a href="https://golangweekly.com/">Golang Weekly</a></li>
+<li><a href="https://wasmweekly.news/">WebAssembly Weekly</a></li>
+<li>...等</li>
+</ul>
+</li>
+<li>其它各種一時想不起來或是非預期的來源</li>
+</ul>
+<p>會做這個服務有幾個原因，一個是我其實本來就有在轉發前端相關的文章連結，不過大多丟在一些非公開的地方，並且這些文章連結都沒好好整理，一直都有想找個書籤服務弄起來，然後這陣子看到<a href="https://wanqu.co/">灣區日報</a>和<a href="https://t.me/JustShareChannel">吹水 Just Share</a> 覺得也可以來做類似的傳播管道，研究和思考了好一陣子，最後決定花錢訂閱了個 <a href="https://pinboard.in/">Pinboard</a> 服務來收集和管理連結，Pinboard 雖然介面沒找什麼設計師，看起來很陽春，不過其實他還蠻靈活的，API 很簡單可以用，不用 oauth，只要帶 token 發請求就可以，和 Telegram Bot 蠻像的，所以其實也不少工具可以用，Android、iOS、Firefox 都有，隨時看到相關的文章都可以很快的把連結丟進 Pinboard。</p>
+<p>連結進 Pinboard 之後，就有個轉發的工具來把這連結丟去 Twitter 和 Telegram，轉發的程式也放在 GitHub 上，叫 <a href="https://github.com/othree/pinboardto">pinboardto</a>，Python 寫的，本來有想趁機玩玩看 Rust，不過研究一下覺得還是先用 Python 把基本款弄出來，裡面東西很簡單沒什麼技術難題，並且不依靠外部儲存（資料庫、檔案），同步的機制是靠系統時間和 cronjob，所以不知什麼原因錯過就錯過了，不過因為這服務也沒有這麼要求可靠性，所以還好。</p>
+<p>Facebook 的部分，本來有想接到 Fire-and-Forget 前端轉貼總部 去的，可是 FB 那邊弄不到永久有效的 token 就弄下去。</p>
+<p>最後成本部分，這個服務其實對我來說蠻低成本的，主要固定支出就只有 Pinboard 的年費，不過本來就要好好收集算是本來就要花，轉發服務掛在現有的主機上，最後就是 iPad 上有花錢買一個 Pinboard 的 app，不過其實也還沒有滿意就是，不知道為什麼抓 Twitter 的網頁 title 都會抓錯。</p>
 ]]></description>
-<link>https://blog.othree.net/log/2017/11/16/naming-cases/</link>
-<guid>https://blog.othree.net/log/2017/11/16/naming-cases/</guid>
+<link>https://blog.othree.net/log/2018/08/22/web-fe-news-service-ofrontend/</link>
+<guid>https://blog.othree.net/log/2018/08/22/web-fe-news-service-ofrontend/</guid>
+<category>web</category>
+<pubDate>Wed, 22 Aug 2018 23:42:43 +0800</pubDate>
+</item>
+
+<item>
+<title>Language Server Protocol</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr"><img src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w" /></a></p>
+<p>最近才注意到 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> （<a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol">官方中文介紹</a>）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。</p>
+<p>LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> 了。</p>
+<p>LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  <a href="http://langserver.org/">langserver.org</a> 上有一份<a href="http://langserver.org/#implementations-server#implementations-client">清單</a>介紹各個 client 的支援狀況。</p>
+<p>送到 Language Server 的指令，目前 Protocol 可以提供以下功能：</p>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion">Completion</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">Hover Information</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp">Signature Help</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition">Goto Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition">Goto Type Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation">Goto Implementation</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references">Find References</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction">Action</a>, fix code</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens">Code Lens</a>, information for specific position</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting">Formatting</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics">Diagnostic</a>, 像是 code lint</li>
+</ul>
+<p>其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">官網的</a>，另一份則是 <a href="http://langserver.org#implementations-server">langserver.org</a> 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 <a href="https://about.sourcegraph.com/">Sourcegraph</a> 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。</p>
+<p>然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 <a href="http://typefox.io">TypeFox</a> 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in VS Code</a> 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 <a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio">JavaScript Language Service</a> 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關<a href="https://github.com/Microsoft/TypeScript/tree/master/src/services">程式碼</a>，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 <a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29">tsserver</a>，TypeScript 的大架構可以參考 <a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview">Architectural Overview</a> 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 <a href="https://github.com/sourcegraph/javascript-typescript-langserver">TypeScript Language Service</a> 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 <a href="https://github.com/theia-ide/typescript-language-server">TypeFox 的</a>比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 <a href="https://github.com/Microsoft/TypeScript/issues/11274">Issue 11274</a>，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。</p>
+<p>補充：另外有個 debugger 用的 <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/28/language-server-protocol/</link>
+<guid>https://blog.othree.net/log/2018/07/28/language-server-protocol/</guid>
 <category>vim</category>
-<pubDate>Thu, 16 Nov 2017 12:31:26 +0800</pubDate>
+<pubDate>Sat, 28 Jul 2018 23:59:05 +0800</pubDate>
 </item>
 
 <item>
-<title>Apple 電話支援</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34475448783/" title="Apple Store Taipei 101 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg" width="1024" height="683" alt="Apple Store Taipei 101, " srcset="https://farm5.staticflickr.com/4198/34475448783_fc97f7bfaa_b.jpg 1024w, https://farm5.staticflickr.com/4198/34475448783_2de7ddb630_h.jpg 1600w" /></a></p>
-<p>前陣子蘋果發表 iPhone 8 和 X 後，我趁機幫我爸買了 iPhone 7，因為是我爸第一次用 iPhone，所以就由我幫忙設定，想不到遇上了要電話聯繫客服的狀況，因為用了蘋果產品這麼久，還是第一次聯繫客服，所以特別紀錄一下。</p>
-<p>遇到的狀況是，一開始覺得我爸沒有 Apple ID，所以就直接在手機上走註冊流程，使用的是我爸一直在使用的 gmail，沒想到走到後來，發現這個帳號已經存在了，這時還想說是不是以前幫他裝 iTunes 時有註冊過，不過嘗試登入都沒辦法成功，後來走忘記密碼的流程成功進去了，沒想到，裡面的資訊都是韓文，像是姓名、地址、app store 國家、安全問題等，很像是被盜用後把資料改成自己的樣子，然後我就一個一個慢慢改回正確的資料和設定，不過即使我區域設定到台灣，語言是中文，還是有一個地方改不動，那就是安全提示問題，依然保持韓文的題目，而因為我不知道問題的答案是什麼，也沒辦法重設，也無法開啟兩步驟驗證，據蘋果文件說明，開啟兩步驟驗證就會停用安全提示問題，而一個月後會把之前設定的安全提示問題刪除。</p>
-<p>遇到這種狀況也只能聯絡客服了，一開始尋找入口不會太困難，不過蘋果不是直接留個號碼給你撥，而是有個表單請你填寫，他會打電話給你，一般看到這種做法的都會覺得是不是要很久以後才會有回應，不過其實完全相反，他在表單上就寫了大約兩分鐘後就會有人撥電話過去給你，而且這是真的！除了致電迅速外，蘋果這種做法其實還有兩個優點，一個是對客戶來說，不用電話費，另一個則是對蘋果來說，他們還是掌握主控權的。</p>
-<p>接通電話之後，第一位服務人員無法處理這個狀況，跟他溝通一下後他轉給專門負責帳號的人員，請我等一下，然後我等了沒多久就換第二位接手，他接手時已經大概知道我的問題，不過我還是有把細節又交待一次，交待完之後，對方就表達了說叫我們不用擔心，一定會盡力幫我們解決問題，他本來有想請我做一些操作，不過知道我幾乎都做過後，也沒有要求我再嘗試一次，這時候他有提到最簡單的方法就是建立一個新的 Apple ID，不過我還是不太希望這樣，一時也沒別的信箱適合（那時候忘了 gmail 有 + 的別名可以用，後來想到時決定當最後備案），他二話不說，就要幫忙把我們的問題轉給主管，這次他有先說因為假日的關係要等比較久，結果真的等了蠻久，等待時是用手機開擴音所以還好不會太累，話筒端就播著蘋果風格的音樂，然後我也趁著這時間翻翻我爸過去收到的 Apple 的信，看一看覺得或許一開始我們沒申請過 Apple ID，而是有個韓國人申請錯帳號，然後我們收到信都是韓文也看不懂，不小心就點了連結然後帳號就開通了⋯</p>
-<p>等待時，前一位還有再回來關心一下，甚至他還試著幫忙翻譯了安全提示問題，想要看看會不會是我們以前設定的忘記了，這點我蠻意外的，不過因為真的沒印象所以也沒用，所以他也完全沒勉強我們測試，而且其實我已經亂測被鎖了，另外我也跟他說了目前推測可能是因為以前亂點到信件連結造呈現在的狀況。最後等了應該有半小時吧，終於等到了，這位主管的聲音聽起來和前一位差不多年輕，有點意外，再來就是他接電話前，已經跟前面那位交接好我的問題了，所以我不用再重新說明一次，而且是最新的狀況，最後這段過程我有點忘記，不過基本上就是，他會找工程師看有什麼法可以處理這個狀況，然後會再跟我聯絡，有約好傍晚在撥，不過沒隔一個小時他就又回撥了，他要請我收信然後回報信件內的六碼 code，不過我剛好在騎車移動，就還是請他六點在撥，後來收到的那個六碼 code 是高強度的，英數大小寫有別，看起來是個特殊的流程給 Apple Support 團隊確認帳號信箱所有權用的，回報確認之後，他就說要請我們等兩三天時間。</p>
-<p>然後過了兩三天後，我爸接到電話說帳號已經可以使用了，我就去測試了一下，結果變無法登入，所以我推測是帳號砍掉了，測試過後就發現真的變成可以註冊的狀態，就趕快把他重新註冊起來，中間這段時間，我猜是去翻 archive 起來的使用者 log 判斷是不是可以砍帳號吧。</p>
-<p>最後總結一下，這次過程我覺的蘋果電話客服有以下特色，不過大概也不會是每個公司都複製的起來的：</p>
-<ol>
-<li>由他們掌握主控權，但是又完全免費，而且填表後真的很快就會接到電話</li>
-<li>每個要等待的階段都會先讓使用者有預期</li>
-<li>除了第一位外言談都蠻誠懇的</li>
-<li>完全相信（至少表現起來是）客戶，不會強迫做一些嘗試過的操作</li>
-<li>連砍帳號都可以辦到</li>
-</ol>
+<title>命名記錄 1</title>
+<description><![CDATA[<p><a title="By Thorin Oakenshield II [CC BY-SA 4.0 
+(https://creativecommons.org/licenses/by-sa/4.0
+)], from Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg"><img width="512" alt="Карта Одинокой Горы " src="https://upload.wikimedia.org/wikipedia/commons/b/b3/%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg" /></a></p>
+<p>記錄一下這兩年自己覺得還不錯的命名，本來是想累積更多再貼的。</p>
+<h4>Herculus</h4>
+<p><a href="https://zh.wikipedia.org/zh-tw/%E8%B5%AB%E6%8B%89%E5%85%8B%E5%8B%92%E6%96%AF">海克力士</a>，用在測試服務名稱上，是希臘神話中的大力士，曾經完成十二偉業，這兩年還有部電影，取名源由其實是 Fate/stay night 中，他做為 Berserk 的 Servant 所持有的寶具，稱為 <strong>十二の試練</strong>，試練就聯想到 test ～</p>
+<h4>Erebor</h4>
+<p>用在資料庫相關的服務，哈比人歷險記的<a href="https://en.wikipedia.org/wiki/Lonely_Mountain">孤山</a>的精靈語，因為孤山裡面有很多矮人的寶物，資料庫內的資料某種層面來說也算是個寶物。</p>
+<h4>Olympus</h4>
+<p>應該不用介紹來源了，用在 client 端自己寫的 API helper，取這個名字的原因是覺的客戶端跟 server 端要資料就如同在跟眾神請求一樣。</p>
 ]]></description>
-<link>https://blog.othree.net/log/2017/10/23/apple-phone-support/</link>
-<guid>https://blog.othree.net/log/2017/10/23/apple-phone-support/</guid>
-<category>mac</category>
-<pubDate>Mon, 23 Oct 2017 23:02:46 +0800</pubDate>
-</item>
-
-<item>
-<title>OSX Admin Account 消失</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37260875515/" title="Mac OSX single user mode by othree, on Flickr"><img src="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg" width="1024" height="683" alt="Mac OSX single user mode" srcset="https://farm5.staticflickr.com/4367/37260875515_4399b64e42_b.jpg 1024w, https://farm5.staticflickr.com/4367/37260875515_07dbc0b069_h.jpg 1600w" /></a></p>
-<p>昨天晚上終於收齊拖了一段時間的 HITCON 2017 CMT 照片，根據莫非定律，這時候一定會有異象發生，果然，我的 iMac 就第一次出問題了，基本狀況是帳號消失，然後我剛好就一個主要帳號同時是 admin，所以狀況就升級成 admin 帳號消失了。</p>
-<p>首先說一下背景，平常我是沒關電腦也沒休眠的，就是用螢幕熱點關閉顯示器而已，然後加上顯示器關閉太久之後回來需要密碼，不用休眠的主要原因是外接鍵盤休眠後就會抓不到，然後昨天晚上，安裝了 Adobe Bridge 後，無法使用，重複移除安裝了兩次結果依舊，於是我就先把照片作簡單的整理，然後丟上 NAS 做備份（NAS 還會丟上  Google Drive 做二號備份），接著我去忙其他事情之後回來，發現登入不了，說密碼錯誤，試了很多次都一樣，而這段時間也不可能進來幫我改密碼的，由於我之前還開了一個一般帳號，所以可以切換成其它使用者，然後就在我按了「切換使用者」之後，我的主要帳號就不見了！</p>
-<p>總之我就試著登入另一個帳號，中間還看到幾次鑰匙圈損毀的訊息，大概可以確定這次的狀況就是這個原因，然後 OSX 不知道怎麼判斷就認為沒這個帳號了，搜尋了一下網路，看到一些解法，最後我的處理方式如下：</p>
-<ol>
-<li>重開機同時按著 <code>cmd</code>+<code>s</code> 進入 single user mode</li>
-<li>用 single user mode 的 CLI 介面刪除 <code>/var/db/.AppleSetupDone</code> 這個檔案</li>
-<li>執行 <code>reboot</code> 重開機，這樣會進入初次開機的狀態</li>
-<li>重新建立帳號，我是用相同的帳號名稱，會執行的有點久，最後會說失敗，原因應該是因為該帳號的 home 目錄已經存在了</li>
-<li>再次重開機，結果會進入正常的登入畫面，可以登入新建的帳號，發現 home 目錄的東西幾乎都可以正常讀入</li>
-</ol>
-<p>最後，為什麼會鑰匙圈損毀呢，我推測是硬碟東西塞太多加上當時在上傳資料才造成問題的，不過也就是個推測而已啦。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/09/16/osx-admin-account-missing/</link>
-<guid>https://blog.othree.net/log/2017/09/16/osx-admin-account-missing/</guid>
-<category>mac</category>
-<pubDate>Sat, 16 Sep 2017 23:02:54 +0800</pubDate>
-</item>
-
-<item>
-<title>Sublime Text 3</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w" /></a></p>
-<p>今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個<a href="https://www.sublimetext.com">更新</a>了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 <a href="https://github.com/wincent/command-t">Command-T</a>（不過我推薦用 <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a>）、<a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">Command Palette</a>、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w" /></a></p>
-<p>其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 <a href="https://www.sublimetext.com/3">Changelog</a> ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w" /></a></p>
-<p>似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w" /></a></p>
-<p>我今天也因此好幾次找不到就是了...</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/09/14/sublime-text-3/</link>
-<guid>https://blog.othree.net/log/2017/09/14/sublime-text-3/</guid>
-<category>software</category>
-<pubDate>Thu, 14 Sep 2017 22:59:57 +0800</pubDate>
-</item>
-
-<item>
-<title>196</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36512922821/" title="196 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg" width="1024" height="683" alt="196" srcset="https://farm5.staticflickr.com/4360/36512922821_91c0a76194_b.jpg 1024w, https://farm5.staticflickr.com/4360/36512922821_a17aefd061_h.jpg 1600w" /></a></p>
-<p>這篇文章是在寫 <a href="http://blog.othree.net/log/2017/08/12/temporal-is-next-date/">temporal</a> 那篇文章時，找資料發現的有趣東西，在那篇文章當中，我有說到目前 date 物件的各種問題，其中第六點是「不支援 Gregorian Calendar（格里曆）以外的日曆（例如農曆）」 ，然後我就好奇起來了，現在還有什麼其他的曆法在用呢？結果找著找著，就看到有個<a href="http://www.fourmilab.ch/documents/calendar/">網站</a>提供了很多曆法了線上轉換，像是 Julian Calendar（儒略曆）、Hebrew Calendar（希伯來曆）、Islamic Calendar（伊斯蘭曆）、Persian Calendar（波斯曆）等，用 JavaScript 寫的，而且在程式碼裡面宣告貢獻到 public domain。</p>
-<p>由於整個網站非常老派，我就對作者起了興趣，發現這個網站 fourmilab.ch 的所有者是 <a href="https://en.wikipedia.org/wiki/John_Walker_(programmer)">John Walker</a>，Autodesk 的 founder 之一，他現在已經退休搬到瑞士去了，然後 fourmilab.ch 上就放了他的各種記錄，像是<a href="http://www.fourmilab.ch/fourmilog/">文章</a>，其實就是 blog，看他結構感覺也是個 MovableType 站，還有<a href="http://www.fourmilab.ch/documents/reading_list/">閱讀清單</a>，旅遊照片，例如他去過<a href="http://www.fourmilab.ch/images/antarctica_2013/S015.html">南極一趟</a>，還有些他寫的書，例如 <a href="https://www.fourmilab.ch/hackdiet/">Hacker's Diet</a>、<a href="http://www.fourmilab.ch/autofile/">The Autodesk File</a> 等。</p>
-<p>然後，我在 fourmilab.ch 上看到了「<a href="http://fourmilab.ch/documents/threeyears/threeyears.html">Three Years Of Computing</a>」這篇文章，標題就吸引了我進去仔細閱讀，這篇文章是在說迴文數（palindrome）挑戰，什麼是迴文數呢，「95277259」就是迴文數，不論是從頭開始還是反過來從尾開始都是相同的數字，那什麼是迴文數問題呢？首先你要拿到一個非迴文數的十進位數字，例如 <strong>362</strong> 好了，把他和自己的反轉相加：</p>
-<pre><code>&gt;
-   362
-+  263
-------
-   625
-</code></pre>
-<p>結果不是迴文數，那繼續一樣的反轉相加運算：</p>
-<pre><code>&gt;
-   625
-+  526
-------
-  1151
-+ 1511
-------
-  1661
-</code></pre>
-<p>最後得到了一個迴文數 <strong>1661</strong>，迴文數問題就是，是否所有的正整數都可以透過這樣的運算，不管幾次，最終可以得到迴文數，如果有數字無法透過這個過程變成迴文數，那這數字也可以稱為 <a href="https://zh.wikipedia.org/wiki/%E5%88%A9%E5%85%8B%E7%91%9E%E5%B0%94%E6%95%B0">Lychrel Number</a>，不過因為目前無法從理論證明一個十進位數是 Lychrel Number，就只能想辦法反證它（註：我有看到說二進位數有證明）。</p>
-<p>文裡說到，所有小於一萬的數字都已經被測試過，大部分的數字都可以用很少的次數就得到迴文數，其中，最小的可能的 Lychrel Number: <strong>196</strong> ，到目前還無法讓它經由反轉相加的過程變為迴文數，John Walker 那個跑了三年的程式就是在驗證 196 到底能不能透過反轉相加的過程。他在 1987 年用他的 Sun 工作站開始跑，結果跑了三年後的 1990，達到他當初設的停止條件，100 萬位，總共反轉相加了 2415836 次，他還放上他的程式碼還有計算的結果，如果有人有興趣可以從這邊開始接手繼續算下去，事實上，當初他跑這程式的工作站性能和現在的電腦比起來差距實在很大，在其它人後來的<a href="http://jasondoucette.com/worldrecords.html">挑戰</a>當中，就有提到一些性能數字，例如 Ian J. Peter 的程式只需要 5 小時就可以計算到一百萬位，用的電腦大約是 500 MHz 的 CPU。</p>
-<p>John Walker 在 1990 年跑到一百萬位，結果還沒得到迴文數，那麼現在最新的紀錄是多少呢？<a href="http://www.p196.org/news.html">p196.org</a> 這網站收集了很多相關的資訊，對這議題有興趣的人還可以去看看，而它站上的紀錄是 <strong>413,930,770</strong>，四億多位，總共反轉相加了十億次；至於我目前看到的最高紀錄，是在「<a href="http://www.dolbeau.name/dolbeau/p196/p196.html">The p196_mpi page</a>」這裡，提供了平行版的程式，而據作者 Romain Dolbeau 所說，他在 2015 年 2 月已經計算到十億位了，不過他沒提供相關資料，有提供的只有 2012 年的六億位結果。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/18/196/</link>
-<guid>https://blog.othree.net/log/2017/08/18/196/</guid>
-<category>diary</category>
-<pubDate>Fri, 18 Aug 2017 23:54:40 +0800</pubDate>
-</item>
-
-<item>
-<title>Temporal - 下個世代的 Date</title>
-<description><![CDATA[<p>這篇文章寫到快寫完的時候，決定到 <a href="http://modernweb.tw/">Modern Web 2017</a> 分享，所以就比較晚發佈 ，其實 Modern Web 演講內容比較多，文末有放相關參考資料。</p>
-<p>JSConf EU 2017 前陣子放出演講影片，蠻多場次都不錯，這篇要主要是從其中的一場演講而來，演講是「 The Past, Present, and Future of JavaScript Date and Time APIs」，講者是 Matt Johnson，<a href="http://momentjs.com/">Moment.js</a> 的作者，下面是這場演講的影片：</p>
-<div class="embed_16_9">
-  <iframe width="853" height="480" src="https://www.youtube.com/embed/aVuor-VAWTI?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-<p>長度不長，推薦可以看一下，主要是在談 JavaScript 的 Datetime，提出這老東西的問題，我覺得可以稱為 WAT JavaScript 的 Datetime 篇，像是 0 起始的月份、不支援 Time Zone、難以運算、是 mutable 物件等等，接著介紹了目前檯面上比較多人用的幾個 library 和他們的特色，都是品質不錯的 library，有需求的可以從中選用，包括了：</p>
-<ul>
-<li><a href="http://momentjs.com/">Moment.js</a></li>
-<li><a href="https://date-fns.org/">date-fns</a></li>
-<li><a href="https://js-joda.github.io/js-joda/">js-joda</a></li>
-</ul>
-<p>最後則是提到他們目前在進行的，改進 JavaScript Datetime 的計畫，也就是新的 ECMAScript Datetime 的 proposal，叫 <a href="https://github.com/tc39/proposal-temporal">temporal</a>，除了 Matt Johnson 之外，還有一位 Microsoft 的 Maggie Pint 也是目前草案的主力推手，他的 blog 上就有兩篇相關的<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">文</a><a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">章</a>，裡面有列出目前 <code>Date</code> 的主要問題：</p>
-<ol>
-<li>不支援 timezone，只有 UTC 和 local</li>
-<li>Parser （轉譯日期字串轉成日期物件）的行為不可靠且難以使用</li>
-<li>Date object 是 mutable 物件</li>
-<li>日光節約時間的行為無法預期</li>
-<li>日期計算 API 很難用</li>
-<li>不支援 <a href="https://jonathanou.wordpress.com/2005/06/02/gregorian-calendar/">Gregorian</a> 以外的日曆（例如農曆）</li>
-</ol>
-<p>事實上，目前的 Date 物件，當初 Brendan Eich 因為時間緊迫，所以 Datetime 的 API 是直接參考 Java 的，當時是 1995，參考的應該是 Beta 版 Java 的 <code>java.util.Date</code>，後來 1996 年 1 月 Java 1.0 發佈，但是到了 1997 年 2 月的 Java 1.1 發佈時，<code>java.util.Date</code> 大部分的設計都被捨棄了，然後 1997 年 6 月，ECMAScript 標準 1.0 發佈，結果這個在 Java 語言只活了 1 年多的設計，就活在 JavaScript 世界活了 20 年之久，相信有用過的人都能多少都知道使用起來的痛苦。</p>
-<p>不過要改善 JavaScript 從來就不是一件容易的事情，最大的困難點就是你不能隨便改動任何已有的東西，像是已經存在 20 年的 <code>Date</code>，即使它設計不好，隨便改動都可能造成大量的網站壞掉，不像是 Java 1.0 升級到 Java 1.1 那樣，各自用各自的，在改善 JavaScript 時基本上就是要當成有人從不升級，不能有 broken change，最簡單的方法就是增加新的東西，而不要去修改舊的，這也是目前 temporal 的方向（其實 ES 5.1 後，舊有的東西該修的東西大概都修完，之後就是一直加新的而已），在 draft 文件已經有一點基礎和預期的 code sample 了：</p>
-<pre><code class="language-javascript">var ldt = new CivilDateTime(2017, 12, 31, 23, 59);
-
-var addHours = new CivilDateTime(2017, 12, 31, 23, 00)
-    .add(2, 'hours');
-
-var zdt = ldt.withZone('America/New_York');
-</code></pre>
-<p>可以看到有方便的加減時間的 API、immutable 特性、還有時區支援等等。事實上這份草案還非常初步而已，還缺非常多細節，預期會有的物件目前已經有八種了，不過這八種物件的 API 也都還沒定義完，不過也正因為如此，想參與的人反而這時候比較有機會提供想法，推薦有興趣的人可以關注關注，給點意見。</p>
-<p>最後列一些參考文件：</p>
-<ul>
-<li>Web Rebels 2017 <a href="https://twitter.com/jxxf">@jxxf</a> 的「<a href="https://www.webrebels.org/#talk-8">Time and Time Again: Fixing Dates in JS</a>」 花了很多時間在講 JavaScript Date 缺少的 concept</li>
-<li>林信良（良葛格）介紹 Java 的 Joda-Time 和 JSR310 的<a href="http://www.codedata.com.tw/tag/jodatime/">相關文章</a>，Joda-Time 是 Java 上很廣為使用的時間套件，由 Stephen Colebourne 為主開發的，他也參與了 <a href="https://jcp.org/en/jsr/detail?id=310">JSR 310: Date and Time API</a> 的制訂，並在 JDK 8 開始可以用</li>
-<li>temporal 目前主要作者之一的 Maggie Pint 的文章：<a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">Fixing JavaScript Date - Web Compatibility and Reality</a></li>
-<li><a href="https://www.youtube.com/watch?v=oVVXW7lmwtw">Understanding Dates, Times, and Time Zones, with Maggie Pint, Matt Johnson, and Jon Skeet</a></li>
-</ul>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</link>
-<guid>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</guid>
+<link>https://blog.othree.net/log/2018/07/21/naming-1/</link>
+<guid>https://blog.othree.net/log/2018/07/21/naming-1/</guid>
 <category>script</category>
-<pubDate>Sat, 12 Aug 2017 10:41:06 +0800</pubDate>
+<pubDate>Sat, 21 Jul 2018 23:12:15 +0800</pubDate>
+</item>
+
+<item>
+<title>引號</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28562524947/" title="Qutation Marks by othree, on Flickr"><img src="https://farm2.staticflickr.com/1786/28562524947_6b41f2c99a_b.jpg" width="233" height="454" alt="Qutation Marks, " srcset="https://farm2.staticflickr.com/1786/28562524947_6b41f2c99a_b.jpg 466w" /></a></p>
+<p>記錄一下搞 i18n 的一些發現，首先是引號，一般寫程式用的單雙引號 <code>'&quot;</code> 是沒分開關的，不過這和寫作的不一樣，當初 ASCII Code 編定時也是因為資源有限所以才不分開引號還是關引號，不過現在其實這些標點符號都已經有區分的版本了，在 Mac 上也都有快速鍵輸入，像是：</p>
+<ul>
+<li><code>&quot;</code> :  <code>opt + [</code></li>
+<li><code>&quot;</code> :  <code>opt + shift + [</code></li>
+<li><code>'</code> :  <code>opt + ]</code></li>
+<li><code>'</code> :  <code>opt + shift + ]</code></li>
+</ul>
+<p>一般文字我還蠻喜歡把普通的單引號雙引號都轉成這種，有個意外的好處就是放在 JSON 裡的字串內時，不需要用 <code>\</code> 跳脫，肉眼看起來和諧許多。</p>
+<p>然後當初實做 Markdown 的 John Gruber 有個工具叫 <a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 可以來處理單雙引號的轉換，這工具當年常和 Markdown 一起合作，我則是有把它 port 到 <a href="https://www.npmjs.com/package/smartypants">JavaScript</a>，然後其實有些語言的引號不是這種點點得，像是大家都知道的中日文的 <code>「」</code> ，我要提的則是俄文用的是箭頭引號 <code>«»</code> 叫 Guillemet，長的和<a href="https://zh.wikipedia.org/wiki/%E4%B9%A6%E5%90%8D%E5%8F%B7">書名號</a>很像，不過大小就有差，當然 Guillemet 也有單線條的版本 <code>‹›</code>，輸入方法如下：</p>
+<ul>
+<li><code>«</code> :  <code>opt + \</code></li>
+<li><code>»</code> :  <code>opt + shift + \</code></li>
+<li><code>‹</code> :  <code>opt + shift + 3</code></li>
+<li><code>›</code> :  <code>opt + shift + 4</code></li>
+</ul>
+<p>德文又比較特別，左邊的引號是放在底部的 <code>„</code>，輸入方法為：</p>
+<ul>
+<li><code>„</code> : <code>opt + shift + w</code></li>
+</ul>
+<p>當然這些不同語言的不同型式好像現在也沒有講究一定要用，我隨便找一些該語言的新聞網站也還是很多用普通的雙引號，而且實際上這些引號的組合很多，<a href="https://en.wikipedia.org/wiki/Quotation_mark">wikipedia</a> 上有人整理好。</p>
+<p>另外想特別提一下西班牙文，它的問句和驚嘆句，除了在句尾加問號和驚嘆號之外，還可以在句首加上反過來的問號和驚嘆號，一樣，現在似乎也沒一定要這樣寫了，輸入方法為：</p>
+<ul>
+<li><code>¿</code> : <code>opt + shift + /</code></li>
+<li><code>¡</code> : <code>opt + 1</code></li>
+</ul>
+<p>最後補篇少數派的文章 <a href="https://sspai.com/post/45516">别再用「六个点」当省略号了，这些标点都有更规范的输入方式</a>。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/17/quotation/</link>
+<guid>https://blog.othree.net/log/2018/07/17/quotation/</guid>
+<category>others</category>
+<pubDate>Tue, 17 Jul 2018 00:39:20 +0800</pubDate>
+</item>
+
+<item>
+<title>Monokai Pro</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43359779851/" title="Monokai Pro VSCode by othree, on Flickr"><img src="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg" width="1024" height="637" alt="Monokai Pro VSCode" srcset="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg 1024w, https://farm1.staticflickr.com/841/43359779851_8253ea1d98_h.jpg 1600w" /></a></p>
+<p>因為用 <a href="http://blog.othree.net/log/2018/05/02/dank-mono/">Dank Mono</a> 字體的關係，最近開始有想要讓 Vim 支援斜體的 syntax highlight，於是又花了不少時間測試，過程中想起在 Twitter 上看到有人說過有一款付費的 Sublime/VSCode 佈景主題（印象中是 <a href="https://twitter.com/yorkxin">@yorkxin</a>），叫 <a href="https://www.monokai.pro/">Monokai Pro</a>，因為可以免費評估，可能是用幾天後才會出現 popup 吧，就一時興起就裝來玩玩看，結果還蠻滿意的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28490909197/" title="Monokai Pro Sublime by othree, on Flickr"><img src="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg" width="1024" height="636" alt="Monokai Pro Sublime" srcset="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg 1024w, https://farm1.staticflickr.com/917/28490909197_a9739e01cc_h.jpg 1600w" /></a></p>
+<p>雖然我主力是 Vim，但是 Sublime 和 VSCode 都還是有用，後來又繼續研究了一下，原來 Monokai 是在 <a href="http://wiki.macromates.com/Themes/UserSubmittedThemes">Textmate 2</a> 的佈景主題，還蠻有名的，也很多人 port 到不同環境，Vim 那邊比較多人用的應該是 <a href="https://github.com/tomasr/molokai">molokai</a>，然後 Monokai Pro 是同個作者做的，如果有 Vim 版的我會支持一下吧～</p>
+<p>然後弄一弄發現我用 jellybean 的配色用到 256 色的，結果把 True Color 支援打開之後發現有點難看，又開始我的探索之旅了，目前暫時是用 <a href="https://github.com/jacoborus/tender.vim">tender</a>：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29489585588/" title="tender.vim by othree, on Flickr"><img src="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg" width="1024" height="684" alt="tender.vim" srcset="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg 1024w, https://farm1.staticflickr.com/843/29489585588_bd4c88fe92_h.jpg 1600w" /></a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/07/15/monokai-pro/</link>
+<guid>https://blog.othree.net/log/2018/07/15/monokai-pro/</guid>
+<category>vim</category>
+<pubDate>Sun, 15 Jul 2018 10:45:48 +0800</pubDate>
+</item>
+
+<item>
+<title>推薦閱讀 - Language</title>
+<description><![CDATA[<p>之前有一篇介紹 <a href="https://blog.othree.net/log/2018/04/09/pegjs/">PEG.js</a>，其實在那之後我還有花不少時間想深入理解，然後家裡小寶寶就誕生了，還沒機會完整理解到我想要的程度，因為現在可以自由研究、寫程式的時間比較少了，時間都拿去寫另外一個工具了，等能理解透徹不知道還要何時，所以先把其中一篇覺得很棒的參考文件放上來：</p>
+<ul>
+<li><a href="http://www.csie.ntnu.edu.tw/%7Eu91029/Language.html">Language - 演算法筆記</a></li>
+</ul>
+<p>這篇對我來說是篇相見恨晚的文件，裡面很有條理的從最基礎的語言定義開始介紹到 Parser 相關的語法，也解答了我幾個存在已久的疑問：</p>
+<ul>
+<li>正規表示式（Regular Expression）的正規是什麼意思</li>
+<li>Context Free Grammar 的 Context Free 是什麼意思</li>
+<li>為什麼 RE 無法 parse HTML 文件</li>
+</ul>
+<p><a href="http://www.csie.ntnu.edu.tw/%7Eu91029/index.html">演算法筆記</a>這網站我其實也不是第一次看到，之前忘了研究什麼的時候也有找到這，當時就覺得怎麼有人這麼佛心的用中文解釋這麼多演算法，其實有搜尋了一下沒找到原作者是誰，倒是有看到以前要找人維護的消息，倒是我比較喜歡以前的樣式，現在這樣式，先不說粉紅色系，文字顏色和背景對比很低，讀起來比較辛苦啊。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/06/29/language/</link>
+<guid>https://blog.othree.net/log/2018/06/29/language/</guid>
+<category>books</category>
+<pubDate>Fri, 29 Jun 2018 13:54:45 +0800</pubDate>
+</item>
+
+<item>
+<title>SmooshGate</title>
+<description><![CDATA[<p>之前應該沒在這邊提過這件事，總之就是之前 TC39 有個 flatten 的 proposal，搞一搞後，發現這東西實做啟用後 MooTools 會爛掉，詳細的原因 Google 那邊有一篇文章<a href="https://developers.google.com/web/updates/2018/03/smooshgate">解釋</a>，標題就是 SmooshGate，Smoosh 這個單字其實有點少見，我大概查一下，雖然有說是 flatten、squash 的意思，不過目前覺得應該是作畫時把顏料抹平那種動作感覺最對吧，總之，當初為了這個問題第一個提案的改名就是 <a href="https://github.com/tc39/proposal-flatMap/pull/56"><code>smoosh</code></a>，不過這個單字整體感覺和 flatten 差距實在太大，所以出現一堆聲音，有的是建議加上 <code>&quot;use es2019&quot;</code> 的 statement 來開啟 <code>flatten</code>，像是 stirct mode 一樣，有的建議其他名字，當然也有些人是覺得管 MooTools 去死的，不過因為 Don't Break the Web 的大原則所以還是要處理這個問題。</p>
+<p>其實我覺得當初提案 smoosh 的人搞不好是故意挑這個字的，藉此增加話題性引發討論和建議，效果其實很好，在 Twitter 上還出現了 <a href="https://twitter.com/hashtag/smooshgate">#SmooshGate</a> 這樣的 hashtag，不過，總之在最近一次五月的 TC39 會議，確定 proposal 改新的名稱：<code>flat</code> ，雖然詞性不同，不過大家都還蠻可以接受，或許也可能是相較於 smoosh 來說很可以接受吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/05/28/smooshgate/</link>
+<guid>https://blog.othree.net/log/2018/05/28/smooshgate/</guid>
+<category>script</category>
+<pubDate>Mon, 28 May 2018 12:32:28 +0800</pubDate>
+</item>
+
+<item>
+<title>GitHub Pages Custom Domain HTTPS</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41138623844/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg 1024w" /></a></p>
+<p>等了好久終於出來的功能，<a href="https://github.com/isaacs/github/issues/156">追了蠻久</a>，昨天 DK 也有<a href="https://blog.gslin.org/archives/2018/05/02/8295/github-%E9%80%8F%E9%81%8E-lets-encrypt-%E6%8F%90%E4%BE%9B%E8%87%AA%E8%A8%82%E7%B6%B2%E5%9F%9F%E7%9A%84-https-%E6%9C%8D%E5%8B%99/">提到</a>，其實正式發佈前就看到有人已經可以用了，不過總之這篇稍微記錄一下如果已經是舊有的 GitHub Pages 還不能用可以怎麼處理，不過不完全有效，舊有的專案在設定看起來會像是：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41127813434/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg 1024w" /></a></p>
+<p>下面有寫說因為用了 custom domain 就不能用，這時候把 custom domain 刪除，然後儲存重新加回去就會變成：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40945601525/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg" width="730" height="512" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg 1024w" /></a></p>
+<p>然後就等，我大概是等到隔天就有了（變成第一張圖的狀態），不過這幾天剛好完全沒空，到現在才有空檔紀錄一下。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/05/04/github-pages-custom-domain-https/</link>
+<guid>https://blog.othree.net/log/2018/05/04/github-pages-custom-domain-https/</guid>
+<category>web</category>
+<pubDate>Fri, 04 May 2018 19:12:21 +0800</pubDate>
+</item>
+
+<item>
+<title>Dank Mono</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40940786465/" title="Dank Mono Regular by othree, on Flickr"><img src="https://farm1.staticflickr.com/870/40940786465_3dbdd2972e_b.jpg" width="400" height="345" alt="Dank Mono Regular, " srcset="https://farm1.staticflickr.com/870/40940786465_3dbdd2972e_b.jpg 800w" /></a></p>
+<p>上週在 Twitter 上看到有人轉推作者的發文，發現這個新的 coding 字型：<a href="https://dank.sh">Dank Mono</a>，然後我就買來用用看了，在這之前我是用 <a href="https://adobe-fonts.github.io/source-code-pro/">Source Code Pro</a> 的，一剛開始設定下去覺得還有點不習慣，不過強迫用了一下卻適應的蠻快的。</p>
+<p>套用上我的編輯環境後是這樣：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27971035788/" title="Dank Mono by othree, on Flickr"><img src="https://farm1.staticflickr.com/959/27971035788_ac9bef913e_b.jpg" width="970" height="707" alt="Dank Mono, " srcset="https://farm1.staticflickr.com/959/27971035788_ac9bef913e_b.jpg 1024w, https://farm1.staticflickr.com/959/27971035788_964e25aeb6_h.jpg 1600w" /></a></p>
+]]><![CDATA[<p>其實我覺得這套字形最大的特色就是那個有 descendant 的小寫 f，讓人忍不住想多用 f 來命名啊，除此之外，它和貴貴的 <a href="https://www.typography.com/fonts/operator/styles/operatormono">Operator Mono</a> 一樣有手寫風格的斜體可用：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40940786495/" title="Dank Mono Italic by othree, on Flickr"><img src="https://farm1.staticflickr.com/965/40940786495_db2904bb0e_b.jpg" width="400" height="345" alt="Dank Mono Italic, " srcset="https://farm1.staticflickr.com/965/40940786495_db2904bb0e_b.jpg 800w" /></a></p>
+<p>有空可以來調整調整現在的 syntax highlight；然後和 <a href="https://github.com/tonsky/FiraCode">Fira Code</a> 一樣，有一些連字（ligatures）：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26977563397/" title="Dank Mono Ligatures by othree, on Flickr"><img src="https://farm1.staticflickr.com/907/26977563397_a129414a80_b.jpg" width="970" height="707" alt="Dank Mono Ligatures, " srcset="https://farm1.staticflickr.com/907/26977563397_a129414a80_b.jpg 1024w, https://farm1.staticflickr.com/907/26977563397_55a399c747_h.jpg 1600w" /></a></p>
+<p>目前的缺點的話，符號整體而言都是比較小的，我還是比較喜歡 Source Code Pro 的符號和其它字元大小的比例，另外就是現在還只有 regular 字重，不排除也不保證會有其它字重，除了這兩點之外，這個字體我目前倒是還蠻喜歡的。</p>
+<p>最後附上作者自己的介紹 <a href="https://medium.com/@philpl/what-sets-dank-mono-apart-1bbdc1cc3cbd">What sets Dank Mono apart?</a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/05/02/dank-mono/</link>
+<guid>https://blog.othree.net/log/2018/05/02/dank-mono/</guid>
+<category>buy</category>
+<pubDate>Wed, 02 May 2018 22:46:24 +0800</pubDate>
+</item>
+
+<item>
+<title>TFN 域名轉出</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41839613061/" title="dig markdown.tw by othree, on Flickr"><img src="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg" width="665" height="452" alt="dig markdown.tw, " srcset="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg 1024w" /></a></p>
+<p>我的 markdown.tw 在 TFN 註冊的，其實一直很想轉出，但是很怕轉的過程出意外，遲遲沒動手。不過剛剛看到 GitHub Pages 用 custom domain 也正式支援 HTTPS 了，如果是設定 A record 的話需要更新 DNS 設定，於是我就決定認真的來處理這件事，不意外的介面很難理解，決定記錄一下幫助眾生～</p>
+]]><![CDATA[<p>域名要轉出最重要的就是要從原註冊商拿到 authorization code，然後在新註冊商轉入的時候輸入，TFN 要轉出還好不是要聯絡客服，介面上有，然後我就點下去看：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26970973117/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/959/26970973117_e94bf86d90_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/959/26970973117_e94bf86d90_b.jpg 1024w, https://farm1.staticflickr.com/959/26970973117_579cf5d5b0_h.jpg 1600w" /></a></p>
+<p>馬上就卡關了，完全沒有說明，就要我輸入<strong>移轉中密碼</strong>，還是必填欄位，根據我一些以往經驗，我以為這邊是要輸入什麼先跟他們取得的安全驗證碼，然後才會拿到 authorization code，不過卻死活找找不到這個取得安全驗證碼的地方，鬼打牆半個鐘頭後，我決定作一個測試，就是把 <strong>移轉中密碼</strong> 當成就是 authorization code 來試試，然後自己想一個密碼輸入後：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41122773584/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/944/41122773584_37384abe31_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/944/41122773584_37384abe31_b.jpg 1024w, https://farm1.staticflickr.com/944/41122773584_9dbf36d901_h.jpg 1600w" /></a></p>
+<p>就得到成功訊息了！這時候眼尖的人會發現左邊的目錄多了個<strong>取消轉出</strong>的選項，看到這選項的我時在忍不住想看看裡面有什麼訊息，就點了下去：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41122773934/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/976/41122773934_eba87c97b9_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/976/41122773934_eba87c97b9_b.jpg 1024w, https://farm1.staticflickr.com/976/41122773934_f040f1fe0f_h.jpg 1600w" /></a></p>
+<p>恩恩，真是不意外的結果啊，總之我就重新操作一次，然後拿著我自己設定的密碼去 Gandi 那邊當 authorization code 轉入，弄完等了一陣子後，竟然就通過了！</p>
+<p>所以結論是，TFN 域名轉出時要輸入的<strong>移轉中密碼</strong>其實就是給使用者自訂 authorization code，而且還有個蠻短的長度限制 XD，現在雖然 nameserver 都轉好了，不過我的 GitHub Pages HTTPS 還是沒生效啊～</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/05/02/tfn-domain-transfer-out/</link>
+<guid>https://blog.othree.net/log/2018/05/02/tfn-domain-transfer-out/</guid>
+<category>web</category>
+<pubDate>Wed, 02 May 2018 12:13:08 +0800</pubDate>
+</item>
+
+<item>
+<title>ESLint Plugin 入門</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr"><img src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w" /></a></p>
+<p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
+<p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
+<p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
+<p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
+<pre><code class="language-javascript">const rule = require('../rule.js')
+const RuleTester = require('eslint').RuleTester
+
+const ruleTester = new RuleTester();
+
+ruleTester.run('no-parameter-e', rule, {
+  valid: [
+    'function a (event) {}',
+  ],
+  invalid: [
+    {
+      code: 'function e (e) {}',
+      errors: [{ message }],
+    }
+  ],
+});
+</code></pre>
+<p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
+<p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
+<p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</link>
+<guid>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</guid>
+<category>script</category>
+<pubDate>Sat, 21 Apr 2018 21:17:13 +0800</pubDate>
+</item>
+
+<item>
+<title>Immer 原理</title>
+<description><![CDATA[<p>前陣子有個蠻有趣的 library 叫 <a href="https://github.com/mweststrate/immer">Immer</a>，是 MobX 的開發者 Michel Weststrate 做的，這個 library 做的事情很有趣，它整合了 immutable 資料和原生資料的特性，反過來從缺點來看，immutable 資料型態的問題就是操作比較不方便，所有的修改動作都要透過 method 來執行，不能直接用 assign 的，有時候要改比較深層一點的資料就很麻煩，像 Facebook 的 <a href="https://github.com/facebook/immutable-js">immutable.js</a> 就需要用 <code>getIn</code>、<code>updateIn</code> 來處理：</p>
+<pre><code class="language-js">getIn({ x: { y: { z: 123 }}}, ['x', 'y', 'z']) // 123
+
+const original = { x: { y: { z: 123 }}}
+setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
+</code></pre>
+<p>用陣列丟每層的屬性名稱，也有一些是用 <code>.</code> 切分的 path 來處理這個問題（像是 <code>prop1.prop2.prop3</code> 這種結構），而原生資料的缺點，在這個場景來看當然就是不 immutable 了，Immer 就提出了一個新的構想，把這兩者的優點結合在一起，讓資料可以保持 immutable 特性，又可以直接修改，當然不能直接修改 JavaScript 行為，所以還是有些地方需要等價交換，就是修改資料的時候，要包進 produce function 內：</p>
+<pre><code class="language-js">const nextState = produce(baseState, draftState =&gt; {
+    draftState.push({ todo: &quot;Tweet about it&quot; })
+    draftState[1].done = true
+})
+</code></pre>
+<p>然後得到的 <code>nextState</code> 和 <code>baseState</code> 就會是不同物件，就像是 immutable 物件一樣行為，所以如果沒修改就還是同個物件，初看覺得有點黑魔法，不過思考過後覺得也不是不能做，有了些假想的實做方法後去研究了一下程式碼，不太意外的其實在 produce 裡面拿到的 draft 物件，是一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 包裝過的物件，然後 immutable 相關的邏輯都做在 Proxy 內，produce 跑完後再把新的值 finalize 取出用 plain object 傳回給 <code>nextState</code>，當然因為 Proxy 是比較新的東西，所以針對 ES5 也有另外的處理，我大致看一下就是比較土法煉鋼的下去比對，至於為什麼不全部都這樣做應該是效能考量吧。其實我覺得比起實做的原理，能想到這樣設計實在是很厲害，不像大部分人早就放棄了，還持續思考是不是有更好的作法可以整合兩種資料格式的優點才有機會找到這條路。</p>
+<p>最後，Immer 這名字的由來，雖然在德文有這單字，不過我判斷應該還是從 immersive 來的吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/19/immer/</link>
+<guid>https://blog.othree.net/log/2018/04/19/immer/</guid>
+<category>script</category>
+<pubDate>Thu, 19 Apr 2018 23:11:20 +0800</pubDate>
+</item>
+
+<item>
+<title>2017</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32417917172/" title="神農老街 by othree, on Flickr"><img src="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg" width="1024" height="683" alt="神農老街" srcset="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg 1024w, https://farm1.staticflickr.com/395/32417917172_1d7322eea0_h.jpg 1600w" /></a></p>
+<p>拖稿很久的 2017 回顧，今年比較沒時間，所以只挑了一輪就直接上陣了（然後還晚了好幾個月），一月是現在固定的台南春節，台南還看的到很多手寫春聯，而且都寫得很漂亮。</p>
+]]><![CDATA[<p>二月是台北燈節時去拍的，台灣總督府交通局鐵道部，當時是特別晚上點燈的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32197014823/" title="台灣總督府交通局鐵道部 台北燈節 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2431/32197014823_ef6d988581_b.jpg" width="1024" height="683" alt="台灣總督府交通局鐵道部 台北燈節" srcset="https://farm3.staticflickr.com/2431/32197014823_ef6d988581_b.jpg 1024w, https://farm3.staticflickr.com/2431/32197014823_0715faaa47_h.jpg 1600w" /></a></p>
+<p>三月是現在已經自由的狐狸們在<a href="https://moztw.org/space/">摩茲工寮</a>的分享，介紹了 2017 年最大更新，Firefox Quantum 的一些技術。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/32746891364/" title="Firebug 開發者 Honza 跟你聊：不斷進化中的 Firefox 開發工具 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2875/32746891364_95d1119f08_b.jpg" width="1024" height="683" alt="Firebug 開發者 Honza 跟你聊：不斷進化中的 Firefox 開發工具" srcset="https://farm3.staticflickr.com/2875/32746891364_95d1119f08_b.jpg 1024w, https://farm3.staticflickr.com/2875/32746891364_c4a0de9cb8_h.jpg 1600w" /></a></p>
+<p>四月帶爸媽去了一趟沖繩，這張照片是其中的首里城，以前琉球王國的首都，本來期待不高，不過結果覺得還蠻不錯的景點，有 Stamp Rally 可以換紀念品蠻不錯的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34118881786/" title="首里城 by othree, on Flickr"><img src="https://farm4.staticflickr.com/3931/34118881786_9a7027f118_b.jpg" width="1024" height="683" alt="首里城" srcset="https://farm4.staticflickr.com/3931/34118881786_9a7027f118_b.jpg 1024w, https://farm4.staticflickr.com/3931/34118881786_89626f61ab_h.jpg 1600w" /></a></p>
+<p>五月又回台南，這間烤滷味還蠻好吃的，趁機偷拍一點街頭紀實類的照片，其實這類照片算是我很想要拍的類型。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34405072766/" title="上好烤滷味 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4186/34405072766_b548d10359_b.jpg" width="1024" height="683" alt="上好烤滷味" srcset="https://farm5.staticflickr.com/4186/34405072766_b548d10359_b.jpg 1024w, https://farm5.staticflickr.com/4186/34405072766_97201b0052_h.jpg 1600w" /></a></p>
+<p>六月有去一趟東京，逛了一下人形町，其中的 RON 咖啡已經開業 50 年，裡面不只裝設很陳舊，店員年紀也都很大了，感覺是個會消失在時間洪流的景點。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34927506263/" title="RON by othree, on Flickr"><img src="https://farm5.staticflickr.com/4239/34927506263_3525c44b55_b.jpg" width="1024" height="683" alt="RON" srcset="https://farm5.staticflickr.com/4239/34927506263_3525c44b55_b.jpg 1024w, https://farm5.staticflickr.com/4239/34927506263_5843297051_h.jpg 1600w" /></a></p>
+<p>七月更新了 iPad Pro 10.5，近年難得的有感升級，當時還有寫<a href="https://blog.othree.net/log/2017/08/03/ipad-pro-105-inch/">文章介紹</a>。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/36164319222/" title="iPad Pro 10.5 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4415/36164319222_192e05cf58_b.jpg" width="1024" height="683" alt="iPad Pro 10.5" srcset="https://farm5.staticflickr.com/4415/36164319222_192e05cf58_b.jpg 1024w, https://farm5.staticflickr.com/4415/36164319222_4c8603e28b_h.jpg 1600w" /></a></p>
+<p>八月也是慣例的 COSCUP，其實還有 HITCON，今年都無法參與了，如果能抽空去臉一下就很不錯了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35576419213/" title="COSCUP 2017 Day 1 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4419/35576419213_e3dbd58f45_b.jpg" width="1024" height="683" alt="COSCUP 2017 Day 1" srcset="https://farm5.staticflickr.com/4419/35576419213_e3dbd58f45_b.jpg 1024w, https://farm5.staticflickr.com/4419/35576419213_6e102939db_h.jpg 1600w" /></a></p>
+<p>九月跑去香港兩天，主要是吃吃行程，剛好看到了現在世上少有的竹子鷹架。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37123095245/" title="香港 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4413/37123095245_64b1945e42_b.jpg" width="1024" height="683" alt="香港" srcset="https://farm5.staticflickr.com/4413/37123095245_64b1945e42_b.jpg 1024w, https://farm5.staticflickr.com/4413/37123095245_5dfa622565_h.jpg 1600w" /></a></p>
+<p>十月趁連假去了紐西蘭十多天，整個行程還蠻順利，運氣也很不錯，這是其中一天在 Te Anau 看到的夕陽，其實去這一趟是有些感觸，不過沒什麼時間記錄。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37712147255/" title="Te Anau by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37712147255_87335bd4f0_b.jpg" width="1024" height="683" alt="Te Anau" srcset="https://farm5.staticflickr.com/4517/37712147255_87335bd4f0_b.jpg 1024w, https://farm5.staticflickr.com/4517/37712147255_3451ae8619_h.jpg 1600w" /></a></p>
+<p>十一月是自由的狐狸啊～</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24851237238/" title="Firefox by othree, on Flickr"><img src="https://farm5.staticflickr.com/4529/24851237238_99d621559b_b.jpg" width="683" height="1024" alt="Firefox" srcset="https://farm5.staticflickr.com/4529/24851237238_99d621559b_b.jpg 683w, https://farm5.staticflickr.com/4529/24851237238_d78256eca1_h.jpg 1067w" /></a></p>
+<p>十二月的是 Mario Odyssey，本來想要玩完寫篇文章記錄的，也還沒開工，不過 Switch 的遊戲拍照機能真是很不錯，薩爾達的時候我就拍了一大堆，不過因為一直沒全破所以還沒發佈，希望今年能找時間解決它。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/24541906227/" title="Super Mario Odyssey by othree, on Flickr"><img src="https://farm5.staticflickr.com/4590/24541906227_34ecf7c3da_b.jpg" width="1024" height="576" alt="Super Mario Odyssey" srcset="https://farm5.staticflickr.com/4590/24541906227_34ecf7c3da_b.jpg 1024w" /></a></p>
+]]></description>
+<link>https://blog.othree.net/log/2018/04/18/2017/</link>
+<guid>https://blog.othree.net/log/2018/04/18/2017/</guid>
+<category>diary</category>
+<pubDate>Wed, 18 Apr 2018 23:25:57 +0800</pubDate>
 </item>
 
 

@@ -9,75 +9,42 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
-		<b:entry entryID="000920" baseName="pegjs">
+		<b:entry entryID="000935" baseName="eslint-plugin-pep8-blank-lines">
 			<b:author>
 				<b:authorName>othree</b:authorName>
 				<b:authorEmail>othree@gmail.com</b:authorEmail>
 				<b:authorUrl></b:authorUrl>
 			</b:author>
 			<b:datetime>
-				<b:date>2018-04-09</b:date>
-				<b:time>21:15:01</b:time>
+				<b:date>2018-09-08</b:date>
+				<b:time>10:24:24</b:time>
 			</b:datetime>
 			<b:category>script</b:category>
-			<b:title>PEG.js</b:title>
+			<b:title>eslint-plugin-pep8-blank-lines</b:title>
 			<b:content>
-				<b:summary> 知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。 總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 TernJS 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 PEG.js 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是： IdentifierName :: IdentifierStart IdentifierName IdentifierPart IdentifierStart :: UnicodeIDStart $...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /></a></p>
-<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
-<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
-<pre><code>IdentifierName ::
-    IdentifierStart
-    IdentifierName IdentifierPart
-
-IdentifierStart ::
-    UnicodeIDStart
-    $
-    _
-    \ UnicodeEscapeSequence
-
-IdentifierPart ::
-    UnicodeIDContinue
-    $
-    _
-    \ UnicodeEscapeSequence
-    &lt;ZWNJ&gt;
-    &lt;ZWJ&gt;
-
-UnicodeIDStart ::
-    any Unicode code point with the Unicode property &amp;ldquo;ID_Start&amp;rdquo;
-
-UnicodeIDContinue ::
-    any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
+				<b:summary> 我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 PEP8 coding style 中關於空行的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。 於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 padding-line-between-statements 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 sourceCode 來一行一行看，不過同時也要知道該行的 context...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
+<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
+<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;standard&quot;,
+ 
+  &quot;plugins&quot;: [
+    &quot;pep8-blank-lines&quot;,
+    &quot;no-parameter-e&quot;
+  ],
+ 
+  &quot;rules&quot;: {
+    &quot;semi&quot;: [2, &quot;always&quot;],
+    &quot;no-extra-semi&quot;: 2,
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
+    &quot;no-multiple-empty-lines&quot;: 0,
+    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
+    &quot;no-parameter-e/no-parameter-e&quot;: 2
+  }
+}
 </code></pre>
-<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
-<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
-<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
-<pre><code>keyword
-keyword1 and keyword2
-</code></pre>
-<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
-<pre><code class="language-pegjs">start
-  = orQuery?
-
-orQuery
-  = left:andQuery Or right:orQuery
-  / andQuery
-
-andQuery
-  = left:notQuery And right:andQuery
-  / notQuery
-
-notQuery
-  = Not right:subQuery
-  / subQuery
-
-subQuery
-  = '(' ws* query:orQuery ws* ')'
-  / queryValue
-</code></pre>
-<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
-<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
+<p>這組其實也是我目前在用的設定啦～</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
@@ -85,115 +52,31 @@ subQuery
 
 		</b:entry>
 
-		<b:entry entryID="000919" baseName="htc-u11plus">
+		<b:entry entryID="000934" baseName="tern-022-released">
 			<b:author>
 				<b:authorName>othree</b:authorName>
 				<b:authorEmail>othree@gmail.com</b:authorEmail>
 				<b:authorUrl></b:authorUrl>
 			</b:author>
 			<b:datetime>
-				<b:date>2018-03-24</b:date>
-				<b:time>17:46:13</b:time>
-			</b:datetime>
-			<b:category>buy</b:category>
-			<b:title>HTC U11+</b:title>
-			<b:content>
-				<b:summary> 去年想說要把用了兩三年的 HTC M9 換掉，在 M9 之前其實我 M8、M7 都有用，算是三代機皇的使用者，本來這次想要買 Google Pixel 2 的，不過台灣一直沒上市，直到前幾天 Google 才說要在台灣上市，不過總之，最後考量價錢、機能等等，決定買號稱本來是 Pixel 2 XL 的 HTC U11+，然後也決定要買主打的透明黑，不過可能因為生產問題，透明黑比較晚上市，其實當時差不多是去年的 1111，各家都有特價什麼的，但是卻買不到透明黑感覺實在有點尷尬，連 HTC 自家網站，當時也有些活動，買 U11+ 就可以用很好的折扣家買周邊，有限期間，於是我就每天上去看，看了好幾天覺得，應該沒這麼會做決策吧，結果一如預期的，特價活動結束隔天才有得下單預定透明黑... 我當然是不差買那些周邊啦，不過對於這種搞法實在是無法參透，總之我還是第一天就下定了，後來也比一堆開箱文還早兩三天拿到，不過拖到今天才來記錄一下。 整體而言我覺得這台還蠻不錯的，透明黑玻璃很漂亮，價錢 ok，定價和五吋的高階機種（U11）一樣，對比於 Pixel 的價位真的是親切很多，而且規格和螢幕都比較大，電池電量表現也很不錯，出門一整天也不用擔心沒電，U11 開始主打的 Edge Sense，拿來單手拍照真的很不錯，相機表現也不錯，不過那個側框啟動叫出目錄的功能就不太行了，主要是反應太慢，還不如用指紋直接開畫面，另外一點就是指紋速度很快，還有防塵防水，然後初期宣傳有說全面屏，不過實際上只是正面的玻璃是全部覆蓋，沒有接縫，或許 Google 當初要捨棄實體鍵打的就是這個主意。 不過 U11+ 還是有點問題，其中我比較有感的就是要用 Google...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38956472765/" title="HTC U11+ by othree, on Flickr"><img src="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg" width="1024" height="683" alt="HTC U11+" srcset="https://farm5.staticflickr.com/4704/38956472765_7d5d8a75ce_b.jpg 1024w, https://farm5.staticflickr.com/4704/38956472765_4c6a20240a_h.jpg 1600w" /></a></p>
-<p>去年想說要把用了兩三年的 HTC M9 換掉，在 M9 之前其實我 M8、M7 都有用，算是三代機皇的使用者，本來這次想要買 Google Pixel 2 的，不過台灣一直沒上市，直到前幾天 Google 才說要在台灣上市，不過總之，最後考量價錢、機能等等，決定買號稱本來是 Pixel 2 XL 的 HTC U11+，然後也決定要買主打的透明黑，不過可能因為生產問題，透明黑比較晚上市，其實當時差不多是去年的 1111，各家都有特價什麼的，但是卻買不到透明黑感覺實在有點尷尬，連 HTC 自家網站，當時也有些活動，買 U11+ 就可以用很好的折扣家買周邊，有限期間，於是我就每天上去看，看了好幾天覺得，應該沒這麼會做決策吧，結果一如預期的，特價活動結束隔天才有得下單預定透明黑... 我當然是不差買那些周邊啦，不過對於這種搞法實在是無法參透，總之我還是第一天就下定了，後來也比一堆開箱文還早兩三天拿到，不過拖到今天才來記錄一下。</p>
-<p>整體而言我覺得這台還蠻不錯的，透明黑玻璃很漂亮，價錢 ok，定價和五吋的高階機種（U11）一樣，對比於 Pixel 的價位真的是親切很多，而且規格和螢幕都比較大，電池電量表現也很不錯，出門一整天也不用擔心沒電，U11 開始主打的 Edge Sense，拿來單手拍照真的很不錯，相機表現也不錯，不過那個側框啟動叫出目錄的功能就不太行了，主要是反應太慢，還不如用指紋直接開畫面，另外一點就是指紋速度很快，還有防塵防水，然後初期宣傳有說全面屏，不過實際上只是正面的玻璃是全部覆蓋，沒有接縫，或許 Google 當初要捨棄實體鍵打的就是這個主意。</p>
-<p>不過 U11+ 還是有點問題，其中我比較有感的就是要用 Google Map 導航會進不了導航狀態，這問題在官方論壇上也有討論，暫時的解法是重開機可以修復，所以還可以接受，除此之外如果還要挑，大概就是螢幕還沒到 4K 吧，不過是廣色域的其實也蠻不錯了，聽說今年的 U12 就會是 4K 螢幕了，不過我應該下一台真的會買 Pixel 了吧。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000918" baseName="accessibility-object-model">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-03-08</b:date>
-				<b:time>08:25:17</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>Accessibility Object Model</b:title>
-			<b:content>
-				<b:summary>很久以前介紹 AMP 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 aria-* 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 Chrome Platform Status 的時候，發現到了一個新的標準草稿叫做 Accessibility Object Model，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 Accessiblity API 下面。 這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是： Accessible Property，建立存取親和力相關屬性的標準界面，包括了 role 和 aria-*，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 accessibleNode； Accessible Action，建立和親和力相關的事件，擴充 accessibleNode 並且讓它會接收到這些親和力相關事件； Virtual Accessibility...</b:summary>
-				<b:mainContent><p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
-<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
-<ol>
-<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
-<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
-<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
-<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
-</ol>
-<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000917" baseName="webdriver-level-2">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-02-17</b:date>
-				<b:time>00:00:08</b:time>
-			</b:datetime>
-			<b:category>web</b:category>
-			<b:title>WebDriver Level 2</b:title>
-			<b:content>
-				<b:summary> 這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流： 第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 CR 了，由 Browser Testing and Tools 工作小組在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 WebDriverIO 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試 另外一條路線是 remote debugging，這個一開始是為了...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr"><img src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w" /></a></p>
-<p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
-<p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
-<p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
-<p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000916" baseName="codeceptjs-puppeteer">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-02-07</b:date>
-				<b:time>12:29:49</b:time>
+				<b:date>2018-09-02</b:date>
+				<b:time>17:41:32</b:time>
 			</b:datetime>
 			<b:category>script</b:category>
-			<b:title>CodeceptJS + puppeteer</b:title>
+			<b:title>Tern 0.22 released</b:title>
 			<b:content>
-				<b:summary>看起來一切似乎都很美好，直到真的下去用。 這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點： CodeceptJS 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。 每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。 Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log： env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose 開...</b:summary>
-				<b:mainContent><p>看起來一切似乎都很美好，直到真的下去用。</p>
-<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
-<ul>
-<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
-<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
-<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
-<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
-<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
-</ul>
-<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
-<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
+				<b:summary>First Tern release in a year and a half today https://t.co/1Ws7zYEJSd . All thanks to @othree picking up maintenance!-- Marijn Haverbeke (@MarijnJH) 2018年8月28日 大約七月初的時候，我開始接手幫忙維護 Tern，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是...</b:summary>
+				<b:mainContent><blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
+<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
+<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
+<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(&quot;:Symbol.iterator&quot;, [], null,
+                                           new HasMethodCall(&quot;next&quot;, [], null,
+                                                             new GetProp(&quot;value&quot;, target))))
 </code></pre>
-<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
-<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
+<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
@@ -201,29 +84,191 @@ subQuery
 
 		</b:entry>
 
-		<b:entry entryID="000915" baseName="tc39-logo">
+		<b:entry entryID="000933" baseName="web-fe-news-service-ofrontend">
 			<b:author>
 				<b:authorName>othree</b:authorName>
 				<b:authorEmail>othree@gmail.com</b:authorEmail>
 				<b:authorUrl></b:authorUrl>
 			</b:author>
 			<b:datetime>
-				<b:date>2018-02-02</b:date>
-				<b:time>12:29:18</b:time>
+				<b:date>2018-08-22</b:date>
+				<b:time>23:42:43</b:time>
 			</b:datetime>
 			<b:category>web</b:category>
-			<b:title>TC39 logo</b:title>
+			<b:title>Web 前端文章廣播服務 ofrontend</b:title>
 			<b:content>
-				<b:summary>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo： 這設計基本上就是參照 JS logo，顏色改成 ECMA 橘，之前那個 JS logo 其實不是官方的，而是社群發起的： 現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上 https://github.com/tc39/logo/ https://github.com/voodootikigod/logo.js/...</b:summary>
-				<b:mainContent><p>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28255675539/" title="TC39 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg" width="1024" height="1024" alt="TC39, " srcset="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg 1024w" /></a></p>
-<p>這設計基本上就是參照 JS logo，顏色改成 <a href="https://www.ecma-international.org/">ECMA</a> 橘，之前那個 JS logo 其實不是官方的，而是社群發起的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40034835081/" title="JS by othree, on Flickr"><img src="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg" width="1024" height="1024" alt="JS, " srcset="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg 1024w" /></a></p>
-<p>現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上</p>
+				<b:summary> 前陣子弄了一個 web 前端文章的廣播服務，現在沒有正式的服務名稱，不過 code base 和一些帳號都叫 ofrontend，所以就先這樣稱呼它吧，現在這服務有兩個末端： Twitter Telegram Channel 會轉發的文章主要就是我看到和前端相關的為主，也會有少量其他的技術文章，大約 80% 英文、20 % 中文，不過不一定是我讀過覺得要推薦的，也是有過一些剛看標題覺得好像不錯，結果找到時間看完覺得沒什麼的文章，不介意的話可以 follow 一下。 目前資訊來源包括了： Twitter 上的 follows 和 Facebook 上自己的 Timeline GitHub 上的 follows、watching（沒有 public 的頁面）我有 watch 一些標準文件的 repository，像是 TC39、CSS-WG 等，現在蠻多資訊可以在 GitHub issue 內看到了，以前都要訂閱 mailing-list...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/30332209388/" title="frontend-news by othree, on Flickr"><img src="https://farm2.staticflickr.com/1897/30332209388_f956381a2d_b.jpg" width="512" height="512" alt="frontend-news" srcset="https://farm2.staticflickr.com/1897/30332209388_f956381a2d_b.jpg 1024w" /></a></p>
+<p>前陣子弄了一個 web 前端文章的廣播服務，現在沒有正式的服務名稱，不過 code base 和一些帳號都叫 <a href="https://github.com/othree/ofrontend">ofrontend</a>，所以就先這樣稱呼它吧，現在這服務有兩個末端：</p>
 <ul>
-<li><a href="https://github.com/tc39/logo/">https://github.com/tc39/logo/</a></li>
-<li><a href="https://github.com/voodootikigod/logo.js/">https://github.com/voodootikigod/logo.js/</a></li>
+<li><a href="https://twitter.com/ofrontend">Twitter</a></li>
+<li><a href="https://t.me/ofrontend">Telegram Channel</a></li>
 </ul>
+<p>會轉發的文章主要就是我看到和前端相關的為主，也會有少量其他的技術文章，大約 80% 英文、20 % 中文，不過不一定是我讀過覺得要推薦的，也是有過一些剛看標題覺得好像不錯，結果找到時間看完覺得沒什麼的文章，不介意的話可以 follow 一下。</p>
+<p>目前資訊來源包括了：</p>
+<ul>
+<li>Twitter 上的 <a href="https://twitter.com/following">follows</a> 和 Facebook 上自己的 Timeline</li>
+<li>GitHub 上的 <a href="https://github.com/othree?tab=following">follows</a>、watching（沒有 public 的頁面）我有 watch 一些標準文件的 repository，像是 TC39、CSS-WG 等，現在蠻多資訊可以在 GitHub issue 內看到了，以前都要訂閱 mailing-list</li>
+<li>跟的 <a href="https://blog.othree.net/blogroll/">Feed</a>，有記得才會去看，線上這份 Feed 清單沒有隨時更新</li>
+<li>Facebook 上的社團：
+<ul>
+<li><a href="https://www.facebook.com/groups/enjoyfonts/">字嗨</a></li>
+<li><a href="https://www.facebook.com/groups/javascript.tw/">JavaScript.tw</a></li>
+<li><a href="https://www.facebook.com/groups/vim.tw/">Vim 正體中文社群</a></li>
+<li><a href="https://www.facebook.com/groups/augularjs.tw/">Angular Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/1249720198386038/">Fire-and-Forget 前端轉貼總部</a></li>
+<li><a href="https://www.facebook.com/groups/142197385837507/">Ruby Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/521085554595481/">Front-End Developers Taiwan</a></li>
+<li><a href="https://www.facebook.com/groups/168537393167684/">Perl 台灣</a></li>
+<li><a href="https://www.facebook.com/groups/830853873715381/">Markdown 台灣</a></li>
+<li><a href="https://www.facebook.com/groups/262800543746083/">node.js台灣</a></li>
+<li><a href="https://www.facebook.com/groups/1439747729634154/">ReactJS.tw</a></li>
+<li>...等</li>
+</ul>
+</li>
+<li>訂閱的電子報：
+<ul>
+<li><a href="https://weekly.codetengu.com/">碼天狗</a></li>
+<li><a href="https://weekly.techbridge.cc/">TechBridge 技術週刊</a></li>
+<li><a href="https://javascriptweekly.com/">JavaScript Weekly</a></li>
+<li><a href="https://nodeweekly.com/">Node Weekly</a></li>
+<li><a href="https://frontendfoc.us/">Frontend Focus</a></li>
+<li><a href="https://mobiledevweekly.com/">Mobile Dev Weekly</a></li>
+<li><a href="https://webopsweekly.com/">WebOps Weekly</a></li>
+<li><a href="https://www.pycoders.com/">Pycoder's Weekly</a></li>
+<li><a href="https://rubyweekly.com/">Ruby Weekly</a></li>
+<li><a href="https://golangweekly.com/">Golang Weekly</a></li>
+<li><a href="https://wasmweekly.news/">WebAssembly Weekly</a></li>
+<li>...等</li>
+</ul>
+</li>
+<li>其它各種一時想不起來或是非預期的來源</li>
+</ul>
+<p>會做這個服務有幾個原因，一個是我其實本來就有在轉發前端相關的文章連結，不過大多丟在一些非公開的地方，並且這些文章連結都沒好好整理，一直都有想找個書籤服務弄起來，然後這陣子看到<a href="https://wanqu.co/">灣區日報</a>和<a href="https://t.me/JustShareChannel">吹水 Just Share</a> 覺得也可以來做類似的傳播管道，研究和思考了好一陣子，最後決定花錢訂閱了個 <a href="https://pinboard.in/">Pinboard</a> 服務來收集和管理連結，Pinboard 雖然介面沒找什麼設計師，看起來很陽春，不過其實他還蠻靈活的，API 很簡單可以用，不用 oauth，只要帶 token 發請求就可以，和 Telegram Bot 蠻像的，所以其實也不少工具可以用，Android、iOS、Firefox 都有，隨時看到相關的文章都可以很快的把連結丟進 Pinboard。</p>
+<p>連結進 Pinboard 之後，就有個轉發的工具來把這連結丟去 Twitter 和 Telegram，轉發的程式也放在 GitHub 上，叫 <a href="https://github.com/othree/pinboardto">pinboardto</a>，Python 寫的，本來有想趁機玩玩看 Rust，不過研究一下覺得還是先用 Python 把基本款弄出來，裡面東西很簡單沒什麼技術難題，並且不依靠外部儲存（資料庫、檔案），同步的機制是靠系統時間和 cronjob，所以不知什麼原因錯過就錯過了，不過因為這服務也沒有這麼要求可靠性，所以還好。</p>
+<p>Facebook 的部分，本來有想接到 Fire-and-Forget 前端轉貼總部 去的，可是 FB 那邊弄不到永久有效的 token 就弄下去。</p>
+<p>最後成本部分，這個服務其實對我來說蠻低成本的，主要固定支出就只有 Pinboard 的年費，不過本來就要好好收集算是本來就要花，轉發服務掛在現有的主機上，最後就是 iPad 上有花錢買一個 Pinboard 的 app，不過其實也還沒有滿意就是，不知道為什麼抓 Twitter 的網頁 title 都會抓錯。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000932" baseName="language-server-protocol">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-07-28</b:date>
+				<b:time>23:59:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Language Server Protocol</b:title>
+			<b:content>
+				<b:summary> 最近才注意到 Language Server Protocol （官方中文介紹）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。 LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 Language Server Protocol 了。 LSP 是架構在 JSON-RPC 這個 protocol...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr"><img src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w" /></a></p>
+<p>最近才注意到 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> （<a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol">官方中文介紹</a>）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。</p>
+<p>LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> 了。</p>
+<p>LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  <a href="http://langserver.org/">langserver.org</a> 上有一份<a href="http://langserver.org/#implementations-server#implementations-client">清單</a>介紹各個 client 的支援狀況。</p>
+<p>送到 Language Server 的指令，目前 Protocol 可以提供以下功能：</p>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion">Completion</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">Hover Information</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp">Signature Help</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition">Goto Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition">Goto Type Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation">Goto Implementation</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references">Find References</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction">Action</a>, fix code</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens">Code Lens</a>, information for specific position</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting">Formatting</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics">Diagnostic</a>, 像是 code lint</li>
+</ul>
+<p>其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">官網的</a>，另一份則是 <a href="http://langserver.org#implementations-server">langserver.org</a> 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 <a href="https://about.sourcegraph.com/">Sourcegraph</a> 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。</p>
+<p>然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 <a href="http://typefox.io">TypeFox</a> 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in VS Code</a> 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 <a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio">JavaScript Language Service</a> 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關<a href="https://github.com/Microsoft/TypeScript/tree/master/src/services">程式碼</a>，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 <a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29">tsserver</a>，TypeScript 的大架構可以參考 <a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview">Architectural Overview</a> 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 <a href="https://github.com/sourcegraph/javascript-typescript-langserver">TypeScript Language Service</a> 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 <a href="https://github.com/theia-ide/typescript-language-server">TypeFox 的</a>比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 <a href="https://github.com/Microsoft/TypeScript/issues/11274">Issue 11274</a>，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。</p>
+<p>補充：另外有個 debugger 用的 <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000931" baseName="naming-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-07-21</b:date>
+				<b:time>23:12:15</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>命名記錄 1</b:title>
+			<b:content>
+				<b:summary> 記錄一下這兩年自己覺得還不錯的命名，本來是想累積更多再貼的。 Herculus 海克力士，用在測試服務名稱上，是希臘神話中的大力士，曾經完成十二偉業，這兩年還有部電影，取名源由其實是 Fate/stay night 中，他做為 Berserk 的 Servant 所持有的寶具，稱為 十二の試練，試練就聯想到 test ～ Erebor 用在資料庫相關的服務，哈比人歷險記的孤山的精靈語，因為孤山裡面有很多矮人的寶物，資料庫內的資料某種層面來說也算是個寶物。 Olympus 應該不用介紹來源了，用在 client 端自己寫的 API helper，取這個名字的原因是覺的客戶端跟 server 端要資料就如同在跟眾神請求一樣。...</b:summary>
+				<b:mainContent><p><a title="By Thorin Oakenshield II [CC BY-SA 4.0 
+(https://creativecommons.org/licenses/by-sa/4.0
+)], from Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg"><img width="512" alt="Карта Одинокой Горы " src="https://upload.wikimedia.org/wikipedia/commons/b/b3/%D0%9A%D0%B0%D1%80%D1%82%D0%B0_%D0%9E%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA%D0%BE%D0%B9_%D0%93%D0%BE%D1%80%D1%8B_.jpg" /></a></p>
+<p>記錄一下這兩年自己覺得還不錯的命名，本來是想累積更多再貼的。</p>
+<h4>Herculus</h4>
+<p><a href="https://zh.wikipedia.org/zh-tw/%E8%B5%AB%E6%8B%89%E5%85%8B%E5%8B%92%E6%96%AF">海克力士</a>，用在測試服務名稱上，是希臘神話中的大力士，曾經完成十二偉業，這兩年還有部電影，取名源由其實是 Fate/stay night 中，他做為 Berserk 的 Servant 所持有的寶具，稱為 <strong>十二の試練</strong>，試練就聯想到 test ～</p>
+<h4>Erebor</h4>
+<p>用在資料庫相關的服務，哈比人歷險記的<a href="https://en.wikipedia.org/wiki/Lonely_Mountain">孤山</a>的精靈語，因為孤山裡面有很多矮人的寶物，資料庫內的資料某種層面來說也算是個寶物。</p>
+<h4>Olympus</h4>
+<p>應該不用介紹來源了，用在 client 端自己寫的 API helper，取這個名字的原因是覺的客戶端跟 server 端要資料就如同在跟眾神請求一樣。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000930" baseName="quotation">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-07-17</b:date>
+				<b:time>00:39:20</b:time>
+			</b:datetime>
+			<b:category>others</b:category>
+			<b:title>引號</b:title>
+			<b:content>
+				<b:summary> 記錄一下搞 i18n 的一些發現，首先是引號，一般寫程式用的單雙引號 '&quot; 是沒分開關的，不過這和寫作的不一樣，當初 ASCII Code 編定時也是因為資源有限所以才不分開引號還是關引號，不過現在其實這些標點符號都已經有區分的版本了，在 Mac 上也都有快速鍵輸入，像是： &quot; : opt + [ &quot; : opt + shift + [ ' : opt + ] ' : opt + shift + ] 一般文字我還蠻喜歡把普通的單引號雙引號都轉成這種，有個意外的好處就是放在 JSON 裡的字串內時，不需要用 \ 跳脫，肉眼看起來和諧許多。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28562524947/" title="Qutation Marks by othree, on Flickr"><img src="https://farm2.staticflickr.com/1786/28562524947_6b41f2c99a_b.jpg" width="233" height="454" alt="Qutation Marks, " srcset="https://farm2.staticflickr.com/1786/28562524947_6b41f2c99a_b.jpg 466w" /></a></p>
+<p>記錄一下搞 i18n 的一些發現，首先是引號，一般寫程式用的單雙引號 <code>'&quot;</code> 是沒分開關的，不過這和寫作的不一樣，當初 ASCII Code 編定時也是因為資源有限所以才不分開引號還是關引號，不過現在其實這些標點符號都已經有區分的版本了，在 Mac 上也都有快速鍵輸入，像是：</p>
+<ul>
+<li><code>&quot;</code> :  <code>opt + [</code></li>
+<li><code>&quot;</code> :  <code>opt + shift + [</code></li>
+<li><code>'</code> :  <code>opt + ]</code></li>
+<li><code>'</code> :  <code>opt + shift + ]</code></li>
+</ul>
+<p>一般文字我還蠻喜歡把普通的單引號雙引號都轉成這種，有個意外的好處就是放在 JSON 裡的字串內時，不需要用 <code>\</code> 跳脫，肉眼看起來和諧許多。</p>
+<p>然後當初實做 Markdown 的 John Gruber 有個工具叫 <a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 可以來處理單雙引號的轉換，這工具當年常和 Markdown 一起合作，我則是有把它 port 到 <a href="https://www.npmjs.com/package/smartypants">JavaScript</a>，然後其實有些語言的引號不是這種點點得，像是大家都知道的中日文的 <code>「」</code> ，我要提的則是俄文用的是箭頭引號 <code>«»</code> 叫 Guillemet，長的和<a href="https://zh.wikipedia.org/wiki/%E4%B9%A6%E5%90%8D%E5%8F%B7">書名號</a>很像，不過大小就有差，當然 Guillemet 也有單線條的版本 <code>‹›</code>，輸入方法如下：</p>
+<ul>
+<li><code>«</code> :  <code>opt + \</code></li>
+<li><code>»</code> :  <code>opt + shift + \</code></li>
+<li><code>‹</code> :  <code>opt + shift + 3</code></li>
+<li><code>›</code> :  <code>opt + shift + 4</code></li>
+</ul>
+<p>德文又比較特別，左邊的引號是放在底部的 <code>„</code>，輸入方法為：</p>
+<ul>
+<li><code>„</code> : <code>opt + shift + w</code></li>
+</ul>
+<p>當然這些不同語言的不同型式好像現在也沒有講究一定要用，我隨便找一些該語言的新聞網站也還是很多用普通的雙引號，而且實際上這些引號的組合很多，<a href="https://en.wikipedia.org/wiki/Quotation_mark">wikipedia</a> 上有人整理好。</p>
+<p>另外想特別提一下西班牙文，它的問句和驚嘆句，除了在句尾加問號和驚嘆號之外，還可以在句首加上反過來的問號和驚嘆號，一樣，現在似乎也沒一定要這樣寫了，輸入方法為：</p>
+<ul>
+<li><code>¿</code> : <code>opt + shift + /</code></li>
+<li><code>¡</code> : <code>opt + 1</code></li>
+</ul>
+<p>最後補篇少數派的文章 <a href="https://sspai.com/post/45516">别再用「六个点」当省略号了，这些标点都有更规范的输入方式</a>。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>

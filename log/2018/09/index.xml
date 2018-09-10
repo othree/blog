@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2018-09">September 2018</b:listData>
+
+			<b:previous>
+				<b:mTitle>August 2018</b:mTitle>
+				<b:mDate>2018/08</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000935" baseName="eslint-plugin-pep8-blank-lines">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-08</b:date>
+				<b:time>10:24:24</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>eslint-plugin-pep8-blank-lines</b:title>
+			<b:content>
+				<b:summary> 我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 PEP8 coding style 中關於空行的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。 於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 padding-line-between-statements 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 sourceCode 來一行一行看，不過同時也要知道該行的 context...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
+<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
+<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;standard&quot;,
+ 
+  &quot;plugins&quot;: [
+    &quot;pep8-blank-lines&quot;,
+    &quot;no-parameter-e&quot;
+  ],
+ 
+  &quot;rules&quot;: {
+    &quot;semi&quot;: [2, &quot;always&quot;],
+    &quot;no-extra-semi&quot;: 2,
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
+    &quot;no-multiple-empty-lines&quot;: 0,
+    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
+    &quot;no-parameter-e/no-parameter-e&quot;: 2
+  }
+}
+</code></pre>
+<p>這組其實也是我目前在用的設定啦～</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000934" baseName="tern-022-released">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-02</b:date>
+				<b:time>17:41:32</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Tern 0.22 released</b:title>
+			<b:content>
+				<b:summary>First Tern release in a year and a half today https://t.co/1Ws7zYEJSd . All thanks to @othree picking up maintenance!-- Marijn Haverbeke (@MarijnJH) 2018年8月28日 大約七月初的時候，我開始接手幫忙維護 Tern，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是...</b:summary>
+				<b:mainContent><blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
+<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
+<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
+<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(&quot;:Symbol.iterator&quot;, [], null,
+                                           new HasMethodCall(&quot;next&quot;, [], null,
+                                                             new GetProp(&quot;value&quot;, target))))
+</code></pre>
+<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

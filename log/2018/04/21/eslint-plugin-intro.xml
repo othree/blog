@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000923" baseName="eslint-plugin-intro">ESLint Plugin 入門</b:listData>
+
+			<b:previous>
+				<b:mTitle>Immer 原理</b:mTitle>
+				<b:mDate>2018-04-19</b:mDate>
+				<b:mBase>immer</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>TFN 域名轉出</b:mTitle>
+				<b:mDate>2018-05-02</b:mDate>
+				<b:mBase>tfn-domain-transfer-out</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000923" baseName="eslint-plugin-intro">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-04-21</b:date>
+				<b:time>21:17:13</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>ESLint Plugin 入門</b:title>
+			<b:content>
+				<b:summary> 最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 eslint-plugin-no-parameter-e，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 e 的話就警報，這條 rule 其實是為了避免把 error 或 event 簡寫成 e，會容易混淆。 接下來進入正題，ESLint 基本上就是透過 ESPree 這個 parser 先把程式碼轉為 ESTree 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr"><img src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w" /></a></p>
+<p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
+<p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
+<p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
+<p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
+<pre><code class="language-javascript">const rule = require('../rule.js')
+const RuleTester = require('eslint').RuleTester
+
+const ruleTester = new RuleTester();
+
+ruleTester.run('no-parameter-e', rule, {
+  valid: [
+    'function a (event) {}',
+  ],
+  invalid: [
+    {
+      code: 'function e (e) {}',
+      errors: [{ message }],
+    }
+  ],
+});
+</code></pre>
+<p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
+<p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
+<p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
