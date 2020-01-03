@@ -4,11 +4,38 @@
 <title>O3noBLOG - mac</title>
 <link>https://blog.othree.net//log/ mac/</link>
 <description></description>
-<copyright>Copyright 2017</copyright>
-<lastBuildDate>2017-10-23 23:02</lastBuildDate>
+<copyright>Copyright 2018</copyright>
+<lastBuildDate>2018-09-26 11:49</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Homebrew rollback to MySQL 5.7</title>
+<description><![CDATA[<p>最近 Mac 的 homebrew 預設的 MySQL 已經改到 8，然後產生了些相容性問題，像是 GUI 不支援之類的，所以提供一下方法回到 5.7</p>
+<pre><code class="language-sh">brew uninstall mysql
+brew install mysql@5.7
+brew link --force mysql@5.7
+</code></pre>
+<p>然後清空舊資料重建新的</p>
+<pre><code class="language-sh">rm -rf /usr/local/var/mysql/
+mysqld --initialize
+</code></pre>
+<p>其中第二個步驟會產生新的 root 密碼，先複製下來，啟動服務並修改密碼：</p>
+<pre><code class="language-sh">brew services start mysql@5.7
+mysqladmin -u root -p password
+</code></pre>
+<p>照指令操作，應該是先填前一步產生的密碼，然後輸入新密碼、再次輸入新密碼，這樣就 ok 了，剩下就是找個 GUI 或是匯入資料之類的。</p>
+<p>參考資料：</p>
+<ul>
+<li><a href="https://actom.me/blog/macos-brew-%E5%AE%89%E8%A3%85-mysql-8-0%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99.html">macos brew 安装 mysql 8.0，客户端连接报错 - 积跬步，行千里</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2018/09/26/homebrew-rollback-mysql-57/</link>
+<guid>https://blog.othree.net/log/2018/09/26/homebrew-rollback-mysql-57/</guid>
+<category>mac</category>
+<pubDate>2018-09-26 11:49</pubDate>
+</item>
 
 <item>
 <title>Apple 電話支援</title>
@@ -264,19 +291,6 @@ ln -s d8 js</code></pre>
 <guid>https://blog.othree.net/log/2005/07/26/my-ibook/</guid>
 <category>mac</category>
 <pubDate>2005-07-26 01:20</pubDate>
-</item>
-
-<item>
-<title>KeyNote轉場特效Demo</title>
-<description><![CDATA[<p><a href="http://blog.othree.net/log/2005/07/04/keynote_transiotion_demo/KeyNoteDemo.mov" class="right"><img src="http://blog.othree.net/log/2005/07/04/keynote_transiotion_demo/KeyNoteDemo.png" alt="KeyNote Demo抓圖" height="192" width="256" /></a></p>
-
-<p>傳聞蘋果的簡報軟體<a href="http://www.apple.com.tw/iwork/keynote/index.html">Keynote</a>的轉場特效很讚，入手iBook後當然要好好來玩玩看，雖然一些是在影像剪接中常見的效果，不過還是很驚豔，於是我輸出了一個Demo，幾乎每種轉場特效都有了（Burn和Flash我的小白沒辦法顯示），只要有<a href="http://www.apple.com.tw/quicktime/">Quicktime</a>就可以看了，如果沒裝Quicktime只裝了<a href="http://www.free-codecs.com/download/QuickTime_Alternative.htm">Quicktime Alternative</a>，那可能要辛苦點，一直暫停播放暫停播放了^^b。<a href="http://blog.othree.net/keynote_transiotion_demo/KeyNoteDemo.mov">按此下載</a>，檔案大小約4MB。</p>
-
-<p>另外要徵求可以在OSX上錄下電腦畫面的軟體，想把Safari的RSS功能錄下來。</p>]]></description>
-<link>https://blog.othree.net/log/2005/07/04/keynote-transiotion-demo/</link>
-<guid>https://blog.othree.net/log/2005/07/04/keynote-transiotion-demo/</guid>
-<category>mac</category>
-<pubDate>2005-07-04 23:48</pubDate>
 </item>
 
 

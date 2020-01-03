@@ -5,10 +5,24 @@
 <link>https://blog.othree.net//log/ vim/</link>
 <description></description>
 <copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-07-28 23:59</lastBuildDate>
+<lastBuildDate>2018-11-29 11:23</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>VimConf 2018</title>
+<description><![CDATA[<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Next Vim version is decided in Tokyo: Vim 2000! <a href="https://twitter.com/hashtag/vimconf?src=hash&amp;ref_src=twsrc%5Etfw">#vimconf</a> <a href="https://t.co/lt83pgnxkH">pic.twitter.com/lt83pgnxkH</a></p>-- Ruslan Osipov (@antistatuquo) <a href="https://twitter.com/antistatuquo/status/1066541845407137793?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的<a href="https://vimconf.wordpress.com/2018/11/25/vimconf-2018/">投影片收集</a>，我想在這介紹其中三個分享，第一個是 <a href="https://docs.google.com/presentation/d/e/2PACX-1vQKaWJY8w6QJpebvuzg334RfLDbQHv4-J_06yFxdTzLrrjhE_y5iuzA-JxCCuFdUAZQB2QQsidF_mys/pub?start=false&amp;loop=false&amp;delayms=3000#slide=id.p">Effective Modern Vim scripting</a>，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的 synchronous/asynchronous process 機制的程式要怎麼寫，有興趣寫 Vim8 asynchronous script 的人可以參考一下，要找整理好的範例其實不是很好找。</p>
+<p>第二個想介紹的是 mattn 的 <a href="https://docs.google.com/presentation/d/e/2PACX-1vTj2uCbuCffhaLVBZE6biI538GG6jMi1INbku-T9q5hu5W0zGLwuibN3m5xbEuqdUFTDnhdhtikPyTi/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.p">What is the next feature?</a> 這段分享主要是在介紹 <a href="https://vim-jp.org/">vim-jp</a> 社群，也是 VimConf 的主辦社群，這個社群還蠻活躍的，而和一般的社群比較不一樣的地方是他不只是使用者社群，也是個開發者社群，有在協助幫忙日本想貢獻 Vim 的人，包括像是資源整合、避免重工、協助轉發 bug report 和 patch，還有翻譯文件和一些文件撰寫等，接著就介紹了一些 vim-jp 貢獻的東西，像是 color emoji、lambda 之類的</p>
+<p>最後一個就是 Bram 的 <a href="https://vimconf.org/2018/slides/Vim_From-hjkl-to-a-platform-for-plugins.pdf">From hjkl To a plaform of plugins</a>，介紹了 Vim 的一些發展史，主要是 plugin 相關的，也提到 Vim scripts performance 的問題（有個建議是換台更快的電腦），最後一段還提到一些未來可能的新功能，其中兩個我很有興趣，第一個是 Bram 打算處理 Plugin dependency 的問題了，投影片中有一些目前可能的解決方法，當然看起來都是走 Vim8 的 package 機制。另外一個則是 text properties，就是可以給一段文字 meta data，這個功能我非常的感興趣，因為這可以用來改善現在的 syntax highlight 機制，理想上，我可以非同步的把程式碼丟給外部的 JS parser tokenize，然後利用結果來加上 text properties，syntax highlight 再根據這個資訊來決定用那個 Highlight Group，這可以解決我的 <a href="https://github.com/othree/yajs.vim">yajs</a> 一直無法解決的 arrow function 的判斷難題，不過還沒預計何時會出來，只能慢慢等了。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/11/29/vimconf-2018/</link>
+<guid>https://blog.othree.net/log/2018/11/29/vimconf-2018/</guid>
+<category>vim</category>
+<pubDate>2018-11-29 11:23</pubDate>
+</item>
 
 <item>
 <title>Language Server Protocol</title>
@@ -518,39 +532,6 @@ make install
 <guid>https://blog.othree.net/log/2013/07/04/vim-airline/</guid>
 <category>vim</category>
 <pubDate>2013-07-04 18:15</pubDate>
-</item>
-
-<item>
-<title>autocomplpop + snipmate</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w" /></a></p>
-
-<p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
-
-<p>其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。</p>
-
-<p>這次不用改檔案，設定有<a href="https://github.com/othree/vim-autocomplpop/blob/master/doc/acp.txt#L82">設對</a>：</p>
-
-<pre><code>let g:acp_behaviorSnipmateLength = 1
-</code></pre>
-
-<p>輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。</p>
-
-<p>最後要補充一下，我 fork 的 autocomplpop 是原作者 ns9tks 拆出一些 component 的版本，所以會需要安裝 <a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a>，新的 snipmate 也有相依的 plugin：<a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a> 和 <a href="https://github.com/tomtom/tlib_vim">tlib</a>，而且它也不含 snippets，東西在另外一個 <a href="https://github.com/honza/vim-snippets">vim-snippets</a>，其實有點多，蠻混亂的，所以整理一下總共要裝哪些 plugin：</p>
-
-<ul>
-<li><a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a></li>
-<li><a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a></li>
-<li><a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a></li>
-<li><a href="https://github.com/tomtom/tlib_vim">tlib</a></li>
-<li><a href="https://github.com/garbas/vim-snipmate">vim-snipmate</a></li>
-<li><a href="https://github.com/honza/vim-snippets">vim-snippets</a></li>
-</ul>
-]]>
-</description>
-<link>https://blog.othree.net/log/2013/06/25/autocomplpop-and-snipmate/</link>
-<guid>https://blog.othree.net/log/2013/06/25/autocomplpop-and-snipmate/</guid>
-<category>vim</category>
-<pubDate>2013-06-25 00:46</pubDate>
 </item>
 
 

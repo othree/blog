@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000963" baseName="activation-behavior">作動行為 Activation Behavior</b:listData>
+
+			<b:previous>
+				<b:mTitle>Circle CI run Terraform and AWS deployment</b:mTitle>
+				<b:mDate>2019-08-22</b:mDate>
+				<b:mBase>circleci-terraform-aws-deploy</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>ENTER or SPACE, KEYDOWN or KEYUP</b:mTitle>
+				<b:mDate>2019-10-22</b:mDate>
+				<b:mBase>enter-space-keydown-keyup</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000963" baseName="activation-behavior">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-10-20</b:date>
+				<b:time>14:22:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>作動行為 Activation Behavior</b:title>
+			<b:content>
+				<b:summary>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程： 想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）-- Miau Huang (@miau715) October 14, 2019 然後 Jedi 提供了一個題目： 困難的簡單習題（平均起來就是中階）：讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。-- Jedi (@JediLin)...</b:summary>
+				<b:mainContent><p>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程：</p>
+<blockquote class="twitter-tweet" data-theme="light"><p lang="zh" dir="ltr">想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）</p>-- Miau Huang (@miau715) <a href="https://twitter.com/miau715/status/1183625099137540098?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>然後 Jedi 提供了一個題目：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">困難的簡單習題（平均起來就是中階）：<br/>讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。</p>-- Jedi (@JediLin) <a href="https://twitter.com/JediLin/status/1183634431929503744?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>後來米奧大人真的交作業了，也有提出一些問題，然後卡西有回應：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">button 比較明顯的問題有：<br/>* 點了 button 後不放開滑鼠，移到 button 外，不該 active 該 button ，但該取得 focus<br/>* button 上的文字不該被選取<br/>* keyup 該觸發 button 上的 onclick</p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1184838289603231744?ref_src=twsrc%5Etfw">October 17, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>其中，「keyup 該觸發 button 上的 onclick」這句引起了我的興趣。</p>
+<p>為了要顧及到網頁親和力，所有的控制元件的操作都應該要可以用鍵盤執行，所以像是 button 的動作也應該要可以用鍵盤控制，但是其實我以前一直搞不清楚，這之間正確的關係應該是怎樣，就三種可能性：</p>
+<ul>
+<li>key 事件觸發 click 事件，click 事件有 default handler</li>
+<li>click 事件觸發 key 事件，key 事件有 default handler</li>
+<li>click 事件和 key 事件都有同一個 default handler</li>
+</ul>
+<p>當我看到卡西那段文字的時候，我覺得他應該說的是有憑據的，不過我也覺得有些不正確，像是就我的認知，button 的 key 事件預設是不會觸發 click 事件的，於是我就花了點時間研究一下網路標準，這次終於找到規範和正確的關係了。</p>
+<p>我先從 button 標籤開始查起，然後注意到一段，在說明 button 的 <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> 行為應該如何的文字，行為分成 submit button、reset button 和 button 三種，其中前兩個就像是在說 submit button 和 reset button 的行為一樣，所以我就了解到，activation behavior 就是我要找的關鍵字了，目前將它翻譯為「作動行為」。</p>
+<p>然後在 <a href="https://html.spec.whatwg.org/multipage/interaction.html#activation">HTML 6.3 Activation</a> 找到：</p>
+<blockquote>
+<p>Certain elements in HTML have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a>, which means that the user  can activate them. This is always caused by a <code>click</code> event.</p>
+<p>The user agent should allow the user to manually trigger elements that have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation   behavior</a>, for instance using keyboard or voice input, or through mouse clicks. When the  user triggers an element with a defined <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> in a manner other than  clicking it, the default action of the interaction event must be to <a href="https://html.spec.whatwg.org/multipage/webappapis.html#fire-a-click-event">fire a <code>click</code> event</a> at the element.</p>
+</blockquote>
+<p>第一段就是說作動行為（activation behavior）都是 <code>click</code> 事件觸發，第二段則是說瀏覽器要讓其它方法（像是鍵盤、語音操作等）可以觸發作動行為的話，實做的方法應該是在該事件的處理器（event handler）內觸發 <code>click</code> 事件來觸發該 HTML 元素的作動行為。這段文字就可以證明卡西說的基本上沒錯，另外就是我有疑惑的，應該是 <code>keydown</code> 還是 <code>keyup</code> 事件呢？根據我自己的實驗結果應該是要用 <code>keydown</code>，不過總還是想找一下標準定義的出處，雖然沒有找到很明確的文字說明，不過 <a href="https://www.w3.org/TR/uievents/#event-flow-activation">UI Events 3.5. Activation triggers and behavior</a> 裡面的 EXAMPLE 4 內確實是寫 keydown event，當然 <code>keydown</code> 的時間點也比較符合期待，目前在不同標準文件內看到的範例也都是用 keydown。</p>
+<p>查到這邊大概就可以確定，正確的關係應該是「key 事件觸發 click 事件，click 事件有 default handler」，<del>不過卡西說的小錯誤是應該要用 keydown 事件，然後我在 twitter 有回說普通 button 不應該 keydown 觸發 click 則是我當時的錯誤認知</del>（請見 <a href="https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/">ENTER or SPACE, KEYDOWN or KEYUP</a>）。</p>
+<p>再來，其實我還很好奇，哪裡有定義不同的元素分別用哪些按鍵 <strong>active</strong> 呢？因為表單送出是用 <kbd>ENTER</kbd> 鍵，但是像是 checkbox 的狀態切換卻是用 <kbd>SPACE</kbd> 鍵；上面提供的幾份文件也都沒講到這部分的定義，有種刻意避開的感覺，後來又找了許久才終於找到，其實是放在 WAI-ARIA Authoring Practices 這份 Working Group Note 內，拿 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-4">checkbox</a> 為例，在它的 Keyboard Interaction 段落內就明白寫了：</p>
+<blockquote>
+<p>When the checkbox has focus, pressing the Space key changes the state of the checkbox.</p>
+</blockquote>
+<p>當然也有 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-3">button</a> 的規範，就是同時有定義 <code>space</code> 和 <code>enter</code> ；由於這份文件是 Working Group Note，規範的硬性比較低，這應該也是故意為之的。</p>
+<p>最後來整理一下，首先是 HTML 文件有定義，預設的作動行為都是透過 <code>click</code> 事件觸發，但是同時也要保留其它操作介面觸發作動行為的可能性，像是常見的鍵盤行為，而其它操作方式都要透過觸發 <code>click</code> 事件的方式來觸發作動行為；再來就是不同 HTML 元素的作動行為要做哪些事情也是在 HTML 文件內；至於不同 HTML 元素要支援哪些按鍵呢，這部分就要交叉參考 <a href="https://w3c.github.io/html-aria">ARIA in HTML</a> 和 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/">WAI-ARIA Authoring Practices</a> 兩份文件了，前者用來查詢 HTML 元素對應的 ARIA role，後者可以根據 role 來判斷要支援哪些鍵盤按鍵。</p>
+<p>以後要做自訂的控制元件的時候，就可以正大光明的把主要的動作寫在 onclick 事件下了（然後根據情況去加上 key event）。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

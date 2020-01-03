@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2019-04">April 2019</b:listData>
+
+			<b:previous>
+				<b:mTitle>March 2019</b:mTitle>
+				<b:mDate>2019/03</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>May 2019</b:mTitle>
+				<b:mDate>2019/05</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000955" baseName="glob">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-04-30</b:date>
+				<b:time>23:32:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>glob</b:title>
+			<b:content>
+				<b:summary>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如： ls *.js 後面的 *.js 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 man glob.7 或是 man 7 glob 就可以找到官方文件了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 ? 和 * 雖然是任意字元，但是 / 不屬於任意字元，/ 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 ls...</b:summary>
+				<b:mainContent><p>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如：</p>
+<pre><code class="language-sh">ls *.js
+</code></pre>
+<p>後面的 <code>*.js</code> 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 <code>man glob.7</code> 或是 <code>man 7 glob</code> 就可以找到<a href="http://man7.org/linux/man-pages/man7/glob.7.html">官方文件</a>了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 <code>?</code> 和 <code>*</code> 雖然是任意字元，但是 <code>/</code> 不屬於任意字元，<code>/</code> 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 <code>ls subfolder/*</code> 只會印出該層子目錄下的檔案，而不是把第二第三層子目錄下的東西也都印出來，雖然有 <code>**</code> 這個寫法，不過我是在 nodejs 開始蓬勃發展之後才在 node-glob 文件上看到的。</p>
+<p>其實我第一次看到 <strong>glob</strong> 這個單字也是 <a href="https://github.com/isaacs/node-glob">node-glob</a>，不過當時以為 node-glob 和命令列的那套不相容，只是借用名字而已，因為那個 <code>**/*.js</code> 的語法我以前沒看過，一直以為是 node-glob 自己做的，直到這次研究才發現其實 <code>**</code> 是 <a href="http://man7.org/linux/man-pages/man1/bash.1.html">bash</a> 提供的擴充語法，bash 的 extglob 提供了一些更接近正規表示式的語法：</p>
+<pre><code>?(pattern-list)
+       Matches zero or one occurrence of the given patterns
+*(pattern-list)
+       Matches zero or more occurrences of the given patterns
++(pattern-list)
+       Matches one or more occurrences of the given patterns
+@(pattern-list)
+       Matches one of the given patterns
+!(pattern-list)
+       Matches anything except one of the given patterns
+</code></pre>
+<p>另外還有很多設定可以調整 glob 的行為，其中一樣叫做 <code>globstar</code> 的，就是讓 <code>**</code> 可以 recursive 的 match 子目錄的檔案，這個功能是在 <a href="https://github.com/bminor/bash/blob/3185942a5234e26ab13fa02f9c51d340cec514f8/CHANGES#L524">bash 4.0 alpha</a> 版的時候新增的，到今天其實也已經超過十年了。</p>
+<p>至於為什麼會研究起 glob 呢？是因為我在做 jsctags-oasis 時，要盡量的支援 <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a> 支援的參數，其中做到 <code>exclude</code> 的時候，一開始偷懶用了 node-glob 的 ignore，但是實際上要拿 <a href="https://github.com/ludovicchabant/vim-gutentags">vim-gutentags</a> 來用時卻行為不如預期，為了能正確支援就研究起這實際上怎麼串起來的，首先是 vim-gutentags 會拿 Vim 那邊的 <a href="https://vimhelp.org/options.txt.html#%27wildignore%27">wildignore</a> 送給 ctags，wildignore 使用的表達式是 Vim 自己的 <a href="https://vimhelp.org/autocmd.txt.html#file-pattern">filepattern</a>，和 glob 有點接近，像是 <code>*</code> 都是正規表示式的 <code>.*</code>，還有 <code>?</code> 都是正規表示式的 <code>.</code>，不過 <code>*</code> 有特別說到：</p>
+<blockquote>
+<p>Unusual: includes path separators</p>
+</blockquote>
+<p>這行為就和 glob 不一樣了，所以假設 ctags 的 <code>exclude</code> 也是用 glob 表示式，那是不是表示 vim-gutentags 這邊實做有不正確呢？結果我發現 Exuberant Ctags 的文件是這樣說的：</p>
+<blockquote>
+<p>each <em>pattern</em> specified using this
+option will be compared against both the complete path (e.g.
+some/path/base.ext) and the base name (e.g. base.ext) of the
+file, thus allowing patterns which match a given file name
+irrespective of its path, or match only a specific path. If
+appropriate support is available from the runtime library of
+your C compiler, then <em>pattern</em> may contain the usual
+shell wildcards (not regular expressions) common on Unix (be
+sure to quote the option parameter to protect the wildcards
+from being expanded by the shell before being passed to
+<strong>ctags</strong>; also be aware that wildcards can match the
+slash character, '/').</p>
+</blockquote>
+<p>這時候就要感謝那時期的文件都有寫得很詳細，不用花時間去看程式碼，這邊的說明就是說會比對 basename （檔名加附檔名）和完整的 pathname，另外對於 wildcard 的支援則是看系統，是用 <a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">shell wildcards</a>，其實就是 glob 表達式，不過照這樣說，應該就和 Vim filepattern 不一樣了，研究許久才注意到關鍵的地方就在上面那段文件的最後一句，提到 wildcards 也會 match 到 <code>/</code> 字元，也就是最前面提到的 path separator，結果就是， Vim filepattern 和 Exuberant Ctags 的 <code>exclude</code> 用的表示式基本上是相容的，但是也因為特性就無法用 node-glob 的 <code>ignore</code> 來支援了。所以我就照著說明自己實做了比對的部分，然後有用到一個叫 <a href="https://www.npmjs.com/package/globrex">globrex</a> 的 npm package，這個是 <a href="https://www.npmjs.com/package/tiny-glob">tiny-glob</a> 底層用的工具，算是個偷吃步，不管 path separator 直接把 glob 轉成正規表示式的作法，根據原始碼，它會直接把 <code>*</code> 轉換成 <code>.*</code>，這樣就會 match 到 <code>/</code> 字元了，本來是偷吃步的作法，卻意外的剛好合用，理論上這樣就可以正確的支援 ctags 的 <code>exclude</code> 才是吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

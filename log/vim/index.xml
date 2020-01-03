@@ -9,6 +9,32 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000944" baseName="vimconf-2018">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-11-29</b:date>
+				<b:time>11:23:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>VimConf 2018</b:title>
+			<b:content>
+				<b:summary>Next Vim version is decided in Tokyo: Vim 2000! #vimconf pic.twitter.com/lt83pgnxkH-- Ruslan Osipov (@antistatuquo) November 25, 2018 11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的投影片收集，我想在這介紹其中三個分享，第一個是 Effective Modern Vim scripting，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的...</b:summary>
+				<b:mainContent><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Next Vim version is decided in Tokyo: Vim 2000! <a href="https://twitter.com/hashtag/vimconf?src=hash&amp;ref_src=twsrc%5Etfw">#vimconf</a> <a href="https://t.co/lt83pgnxkH">pic.twitter.com/lt83pgnxkH</a></p>-- Ruslan Osipov (@antistatuquo) <a href="https://twitter.com/antistatuquo/status/1066541845407137793?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的<a href="https://vimconf.wordpress.com/2018/11/25/vimconf-2018/">投影片收集</a>，我想在這介紹其中三個分享，第一個是 <a href="https://docs.google.com/presentation/d/e/2PACX-1vQKaWJY8w6QJpebvuzg334RfLDbQHv4-J_06yFxdTzLrrjhE_y5iuzA-JxCCuFdUAZQB2QQsidF_mys/pub?start=false&amp;loop=false&amp;delayms=3000#slide=id.p">Effective Modern Vim scripting</a>，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的 synchronous/asynchronous process 機制的程式要怎麼寫，有興趣寫 Vim8 asynchronous script 的人可以參考一下，要找整理好的範例其實不是很好找。</p>
+<p>第二個想介紹的是 mattn 的 <a href="https://docs.google.com/presentation/d/e/2PACX-1vTj2uCbuCffhaLVBZE6biI538GG6jMi1INbku-T9q5hu5W0zGLwuibN3m5xbEuqdUFTDnhdhtikPyTi/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.p">What is the next feature?</a> 這段分享主要是在介紹 <a href="https://vim-jp.org/">vim-jp</a> 社群，也是 VimConf 的主辦社群，這個社群還蠻活躍的，而和一般的社群比較不一樣的地方是他不只是使用者社群，也是個開發者社群，有在協助幫忙日本想貢獻 Vim 的人，包括像是資源整合、避免重工、協助轉發 bug report 和 patch，還有翻譯文件和一些文件撰寫等，接著就介紹了一些 vim-jp 貢獻的東西，像是 color emoji、lambda 之類的</p>
+<p>最後一個就是 Bram 的 <a href="https://vimconf.org/2018/slides/Vim_From-hjkl-to-a-platform-for-plugins.pdf">From hjkl To a plaform of plugins</a>，介紹了 Vim 的一些發展史，主要是 plugin 相關的，也提到 Vim scripts performance 的問題（有個建議是換台更快的電腦），最後一段還提到一些未來可能的新功能，其中兩個我很有興趣，第一個是 Bram 打算處理 Plugin dependency 的問題了，投影片中有一些目前可能的解決方法，當然看起來都是走 Vim8 的 package 機制。另外一個則是 text properties，就是可以給一段文字 meta data，這個功能我非常的感興趣，因為這可以用來改善現在的 syntax highlight 機制，理想上，我可以非同步的把程式碼丟給外部的 JS parser tokenize，然後利用結果來加上 text properties，syntax highlight 再根據這個資訊來決定用那個 Highlight Group，這可以解決我的 <a href="https://github.com/othree/yajs.vim">yajs</a> 一直無法解決的 arrow function 的判斷難題，不過還沒預計何時會出來，只能慢慢等了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000932" baseName="language-server-protocol">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -459,55 +485,6 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
 <p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
 
 <p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000822" baseName="jspcvim">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-11-30</b:date>
-				<b:time>18:37:08</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>JavaScript Parameter Complete</b:title>
-			<b:content>
-				<b:summary>前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 Web Crypto API，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 - 在裡面，像是 SHA-256 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 - 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 jspc.vim。 這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto...</b:summary>
-				<b:mainContent><p>前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.crypto">Web Crypto API</a>，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 <code>-</code> 在裡面，像是 <code>SHA-256</code> 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 <code>-</code> 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 <a href="https://github.com/othree/jspc.vim">jspc.vim</a>。</p>
-
-<p>這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto algorithm，還有各種事件名稱，Media Type 等，其實越做發現越多這類的選項，目前支援的東西包括：</p>
-
-<ul>
-<li>Web Crypto Algorithm Name</li>
-<li>Event Name for DOM, jQuery, Backbone</li>
-<li>HTTP Methods for XHR, fetch</li>
-<li>HTTP Headers, some values</li>
-<li>Locales for Intl</li>
-<li>HTML Tag Name for DOM API</li>
-<li>Image Type for canvas.toBlob, canvas.toDataURL</li>
-</ul>
-
-<p>這個 function 的原理還蠻簡單的，如果抓到游標位置看起來在字串內（以下用底線代表游標位置）：</p>
-
-<pre><code>n.addEventListener('cl_
-</code></pre>
-
-<p>然後就會往前找看看這是不是一個 function call 的內部，是的話去看看 function name，像是上面的範例就會找 <code>addEventListener</code>，然後就去內部先定義好的表單找看有沒有候選的項目，有的話就會根據字串內容去做過濾後然後給回來。</p>
-
-<p>如果前面有其他參數是不會受影響的，不過 function name 和字串要在同一行，然後除了 JavaScript 的語法用 <code>(</code> 做為判斷是不是 function call 之外，其實還有支援 CoffeeScript 那種只用空白接餐處的寫法：</p>
-
-<pre><code>n.addEventListener 'cl_
-</code></pre>
-
-<p>其實判斷方法很簡單，就是找空白前面不是 <code>,</code> 的話就是了，一時還想不到是不是有其他種語言的 function call 的語法跳脫這兩種寫法的，我想應該可以支援大部分的程式語言了，不過裡面的候選資料還需要人來做苦工，所以我只弄了 JavaScript 的 Web 相關的東西，然後同時給 CoffeeScript、LiveScript、TypeScript 用，安裝方法就照用 Pathogen 那套裝法就可以了裝起來直接用，因為實做上是把原本的 omni complete function 包起來，所以不用特別做什麼設定，就可以和其它自動補完的輔助工具合作，像是 <a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a> 和 <a href="https://github.com/Shougo/neocomplcache.vim">neocomplcache.vim</a>，其實本來是獨立一個 function 的，但是這樣要和 Neo Complete Cache 整合太難了，乾脆就走 Vim 的 omnicomplete 路線，結果意外的方便，最後就是有什麼問題歡迎提出摟～</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

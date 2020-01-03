@@ -4,11 +4,270 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-09-08 10:24</lastBuildDate>
+<copyright>Copyright 2019</copyright>
+<lastBuildDate>2019-08-22 23:02</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Circle CI run Terraform and AWS deployment</title>
+<description><![CDATA[<p>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來：</p>
+<p>Terraform 是用 hashicorp 官方的 <a href="https://hub.docker.com/r/hashicorp/terraform/">image</a>，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 <a href="https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command">BASH_ENV</a> 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command 執行：</p>
+<pre><code class="language-sh">echo &quot;export S3_ID=`terraform output s3_bucket_name`&quot; &gt;&gt; $BASH_ENV
+</code></pre>
+<p>當然你的 terraform module 要有定義好 output。</p>
+<p>第二個是重點是 <code>$BASH_ENV</code> 的值，個人建議是設定絕對路徑，直接寫出完整路徑，不要用其它環境變數來組合，然後位置要放在 working directory 內，好方便能  <code>persist_to_workspace</code>，這樣才能夠跨 job 使用，另外就是檔名建議不要用 <code>.</code> 開頭的隱藏檔名，我遇到過各種找不到檔案的錯誤訊息，然後 working directory 建議不要放在 home 目錄下，一來 <code>$BASH_ENV</code> 去用 <code>$HOME</code> 組合出來我遇到錯誤過，用 <code>~</code> 來寫路徑也是遇到錯誤過，二來不同 image 的 home 目錄路徑不同，如果要在 config 內直接寫死絕對路徑，建議直接定一個固定的位置，我現在是用：</p>
+<pre><code>/tmp/workspace
+</code></pre>
+<p>然後這樣後面就可以用官方的 s3 orb 下指令了：</p>
+<pre><code class="language-yaml">- aws-s3/sync:
+    from: build
+    to: &quot;s3://${S3_ID}&quot;
+    aws-region: &quot;ap-northeast-1&quot;
+</code></pre>
+]]></description>
+<link>https://blog.othree.net/log/2019/08/22/circleci-terraform-aws-deploy/</link>
+<guid>https://blog.othree.net/log/2019/08/22/circleci-terraform-aws-deploy/</guid>
+<category>script</category>
+<pubDate>2019-08-22 23:02</pubDate>
+</item>
+
+<item>
+<title>glob</title>
+<description><![CDATA[<p>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如：</p>
+<pre><code class="language-sh">ls *.js
+</code></pre>
+<p>後面的 <code>*.js</code> 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 <code>man glob.7</code> 或是 <code>man 7 glob</code> 就可以找到<a href="http://man7.org/linux/man-pages/man7/glob.7.html">官方文件</a>了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 <code>?</code> 和 <code>*</code> 雖然是任意字元，但是 <code>/</code> 不屬於任意字元，<code>/</code> 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 <code>ls subfolder/*</code> 只會印出該層子目錄下的檔案，而不是把第二第三層子目錄下的東西也都印出來，雖然有 <code>**</code> 這個寫法，不過我是在 nodejs 開始蓬勃發展之後才在 node-glob 文件上看到的。</p>
+<p>其實我第一次看到 <strong>glob</strong> 這個單字也是 <a href="https://github.com/isaacs/node-glob">node-glob</a>，不過當時以為 node-glob 和命令列的那套不相容，只是借用名字而已，因為那個 <code>**/*.js</code> 的語法我以前沒看過，一直以為是 node-glob 自己做的，直到這次研究才發現其實 <code>**</code> 是 <a href="http://man7.org/linux/man-pages/man1/bash.1.html">bash</a> 提供的擴充語法，bash 的 extglob 提供了一些更接近正規表示式的語法：</p>
+<pre><code>?(pattern-list)
+       Matches zero or one occurrence of the given patterns
+*(pattern-list)
+       Matches zero or more occurrences of the given patterns
++(pattern-list)
+       Matches one or more occurrences of the given patterns
+@(pattern-list)
+       Matches one of the given patterns
+!(pattern-list)
+       Matches anything except one of the given patterns
+</code></pre>
+<p>另外還有很多設定可以調整 glob 的行為，其中一樣叫做 <code>globstar</code> 的，就是讓 <code>**</code> 可以 recursive 的 match 子目錄的檔案，這個功能是在 <a href="https://github.com/bminor/bash/blob/3185942a5234e26ab13fa02f9c51d340cec514f8/CHANGES#L524">bash 4.0 alpha</a> 版的時候新增的，到今天其實也已經超過十年了。</p>
+<p>至於為什麼會研究起 glob 呢？是因為我在做 jsctags-oasis 時，要盡量的支援 <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a> 支援的參數，其中做到 <code>exclude</code> 的時候，一開始偷懶用了 node-glob 的 ignore，但是實際上要拿 <a href="https://github.com/ludovicchabant/vim-gutentags">vim-gutentags</a> 來用時卻行為不如預期，為了能正確支援就研究起這實際上怎麼串起來的，首先是 vim-gutentags 會拿 Vim 那邊的 <a href="https://vimhelp.org/options.txt.html#%27wildignore%27">wildignore</a> 送給 ctags，wildignore 使用的表達式是 Vim 自己的 <a href="https://vimhelp.org/autocmd.txt.html#file-pattern">filepattern</a>，和 glob 有點接近，像是 <code>*</code> 都是正規表示式的 <code>.*</code>，還有 <code>?</code> 都是正規表示式的 <code>.</code>，不過 <code>*</code> 有特別說到：</p>
+<blockquote>
+<p>Unusual: includes path separators</p>
+</blockquote>
+<p>這行為就和 glob 不一樣了，所以假設 ctags 的 <code>exclude</code> 也是用 glob 表示式，那是不是表示 vim-gutentags 這邊實做有不正確呢？結果我發現 Exuberant Ctags 的文件是這樣說的：</p>
+<blockquote>
+<p>each <em>pattern</em> specified using this
+option will be compared against both the complete path (e.g.
+some/path/base.ext) and the base name (e.g. base.ext) of the
+file, thus allowing patterns which match a given file name
+irrespective of its path, or match only a specific path. If
+appropriate support is available from the runtime library of
+your C compiler, then <em>pattern</em> may contain the usual
+shell wildcards (not regular expressions) common on Unix (be
+sure to quote the option parameter to protect the wildcards
+from being expanded by the shell before being passed to
+<strong>ctags</strong>; also be aware that wildcards can match the
+slash character, '/').</p>
+</blockquote>
+<p>這時候就要感謝那時期的文件都有寫得很詳細，不用花時間去看程式碼，這邊的說明就是說會比對 basename （檔名加附檔名）和完整的 pathname，另外對於 wildcard 的支援則是看系統，是用 <a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">shell wildcards</a>，其實就是 glob 表達式，不過照這樣說，應該就和 Vim filepattern 不一樣了，研究許久才注意到關鍵的地方就在上面那段文件的最後一句，提到 wildcards 也會 match 到 <code>/</code> 字元，也就是最前面提到的 path separator，結果就是， Vim filepattern 和 Exuberant Ctags 的 <code>exclude</code> 用的表示式基本上是相容的，但是也因為特性就無法用 node-glob 的 <code>ignore</code> 來支援了。所以我就照著說明自己實做了比對的部分，然後有用到一個叫 <a href="https://www.npmjs.com/package/globrex">globrex</a> 的 npm package，這個是 <a href="https://www.npmjs.com/package/tiny-glob">tiny-glob</a> 底層用的工具，算是個偷吃步，不管 path separator 直接把 glob 轉成正規表示式的作法，根據原始碼，它會直接把 <code>*</code> 轉換成 <code>.*</code>，這樣就會 match 到 <code>/</code> 字元了，本來是偷吃步的作法，卻意外的剛好合用，理論上這樣就可以正確的支援 ctags 的 <code>exclude</code> 才是吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2019/04/30/glob/</link>
+<guid>https://blog.othree.net/log/2019/04/30/glob/</guid>
+<category>script</category>
+<pubDate>2019-04-30 23:32</pubDate>
+</item>
+
+<item>
+<title>addEventListener 的第三個參數</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40460552953/" title="addEventListener by othree, on Flickr"><img src="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg" intrinsicsize="1024x787" width="1024" height="787" alt="addEventListener" srcset="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg 1024w, https://farm8.staticflickr.com/7917/40460552953_f337cc854a_h.jpg 1600w" /></a></p>
+<p>2007 年我寫過一篇一樣標題的 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，介紹了事件發生時， DOM Node 的 capture 和 bubbling，事隔十多年，前陣子定睛一看，發現 DOM spec 有變，第三個參數除了可以收 boolean 型別的 useCapture 之外，還可以收 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters">options</a> 物件，又稱為 <a href="https://github.com/WICG/EventListenerOptions">EventListenerOptions</a>，而這個 options 物件現在支援三個屬性，分別是：</p>
+<ul>
+<li><code>capture</code>－就是以前的第三個參數 useCapture，Boolean 型別。</li>
+<li><code>once</code>－新的選項，也是 Boolean 型別，用途就像是 jQuery 的 <a href="https://api.jquery.com/one/">one</a> 一樣，想不到現在也直接在 DOM 層原生支援了</li>
+<li><code>passive</code>－也是新選項，一樣是 Boolean 型別，用途是告訴瀏覽器，這個事件 handler function 會不會呼叫 <code>event.preventDefault</code> 來停止瀏覽器的原生行為，我最初其實是在 Google 的關於 <a href="https://developers.google.com/web/updates/2016/06/passive-event-listeners">scroll performance 的文件</a> 看到的，就是如果你是 scroll event，以前會因為瀏覽器要判斷會不會被 <code>preventDefault</code>，所以讓 scroll 的效能變差，加上這個選項可以直接告訴瀏覽器說沒有要 preventDefault 後，原生的事件行為就可以不管 event handler 直接處理了，如果裡面硬是執行 <code>event.preventDefault</code> 的話，那就會被忽略掉，然後根據使用的瀏覽器的話，有的會有警告訊息出現在 console。</li>
+</ul>
+<p>Passive Event 的效果也有人做了影片可以看（<a href="https://medium.com/@devlucky/about-passive-event-listeners-224ff620e68c">來源</a>）：</p>
+<div class="embed_16_9">
+  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NPM6172J22g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>EventListenerOptions 這個東西大概是在 2015 開始討論的，然後 <a href="https://discourse.wicg.io/t/eventlisteneroptions-and-passive-event-listeners-move-to-wicg/1386">2016</a> 進到 WICG 討論，瀏覽器開始實做，一開始就是只有 <code>passive</code> 和 <code>capture</code>，<code>once</code> 則是後來才加上的，所以可以看到 MDN 的瀏覽器支援度表格，<code>once</code> 還要比較新一點的瀏覽器才支援，像是 Chrome 51 就支援 <code>passive</code>，然後要到 55 才支援 <code>once</code>，如果再仔細看，會發現最後一列是 <code>touchstart</code>、<code>touchmove</code> 事件如果是在 document 層的話，預設改為 passive 事件，這是 2017 年 Chrome 主導修改的行為，Firefox 也有跟進，主要就是希望能讓這些事件處理預設效能好一點，這部分的行為修改其實到現在都還沒標準化，目前還是在 WICG 那邊有個 <a href="https://github.com/WICG/interventions/issues/18">open issue</a>，除了 touch 事件外，其實連 document 層的 wheel 事件也在 <a href="https://developers.google.com/web/updates/2019/02/scrolling-intervention">Chrome 73</a>，也就是現在的穩定版本也預設改為 passive 事件了，然後也是有 WICG  的 <a href="https://github.com/WICG/interventions/issues/64">open issue</a>，MDN 的表則是還沒有。</p>
+<p>EventListenerOptions 也是有 polyfill 和工具 package 的，首先來說一下 polyfill 吧，我知道的有 <a href="https://github.com/WebReflection/dom4">dom4</a>，其實搜尋一下還蠻容易找到其它的，不過差異沒很大，feature detection 的方式幾乎都是用 Object 的 getter 來看送進去的 options 物件的 <code>passive</code> 屬性有沒有被讀取過，有的話就表示瀏覽器有支援，然候 polyfill 其實也只有行為上的補完，不會真的讓效能提升，不過 polyfill 在現在的支援度下來看也是不太需要了。Package 的話有個 <a href="https://www.npmjs.com/package/default-passive-events">default-passive-events</a> 會幫忙把 scroll、wheel、mouse、touch 等等有需要的事件都改為預設 <code>passive: true</code>，如果是新專案先加一下似乎不錯，不過感覺上 Google 是很想都改掉的樣子，現在其實也只差 mouse 事件而已，應該是還怕影響太大不敢下手吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2019/03/20/third-argument-of-addeventlistener-2/</link>
+<guid>https://blog.othree.net/log/2019/03/20/third-argument-of-addeventlistener-2/</guid>
+<category>script</category>
+<pubDate>2019-03-20 23:52</pubDate>
+</item>
+
+<item>
+<title>async, await and try catch</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27075072839/" title="New Zeland by othree, on Flickr"><img src="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="New Zeland" srcset="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg 1024w, https://farm5.staticflickr.com/4536/27075072839_ef2586e741_h.jpg 1600w" /></a></p>
+<p>這篇想說一下 <code>async</code>﹑<code>await</code> 語法的一些小細節，首先從 <code>async</code> 來說吧，一般來說，async function 是在內部有需要用 <code>await</code> 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會<a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-async-functions-abstract-operations">自動被包成 Promise</a>，所以像下面的程式：</p>
+<pre><code class="language-js">async function wow () {
+    return Promise.resolve(100);
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code></pre>
+<p>就等同於：</p>
+<pre><code class="language-js">async function wow () {
+    return 100;
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code></pre>
+<p>和直接回 Promise value 比起來，效能上不會有什麼顯著差異，從建議的實做方法來看就是多一個判斷。再來看看 <code>await</code> 吧，首先一樣，<code>await</code> 一般是用來接 Promise 的，不過其實也是可以接非 Promise value 的</p>
+<pre><code class="language-js">async function wow () {
+  var r = await 1;
+  console.log(1);
+}
+
+wow();
+console.log(2);
+</code></pre>
+<p>所以這樣的程式碼也可以正確執行，不過 await 那邊的執行方式還是會維持非同步的（實際上應該是後面的東西都會用 Promise 包起來一次），所以這段程式碼的輸出會是先輸出 <code>2</code> 再輸出 <code>1</code>。</p>
+<p>再來這點可能比較多人知道，就是連續的多個 <code>await</code> 不會讓這些非同步操作同時開始：</p>
+<pre><code class="language-js">async function wow () {
+  const a = await fetch('/a');
+  const b = await fetch('/b');
+  const c = await fetch('/c');
+
+  return [a, b, c];
+}
+</code></pre>
+<p>這樣其實三個請求會照順序執行，<code>a</code> 有結果了才去要 <code>b</code>，<code>b</code> 有結果了才去要 <code>c</code>，而不是同時處理，如果要同時發出請求則還是需要用 <code>Promise.all</code>，然後不用 <code>async</code> 了：</p>
+<pre><code class="language-js">function wow () {
+  return Promise.all([
+    fetch('/a'),
+    fetch('/b'),
+    fetch('/c')
+  ]);
+}
+</code></pre>
+<p>不要  <code>await</code> 的話，也是可以先 assign 給變數的：</p>
+<pre><code class="language-js">function wow () {
+  const a = fetch('/a');
+  const b = fetch('/b');
+  const c = fetch('/c');
+
+  return Promise.all([a, b, c]);
+}
+</code></pre>
+<p>然後其實 <code>Promise.all</code> 是要所有的 Promise 都 fulfilled 時才會 resolve，另外一個角度來看，就是其中只要一個 rejected 的話，就不會 resolve，實際上使用起來變化有點少，而且要做忽略錯誤的 <code>fetch</code> 也有點麻煩，所以現在 TC39 還有個新的草案叫 <a href="https://docs.google.com/presentation/d/1fWK9kMsvn2o66Lk6QUw3yITEfsE87yjZdTngoLTsUQ0/edit#slide=id.g41da6c5107_0_0">Promise.allSettled</a>，不管是 resolve 還是 reject，只要所有參數內的 Promise 都結束了，<code>allSettled</code> 就會 resolve，目前這草案還在 stage 1，過幾天的會議有望升到 stage 2，不過這是題外話。</p>
+<p>最後一個想說的就是 <code>await</code> 處理 rejected Promise 的問題，如果是從 jQuery 時期就開始寫 Deferred/Promise 的人，可能會很習慣的把 Promise 的兩種狀態拿來當成值的一部份，事實上這也是 <code>jQuery.ajax</code> 的設計，如果用這種想法來寫 <code>await</code> 接值的時候，就會覺得很難處理 <code>rejected</code> 的狀態，因為要用 <code>try...catch</code>：</p>
+<pre><code class="language-js">async function wow () {
+  try {
+    const a = await fetch('/a');     
+  } catch (error) {
+    // deal with non-ok fetch
+  }
+}
+</code></pre>
+<p>要這樣寫還不如用舊的 <code>.then</code> 來接看起來還漂亮一點。不過實際上，這是錯誤的理解 Promise，Promise 不是用來取得兩種狀態用的，而是用來非同步取得單一個數值用的機制，而所謂 <code>rejected</code> 的狀態，其實就是發生非預期狀況（unexpected exception）的情形，這也就是為什麼 ECMAScript 版的 Promise 是用 <code>throw Error</code> 的方式來 reject Promise。</p>
+<p>我一直覺得用 HTTP 請求來比較這兩種設計蠻好理解的，使用 jQuery 的 <code>ajax</code>，server 端回非 200 的 status 的話，就會被當成是錯誤，然後回傳的 Promise 就會被 reject，但是在使用 ECMAScript Promise 的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 中，不管 server 端回應的 status code，fetch 都會 resolve，而會 reject 的情形，就只有網路有問題的時候，像是網路斷線、存取被拒絕（CORS）等完全碰不到遠端主機的情形，也就是對於一個 HTTP 請求來說，真正的非預期狀況，所以如果你有兩種狀況要處理，那應該是回傳值的一部份，後面再用 <code>if...else</code> 來做分支。</p>
+<p>回來看 <code>await</code> 的使用，究竟應該什麼時候來用 <code>try...catch</code> 呢，我自己有一個很簡單的初步判斷條件，就是這個取值的程式碼，如果不是非同步，沒有使用 <code>await</code> 的話，你會不會用 <code>try...catch</code> 包起來，不會的話，那改成非同步操作的程式碼應該也不用 <code>try...catch</code>。不過現實世界當然還是比較難一點，非同步的取值風險和狀況還是比較多的，例如 <code>fetch</code> 遇到網路問題會 reject，但是還是需要處理這種狀況，不用 <code>try...catch</code> 的話，怎樣寫比較好呢？我的想法是，用 <code>.then/catch</code> 處理好需要處理的情形，然後把結果包起來傳回去，所以要處理 <code>fetch</code> 的非預期狀況的話，就可以改成：</p>
+<pre><code class="language-js">async function wow () {
+  const a = await fetch('/a').catch(error =&gt; {
+    return {
+      ok: false,
+      status: -1,
+      error: error,  
+    };
+  });
+  
+  if (a.status === -1) {
+    // exception error handling
+  }
+}
+</code></pre>
+<p>這邊我設計成有非預期狀況時，status code 為 <code>-1</code>，並且把 error 資訊也傳回去，然後後面就可以直接拿來判斷是不是非預期狀況，當然也可以把這個處理包成一個自己的 <code>myFetch</code>：</p>
+<pre><code class="language-js">const myFetch = (url, options) =&gt;
+  fetch(url, options)
+    .catch(error =&gt; {
+      ok: false,
+      status: -1,
+      error: error,  
+    });
+</code></pre>
+<p>然後原來的程式就可以直接拿 <code>myFetch</code> 取代 <code>fetch</code> 了。</p>
+<p>如果要通用一點的，其實有一個叫 <a href="https://www.npmjs.com/package/await-to-js">await-to-js</a> 的套件我覺得蠻不錯的，直接拿官方的範例看吧：</p>
+<pre><code class="language-js">import to from 'await-to-js';
+
+async function asyncTaskWithCb(cb) {
+  let [err, user] = await to(UserModel.findById(1));
+  if (!user) return cb('No user found');
+}
+</code></pre>
+<p>它可以包裝 Promise 物件，然後不管那個 Promise 成功還是失敗，它自己都會 resolve，resolve 的值就是 <code>[error, value]</code> 這樣形式的陣列，一來符合 node 的 <a href="https://nodejs.org/api/errors.html#errors_error_first_callbacks">error-first callbacks</a>，再來就是配合 destructuring assignment 其實程式碼是蠻漂亮的。</p>
+]]></description>
+<link>https://blog.othree.net/log/2019/01/26/async-await-try-catch/</link>
+<guid>https://blog.othree.net/log/2019/01/26/async-await-try-catch/</guid>
+<category>script</category>
+<pubDate>2019-01-26 17:21</pubDate>
+</item>
+
+<item>
+<title>ES Module for NPM Package</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38820559832/" title="Queenstown by othree, on Flickr"><img src="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Queenstown" srcset="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg 1024w, https://farm5.staticflickr.com/4560/38820559832_998d7ad575_h.jpg 1600w" /></a></p>
+<p>For English reader: <a href="https://github.com/othree/til/blob/master/js/esm-package.md">https://github.com/othree/til/blob/master/js/esm-package.md</a></p>
+<p>這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 <a href="https://nodejs.org/api/esm.html">mjs</a> 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 <a href="https://webpack.js.org/guides/tree-shaking/">tree shaking</a> 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧：</p>
+<pre><code class="language-js">{
+  &quot;name&quot;: &quot;smartypants&quot;,
+  &quot;version&quot;: &quot;0.1.1&quot;,
+  &quot;main&quot;: &quot;smartypants&quot;,
+  &quot;module&quot;: &quot;smartypants.es6.js&quot;,
+  &quot;jsnext:main&quot;: &quot;smartypants.es6.js&quot;,
+  ...
+}
+</code></pre>
+<p>package.json 這樣寫，然後需要提供以下三個檔案：</p>
+<pre><code class="language-sh">-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.es6.js
+-rw-r--r--  1 othree  staff  24885 Jan  9 17:12 smartypants.js
+-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.mjs
+</code></pre>
+<p>這段是我從 <a href="https://github.com/othree/smartypants.js">smartypants.js</a> 那邊拿來的，重點在：</p>
+<ol>
+<li><code>main</code> 裡面的檔名不寫副檔名，該檔名要同時提供 <code>js</code> 和 <code>mjs</code> 兩種</li>
+<li>多加上 <code>module</code> 這筆設定</li>
+</ol>
+<p>說明一下，Node.js 現在判斷是哪種模組格式的方式是看副檔名，所以一定要 <code>mjs</code> 的檔案才會當成 ES module，然後剛好解析 <code>main</code> 檔案時的副檔名會自動補，所以就乾脆拿掉，同時提供 <code>smartypants.js</code> 和 <code>smartypants.mjs</code> 兩個檔案，其實都是 <code>main</code> 用的；再來是 <code>module</code> 這個設定和 Node.js 以及 NPM 無關，其實是 <a href="https://rollupjs.org/guide/en">rollup</a> 提出來的 <a href="https://github.com/rollup/rollup/wiki/pkg.module">pkg.module</a>，rollup 如果在解析模組實有看到這個設定，就可以把這個檔案拿來用，當時設計是這個設定 ES module，以前的 main 則是 CommonJS module，雖然是 rollup 提出的，不過 webpack 現在也支援了，範例中還有一筆 <code>jsnext:main</code> 則是比較早期用的 key。</p>
+<p>再更進階一點，還有目標對象的問題，就是產出是瀏覽器用的還是 server 端用的，以前這問題不太常見，不過隨著 server side rendering 越來越普及，這問題就開始比較多人關注了，webpack 就有支援 bundle 的目標對象，也有支援 <a href="https://github.com/defunctzombie/package-browser-field-spec">pkg.browser</a> 設定，webpack 的 <a href="https://github.com/webpack/webpack/issues/5673">issue #5673</a> 有不少討論，有興趣的可以參考看看，不過要注意的是 <code>browser</code> 似乎是第一順位，設定的時候要小心點。</p>
+]]></description>
+<link>https://blog.othree.net/log/2019/01/10/esm-for-npm-package/</link>
+<guid>https://blog.othree.net/log/2019/01/10/esm-for-npm-package/</guid>
+<category>script</category>
+<pubDate>2019-01-10 22:27</pubDate>
+</item>
+
+<item>
+<title>ECMAScript 2015 新功能間的關係</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/29781972467/" title="ECMAScript 2015 by othree, on Flickr"><img src="https://farm2.staticflickr.com/1845/29781972467_06b6deb358_b.jpg" width="1024" height="622" alt="ECMAScript 2015, " srcset="https://farm2.staticflickr.com/1845/29781972467_06b6deb358_b.jpg 1024w, https://farm2.staticflickr.com/1845/29781972467_e79243c585_h.jpg 1600w" /></a></p>
+<p>這篇想說的是 2015 年的那個 ECMAScript 6（後面簡稱 ES6），也就是之前 ECMAScript Harmony 計畫的主要成果，那版 ES6 其實是這幾年來改動最多的一版，新增了很多的新功能和語法，而這一堆新功能很多是環環相扣的，我以前曾經在 Facebook 上提過，不過那邊的東西容易就消失在網路上，所以還是另開一篇文章來記錄，剛好也可以做為下一篇文章的參考資料。</p>
+<p>首先要從 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a>/<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a> 這兩個新的資料型態說起，ECMAScript 一直以來都只有少少的資料型態，直到 ES6 才加了些新的，其中比較容易注意到的就是 Map 和 Set 了，其實這兩種資料型態以前就是直接用 object 來 array 來做，兩邊蠻接近的，最主要的差異則是 Map 的 key 可以是任意型態， 而以前 object 的 key 只能是字串，Set 是 unique 的，array 則否，另外就是在適合的情境下，現在 Map/Set 的效能不一定會比較差。</p>
+<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">???? Jest reduced their test runner time by 20% by switching from plain JavaScript objects to Maps where it made sense. <a href="https://t.co/ZrtgeJIwOU">https://t.co/ZrtgeJIwOU</a><br /><br />In general, don't be afraid to use modern features! Focus on writing idiomatic code, and let JS engines worry about making it fast.</p> -- V8 (@v8js) <a href="https://twitter.com/v8js/status/1040219491358179328?ref_src=twsrc%5Etfw">2018年9月13日</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>Map、Set 其實都算是 collection 的資料，所以會需要有個方法可以遍歷所有元素，像是 array 的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">forEach</a> 或是 for...in 語法，不過 for...in 先拿到的東西是 key，還需要拿 key 去取元素實際的值：</p>
+<pre><code class="language-javascript">for (let k in arr) {
+  let v = arr[k];
+}
+</code></pre>
+<p>一直以來，其實開發者社群都希望有個語法能直接取 collection 內的元素，所以像是 CoffeeScript 就是把 <code>for...in</code> 換成直接拿到 value，於是 ES6 就有了個 <code>for...of</code> 語法，可以遍歷 collection 類型的資料並直接取得值：</p>
+<pre><code class="language-javascript">for (let v of arr) {
+    
+}
+</code></pre>
+<p>ES6 的這個語法，其實底層是透過 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">iteration protocols</a> 這些內部協定來運作的，包括了 iterable protocol 和 iterator protocol，<code>for...of</code> 其實就是透過 iterable protocol 去拿物件的 iterator，利用 iterator 來遍歷元素，所以自己寫的物件也可以實做 iterable protocol，然後就可以讓該物件支援 <code>for...of</code> 語法了；除此之外，iterator 是不能重複使用的，所以其實每次 <code>for..of</code>，都是拿一個該物件的新的 iterator，而為了可以簡單產生這個 iterator，又有了 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator function</a>，generator function 每次執行都會回傳一個新的 iterator（精確一點說是 generator object，同時是 iterator 也是 iterable），正好適合這個情境。</p>
+<p>Iterable protocol 的定義其實很簡單，就是定義怎樣把 generator function 放在物件裡的方式，實際上是利用 ES6 另一個新的資料型態： <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a> 來達成的，為什麼不直接定個屬性名稱給它呢？最主要就是不要讓這些內部 protocol 的東西在 <code>for...in</code> 操作的時候被遍歷到，所以定義了新的 Symbol 型別，利用它的特性來把內部 protocol 做了一定程度的保護，iterable protocol 就是把 generator function 用一個預先定義好的 Symbol 來儲存，這個 Symbol 又稱為 <code>Symbol.iterator</code>，這種預先定義好的 Symbol 則統稱為 Well-Known Symbols，ES6 其實定義了<a href="http://exploringjs.com/es6/ch_symbols.html#_well-known-symbols">好幾個</a>，不是只有 iterable 用的到，透過定義這些 Well-Known Symobls，可以介入改變一些 JavaScript 比較基礎的運作。</p>
+<p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill [harmony-reflect][] 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
+<p>最後總結一下，這串從 Map/Set 開始，接著連到 <code>for...of</code> 語法、Iterator、Generator、Symbol、Well-Known Symobls 最後到 meta programming 的 Proxy 和 Reflect，其實也差不多佔了 1/4 的 ES6 新功能。</p>
+]]></description>
+<link>https://blog.othree.net/log/2018/09/17/ecmascript-2015-rel-of-features/</link>
+<guid>https://blog.othree.net/log/2018/09/17/ecmascript-2015-rel-of-features/</guid>
+<category>script</category>
+<pubDate>2018-09-17 00:28</pubDate>
+</item>
 
 <item>
 <title>eslint-plugin-pep8-blank-lines</title>
@@ -45,7 +304,7 @@
 <title>Tern 0.22 released</title>
 <description><![CDATA[<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
 <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CofeeScript plugin。</p>
+<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CoffeeScript plugin。</p>
 <p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
 <p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
 <p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
@@ -259,273 +518,6 @@ subQuery
 <guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
 <category>script</category>
 <pubDate>2018-01-12 10:54</pubDate>
-</item>
-
-<item>
-<title>Web F2E 看 Python Syntax</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr"><img src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w" /></a></p>
-<p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
-<h4>內建支援 String Formatting</h4>
-<p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
-<pre><code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
-</code></pre>
-<p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
-<pre><code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
-</code></pre>
-<p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
-<h4>Multiline String</h4>
-<p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
-<pre><code class="language-python">template_string = &quot;&quot;&quot;&lt;div&gt;
-                       Wow
-                     &lt;/div&gt;&quot;&quot;&quot;
-</code></pre>
-<p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
-<h4>Keyword Arguments</h4>
-<p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
-<pre><code class="language-python">def func(a, b, c, d):
-    return a + b + c + d
-</code></pre>
-<p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
-<pre><code class="language-python">func(a=1, b=2, c=3, d=4)
-</code></pre>
-<p>而且也可以混用：</p>
-<pre><code class="language-python">func(1, 2, c=3, d=4)
-</code></pre>
-<p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
-<p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
-<h4>Circular Dependency</h4>
-<p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
-<h4>Ternary Operator</h4>
-<p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
-<pre><code class="language-python">reality = True if isReal else False
-</code></pre>
-<p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
-<pre><code class="language-coffeescript">filename = file.name
-
-if file.hash
-  filename = filename + '-' + file.hash
-  
-if file.ext
-  filename = filename + '.' + file.ext
-</code></pre>
-<p>用了後置 <code>if</code> 的話可以寫成：</p>
-<pre><code class="language-coffeescript">filename = file.name
-
-filename = filename + '-' + file.hash if file.hash
-
-filename = filename + '.' + file.ext if file.ext
-</code></pre>
-<p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
-<pre><code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
-</code></pre>
-<p>就比較不喜歡這樣就是了。</p>
-<h4>Tuple</h4>
-<p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
-<p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
-<h4>in 運算</h4>
-<p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
-<pre><code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
-    ok()
-</code></pre>
-<p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
-<h4>Dict</h4>
-<p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
-<pre><code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
-</code></pre>
-<p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
-<pre><code class="language-coffeescript">data.attr1?.attr2?.attr3?
-</code></pre>
-<p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
-<h4>Unix Timestamp</h4>
-<p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
-<h4>PEP8, Flake8</h4>
-<p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
-<pre><code class="language-python">def hello(name='John'):
-  return 'Hello ' + name
-
-hello(name='Hancock')
-</code></pre>
-<p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
-<pre><code class="language-python">import pages  # noqa: F401
-</code></pre>
-<p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
-<h4>Python Enhancement Proposals (PEPs)</h4>
-<p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</link>
-<guid>https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/</guid>
-<category>script</category>
-<pubDate>2017-12-05 18:39</pubDate>
-</item>
-
-<item>
-<title>問號出頭天</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/37786653964/" title="Mario by othree, on Flickr"><img src="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg" width="1024" height="576" alt="Mario" srcset="https://farm5.staticflickr.com/4517/37786653964_3a7bc2cef2_b.jpg 1024w, https://farm5.staticflickr.com/4517/37786653964_44fc722b32_h.jpg 1600w" /></a></p>
-<p>剛剛掃了一下 TC39 新的草案，發現和 <code>?</code> 相關的還不少，稍微來介紹一下這幾個很初期的草案吧：首先第一個是已經見過一陣子的 Optional Chaining，第一次看到這種語法是 <a href="http://coffeescript.org/">CoffeeScript</a>，在 CoffeeScript 現在是叫 Existential Operator，不知道是不是以前就這個名字，對付多階層的物件特別好用：</p>
-<pre><code class="language-javascript">let zip = lottery.drawWinner?.()?.address?.zipcode
-</code></pre>
-<p>可以像這樣用，中間任何一層回傳 falsy value 就會直接把值給 zip 變數，而不會繼續往下找，不會造成 Script 執行錯誤，不過目前看起來對於 function 的處理比 CoffeeScript 麻煩一點，要寫成 <code>?.()</code>，而不是 <code>?()</code>，其實我覺得也比較醜一些。</p>
-<p>第二個是 <a href="https://github.com/tc39-transfer/proposal-nullish-coalescing">Nullish Coalescing</a>，這是正港的用來設定變數 default 值用的，以前通常的作法是用 <code>||</code>：</p>
-<pre><code class="language-javascript">function (option = {}) {
-  let quick = option.quick || true;
-}
-</code></pre>
-<p>在上面的範例中，<code>quick</code> 預期是 boolean 值，可能是 <code>true</code> 或 <code>flase</code> ，預期的預設值是 <code>true</code>，不過這樣寫其實，如果傳 <code>false</code> 進來會誤判，結果會變成用預設值的 <code>true</code>，新的 Nullish Coalescing 就是要來解決這個問題，把 <code>||</code> 換成 <code>??</code>：</p>
-<pre><code class="language-javascript">function (option = {}) {
-  let quick = option.quick ?? true;
-}
-</code></pre>
-<p>這樣傳 <code>false</code> 時就不會被當成沒傳值，只有 <code>null</code> 和 <code>undefined</code> 才會用預設值，其實判斷的方式和第一個 Optional Chaining 一樣。</p>
-<p>第三個是 <a href="https://github.com/rbuckton/proposal-partial-application">Partial Application</a>，其實就是字面上的意思，不過是從 syntax 上就支援 partial 執行 function：</p>
-<pre><code class="language-javascript">function add(x, y) { return x + y; }
-
-const addOne = add(1, ?); // apply from the left
-addOne(2); // 3
-</code></pre>
-<p>我覺得用 <code>?</code> 這招還蠻漂亮的，雖然我還不太有機會用到 就是。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</link>
-<guid>https://blog.othree.net/log/2017/11/19/question-mark-in-es/</guid>
-<category>script</category>
-<pubDate>2017-11-19 00:06</pubDate>
-</item>
-
-<item>
-<title>Temporal - 下個世代的 Date</title>
-<description><![CDATA[<p>這篇文章寫到快寫完的時候，決定到 <a href="http://modernweb.tw/">Modern Web 2017</a> 分享，所以就比較晚發佈 ，其實 Modern Web 演講內容比較多，文末有放相關參考資料。</p>
-<p>JSConf EU 2017 前陣子放出演講影片，蠻多場次都不錯，這篇要主要是從其中的一場演講而來，演講是「 The Past, Present, and Future of JavaScript Date and Time APIs」，講者是 Matt Johnson，<a href="http://momentjs.com/">Moment.js</a> 的作者，下面是這場演講的影片：</p>
-<div class="embed_16_9">
-  <iframe width="853" height="480" src="https://www.youtube.com/embed/aVuor-VAWTI?rel=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-<p>長度不長，推薦可以看一下，主要是在談 JavaScript 的 Datetime，提出這老東西的問題，我覺得可以稱為 WAT JavaScript 的 Datetime 篇，像是 0 起始的月份、不支援 Time Zone、難以運算、是 mutable 物件等等，接著介紹了目前檯面上比較多人用的幾個 library 和他們的特色，都是品質不錯的 library，有需求的可以從中選用，包括了：</p>
-<ul>
-<li><a href="http://momentjs.com/">Moment.js</a></li>
-<li><a href="https://date-fns.org/">date-fns</a></li>
-<li><a href="https://js-joda.github.io/js-joda/">js-joda</a></li>
-</ul>
-<p>最後則是提到他們目前在進行的，改進 JavaScript Datetime 的計畫，也就是新的 ECMAScript Datetime 的 proposal，叫 <a href="https://github.com/tc39/proposal-temporal">temporal</a>，除了 Matt Johnson 之外，還有一位 Microsoft 的 Maggie Pint 也是目前草案的主力推手，他的 blog 上就有兩篇相關的<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">文</a><a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">章</a>，裡面有列出目前 <code>Date</code> 的主要問題：</p>
-<ol>
-<li>不支援 timezone，只有 UTC 和 local</li>
-<li>Parser （轉譯日期字串轉成日期物件）的行為不可靠且難以使用</li>
-<li>Date object 是 mutable 物件</li>
-<li>日光節約時間的行為無法預期</li>
-<li>日期計算 API 很難用</li>
-<li>不支援 <a href="https://jonathanou.wordpress.com/2005/06/02/gregorian-calendar/">Gregorian</a> 以外的日曆（例如農曆）</li>
-</ol>
-<p>事實上，目前的 Date 物件，當初 Brendan Eich 因為時間緊迫，所以 Datetime 的 API 是直接參考 Java 的，當時是 1995，參考的應該是 Beta 版 Java 的 <code>java.util.Date</code>，後來 1996 年 1 月 Java 1.0 發佈，但是到了 1997 年 2 月的 Java 1.1 發佈時，<code>java.util.Date</code> 大部分的設計都被捨棄了，然後 1997 年 6 月，ECMAScript 標準 1.0 發佈，結果這個在 Java 語言只活了 1 年多的設計，就活在 JavaScript 世界活了 20 年之久，相信有用過的人都能多少都知道使用起來的痛苦。</p>
-<p>不過要改善 JavaScript 從來就不是一件容易的事情，最大的困難點就是你不能隨便改動任何已有的東西，像是已經存在 20 年的 <code>Date</code>，即使它設計不好，隨便改動都可能造成大量的網站壞掉，不像是 Java 1.0 升級到 Java 1.1 那樣，各自用各自的，在改善 JavaScript 時基本上就是要當成有人從不升級，不能有 broken change，最簡單的方法就是增加新的東西，而不要去修改舊的，這也是目前 temporal 的方向（其實 ES 5.1 後，舊有的東西該修的東西大概都修完，之後就是一直加新的而已），在 draft 文件已經有一點基礎和預期的 code sample 了：</p>
-<pre><code class="language-javascript">var ldt = new CivilDateTime(2017, 12, 31, 23, 59);
-
-var addHours = new CivilDateTime(2017, 12, 31, 23, 00)
-    .add(2, 'hours');
-
-var zdt = ldt.withZone('America/New_York');
-</code></pre>
-<p>可以看到有方便的加減時間的 API、immutable 特性、還有時區支援等等。事實上這份草案還非常初步而已，還缺非常多細節，預期會有的物件目前已經有八種了，不過這八種物件的 API 也都還沒定義完，不過也正因為如此，想參與的人反而這時候比較有機會提供想法，推薦有興趣的人可以關注關注，給點意見。</p>
-<p>最後列一些參考文件：</p>
-<ul>
-<li>Web Rebels 2017 <a href="https://twitter.com/jxxf">@jxxf</a> 的「<a href="https://www.webrebels.org/#talk-8">Time and Time Again: Fixing Dates in JS</a>」 花了很多時間在講 JavaScript Date 缺少的 concept</li>
-<li>林信良（良葛格）介紹 Java 的 Joda-Time 和 JSR310 的<a href="http://www.codedata.com.tw/tag/jodatime/">相關文章</a>，Joda-Time 是 Java 上很廣為使用的時間套件，由 Stephen Colebourne 為主開發的，他也參與了 <a href="https://jcp.org/en/jsr/detail?id=310">JSR 310: Date and Time API</a> 的制訂，並在 JDK 8 開始可以用</li>
-<li>temporal 目前主要作者之一的 Maggie Pint 的文章：<a href="https://maggiepint.com/2017/04/11/fixing-javascript-date-web-compatibility-and-reality/">Fixing JavaScript Date - Web Compatibility and Reality</a></li>
-<li><a href="https://www.youtube.com/watch?v=oVVXW7lmwtw">Understanding Dates, Times, and Time Zones, with Maggie Pint, Matt Johnson, and Jon Skeet</a></li>
-</ul>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</link>
-<guid>https://blog.othree.net/log/2017/08/12/temporal-is-next-date/</guid>
-<category>script</category>
-<pubDate>2017-08-12 10:41</pubDate>
-</item>
-
-<item>
-<title>WAT JavaScript Date</title>
-<description><![CDATA[<p>週四在 Modern Web 2017 分享的投影片</p>
-<script async="async" class="speakerdeck-embed" data-id="5cf2c2b7e3734425b660781da7a9e57a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-]]></description>
-<link>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</link>
-<guid>https://blog.othree.net/log/2017/08/12/wat-javascript-date/</guid>
-<category>script</category>
-<pubDate>2017-08-12 00:13</pubDate>
-</item>
-
-<item>
-<title>NodeJS and ES Module</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr"><img src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w" /></a></p>
-<p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
-<pre><code class="language-javascript">(function (root) {
-
-  root.lib = {};
-
-}(this));
-</code></pre>
-<p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code> <a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
-<pre><code class="language-javascript">(function (root) {
-
-  root.lib = {};
-
-}(this));
-
-export {};
-</code></pre>
-<p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type=&quot;module&quot;&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</link>
-<guid>https://blog.othree.net/log/2017/01/14/nodejs-es-module/</guid>
-<category>script</category>
-<pubDate>2017-01-14 12:22</pubDate>
-</item>
-
-<item>
-<title>smartypants.js</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/31387550094/" title="大阪新年 by othree, on Flickr"><img src="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg" width="1024" height="683" alt="大阪新年" srcset="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg 1024w, https://farm1.staticflickr.com/293/31387550094_6f388b3f83_h.jpg 1600w" /></a></p>
-
-<p><a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 這個東西也是很久了，和 Markdown 差不多時期，都是 John Gruber 幫當時的網路文字出版軟體（ex: MovableType）所做的，而 SmartyPants 是用來處理一些標點符號的，其中，最容易被人注意到的就是引號「"」的轉換了。</p>
-
-<p>雖然鍵盤上的引號按鍵只有一個，但是傳統的文書寫作上，引號是有分左邊（開始）的「&#8220;」和右邊（結束）的「&#8221;」，只不過早期為了減少鍵盤按鍵數，還有字元編碼上的限制，所以合併成為只有一個，不過隨著計算機的發展，可以使用的字元編碼資料量增加後，就還是有定義了開始和結束的兩種引號，並且有單引號和雙引號兩種：</p>
-
-<ul>
-<li>左單引號 &#8216;</li>
-<li>右單引號 &#8217;</li>
-<li>左雙引號 &#8220;</li>
-<li>右雙引號 &#8221;</li>
-</ul>
-
-<p>理想上，寫作文章時也應該正確的使用這些引號，不過其實因為輸入上比較麻煩，一般人打字也不會特別注意，所以常常被忽略，比較常見的是軟體本身在使用者輸入文字時自動做轉換，例如 Apple 的 Pages、Keynote、微軟的 Skype 等等，講到 Keynote 自動轉換引號這點就要另外岔題一下，就是偶爾都會看到頭影片裡面的程式碼，其中的引號也被轉換過，其實就是因為貼上 code 到 Keynote 的時候被轉換了，如果作者沒有注意到的話就直接釋出，然後讀者 copy 程式碼出來試試看時，就會編譯失敗而無法執行。回到標點符號上，這類標點符號其實不止有引號，SmartyPants 可以處理的還包括：</p>
-
-<ul>
-<li><code>--</code> 轉成 en-dash &#8211;</li>
-<li><code>---</code> 轉成 em-dash &#8212;</li>
-<li><code>...</code> 轉成 ellipsis &#8230;</li>
-</ul>
-
-<p>而且它對於引號的轉換還算是聰明，會判斷是不是真的用來包起文字的，還支援用 backtick 來模擬的雙引號，看起來像：</p>
-
-<pre><code>``quoted string''
-</code></pre>
-
-<p>另為也會針對年代的特殊寫法做處理，例如 <code>'80s</code> 會轉成 &#8217;80s，並且會避開 HTML 標籤的部分，不會把 HTML 標籤裡面的屬性值的引號也做轉換，像是 <code>&lt;html lang="en"&gt;</code> 這種。前陣子因為工作上要處理翻譯字串，想要順便好好的處理這些符號，所以就想到了這個工具，因為我一般寫小 script 做事情是用 JavaScript 然後用 node 來執行，所以要用 SmartyPants 就沒辦法那麼直接了，一開始先找 JavaScript 的 solution，找到一個簡單的，只用幾條 regular epxression 的<a href="https://gist.github.com/danburzo/1cc866400cb4f810c493">版本</a>，其實運作的也還不錯，但是無法避開不處理 HTML 標籤，所以產生出來的結果也不能用，接著改成用 STDIO 丟給 John Gruber 的 Perl 版，結果這效率實在太差，所以又繼續研究一番，發現還有一套叫 <a href="https://www.npmjs.com/package/typogr">typogr</a> 的文字處理工具有實做，不過不想要太多功能，所以最後我決定自己把 Perl 版 SmartyPants 移植成 NPM module，也因此有了 <a href="https://github.com/othree/smartypants.js">smartypants.js</a>。</p>
-
-<p>這次開發我選擇的語言是 TypeScript，原因可以參考我上一篇文章 <a href="https://blog.othree.net/log/2016/11/18/20k-for-of/">20k-for-of</a>，然後用 Makefile 加上一些指令轉成類似 <a href="https://github.com/jquery/jquery/blob/master/src/wrapper.js">jQuery UMD</a> 形式的 JavaScript 檔案發佈到 NPM 上，目前的 smartypants.js 是完完全全把 Perl 版的邏輯翻過來，不過只有實作轉換編碼的部分加上 CLI 的介面，另外 Perl 版的只能轉換成 HTML entity 的格式，不過現在 UTF-8 已經算是很廣泛應用的文字編碼了，所以我還加上了一個轉成 UTF-8 字元的版本，用 UTF-8 編碼的雙引號其實很不錯，在 JSON 或是 csv 裡面也不用 escape，肉眼看起來也美觀許多。</p>
-
-<p>實做過程比較緊張的地方大概就是要把 Perl 的 regular expression 轉成 JavaScript 的版本了，一度看到沒看過的用法都覺得會不會沒辦法用 JavaScript 做起來，還好沒用到很神奇的語法。另外它處理 HTML 語法的部分，其實是先過一個簡單的 lexer 轉成 token list，裡面兩種 token 分別就是一般文字和 HTML 標籤兩種，接著只針對一般文字 token 來做標點符號轉換，不過其實這個 tokenize 的部分有 bug，例如：</p>
-
-<pre><code>&lt;span title="&gt;"&gt;HAHA&lt;/span&gt;
-</code></pre>
-
-<p>就會被分解成如下的 token：</p>
-
-<ul>
-<li><code>&lt;span title="&gt;</code></li>
-<li><code>"&gt;HAHA</code></li>
-<li><code>&lt;/span&gt;</code></li>
-</ul>
-
-<p>而且這種方法就也無法處理到一些文字內容的 HTML 屬性，例如 title 和 alt 等，所以接下來還可以做的改進，一個就是改進這部分的 lexer，然後也要對這些屬性值轉換標點符號，大概需要建立一個白名單，另外還有一個想加強的地方就是補上 test case 了，目前完全沒有相關的 test case 可以用，所以其實也沒很正式的驗證過，不過總之目前是都還運作正常，如果有相似需求的人可以參考一下。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2017/01/10/smartypants-js/</link>
-<guid>https://blog.othree.net/log/2017/01/10/smartypants-js/</guid>
-<category>script</category>
-<pubDate>2017-01-10 22:47</pubDate>
 </item>
 
 

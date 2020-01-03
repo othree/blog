@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000954" baseName="third-argument-of-addeventlistener-2">addEventListener 的第三個參數</b:listData>
+
+			<b:previous>
+				<b:mTitle>Lab Gradient</b:mTitle>
+				<b:mDate>2019-03-18</b:mDate>
+				<b:mBase>lab-gradient</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>glob</b:mTitle>
+				<b:mDate>2019-04-30</b:mDate>
+				<b:mBase>glob</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000954" baseName="third-argument-of-addeventlistener-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-03-20</b:date>
+				<b:time>23:52:39</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>addEventListener 的第三個參數</b:title>
+			<b:content>
+				<b:summary> 2007 年我寫過一篇一樣標題的 addEventListener 的第三個參數，介紹了事件發生時， DOM Node 的 capture 和 bubbling，事隔十多年，前陣子定睛一看，發現 DOM spec 有變，第三個參數除了可以收 boolean 型別的 useCapture 之外，還可以收 options 物件，又稱為 EventListenerOptions，而這個 options 物件現在支援三個屬性，分別是： capture－就是以前的第三個參數 useCapture，Boolean 型別。 once－新的選項，也是 Boolean 型別，用途就像是 jQuery 的 one 一樣，想不到現在也直接在 DOM 層原生支援了 passive－也是新選項，一樣是 Boolean 型別，用途是告訴瀏覽器，這個事件 handler function...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40460552953/" title="addEventListener by othree, on Flickr"><img src="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg" intrinsicsize="1024x787" width="1024" height="787" alt="addEventListener" srcset="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg 1024w, https://farm8.staticflickr.com/7917/40460552953_f337cc854a_h.jpg 1600w" /></a></p>
+<p>2007 年我寫過一篇一樣標題的 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，介紹了事件發生時， DOM Node 的 capture 和 bubbling，事隔十多年，前陣子定睛一看，發現 DOM spec 有變，第三個參數除了可以收 boolean 型別的 useCapture 之外，還可以收 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters">options</a> 物件，又稱為 <a href="https://github.com/WICG/EventListenerOptions">EventListenerOptions</a>，而這個 options 物件現在支援三個屬性，分別是：</p>
+<ul>
+<li><code>capture</code>－就是以前的第三個參數 useCapture，Boolean 型別。</li>
+<li><code>once</code>－新的選項，也是 Boolean 型別，用途就像是 jQuery 的 <a href="https://api.jquery.com/one/">one</a> 一樣，想不到現在也直接在 DOM 層原生支援了</li>
+<li><code>passive</code>－也是新選項，一樣是 Boolean 型別，用途是告訴瀏覽器，這個事件 handler function 會不會呼叫 <code>event.preventDefault</code> 來停止瀏覽器的原生行為，我最初其實是在 Google 的關於 <a href="https://developers.google.com/web/updates/2016/06/passive-event-listeners">scroll performance 的文件</a> 看到的，就是如果你是 scroll event，以前會因為瀏覽器要判斷會不會被 <code>preventDefault</code>，所以讓 scroll 的效能變差，加上這個選項可以直接告訴瀏覽器說沒有要 preventDefault 後，原生的事件行為就可以不管 event handler 直接處理了，如果裡面硬是執行 <code>event.preventDefault</code> 的話，那就會被忽略掉，然後根據使用的瀏覽器的話，有的會有警告訊息出現在 console。</li>
+</ul>
+<p>Passive Event 的效果也有人做了影片可以看（<a href="https://medium.com/@devlucky/about-passive-event-listeners-224ff620e68c">來源</a>）：</p>
+<div class="embed_16_9">
+  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NPM6172J22g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>EventListenerOptions 這個東西大概是在 2015 開始討論的，然後 <a href="https://discourse.wicg.io/t/eventlisteneroptions-and-passive-event-listeners-move-to-wicg/1386">2016</a> 進到 WICG 討論，瀏覽器開始實做，一開始就是只有 <code>passive</code> 和 <code>capture</code>，<code>once</code> 則是後來才加上的，所以可以看到 MDN 的瀏覽器支援度表格，<code>once</code> 還要比較新一點的瀏覽器才支援，像是 Chrome 51 就支援 <code>passive</code>，然後要到 55 才支援 <code>once</code>，如果再仔細看，會發現最後一列是 <code>touchstart</code>、<code>touchmove</code> 事件如果是在 document 層的話，預設改為 passive 事件，這是 2017 年 Chrome 主導修改的行為，Firefox 也有跟進，主要就是希望能讓這些事件處理預設效能好一點，這部分的行為修改其實到現在都還沒標準化，目前還是在 WICG 那邊有個 <a href="https://github.com/WICG/interventions/issues/18">open issue</a>，除了 touch 事件外，其實連 document 層的 wheel 事件也在 <a href="https://developers.google.com/web/updates/2019/02/scrolling-intervention">Chrome 73</a>，也就是現在的穩定版本也預設改為 passive 事件了，然後也是有 WICG  的 <a href="https://github.com/WICG/interventions/issues/64">open issue</a>，MDN 的表則是還沒有。</p>
+<p>EventListenerOptions 也是有 polyfill 和工具 package 的，首先來說一下 polyfill 吧，我知道的有 <a href="https://github.com/WebReflection/dom4">dom4</a>，其實搜尋一下還蠻容易找到其它的，不過差異沒很大，feature detection 的方式幾乎都是用 Object 的 getter 來看送進去的 options 物件的 <code>passive</code> 屬性有沒有被讀取過，有的話就表示瀏覽器有支援，然候 polyfill 其實也只有行為上的補完，不會真的讓效能提升，不過 polyfill 在現在的支援度下來看也是不太需要了。Package 的話有個 <a href="https://www.npmjs.com/package/default-passive-events">default-passive-events</a> 會幫忙把 scroll、wheel、mouse、touch 等等有需要的事件都改為預設 <code>passive: true</code>，如果是新專案先加一下似乎不錯，不過感覺上 Google 是很想都改掉的樣子，現在其實也只差 mouse 事件而已，應該是還怕影響太大不敢下手吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

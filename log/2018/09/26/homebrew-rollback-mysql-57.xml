@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000941" baseName="homebrew-rollback-mysql-57">Homebrew rollback to MySQL 5.7</b:listData>
+
+			<b:previous>
+				<b:mTitle>Intrinsic Size 媒體寬高比</b:mTitle>
+				<b:mDate>2018-09-21</b:mDate>
+				<b:mBase>intrinsic-size</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>保護專注力</b:mTitle>
+				<b:mDate>2018-09-26</b:mDate>
+				<b:mBase>zone-of-zero</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000941" baseName="homebrew-rollback-mysql-57">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-26</b:date>
+				<b:time>11:49:46</b:time>
+			</b:datetime>
+			<b:category>mac</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Homebrew rollback to MySQL 5.7</b:title>
+			<b:content>
+				<b:summary>最近 Mac 的 homebrew 預設的 MySQL 已經改到 8，然後產生了些相容性問題，像是 GUI 不支援之類的，所以提供一下方法回到 5.7 brew uninstall mysql brew install mysql@5.7 brew link --force mysql@5.7 然後清空舊資料重建新的 rm -rf /usr/local/var/mysql/ mysqld --initialize 其中第二個步驟會產生新的 root 密碼，先複製下來，啟動服務並修改密碼： brew services start mysql@5.7 mysqladmin -u root -p password 照指令操作，應該是先填前一步產生的密碼，然後輸入新密碼、再次輸入新密碼，這樣就...</b:summary>
+				<b:mainContent><p>最近 Mac 的 homebrew 預設的 MySQL 已經改到 8，然後產生了些相容性問題，像是 GUI 不支援之類的，所以提供一下方法回到 5.7</p>
+<pre><code class="language-sh">brew uninstall mysql
+brew install mysql@5.7
+brew link --force mysql@5.7
+</code></pre>
+<p>然後清空舊資料重建新的</p>
+<pre><code class="language-sh">rm -rf /usr/local/var/mysql/
+mysqld --initialize
+</code></pre>
+<p>其中第二個步驟會產生新的 root 密碼，先複製下來，啟動服務並修改密碼：</p>
+<pre><code class="language-sh">brew services start mysql@5.7
+mysqladmin -u root -p password
+</code></pre>
+<p>照指令操作，應該是先填前一步產生的密碼，然後輸入新密碼、再次輸入新密碼，這樣就 ok 了，剩下就是找個 GUI 或是匯入資料之類的。</p>
+<p>參考資料：</p>
+<ul>
+<li><a href="https://actom.me/blog/macos-brew-%E5%AE%89%E8%A3%85-mysql-8-0%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99.html">macos brew 安装 mysql 8.0，客户端连接报错 - 积跬步，行千里</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

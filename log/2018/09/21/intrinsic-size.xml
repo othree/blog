@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000940" baseName="intrinsic-size">Intrinsic Size 媒體寬高比</b:listData>
+
+			<b:previous>
+				<b:mTitle>Extensible Web at 2018</b:mTitle>
+				<b:mDate>2018-09-18</b:mDate>
+				<b:mBase>extensible-web-2018</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Homebrew rollback to MySQL 5.7</b:mTitle>
+				<b:mDate>2018-09-26</b:mDate>
+				<b:mBase>homebrew-rollback-mysql-57</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000940" baseName="intrinsic-size">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2018-09-21</b:date>
+				<b:time>22:08:14</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Intrinsic Size 媒體寬高比</b:title>
+			<b:content>
+				<b:summary>HTML 文件在編寫插入 &lt;img&gt; 時，通常都會順便加上寬高的資訊，早期這樣做除了指定圖片呈現時的大小外，還有一個好處是提升頁面繪製的速度，不用在圖片讀取好、知道實際寬高時，又重新排版重畫版面，不過這個狀況在用 CSS 設定動態寬度時，就又回到原點了，像是設定 width: 100%; 這種，因為沒辦法設定相對於圖片寬度的高度值，所以瀏覽器只能自己先隨便決定一個高度，等圖片抓好再重排一次。 一直以來這問題都沒好的方案處理，在排版上比較多人採用的是外面多一層 block 元素然後用 padding-top 來把空間先佔好，不過這也只算是個替代方案，真的要處理應該還是要從 HTML 或是 CSS 下手，然後前兩天才終於看到有個不錯的方案 Chrome 要來實做了，叫做 Intrinsic Size： &lt;img intrinsicsize=&quot;250 x 200&quot; src=&quot;cat.jpg&quot;&gt; 就是一個長乘寬的概念，中間那個乘號其實是小寫的 x，然後提供的長寬資訊其實是等於預先給的 naturalWidth、naturalHeight，為什麼不用 aspect ratio 呢？在提案的文件裡面其實都有寫到，基本上就是這種設計提供的資訊更多，有更多好處，例如都沒設定寬高時，可以拿 intrinsicsize 來先用之類的，intrinsicsize目前設計只能用在圖片和影片上，Chrome 預計在 71 的時候推出這個功能，也已經做好有貓的測試網頁了，感覺一切都箭在弦上了，不過這新提案在 WICG 上幾乎沒討論，提案者是...</b:summary>
+				<b:mainContent><p>HTML 文件在編寫插入 <code>&lt;img&gt;</code> 時，通常都會順便加上寬高的資訊，早期這樣做除了指定圖片呈現時的大小外，還有一個好處是提升頁面繪製的速度，不用在圖片讀取好、知道實際寬高時，又重新排版重畫版面，不過這個狀況在用 CSS 設定動態寬度時，就又回到原點了，像是設定 <code>width: 100%;</code> 這種，因為沒辦法設定相對於圖片寬度的高度值，所以瀏覽器只能自己先隨便決定一個高度，等圖片抓好再重排一次。</p>
+<p>一直以來這問題都沒好的方案處理，在排版上比較多人採用的是外面多一層 block 元素然後用 <code>padding-top</code> 來把空間先佔好，不過這也只算是個替代方案，真的要處理應該還是要從 HTML 或是 CSS 下手，然後前兩天才終於看到有個不錯的方案 Chrome 要來實做了，叫做 <a href="https://github.com/ojanvafai/intrinsicsize-attribute">Intrinsic Size</a>：</p>
+<pre><code class="language-html">&lt;img intrinsicsize=&quot;250 x 200&quot; src=&quot;cat.jpg&quot;&gt;
+</code></pre>
+<p>就是一個長乘寬的概念，中間那個乘號其實是小寫的 <code>x</code>，然後提供的長寬資訊其實是等於預先給的 naturalWidth、naturalHeight，為什麼不用 aspect ratio 呢？在提案的文件裡面其實都有寫到，基本上就是這種設計提供的資訊更多，有更多好處，例如都沒設定寬高時，可以拿 <code>intrinsicsize</code> 來先用之類的，<code>intrinsicsize</code>目前設計只能用在圖片和影片上，Chrome <a href="https://www.chromestatus.com/feature/4704436815396864">預計</a>在 71 的時候推出這個功能，也已經做好<strong>有貓</strong>的<a href="https://googlechrome.github.io/samples/intrinsic-size/index.html">測試網頁</a>了，感覺一切都箭在弦上了，不過這新提案在 WICG 上幾乎沒<a href="https://discourse.wicg.io/t/layout-of-img-canvas-and-video-for-any-elements-suggestion/1595/2">討論</a>，提案者是 WICG 也是 Chromium 成員就是，另外就是另外三家的 web platform status 都還查不到，並且，其實也有一個 CSS 的 <code>aspect-ratio</code> <a href="https://www.xanthir.com/blog/b4810">提案</a>，所以到底會怎樣還很難說啊（不過我覺得是會變標準啦）。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

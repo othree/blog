@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000949" baseName="esm-for-npm-package">ES Module for NPM Package</b:listData>
+
+			<b:previous>
+				<b:mTitle>Kobo Forma</b:mTitle>
+				<b:mDate>2018-12-31</b:mDate>
+				<b:mBase>kobo-forma</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>async, await and try catch</b:mTitle>
+				<b:mDate>2019-01-26</b:mDate>
+				<b:mBase>async-await-try-catch</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000949" baseName="esm-for-npm-package">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-01-10</b:date>
+				<b:time>22:27:07</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>ES Module for NPM Package</b:title>
+			<b:content>
+				<b:summary> For English reader: https://github.com/othree/til/blob/master/js/esm-package.md 這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 mjs 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 tree shaking 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧： { &quot;name&quot;: &quot;smartypants&quot;, &quot;version&quot;:...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38820559832/" title="Queenstown by othree, on Flickr"><img src="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Queenstown" srcset="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg 1024w, https://farm5.staticflickr.com/4560/38820559832_998d7ad575_h.jpg 1600w" /></a></p>
+<p>For English reader: <a href="https://github.com/othree/til/blob/master/js/esm-package.md">https://github.com/othree/til/blob/master/js/esm-package.md</a></p>
+<p>這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 <a href="https://nodejs.org/api/esm.html">mjs</a> 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 <a href="https://webpack.js.org/guides/tree-shaking/">tree shaking</a> 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧：</p>
+<pre><code class="language-js">{
+  &quot;name&quot;: &quot;smartypants&quot;,
+  &quot;version&quot;: &quot;0.1.1&quot;,
+  &quot;main&quot;: &quot;smartypants&quot;,
+  &quot;module&quot;: &quot;smartypants.es6.js&quot;,
+  &quot;jsnext:main&quot;: &quot;smartypants.es6.js&quot;,
+  ...
+}
+</code></pre>
+<p>package.json 這樣寫，然後需要提供以下三個檔案：</p>
+<pre><code class="language-sh">-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.es6.js
+-rw-r--r--  1 othree  staff  24885 Jan  9 17:12 smartypants.js
+-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.mjs
+</code></pre>
+<p>這段是我從 <a href="https://github.com/othree/smartypants.js">smartypants.js</a> 那邊拿來的，重點在：</p>
+<ol>
+<li><code>main</code> 裡面的檔名不寫副檔名，該檔名要同時提供 <code>js</code> 和 <code>mjs</code> 兩種</li>
+<li>多加上 <code>module</code> 這筆設定</li>
+</ol>
+<p>說明一下，Node.js 現在判斷是哪種模組格式的方式是看副檔名，所以一定要 <code>mjs</code> 的檔案才會當成 ES module，然後剛好解析 <code>main</code> 檔案時的副檔名會自動補，所以就乾脆拿掉，同時提供 <code>smartypants.js</code> 和 <code>smartypants.mjs</code> 兩個檔案，其實都是 <code>main</code> 用的；再來是 <code>module</code> 這個設定和 Node.js 以及 NPM 無關，其實是 <a href="https://rollupjs.org/guide/en">rollup</a> 提出來的 <a href="https://github.com/rollup/rollup/wiki/pkg.module">pkg.module</a>，rollup 如果在解析模組實有看到這個設定，就可以把這個檔案拿來用，當時設計是這個設定 ES module，以前的 main 則是 CommonJS module，雖然是 rollup 提出的，不過 webpack 現在也支援了，範例中還有一筆 <code>jsnext:main</code> 則是比較早期用的 key。</p>
+<p>再更進階一點，還有目標對象的問題，就是產出是瀏覽器用的還是 server 端用的，以前這問題不太常見，不過隨著 server side rendering 越來越普及，這問題就開始比較多人關注了，webpack 就有支援 bundle 的目標對象，也有支援 <a href="https://github.com/defunctzombie/package-browser-field-spec">pkg.browser</a> 設定，webpack 的 <a href="https://github.com/webpack/webpack/issues/5673">issue #5673</a> 有不少討論，有興趣的可以參考看看，不過要注意的是 <code>browser</code> 似乎是第一順位，設定的時候要小心點。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

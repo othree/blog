@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000962" baseName="circleci-terraform-aws-deploy">Circle CI run Terraform and AWS deployment</b:listData>
+
+			<b:previous>
+				<b:mTitle>COSCUP 2019</b:mTitle>
+				<b:mDate>2019-08-20</b:mDate>
+				<b:mBase>coscup-2019</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>作動行為 Activation Behavior</b:mTitle>
+				<b:mDate>2019-10-20</b:mDate>
+				<b:mBase>activation-behavior</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000962" baseName="circleci-terraform-aws-deploy">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-08-22</b:date>
+				<b:time>23:02:19</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Circle CI run Terraform and AWS deployment</b:title>
+			<b:content>
+				<b:summary>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來： Terraform 是用 hashicorp 官方的 image，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 BASH_ENV 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command...</b:summary>
+				<b:mainContent><p>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來：</p>
+<p>Terraform 是用 hashicorp 官方的 <a href="https://hub.docker.com/r/hashicorp/terraform/">image</a>，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 <a href="https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command">BASH_ENV</a> 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command 執行：</p>
+<pre><code class="language-sh">echo &quot;export S3_ID=`terraform output s3_bucket_name`&quot; &gt;&gt; $BASH_ENV
+</code></pre>
+<p>當然你的 terraform module 要有定義好 output。</p>
+<p>第二個是重點是 <code>$BASH_ENV</code> 的值，個人建議是設定絕對路徑，直接寫出完整路徑，不要用其它環境變數來組合，然後位置要放在 working directory 內，好方便能  <code>persist_to_workspace</code>，這樣才能夠跨 job 使用，另外就是檔名建議不要用 <code>.</code> 開頭的隱藏檔名，我遇到過各種找不到檔案的錯誤訊息，然後 working directory 建議不要放在 home 目錄下，一來 <code>$BASH_ENV</code> 去用 <code>$HOME</code> 組合出來我遇到錯誤過，用 <code>~</code> 來寫路徑也是遇到錯誤過，二來不同 image 的 home 目錄路徑不同，如果要在 config 內直接寫死絕對路徑，建議直接定一個固定的位置，我現在是用：</p>
+<pre><code>/tmp/workspace
+</code></pre>
+<p>然後這樣後面就可以用官方的 s3 orb 下指令了：</p>
+<pre><code class="language-yaml">- aws-s3/sync:
+    from: build
+    to: &quot;s3://${S3_ID}&quot;
+    aws-region: &quot;ap-northeast-1&quot;
+</code></pre>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

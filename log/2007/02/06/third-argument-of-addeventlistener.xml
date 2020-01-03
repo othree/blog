@@ -6,7 +6,7 @@
 	<b:entries>
 		<b:entriesMeta>
 			<b:listType>s</b:listType>
-			<b:listData listID="000386" baseName="third-argument-of-addeventlistener">addEventListener的第三個參數</b:listData>
+			<b:listData listID="000386" baseName="third-argument-of-addeventlistener">addEventListener 的第三個參數</b:listData>
 
 			<b:previous>
 				<b:mTitle>2007台北國際書展</b:mTitle>
@@ -39,7 +39,7 @@
 
 			<b:PingsAccepted>0</b:PingsAccepted>
 
-			<b:title>addEventListener的第三個參數</b:title>
+			<b:title>addEventListener 的第三個參數</b:title>
 			<b:content>
 				<b:summary>W3C DOM裡用來新增觸發事件的函數叫AddEventListener，不過我一直不知道這個函數的第三個參數是要做什麼用的，總是隨便設，也沒發現差異再哪，前兩天看ppk on javascript終於看到說明了，至於很久以前就有的DOM的標準文件，我其實根本沒去找過這個參數的資訊。...</b:summary>
 				<b:mainContent><p><span class="caps">W3C </span><a href="http://www.w3.org/DOM/"><span class="caps">DOM</span></a>裡用來新增觸發事件的函數叫<a href="http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventListener">AddEventListener</a>，不過我一直不知道這個函數的第三個參數是要做什麼用的，總是隨便設，也沒發現差異再哪，前兩天看<a href="http://www.quirksmode.org/book/">ppk on javascript</a>終於看到說明了，至於很久以前就有的DOM的標準文件，我其實根本沒去找過這個參數的資訊。</p></b:mainContent>
@@ -49,7 +49,9 @@
 
 <p>像這張圖所顯示的，我的範例有兩層div元素，而且都設定有click事件，一般來說，如果我在內層藍色的元素上click不只會觸發藍色元素的click事件，還會同時觸發紅色元素的click事件，而useCapture這個參數就是在控制這時候兩個click事件的先後順序。如果是false，那就會使用bubbling，他是從內而外的流程，所以會先執行藍色元素的click事件再執行紅色元素的click事件，如果是true，那就是capture，和bubbling相反是由外而內，會先執行紅色元素的click事件才執行藍色元素的click事件。附上兩個範例，<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/useCapture.html">capture</a>和<a href="http://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/notUseCapture.html">bubbling</a>，兩個檔案只有差在此一參數不同，可以發現事件的發生順序不一樣了。</p>
 
-<p>那如果不同層的元素使用的useCapture不同呢？就是會先從最外層元素往目標元素尋找設定為capture的事件，到達目標元素執行目標元素的事件後，再尋原路往外尋找設定為bubbling的事件。</p></b:extendContent>
+<p>那如果不同層的元素使用的useCapture不同呢？就是會先從最外層元素往目標元素尋找設定為capture的事件，到達目標元素執行目標元素的事件後，再尋原路往外尋找設定為bubbling的事件。</p>
+
+<p>補充：[2019 年的記錄](https://blog.othree.net/log/2019/03/20/third-argument-of-addeventlistener-2/)</p></b:extendContent>
 			</b:content>
 			<b:comments commentCount="12">
 

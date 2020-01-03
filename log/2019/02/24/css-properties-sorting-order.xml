@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000951" baseName="css-properties-sorting-order">CSS 屬性排序</b:listData>
+
+			<b:previous>
+				<b:mTitle>async, await and try catch</b:mTitle>
+				<b:mDate>2019-01-26</b:mDate>
+				<b:mBase>async-await-try-catch</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>使用 VSCode 讀程式碼</b:mTitle>
+				<b:mDate>2019-03-09</b:mDate>
+				<b:mBase>read-code-using-vscode</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000951" baseName="css-properties-sorting-order">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-02-24</b:date>
+				<b:time>22:21:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>CSS 屬性排序</b:title>
+			<b:content>
+				<b:summary> 上週在弄 Stylelint 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 zen 這組設定， 這組排序規則是從 Zen Coding 那邊來的，它的規則其實應該就是 Concentric CSS 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。 最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 Poll Results: How do you order your...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47191821991/" title="CSS Box by othree, on Flickr"><img src="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg" intrinsicsize="455x340" width="455" height="340" alt="CSS Box" srcset="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg 455w" /></a></p>
+<p>上週在弄 <a href="https://stylelint.io/">Stylelint</a> 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 <a href="https://github.com/csscomb/csscomb.js/">zen</a> 這組設定， 這組排序規則是從 <a href="https://github.com/pepelsbey/zen-coding-snippets/blob/master/CSS%20Sorting.md">Zen Coding</a> 那邊來的，它的規則其實應該就是 <a href="https://rhodesmill.org/brandon/2011/concentric-css/">Concentric CSS</a> 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。</p>
+<p>最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 <a href="https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/">Poll Results: How do you order your CSS properties?</a> 的這篇文章，裡面就有 14% 的人是使用字母排序，當年還是 2012，2017 年 SitePoint 的<a href="https://www.sitepoint.com/results-ultimate-css-survey-2017/">調查結果</a> 其實沒有很大改變，變成 13%，所以雖然我覺得 anti-pattern 但其實還是有一定比例的人真的這樣用，其實要說的話也還是有好處啦，因為其它的屬性排序規則都是有個基本原則，實際上要仔細排列所有屬性的時候都還是有可能會有些地方有灰色地帶。</p>
+<p>最高比例的排序方法則是照屬性類型分類，照屬性分類其實算是比較籠統的說法，Concentric CSS 的排序規則也算是照屬性分類的，同樣符合這樣條件的另外還有 Nicolas 的 <a href="https://github.com/necolas/idiomatic-css#declaration-order">Idomatic CSS</a> 和 Jonathan Snook 的 <a href="https://smacss.com/book/formatting#grouping">SMACSS</a> 的排序規則，其實這兩種方法的大方向也和 Concentric 的很接近，雖然是分成幾個大類別，但是大類別的排序基本上一樣是從外到內的方向，然後根據 npm 的<a href="https://www.npmjs.com/package/stylelint-config-property-sort-order-smacss">安裝數字</a>，目前使用度最高的應該是 SMACSS 的排序建議了吧，細部的完整排序可以在 Stylelint plugin package 的 <a href="https://github.com/cahamilton/css-property-sort-order-smacss/blob/master/index.js">repo</a> 那邊看到。而除了 Stylelint 之外，PostCSS 也有 plugin 叫 <a href="https://www.npmjs.com/package/css-declaration-sorter">css-declaration-sorter</a> 來幫你排，也內建了 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a> 和 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>，而且該 plugin 還號稱：</p>
+<ul>
+<li>Up-to-date CSS properties fetched from the <a href="https://developer.mozilla.org/">MDN Web Platform</a>.</li>
+<li>Thought-out sorting orders out of the box, <strong>approved by their authors</strong>.</li>
+</ul>
+<p>感覺很不錯的樣子，它們的完整排序清單也可以在 repo 內找到：<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>、<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a>，不過排序這東西應該還是要在 lint 的時候做啊，PostCSS 的產出物通常是 production 環境用的 code 了，只是 stylelint 那邊用的排序清單和這邊的又不同，不過其實 <a href="https://stylelint.io/user-guide/postcss-plugin/">Stylelint</a> 和 <a href="https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-postcss-sorting">VSCode</a> 都可以拿 PostCSS 的來用的樣子，還沒測試過就是～</p>
+<p>最後提兩個 Concentric CSS 灰色地帶的問題：</p>
+<ol>
+<li>Grid、 column、 flex、 float 這幾個屬性你會怎麼排呢～？</li>
+<li>如果 <code>box-sizing: border-box;</code> 設下去後，width/height 要放在 padding 前面還後面呢？</li>
+</ol>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

@@ -9,6 +9,206 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000964" baseName="enter-space-keydown-keyup">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-10-22</b:date>
+				<b:time>22:54:22</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>ENTER or SPACE, KEYDOWN or KEYUP</b:title>
+			<b:content>
+				<b:summary>前一篇文章作動行為 Activation Behavior 發佈之後，卡西又做了一些測試，發現到 ENTER 和 SPACE 的觸發時機其實不一樣： 終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 https://t.co/ec1rMlFVvO-- 卡西 (@caasih) October 21, 2019 然後我仔細測試過發現真的是這樣，而且 SPACE 有 keypress 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 WAI-ARIA...</b:summary>
+				<b:mainContent><p>前一篇文章<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/">作動行為 Activation Behavior</a> 發佈之後，卡西又做了一些測試，發現到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 的觸發時機其實不一樣：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 <a href="https://t.co/ec1rMlFVvO">https://t.co/ec1rMlFVvO</a></p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1186268152184766464?ref_src=twsrc%5Etfw">October 21, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>然後我仔細測試過發現真的是這樣，而且 <kbd>SPACE</kbd> 有 <code>keypress</code> 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 <a href="https://github.com/w3c/aria-practices/issues/610">WAI-ARIA Authoring Practices Issue 610</a>，於是我就覺得這應該和 Web 標準定義沒關係，應該是更古老的預設行為，於是改變方向改找 Windows 預設行為相關的文件，搜尋一陣子其實也找不太到東西，大概是因為 GUI 和 Windows 剛出的時候其實 www 還不知道在哪裡吧，不過後來還是找到兩篇 stackoverflow 的問答看起來是相關的：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/16090578/why-do-enter-and-space-keys-behave-differently-for-buttons">Why do Enter and Space keys behave differently for buttons?</a></li>
+<li><a href="https://stackoverflow.com/questions/6706689/keyboard-control-of-gui-dialogs-should-default-button-change-with-focus">Keyboard control of GUI dialogs - Should default button change with focus?</a></li>
+</ul>
+<p>總和這兩篇的內容，大概整理一下：</p>
+<p>這個行為應該是 Windows 一開始的時候就如此設計的了（看起來是很難找到相關設計的文件），然後實際上和 <kbd>ENTER</kbd> 相關（相對）的操作其實是 <kbd>ESC</kbd> 鍵，<kbd>ENTER</kbd> 鍵代表的是直接點 default button（例如 form 的 submit、dialog 的 ok 之類的），或是可以說是執行元件預設的行為，至於 <kbd>ESC</kbd> 鍵則是取消，不過取消在網頁的控制元件中幾乎是不存在的，過去有的大概只有 <code>&lt;select&gt;</code> 展開下拉選單後又決定不選時可以取消，到 HTML5 則又多了 <code>&lt;dialog&gt;</code> 有取消的行為（關閉 dialog），大概也是因為這個原因讓人忽略了 <kbd>ENTER</kbd> 和 <kbd>ESC</kbd> 的關係，變成注意到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 都可以操作元件；至於 <kbd>SPACE</kbd> 鍵其實就像是滑鼠點擊，<code>keyDown</code> 如同 <code>mouseDown</code>，<code>keyUp</code> 如同 <code>mouseUp</code>，要到 <code>keyUp</code> 才算一個點擊的動作，也就是到這時候才會去觸發 <code>click</code> 事件。</p>
+<p>搞清楚這現象的原理之後，其實也就更容易理解 <a href="https://github.com/w3c/aria-practices">WAI-ARIA Authoring Practices</a> 的範例那些 <kbd>ENTER</kbd>、<kbd>ESC</kbd>、<kbd>SPACE</kbd> 幾個按鍵行為為什麼是那樣了，當然，以後需要客製 widget 時也不用再對這幾個按鍵的行為該怎樣定義苦惱了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000963" baseName="activation-behavior">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-10-20</b:date>
+				<b:time>14:22:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>作動行為 Activation Behavior</b:title>
+			<b:content>
+				<b:summary>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程： 想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）-- Miau Huang (@miau715) October 14, 2019 然後 Jedi 提供了一個題目： 困難的簡單習題（平均起來就是中階）：讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。-- Jedi (@JediLin)...</b:summary>
+				<b:mainContent><p>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程：</p>
+<blockquote class="twitter-tweet" data-theme="light"><p lang="zh" dir="ltr">想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）</p>-- Miau Huang (@miau715) <a href="https://twitter.com/miau715/status/1183625099137540098?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>然後 Jedi 提供了一個題目：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">困難的簡單習題（平均起來就是中階）：<br/>讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。</p>-- Jedi (@JediLin) <a href="https://twitter.com/JediLin/status/1183634431929503744?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>後來米奧大人真的交作業了，也有提出一些問題，然後卡西有回應：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">button 比較明顯的問題有：<br/>* 點了 button 後不放開滑鼠，移到 button 外，不該 active 該 button ，但該取得 focus<br/>* button 上的文字不該被選取<br/>* keyup 該觸發 button 上的 onclick</p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1184838289603231744?ref_src=twsrc%5Etfw">October 17, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>其中，「keyup 該觸發 button 上的 onclick」這句引起了我的興趣。</p>
+<p>為了要顧及到網頁親和力，所有的控制元件的操作都應該要可以用鍵盤執行，所以像是 button 的動作也應該要可以用鍵盤控制，但是其實我以前一直搞不清楚，這之間正確的關係應該是怎樣，就三種可能性：</p>
+<ul>
+<li>key 事件觸發 click 事件，click 事件有 default handler</li>
+<li>click 事件觸發 key 事件，key 事件有 default handler</li>
+<li>click 事件和 key 事件都有同一個 default handler</li>
+</ul>
+<p>當我看到卡西那段文字的時候，我覺得他應該說的是有憑據的，不過我也覺得有些不正確，像是就我的認知，button 的 key 事件預設是不會觸發 click 事件的，於是我就花了點時間研究一下網路標準，這次終於找到規範和正確的關係了。</p>
+<p>我先從 button 標籤開始查起，然後注意到一段，在說明 button 的 <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> 行為應該如何的文字，行為分成 submit button、reset button 和 button 三種，其中前兩個就像是在說 submit button 和 reset button 的行為一樣，所以我就了解到，activation behavior 就是我要找的關鍵字了，目前將它翻譯為「作動行為」。</p>
+<p>然後在 <a href="https://html.spec.whatwg.org/multipage/interaction.html#activation">HTML 6.3 Activation</a> 找到：</p>
+<blockquote>
+<p>Certain elements in HTML have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a>, which means that the user  can activate them. This is always caused by a <code>click</code> event.</p>
+<p>The user agent should allow the user to manually trigger elements that have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation   behavior</a>, for instance using keyboard or voice input, or through mouse clicks. When the  user triggers an element with a defined <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> in a manner other than  clicking it, the default action of the interaction event must be to <a href="https://html.spec.whatwg.org/multipage/webappapis.html#fire-a-click-event">fire a <code>click</code> event</a> at the element.</p>
+</blockquote>
+<p>第一段就是說作動行為（activation behavior）都是 <code>click</code> 事件觸發，第二段則是說瀏覽器要讓其它方法（像是鍵盤、語音操作等）可以觸發作動行為的話，實做的方法應該是在該事件的處理器（event handler）內觸發 <code>click</code> 事件來觸發該 HTML 元素的作動行為。這段文字就可以證明卡西說的基本上沒錯，另外就是我有疑惑的，應該是 <code>keydown</code> 還是 <code>keyup</code> 事件呢？根據我自己的實驗結果應該是要用 <code>keydown</code>，不過總還是想找一下標準定義的出處，雖然沒有找到很明確的文字說明，不過 <a href="https://www.w3.org/TR/uievents/#event-flow-activation">UI Events 3.5. Activation triggers and behavior</a> 裡面的 EXAMPLE 4 內確實是寫 keydown event，當然 <code>keydown</code> 的時間點也比較符合期待，目前在不同標準文件內看到的範例也都是用 keydown。</p>
+<p>查到這邊大概就可以確定，正確的關係應該是「key 事件觸發 click 事件，click 事件有 default handler」，<del>不過卡西說的小錯誤是應該要用 keydown 事件，然後我在 twitter 有回說普通 button 不應該 keydown 觸發 click 則是我當時的錯誤認知</del>（請見 <a href="https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/">ENTER or SPACE, KEYDOWN or KEYUP</a>）。</p>
+<p>再來，其實我還很好奇，哪裡有定義不同的元素分別用哪些按鍵 <strong>active</strong> 呢？因為表單送出是用 <kbd>ENTER</kbd> 鍵，但是像是 checkbox 的狀態切換卻是用 <kbd>SPACE</kbd> 鍵；上面提供的幾份文件也都沒講到這部分的定義，有種刻意避開的感覺，後來又找了許久才終於找到，其實是放在 WAI-ARIA Authoring Practices 這份 Working Group Note 內，拿 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-4">checkbox</a> 為例，在它的 Keyboard Interaction 段落內就明白寫了：</p>
+<blockquote>
+<p>When the checkbox has focus, pressing the Space key changes the state of the checkbox.</p>
+</blockquote>
+<p>當然也有 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-3">button</a> 的規範，就是同時有定義 <code>space</code> 和 <code>enter</code> ；由於這份文件是 Working Group Note，規範的硬性比較低，這應該也是故意為之的。</p>
+<p>最後來整理一下，首先是 HTML 文件有定義，預設的作動行為都是透過 <code>click</code> 事件觸發，但是同時也要保留其它操作介面觸發作動行為的可能性，像是常見的鍵盤行為，而其它操作方式都要透過觸發 <code>click</code> 事件的方式來觸發作動行為；再來就是不同 HTML 元素的作動行為要做哪些事情也是在 HTML 文件內；至於不同 HTML 元素要支援哪些按鍵呢，這部分就要交叉參考 <a href="https://w3c.github.io/html-aria">ARIA in HTML</a> 和 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/">WAI-ARIA Authoring Practices</a> 兩份文件了，前者用來查詢 HTML 元素對應的 ARIA role，後者可以根據 role 來判斷要支援哪些鍵盤按鍵。</p>
+<p>以後要做自訂的控制元件的時候，就可以正大光明的把主要的動作寫在 onclick 事件下了（然後根據情況去加上 key event）。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000957" baseName="w3c-whatwg-html">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-05-28</b:date>
+				<b:time>23:06:35</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>W3C and WHATWG and HTML</b:title>
+			<b:content>
+				<b:summary> 「天下大勢，分久必合，合久必分」，沒想到 W3C 和 WHATWG 之間的複雜關係就這麼突然的踏上新的里程碑了，今天 W3C blog 發表了一篇文章－W3C and the WHATWG signed an agreement to collaborate on a single version of HTML and DOM，說兩個組織已經簽好合作的協議了，未來算是要共同維護同一份 HTML 和 DOM 的 spec，HTML WG 的章程也因此要重新制訂，現在有草稿可看，詳細一點的摘要可以看 W3C CEO Jeff Jaffe 的文章 － W3C and...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47951484072/" title="w3c-whatwg-logos by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47951484072_044a889c15_b.jpg" intrinsicsize="1024x768" width="512" height="384" alt="w3c-whatwg-logos" srcset="https://live.staticflickr.com/65535/47951484072_044a889c15_b.jpg 1024w" /></a></p>
+<p>「天下大勢，分久必合，合久必分」，沒想到 W3C 和 WHATWG 之間的複雜關係就這麼突然的踏上新的里程碑了，今天 W3C blog 發表了一篇文章－<a href="https://www.w3.org/blog/news/archives/7753">W3C and the WHATWG signed an agreement to collaborate on a single version of HTML and DOM</a>，說兩個組織已經簽好合作的協議了，未來算是要共同維護同一份 HTML 和 DOM 的 spec，HTML WG 的章程也因此要重新制訂，現在有<a href="https://www.w3.org/2018/12/html.html">草稿</a>可看，詳細一點的摘要可以看 W3C CEO Jeff Jaffe 的文章 － <a href="https://www.w3.org/blog/2019/05/w3c-and-whatwg-to-work-together-to-advance-the-open-web-platform/">W3C and WHATWG to work together to advance the open Web platform</a>：</p>
+<ul>
+<li>W3C and WHATWG work together on HTML and DOM, in the WHATWG  repositories, to produce a Living Standard and Recommendation/Review  Draft-snapshots</li>
+<li>WHATWG maintains the HTML and DOM Living Standards</li>
+<li>W3C facilitates community work directly in the WHATWG repositories  (bridging communities, developing use cases, filing issues, writing  tests, mediating issue resolution)</li>
+<li>W3C stops independent publishing of a designated list of  specifications related to HTML and DOM and instead will work to take  WHATWG Review Drafts to W3C Recommendations</li>
+</ul>
+<p>基本上就是 W3C 相關的 WG 以後都改成貢獻到 WHATWG 那邊（在 GitHub 上），然後 W3C 那邊會拿 WHATWG 標準文件的 snapshot 來作為 CR、PR、REC，或許也可以稱為 Living Standard 的勝利。</p>
+<p>如果要看比較細節關於兩個組織間簽的合作內容也有公開在網路上－<a href="https://www.w3.org/2019/04/WHATWG-W3C-MOU.html">Memorandum of Understanding Between W3C and WHATWG</a>，裡面還有列出所有相關的 W3C 的標準文件，以前我就一直很好奇到底全部是有哪些，剛好趁這機會一次收集齊全，其實還不少我沒看過的，甚至也有 404 的(?)，其中推薦標準（REC）的部分：</p>
+<ol>
+<li><a href="https://www.w3.org/TR/html5/">https://www.w3.org/TR/html5/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html50/">https://www.w3.org/TR/html50/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html51/">https://www.w3.org/TR/html51/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html52/">https://www.w3.org/TR/html52/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html/">https://www.w3.org/TR/html/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/webstorage/">https://www.w3.org/TR/webstorage/</a></li>
+<li><a href="https://www.w3.org/TR/webmessaging/">https://www.w3.org/TR/webmessaging/</a></li>
+<li><a href="https://www.w3.org/TR/eventsource/">https://www.w3.org/TR/eventsource/</a></li>
+<li><a href="https://www.w3.org/TR/2dcontext/">https://www.w3.org/TR/2dcontext/</a></li>
+<li><a href="https://www.w3.org/TR/dom/">https://www.w3.org/TR/dom/</a></li>
+</ol>
+<p>非推薦標準：</p>
+<ol>
+<li><a href="https://w3c.github.io/html/">https://w3c.github.io/html/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/html/wg/drafts/html/master/">https://www.w3.org/html/wg/drafts/html/master/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/websockets/">https://www.w3.org/TR/websockets/</a></li>
+<li><a href="https://www.w3.org/TR/2dcontext2/">https://www.w3.org/TR/2dcontext2/</a></li>
+<li><a href="https://www.w3.org/TR/microdata/">https://www.w3.org/TR/microdata/</a></li>
+<li><a href="https://www.w3.org/TR/staticrange/">https://www.w3.org/TR/staticrange/</a></li>
+<li><a href="https://www.w3.org/TR/workers/">https://www.w3.org/TR/workers/</a></li>
+<li><a href="https://dvcs.w3.org/hg/webperf/raw-file/default/specs/RequestAnimationFrame/Overview.html">https://dvcs.w3.org/hg/webperf/raw-file/default/specs/RequestAnimationFrame/Overview.html</a></li>
+<li><a href="https://w3c.github.io/dom/">https://w3c.github.io/dom/</a></li>
+<li><a href="https://www.w3.org/TR/dom41/">https://www.w3.org/TR/dom41/</a></li>
+<li><a href="https://www.w3.org/TR/DOM-Parsing/">https://www.w3.org/TR/DOM-Parsing/</a></li>
+<li><a href="https://www.w3.org/TR/html53/">https://www.w3.org/TR/html53/</a></li>
+</ol>
+<p>這些東西在 WHATWG 那邊基本上都寫在 <a href="https://html.spec.whatwg.org/multipage/">HTML</a> 和 <a href="https://dom.spec.whatwg.org/">DOM</a> 裡面，就是單一份標準文件內塞了比較多東西這樣。</p>
+<p>最後就是我還發現一點有趣的，WHATWG <a href="https://github.com/whatwg/sg/issues/90">投票那邊</a>，四位出來投票的分別是 Apple、Microsoft、Mozilla 和 Google 四間公司的人。然後我只對 Mozilla 的 <a href="https://github.com/dbaron">dbaron</a> 有印象而已。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000953" baseName="lab-gradient">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-03-18</b:date>
+				<b:time>22:38:25</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Lab Gradient</b:title>
+			<b:content>
+				<b:summary> 一早起來就看到這篇文章 視覺上的完美漸層 Chromatic，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。 目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 chromatic-sass，PostCSS 則是 postcss-easing-gradients，這套背後用的則是首篇文章也有介紹的 chroma.js 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的工具，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 Lch and Lab colour and...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47359638052/" title="Gradient by othree, on Flickr"><img src="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="Gradient" srcset="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg 1024w" /></a></p>
+<p>一早起來就看到這篇文章 <a href="https://medium.com/@citysite1025/%E8%A6%96%E8%A6%BA%E4%B8%8A%E7%9A%84%E5%AE%8C%E7%BE%8E%E6%BC%B8%E5%B1%A4-chromatic-e1acbfcd2428">視覺上的完美漸層 Chromatic</a>，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。</p>
+<p>目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 <a href="https://github.com/bugsnag/chromatic-sass">chromatic-sass</a>，PostCSS 則是 <a href="https://github.com/larsenwork/postcss-easing-gradients">postcss-easing-gradients</a>，這套背後用的則是首篇文章也有介紹的 <a href="https://vis4.net/chromajs/">chroma.js</a> 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的<a href="https://larsenwork.com/easing-gradients/">工具</a>，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 <a href="http://davidjohnstone.net/pages/lch-lab-colour-gradient-picker">Lch and Lab colour and gradient picker</a>。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000951" baseName="css-properties-sorting-order">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-02-24</b:date>
+				<b:time>22:21:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS 屬性排序</b:title>
+			<b:content>
+				<b:summary> 上週在弄 Stylelint 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 zen 這組設定， 這組排序規則是從 Zen Coding 那邊來的，它的規則其實應該就是 Concentric CSS 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。 最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 Poll Results: How do you order your...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47191821991/" title="CSS Box by othree, on Flickr"><img src="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg" intrinsicsize="455x340" width="455" height="340" alt="CSS Box" srcset="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg 455w" /></a></p>
+<p>上週在弄 <a href="https://stylelint.io/">Stylelint</a> 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 <a href="https://github.com/csscomb/csscomb.js/">zen</a> 這組設定， 這組排序規則是從 <a href="https://github.com/pepelsbey/zen-coding-snippets/blob/master/CSS%20Sorting.md">Zen Coding</a> 那邊來的，它的規則其實應該就是 <a href="https://rhodesmill.org/brandon/2011/concentric-css/">Concentric CSS</a> 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。</p>
+<p>最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 <a href="https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/">Poll Results: How do you order your CSS properties?</a> 的這篇文章，裡面就有 14% 的人是使用字母排序，當年還是 2012，2017 年 SitePoint 的<a href="https://www.sitepoint.com/results-ultimate-css-survey-2017/">調查結果</a> 其實沒有很大改變，變成 13%，所以雖然我覺得 anti-pattern 但其實還是有一定比例的人真的這樣用，其實要說的話也還是有好處啦，因為其它的屬性排序規則都是有個基本原則，實際上要仔細排列所有屬性的時候都還是有可能會有些地方有灰色地帶。</p>
+<p>最高比例的排序方法則是照屬性類型分類，照屬性分類其實算是比較籠統的說法，Concentric CSS 的排序規則也算是照屬性分類的，同樣符合這樣條件的另外還有 Nicolas 的 <a href="https://github.com/necolas/idiomatic-css#declaration-order">Idomatic CSS</a> 和 Jonathan Snook 的 <a href="https://smacss.com/book/formatting#grouping">SMACSS</a> 的排序規則，其實這兩種方法的大方向也和 Concentric 的很接近，雖然是分成幾個大類別，但是大類別的排序基本上一樣是從外到內的方向，然後根據 npm 的<a href="https://www.npmjs.com/package/stylelint-config-property-sort-order-smacss">安裝數字</a>，目前使用度最高的應該是 SMACSS 的排序建議了吧，細部的完整排序可以在 Stylelint plugin package 的 <a href="https://github.com/cahamilton/css-property-sort-order-smacss/blob/master/index.js">repo</a> 那邊看到。而除了 Stylelint 之外，PostCSS 也有 plugin 叫 <a href="https://www.npmjs.com/package/css-declaration-sorter">css-declaration-sorter</a> 來幫你排，也內建了 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a> 和 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>，而且該 plugin 還號稱：</p>
+<ul>
+<li>Up-to-date CSS properties fetched from the <a href="https://developer.mozilla.org/">MDN Web Platform</a>.</li>
+<li>Thought-out sorting orders out of the box, <strong>approved by their authors</strong>.</li>
+</ul>
+<p>感覺很不錯的樣子，它們的完整排序清單也可以在 repo 內找到：<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>、<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a>，不過排序這東西應該還是要在 lint 的時候做啊，PostCSS 的產出物通常是 production 環境用的 code 了，只是 stylelint 那邊用的排序清單和這邊的又不同，不過其實 <a href="https://stylelint.io/user-guide/postcss-plugin/">Stylelint</a> 和 <a href="https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-postcss-sorting">VSCode</a> 都可以拿 PostCSS 的來用的樣子，還沒測試過就是～</p>
+<p>最後提兩個 Concentric CSS 灰色地帶的問題：</p>
+<ol>
+<li>Grid、 column、 flex、 float 這幾個屬性你會怎麼排呢～？</li>
+<li>如果 <code>box-sizing: border-box;</code> 設下去後，width/height 要放在 padding 前面還後面呢？</li>
+</ol>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000902" baseName="svg">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -294,240 +494,6 @@ background: #123456 url('the-bg@2x.png') center center/32px 32px;
 <li><a href="https://www.dropbox.com/s/qkh68xkz3vp5yvr/eis-design-innovation.pdf?dl=0">Innovations in Email Design</a></li>
 <li><a href="https://emailclientmarketshare.com/">Email Client Market Share</a></li>
 </ul>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000865" baseName="purecss">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-04-08</b:date>
-				<b:time>22:48:28</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Pure.css</b:title>
-			<b:content>
-				<b:summary>最近做的修改還有一個就是把 Bootstrap 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 Pure.css。 Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是...</b:summary>
-				<b:mainContent><p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
-
-<p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
-
-<p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000859" baseName="device-pixel-ratio-header">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-02-28</b:date>
-				<b:time>14:34:04</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Device Pixel Ratio Header</b:title>
-			<b:content>
-				<b:summary>之前文章有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 HTTP Client Hints，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了： DPR width viewport-width downlink 其中 DPR 就是 device pixel ratio；viewport-width 就和以前介紹過的 viewport width 一樣；width 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device...</b:summary>
-				<b:mainContent><p>之前<a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">文章</a>有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 <a href="http://httpwg.org/http-extensions/client-hints.html">HTTP Client Hints</a>，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：</p>
-
-<ul>
-<li>DPR</li>
-<li>width</li>
-<li>viewport-width</li>
-<li>downlink</li>
-</ul>
-
-<p>其中 <code>DPR</code> 就是 device pixel ratio；<code>viewport-width</code> 就和以前介紹過的 viewport width 一樣；<code>width</code> 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，<code>width</code> 就是 160×2 = 320px；最後一個 <code>downlink</code> 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 <a href="https://w3c.github.io/netinfo/#downlinkmax-attribute">Network Information API</a> 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。</p>
-
-<p>Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 <a href="https://www.ampproject.org/">Accelerated Mobile Pages Project</a>  所做的。</p>
-
-<p>Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 <code>Accept-CH</code>：</p>
-
-<pre><code>Accept-CH: "DPR, Downlink"
-</code></pre>
-
-<p>或是加上 meta tag</p>
-
-<pre><code>&lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&gt;
-</code></pre>
-
-<p>其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">HTTP content negotiation</a>，用的 header 也是 <code>Accept</code> 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216">進度</a>。</p>
-
-<p>這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。</p>
-
-<p>Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。</p>
-
-<p>不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 <a href="https://fetch.spec.whatwg.org/#simple-header">simple headers</a> 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下<a href="https://github.com/whatwg/fetch/issues/52">討論</a>。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000840" baseName="more-on-srcset">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-04-08</b:date>
-				<b:time>00:53:33</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>srcset</b:title>
-			<b:content>
-				<b:summary>Responsive Image 大概定案成 srcset 和 &lt;picture&gt; 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 srcset 和我當初介紹時已經差蠻多，中文資源有找到 Zhusee 有另外一篇介紹，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 w 和 density descriptor 用 x，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 x 或是全部用 w，所以： 不能在一張圖片裡面同時有 w 和...</b:summary>
-				<b:mainContent><p>Responsive Image 大概定案成 <code>srcset</code> 和 <code>&lt;picture&gt;</code> 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 <code>srcset</code> 和我當初<a href="https://blog.othree.net/log/2012/12/02/srcset/">介紹</a>時已經差蠻多，中文資源有找到 Zhusee 有另外一篇<a href="http://blog.zhusee.in/post/248199/basic-responsive-image-with-srcset-property">介紹</a>，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 <code>w</code> 和 density descriptor 用 <code>x</code>，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 <code>x</code> 或是全部用 <code>w</code>，所以：</p>
-
-<ol>
-<li>不能在一張圖片裡面同時有 <code>w</code> 和 <code>x</code></li>
-<li>全部都用 <code>w</code> 或是全部都用 <code>x</code></li>
-<li>不可有相同的數值，例如兩個 <code>1x</code> 或是兩個 <code>760w</code> </li>
-<li>Descriptor 可以算是該圖片的資訊</li>
-</ol>
-</b:mainContent>
-				<b:extendContent><p>不過最新的 spec 裡面少了第二點的限制，所以會有一組 srceset 混和 width descriptor 和 density descriptor 的情形，然後怎麼挑選圖片的<a href="https://html.spec.whatwg.org/multipage/embedded-content.html#select-an-image-source">地方</a>寫說：</p>
-
-<blockquote>
-  <p>In a user agent-specific manner, choose one image source from source set. Let this be selected source.</p>
-</blockquote>
-
-<p>就是叫瀏覽器自己想辦法的意思，我就很好奇，如果我想設定一組規則，要分成四個組合：</p>
-
-<ul>
-<li>小螢幕低密度</li>
-<li>小螢幕高密度</li>
-<li>大螢幕低密度</li>
-<li>大螢幕高密度</li>
-</ul>
-
-<p>的話，我要怎樣設定 srcset 才能達到目標，因為現在已經不是用 media query 來寫 srcset 了，不能直接寫這樣四組，所以我就去找了 Firefox 和 Chromium 的原始碼來看看他們怎麼做的，Firefox 的找沒多久就<a href="https://dxr.mozilla.org/mozilla-central/source/dom/base/ResponsiveImageSelector.cpp#274">找到</a>了，因為他們有 <a href="https://github.com/mozilla/dxr">dxr</a> 專案用來方便找程式碼，實際用過覺得真的好用，至於 Chromium 就找比較久了，後來是在 <a href="https://github.com/WebKit/webkit/blob/master/Source/WebCore/html/parser/HTMLSrcsetParser.cpp#L232">WebKit 裡面</a>有找到，然後發現兩個瀏覽器的原理其實都一樣，要處理同時有 width descriptor 和 density descriptor 的狀況，基本上就是都轉成 density 然後來挑最適合的，作法大致如下，細節可能有誤：</p>
-
-<ol>
-<li>先對圖片標籤排版，這邊可能會用到 <code>sizes</code> 屬性，不過 CSS 還是優先，然後會得到圖片在頁面上的寬度，稱為 computed width</li>
-<li>對每張候選圖片計算 effective pixel density，算法是： <code>圖片寬度 / computed width</code>，圖片寬度可以是 width descriptor 來的或是圖片的實際寬度，如果 descriptor 是 density descriptor 的話就不用計算，直接拿來用</li>
-<li>比對 effective pixel density 和現在 device 螢幕的 density，取最接近的</li>
-</ol>
-
-<p>其中第三步驟的比較，大概是考慮效能和記憶體問題，兩個瀏覽器都沒真的做很嚴謹，都是照順序跑過一遍而已，所以在寫 srcset 的時候建議也要照圖片的大小排，至於要大的先還是小的先，就看開發者希望是 density 略大的優先還是略小的優先了，所以如果我寫：</p>
-
-<pre><code>srcset="aaa.jpg 1x, bbb.jpg 1.4x, ccc.jpg 1.6x, ddd.jpg 2x"
-</code></pre>
-
-<p>然後我現在圖片需要 <code>1.5x</code> 的話，應該就會拿到 1.4x 的 <code>bbb.jpg</code>，而如果我偏好用 1.6x <code>ccc.jpg</code> 的話，就要改成：</p>
-
-<pre><code>srcset="ddd.jpg 2x, ccc.jpg 1.6x, bbb.jpg 1.4x, aaa.jpg 1x"
-</code></pre>
-
-<p>後來發現這個挑選圖片的原則，其實在 WHATWG 的 <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#embedded-content">HTML Spec 裡面有寫</a>，不過是 non-normative 的段落，就是說這不是一定要遵守，只是建議，而且前面也有提到 spec 內是寫說挑選的原則是瀏覽器自己處理，而會這樣設計相信是為了像 mobile device 之類的裝置，網路速度如果比較慢，或是需要節省流量時，就可以挑選比較小的檔案，而不一定是挑出顯示上最好的那張圖片。</p>
-
-<p>最後，其實 descriptor 除了 density 和 width 兩種之外，還有一種 height descriptor，不過目前只是保留可能性，spec 還沒定義要怎樣處理，其實還蠻能理解目前會以寬度為主的狀況，在 Matt Brubeck 的 Let's build a browser engine! 系列文章中的第六篇「<a href="http://limpet.net/mbrubeck/2014/09/17/toy-layout-engine-6-block.html">Block layout</a>」這篇文章有介紹到一般瀏覽器是怎樣排版畫 layout 的，而其處理的原則就是先從左上角開始把東西往右排，所以寬度一定先決定，然後才決定高度，相信這也是垂直置中搞這麼多年的原因吧。</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000814" baseName="resource-hints">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-10-23</b:date>
-				<b:time>14:18:35</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Resource Hints</b:title>
-			<b:content>
-				<b:summary>Resource Hints 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 &lt;link&gt; 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，範例如下： &lt;link rel="preconnect" href="//example.com"&gt; &lt;link rel="preconnect" href="//cdn.example.com"&gt; &lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt; &lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt; 可以發現有兩種 hint，分別是 preconnect 和 preload，當然就照字面上的意思就可以理解了，preconnect 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake...</b:summary>
-				<b:mainContent><p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，範例如下：</p>
-
-<pre><code>&lt;link rel="preconnect" href="//example.com"&gt;
-&lt;link rel="preconnect" href="//cdn.example.com"&gt;
-&lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt;
-&lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt;
-</code></pre>
-
-<p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
-
-<p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000799" baseName="rgba">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2014-06-06</b:date>
-				<b:time>14:47:38</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>RGBA_ 控字慾</b:title>
-			<b:content>
-				<b:summary>昨天去參加了 RGBA 很久沒辦的活動，這次主題是字體，剛好是我很有興趣的議題，所以從一開始就很想參與，結果報名時竟然忘記，而且還連續兩次都忘記了，想不到活動當天 hlb 沒辦法過去，我就順利的接手他的票了，然後覺得應該分享一下，所以就有了這篇文章。 一開始是由 Jason 的手寫西文毛筆字開始，我有拍些照片也錄了一段影片： 一直覺得寫這種字體用的筆很有趣，根本就是一片鐵片，要控制的好讓出墨平均應該需要不少練習吧， 接著就是 Even 介紹他挑選字形的方法，因為他基本上都是挑選黑體來用比較多，不過黑體也分很多種，所以先介紹了不同黑體的差異，基本上就是黑體字並不是所有都侷限現在框框內的，筆劃也不是都方方正正的，例如蒙納黑和 Arial Unicode MS 的底就不平，所以字體本身可能是有點歪斜的。 另外一種變化可以稱為喇叭口，也就是上圖那樣，在筆劃末端會放大，這種黑體比較適合小字使用，喇叭口可以讓視覺上感覺筆會比較粗，但是又不會影響整體的灰度，例如 Hiragino 這個 OSX 內建的日文字體。如果不要喇叭口的話可以選華康黑，華康黑又有一個特別的地方是他的一些筆劃是有裝飾的，我本來以為黑體就是不會有這些裝飾元素的，真是沒想到啊。最後講到信黑體，信黑體就是非常標準，文字侷限在方框內，灰度平均，沒有裝飾的黑體。然後 Even 還有用 fontshop 這個網站和 Sketch 示範一下不同字重的搭配。 接下來聽的是 but 介紹 OpenType 特殊功能和他做的一些實驗，OpenType 的規範有定義一些在西文排版上已經存在很久的功能，例如連字 Ligatures。 OpenType 有的功能時很很多，微軟有份文件有列出，據 but 說，OpenType 是微軟和 Adobe...</b:summary>
-				<b:mainContent><p>昨天去參加了 RGBA 很久沒辦的活動，這次主題是字體，剛好是我很有興趣的議題，所以從一開始就很想參與，結果報名時竟然忘記，而且還連續兩次都忘記了，想不到活動當天 hlb 沒辦法過去，我就順利的接手他的票了，然後覺得應該分享一下，所以就有了這篇文章。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14345683145/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5591/14345683145_0f9d9383c8_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm6.staticflickr.com/5591/14345683145_0f9d9383c8_b.jpg 1024w, https://farm6.staticflickr.com/5591/14345683145_aa653ac6b4_h.jpg 1600w" /></a></p>
-
-<p>一開始是由 Jason 的手寫西文毛筆字開始，我有拍些照片也錄了一段影片：</p>
-
-<div class="embed_16_9">
-<iframe width="853" height="480" src="//www.youtube.com/embed/55-x6DcKyQc" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-<p>一直覺得寫這種字體用的筆很有趣，根本就是一片鐵片，要控制的好讓出墨平均應該需要不少練習吧，</p>
-
-<p>接著就是 Even 介紹他挑選字形的方法，因為他基本上都是挑選黑體來用比較多，不過黑體也分很多種，所以先介紹了不同黑體的差異，基本上就是黑體字並不是所有都侷限現在框框內的，筆劃也不是都方方正正的，例如蒙納黑和 Arial Unicode MS 的底就不平，所以字體本身可能是有點歪斜的。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14352869974/" title="喇叭口 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2911/14352869974_632f9dfaab_b.jpg" width="1024" height="1024" alt="喇叭口" srcset="https://farm3.staticflickr.com/2911/14352869974_632f9dfaab_b.jpg 1024w, https://farm3.staticflickr.com/2911/14352869974_6c3fb2cc87_h.jpg 1600w" /></a></p>
-
-<p>另外一種變化可以稱為喇叭口，也就是上圖那樣，在筆劃末端會放大，這種黑體比較適合小字使用，喇叭口可以讓視覺上感覺筆會比較粗，但是又不會影響整體的灰度，例如 Hiragino 這個 OSX 內建的日文字體。如果不要喇叭口的話可以選華康黑，華康黑又有一個特別的地方是他的一些筆劃是有裝飾的，我本來以為黑體就是不會有這些裝飾元素的，真是沒想到啊。最後講到信黑體，信黑體就是非常標準，文字侷限在方框內，灰度平均，沒有裝飾的黑體。然後 Even 還有用 <a href="http://fontshop.com">fontshop</a> 這個網站和 <a href="http://bohemiancoding.com/sketch/">Sketch</a> 示範一下不同字重的搭配。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14159167097/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm3.staticflickr.com/2934/14159167097_81c5f90da1_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm3.staticflickr.com/2934/14159167097_81c5f90da1_b.jpg 1024w, https://farm3.staticflickr.com/2934/14159167097_6079864fe3_h.jpg 1600w" /></a></p>
-
-<p>接下來聽的是 but 介紹 OpenType 特殊功能和他做的一些實驗，OpenType 的規範有定義一些在西文排版上已經存在很久的功能，例如連字 Ligatures。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/diegoiaconelli/4904028989/" title="Ligatures by dotcx, on Flickr"><img src="https://farm5.staticflickr.com/4075/4904028989_0f6974d4ec_b.jpg" width="1024" height="765" alt="Ligatures" srcset="https://farm5.staticflickr.com/4075/4904028989_0f6974d4ec_b.jpg 1024w" /></a></p>
-
-<p>OpenType 有的功能時很很多，微軟有份<a href="http://www.microsoft.com/typography/otspec/featurelist.htm">文件</a>有列出，據 but 說，OpenType 是<a href="http://www.microsoft.com/typography/otspec/default.htm">微軟</a>和 <a href="http://www.adobe.com/products/type/opentype.html">Adobe</a> 合作產出的，我後來搜尋一些相關資料時發現微軟有不少文件，可惜 IE 對於 OpenType feature 的支援卻落後不少，Firefox 和 Chrome 都已經支援一陣子了，雖然目前都還算是實驗中的功能， but 有用這些功能和他自己製作的字形弄了兩個實驗網站，兩個其實都是用連字辦到的，<a href="http://but.tw/font/">第一個</a>是完全用文字把日本的火車時刻表做出來，這樣做除了畫面呈現上可以和紙本一樣，SEO 也會表現的比插入 icon 來的好，當然親和力也自動跟著提昇，<a href="http://but.tw/font/bpmfpy.html">第二個</a>則是注音字形，可以邊打拼音邊顯示你輸入的注音符號，然後另外還做一個反向的，可以打注音拼音，兩個 demo 都蠻有趣的，而且可以在頁面上玩玩看連字。</p>
-
-<p>另外因為有提到 emoji，因為 emoji 是彩色的，目前各家實做不一樣，蘋果是塞圖進字形、Firefox 我忘了，然後微軟是用多個圖層來處理多色的問題，所以我問了一下去年看過的 SVG in OpenType 的相關資訊，可惜 but 沒接觸過，後來我去搜尋看看到底這神秘的東西是誰推出來的，因為把 SVG 放進去字形裡面不是單純只是向量的彩色圖片，所有 SVG 可以做的事情都可以辦到，例如動畫之類的。總之發現是 Mozilla 開始這計畫的，在 W3C 有 <a href="http://www.w3.org/community/svgopentype/">community</a>，Adobe 的網站也有介紹過，應該不會是個孤兒格式才是，目前好像轉轉進到 MPEG 組織下維護了，Open Type 有個很神秘的地方是它現在是由 MPEG 組織來維護，屬於 <a href="http://www.adobe.com/aboutadobe/pressroom/pressreleases/200508/081505OpenTypeISO.html">MPEG-4</a> 檔案格式的一部分，真是令不解的狀況啊～</p>
-
-<p>最後比較可惜的是 Vertical Rhyme 沒聽到，不知道之後會不會放出投影片（but 的投影片也想要啊），主要想聽的主題就差那個而已，有一些特別去聽的就是之前已經在別的場合聽過了，整體來說這次收穫算是很多的，最後還是要感謝一下辦活動的 Even 和突然沒辦法去的布丁了，然後就看一下當天的盛況吧。</p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14365818033/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm4.staticflickr.com/3859/14365818033_7ca0693d4d_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm4.staticflickr.com/3859/14365818033_7ca0693d4d_b.jpg 1024w, https://farm4.staticflickr.com/3859/14365818033_d71743daed_h.jpg 1600w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14345645395/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5547/14345645395_a2e651b466_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm6.staticflickr.com/5547/14345645395_a2e651b466_b.jpg 1024w, https://farm6.staticflickr.com/5547/14345645395_4a02da2dcf_h.jpg 1600w" /></a></p>
-
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/14365860773/" title="RGBA_ 控字慾 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5154/14365860773_4a33f5f37b_b.jpg" width="1024" height="683" alt="RGBA_ 控字慾" srcset="https://farm6.staticflickr.com/5154/14365860773_4a33f5f37b_b.jpg 1024w, https://farm6.staticflickr.com/5154/14365860773_0aa176198f_h.jpg 1600w" /></a></p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

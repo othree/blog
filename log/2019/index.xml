@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>y</b:listType>
+			<b:listData listID="2019">2019</b:listData>
+
+			<b:previous>
+				<b:mTitle>2018</b:mTitle>
+				<b:mDate>2018</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000964" baseName="enter-space-keydown-keyup">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-10-22</b:date>
+				<b:time>22:54:22</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>ENTER or SPACE, KEYDOWN or KEYUP</b:title>
+			<b:content>
+				<b:summary>前一篇文章作動行為 Activation Behavior 發佈之後，卡西又做了一些測試，發現到 ENTER 和 SPACE 的觸發時機其實不一樣： 終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 https://t.co/ec1rMlFVvO-- 卡西 (@caasih) October 21, 2019 然後我仔細測試過發現真的是這樣，而且 SPACE 有 keypress 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 WAI-ARIA...</b:summary>
+				<b:mainContent><p>前一篇文章<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/">作動行為 Activation Behavior</a> 發佈之後，卡西又做了一些測試，發現到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 的觸發時機其實不一樣：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 <a href="https://t.co/ec1rMlFVvO">https://t.co/ec1rMlFVvO</a></p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1186268152184766464?ref_src=twsrc%5Etfw">October 21, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>然後我仔細測試過發現真的是這樣，而且 <kbd>SPACE</kbd> 有 <code>keypress</code> 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 <a href="https://github.com/w3c/aria-practices/issues/610">WAI-ARIA Authoring Practices Issue 610</a>，於是我就覺得這應該和 Web 標準定義沒關係，應該是更古老的預設行為，於是改變方向改找 Windows 預設行為相關的文件，搜尋一陣子其實也找不太到東西，大概是因為 GUI 和 Windows 剛出的時候其實 www 還不知道在哪裡吧，不過後來還是找到兩篇 stackoverflow 的問答看起來是相關的：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/16090578/why-do-enter-and-space-keys-behave-differently-for-buttons">Why do Enter and Space keys behave differently for buttons?</a></li>
+<li><a href="https://stackoverflow.com/questions/6706689/keyboard-control-of-gui-dialogs-should-default-button-change-with-focus">Keyboard control of GUI dialogs - Should default button change with focus?</a></li>
+</ul>
+<p>總和這兩篇的內容，大概整理一下：</p>
+<p>這個行為應該是 Windows 一開始的時候就如此設計的了（看起來是很難找到相關設計的文件），然後實際上和 <kbd>ENTER</kbd> 相關（相對）的操作其實是 <kbd>ESC</kbd> 鍵，<kbd>ENTER</kbd> 鍵代表的是直接點 default button（例如 form 的 submit、dialog 的 ok 之類的），或是可以說是執行元件預設的行為，至於 <kbd>ESC</kbd> 鍵則是取消，不過取消在網頁的控制元件中幾乎是不存在的，過去有的大概只有 <code>&lt;select&gt;</code> 展開下拉選單後又決定不選時可以取消，到 HTML5 則又多了 <code>&lt;dialog&gt;</code> 有取消的行為（關閉 dialog），大概也是因為這個原因讓人忽略了 <kbd>ENTER</kbd> 和 <kbd>ESC</kbd> 的關係，變成注意到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 都可以操作元件；至於 <kbd>SPACE</kbd> 鍵其實就像是滑鼠點擊，<code>keyDown</code> 如同 <code>mouseDown</code>，<code>keyUp</code> 如同 <code>mouseUp</code>，要到 <code>keyUp</code> 才算一個點擊的動作，也就是到這時候才會去觸發 <code>click</code> 事件。</p>
+<p>搞清楚這現象的原理之後，其實也就更容易理解 <a href="https://github.com/w3c/aria-practices">WAI-ARIA Authoring Practices</a> 的範例那些 <kbd>ENTER</kbd>、<kbd>ESC</kbd>、<kbd>SPACE</kbd> 幾個按鍵行為為什麼是那樣了，當然，以後需要客製 widget 時也不用再對這幾個按鍵的行為該怎樣定義苦惱了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000963" baseName="activation-behavior">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-10-20</b:date>
+				<b:time>14:22:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>作動行為 Activation Behavior</b:title>
+			<b:content>
+				<b:summary>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程： 想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）-- Miau Huang (@miau715) October 14, 2019 然後 Jedi 提供了一個題目： 困難的簡單習題（平均起來就是中階）：讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。-- Jedi (@JediLin)...</b:summary>
+				<b:mainContent><p>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程：</p>
+<blockquote class="twitter-tweet" data-theme="light"><p lang="zh" dir="ltr">想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）</p>-- Miau Huang (@miau715) <a href="https://twitter.com/miau715/status/1183625099137540098?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>然後 Jedi 提供了一個題目：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">困難的簡單習題（平均起來就是中階）：<br/>讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。</p>-- Jedi (@JediLin) <a href="https://twitter.com/JediLin/status/1183634431929503744?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
+<p>後來米奧大人真的交作業了，也有提出一些問題，然後卡西有回應：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">button 比較明顯的問題有：<br/>* 點了 button 後不放開滑鼠，移到 button 外，不該 active 該 button ，但該取得 focus<br/>* button 上的文字不該被選取<br/>* keyup 該觸發 button 上的 onclick</p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1184838289603231744?ref_src=twsrc%5Etfw">October 17, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>其中，「keyup 該觸發 button 上的 onclick」這句引起了我的興趣。</p>
+<p>為了要顧及到網頁親和力，所有的控制元件的操作都應該要可以用鍵盤執行，所以像是 button 的動作也應該要可以用鍵盤控制，但是其實我以前一直搞不清楚，這之間正確的關係應該是怎樣，就三種可能性：</p>
+<ul>
+<li>key 事件觸發 click 事件，click 事件有 default handler</li>
+<li>click 事件觸發 key 事件，key 事件有 default handler</li>
+<li>click 事件和 key 事件都有同一個 default handler</li>
+</ul>
+<p>當我看到卡西那段文字的時候，我覺得他應該說的是有憑據的，不過我也覺得有些不正確，像是就我的認知，button 的 key 事件預設是不會觸發 click 事件的，於是我就花了點時間研究一下網路標準，這次終於找到規範和正確的關係了。</p>
+<p>我先從 button 標籤開始查起，然後注意到一段，在說明 button 的 <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> 行為應該如何的文字，行為分成 submit button、reset button 和 button 三種，其中前兩個就像是在說 submit button 和 reset button 的行為一樣，所以我就了解到，activation behavior 就是我要找的關鍵字了，目前將它翻譯為「作動行為」。</p>
+<p>然後在 <a href="https://html.spec.whatwg.org/multipage/interaction.html#activation">HTML 6.3 Activation</a> 找到：</p>
+<blockquote>
+<p>Certain elements in HTML have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a>, which means that the user  can activate them. This is always caused by a <code>click</code> event.</p>
+<p>The user agent should allow the user to manually trigger elements that have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation   behavior</a>, for instance using keyboard or voice input, or through mouse clicks. When the  user triggers an element with a defined <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> in a manner other than  clicking it, the default action of the interaction event must be to <a href="https://html.spec.whatwg.org/multipage/webappapis.html#fire-a-click-event">fire a <code>click</code> event</a> at the element.</p>
+</blockquote>
+<p>第一段就是說作動行為（activation behavior）都是 <code>click</code> 事件觸發，第二段則是說瀏覽器要讓其它方法（像是鍵盤、語音操作等）可以觸發作動行為的話，實做的方法應該是在該事件的處理器（event handler）內觸發 <code>click</code> 事件來觸發該 HTML 元素的作動行為。這段文字就可以證明卡西說的基本上沒錯，另外就是我有疑惑的，應該是 <code>keydown</code> 還是 <code>keyup</code> 事件呢？根據我自己的實驗結果應該是要用 <code>keydown</code>，不過總還是想找一下標準定義的出處，雖然沒有找到很明確的文字說明，不過 <a href="https://www.w3.org/TR/uievents/#event-flow-activation">UI Events 3.5. Activation triggers and behavior</a> 裡面的 EXAMPLE 4 內確實是寫 keydown event，當然 <code>keydown</code> 的時間點也比較符合期待，目前在不同標準文件內看到的範例也都是用 keydown。</p>
+<p>查到這邊大概就可以確定，正確的關係應該是「key 事件觸發 click 事件，click 事件有 default handler」，<del>不過卡西說的小錯誤是應該要用 keydown 事件，然後我在 twitter 有回說普通 button 不應該 keydown 觸發 click 則是我當時的錯誤認知</del>（請見 <a href="https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/">ENTER or SPACE, KEYDOWN or KEYUP</a>）。</p>
+<p>再來，其實我還很好奇，哪裡有定義不同的元素分別用哪些按鍵 <strong>active</strong> 呢？因為表單送出是用 <kbd>ENTER</kbd> 鍵，但是像是 checkbox 的狀態切換卻是用 <kbd>SPACE</kbd> 鍵；上面提供的幾份文件也都沒講到這部分的定義，有種刻意避開的感覺，後來又找了許久才終於找到，其實是放在 WAI-ARIA Authoring Practices 這份 Working Group Note 內，拿 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-4">checkbox</a> 為例，在它的 Keyboard Interaction 段落內就明白寫了：</p>
+<blockquote>
+<p>When the checkbox has focus, pressing the Space key changes the state of the checkbox.</p>
+</blockquote>
+<p>當然也有 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-3">button</a> 的規範，就是同時有定義 <code>space</code> 和 <code>enter</code> ；由於這份文件是 Working Group Note，規範的硬性比較低，這應該也是故意為之的。</p>
+<p>最後來整理一下，首先是 HTML 文件有定義，預設的作動行為都是透過 <code>click</code> 事件觸發，但是同時也要保留其它操作介面觸發作動行為的可能性，像是常見的鍵盤行為，而其它操作方式都要透過觸發 <code>click</code> 事件的方式來觸發作動行為；再來就是不同 HTML 元素的作動行為要做哪些事情也是在 HTML 文件內；至於不同 HTML 元素要支援哪些按鍵呢，這部分就要交叉參考 <a href="https://w3c.github.io/html-aria">ARIA in HTML</a> 和 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/">WAI-ARIA Authoring Practices</a> 兩份文件了，前者用來查詢 HTML 元素對應的 ARIA role，後者可以根據 role 來判斷要支援哪些鍵盤按鍵。</p>
+<p>以後要做自訂的控制元件的時候，就可以正大光明的把主要的動作寫在 onclick 事件下了（然後根據情況去加上 key event）。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000962" baseName="circleci-terraform-aws-deploy">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-08-22</b:date>
+				<b:time>23:02:19</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>Circle CI run Terraform and AWS deployment</b:title>
+			<b:content>
+				<b:summary>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來： Terraform 是用 hashicorp 官方的 image，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 BASH_ENV 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command...</b:summary>
+				<b:mainContent><p>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來：</p>
+<p>Terraform 是用 hashicorp 官方的 <a href="https://hub.docker.com/r/hashicorp/terraform/">image</a>，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 <a href="https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command">BASH_ENV</a> 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command 執行：</p>
+<pre><code class="language-sh">echo &quot;export S3_ID=`terraform output s3_bucket_name`&quot; &gt;&gt; $BASH_ENV
+</code></pre>
+<p>當然你的 terraform module 要有定義好 output。</p>
+<p>第二個是重點是 <code>$BASH_ENV</code> 的值，個人建議是設定絕對路徑，直接寫出完整路徑，不要用其它環境變數來組合，然後位置要放在 working directory 內，好方便能  <code>persist_to_workspace</code>，這樣才能夠跨 job 使用，另外就是檔名建議不要用 <code>.</code> 開頭的隱藏檔名，我遇到過各種找不到檔案的錯誤訊息，然後 working directory 建議不要放在 home 目錄下，一來 <code>$BASH_ENV</code> 去用 <code>$HOME</code> 組合出來我遇到錯誤過，用 <code>~</code> 來寫路徑也是遇到錯誤過，二來不同 image 的 home 目錄路徑不同，如果要在 config 內直接寫死絕對路徑，建議直接定一個固定的位置，我現在是用：</p>
+<pre><code>/tmp/workspace
+</code></pre>
+<p>然後這樣後面就可以用官方的 s3 orb 下指令了：</p>
+<pre><code class="language-yaml">- aws-s3/sync:
+    from: build
+    to: &quot;s3://${S3_ID}&quot;
+    aws-region: &quot;ap-northeast-1&quot;
+</code></pre>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000961" baseName="coscup-2019">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-08-20</b:date>
+				<b:time>15:13:53</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>COSCUP 2019</b:title>
+			<b:content>
+				<b:summary> 今年發生什麼事大家都知道了，我今年負責的是 Open Web Technologies 議程軌，相對是受影響比較小的單位，不過還是想從我的角度來記錄一下，這篇就流水帳吧。 前一天晚上聽到說台科大停電的時候，還沒什麼實感，而且研揚大樓很快就恢復了，想說應該不會停太久吧，直到後來要睡前都沒有恢復才有一點緊張感，不過基本上也做不了什麼事情，還是準時去睡覺，還把龍王的工作八給看完了，隔天早上七點多醒來一看已經確定要換場地了，各管道的宣傳也開始在跑了，我就邊處理小孩的東西，先發了一封信件給今天的所有講者說場地要換大樓了，當時新教室的位置還沒出來。然後也邊跟另外一位社群協調人 hlb 聯絡，他還要從新竹出發過來，比我還早出門，後來教室確定後我又再發一封郵件，還有在 Telegram 的 Mozillians at COSCUP 2019 群（專門開給國外來參加 COSCUP 的 Mozilla 人的群）也趕快發通知，剛好那邊還有今天下午的兩位講者在裡面。 我自己本來的規劃是九點到場，後來因為確定狀況和發信等等後來有比較晚到，不過還是去採買了要給講者喝的水，我準備了一個保冷袋還加買兩包冰塊，後來冰塊到離開時都還沒融化完，可是冷卻效果不是很好，或許還是專用的保冷劑效果會比較好，另外就是有一包冰塊好像袋子還有破洞漏水。停到研揚大樓停車場的時候，竟然只能使用悠遊卡，然後一刷，只剩下 80 塊，這表示我要離開前勢必要先找地方加值了，當然，當時校內的便利商店也都停電了 ～＿～ 九點多到場時很感謝 hlb 都已經確認完場地狀況了，而且看起來幾乎場地都已經準備好了，雖然還有攤位沒準備完，樓下其實還一直在搬東西過來，不過真的是要讓演講開始已經完全沒問題了，像是教室指標、背版、麥克風備用電池，甚至連新印的單間會議廳的議程表都有，隔壁教室的贊助商攤位看起來也很有一回事了。 之後就都還蠻順利的，講者都有準時到，沒有開空窗，也沒有人超時卡到下一位講者，分享後互動最熱烈的那場，也剛好排在午餐前，比較可惜是我的主持還不太行，介紹講者的部分都不太好，當然週五無法先去找講者聊一下也是蠻有影響的，不過更大的因素是我自己事前準備還不夠，沒有練習好，這部分就明年繼續努力了。 今年 Open Web Technologies 下午有三位海外講者，其實都是他們各自籌經費，Mozilla 的 Rabimba 和 Bob 都是 Mozilla Tech...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/48582240846/" title="COSCUP 2019 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="COSCUP 2019" srcset="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg 1024w, https://live.staticflickr.com/65535/48582240846_26f337902f_h.jpg 1600w" /></a></p>
+<p>今年發生什麼事大家都知道了，我今年負責的是 Open Web Technologies 議程軌，相對是受影響比較小的單位，不過還是想從我的角度來記錄一下，這篇就流水帳吧。</p>
+<p>前一天晚上聽到說台科大停電的時候，還沒什麼實感，而且研揚大樓很快就恢復了，想說應該不會停太久吧，直到後來要睡前都沒有恢復才有一點緊張感，不過基本上也做不了什麼事情，還是準時去睡覺，還把龍王的工作八給看完了，隔天早上七點多醒來一看已經確定要換場地了，各管道的宣傳也開始在跑了，我就邊處理小孩的東西，先發了一封信件給今天的所有講者說場地要換大樓了，當時新教室的位置還沒出來。然後也邊跟另外一位社群協調人 hlb 聯絡，他還要從新竹出發過來，比我還早出門，後來教室確定後我又再發一封郵件，還有在 Telegram 的 Mozillians at COSCUP 2019 群（專門開給國外來參加 COSCUP 的 Mozilla 人的群）也趕快發通知，剛好那邊還有今天下午的兩位講者在裡面。</p>
+<p>我自己本來的規劃是九點到場，後來因為確定狀況和發信等等後來有比較晚到，不過還是去採買了要給講者喝的水，我準備了一個保冷袋還加買兩包冰塊，後來冰塊到離開時都還沒融化完，可是冷卻效果不是很好，或許還是專用的保冷劑效果會比較好，另外就是有一包冰塊好像袋子還有破洞漏水。停到研揚大樓停車場的時候，竟然只能使用悠遊卡，然後一刷，只剩下 80 塊，這表示我要離開前勢必要先找地方加值了，當然，當時校內的便利商店也都停電了 ～＿～</p>
+<p>九點多到場時很感謝 hlb 都已經確認完場地狀況了，而且看起來幾乎場地都已經準備好了，雖然還有攤位沒準備完，樓下其實還一直在搬東西過來，不過真的是要讓演講開始已經完全沒問題了，像是教室指標、背版、麥克風備用電池，甚至連新印的單間會議廳的議程表都有，隔壁教室的贊助商攤位看起來也很有一回事了。</p>
+<p>之後就都還蠻順利的，講者都有準時到，沒有開空窗，也沒有人超時卡到下一位講者，分享後互動最熱烈的那場，也剛好排在午餐前，比較可惜是我的主持還不太行，介紹講者的部分都不太好，當然週五無法先去找講者聊一下也是蠻有影響的，不過更大的因素是我自己事前準備還不夠，沒有練習好，這部分就明年繼續努力了。</p>
+<p>今年 Open Web Technologies 下午有三位海外講者，其實都是他們各自籌經費，Mozilla 的 Rabimba 和 Bob 都是 Mozilla Tech Speaker，所以應該是從那邊申請經費的，另外一位則是 LINE 的 Trustin Lee，LINE 也是今年贊助商之一，講者的經費應該是公司出的，剛好攤位就在隔壁教室，好像也有該主題自己的攤位和其它一起從韓國來的朋友，開場前就看到他們開始在拍照，然後我才想到，像這種公司出錢來的海外講者，要是因為活動因故取消的話，人都到了不知道他們的旅費要怎麼處理，這時才第一次體會到，推廣國際能見度其實也是伴隨而來更多的責任的啊。</p>
+<p>總之議程過程還算順利，我自己因為主持的關係幾乎離不開，只有挑了一場演講開始的時間去 HKOSC 買預計要入手的 kotties，還有去拿個人贊助的紀念品，不過我沒有拿到大會手冊就是，最後議程結束後，我就把東西收好走去長興街 7-11 儲值悠遊卡，那段時間雨還不小，回來時在一樓跟小耕打招呼，他也提到了場佈兩次的事情，我腦中就響起了這個旋律：</p>
+<blockquote>
+<p>每條大街小巷<br />
+每個人的嘴裡<br />
+見面第一句話<br />
+場佈快不快樂</p>
+</blockquote>
+<p>搭配音樂：</p>
+<div class="embed_16_9">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/7BNPbS1lmy8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>之後還在閃電講時間，我去了記錄組工作區晃了一下，還遇到不少老人回來要準備幫忙撤場，沒停留多久就回家顧小孩了，停車費 400（應該是 50 x 8 小時），大概九點弄完才有時間去找出 YouTube 直播留存的影片來看最後的閃電講和閉幕，看完覺得第二天能順利辦完真是太好了，不只是對贊助商和講者的交代，要是沒有辦起來也沒機會再次緬懷 Ilya 和阿怪了。</p>
+<p>最後個人想法，其實我聽到要換場地的時候，我腦中倒是完全沒有懷疑過 COSCUP 團隊會辦不到，有個替代場地可以用反而是我覺得真的是撿到的，不知道為什麼一開始會先把研揚大樓的供電恢復，而且校方還能迅速幫忙協調出空間給我們用這真的是非常關鍵，如果今天在其它地方辦搞不好就真的無法找到替代空間了；然後在研揚辦的效果其實也還不錯，走道有空調真是舒適不少，第一次到台科辦的時候好像也有考慮過這個位置就是，不過大概就是因為沒有比較正式的會議廳吧。第二是 Bobchao 從前年開始推動的社群議程其實也在這次事件發揮蠻大的功效，不然整個議程相關的問題就會擠在議程組內了，現在這樣倒是可以把很多事務和權責放到外部，對我來說，其實更換場地影響沒有很大（當然是因為我到場時東西都已經準備好了，十點社群議程才開始也提供了相當充足的時間），最重要的就是確定新的會議廳位置以及想辦法通知講者，尤其是海外講者，這次我們軌三位海外講者中有兩位都有 IM 管道可以跟他們聯繫（感謝 Irvin 有先建立群組），所以我都有確定他們知道場地變動的訊息，以後也可以考慮先建立好跟講者聯繫的 IM 管道。</p>
+<p>然後比較個人部分的感想，要顧一間做整天的主持人，幾乎都沒有機會離開啊，更不用說拍什麼照片了，其實攝影器材有帶不少但是大概用不到一半，希望以後能更多時間到場，然後可以分個半天一天做自由記錄。</p>
+<p>最後的最後就放其它人的紀錄吧（不過目前看到的公開的只有四貓的，歡迎提供其它連結）：</p>
+<ul>
+<li><a href="https://blog.catcatcatcat.cc/2019/08/19/coscup2019/">四貓</a></li>
+<li><a href="https://medium.com/@nijia.lin/chatbottw-in-coscup-2019-%E5%BE%9E%E6%9C%83%E7%9C%BE%E8%AE%8A%E6%88%90%E8%B2%A0%E8%B2%AC%E4%BA%BA%E7%9A%84%E5%BF%83%E8%B7%AF%E6%AD%B7%E7%A8%8B-d58ddfe61328">NiJia</a></li>
+<li><a href="https://www.facebook.com/bigbody2/posts/10158315999530752">大隻</a></li>
+<li><a href="https://pingyeh.blogspot.com/2019/08/coscup-2019.html">pingooo</a></li>
+</ul>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000960" baseName="kyoani-fire">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-07-18</b:date>
+				<b:time>22:48:26</b:time>
+			</b:datetime>
+			<b:category>acg</b:category>
+			<b:title>京都動畫公司縱火事件</b:title>
+			<b:content>
+				<b:summary> 想不到我在這個類別隔這麼的發文又是為了記錄這種事情。 今天（2019 年 7 月 18 日）京都動畫第一工作室遭縱火，目前死者 33 人，不過也有十名重傷，火災重傷後續也很辛苦，所以數字還不排除有變化的可能性。這場火災是日本近年來死傷最嚴重的縱火事件，我一早就看到消息了，然後整天就一直看著傷亡數字上升，很難受。 其實我對京阿尼還算蠻有情感的，想當年他們要開始獨立製作動畫時，還有發新聞稿，強調他們要以著重動畫品質的時候，我還想著就來看看結果會如何，結果後來就是大家所知道的，他們推出了一部又一部品質精美的動畫作品，我自己很喜歡的一張我拍的 cosplay 照片 的角色六花也是從他們的作品中出來的，今天我認真的查了一下我看過哪些，發現沒看過的其實沒幾部，就這樣從我大學一直到現在。這個消息在全世界動漫圈都傳很大，美國的發行商 Sentai Filmworks 還為他們發起了募款活動，本來五十萬美金的目標已經達標，現在是新目標 75 萬，#PrayForKyoani 這個 hashtag 也在世界趨勢中維持在第一位一整天了。 動物朋友的監督 たつき 在 twitter 上發表了一段文字，我想很正確的表達了這件事情為什麼讓人感受這麼深： 亡くなられた方がどれだけの、膨大で地道な時間を人知れずアニメに使ってきたか、のべ何万人何億人のひとの時間を豊かにしたか、ヒトの幸せの総量を増やしたか。そんな方々がなぜこんな苦しいつらい終わり方をしないといけないのか。－ たつき／irodori (@irodori7) July 18, 2019 借一下 plurk 上 AT2 的翻譯： 逝世者們到底花費多少龐大且踏實的時間，在不為人知的情況下拿來做動畫。 豐富了幾萬、甚至幾億人的時間，增加了人們幸福的總指標。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/48315611637/" title="#PrayForKyoani by othree, on Flickr"><img src="https://live.staticflickr.com/65535/48315611637_98b6a090b2_b.jpg" intrinsicsize="542x1024" width="343" height="648" alt="#PrayForKyoani" srcset="https://live.staticflickr.com/65535/48315611637_98b6a090b2_b.jpg 542w" /></a></p>
+<p>想不到我在這個類別隔這麼的發文又是為了記錄這種事情。</p>
+<p>今天（2019 年 7 月 18 日）京都動畫第一工作室遭縱火，目前<a href="https://www.fdma.go.jp/disaster/info/items/1907182201.pdf">死者 33 人</a>，不過也有十名重傷，火災重傷後續也很辛苦，所以數字還不排除有變化的可能性。這場火災是日本近年來死傷最嚴重的縱火事件，我一早就看到消息了，然後整天就一直看著傷亡數字上升，很難受。</p>
+<p>其實我對京阿尼還算蠻有情感的，想當年他們要開始獨立製作動畫時，還有發新聞稿，強調他們要以著重動畫品質的時候，我還想著就來看看結果會如何，結果後來就是大家所知道的，他們推出了一部又一部品質精美的動畫作品，我自己很喜歡的一張我拍的 <a href="https://www.flickr.com/photos/othree/8477826443/">cosplay 照片</a> 的角色六花也是從他們的作品中出來的，今天我認真的查了一下我看過哪些，發現沒看過的其實沒幾部，就這樣從我大學一直到現在。這個消息在全世界動漫圈都傳很大，美國的發行商 Sentai Filmworks 還為他們發起了<a href="https://www.gofundme.com/f/help-kyoani-heal">募款活動</a>，本來五十萬美金的目標已經達標，現在是新目標 75 萬，<a href="https://twitter.com/search?q=%23PrayForKyoani&amp;f=live">#PrayForKyoani</a> 這個 hashtag 也在世界趨勢中維持在第一位一整天了。</p>
+<p>動物朋友的監督 たつき 在 twitter 上發表了一段文字，我想很正確的表達了這件事情為什麼讓人感受這麼深：</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">亡くなられた方がどれだけの、膨大で地道な時間を人知れずアニメに使ってきたか、のべ何万人何億人のひとの時間を豊かにしたか、ヒトの幸せの総量を増やしたか。そんな方々がなぜこんな苦しいつらい終わり方をしないといけないのか。</p>－ たつき／irodori (@irodori7) <a href="https://twitter.com/irodori7/status/1151776349121417216?ref_src=twsrc%5Etfw">July 18, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>借一下 plurk 上 AT2 的<a href="https://www.plurk.com/p/nes3xm">翻譯</a>：</p>
+<blockquote>
+<p>逝世者們到底花費多少龐大且踏實的時間，在不為人知的情況下拿來做動畫。
+豐富了幾萬、甚至幾億人的時間，增加了人們幸福的總指標。
+為什麼這樣的人們要非得以這麼痛苦、這麼悲傷的方法離世呢</p>
+</blockquote>
+<p>最後就是突然又想到 ZEGAPAIN 這部動畫，ZEGAPAIN 其實是 ZEGA 和 PAIN 兩個單字，意思是人類（整個人類種族）難以承受的巨大傷痛，想我當年看完這部作品心情嚴重低落三天，嚴重到我爸媽問我怎麼了，今天這件事來看好像又更能體會一點了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000959" baseName="robots-exclusion-protocol">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-07-02</b:date>
+				<b:time>12:35:06</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Robots Exclusion Protocol</b:title>
+			<b:content>
+				<b:summary>Google Webmaster Central Blog 昨天發表了 Formalizing the Robots Exclusion Protocol Specification 這篇文章，介紹到 Robots Exclusion Protocol (REP) 這個正在標準化的草案，REP 其實就是已經被廣泛使用的 robots.txt 檔案，robots.txt 誕生至今已經 25 年了，當初是由 Martijn Koster 所設計，早期網路的東西基本上就是先做，設計的不錯大家就跟著抄，不一定會有什麼標準的文件，robots.txt 就是這樣其實一直都沒正式的標準文件，我以前還真的有懷疑過怎麼找不到，直到 Google 這篇文章才確定了，真的一直以來是沒標準的，雖然 Google 衝網路標準太快讓人有不少意見，不過這次我倒是覺得樂觀其成，而且他們也還公開了他們的 robots.txt 的 parser matcher lib。 消息來源...</b:summary>
+				<b:mainContent><p>Google Webmaster Central Blog 昨天發表了 <a href="https://webmasters.googleblog.com/2019/07/rep-id.html">Formalizing the Robots Exclusion Protocol Specification</a> 這篇文章，介紹到 Robots Exclusion Protocol (REP) 這個正在標準化的<a href="https://tools.ietf.org/html/draft-rep-wg-topic-00">草案</a>，REP 其實就是已經被廣泛使用的 <a href="https://support.google.com/webmasters/answer/6062608?hl=zh-Hant">robots.txt</a> 檔案，robots.txt 誕生至今已經 25 年了，當初是由 <a href="https://en.wikipedia.org/wiki/Martijn_Koster">Martijn Koster</a> 所設計，早期網路的東西基本上就是先做，設計的不錯大家就跟著抄，不一定會有什麼標準的文件，robots.txt 就是這樣其實一直都沒正式的標準文件，我以前還真的有懷疑過怎麼找不到，直到 Google 這篇文章才確定了，真的一直以來是沒標準的，雖然 Google 衝網路標準太快讓人有不少意見，不過這次我倒是覺得樂觀其成，而且他們也還公開了他們的 robots.txt 的 <a href="https://github.com/google/robotstxt">parser matcher lib</a>。</p>
+<p><a href="https://twitter.com/igrigorik/status/1145778175898599424">消息來源</a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000958" baseName="2018">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-05-29</b:date>
+				<b:time>23:28:57</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>2018</b:title>
+			<b:content>
+				<b:summary> 2018 年回顧拖了快要半年還沒出來，主要原因是現在空閒時間很少，而且本來想先把記錄組文章的第二篇寫出來，不過想一想還是放棄這個方案，免得到了 2020 年還沒寫好。 去年對我來說變化很大，忙碌到沒有每個月都有拍照，所以放棄以往一個月一張照片的方式，改以文字為主。所以去年有什麼變化呢？去年我換了工作、搬了家、小孩出生然後還買了新車，買車主要是為了方便帶小孩出門時，以前開的是我哥的老車，考慮到安全性和舒適性的問題，決定還是買台新車，然後因為車款熱門所以等很久才拿到車就是。 搬家也是為了小孩，因為考慮到本來住的兩房不夠大才搬的，本來有一間很大環境不錯、價錢不錯還有車位的陰錯陽差沒租到，不過那間缺點是比較偏僻，之後又一直找不太到適合的，然後現在租的也是有點運氣才租到的，本來跟房東約好週末要去看房子，結果前一天房東就打來說租出去了，然後又過了不知道多久那位房東又打來說本來要租的因故無法承租了，然後才輪到我有機會去看，然後一看就覺得不錯就先訂下來，大約是二十年的房子，實際上住進來當然還是有些缺點，不過還算 OK，不過有覺得現在的空間也還無法以後給小孩獨立一間房間，大概過幾年又要再看看了。 工作的部分，其實現在也有點想不起來完整決定離職的原因，不過之前工作有段時間有心理影響生理的狀況出現，現在的工作則是託朋友的福才有的，當時其實最想要的是找國外的遠端工作，第一目標是 Elastic，對於 Kibana 開發還蠻有興趣的，不過可惜連履歷那關都沒過XD，還有一家很想加入的是 DuckDuckGo，其實是第一個投的，履歷的品質和後來的版本差很多，也是一樣沒下文，其它有得到大約兩家的面試機會，不過都沒順利過關，自我評量大概是英文表達能力還明顯不足，現在的工作則是想要的外國公司都失敗後，開始要在國內找時，先有一些朋友來找我，然後我就從中挑了其中一個工作了，其實本來有想公開找的，不過也是還沒機會公開說就確定了。之後大概等小孩大一點就要開始來加強英文了，這部分真的是應該早點開始的。 最後終於要來談談小孩的事了，我家小孩是 5/3 號晚上出生的，剛好預產期同一天，差一點就變成原力寶寶了，不過講真的生產過程也是很辛苦，老婆痛了將近 20 小時，差點就要全餐了，然後還臍帶繞頸，生出來之後給小兒科那邊弄了好久才哭出聲音來，等待的時候真的是很緊張，還好沒什麼其它異狀，大概就是不好帶吧，不愛吃不愛睡，即使到今天已經滿一歲了還是一樣，還好長得很可愛，不然早就忍不住垂下去了(?)，說可愛也不是父母視點，是真的客觀來說長得很可愛，在外面常常被當成小女生，睫毛超長，甚至有過一次背著他走路時，路邊一個大叔看到驚呼：「太可愛了吧！」不過隨著年紀越來越大可愛度似乎也有下降了。有小孩之後生活和心境都變化不少，也必須放棄不少東西，要寫的話好像可以寫一堆，所以還是不寫了，不過就是，在某些時候，就突然想起了 About Time 的劇情，曾經一直想著為什麼主角不再穿越時間，似乎現在也明白了。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47958934008/" title="Baby by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47958934008_fa8ebe7a70_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Baby" srcset="https://live.staticflickr.com/65535/47958934008_fa8ebe7a70_b.jpg 1024w, https://live.staticflickr.com/65535/47958934008_3e58bcf3f0_h.jpg 1600w" /></a></p>
+<p>2018 年回顧拖了快要半年還沒出來，主要原因是現在空閒時間很少，而且本來想先把記錄組文章的第二篇寫出來，不過想一想還是放棄這個方案，免得到了 2020 年還沒寫好。</p>
+<p>去年對我來說變化很大，忙碌到沒有每個月都有拍照，所以放棄以往一個月一張照片的方式，改以文字為主。所以去年有什麼變化呢？去年我換了工作、搬了家、小孩出生然後還買了新車，買車主要是為了方便帶小孩出門時，以前開的是我哥的老車，考慮到安全性和舒適性的問題，決定還是買台新車，然後因為車款熱門所以等很久才拿到車就是。</p>
+<p>搬家也是為了小孩，因為考慮到本來住的兩房不夠大才搬的，本來有一間很大環境不錯、價錢不錯還有車位的陰錯陽差沒租到，不過那間缺點是比較偏僻，之後又一直找不太到適合的，然後現在租的也是有點運氣才租到的，本來跟房東約好週末要去看房子，結果前一天房東就打來說租出去了，然後又過了不知道多久那位房東又打來說本來要租的因故無法承租了，然後才輪到我有機會去看，然後一看就覺得不錯就先訂下來，大約是二十年的房子，實際上住進來當然還是有些缺點，不過還算 OK，不過有覺得現在的空間也還無法以後給小孩獨立一間房間，大概過幾年又要再看看了。</p>
+<p>工作的部分，其實現在也有點想不起來完整決定離職的原因，不過之前工作有段時間有心理影響生理的狀況出現，現在的工作則是託朋友的福才有的，當時其實最想要的是找國外的遠端工作，第一目標是 Elastic，對於 Kibana 開發還蠻有興趣的，不過可惜連履歷那關都沒過XD，還有一家很想加入的是 DuckDuckGo，其實是第一個投的，履歷的品質和後來的版本差很多，也是一樣沒下文，其它有得到大約兩家的面試機會，不過都沒順利過關，自我評量大概是英文表達能力還明顯不足，現在的工作則是想要的外國公司都失敗後，開始要在國內找時，先有一些朋友來找我，然後我就從中挑了其中一個工作了，其實本來有想公開找的，不過也是還沒機會公開說就確定了。之後大概等小孩大一點就要開始來加強英文了，這部分真的是應該早點開始的。</p>
+<p>最後終於要來談談小孩的事了，我家小孩是 5/3 號晚上出生的，剛好預產期同一天，差一點就變成原力寶寶了，不過講真的生產過程也是很辛苦，老婆痛了將近 20 小時，差點就要全餐了，然後還臍帶繞頸，生出來之後給小兒科那邊弄了好久才哭出聲音來，等待的時候真的是很緊張，還好沒什麼其它異狀，大概就是不好帶吧，不愛吃不愛睡，即使到今天已經滿一歲了還是一樣，還好長得很可愛，不然早就忍不住垂下去了(?)，說可愛也不是父母視點，是真的客觀來說長得很可愛，在外面常常被當成小女生，睫毛超長，甚至有過一次背著他走路時，路邊一個大叔看到驚呼：「太可愛了吧！」不過隨著年紀越來越大可愛度似乎也有下降了。有小孩之後生活和心境都變化不少，也必須放棄不少東西，要寫的話好像可以寫一堆，所以還是不寫了，不過就是，在某些時候，就突然想起了 About Time 的劇情，曾經一直想著為什麼主角不再穿越時間，似乎現在也明白了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47958942466/" title="Baby by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47958942466_b59151817c_b.jpg" intrinsicsize="1024x680" width="1024" height="680" alt="Baby" srcset="https://live.staticflickr.com/65535/47958942466_b59151817c_b.jpg 1024w, https://live.staticflickr.com/65535/47958942466_9087ab3f96_h.jpg 1600w" /></a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000957" baseName="w3c-whatwg-html">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-05-28</b:date>
+				<b:time>23:06:35</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>W3C and WHATWG and HTML</b:title>
+			<b:content>
+				<b:summary> 「天下大勢，分久必合，合久必分」，沒想到 W3C 和 WHATWG 之間的複雜關係就這麼突然的踏上新的里程碑了，今天 W3C blog 發表了一篇文章－W3C and the WHATWG signed an agreement to collaborate on a single version of HTML and DOM，說兩個組織已經簽好合作的協議了，未來算是要共同維護同一份 HTML 和 DOM 的 spec，HTML WG 的章程也因此要重新制訂，現在有草稿可看，詳細一點的摘要可以看 W3C CEO Jeff Jaffe 的文章 － W3C and...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47951484072/" title="w3c-whatwg-logos by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47951484072_044a889c15_b.jpg" intrinsicsize="1024x768" width="512" height="384" alt="w3c-whatwg-logos" srcset="https://live.staticflickr.com/65535/47951484072_044a889c15_b.jpg 1024w" /></a></p>
+<p>「天下大勢，分久必合，合久必分」，沒想到 W3C 和 WHATWG 之間的複雜關係就這麼突然的踏上新的里程碑了，今天 W3C blog 發表了一篇文章－<a href="https://www.w3.org/blog/news/archives/7753">W3C and the WHATWG signed an agreement to collaborate on a single version of HTML and DOM</a>，說兩個組織已經簽好合作的協議了，未來算是要共同維護同一份 HTML 和 DOM 的 spec，HTML WG 的章程也因此要重新制訂，現在有<a href="https://www.w3.org/2018/12/html.html">草稿</a>可看，詳細一點的摘要可以看 W3C CEO Jeff Jaffe 的文章 － <a href="https://www.w3.org/blog/2019/05/w3c-and-whatwg-to-work-together-to-advance-the-open-web-platform/">W3C and WHATWG to work together to advance the open Web platform</a>：</p>
+<ul>
+<li>W3C and WHATWG work together on HTML and DOM, in the WHATWG  repositories, to produce a Living Standard and Recommendation/Review  Draft-snapshots</li>
+<li>WHATWG maintains the HTML and DOM Living Standards</li>
+<li>W3C facilitates community work directly in the WHATWG repositories  (bridging communities, developing use cases, filing issues, writing  tests, mediating issue resolution)</li>
+<li>W3C stops independent publishing of a designated list of  specifications related to HTML and DOM and instead will work to take  WHATWG Review Drafts to W3C Recommendations</li>
+</ul>
+<p>基本上就是 W3C 相關的 WG 以後都改成貢獻到 WHATWG 那邊（在 GitHub 上），然後 W3C 那邊會拿 WHATWG 標準文件的 snapshot 來作為 CR、PR、REC，或許也可以稱為 Living Standard 的勝利。</p>
+<p>如果要看比較細節關於兩個組織間簽的合作內容也有公開在網路上－<a href="https://www.w3.org/2019/04/WHATWG-W3C-MOU.html">Memorandum of Understanding Between W3C and WHATWG</a>，裡面還有列出所有相關的 W3C 的標準文件，以前我就一直很好奇到底全部是有哪些，剛好趁這機會一次收集齊全，其實還不少我沒看過的，甚至也有 404 的(?)，其中推薦標準（REC）的部分：</p>
+<ol>
+<li><a href="https://www.w3.org/TR/html5/">https://www.w3.org/TR/html5/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html50/">https://www.w3.org/TR/html50/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html51/">https://www.w3.org/TR/html51/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html52/">https://www.w3.org/TR/html52/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/html/">https://www.w3.org/TR/html/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/webstorage/">https://www.w3.org/TR/webstorage/</a></li>
+<li><a href="https://www.w3.org/TR/webmessaging/">https://www.w3.org/TR/webmessaging/</a></li>
+<li><a href="https://www.w3.org/TR/eventsource/">https://www.w3.org/TR/eventsource/</a></li>
+<li><a href="https://www.w3.org/TR/2dcontext/">https://www.w3.org/TR/2dcontext/</a></li>
+<li><a href="https://www.w3.org/TR/dom/">https://www.w3.org/TR/dom/</a></li>
+</ol>
+<p>非推薦標準：</p>
+<ol>
+<li><a href="https://w3c.github.io/html/">https://w3c.github.io/html/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/html/wg/drafts/html/master/">https://www.w3.org/html/wg/drafts/html/master/</a> including other URLs under this directory</li>
+<li><a href="https://www.w3.org/TR/websockets/">https://www.w3.org/TR/websockets/</a></li>
+<li><a href="https://www.w3.org/TR/2dcontext2/">https://www.w3.org/TR/2dcontext2/</a></li>
+<li><a href="https://www.w3.org/TR/microdata/">https://www.w3.org/TR/microdata/</a></li>
+<li><a href="https://www.w3.org/TR/staticrange/">https://www.w3.org/TR/staticrange/</a></li>
+<li><a href="https://www.w3.org/TR/workers/">https://www.w3.org/TR/workers/</a></li>
+<li><a href="https://dvcs.w3.org/hg/webperf/raw-file/default/specs/RequestAnimationFrame/Overview.html">https://dvcs.w3.org/hg/webperf/raw-file/default/specs/RequestAnimationFrame/Overview.html</a></li>
+<li><a href="https://w3c.github.io/dom/">https://w3c.github.io/dom/</a></li>
+<li><a href="https://www.w3.org/TR/dom41/">https://www.w3.org/TR/dom41/</a></li>
+<li><a href="https://www.w3.org/TR/DOM-Parsing/">https://www.w3.org/TR/DOM-Parsing/</a></li>
+<li><a href="https://www.w3.org/TR/html53/">https://www.w3.org/TR/html53/</a></li>
+</ol>
+<p>這些東西在 WHATWG 那邊基本上都寫在 <a href="https://html.spec.whatwg.org/multipage/">HTML</a> 和 <a href="https://dom.spec.whatwg.org/">DOM</a> 裡面，就是單一份標準文件內塞了比較多東西這樣。</p>
+<p>最後就是我還發現一點有趣的，WHATWG <a href="https://github.com/whatwg/sg/issues/90">投票那邊</a>，四位出來投票的分別是 Apple、Microsoft、Mozilla 和 Google 四間公司的人。然後我只對 Mozilla 的 <a href="https://github.com/dbaron">dbaron</a> 有印象而已。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000956" baseName="incrementally-better-cookies">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-05-27</b:date>
+				<b:time>22:48:46</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>SameSite Cookie</b:title>
+			<b:content>
+				<b:summary> Cookie 的規格是 RFC 文件所定義的，其實一直以來都有在演化，目前為止已經有三個版本，照順序分別是 RFC2109、RFC2965 和最新的 RFC6265，像是 HttpOnly 就是 RFC6265 才出現的，而最近最新的屬性，就是 SameStie 了，其實它和 HttpOnly 的起源很接近，都是近年來比較被人重視的安全性和隱私的原因，Google 的 web.dev 有一篇圖文並茂的文章介紹的很詳細－ SameSite cookies explained，建議還不清楚什麼是 SameSite cookie 的可以先去看一下。 SameSite Cookie 的標準文件其實還未正式定稿，目前還算是草稿 RFC6265bis（bis 在 The Tao of IETF 有解釋），不過主流瀏覽器都已經支援了，然後其實這篇文章我想說的是最近在 W3C TAG 看到的 Issue 373：SameSite=Lax...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47943015586/" title="Cookie Time by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Cookie Time" srcset="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg 1024w, https://live.staticflickr.com/65535/47943015586_2368c831dc_h.jpg 1600w" /></a></p>
+<p>Cookie 的規格是 RFC 文件所定義的，其實一直以來都有在演化，目前為止已經有三個版本，照順序分別是 <a href="https://tools.ietf.org/html/rfc2109">RFC2109</a>、<a href="https://tools.ietf.org/html/rfc2965">RFC2965</a> 和最新的 <a href="https://tools.ietf.org/html/rfc6265">RFC6265</a>，像是 <code>HttpOnly</code> 就是 RFC6265 才出現的，而最近最新的屬性，就是 <code>SameStie</code> 了，其實它和 <code>HttpOnly</code> 的起源很接近，都是近年來比較被人重視的安全性和隱私的原因，Google 的 web.dev 有一篇圖文並茂的文章介紹的很詳細－ <a href="https://web.dev/samesite-cookies-explained/">SameSite cookies explained</a>，建議還不清楚什麼是 SameSite cookie 的可以先去看一下。</p>
+<p>SameSite Cookie 的標準文件其實還未正式定稿，目前還算是草稿 <a href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-5.3.7">RFC6265bis</a>（bis 在 <a href="https://www6.ietf.org/tao#rfc.section.6.3">The Tao of IETF</a> 有解釋），不過主流瀏覽器都已經支援了，然後其實這篇文章我想說的是最近在 W3C TAG 看到的 Issue 373：<a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，是由 Google 的 Mike West 提案要把 SameSite 的預設值改為 Lax，現在 Google Chrome 已經有這個實驗選項了，而且除了 SameSite 預設值的改變之外，其實還有一個修改目標是 <code>SameSite</code> 要在 <code>Secure</code> 的時候才能設為 <code>None</code>，這項改變相對而言是影響比較大的，所以提案的<a href="https://mikew%C3%AF%C2%BC%C2%8Cest.github.io/cookie-incrementalism/draft-west-cookie-incrementalism.html">文件</a>（Incrementally Better Cookies）也有提到可以分步進行，另外就是 Firefox 也表示<a href="https://groups.google.com/forum/#!msg/mozilla.dev.platform/nx2uP0CzA9k/BNVPWDHsAQAJ">有意願來實做</a>，看起來至少 SameSite 預設改為 Lax 這件事應該是不會太久之後就會發生了。</p>
+<p>在花時間看一些文件內的參考資料後，發現 Mike West 還有其它幾份相關的草案：</p>
+<ul>
+<li><a href="https://mikewest.github.io/first-party-sets/">first-party-set</a> 是用 <code>/.well-known/</code> URL 來跟客戶端溝通，可以提供 first party 的域名清單；</li>
+<li><a href="https://tools.ietf.org/html/draft-west-cookie-samesite-firstparty-00">First-Party Sets and SameSite Cookies</a> 利用上面的 first-party-set 資訊，然後提供兩種新的 SameSite 值：<code>FirstPartyLax</code> 和 <code>FirstPartyStrict</code>；</li>
+<li><a href="https://tools.ietf.org/html/draft-west-http-state-tokens-00">HTTP State Tokens</a> 定義了個標準化的 session token，是由瀏覽器端產生的 token，而不是 Web API，至於怎麼傳遞到 server 端，怎樣溝通有效期等都有寫在規範內，Incrementally Better Cookies 的想法也是從這份草案中的特性而來。</li>
+</ul>
+<p>這些草案都還蠻有趣的，至於會不會定稿成為規範甚至大家都開始實做，目前就還很難斷定了。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000955" baseName="glob">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-04-30</b:date>
+				<b:time>23:32:23</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>glob</b:title>
+			<b:content>
+				<b:summary>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如： ls *.js 後面的 *.js 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 man glob.7 或是 man 7 glob 就可以找到官方文件了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 ? 和 * 雖然是任意字元，但是 / 不屬於任意字元，/ 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 ls...</b:summary>
+				<b:mainContent><p>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如：</p>
+<pre><code class="language-sh">ls *.js
+</code></pre>
+<p>後面的 <code>*.js</code> 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 <code>man glob.7</code> 或是 <code>man 7 glob</code> 就可以找到<a href="http://man7.org/linux/man-pages/man7/glob.7.html">官方文件</a>了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 <code>?</code> 和 <code>*</code> 雖然是任意字元，但是 <code>/</code> 不屬於任意字元，<code>/</code> 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 <code>ls subfolder/*</code> 只會印出該層子目錄下的檔案，而不是把第二第三層子目錄下的東西也都印出來，雖然有 <code>**</code> 這個寫法，不過我是在 nodejs 開始蓬勃發展之後才在 node-glob 文件上看到的。</p>
+<p>其實我第一次看到 <strong>glob</strong> 這個單字也是 <a href="https://github.com/isaacs/node-glob">node-glob</a>，不過當時以為 node-glob 和命令列的那套不相容，只是借用名字而已，因為那個 <code>**/*.js</code> 的語法我以前沒看過，一直以為是 node-glob 自己做的，直到這次研究才發現其實 <code>**</code> 是 <a href="http://man7.org/linux/man-pages/man1/bash.1.html">bash</a> 提供的擴充語法，bash 的 extglob 提供了一些更接近正規表示式的語法：</p>
+<pre><code>?(pattern-list)
+       Matches zero or one occurrence of the given patterns
+*(pattern-list)
+       Matches zero or more occurrences of the given patterns
++(pattern-list)
+       Matches one or more occurrences of the given patterns
+@(pattern-list)
+       Matches one of the given patterns
+!(pattern-list)
+       Matches anything except one of the given patterns
+</code></pre>
+<p>另外還有很多設定可以調整 glob 的行為，其中一樣叫做 <code>globstar</code> 的，就是讓 <code>**</code> 可以 recursive 的 match 子目錄的檔案，這個功能是在 <a href="https://github.com/bminor/bash/blob/3185942a5234e26ab13fa02f9c51d340cec514f8/CHANGES#L524">bash 4.0 alpha</a> 版的時候新增的，到今天其實也已經超過十年了。</p>
+<p>至於為什麼會研究起 glob 呢？是因為我在做 jsctags-oasis 時，要盡量的支援 <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a> 支援的參數，其中做到 <code>exclude</code> 的時候，一開始偷懶用了 node-glob 的 ignore，但是實際上要拿 <a href="https://github.com/ludovicchabant/vim-gutentags">vim-gutentags</a> 來用時卻行為不如預期，為了能正確支援就研究起這實際上怎麼串起來的，首先是 vim-gutentags 會拿 Vim 那邊的 <a href="https://vimhelp.org/options.txt.html#%27wildignore%27">wildignore</a> 送給 ctags，wildignore 使用的表達式是 Vim 自己的 <a href="https://vimhelp.org/autocmd.txt.html#file-pattern">filepattern</a>，和 glob 有點接近，像是 <code>*</code> 都是正規表示式的 <code>.*</code>，還有 <code>?</code> 都是正規表示式的 <code>.</code>，不過 <code>*</code> 有特別說到：</p>
+<blockquote>
+<p>Unusual: includes path separators</p>
+</blockquote>
+<p>這行為就和 glob 不一樣了，所以假設 ctags 的 <code>exclude</code> 也是用 glob 表示式，那是不是表示 vim-gutentags 這邊實做有不正確呢？結果我發現 Exuberant Ctags 的文件是這樣說的：</p>
+<blockquote>
+<p>each <em>pattern</em> specified using this
+option will be compared against both the complete path (e.g.
+some/path/base.ext) and the base name (e.g. base.ext) of the
+file, thus allowing patterns which match a given file name
+irrespective of its path, or match only a specific path. If
+appropriate support is available from the runtime library of
+your C compiler, then <em>pattern</em> may contain the usual
+shell wildcards (not regular expressions) common on Unix (be
+sure to quote the option parameter to protect the wildcards
+from being expanded by the shell before being passed to
+<strong>ctags</strong>; also be aware that wildcards can match the
+slash character, '/').</p>
+</blockquote>
+<p>這時候就要感謝那時期的文件都有寫得很詳細，不用花時間去看程式碼，這邊的說明就是說會比對 basename （檔名加附檔名）和完整的 pathname，另外對於 wildcard 的支援則是看系統，是用 <a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">shell wildcards</a>，其實就是 glob 表達式，不過照這樣說，應該就和 Vim filepattern 不一樣了，研究許久才注意到關鍵的地方就在上面那段文件的最後一句，提到 wildcards 也會 match 到 <code>/</code> 字元，也就是最前面提到的 path separator，結果就是， Vim filepattern 和 Exuberant Ctags 的 <code>exclude</code> 用的表示式基本上是相容的，但是也因為特性就無法用 node-glob 的 <code>ignore</code> 來支援了。所以我就照著說明自己實做了比對的部分，然後有用到一個叫 <a href="https://www.npmjs.com/package/globrex">globrex</a> 的 npm package，這個是 <a href="https://www.npmjs.com/package/tiny-glob">tiny-glob</a> 底層用的工具，算是個偷吃步，不管 path separator 直接把 glob 轉成正規表示式的作法，根據原始碼，它會直接把 <code>*</code> 轉換成 <code>.*</code>，這樣就會 match 到 <code>/</code> 字元了，本來是偷吃步的作法，卻意外的剛好合用，理論上這樣就可以正確的支援 ctags 的 <code>exclude</code> 才是吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000954" baseName="third-argument-of-addeventlistener-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-03-20</b:date>
+				<b:time>23:52:39</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>addEventListener 的第三個參數</b:title>
+			<b:content>
+				<b:summary> 2007 年我寫過一篇一樣標題的 addEventListener 的第三個參數，介紹了事件發生時， DOM Node 的 capture 和 bubbling，事隔十多年，前陣子定睛一看，發現 DOM spec 有變，第三個參數除了可以收 boolean 型別的 useCapture 之外，還可以收 options 物件，又稱為 EventListenerOptions，而這個 options 物件現在支援三個屬性，分別是： capture－就是以前的第三個參數 useCapture，Boolean 型別。 once－新的選項，也是 Boolean 型別，用途就像是 jQuery 的 one 一樣，想不到現在也直接在 DOM 層原生支援了 passive－也是新選項，一樣是 Boolean 型別，用途是告訴瀏覽器，這個事件 handler function...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40460552953/" title="addEventListener by othree, on Flickr"><img src="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg" intrinsicsize="1024x787" width="1024" height="787" alt="addEventListener" srcset="https://farm8.staticflickr.com/7917/40460552953_4c7f15c64c_b.jpg 1024w, https://farm8.staticflickr.com/7917/40460552953_f337cc854a_h.jpg 1600w" /></a></p>
+<p>2007 年我寫過一篇一樣標題的 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，介紹了事件發生時， DOM Node 的 capture 和 bubbling，事隔十多年，前陣子定睛一看，發現 DOM spec 有變，第三個參數除了可以收 boolean 型別的 useCapture 之外，還可以收 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Parameters">options</a> 物件，又稱為 <a href="https://github.com/WICG/EventListenerOptions">EventListenerOptions</a>，而這個 options 物件現在支援三個屬性，分別是：</p>
+<ul>
+<li><code>capture</code>－就是以前的第三個參數 useCapture，Boolean 型別。</li>
+<li><code>once</code>－新的選項，也是 Boolean 型別，用途就像是 jQuery 的 <a href="https://api.jquery.com/one/">one</a> 一樣，想不到現在也直接在 DOM 層原生支援了</li>
+<li><code>passive</code>－也是新選項，一樣是 Boolean 型別，用途是告訴瀏覽器，這個事件 handler function 會不會呼叫 <code>event.preventDefault</code> 來停止瀏覽器的原生行為，我最初其實是在 Google 的關於 <a href="https://developers.google.com/web/updates/2016/06/passive-event-listeners">scroll performance 的文件</a> 看到的，就是如果你是 scroll event，以前會因為瀏覽器要判斷會不會被 <code>preventDefault</code>，所以讓 scroll 的效能變差，加上這個選項可以直接告訴瀏覽器說沒有要 preventDefault 後，原生的事件行為就可以不管 event handler 直接處理了，如果裡面硬是執行 <code>event.preventDefault</code> 的話，那就會被忽略掉，然後根據使用的瀏覽器的話，有的會有警告訊息出現在 console。</li>
+</ul>
+<p>Passive Event 的效果也有人做了影片可以看（<a href="https://medium.com/@devlucky/about-passive-event-listeners-224ff620e68c">來源</a>）：</p>
+<div class="embed_16_9">
+  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NPM6172J22g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<p>EventListenerOptions 這個東西大概是在 2015 開始討論的，然後 <a href="https://discourse.wicg.io/t/eventlisteneroptions-and-passive-event-listeners-move-to-wicg/1386">2016</a> 進到 WICG 討論，瀏覽器開始實做，一開始就是只有 <code>passive</code> 和 <code>capture</code>，<code>once</code> 則是後來才加上的，所以可以看到 MDN 的瀏覽器支援度表格，<code>once</code> 還要比較新一點的瀏覽器才支援，像是 Chrome 51 就支援 <code>passive</code>，然後要到 55 才支援 <code>once</code>，如果再仔細看，會發現最後一列是 <code>touchstart</code>、<code>touchmove</code> 事件如果是在 document 層的話，預設改為 passive 事件，這是 2017 年 Chrome 主導修改的行為，Firefox 也有跟進，主要就是希望能讓這些事件處理預設效能好一點，這部分的行為修改其實到現在都還沒標準化，目前還是在 WICG 那邊有個 <a href="https://github.com/WICG/interventions/issues/18">open issue</a>，除了 touch 事件外，其實連 document 層的 wheel 事件也在 <a href="https://developers.google.com/web/updates/2019/02/scrolling-intervention">Chrome 73</a>，也就是現在的穩定版本也預設改為 passive 事件了，然後也是有 WICG  的 <a href="https://github.com/WICG/interventions/issues/64">open issue</a>，MDN 的表則是還沒有。</p>
+<p>EventListenerOptions 也是有 polyfill 和工具 package 的，首先來說一下 polyfill 吧，我知道的有 <a href="https://github.com/WebReflection/dom4">dom4</a>，其實搜尋一下還蠻容易找到其它的，不過差異沒很大，feature detection 的方式幾乎都是用 Object 的 getter 來看送進去的 options 物件的 <code>passive</code> 屬性有沒有被讀取過，有的話就表示瀏覽器有支援，然候 polyfill 其實也只有行為上的補完，不會真的讓效能提升，不過 polyfill 在現在的支援度下來看也是不太需要了。Package 的話有個 <a href="https://www.npmjs.com/package/default-passive-events">default-passive-events</a> 會幫忙把 scroll、wheel、mouse、touch 等等有需要的事件都改為預設 <code>passive: true</code>，如果是新專案先加一下似乎不錯，不過感覺上 Google 是很想都改掉的樣子，現在其實也只差 mouse 事件而已，應該是還怕影響太大不敢下手吧。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000953" baseName="lab-gradient">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-03-18</b:date>
+				<b:time>22:38:25</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Lab Gradient</b:title>
+			<b:content>
+				<b:summary> 一早起來就看到這篇文章 視覺上的完美漸層 Chromatic，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。 目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 chromatic-sass，PostCSS 則是 postcss-easing-gradients，這套背後用的則是首篇文章也有介紹的 chroma.js 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的工具，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 Lch and Lab colour and...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47359638052/" title="Gradient by othree, on Flickr"><img src="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="Gradient" srcset="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg 1024w" /></a></p>
+<p>一早起來就看到這篇文章 <a href="https://medium.com/@citysite1025/%E8%A6%96%E8%A6%BA%E4%B8%8A%E7%9A%84%E5%AE%8C%E7%BE%8E%E6%BC%B8%E5%B1%A4-chromatic-e1acbfcd2428">視覺上的完美漸層 Chromatic</a>，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。</p>
+<p>目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 <a href="https://github.com/bugsnag/chromatic-sass">chromatic-sass</a>，PostCSS 則是 <a href="https://github.com/larsenwork/postcss-easing-gradients">postcss-easing-gradients</a>，這套背後用的則是首篇文章也有介紹的 <a href="https://vis4.net/chromajs/">chroma.js</a> 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的<a href="https://larsenwork.com/easing-gradients/">工具</a>，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 <a href="http://davidjohnstone.net/pages/lch-lab-colour-gradient-picker">Lch and Lab colour and gradient picker</a>。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000952" baseName="read-code-using-vscode">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-03-09</b:date>
+				<b:time>16:46:21</b:time>
+			</b:datetime>
+			<b:category>software</b:category>
+			<b:title>使用 VSCode 讀程式碼</b:title>
+			<b:content>
+				<b:summary> 偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 immer，或是最近還在看的 lit-html，然後最近發現 VSCode 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。 閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 F12 移動到定義處和 Ctrl+- 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能： Opt + F12 Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。 Cmd + K F12 Open...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr"><img src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w" /></a></p>
+<p>偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 <a href="https://blog.othree.net/log/2018/04/19/immer/">immer</a>，或是最近還在看的 <a href="https://lit-html.polymer-project.org/">lit-html</a>，然後最近發現 <a href="https://code.visualstudio.com/">VSCode</a> 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。</p>
+<p>閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 <code>F12</code> 移動到定義處和 <code>Ctrl</code>+<code>-</code> 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：</p>
+<ol>
+<li><code>Opt</code> + <code>F12</code> Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。</li>
+<li><code>Cmd</code> + <code>K</code> <code>F12</code> Open Definition to the Side，這是兩段式的指令，先按 <code>Cmd</code> + <code>K</code> 然後再按 <code>F12</code>，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。</li>
+<li><code>Shift</code> + <code>F12</code> Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。</li>
+</ol>
+<p>大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000951" baseName="css-properties-sorting-order">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-02-24</b:date>
+				<b:time>22:21:27</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>CSS 屬性排序</b:title>
+			<b:content>
+				<b:summary> 上週在弄 Stylelint 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 zen 這組設定， 這組排序規則是從 Zen Coding 那邊來的，它的規則其實應該就是 Concentric CSS 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。 最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 Poll Results: How do you order your...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47191821991/" title="CSS Box by othree, on Flickr"><img src="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg" intrinsicsize="455x340" width="455" height="340" alt="CSS Box" srcset="https://farm8.staticflickr.com/7868/47191821991_667bafc814.jpg 455w" /></a></p>
+<p>上週在弄 <a href="https://stylelint.io/">Stylelint</a> 的設定，然後理所當然的處理到屬性排序的問題，以前我是用 CSScomb 的 <a href="https://github.com/csscomb/csscomb.js/">zen</a> 這組設定， 這組排序規則是從 <a href="https://github.com/pepelsbey/zen-coding-snippets/blob/master/CSS%20Sorting.md">Zen Coding</a> 那邊來的，它的規則其實應該就是 <a href="https://rhodesmill.org/brandon/2011/concentric-css/">Concentric CSS</a> 的規則，concentric 是同心的的意思，同心圓的那個同心，這組規則的基本原則就是從外到內，從外部的定位、排版方式、到邊距、外框、內距、寬高等 box model 的屬性，然後才到內文的屬性，這組也是我第一次知道的有系統的 CSS 屬性排序規則，而且我覺得這個規則很直覺，而且也是很有邏輯的設計，所以就一直用到現在了。</p>
+<p>最近這次要弄 Stylelint 設定時順便又研究了一下現在主流的排序規則，發現現在 lint tool 如果有內建排序規則的話，一定會有的其實是照字母順序排序，我自己是覺得在 CSS 領域照字母排序根本是 anti-pattern 啦，不過一直都有聽說有些大型企業的專案會用這種排序規則。事實上在 CSS-Tricks 的 <a href="https://css-tricks.com/poll-results-how-do-you-order-your-css-properties/">Poll Results: How do you order your CSS properties?</a> 的這篇文章，裡面就有 14% 的人是使用字母排序，當年還是 2012，2017 年 SitePoint 的<a href="https://www.sitepoint.com/results-ultimate-css-survey-2017/">調查結果</a> 其實沒有很大改變，變成 13%，所以雖然我覺得 anti-pattern 但其實還是有一定比例的人真的這樣用，其實要說的話也還是有好處啦，因為其它的屬性排序規則都是有個基本原則，實際上要仔細排列所有屬性的時候都還是有可能會有些地方有灰色地帶。</p>
+<p>最高比例的排序方法則是照屬性類型分類，照屬性分類其實算是比較籠統的說法，Concentric CSS 的排序規則也算是照屬性分類的，同樣符合這樣條件的另外還有 Nicolas 的 <a href="https://github.com/necolas/idiomatic-css#declaration-order">Idomatic CSS</a> 和 Jonathan Snook 的 <a href="https://smacss.com/book/formatting#grouping">SMACSS</a> 的排序規則，其實這兩種方法的大方向也和 Concentric 的很接近，雖然是分成幾個大類別，但是大類別的排序基本上一樣是從外到內的方向，然後根據 npm 的<a href="https://www.npmjs.com/package/stylelint-config-property-sort-order-smacss">安裝數字</a>，目前使用度最高的應該是 SMACSS 的排序建議了吧，細部的完整排序可以在 Stylelint plugin package 的 <a href="https://github.com/cahamilton/css-property-sort-order-smacss/blob/master/index.js">repo</a> 那邊看到。而除了 Stylelint 之外，PostCSS 也有 plugin 叫 <a href="https://www.npmjs.com/package/css-declaration-sorter">css-declaration-sorter</a> 來幫你排，也內建了 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a> 和 <a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>，而且該 plugin 還號稱：</p>
+<ul>
+<li>Up-to-date CSS properties fetched from the <a href="https://developer.mozilla.org/">MDN Web Platform</a>.</li>
+<li>Thought-out sorting orders out of the box, <strong>approved by their authors</strong>.</li>
+</ul>
+<p>感覺很不錯的樣子，它們的完整排序清單也可以在 repo 內找到：<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/smacss.json">SMACSS</a>、<a href="https://github.com/Siilwyn/css-declaration-sorter/blob/master/orders/concentric-css.json">Concentric CSS</a>，不過排序這東西應該還是要在 lint 的時候做啊，PostCSS 的產出物通常是 production 環境用的 code 了，只是 stylelint 那邊用的排序清單和這邊的又不同，不過其實 <a href="https://stylelint.io/user-guide/postcss-plugin/">Stylelint</a> 和 <a href="https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-postcss-sorting">VSCode</a> 都可以拿 PostCSS 的來用的樣子，還沒測試過就是～</p>
+<p>最後提兩個 Concentric CSS 灰色地帶的問題：</p>
+<ol>
+<li>Grid、 column、 flex、 float 這幾個屬性你會怎麼排呢～？</li>
+<li>如果 <code>box-sizing: border-box;</code> 設下去後，width/height 要放在 padding 前面還後面呢？</li>
+</ol>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000950" baseName="async-await-try-catch">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-01-26</b:date>
+				<b:time>17:21:51</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>async, await and try catch</b:title>
+			<b:content>
+				<b:summary> 這篇想說一下 async﹑await 語法的一些小細節，首先從 async 來說吧，一般來說，async function 是在內部有需要用 await 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會自動被包成 Promise，所以像下面的程式： async function wow () { return Promise.resolve(100); } wow().then(v =&gt; { console.log(v); }); 就等同於： async function wow () { return 100; }...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/27075072839/" title="New Zeland by othree, on Flickr"><img src="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="New Zeland" srcset="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg 1024w, https://farm5.staticflickr.com/4536/27075072839_ef2586e741_h.jpg 1600w" /></a></p>
+<p>這篇想說一下 <code>async</code>﹑<code>await</code> 語法的一些小細節，首先從 <code>async</code> 來說吧，一般來說，async function 是在內部有需要用 <code>await</code> 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會<a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-async-functions-abstract-operations">自動被包成 Promise</a>，所以像下面的程式：</p>
+<pre><code class="language-js">async function wow () {
+    return Promise.resolve(100);
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code></pre>
+<p>就等同於：</p>
+<pre><code class="language-js">async function wow () {
+    return 100;
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code></pre>
+<p>和直接回 Promise value 比起來，效能上不會有什麼顯著差異，從建議的實做方法來看就是多一個判斷。再來看看 <code>await</code> 吧，首先一樣，<code>await</code> 一般是用來接 Promise 的，不過其實也是可以接非 Promise value 的</p>
+<pre><code class="language-js">async function wow () {
+  var r = await 1;
+  console.log(1);
+}
+
+wow();
+console.log(2);
+</code></pre>
+<p>所以這樣的程式碼也可以正確執行，不過 await 那邊的執行方式還是會維持非同步的（實際上應該是後面的東西都會用 Promise 包起來一次），所以這段程式碼的輸出會是先輸出 <code>2</code> 再輸出 <code>1</code>。</p>
+<p>再來這點可能比較多人知道，就是連續的多個 <code>await</code> 不會讓這些非同步操作同時開始：</p>
+<pre><code class="language-js">async function wow () {
+  const a = await fetch('/a');
+  const b = await fetch('/b');
+  const c = await fetch('/c');
+
+  return [a, b, c];
+}
+</code></pre>
+<p>這樣其實三個請求會照順序執行，<code>a</code> 有結果了才去要 <code>b</code>，<code>b</code> 有結果了才去要 <code>c</code>，而不是同時處理，如果要同時發出請求則還是需要用 <code>Promise.all</code>，然後不用 <code>async</code> 了：</p>
+<pre><code class="language-js">function wow () {
+  return Promise.all([
+    fetch('/a'),
+    fetch('/b'),
+    fetch('/c')
+  ]);
+}
+</code></pre>
+<p>不要  <code>await</code> 的話，也是可以先 assign 給變數的：</p>
+<pre><code class="language-js">function wow () {
+  const a = fetch('/a');
+  const b = fetch('/b');
+  const c = fetch('/c');
+
+  return Promise.all([a, b, c]);
+}
+</code></pre>
+<p>然後其實 <code>Promise.all</code> 是要所有的 Promise 都 fulfilled 時才會 resolve，另外一個角度來看，就是其中只要一個 rejected 的話，就不會 resolve，實際上使用起來變化有點少，而且要做忽略錯誤的 <code>fetch</code> 也有點麻煩，所以現在 TC39 還有個新的草案叫 <a href="https://docs.google.com/presentation/d/1fWK9kMsvn2o66Lk6QUw3yITEfsE87yjZdTngoLTsUQ0/edit#slide=id.g41da6c5107_0_0">Promise.allSettled</a>，不管是 resolve 還是 reject，只要所有參數內的 Promise 都結束了，<code>allSettled</code> 就會 resolve，目前這草案還在 stage 1，過幾天的會議有望升到 stage 2，不過這是題外話。</p>
+<p>最後一個想說的就是 <code>await</code> 處理 rejected Promise 的問題，如果是從 jQuery 時期就開始寫 Deferred/Promise 的人，可能會很習慣的把 Promise 的兩種狀態拿來當成值的一部份，事實上這也是 <code>jQuery.ajax</code> 的設計，如果用這種想法來寫 <code>await</code> 接值的時候，就會覺得很難處理 <code>rejected</code> 的狀態，因為要用 <code>try...catch</code>：</p>
+<pre><code class="language-js">async function wow () {
+  try {
+    const a = await fetch('/a');     
+  } catch (error) {
+    // deal with non-ok fetch
+  }
+}
+</code></pre>
+<p>要這樣寫還不如用舊的 <code>.then</code> 來接看起來還漂亮一點。不過實際上，這是錯誤的理解 Promise，Promise 不是用來取得兩種狀態用的，而是用來非同步取得單一個數值用的機制，而所謂 <code>rejected</code> 的狀態，其實就是發生非預期狀況（unexpected exception）的情形，這也就是為什麼 ECMAScript 版的 Promise 是用 <code>throw Error</code> 的方式來 reject Promise。</p>
+<p>我一直覺得用 HTTP 請求來比較這兩種設計蠻好理解的，使用 jQuery 的 <code>ajax</code>，server 端回非 200 的 status 的話，就會被當成是錯誤，然後回傳的 Promise 就會被 reject，但是在使用 ECMAScript Promise 的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 中，不管 server 端回應的 status code，fetch 都會 resolve，而會 reject 的情形，就只有網路有問題的時候，像是網路斷線、存取被拒絕（CORS）等完全碰不到遠端主機的情形，也就是對於一個 HTTP 請求來說，真正的非預期狀況，所以如果你有兩種狀況要處理，那應該是回傳值的一部份，後面再用 <code>if...else</code> 來做分支。</p>
+<p>回來看 <code>await</code> 的使用，究竟應該什麼時候來用 <code>try...catch</code> 呢，我自己有一個很簡單的初步判斷條件，就是這個取值的程式碼，如果不是非同步，沒有使用 <code>await</code> 的話，你會不會用 <code>try...catch</code> 包起來，不會的話，那改成非同步操作的程式碼應該也不用 <code>try...catch</code>。不過現實世界當然還是比較難一點，非同步的取值風險和狀況還是比較多的，例如 <code>fetch</code> 遇到網路問題會 reject，但是還是需要處理這種狀況，不用 <code>try...catch</code> 的話，怎樣寫比較好呢？我的想法是，用 <code>.then/catch</code> 處理好需要處理的情形，然後把結果包起來傳回去，所以要處理 <code>fetch</code> 的非預期狀況的話，就可以改成：</p>
+<pre><code class="language-js">async function wow () {
+  const a = await fetch('/a').catch(error =&gt; {
+    return {
+      ok: false,
+      status: -1,
+      error: error,  
+    };
+  });
+  
+  if (a.status === -1) {
+    // exception error handling
+  }
+}
+</code></pre>
+<p>這邊我設計成有非預期狀況時，status code 為 <code>-1</code>，並且把 error 資訊也傳回去，然後後面就可以直接拿來判斷是不是非預期狀況，當然也可以把這個處理包成一個自己的 <code>myFetch</code>：</p>
+<pre><code class="language-js">const myFetch = (url, options) =&gt;
+  fetch(url, options)
+    .catch(error =&gt; {
+      ok: false,
+      status: -1,
+      error: error,  
+    });
+</code></pre>
+<p>然後原來的程式就可以直接拿 <code>myFetch</code> 取代 <code>fetch</code> 了。</p>
+<p>如果要通用一點的，其實有一個叫 <a href="https://www.npmjs.com/package/await-to-js">await-to-js</a> 的套件我覺得蠻不錯的，直接拿官方的範例看吧：</p>
+<pre><code class="language-js">import to from 'await-to-js';
+
+async function asyncTaskWithCb(cb) {
+  let [err, user] = await to(UserModel.findById(1));
+  if (!user) return cb('No user found');
+}
+</code></pre>
+<p>它可以包裝 Promise 物件，然後不管那個 Promise 成功還是失敗，它自己都會 resolve，resolve 的值就是 <code>[error, value]</code> 這樣形式的陣列，一來符合 node 的 <a href="https://nodejs.org/api/errors.html#errors_error_first_callbacks">error-first callbacks</a>，再來就是配合 destructuring assignment 其實程式碼是蠻漂亮的。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000949" baseName="esm-for-npm-package">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2019-01-10</b:date>
+				<b:time>22:27:07</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>ES Module for NPM Package</b:title>
+			<b:content>
+				<b:summary> For English reader: https://github.com/othree/til/blob/master/js/esm-package.md 這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 mjs 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 tree shaking 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧： { &quot;name&quot;: &quot;smartypants&quot;, &quot;version&quot;:...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/38820559832/" title="Queenstown by othree, on Flickr"><img src="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Queenstown" srcset="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg 1024w, https://farm5.staticflickr.com/4560/38820559832_998d7ad575_h.jpg 1600w" /></a></p>
+<p>For English reader: <a href="https://github.com/othree/til/blob/master/js/esm-package.md">https://github.com/othree/til/blob/master/js/esm-package.md</a></p>
+<p>這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 <a href="https://nodejs.org/api/esm.html">mjs</a> 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 <a href="https://webpack.js.org/guides/tree-shaking/">tree shaking</a> 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧：</p>
+<pre><code class="language-js">{
+  &quot;name&quot;: &quot;smartypants&quot;,
+  &quot;version&quot;: &quot;0.1.1&quot;,
+  &quot;main&quot;: &quot;smartypants&quot;,
+  &quot;module&quot;: &quot;smartypants.es6.js&quot;,
+  &quot;jsnext:main&quot;: &quot;smartypants.es6.js&quot;,
+  ...
+}
+</code></pre>
+<p>package.json 這樣寫，然後需要提供以下三個檔案：</p>
+<pre><code class="language-sh">-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.es6.js
+-rw-r--r--  1 othree  staff  24885 Jan  9 17:12 smartypants.js
+-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.mjs
+</code></pre>
+<p>這段是我從 <a href="https://github.com/othree/smartypants.js">smartypants.js</a> 那邊拿來的，重點在：</p>
+<ol>
+<li><code>main</code> 裡面的檔名不寫副檔名，該檔名要同時提供 <code>js</code> 和 <code>mjs</code> 兩種</li>
+<li>多加上 <code>module</code> 這筆設定</li>
+</ol>
+<p>說明一下，Node.js 現在判斷是哪種模組格式的方式是看副檔名，所以一定要 <code>mjs</code> 的檔案才會當成 ES module，然後剛好解析 <code>main</code> 檔案時的副檔名會自動補，所以就乾脆拿掉，同時提供 <code>smartypants.js</code> 和 <code>smartypants.mjs</code> 兩個檔案，其實都是 <code>main</code> 用的；再來是 <code>module</code> 這個設定和 Node.js 以及 NPM 無關，其實是 <a href="https://rollupjs.org/guide/en">rollup</a> 提出來的 <a href="https://github.com/rollup/rollup/wiki/pkg.module">pkg.module</a>，rollup 如果在解析模組實有看到這個設定，就可以把這個檔案拿來用，當時設計是這個設定 ES module，以前的 main 則是 CommonJS module，雖然是 rollup 提出的，不過 webpack 現在也支援了，範例中還有一筆 <code>jsnext:main</code> 則是比較早期用的 key。</p>
+<p>再更進階一點，還有目標對象的問題，就是產出是瀏覽器用的還是 server 端用的，以前這問題不太常見，不過隨著 server side rendering 越來越普及，這問題就開始比較多人關注了，webpack 就有支援 bundle 的目標對象，也有支援 <a href="https://github.com/defunctzombie/package-browser-field-spec">pkg.browser</a> 設定，webpack 的 <a href="https://github.com/webpack/webpack/issues/5673">issue #5673</a> 有不少討論，有興趣的可以參考看看，不過要注意的是 <code>browser</code> 似乎是第一順位，設定的時候要小心點。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>
