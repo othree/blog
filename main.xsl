@@ -312,7 +312,6 @@
               <!-- <a href="http://www.w3.org/WAI/intro/aria">WAI-ARIA</a> -->
               <!-- <a href="http://www.w3.org/TR/WAI-WEBCONTENT/">WCAG</a> -->
               <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-              <a href="https://plus.google.com/108698651587282496682?rel=author" rel="publisher">Google+</a>
               <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
                 <span itemprop="name">othree.net</span>
                 <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
