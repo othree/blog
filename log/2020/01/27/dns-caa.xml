@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000966" baseName="dns-caa">DNS CAA record</b:listData>
+
+			<b:previous>
+				<b:mTitle>Public Suffix List</b:mTitle>
+				<b:mDate>2020-01-05</b:mDate>
+				<b:mBase>public-suffix-list</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>W3C TAG</b:mTitle>
+				<b:mDate>2020-02-01</b:mDate>
+				<b:mBase>w3c-tag</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000966" baseName="dns-caa">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2020-01-27</b:date>
+				<b:time>23:41:16</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>DNS CAA record</b:title>
+			<b:content>
+				<b:summary>過年前因為工作關係第一次注意到 CAA record (Certification Authority Authorization) 這個東西，簡單說明就是透過 DNS record 來設定你的 SSL cert 的簽發單位白名單，一開始的規範是 RFC6844，其實原理也不複雜，不過我就在遇到用 AWS ACM 簽發憑證時說檢查不過的狀況，有趣的是該 domain 沒有設定任何 CAA，搜尋研究一陣子後發現可能是因為該 domain 是 CNAME 去到別的第三方 domain 才會這樣，然後果然發現這個問題其實很久了。 不過其實原始版本的 RFC6844 其實沒有要求檢查 CNAME 目標的 CAA，而是在 2017 年的勘誤 5065 中才加入的，不過這個修改造成很多問題，所以 letsencrypt 在同一年就又換回舊的實做了。CAA record 看起來也因此放棄這個修改了，在用來取代...</b:summary>
+				<b:mainContent><p>過年前因為工作關係第一次注意到 <a href="https://en.wikipedia.org/wiki/DNS_Certification_Authority_Authorization">CAA record</a> (Certification Authority Authorization) 這個東西，簡單說明就是透過 DNS record 來設定你的 SSL cert 的簽發單位白名單，一開始的規範是 <a href="https://www.rfc-editor.org/rfc/rfc6844.html">RFC6844</a>，其實原理也不複雜，不過我就在遇到用 AWS ACM 簽發憑證時說檢查不過的狀況，有趣的是該 domain 沒有設定任何 CAA，搜尋研究一陣子後發現可能是因為該 domain 是 CNAME 去到別的第三方 domain 才會這樣，然後果然發現這個<a href="https://forums.aws.amazon.com/thread.jspa?messageID=924285&amp;#924285">問題</a>其實很久了。</p>
+<p>不過其實原始版本的 RFC6844 其實沒有要求檢查 CNAME 目標的 CAA，而是在 2017 年的<a href="https://www.rfc-editor.org/errata/eid5065">勘誤 5065</a> 中才加入的，不過這個修改造成很多問題，所以 letsencrypt 在同一年就又<a href="https://community.letsencrypt.org/t/legacy-caa-implementation/42335">換回舊的實做</a>了。CAA record 看起來也因此放棄這個修改了，在用來取代 RFC6844 的 <a href="https://www.rfc-editor.org/rfc/rfc8659.html#name-differences-from-rfc-6844">RFC8659</a> 中，就完全沒有提到 CNAME 的檢查，甚至在與舊版相異的附錄也是特別提到這點差異，不過 RFC8659 還很新，是 2019 年 11 月的，看起來 AWS 還沒修正也情有可原(?)。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

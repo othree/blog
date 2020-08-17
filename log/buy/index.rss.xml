@@ -4,11 +4,94 @@
 <title>O3noBLOG - buy</title>
 <link>https://blog.othree.net//log/ buy/</link>
 <description></description>
-<copyright>Copyright 2018</copyright>
-<lastBuildDate>2018-12-31 17:57</lastBuildDate>
+<copyright>Copyright 2020</copyright>
+<lastBuildDate>2020-08-06 23:30</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>USB-C、DisplayPort</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176207458/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176207458_47d3e5420f_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176207458_47d3e5420f_b.jpg 1024w, https://live.staticflickr.com/65535/50176207458_6984419dba_h.jpg 1600w" /></a></p>
+<p>前陣子為了買螢幕認真的研究了一下 USB-C 介面的問題，然後就在 FB 上快速的紀錄了一下，這篇就把那時的紀錄轉過來，每段文字前後有點不連貫還請忽略，然後尾巴加一些後來研究才知道的東西，當然因為我不是這方面專業的，內容有錯還請通知我～</p>
+<p>最有趣的大概是 USB-C to HDMI 幾乎都是走 DisplayPort Alt. mode 然後線上晶片轉成 HDMI 訊號吧，反而沒有什麼支援輸出  HDMI Alt. mode 的設備，就算有，用上這種主動線材也不能用，然後買線的時候，有些廠商又不寫他是支援 DisplayPort Alt. mode  還是 HDMI Alt. mode（像是那個 moshi，盒子上可能有寫但是網站上都沒寫），不過現在應該幾乎都是前者吧，後者專用的線材可能還要特別去找。</p>
+<p>然後 Mac 之前 Thunderbolt 3 其實只有支援到傳輸 DisplayPort 1.2 的訊號，但是 DisplayPort 1.2  的資料傳輸量只有支援到 4K 60Hz，只是 Thunderbolt 3 可以傳輸兩組 DisplayPort 1.2 訊號，所以可以把 5K 60Hz 10bpc(bit per color) 的視訊資料塞進去。不過最近出的 Pro Display XDR 是 6K 螢幕，一樣只用一條 Thunderbolt 3 線傳輸，研究一番才發現應該是 Mac 換了新的 Thunderbolt 晶片，現在支援到 DisplayPort 1.4，所以可以輸出到 6K 訊號了，不過一般查 Thunderbolt 3 都還是只有寫支援到 DisplayPort 1.2，不知道是不是其實這部分是動態沒寫死的。</p>
+<p>再來就是我之前貼的兩台螢幕，MSI 那台的 USB-C 頭在使用手冊內有寫說不支援數據傳輸，所以那個頭應該是用 USB-C 的 DisplayPort Alt. mode，而不是 Thunderbolt Alt. mode 去傳輸 DisplayPort 訊號，LG 的是後者，所以它可以一條線同時做訊號傳輸，還提供筆電充電和三個  USB-C 頭出來（真的是 USB 介面的），不過沒有 downstream 來串接 Thunderbolt 設備，4K 版才有多餘的頻寬。</p>
+<p>蘋果那條 Pro Cable 厲害的點就是在它有 2M 長度，但是：</p>
+<ol>
+<li>支援 USB-C 資料傳輸，傳輸速度可以到 USB 3.1 Gen 2 的 10Gbps；</li>
+<li>Thunderbolt 3 Alt. mode，傳輸速度可以到最高速的 40 Gbps；</li>
+<li>DisplayPort Alt. mode 訊號，並且支援到 1.3 的 HBR3，資料量有到 25.92 Gbps；</li>
+<li>支援充電到 100W，也是 Thunderbolt 3 規格的最高功率。</li>
+</ol>
+<p>可以說是目前最常見的模式都有支援到目前的頂級規格了，一般這種長度的線通常就是：1. 普通 USB-C 被動（沒晶片處理）線材，然後就無法乘載 Thunderbolt 3 的 40G 訊號；2. 主動的 Thunderbolt 3 or DisplayPort 線材，但是就會變成只能傳輸自己支援的訊號，不能當 USB-C 線用，蘋果那條線到底是怎麼同時達成其實還不清楚，充電要怎樣能到 100W 然後同時傳輸這樣大量的資料也是很厲害。其實也有廠商出過同時可以當 Thunderbolt 3 和 USB 的<a href="https://www.akitio.com.tw/accessories/40gbps-thunderbolt3-cable-2m">線材</a>，只是 USB 就不能到 10Gbps，充電也有差，總之就是沒有樣樣完美的。</p>
+<p>MacBook Pro 16 現在有支援同時輸出給兩台 Pro Display XDR，不過要一台插左邊，一台插右邊，其實 5K 就需要了，官網文件有寫，所以大概可以知道四個 port 頻寬是左右兩邊分開的，其實 Apple 官方文件寫的還蠻仔細的，不同機種都有各自的文件說明：</p>
+<ul>
+<li><a href="https://support.apple.com/en-us/HT210754">MacBook Pro 16</a></li>
+<li><a href="https://support.apple.com/en-us/HT208366">iMac Pro</a></li>
+<li><a href="https://support.apple.com/en-us/HT210392">Mac Pro with Radeon Pro Vega II Duo MPX Module</a></li>
+</ul>
+<p>然後 DisplayPort 1.4 有支援到 8K 60Hz 的訊號，Dell 也有一台 8K 螢幕 UP3218K 支援到 8K 60Hz 10bpc，不過現在一來 macOS 不支援輸出 8K，二來 Dell 那台如果要支援 8K 60Hz 是用兩條 DisplayPort 1.3（標準接頭）來傳輸訊號的，因為 DisplayPort 1.3 只有支援到 8K 30Hz，單一條無法到達 60Hz。不過一來 30Hz 蘋果不喜歡，二來兩條線也不符合蘋果美學，所以這個組合在可見的未來大概也是無法搭配在一起吧，我推測蘋果的裝置要支援到 8K 螢幕應該是至少要先換到 Thunderbolt 4 的介面，用比較高效的編碼然後用到單向 80Gbps 的傳輸，不過單向傳輸的話其實就無法同時串接 Thunderbolt 裝置了，也會變成無法達成一條線同時傳視訊、資料和充電，到時候到底會怎樣還是很很讓人好奇啊。</p>
+<p>說到這其實我就很好奇，兩條 DisplayPort 線輸出高解析度畫面，這靠的是什麼標準呢？以前在 DVI 時代，這叫做 Dual-Link，不過 DisplayPort 似乎沒有相對應的專有名詞，蘋果網站和 LG 說是 dual-link SST(Single Stream Transport) ，Thunderbolt 網站有看到寫 Dual DisplayPort 的，不過似乎都不是正式的名稱，我基於好奇搜尋許久，還找到看起來好像很有關連的 DisplayPort Dual Mode（DP++）這東西，但是其實這也不是我要找的，我要找的最後是在一份 VESA 在 Display Summit 用的投影片中找到，這份投影片叫：<a href="https://www.vesa.org/wp-content/uploads/2016/06/Display-Summit-USA-2016-AMD-VESA-SAH_Final_r1.pdf">DisplayPort Future Proofing Display Connectivity for VR and 8K HDR</a>，其實這個能力是真的沒有特別的專有名詞（行銷用詞），它是利用 <a href="https://en.wikipedia.org/wiki/DisplayID">DisplayID</a> 的一個功能「Tiled Display Topology Data Block」來達成的，意思就是顯示器的 DisplayID 會跟訊源說你可以把我當成是一組並排螢幕中的一個，Dell UP3218K 是需要實體的 DisplayPort 線兩條，顯示器只要其中一個孔位說是左邊，一個說是右邊就可以，然後解析度都是 3840 × 4320 at 60Hz ，像 Thunderbolt 3 可以傳輸兩組 DisplayPort 訊號，也是一樣的方式，接 UltraFine 5K 的話是兩組 2560 × 2880 at 60Hz 10bpc 的訊號。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50195209003/" title="Pro Cable by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50195209003_39aa1b5807_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="Pro Cable" srcset="https://live.staticflickr.com/65535/50195209003_39aa1b5807_b.jpg 1024w, https://live.staticflickr.com/65535/50195209003_60a2cb1dd3_h.jpg 1600w" /></a></p>
+<p>最後，如果你看到一台螢幕號稱說是 USB-C 螢幕，那有三種可能性，一是它只支援 Thunderbolt Alt. mode，像是舊版的 LG UltraFine 5K；二是它只支援 DisplayPort Alt. mode，像是 MSI Prestige PS341WU；最後就是兩種都支援，像是新版的 LG UltraFine 5K。哇！除了線材挑選有學問之外，螢幕說支援 USB-C 接頭傳輸視訊，其實也有不同可能性了，USB-C 真的很難！</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/08/06/usb-cdisplayport/</link>
+<guid>https://blog.othree.net/log/2020/08/06/usb-cdisplayport/</guid>
+<category>buy</category>
+<pubDate>2020-08-06 23:30</pubDate>
+</item>
+
+<item>
+<title>更新螢幕</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176899326/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176899326_873c44ed56_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176899326_873c44ed56_b.jpg 1024w, https://live.staticflickr.com/65535/50176899326_4d8f5560db_h.jpg 1600w" /></a></p>
+<p>最近因為改用公司發的筆電，所以買了一台新螢幕，本來用的初代 Retina 5K iMac 就先搬回舊家了，這篇來記錄一下這次的螢幕的挑選過程。</p>
+]]><![CDATA[<p>初代的 5K iMac 到現在也已經有五年了，其實當初剛拿到就有點覺得硬體不是很夠力，沒有完美順暢的感覺，不過做 web 開發也還可以接受，直到前陣子有開始接觸 React Native 要編譯 native app 還有常常需要開模擬器，就很明顯的感受到電腦的速度不夠了，加上初代螢幕會有烙印問題，也是有點想更新，剛好拿到公司配發的筆電，於是就開始考慮要更換過去，然後就開始挑螢幕了，主要的挑選目標是：</p>
+<ul>
+<li>用 USB-C 做視訊傳輸介面</li>
+<li>想要更大的工作區域，而且我不想要多螢幕</li>
+</ul>
+<p>因為想要單螢幕更大的工作區域，所以我一開始找 21:9 的螢幕，然後找到了買不太到的 <a href="https://www.lg.com/tw/monitors/lg-34WK95U-W">LG 34WK95U-W</a>，寬高比 21:9，解析度 5120 × 2160，對角線 34 吋，支援 Thunderbolt 3、DisplayPort Alt 和筆電充電，DCI-P3 色域還有支援 HDR，其實總共的點數是筆 5K iMac 還要少，但是如果改成 scaled 顯示就可以得到更大的工作區域，不過那個時間點已經找不太到貨了，當時蝦皮還有兩三台新品，但是我還沒要下單，結果某天突然就都消失了。</p>
+<p>然後我就開始找看看有沒有其他同樣規格的螢幕，意外的 5K 螢幕其實很少，幾乎都是超寬的才有 5K，但是這樣垂直解析度就不夠了，結果只有找到 <a href="https://tw.msi.com/Monitor/Prestige-PS341WU.html">MSI Prestige PS341WU</a>，其實是 LG 同規格的面板，可能是不同型號，最近還有活動會送 X-Rite 的校色器和一張電腦椅，實在是很吸引人，不過雖然面板一樣，其他部分差異就蠻多了，像是它的 USB-C 接頭不支援 Thunderbolt 3，應該是只有 DisplayPort Alt Mode，所以筆電充電的能力也是個問號，要轉接 USB 還要多一條 up-stream 線到電腦，不過總之要 5K 螢幕好像也沒得選了，大概心裡就覺得就是這台了吧，不過我雖然好像差不多決定要買這台，但是因為當時還沒決定要把 iMac 弄到哪，所以還是一直拖著沒買（上面說的那台 LG 也是在這段時間賣掉的，之後才只剩下這台）。</p>
+<p>不過就在我還在拖拖拉拉的這段時間，我就偶爾還會繼續研究，也花了些時間搞懂 USB-C 接頭的一些事，這部分之後會另外一篇文章寫，然後看到了 <a href="https://github.com/tonsky/FiraCode">Fira Code</a> 作者 Nikita Prokopov 寫的 <a href="https://tonsky.me/blog/monitors/">Time to upgrade your monitor</a> 這篇文章（內有簡體中文翻譯連結），這篇文章的總結其實作者也有整理出來：</p>
+<ul>
+<li>It needs to be at least a 4k monitor. Both 5k and 6k are also great, of course.</li>
+<li>You need to use the integer scaling factor.</li>
+</ul>
+<p>其中第二點說的是要整數的 scaling factor，scaling factor 或許稱為 pixel density 比較有人知道，其實我本來也是有點堅持這點的，不過剛開始挑選新螢幕時有想要為了更大的工作空間妥協的，當時是因為我有先用筆電測試過，肉眼其實看不太出什麼問題，看完這篇我又開始猶豫是不是要 MSI 那台了，因為如果要整數倍（其實就是兩倍）的 scale，那 21:9 的 5K 螢幕實際上點數比正在用的 16:9 5K 還要少，工作區域事實上是變少的，所以，我找起了 16:9 5K 27 吋的螢幕，結果其實選擇一樣不多，基本上就是 <a href="https://www.lg.com/tw/monitors/lg-27MD5KL-B">LG UltraFine 5K</a>，但是這台有點舊了所以我其實有點卻步，花了很多時間看，發現這台根本就是 Apple Cinema Disaply 的 5K 版外包給 LG 做，雖然外觀不是 Apple 風格，但是各方面設計完全是 Apple 的精神在其中，列舉如下：</p>
+<ul>
+<li>有內建的 Web Cam 和喇叭，和 iMac、Cinema Display 一樣</li>
+<li>只有一個 USB-C 輸入孔，完全沒有其他的輸入介面支援</li>
+<li>沒有任何按鈕、沒有電源鍵、沒有 OSD 介面</li>
+</ul>
+<p>這也難怪 PCHome 網站上還要放上這串字「 <strong>《貼心叮嚀》僅thunderbolt3接頭，只支援apple設備輸出！！！</strong>」</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50177002122/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50177002122_0338b95e11_b.jpg" intrinsicsize="1024x577" width="1024" height="577" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50177002122_0338b95e11_b.jpg 1024w, https://live.staticflickr.com/65535/50177002122_1423a640cc_h.jpg 1600w" /></a></p>
+<p>再繼續下去說我最後的選擇之前，先來說一下到底是不是有真的符合我目標的螢幕吧，其實是有的，就是 <a href="https://www.apple.com/tw/pro-display-xdr/">Apple Pro Display XDR</a>，介面不用說，他的解析度是 6016 × 3384，所以可以維持 scaling factor 保持 2，但是提供更大的工作空間，不過大家都知道他的價錢，所以就不用考慮了，然後其實我也蠻在意那個解析度數字不是很漂亮。</p>
+<p>總之，最後我挑的是 LG UltraFine 5K，有幾個原因，一是工作區域大小，假如我願意接受非整數的 scale，那這台的實體點數 5120 × 2880 其實是可以提供更大的空間（相較於 5120 × 2160）；第二是這台在 2019 年有更新過，新款型號是 27MD5KL-B，舊款是 27MD5KA-B，其實更新的地方很少，就是晶片更新修正一些 bug、支援 USB-C DisplayPort Alt，所以可以直接接 iPad，然後其他都沒變動，面板也沒換，不過至少我可以知道這台規格現在還沒有過時；第三是我一直很想試試看 Apple 一直以來的只接一條線同時傳視訊、資料和充電的方案。然後我買的時候 PCHome 剩下兩台（現在已經沒了），而且我買來才發現「沒有任何按鈕、沒有電源鍵、沒有 OSD 介面」這個特色。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176748601/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176748601_604c63ef62_b.jpg" intrinsicsize="768x1024" width="600" height="800" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176748601_604c63ef62_b.jpg 768w, https://live.staticflickr.com/65535/50176748601_53bc3332f1_h.jpg 1200w" /></a></p>
+<p>上週收到後花了一個下午把工作桌重新整理起來，除了螢幕之外其實還有一些其他的配件：</p>
+<ul>
+<li>螢幕懸臂：<a href="https://ergotechgroup.com/freedom-arms.html">ERGOTECH FDM-PC-S01</a>，這隻我是買 iMac 前買的，本來是要用在 iMac 上的，結果 5K 版好像不支援 VESA 轉接架</li>
+<li>MBP 立架：<a href="https://www.twelvesouth.com/products/bookarc-macbook">Twelve South BookArc</a>，之前 Apple Store 有賣的（現在線上商店搜尋已經沒有了），本來也有考慮 <a href="https://www.raindesigninc.com/mtower.html">Rain Design mTower</a>，想要方正一點的話可以考慮這款，我挑選前一款的主因是它算是 Apple 認證的周邊廠商、然後覺得那個弧形下面如果要走線經過好像比較方便，不過結果而言是沒有線經過他的下方啦</li>
+<li><a href="https://www.apple.com/tw/shop/product/MWP32FE/A/">Thunderbolt 3 Pro Cable</a> 冠上 Pro 之名的蘋果線材，兩公尺長度但是可以當 Thunderbolt 3 連接線也可以當 USB-C 連接線，不過我拿到螢幕後發現它也付了一條，不過沒有詳細的規格</li>
+</ul>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176207438/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176207438_5f6682d214_b.jpg" intrinsicsize="768x1024" width="600" height="800" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176207438_5f6682d214_b.jpg 768w, https://live.staticflickr.com/65535/50176207438_0e5b8853a7_h.jpg 1200w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176207458/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176207458_47d3e5420f_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176207458_47d3e5420f_b.jpg 1024w, https://live.staticflickr.com/65535/50176207458_6984419dba_h.jpg 1600w" /></a></p>
+<p>還有一些是本來就有的，像是 <a href="https://www.benq.com/zh-tw/lighting/screenbar-lamp.html">Benq WiT ScreenBar</a>，之前是用 Plus，但是考慮到這次螢幕接上懸臂了，所以用回普通版，然後這個東西和 UltraFine 5K 螢幕不太和，如果裝正中間會檔到 WebCam；喇叭又換回 Bose Computer Music Monitor，體積比較小，可惜這對喇叭已經停產了，也沒有類似的後繼機種；另外就是弄完有點想要無線鍵盤，不過我還在等 Topre Realforce R2 的無線版本，當初 R2 剛發表的時候好像有稍微提到這件事情。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176390553/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176390553_049b090e71_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176390553_049b090e71_b.jpg 1024w, https://live.staticflickr.com/65535/50176390553_0d391d8473_h.jpg 1600w" /></a></p>
+<p>裝起來後就開始試驗不同的 scaling factor 了，macOS 更新前好像不太正確，出現了 Pro Display XDR 的 3008 這種怪比例，還好更新到最新版後數字比較正常，比本來 2x 的 2560 × 1440 還要小的有：</p>
+<ul>
+<li>2880 × 1620、約是 1.78× (3.5/2)</li>
+<li>3200 × 1800、1.6×</li>
+</ul>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50176210153/" title="LG UltraFine 5K by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50176210153_7748ecd890_b.jpg" intrinsicsize="1024x684" width="1024" height="684" alt="LG UltraFine 5K" srcset="https://live.staticflickr.com/65535/50176210153_7748ecd890_b.jpg 1024w, https://live.staticflickr.com/65535/50176210153_075a421043_h.jpg 1336w" /></a></p>
+<p>目前是先使用 2880 × 1620 的大小，最後還是想再強調一次，這台真的就是 Apple 跟 LG 合作的 Cinema Display 後繼機，連作業系統內都有專用的示意圖。</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/08/01/upgrade-my-monitor/</link>
+<guid>https://blog.othree.net/log/2020/08/01/upgrade-my-monitor/</guid>
+<category>buy</category>
+<pubDate>2020-08-01 23:22</pubDate>
+</item>
 
 <item>
 <title>Kobo Forma</title>
@@ -360,52 +443,6 @@
 <guid>https://blog.othree.net/log/2011/05/27/html5/</guid>
 <category>buy</category>
 <pubDate>2011-05-27 05:29</pubDate>
-</item>
-
-<item>
-<title>Eye-Fi Direct Mode</title>
-<description><![CDATA[<p>對我來說，期待很久的 Eye-Fi Direct Mode 終於出來了，有這個功能後，Eye-Fi 卡片就可以自己做成 AP ，然後直接傳輸檔案到指定的裝置上，而不用在找一個 Wifi AP 來做中間點，所以理想上我可以相機拍完直接進 iPad ，然後就可以看大圖了！</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/5633010595/" title="Eye-Fi Direct Mode by othree, on Flickr"><img src="https://farm6.staticflickr.com/5062/5633010595_52b6e8f72d_b.jpg" width="1024" height="768" alt="Eye-Fi Direct Mode" srcset="https://farm6.staticflickr.com/5062/5633010595_52b6e8f72d_b.jpg 1024w" /></a></p>
-
-<p>上圖是我的 Android 手機在使用直接傳輸模式接收相機那邊傳來的新鮮照片，不過理想畢竟是理想，我在使用上其實遇到不小的問題，其實問題也只有一個，就是卡片應該要建立 AP，但是確沒有，或是連上之後，AP 就消失了，最慘的是照片傳到一半時，AP 消失了，今天甚至因此沒有成功傳輸照片到 iPad 上，不然本來要附上傳輸到 iPad 的照片的，只能先用 Android 將就一下，我已經在討論區發出 <a href="http://forums.eye.fi/viewtopic.php?f=2&amp;t=3820">問題</a> 了，也有人說有一樣的問題，事實上我還有位朋友也是一樣的狀況，希望這個問題能夠解決，不然 Direct Mode 成功率現在是低到無法使用的狀態。</p>
-
-<p>總之，這篇一樣是給有意買進 Eye-Fi 的人參考用的，有任何新消息貨更新我還會在 po 上來。</p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/04/22/eye-fi-direct-mode/</link>
-<guid>https://blog.othree.net/log/2011/04/22/eye-fi-direct-mode/</guid>
-<category>buy</category>
-<pubDate>2011-04-22 00:15</pubDate>
-</item>
-
-<item>
-<title>eye-fi 無線記憶卡之講在前頭</title>
-<description><![CDATA[<p>知道現在有 SD 卡內建無線模組可以直接傳照片出來的人可能不多，不過隨著 Mobile01 的 <a href="http://www.mobile01.com/newsdetail.php?id=9703">介紹</a> 後，知道的人也是有在增加，我自己是在今年七月就拖朋友幫忙從美國帶了一張目前最頂級的 <a href="http://www.eye.fi/products/prox2">Pro X2</a> ，用了約半年有不少經驗，都是入手前不太容易知道的事情，我覺得可以分享一下免得有人誤入歧途。</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/4713524095/" title="Eye-Fi by othree, on Flickr"><img src="https://farm5.staticflickr.com/4028/4713524095_6474fab9f9_b.jpg" width="1024" height="768" alt="Eye-Fi" srcset="https://farm5.staticflickr.com/4028/4713524095_6474fab9f9_b.jpg 1024w" /></a></p>
-]]><![CDATA[<p>首先是建議的 <a href="http://www.eye.fi/products/compare-cards">卡款</a>，我個人是建議買到 <a href="http://www.eye.fi/products/explorex2">Explorer X2</a> 就可以了，甚至如果你只需要 4G 的話那我建議可以 <a href="http://www.eye.fi/products/geox2">Geo X2</a> 就可以，我當初買到 <a href="http://www.eye.fi/products/prox2">Pro X2</a> 其實是為了 <a href="http://zh.wikipedia.org/zh-tw/%E7%84%A1%E7%B7%9A%E9%9A%A8%E6%84%8F%E7%B6%B2%E8%B7%AF">ad hoc</a> 點對點傳輸功能，不過這個功能我幾乎沒用到，我當初設想我的使用情境是出外玩時，晚上可以把相片傳到筆電裡面，即時我的電腦沒網路也可以用 ad hoc ，可是 Eye-Fi 強制要求你的接收端機器要能連上網路，相片才有辦法傳進去，所以這個功能我只有用過幾次，至於熱點台灣都沒有，完全不用考慮，所以第二個看的功能就是要支援地理資訊標籤（Geo Tag），Geo Tag 有抓到的話基本上都蠻準的，不過我最近覺得它越來越抓不到了，可能是和老化有關，而且有時候在家裡拍的他還是抓到家裡的位置，不過這些照片其實我不想加上地理資訊標籤的，也有時候會回家傳照片時才抓位置，然後就標錯位置，再來它是用 Wi-Fi 定位，所以去郊外的話基本上是沒用的，其實這也有點諷刺，我是覺得 Geo Tag 還是要相機本身支援才比較方便，SONY最近已經開始有些相機有了，希望其它幾家也能跟進。</p>
-
-<p>第二點是根據我的觀察， Eye-Fi 的運作機制其實不是從你的電腦上傳照片到網路上，而是會存一份在他們的主機上，再從那邊丟到相簿，我不知道使用者條款上有沒有寫，不過我想有些人可能會不能接受，最近 Eye-Fi 提供了一個加值服務就是讓使用者可以存取這些他們備份的照片，叫做 <a href="http://www.eye.fi/how-it-works/eyefiview">Eye-Fi View</a> ，而這個自動上傳到他們主機上的功能(?)似乎是不能關掉的，雖然新版軟體設定有個選項是要不要上傳到 Eye-Fi View，不過我實在不確定這兩件事是不是等價，前面說的 ad hoc 傳輸還是需要接收端有連外網路我想一部分原因就是這個。</p>
-
-<p>第三點是它和讀卡機相容性不好，很容易就抓不到卡片，尤其是記憶卡內有還沒上傳的照片時，即使是它用自己的讀卡機也會出現一下又消失，如果要有線傳輸的話，最穩定的方法反而是放相機裡面用傳輸線。</p>
-
-<p>第四點是網路設定一定要先裝在電腦上設定，這不是要說他壞話，而是要說沒有其他方法可以做到沒電腦也可以改設定，如果 iPad + Camera Kit 可以在外面即時新增網路 SSID 的話會方便很多，所以如果你要到某個沒去過的地方用那邊的無線網路，那就一定要在那邊有電腦，裝上 Eye-Fi 程式和讀卡機才能修改設定，當然筆電也可以，不過有時候就是不想要帶筆電啊。</p>
-
-<p>第五點是和 <a href="http://www.apple.com/tw/ipad/">iPad</a> 的混和應用，這也是我在買之前就很期待的功能之一，不過我到最近才買了 iPad ， iPad 上有個 App 叫 <a href="http://2ndnature.thebrew.dk/shuttersnitch/">ShutterSnitch</a> ，基本上是一個相片管理工具，不過他最引人注目的就是它可以讓 iPad 接收 Eye-Fi 的檔案，只要有 Wi-Fi 區網就可以，iPad 也不需要連的上外部網路，不過使用上有些小細節要注意，第一次（相機開機後）連結會比較花時間，因為 Eye-Fi 要去搜尋區網內的機器，然後似乎 ShutterSnitch 會去偽裝成 Eye-Fi 的主機來接收檔案，這個搜尋的時間要花比較久，不過之後就蠻快了，傳輸速度其實 X2 系列一直都不差，網路好的話我 5MB 的照片也只要數秒鐘就可以進電腦，所以出外的話就變成看你的無線網路品質了，當然配合 iPad 目前最好的用法是買個無線 AP 隨身帶著，不過這部份我我目前還沒有機器測試，至少我有朋友已經這樣操作一段時間了，然後他的作法是相機同時存 RAW + JPG，JPG 只存 2M 大小，然後也只傳 JPG 到 iPad 做預覽用。</p>
-
-<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/5223460439/" title="台大卡漫講座 by othree, on Flickr"><img src="https://farm6.staticflickr.com/5084/5223460439_ed7678486c_b.jpg" width="768" height="1024" alt="台大卡漫講座" srcset="https://farm6.staticflickr.com/5084/5223460439_ed7678486c_b.jpg 1024w" /></a></p>
-
-<p>比較可惜的是 iPad 不支援 ad hoc ，不然應該可以省去那個搜尋時間，相機要一直開機對小 DC 實在是很傷電，說到耗電，還有一點一定要講的，就是用上 Eye-Fi 的話，吃電會吃比較快，尤其是如果你移植在測試網路和設定來設定去的話，所以我現在都還是會帶一張普通記憶卡備用。</p>
-
-<p>另外 JB 過的 iPad 據說可以開 Wi-Fi AP 做網路分享，至於能不能用來接收 Eye-Fi 照片我就不知道了，iOS 4.2.1 目前還沒完美的 JB 所以我還不會去嘗試，或許有朋友有機會可以試試看，順便提一下，ShutterSnitch 在 iOS 4 之後，在設定 <a href="http://www.flickr.com/">Flickr</a> 相簿的認證時會出問題，有人試出了方法避開問題，首先是把 ShutterSnitch 的 Flickr 設定砍掉，然後 Safari 登出 Flickr ，接著照正常步驟重來一次，到登入 flickr 頁面的時候，按兩下 Home 鍵去程序管理那邊把 ShutterSnitch 關掉，然後回 Safari 那邊登入並同意授權，接著系統會自動開啟 ShutterSnitch ，這時候認證資訊它應該就能正確接到了。</p>
-
-<p>最後要講的就是無線記憶卡這東西，其實有在 <a href="http://www.engadget.com/2010/06/22/toshiba-looking-to-standardize-wireless-memory-cards-crash-eye/">制定標準</a> 了，現在只有一家廠商，所以什麼都要照他的遊戲規則來，如果有個標準的規格可以走，那應該未來用途會更加廣泛，不過從新聞出來到現在也四五個月了，其實也沒個影就是了Q_Q。</p>
-]]></description>
-<link>https://blog.othree.net/log/2010/12/15/eye-fi-experience/</link>
-<guid>https://blog.othree.net/log/2010/12/15/eye-fi-experience/</guid>
-<category>buy</category>
-<pubDate>2010-12-15 11:24</pubDate>
 </item>
 
 

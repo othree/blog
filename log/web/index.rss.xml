@@ -4,11 +4,115 @@
 <title>O3noBLOG - web</title>
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
-<copyright>Copyright 2019</copyright>
-<lastBuildDate>2019-07-02 12:35</lastBuildDate>
+<copyright>Copyright 2020</copyright>
+<lastBuildDate>2020-07-17 21:51</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Safari 3rd-Party Cookie</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50122828112/" title="Apple ITP by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50122828112_79ce3e54d3_b.jpg" intrinsicsize="1024x837" width="936" height="765" alt="Apple ITP" srcset="https://live.staticflickr.com/65535/50122828112_79ce3e54d3_b.jpg 1024w, https://live.staticflickr.com/65535/50122828112_73eaebf7b0_h.jpg 1600w" /></a></p>
+<p>Apple 之前有<a href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/">宣告</a>要完全阻擋 3rd-party cookie，iThome 也有相關的<a href="https://www.ithome.com.tw/news/136565">報導</a>，iOS 和 iPadOS 應該是已經上線了，然後最近 Mac 版 Safari 也快要上線了，所以這篇來記錄一下要怎樣因應還有一些參考資料。</p>
+<p>其實真的會寫到第三方 cookie 的服務是沒想像多的，如果不是開發給其它網站用的第三方服務的話（不是掛 script 而已），那其實沒那麼常見，舉例來說：很多人可能會覺得 Google Analytic 會受影響，但是其實並沒有，一般網站掛 Google Analytic 算是掛上 3rd-party script，但是它寫的 cookie 是 1st party cookie，也就是寫在你的網站的 domain 下，Google 的文件也有很詳細的說明他的每個 cookie 的<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage">用途</a>，然後仔細看就會找到還有寫如何<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/cross-domain">跨網域追蹤</a>，而這其實是需要帶一些參數過去的，如果 GA 是用 3rd-party cookie 寫在 Google 自己的 domain 的話，要跨網域追蹤就不需要這樣帶參數了，我是覺得 Apple 的 ITP 比較是針對廣告和 Facebook，早幾年前 Facebook 可以用 like button 來簡單的做到跨站追蹤，現在那些 iframe 都會被認為是 3rd-party，cookie 會和 1st-party 放不同區（partition），甚至本來如果有先去看過 facebook.com 之後，會有 24 小時可以存取該網域 3rd-party cookie 的能力也在 <a href="https://webkit.org/blog/8311/intelligent-tracking-prevention-2-0/">ITP 2.0</a> 移除，facebook 後來加上了 <code>fbclid</code> 這個參數來追蹤連出去的連結，然後 <a href="https://webkit.org/blog/8828/intelligent-tracking-prevention-2-2/">ITP 2.2</a> 就又針對這種連結裝飾（link decoration）也設了 cookie 的存取限制（剛好同時也影響到 Google Analytic）。</p>
+<p>如果真的是需要作為 3rd-party 端提供服務的話怎麼辦呢？其實一開始 Apple 那篇<a href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/">文章</a>，有列了幾個方案，其中正規的兩個方案：</p>
+<ol>
+<li>用 OAuth 2.0 作為 user auth 的方案，然後第一方網站拿到 token 後自己存好（作為 1st-party cookie 或是其它儲存方法）。</li>
+<li>用 <a href="https://webkit.org/blog/8124/introducing-storage-access-api/">Storage Access API</a>，這是 Apple 所提出的 Web API，在被視為第三方的 context 中（例如 iframe），可以透過 Storage Access API 來取得 1st-party cookie 的存取權限，不過一般人直接用這個 API 要權限，可能會覺得奇怪怎麼 Safari 都沒有問使用者要不要給，權限就拿到了，其實這是因為 Apple 那邊的想法是這個 API 要盡可能的不干擾使用者，所以只有被歸類（classified）為有追蹤能力的域名才會跳出視窗跟使用者詢問，至於這個歸類的方法是在 <a href="https://webkit.org/blog/7675/intelligent-tracking-prevention/">ITP 1.0</a> 中提出的，Apple 考慮到隱私問題，所以這個機制是用機器學習的，每台電腦/裝置都維護自己的清單，沒有中心化的黑名單（Firefox 應該是用這種方法），而如果想要親自驗證自己的 domain 要是被歸類為追蹤網站的話，會發生什麼事的話，也有篇<a href="https://webkit.org/blog/8387/itp-debug-mode-in-safari-technology-preview-62/">文章</a>介紹，我自己有測試過也確實看到了那個詢問視窗。</li>
+</ol>
+<p>然後如果要用 Storage Access API，其實還有些限制，Safari 從 1.0 開始，就有個針對 3rd-party cookie 的限制，就是使用者要曾經直接訪問過該網域，並且寫入過 1st-party cookie，之後該網域才能對 3rd-party cookie 做存取，而這項限制也延伸到 Storage Access API 這邊，一樣要先作為 1st-party 寫入過 cookie，之後才能夠透過 Storage Access API 取得 1st-party cookie 的存取權限，Apple 負責 ITP 的 <a href="https://twitter.com/johnwilander">John Wilander</a> 最近正在寫相關的<a href="https://bugs.webkit.org/show_bug.cgi?id=193277#c7">文件</a>，裡面就有提到，然後這個限制 Firefox 也有，不過 Firefox 似乎是 30 天內有訪問過該網域就可以。</p>
+<p>寫到這邊，其實有件事情忘記先提，就是網路上你去搜尋 <strong>Safari 3rd Party Cookie</strong> 會找到一些方法說可以成功讀寫 3rd-party cookie 的，那些全部都已經失效了，而且不只是 cookie，所有可以寫入的東西像是 DOM Storage 也是有受到一樣的限制保護的（然後 Storage Access API 現在<a href="https://twitter.com/jonathandavis/status/1204102948571119616">只能拿到 cookie 的權限</a>），目前也沒有出現其它的繞過方式，而且就算有人找到，Apple 都會修掉的，所以如果有這需求還是趕快用 Storage Access API 實做吧（別忘了 feature detection）。</p>
+<p>然後或許有人會覺得 ITP 沒檔到 Google Analytic 好像沒什麼意義，其實 <a href="https://twitter.com/johnwilander">John Wilander</a> 早在 2017 年就有在 WebAppSec 稍微<a href="https://lists.w3.org/Archives/Public/public-webappsec/2017Mar/0034.html">提過 Single Trust</a> 這件事，提的就是網頁內掛的 3rd-party script 其實是安全性隱憂，應該只有同 domain 的東西可以信任，在 cookie 這邊來說就是 3rd-party script 不應該有存取網站 1st-party cookie 的權限（不過後來發生的是<a href="https://twitter.com/GossiTheDog/status/1038333980423204865">某航空公司的信用卡資訊輸入頁面放的第三方 script 會做 key log</a>），如果真的進行，這個改變可以想像的到影響非常的巨大，舉例來說，以前的 Performance Practice 其中一項是把 static file 放到 CDN 並且用不同 domain host，但是這樣其實就會被當成是 3rd-party script 了，雖然他在我們的認知下是可信任的，然後目前也有非常大量的現存網站是這樣做。目前 Apple 也有在做一些相關的研究，其中一個已經廣為人知(?)的就是 Safari 現在有在<a href="https://bugs.webkit.org/show_bug.cgi?id=204262">紀錄 3rd-party script 的數量</a>，另外就是我之前在 <a href="https://blog.othree.net/log/2019/05/27/incrementally-better-cookies/">SameSite Cookie</a> 這篇文章有提到的，Mike West 起草的 <a href="https://github.com/WICG/first-party-sets">First-Party Sets</a>，透過 <code>/.well-known/</code> 下的檔案定義可以被認為是 1st-party 的 domain 清單，假設未來真的要做到 single trust 的程度，要處理 CDN 之類的問題，像是 First-Party Sets 的機制就不可少。</p>
+<p>最後附上一些延伸的參考資料：</p>
+<ul>
+<li><a href="https://github.com/whatwg/html/issues/3338#issuecomment-357790890">在提案 Storage Access API 時，Apple 工程師整理的 Safari 行為</a></li>
+<li><a href="https://medium.com/@meistudio/the-rise-of-privacy-8c9ea5f53b09">Paul Li 之前在介紹 SameSite Cookie 時也有討論到相關的問題，並且還有一個 test suite</a></li>
+<li><a href="https://www.tenmax.io/archives/14012">TenMax 介紹 ITP 的這篇文章的 ITP 發展歷程整理的很棒</a></li>
+<li><a href="https://note.com/martech">日本的 AD EBiS マーテック研究会 的文章資訊都很新且深入</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2020/07/17/safari-3rd-party-cookie/</link>
+<guid>https://blog.othree.net/log/2020/07/17/safari-3rd-party-cookie/</guid>
+<category>web</category>
+<pubDate>2020-07-17 21:51</pubDate>
+</item>
+
+<item>
+<title>Scroll to Text</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/49561392806/" title="Scroll To Text by othree, on Flickr"><img src="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg" intrinsicsize="1024x869" width="1024" height="869" alt="Scroll To Text" srcset="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg 1024w, https://live.staticflickr.com/65535/49561392806_a7ec190efb_h.jpg 1600w" /></a></p>
+<p>Chrome 最近有個新功能叫做 <a href="https://chromestatus.com/feature/4733392803332096">Scroll to Text Fragment</a>，雖然在 Chrome Platform Status 網站那邊寫 M80 會可以用，不過我實際上測試正式版的 Chrome 80 還沒有，但是 Chrome Canary 已經是預設啟用了。這個功能讓你可以在網址內的 Fragment 段（<code>#</code> 後面那段），用新定義的語法來讓瀏覽器直接捲動到指定的文字位置，語法如下：</p>
+<pre><code>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
+          context  |-------match-----|  context
+</code></pre>
+<p>如果有在用 Chrome Canary 的可以直接試試看<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/#:%7E:text=%E6%AD%A3%E5%A4%A7%E5%85%89%E6%98%8E">這個連結</a>。這個語法其實還蠻靈活的，可以和以前 id identifier 並用：</p>
+<pre><code>#targetID:~:text=theText
+</code></pre>
+<p>這樣如果找不到文字，瀏覽器還可以改用 targetID 定位；如果網頁內有多個一樣的文字，可以用 <code>prefix-</code> 和 <code>-suffix</code> 給出前後文來讓瀏覽器找到正確的目標；再來就是如果要標註的文字很長，也可以用 <code>textStart,textEnd</code> 來標註，這樣就不用在網址內放一大串文字了；然後也可以標註多段文字，用 <code>&amp;</code> 切開，和給參數的格式一樣：</p>
+<pre><code>#:~:text=firstText&amp;text=secondText
+</code></pre>
+<p><a href="https://wicg.github.io/ScrollToTextFragment/">正式的文件</a>現在是放在 WICG 那邊，GitHub 那邊的 <a href="https://github.com/WICG/ScrollToTextFragment/">Proposal repo</a> 則是有一段解釋<a href="https://github.com/WICG/ScrollToTextFragment/#enter-">為什麼選擇用 <code>:~:</code></a> 當分割符號的段落，我覺得這種脈絡的紀錄是很重要的，這邊簡單說一下，一開始有考慮過 <code>##</code> 這種比較容易想到形式，但是有些 URL parser 是由右到左的可能會有錯誤，再來他們列出一堆不太會有人去用的組合來當候選，然後去看 Google 那邊過去五年的紀錄，結果就是 <code>:~:</code> 最沒人用，只有 0.0000039% 的比例，所以目前是選擇這個分割符號。</p>
+<p>我是蠻喜歡這新功能（標準？）的，<a href="https://github.com/mozilla/standards-positions/issues/194">Mozilla 也覺得還可以考慮看看</a>，不過目前這個功能似乎還沒在 stable channel 啟用，應該是因為<a href="https://www.theregister.co.uk/2020/02/20/chrome_deploys_deeplinking/">隱私問題</a>，Chrome 負責的團隊也有整理相關的<a href="https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.uoiwg23pt0tx">資訊</a>，大概簡單說就是有可能透過頁面的讀取時間或是 <code>scrollTop</code> 的值來判斷你開啟的頁面內有沒有特定字串，然後就會有外洩的疑慮。另外還有一個讓人擔心的問題是這個功能可能會讓那些本來用 fragment 當成 route 的 SPA 壞掉，<a href="https://github.com/w3ctag/design-reviews/issues/392">W3C TAG design review</a> 那邊他們自己也有提到。</p>
+<p>其實這個 scroll to text 的功能在之前還有一套提案，不過不是由瀏覽器開發商所提，而是 indieweb 提的，叫做 <a href="https://indieweb.org/fragmention">Fragmention</a>，這組提案功能就比較陽春而且不成熟了：</p>
+<pre><code>#some%20text
+</code></pre>
+<p>重點在裡面那個 <code>%20</code>，也就是空白字元，Freagmention 的提案是你的目標文字要有空白，因為 HTML 的 id 不能包含空白字元，所以如果有空白字元就表示不是要找 id，這個提案由我來看就是很明顯沒搞過 i18n 的啊～</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/02/21/scroll-to-text/</link>
+<guid>https://blog.othree.net/log/2020/02/21/scroll-to-text/</guid>
+<category>web</category>
+<pubDate>2020-02-21 00:15</pubDate>
+</item>
+
+<item>
+<title>W3C TAG</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/49471463826/" title="3874462 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg" width="320" height="320" alt="" srcset="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg 320w" /></a></p>
+<p>去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 <a href="https://www.w3.org/2001/tag/">W3C TAG(Technical Architecture Group)</a> 的 <a href="https://github.com/w3ctag/design-reviews">design-reviews</a>，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 <a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，還有剛提出的 <a href="https://github.com/w3ctag/design-reviews/issues/467">Partial freezing of the User-Agent string</a>。</p>
+<p>W3C 有一份 <a href="https://www.w3.org/2019/Process-20190301/">Consortium Process Document</a> 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到 W3C Rec（推薦標準），除此之外，這份文件還有制訂了兩個獨立組別的構成方法，這兩個組分別為：<a href="https://www.w3.org/2002/ab/">Advisory Board</a>（顧問團） 和 Technical Architecture Group（TAG、技術架構組），兩者都有負責解決跨技術報告（aka 標準）之間的問題，前者是負責非技術的問題，後者則是負責技術問題。W3C TAG 的成員結構現在是：</p>
+<ul>
+<li>Tim Bernes Lee 為終生成員</li>
+<li>W3C 總監</li>
+<li>總監可以提名三位成員</li>
+<li>另外有六名成員則是由 Advisory Committee（諮詢委員會，其實就是所有 W3C 會員代表人）選出</li>
+</ul>
+<p>其實看他們的審查意見都覺得真的很厲害，不過這些成員的名字其實曝光都很少。然後我一直很好奇，為什麼幾乎所有的技術報告都來這邊提審查，應該是有在技術報告開發流程上寫到才會這麼多，結果那份 Process 文件找來找去就是沒找到，花了幾個小時最後終於在其中一分外連的「如何建立一個工作/興趣小組」的文件中找到，其實找 TAG 做審查是 <a href="https://www.w3.org/Guide/process/charter.html#horizontal-review">Horizontal Review</a>（橫向審查） 的一部分，Horizontal Review 指的是技術報告在發展的過程中，找各個相關/相依的小組一起來做審查，而這些組別間的關係其實是寫在小組各自的章程裡面的，該份文件還有列出一些比較關鍵的組別：</p>
+<ul>
+<li><a href="https://www.w3.org/WAI/APA/">WAI Accessible Platform Architectures (APA) Working Group</a> 親和力</li>
+<li><a href="https://www.w3.org/International/review-request">Internationalization Working Group</a> 多國語言支援</li>
+<li><a href="https://www.w3.org/Security/wiki/IG">Security Interest Group</a> 安全性</li>
+<li><a href="https://www.w3.org/Privacy/">Privacy Interest Group</a> 隱私</li>
+<li><a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> 技術架構</li>
+</ul>
+<p>這五個確實是非常跨技術的主題，尤其是 TAG，技術的議題都跑不掉，我也循線去其它四個小組看了一下，發現真的也有相關的審查請求，不過不同小組申請審查的管道不一樣，有的還是用 W3C 傳統的 mailing-list，TAG 已經用 GitHub 算是非常先進而且方便訂閱了，從開發者的角度如果要關心網路標準的新發展可以以這邊為主，明顯比較缺的就是 CSS 的新東西不會發到這邊，我自己是還有訂 CSS Working Group 的 issue list。</p>
+<p>最後就是現在台灣的 W3C 會員似乎只剩下 <a href="http://www.dpublishing.org.tw/">台灣數位出版聯盟</a>，日本現在倒是很多組織有加入了，像是不知道為什麼加入的 DWANGO，看起來也沒參加 Chinese Interest Group 的 <a href="https://w3c.github.io/danmaku/api.zh.html">Danmaku</a>。</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/02/01/w3c-tag/</link>
+<guid>https://blog.othree.net/log/2020/02/01/w3c-tag/</guid>
+<category>web</category>
+<pubDate>2020-02-01 23:40</pubDate>
+</item>
+
+<item>
+<title>DNS CAA record</title>
+<description><![CDATA[<p>過年前因為工作關係第一次注意到 <a href="https://en.wikipedia.org/wiki/DNS_Certification_Authority_Authorization">CAA record</a> (Certification Authority Authorization) 這個東西，簡單說明就是透過 DNS record 來設定你的 SSL cert 的簽發單位白名單，一開始的規範是 <a href="https://www.rfc-editor.org/rfc/rfc6844.html">RFC6844</a>，其實原理也不複雜，不過我就在遇到用 AWS ACM 簽發憑證時說檢查不過的狀況，有趣的是該 domain 沒有設定任何 CAA，搜尋研究一陣子後發現可能是因為該 domain 是 CNAME 去到別的第三方 domain 才會這樣，然後果然發現這個<a href="https://forums.aws.amazon.com/thread.jspa?messageID=924285&amp;#924285">問題</a>其實很久了。</p>
+<p>不過其實原始版本的 RFC6844 其實沒有要求檢查 CNAME 目標的 CAA，而是在 2017 年的<a href="https://www.rfc-editor.org/errata/eid5065">勘誤 5065</a> 中才加入的，不過這個修改造成很多問題，所以 letsencrypt 在同一年就又<a href="https://community.letsencrypt.org/t/legacy-caa-implementation/42335">換回舊的實做</a>了。CAA record 看起來也因此放棄這個修改了，在用來取代 RFC6844 的 <a href="https://www.rfc-editor.org/rfc/rfc8659.html#name-differences-from-rfc-6844">RFC8659</a> 中，就完全沒有提到 CNAME 的檢查，甚至在與舊版相異的附錄也是特別提到這點差異，不過 RFC8659 還很新，是 2019 年 11 月的，看起來 AWS 還沒修正也情有可原(?)。</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/01/27/dns-caa/</link>
+<guid>https://blog.othree.net/log/2020/01/27/dns-caa/</guid>
+<category>web</category>
+<pubDate>2020-01-27 23:41</pubDate>
+</item>
+
+<item>
+<title>Public Suffix List</title>
+<description><![CDATA[<p>最近因為花了很多時間研究 Safari 和第三方 Cookie，常常看到一個專有名詞 <strong>eTLD+1</strong>，之前只知道和 domain name 及 TLD 相關，不清楚確切的定義，所以又去查了一下，結果找到解釋最清楚的竟然是 Go 的 publicsuffix 套件的<a href="https://godoc.org/golang.org/x/net/publicsuffix">說明文件</a>，總之簡單比較不明確的解釋，eTLD 指的是 effective TLD，像是 <code>net</code>、<code>net.tw</code> 這類，域名註冊商可以提供的網址後綴，依此類推，eTLD+1 就是 eTLD 再多一段，也就是一般人可以註冊到的網域名稱，像是我這邊用的 <code>othree.net</code>，至於部落格的子網域 <code>blog.othree.net</code> 就不是 eTLD+1 了。</p>
+<p>其中的 eTLD 又稱為 Public Suffix，然後 Mozilla 有維護一份 <a href="https://publicsuffix.org/">Public Suffix List</a>，給瀏覽器用的，主要用途就是避免寫入太高權限的 cookie，例如我要是把 cookie 寫到 <code>.net</code> 層的話，所有的 <code>.net</code> 域名的網站都會讀的到它，就會有安全性問題，這份清單現在已經是主要瀏覽器開發商都有在使用了，它的內容除了那些 eTLD 之外，其實還有私人公司提交的，像是 blogspot 列了一大串，還有 github 有列 <code>github.io</code> 和 <code>githubusercontent.com</code>，<code>github.io</code> 是 GitHub Pages 的預設 domain，像我的 Github Page 就會用 othree.github.io，GitHub 提交這筆記錄，在現代瀏覽器就會限制我在 <code>othree.github.io</code> 不能寫 cookie 到 <code>github.io</code>，這樣可以確保所有使用者的頁面不會互相影響。</p>
+<p>我還順便亂瀏覽一下內容，發現 Amazon 手上好多的 gTLD，像是 <code>book</code>、<code>song</code>，然後他們的 <code>cloudfront.net</code> 也有提交，還有一堆其它的 aws 網域名稱；另外就是 DynDNS 和 no-ip 兩個類似服務都提交超多的；然後還發現一間叫 <a href="https://nymnom.com/">nymnom.com</a> 的域名註冊商，專門提供一堆 <code>nom</code> 或 <code>nym</code> 結尾的域名，搞不清楚這兩個單字的意思啊。</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/01/05/public-suffix-list/</link>
+<guid>https://blog.othree.net/log/2020/01/05/public-suffix-list/</guid>
+<category>web</category>
+<pubDate>2020-01-05 23:23</pubDate>
+</item>
 
 <item>
 <title>Robots Exclusion Protocol</title>
@@ -28,7 +132,7 @@
 <p>SameSite Cookie 的標準文件其實還未正式定稿，目前還算是草稿 <a href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-5.3.7">RFC6265bis</a>（bis 在 <a href="https://www6.ietf.org/tao#rfc.section.6.3">The Tao of IETF</a> 有解釋），不過主流瀏覽器都已經支援了，然後其實這篇文章我想說的是最近在 W3C TAG 看到的 Issue 373：<a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，是由 Google 的 Mike West 提案要把 SameSite 的預設值改為 Lax，現在 Google Chrome 已經有這個實驗選項了，而且除了 SameSite 預設值的改變之外，其實還有一個修改目標是 <code>SameSite</code> 要在 <code>Secure</code> 的時候才能設為 <code>None</code>，這項改變相對而言是影響比較大的，所以提案的<a href="https://mikew%C3%AF%C2%BC%C2%8Cest.github.io/cookie-incrementalism/draft-west-cookie-incrementalism.html">文件</a>（Incrementally Better Cookies）也有提到可以分步進行，另外就是 Firefox 也表示<a href="https://groups.google.com/forum/#!msg/mozilla.dev.platform/nx2uP0CzA9k/BNVPWDHsAQAJ">有意願來實做</a>，看起來至少 SameSite 預設改為 Lax 這件事應該是不會太久之後就會發生了。</p>
 <p>在花時間看一些文件內的參考資料後，發現 Mike West 還有其它幾份相關的草案：</p>
 <ul>
-<li><a href="https://mikewest.github.io/first-party-sets/">first-party-set</a> 是用 <code>/.well-known/</code> URL 來跟客戶端溝通，可以提供 first party 的域名清單；</li>
+<li><del><a href="https://mikewest.github.io/first-party-sets/">first-party-sets</a></del> <a href="https://github.com/WICG/first-party-sets">WICG/first-party-sets</a> 是用 <code>/.well-known/</code> URL 來跟客戶端溝通，可以提供 first party 的域名清單；</li>
 <li><a href="https://tools.ietf.org/html/draft-west-cookie-samesite-firstparty-00">First-Party Sets and SameSite Cookies</a> 利用上面的 first-party-set 資訊，然後提供兩種新的 SameSite 值：<code>FirstPartyLax</code> 和 <code>FirstPartyStrict</code>；</li>
 <li><a href="https://tools.ietf.org/html/draft-west-http-state-tokens-00">HTTP State Tokens</a> 定義了個標準化的 session token，是由瀏覽器端產生的 token，而不是 Web API，至於怎麼傳遞到 server 端，怎樣溝通有效期等都有寫在規範內，Incrementally Better Cookies 的想法也是從這份草案中的特性而來。</li>
 </ul>
@@ -226,105 +330,6 @@
 <guid>https://blog.othree.net/log/2018/05/02/tfn-domain-transfer-out/</guid>
 <category>web</category>
 <pubDate>2018-05-02 12:13</pubDate>
-</item>
-
-<item>
-<title>Accessibility Object Model</title>
-<description><![CDATA[<p>很久以前介紹 <a href="https://blog.othree.net/log/2016/10/14/acclerated-mobile-pages/">AMP</a> 的時候，有提到標準內的 HTML attribute，都是有其意義和用途，而當然 WAI-ARIA 的那堆 <code>aria-*</code> 屬性也是，不過以前那堆東西的介面在 web 開發端是碰不到的，不過前陣子在看 <a href="https://www.chromestatus.com/features/6643371200217088">Chrome Platform Status</a> 的時候，發現到了一個新的標準草稿叫做 <a href="https://github.com/WICG/aom/">Accessibility Object Model</a>，中文可以叫做親和力物件模型吧，還很早期不過 Firefox 有一些基本實做，預設關閉，掛在他們的 <a href="https://wiki.mozilla.org/Accessibility/WebAccessibilityAPI">Accessiblity API</a> 下面。</p>
-<p>這個標準目前規劃四個階段，目前有內容的只有前兩個，分別要做的事情是：</p>
-<ol>
-<li>Accessible Property，建立存取親和力相關屬性的標準界面，包括了 <code>role</code> 和 <code>aria-*</code>，目前的草案不是直接把這些屬性放在 ElementNode 下，而是在 ElementNode 新增一個 <code>accessibleNode</code>；</li>
-<li>Accessible Action，建立和親和力相關的事件，擴充  <code>accessibleNode</code> 並且讓它會接收到這些親和力相關事件；</li>
-<li>Virtual Accessibility Node，讓開發者可以產生虛擬的 <code>accessibleNode</code>，然後這些虛擬的 node 也有前兩個階段的能力，所以可以預期像是用 canvas 畫的介面也可以生出介面讓數位輔具可以溝通；</li>
-<li>Computed Accessibility Tree，提供 Accessibility Tree 的介面，目前，Accessibility Tree 也還是網頁開發者碰不到的。</li>
-</ol>
-<p>目前這份草稿還在 WICG，不過已經開始有些實做了，除了 Firefox 之外 Chrome 也有，我看作者是 Mozilla、Google、Apple 的人都有，之後應該會慢慢發展成統一的數位輔具介面吧。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</link>
-<guid>https://blog.othree.net/log/2018/03/08/accessibility-object-model/</guid>
-<category>web</category>
-<pubDate>2018-03-08 08:25</pubDate>
-</item>
-
-<item>
-<title>WebDriver Level 2</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr"><img src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w" /></a></p>
-<p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
-<p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
-<p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
-<p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/17/webdriver-level-2/</link>
-<guid>https://blog.othree.net/log/2018/02/17/webdriver-level-2/</guid>
-<category>web</category>
-<pubDate>2018-02-17 00:00</pubDate>
-</item>
-
-<item>
-<title>TC39 logo</title>
-<description><![CDATA[<p>每兩個月一次的 TC39 會議剛結束的一月會議，除了確定了 ECMAScript 2018 的 feature set 之外，還加碼發佈了 TC39 自己的 logo：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/28255675539/" title="TC39 by othree, on Flickr"><img src="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg" width="1024" height="1024" alt="TC39, " srcset="https://farm5.staticflickr.com/4623/28255675539_95a96b168d_b.jpg 1024w" /></a></p>
-<p>這設計基本上就是參照 JS logo，顏色改成 <a href="https://www.ecma-international.org/">ECMA</a> 橘，之前那個 JS logo 其實不是官方的，而是社群發起的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40034835081/" title="JS by othree, on Flickr"><img src="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg" width="1024" height="1024" alt="JS, " srcset="https://farm5.staticflickr.com/4715/40034835081_1ebf851535_b.jpg 1024w" /></a></p>
-<p>現在還蠻廣泛使用，已經是公認的 logo，兩個 logo 都是放在 GitHub 上</p>
-<ul>
-<li><a href="https://github.com/tc39/logo/">https://github.com/tc39/logo/</a></li>
-<li><a href="https://github.com/voodootikigod/logo.js/">https://github.com/voodootikigod/logo.js/</a></li>
-</ul>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/02/tc39-logo/</link>
-<guid>https://blog.othree.net/log/2018/02/02/tc39-logo/</guid>
-<category>web</category>
-<pubDate>2018-02-02 12:29</pubDate>
-</item>
-
-<item>
-<title>a11y</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34944175192/" title="Pa11y Dashboard by othree, on Flickr"><img src="https://farm5.staticflickr.com/4251/34944175192_71a6475ca3_b.jpg" width="1024" height="595" alt="Pa11y Dashboard, " srcset="https://farm5.staticflickr.com/4251/34944175192_71a6475ca3_b.jpg 1024w, https://farm5.staticflickr.com/4251/34944175192_32efc09322_h.jpg 1600w" /></a></p>
-<p>標題的 a11y 其實是 accessibility （親和力）的縮寫，現在英文世界似乎很大量的使用這個簡稱，今年的 JSConf EU 前陣子放出演講錄影，其中有一場是在講網路親和力的議題「YES, your site too can (and should) be accessible.」：</p>
-<div class="embed_16_9">
-<iframe width="853" height="480" src="https://www.youtube.com/embed/H4FzW9oFObs?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-</div>
-<p>講者是 Laura Carvajal，在 <a href="https://ft.com">Financial Times</a> 工作，而這場演講就是他們改進 ft.com 網站親和力的過程和一些想法，我覺得精華在後半，前面是介紹自動化工具 <a href="http://pa11y.org/">Pa11y</a>，a11y 是 accessibility，至於首字母的 <strong>P</strong>，看 README 應該是 pal 的意思；他們把這個自動化工具整合進他們的開發流程，然後慢慢的修改，直到把回報的問題都修完，其實現在自動化工具已經很強了，連顏色對比度夠不夠都能算出來（瀏覽器的開發工具以後也會有相關資訊），不過要驗證親和力做的如何，還是有很大量的驗證其實是需要手動測試。</p>
-<p>手動測試的部分他們是請了 <a href="http://digitalaccessibilitycentre.org/">DAC</a> (Digital Accessibility Centre) 來做，演講中還有一些測試者的測試影片，每位測試者都會先說他身體有怎樣的障礙，然後他邊測試會邊口述他在做什麼，遇到怎樣的問題，建議可以怎麼處理，感覺就是很專業的測試員。總之，在他們處理完所有 Pa11y 檢測到的問題後，才請 DAC 做親和力評估驗證，結果還是收到了一份兩百多頁的測試報告，回報了各種 ft.com 網站上的親和力問題，之後又花了幾個月的時間來處理這些問題，最後終於得到 DAC 的<a href="http://digitalaccessibilitycentre.org/index.php/financial-times">認證</a>，這份認證資訊還蠻完整的，還說明了他們認證時網站的狀況，還有哪些問題待解決，甚至連可能會使用到但是還沒處理過親和力問題的同組織的網站（服務）都有列出來，另外在 ft.com 的<a href="https://www.ft.com/accessibility">親和力聲明</a>也可以看到 DAC 的認證。</p>
-<p>接著 Laura Carvajal 介紹到如何實際體會（參與）這些親和力問題，其中一個很經典的狀態就是只用鍵盤做所有的控制，他提供了一些強迫自己只能用鍵盤操控的方法，並且在這種狀態下工作，其它還有像是使用 Mac 的 VoiceOver 做為 ScreenReader、使用 Windows 的高對比模式等等，他建議可以實際自己去體驗看看的，甚至強迫自己使用一陣子，會對這些問題更有體會，除此之外，他還透過一些活動來讓其他公司內的人也來參與，像是模擬一個障礙者會面臨的環境，以他的例子來說是把網頁模糊化，模擬視力障礙的使用者狀態，然後在這個狀態下請人去完成一些任務，像是填一個表單，並且有提供些獎勵增加參與人數，記得他們是提供 Amazon Credit，這樣可以讓更多人體會到需要依靠輔具來上網的不便，長久下來也可以讓這些工作的推動更加順利。</p>
-<p>這幾天我也試著裝起了 <a href="https://github.com/pa11y/dashboard">Pa11y Dashboard</a> 開始做些檢測，看到的 Error 加上 Warning 數量真是有點驚人，再來慢慢處理吧...</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/06/07/a11y/</link>
-<guid>https://blog.othree.net/log/2017/06/07/a11y/</guid>
-<category>web</category>
-<pubDate>2017-06-07 00:09</pubDate>
-</item>
-
-<item>
-<title>Telegram Instant View</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34366696420/" title="Telegram Instant View by othree, on Flickr"><img src="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg" width="1024" height="592" alt="Telegram Instant View, " srcset="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg 1024w, https://farm5.staticflickr.com/4194/34366696420_83f48bbf29_h.jpg 1600w" /></a></p>
-<p>Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 <a href="https://telegram.org/blog/video-messages-and-telescope">Video Message</a>、<a href="https://telegram.org/blog/payments">Payment for Bots</a> 還有就是 <a href="https://telegram.org/blog/instant-view">Instant View</a> 準備要<a href="https://telegram.org/blog/instant-view-contest-200K">開放給所有網頁使用</a>了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page object），不完全算是程式語言，裡面比較像是一些定義，加上用 <a href="https://zh.wikipedia.org/zh-tw/XPath">XPath</a> 來做文件內容的選取，蠻意外會用 XPath 的，還好我對 XPath 有點經驗，就花了一點時間研究了一下，也把自己 blog 的 tempalte 基本版做出來了：</p>
-<pre><code>?exists:  //article/div[@id=&quot;comments&quot;]
-
-author:  &quot;othree&quot;
-channel: &quot;@othree&quot;
-
-body:     //article
-title:    $body//h3[1]
-
-cover: $body/section[@itemprop=&quot;articleBody&quot;]/p[1]/a[@itemprop=&quot;image&quot;]/img
-
-published_date: $body/header/time[@itemprop=&quot;datePublished dateModified&quot;]/@datetime
-
-@remove: //article/header
-@remove: //article/footer
-@remove: //article/div[@id=&quot;comments&quot;]
-@remove: //noscript
-@remove: //a[has-class(&quot;dsq-brlink&quot;)]
-</code></pre>
-<p>語法還算蠻好理解的，官方也提供了幾個有完整註解的<a href="https://instantview.telegram.org/samples/">範例</a>，仔細一看似乎之前其實也只有 medium 是非官方有支援的網站，也因為這個實做方式，對不同的網站就要有不同的 template 來處理，所以官方辦了個競賽，搶先替<a href="https://instantview.telegram.org/contest">清單上的網站</a>做出可用的 template 就會有獎金，目前個人網站雖然已經可以在官方的 editor 做 template、驗證並發測試連結，不過還要等 domain 被加進白名單後才會真的啟用，目前這個關卡還沒開放就是。</p>
-<p>其實我是比較喜歡這種實做方式的，不用為了增加支援一個新的網路服務就多做一個版本，不會影響原本的網頁原始碼，不會讓  <code>&lt;head&gt;</code> 越來越肥大，當然缺點就是網站改版，HTML 結構有變化的話就要跟著修改 template，不過我是認為這個實做方法對於網路生態是比較好一些的。</p>
-]]></description>
-<link>https://blog.othree.net/log/2017/05/21/telegram-instant-view/</link>
-<guid>https://blog.othree.net/log/2017/05/21/telegram-instant-view/</guid>
-<category>web</category>
-<pubDate>2017-05-21 23:45</pubDate>
 </item>
 
 
