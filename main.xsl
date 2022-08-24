@@ -165,7 +165,9 @@
               <a href="{$mainPath}about/me/{$ext}" class="pure-menu-item"><xsl:if test="$listType = 'about'"><xsl:attribute name="id">pure-menu-selected</xsl:attribute><xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute></xsl:if>
                     About
                 </a>
-              <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">GitHub</a>
+                <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+                  <img src="/images/github.svg" width="24" height="24" alt="GitHub" />
+                </a>
             </div>
           </div>
         </nav>
@@ -293,7 +295,7 @@
               </ul>
               <h3>貼紙</h3>
               <p id="stickers">
-                <a href="http://happybusy.googlepages.com/">
+                <a href="https://sites.google.com/site/happybusy/">
                   <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
                 </a>
                 <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">

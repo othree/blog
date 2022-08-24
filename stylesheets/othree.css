@@ -203,6 +203,10 @@ h1 a:hover {
   font-size: 80%;
   margin-left: 0.5em;
 }
+#content ul ul, #content ol ul, #content ul ol, #content ol ol {
+  margin: 0;
+  padding-left: 1em;
+}
 #content p .thumbnail {
   display: inline-block;
   max-width: 100%;
@@ -440,9 +444,18 @@ address {
   display: none;
 }
 
-pre, code, pre code {
-  font-size: 12px;
-  font-family: 'Droid Sans Mono', Monaco, monospace;
+code {
+  font-size: 14px;
+  font-family: 'Droid Sans Mono', Monaco, monospace !important;
+}
+
+p code {
+  margin: 0 4px;
+}
+
+pre code {
+  font-size: 14px !important;
+  font-family: 'Droid Sans Mono', Monaco, monospace !important;
 }
 pre {
   margin-top: 2.2em;
@@ -584,25 +597,8 @@ nav .pure-menu-selected {
   -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
   box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
 }
-nav .pure-menu-item.icon {
-  margin: 4px 15px;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  overflow: hidden;
-  text-indent: 100%;
-}
 nav .pure-menu-item.icon.github {
-  background: url(/images/github_32.png);
-}
-
-@media (-webkit-min-device-pixel-ratio: 2),
-(min--moz-device-pixel-ratio: 2),
-(min-resolution: 2dppx) {
-  nav .pure-menu-item.icon.github {
-    background: url(/images/github_64.png);
-    background-size: 32px 32px;
-  }
+  mix-blend-mode: difference;
 }
 
 hr {
@@ -641,7 +637,7 @@ hr {
   height: 64px;
 }
 #tw-button {
-  width: 67px;
+  width: 72px;
   height: 28px;
 }
 img.pls-tailbottom {
@@ -738,12 +734,14 @@ img.pls-tailbottom {
     text-decoration-color: #444;
   }
   code {
-    color: #d5a8b3;
-    background-color: #000;
+    color: #f8f8f2;
+    background-color: #272822;
     border-color: #333;
   }
   pre {
-    background-color: #000;
+    background-color: #272822;
     border: 1px solid #333;
+    font-family: Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;
+    font-size: 1em;
   }
 }

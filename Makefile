@@ -7,14 +7,17 @@ stylesheets/all.css.br: stylesheets/all.css
 stylesheets/all.css.gz: stylesheets/all.css
 	zopfli stylesheets/all.css
 
-stylesheets/all.css: stylesheets/othree.min.css stylesheets/prism.min.css
-	cat stylesheets/pure-min.css stylesheets/grids-responsive-min.css stylesheets/prism.min.css stylesheets/othree.min.css > stylesheets/all.css
+stylesheets/all.css: stylesheets/othree.min.css stylesheets/prism.min.css stylesheets/prism.dark.min.css
+	cat stylesheets/pure-min.css stylesheets/grids-responsive-min.css stylesheets/prism.min.css stylesheets/prism.dark.min.css stylesheets/othree.min.css > stylesheets/all.css
 
 stylesheets/othree.min.css: stylesheets/othree.css 
 	cleancss stylesheets/othree.css > stylesheets/othree.min.css
 
 stylesheets/prism.min.css: stylesheets/prism.css 
 	cleancss stylesheets/prism.css > stylesheets/prism.min.css
+
+stylesheets/prism.dark.min.css: stylesheets/prism.dark.css 
+	cleancss stylesheets/prism.dark.css > stylesheets/prism.dark.min.css
 
 scripts/all.js.br: scripts/all.js
 	bro --force --input scripts/all.js --output scripts/all.js.br
