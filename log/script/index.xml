@@ -9,6 +9,80 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000979" baseName="csp-for-lambdaedge">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2021-08-12</b:date>
+				<b:time>11:59:16</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>CSP for Lambda@Edge</b:title>
+			<b:content>
+				<b:summary> 之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。 要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset="" /></a></p>
+<p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
+<p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
+<p>這個專案內容就只是一個簡單的 function：</p>
+<pre><code class="language-javascript">const CSP = (directives) =&gt; {
+  return directives
+    .map((directive) =&gt; {
+    	return `${directive.name} ${directive.value.join(' ')};`;
+    })
+    .join(' ');
+};
+</code></pre>
+<p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
+<pre><code class="language-json">{
+  &quot;default-src&quot;: [&quot;'none'&quot;],
+  &quot;script-src&quot;: [&quot;'self'&quot;],
+  &quot;connect-src&quot;: [&quot;blah&quot;, &quot;blah&quot;]
+}
+</code></pre>
+<p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;default-src&quot;,
+    &quot;value&quot;: [&quot;'none'&quot;]
+  },
+  {
+    &quot;name&quot;: &quot;script-src&quot;&quot;,
+    &quot;value&quot;: [&quot;'self'&quot;]
+  }
+]
+</code></pre>
+<p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
+<pre><code class="language-typescript">type Source = string;
+
+type Directive = {
+  name: string;
+  value: Source[];
+};
+
+type Policy = {
+  source: &quot;header&quot; | &quot;meta&quot;;
+  disposition: &quot;enforce&quot; | &quot;report&quot;;
+  directiveSet: OrderedSet&lt;Directive&gt;;
+};
+
+type Policies = Policy[];
+</code></pre>
+<p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
+<pre><code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
+</code></pre>
+<p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
+<p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
+<p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000962" baseName="circleci-terraform-aws-deploy">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -439,29 +513,6 @@ async function asyncTaskWithCb(cb) {
 <p>用在資料庫相關的服務，哈比人歷險記的<a href="https://en.wikipedia.org/wiki/Lonely_Mountain">孤山</a>的精靈語，因為孤山裡面有很多矮人的寶物，資料庫內的資料某種層面來說也算是個寶物。</p>
 <h4>Olympus</h4>
 <p>應該不用介紹來源了，用在 client 端自己寫的 API helper，取這個名字的原因是覺的客戶端跟 server 端要資料就如同在跟眾神請求一樣。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000927" baseName="smooshgate">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-05-28</b:date>
-				<b:time>12:32:28</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>SmooshGate</b:title>
-			<b:content>
-				<b:summary>之前應該沒在這邊提過這件事，總之就是之前 TC39 有個 flatten 的 proposal，搞一搞後，發現這東西實做啟用後 MooTools 會爛掉，詳細的原因 Google 那邊有一篇文章解釋，標題就是 SmooshGate，Smoosh 這個單字其實有點少見，我大概查一下，雖然有說是 flatten、squash 的意思，不過目前覺得應該是作畫時把顏料抹平那種動作感覺最對吧，總之，當初為了這個問題第一個提案的改名就是 smoosh，不過這個單字整體感覺和 flatten 差距實在太大，所以出現一堆聲音，有的是建議加上 &quot;use es2019&quot; 的 statement 來開啟 flatten，像是 stirct mode 一樣，有的建議其他名字，當然也有些人是覺得管 MooTools 去死的，不過因為 Don't Break the Web 的大原則所以還是要處理這個問題。 其實我覺得當初提案 smoosh 的人搞不好是故意挑這個字的，藉此增加話題性引發討論和建議，效果其實很好，在 Twitter 上還出現了 #SmooshGate 這樣的...</b:summary>
-				<b:mainContent><p>之前應該沒在這邊提過這件事，總之就是之前 TC39 有個 flatten 的 proposal，搞一搞後，發現這東西實做啟用後 MooTools 會爛掉，詳細的原因 Google 那邊有一篇文章<a href="https://developers.google.com/web/updates/2018/03/smooshgate">解釋</a>，標題就是 SmooshGate，Smoosh 這個單字其實有點少見，我大概查一下，雖然有說是 flatten、squash 的意思，不過目前覺得應該是作畫時把顏料抹平那種動作感覺最對吧，總之，當初為了這個問題第一個提案的改名就是 <a href="https://github.com/tc39/proposal-flatMap/pull/56"><code>smoosh</code></a>，不過這個單字整體感覺和 flatten 差距實在太大，所以出現一堆聲音，有的是建議加上 <code>&quot;use es2019&quot;</code> 的 statement 來開啟 <code>flatten</code>，像是 stirct mode 一樣，有的建議其他名字，當然也有些人是覺得管 MooTools 去死的，不過因為 Don't Break the Web 的大原則所以還是要處理這個問題。</p>
-<p>其實我覺得當初提案 smoosh 的人搞不好是故意挑這個字的，藉此增加話題性引發討論和建議，效果其實很好，在 Twitter 上還出現了 <a href="https://twitter.com/hashtag/smooshgate">#SmooshGate</a> 這樣的 hashtag，不過，總之在最近一次五月的 TC39 會議，確定 proposal 改新的名稱：<code>flat</code> ，雖然詞性不同，不過大家都還蠻可以接受，或許也可能是相較於 smoosh 來說很可以接受吧。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>

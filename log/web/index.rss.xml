@@ -4,11 +4,171 @@
 <title>O3noBLOG - web</title>
 <link>https://blog.othree.net//log/ web/</link>
 <description></description>
-<copyright>Copyright 2020</copyright>
-<lastBuildDate>2020-07-17 21:51</lastBuildDate>
+<copyright>Copyright 2022</copyright>
+<lastBuildDate>2022-08-23 22:27</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>HTTP 103 Early Hints</title>
+<description><![CDATA[<p>前幾天晚上前同事陶百貼了個 Tweet，說到 Chrome 要移除 HTTP/2 Server Push 了：</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">HTTP/2 PUSH is finally going away in Chrome 106: <a href="https://t.co/FFL8hmkRyf">https://t.co/FFL8hmkRyf</a><br /><br />HTTP 103 is the best way to early-hint out-of-band.<br /><br />Thanks to the community and teams that made this possible (standards teams for 103, CDNs for implementing, Net team, huge effort)</p>-- Patrick Meenan (@patmeenan) <a href="https://twitter.com/patmeenan/status/1559943970481913856?ref_src=twsrc%5Etfw">August 17, 2022</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>仔細看一下，發現原來大家用 Server Push 都還是為了提升網頁第一屏的速度，但是 Server Push 一直有<a href="https://www.fastly.com/blog/faster-websites-early-priority-hints#but-what-about-http/2-server-push">一些難解的問題</a>，像是不知道 client 端有沒有 cache，實作和支援比較麻煩，而 Chrome 要移除 Server Push 前，其實先實作了 <a href="https://datatracker.ietf.org/doc/html/rfc8297">RFC-8279 的
+HTTP 103: Early Hints</a>，為的就要讓 Server Push 現在作的事情先有替代方案。</p>
+<p>Early Hint 應該算是 Fastly 提出的，RFC 文件作者是 <a href="https://twitter.com/kazuho/">Kazuho Oku</a>，實際上應該也有其他 Fastly 的人參與構思和試驗，支援 Early Hints 的環境下，一個 HTTP request 看起來就像是下面這樣：</p>
+<pre><code>Client request:
+
+  GET / HTTP/1.1
+  Host: example.com
+
+
+Server response:
+
+  HTTP/1.1 103 Early Hints
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  &lt;!doctype html&gt;
+  [... rest of the response body is omitted from the example ...]
+</code></pre>
+<p>很特別的，就是在於有兩段 response，第一段就是 103 的 status code，然後內容就是 Link headers 了，接著才是常見的 200 回應，看到這邊，自然的出現第一個問題：現有的瀏覽器能相容嗎？</p>
+<p>這個問題在 <a href="https://stackoverflow.com/questions/73320707/http-103-responses-what-happens-if-a-server-sends-a-103-early-hints-response-to/73320831#73320831">Stack Overflow 也有人問</a>，結果回答在 RFC 文件內其實就有，只不過是放在第三章的安全性那邊，我一開始也因為先跳過這章而沒發現，總之關於這個問題，就是如果是 HTTP/2 的話，就比較沒問題，HTTP/1.1 的話，理論上應該要可以相容（沒功能但是也不出錯），但是無法保證現在有在用的 HTTP/1.1 client 都有正確的處理 1xx response，所以比較建議是 HTTP/2 才回 103。</p>
+<p>過了兩天後，我更仔細的研究一下，發現其實早在 HTTP/1.1 時，就有把 <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.2-3">1xx 的處理需求定義</a>好了：</p>
+<blockquote>
+<p>A client MUST be able to parse one or more 1xx responses received prior to a final response, even if the client does not expect one. A user agent MAY ignore unexpected 1xx responses.</p>
+</blockquote>
+<p>就是說早在 HTTP/1.1 時的設計，就允許 1xx 接 200 的回應，而且還應該要支援多個 1xx 回應，而最後的那個 200（其實是 2xx 到 5xx 都可以），則是稱為 final response，至於這處理的方式，在 WHATWG 的 fetch 的 4.7 章則有清楚的寫下流程，在該章節的第九項裡面的第五子項目，寫成程式碼大概長成：</p>
+<pre><code class="language-js">while (true) {
+  const response = await networkTransmit();
+  const status = response.statusCode;
+    
+  if (status &gt;= 100 &amp;&amp; status &lt;= 199) {
+    // handle 1xx response
+    continue;
+  } else {
+    break;
+  }
+}
+
+// handle final response
+</code></pre>
+<p>所以理論上，Early Hints 的設計在正確支援 HTTP/1.1 但是還沒有支援 Early Hints 的瀏覽器就應該要可以正常的略過，而不會把它當成是 final response。</p>
+<p>解決完第一個問題後，接著來仔細的看看剛剛範例的 server response：</p>
+<pre><code>HTTP/1.1 103 Early Hints
+Link: &lt;/style.css&gt;; rel=preload; as=style
+Link: &lt;/script.js&gt;; rel=preload; as=script
+
+HTTP/1.1 200 OK
+Date: Fri, 26 May 2017 10:02:11 GMT
+Content-Length: 1234
+Content-Type: text/html; charset=utf-8
+Link: &lt;/style.css&gt;; rel=preload; as=style
+Link: &lt;/script.js&gt;; rel=preload; as=script
+
+&lt;!doctype html&gt;
+[... rest of the response body is omitted from the example ...]
+</code></pre>
+<p>不知道會不會有人疑惑，為什麼不直接用 200 response 裡面回應的 Link header 就好了？其實我一開始也是這樣想，不過這完全是因為這個問題落入身為前端工程師的我的盲點之中，因為現在前端開發主流是 SPA，通常 HTTP server 回的就是一個靜態的 HTML 檔案，所以回應速度超快。不過，如果回應的 HTML 文件，是由程式語言動態生成的，或許還需要查詢一下資料庫之類的，那這個回應時間就會變慢了，而 HTTP 103 Early Hints 就是在這種狀態下用的，在你的 server 端程式開始處理 request 之前，就先丟 103 的 status code 和 Early Hints 的內容回給瀏覽器，然後才接著處理資料和生成 HTML 文件，這種情境下，Early Hints 就顯得比較有差異了。Nitropack 的<a href="https://nitropack.io/blog/post/early-hints">文章</a>就解釋的很清楚，還有附上詳細的說明圖。</p>
+<p>相較於 Server Push，其實 Early Hints 的設計簡單很多，所有的傳輸還是從 client 端看有沒有 cache ，決定要不要發 request，而這種操作已經非常成熟（相較於 server push），相信很多地方可以直接使用現有的程式碼來實作，最大的隱憂，就只是不相容 HTTP/1.0，然後會擔心有 HTTP/1.1 的 client 端沒正確實作吧，畢竟 1xx 的處理機制雖然早早就設計好，但是實際上 1xx 有被廣泛使用也是這幾年的事。</p>
+<p>目前 Chrome 是從 103 <a href="https://developer.chrome.com/blog/new-in-chrome-103/">開始支援 Early Hints</a> 的，並且預計在 106 <a href="https://developer.chrome.com/blog/removing-push/">正式移除 Server Push</a>，至於其他瀏覽器則是都還沒有支援， Firefox 是有計畫要支援，<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1407355">進度</a>有點緩慢就是。</p>
+<p>最後，Fastly 其實有提供一個測試用的網站：<a href="https://early-hints.fastlylabs.com/">https://early-hints.fastlylabs.com/</a>，不過這個網站不是用來測試你的瀏覽器支不支援 Early Hints 的，而是用來測試先 103 status 後 200 的 response 會不會有非預期的問題（也就是相容性的測試），如果想要直接看看來回的內容，也可以直接用 curl：</p>
+<pre><code class="language-sh">curl -v https://early-hints.fastlylabs.com
+</code></pre>
+]]></description>
+<link>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</link>
+<guid>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</guid>
+<category>web</category>
+<pubDate>2022-08-23 22:27</pubDate>
+</item>
+
+<item>
+<title>Shopify App</title>
+<description><![CDATA[<p>之前開發 Shopify App 時，為了搞定他的安裝搞了蠻久，所以決定來紀錄一下踩到的坑，這篇文章適合已經開始在開發 Shopify App 的人閱讀，有些 Shopify App 的基本知識就不會提到，以下內文幾個名詞先定義清楚一下：</p>
+<ul>
+<li>App 指的是我們開發的 Shopify 第三方 app</li>
+<li>Merchant 指的是在 Shopify 上開店的商家</li>
+<li>安裝 app 指的是 merchant 在他們的 Shopify 商店上安裝我們開發的第三方 app</li>
+</ul>
+<p>首先就是，我踩的很多坑有一部分原因是因為我用 NodeJS 作為 server 端的語言，選的是 Express，但是官方的 Express 架構的 app 範例已經停止維護了，取而代之的，是 Koa 版本的 <a href="https://github.com/Shopify/koa-shopify-auth">@shopify/koa-shopify-auth</a>，只有負責驗證相關的 middleware，不過其實我也就剛好是需要 auth 相關的部分，只是差在不是 Express 版，我也還可以研究看看要怎樣自己實作了。</p>
+<p>大概看一下，發現其實還有另外一個 <a href="https://github.com/Shopify/shopify-api-node">@shopify/shopify-api</a> 是底層負責處理跟 Shopify 相關的邏輯，所以理論上我也可以使用它來搭配 Express，不過這裡首先就有一個坑了，初始化的範例是長這樣：</p>
+<pre><code class="language-js">Shopify.Context.initialize({
+  API_KEY: process.env.SHOPIFY_API_KEY,
+  API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
+  SCOPES: process.env.SHOPIFY_APP_SCOPES,
+  HOST_NAME: process.env.SHOPIFY_APP_URL.replace(/^https:\/\//, ''),
+  API_VERSION: ApiVersion.October20,
+  IS_EMBEDDED_APP: true,
+  // More information at https://github.com/Shopify/shopify-node-api/blob/main/docs/issues.md#notes-on-session-handling
+  SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+});
+</code></pre>
+<p>可以看到，最後有一個 <code>SESSION_STORAGE</code>，這是個處理 merchant 在安裝 app 時，我們的 app 拿到的 access token 的儲存方式的 adapter，不過官方的範例是用 Memory Storage，這個 adpater 是只有存在記憶體內，其實只適用於開發用，只要你的 server 一重開，所有的 merchant 就都要重新安裝你的 app，不然你的 app 會沒有 access token 跟 Shopify 溝通，實際上你應該要參考 <a href="https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/customsessions.md">Custom Session Storage</a> 這份文件，挑選適用的 adapter，我則是參考範例寫了一個 GCP FireStore 的版本，當然另外沒特別提到的就是，因為是儲存 access token，最好要考慮一下 DB 的加密。</p>
+<p>第二個坑，就是要怎樣做 Shopify 的 authentication 以及 identification，先來說如何驗證 request 是可信的，在 Shopify API 的設計，就是要靠 query string parameter 裡面的 hmac，他是根據你的 App 的 secret 來計算出來的，然後，這裡的坑就是官方套件 <code>@shopify/shopify-api</code> 內有個 <code>validateHmac</code> 可以用，但是它的計算其實是不正確的，它是用白名單只有取部分的 query string parameter 來計算，結果和 Shopify 給的就會有出入，所以我是參考 GitHub issue 討論串內 Muhammad Kamal 給的<a href="https://github.com/Shopify/shopify-node-api/issues/275#issuecomment-1059968699">範例</a>來使用。</p>
+<p>第三個坑，則是安裝 App 用的 route 了，Shopify 的設計有點特別，所有的初始 request （不論是第一次安裝、還是從 Shopify 後台進入 App 的設定畫面），都長的很接近，所以你就要根據各種狀況來決定該做什麼事情，以下是所有可能的狀況：</p>
+<ul>
+<li>第一次來安裝</li>
+<li>安裝後進到設定畫面</li>
+<li>曾經安裝過，但是需要重新授權，可能的原因：
+<ul>
+<li>App 需要的權限有變動</li>
+<li>App 端的 access token 失效了</li>
+</ul>
+</li>
+<li>Shopify 認為已經安裝了，但是 app 端沒資料</li>
+</ul>
+<p>扣除需要的權限有變動之外，其實就是排列組合，Shopify 端認為有沒有安裝過，和 App 端認為有沒有安裝過，二乘二共四種可能性，不過實際上只有三種處理方式：初次安裝、重新授權、安裝沒問題的快樂路線（happy path）整理成程式流程大概是：</p>
+<ol>
+<li>驗證 hmac，沒過可以直接回 400</li>
+<li>判斷 shop 是否有在資料庫中</li>
+<li>2 有的話驗證資料庫中的 access token</li>
+<li>3 驗證通過的話，狀態就是 happy path，Shopify 認為 app 有裝，app 端檢查也沒問題，我把這狀態命名為 <code>valid</code></li>
+<li>3 驗證沒通過的話，判斷有沒有 <code>session</code> 這個 query string 參數</li>
+<li>5 有的話，狀態就是 app 端的 access token 不能用了，需要走重新授權的流程，我把這狀態命名為 <code>invalid</code></li>
+<li>5 沒有的話，就是第一次安裝的流程，我把這狀態命名為 <code>not_found</code></li>
+<li>最後就是 2 沒有的話也是走初次安裝的授權流程，同樣也可以叫 <code>not_found</code></li>
+</ol>
+<p>然後 app 需要的權限變動的話，理論上是每次進來，驗證 access token 的時候，可以去打 API 問目前 <a href="https://shopify.dev/api/usage/access-scopes#checking-granted-access-scopes">token 的 access scope</a>，不過這部份我沒實做，因為目前我還沒有相關需求。</p>
+<p>網路上可能可以找到 <code>X-Shopify-API-Request-Failure-Reauthorize</code> 這個 header，不過這個其實不是 Shopify API 的回應，而是 Shopify 的 <a href="https://github.com/Shopify/shopify-app-template-node/blob/main/server/middleware/verify-request.js">app-template</a> 裡面設計的機制，它們的 app template 裡面，server 端在轉發 Ajax API request 時，如果收到 Shopify 端的錯誤後，就加上這個 header 回給 app 前端，app 前端收到這個 header 後就可以透過 Shopify app-bridge 進入重新授權的流程。</p>
+<p>講到這邊，或許有人會好奇，為什麼需要把安裝 app 和重新授權兩個流程的處理方式分開？其實這可以算是第四個坑，也是和使用者體驗有關係，狀況就是，Shopify 認為是初次安裝時，是直接進入 OAuth 的流程，所以是瀏覽器的最上層視窗直接轉址到 auth 頁面，但是如果是需要重新授權的情形，則是 Shopify 端認為已經安裝好，但是 app 這邊認為需要重新跑一次 OAuth，而這時候，連到 app server 的瀏覽器視窗是在 Shopify 商店後台的 iframe 內，在 iframe 內也無法正確的完成 OAuth 授權，所以需要用 Shopify 現在一套叫 app-bridge 的工具幫忙，讓 OAuth 流程從最上層視窗開始，所以需要回一個 HTML 頁面，<a href="https://shopify.dev/apps/tools/app-bridge/getting-started/app-setup#set-up-shopify-app-bridge-in-your-app">引入 app-bridge 的 script</a>，然後執行以下的的 JS：</p>
+<pre><code class="language-js">const AppBridge = window['app-bridge'];
+const createApp = AppBridge.default;
+const Redirect = AppBridge.actions.Redirect;
+const app = createApp({
+	apiKey: '{{API_KEY}}',
+	host: '{{HOST}}',
+});
+const redirect = Redirect.create(app);
+
+redirect.dispatch(
+	Redirect.Action.REMOTE,
+	'/url/to/your/auth?shop={{SHOP}}'
+);
+
+</code></pre>
+<p>當然記得要把該替換的東西替換上去，然後就可以看到正確的從最上層視窗開始進入 OAuth 授權的流程了。</p>
+<p>最後一個坑，其實就是 merchant 反安裝 app 後，Shopify 和 app 端的狀態就會不一致的問題，Shopify 端認為沒安裝，但是 app 端認為有安裝，雖然我上面設計的程式流程已經可以處理這種狀況（驗證 access token 會失敗，然後沒有 <code>session</code> 參數，所以會進入初次安裝），但是這種情形還是應該要能避免就避免，而解法就是要支援 webhook，要作的事情就是：</p>
+<ol>
+<li>安裝完成的 callback 去訂閱 <code>APP_UNINSTALLED</code> 這個 webhook event</li>
+<li>然後在收到這個事件後，把資料庫中的對應資料刪除</li>
+</ol>
+<p>這邊我是用 <code>@shopify/shopify-api</code> 提供的工具像是
+<code>Shopify.Webhooks.Registry.register</code> 和 <code>Shopify.Utils.deleteOfflineSession</code>，真的想要自己作也不是辦不到，不過我記得 Shopify 的 webhook 處理起來有點麻煩。</p>
+<p>這些細節就是官方文件沒有好好寫清楚，雖然官方文件內容已經很多，有努力整理了，但是實際上要自己接就還是遇到了不少問題，所以特別寫一篇文章紀錄，雖然不知道會不會有其他中文圈的人需要自己來做 Shopify app 就是了，可以直接用他們的 app template 還是比較簡單啦。</p>
+]]></description>
+<link>https://blog.othree.net/log/2022/08/18/shopify-app/</link>
+<guid>https://blog.othree.net/log/2022/08/18/shopify-app/</guid>
+<category>web</category>
+<pubDate>2022-08-18 20:48</pubDate>
+</item>
 
 <item>
 <title>Safari 3rd-Party Cookie</title>
@@ -296,40 +456,6 @@
 <guid>https://blog.othree.net/log/2018/08/22/web-fe-news-service-ofrontend/</guid>
 <category>web</category>
 <pubDate>2018-08-22 23:42</pubDate>
-</item>
-
-<item>
-<title>GitHub Pages Custom Domain HTTPS</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41138623844/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg 1024w" /></a></p>
-<p>等了好久終於出來的功能，<a href="https://github.com/isaacs/github/issues/156">追了蠻久</a>，昨天 DK 也有<a href="https://blog.gslin.org/archives/2018/05/02/8295/github-%E9%80%8F%E9%81%8E-lets-encrypt-%E6%8F%90%E4%BE%9B%E8%87%AA%E8%A8%82%E7%B6%B2%E5%9F%9F%E7%9A%84-https-%E6%9C%8D%E5%8B%99/">提到</a>，其實正式發佈前就看到有人已經可以用了，不過總之這篇稍微記錄一下如果已經是舊有的 GitHub Pages 還不能用可以怎麼處理，不過不完全有效，舊有的專案在設定看起來會像是：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41127813434/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg 1024w" /></a></p>
-<p>下面有寫說因為用了 custom domain 就不能用，這時候把 custom domain 刪除，然後儲存重新加回去就會變成：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/40945601525/" title="GitHub Pages by othree, on Flickr"><img src="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg" width="730" height="512" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg 1024w" /></a></p>
-<p>然後就等，我大概是等到隔天就有了（變成第一張圖的狀態），不過這幾天剛好完全沒空，到現在才有空檔紀錄一下。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/05/04/github-pages-custom-domain-https/</link>
-<guid>https://blog.othree.net/log/2018/05/04/github-pages-custom-domain-https/</guid>
-<category>web</category>
-<pubDate>2018-05-04 19:12</pubDate>
-</item>
-
-<item>
-<title>TFN 域名轉出</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41839613061/" title="dig markdown.tw by othree, on Flickr"><img src="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg" width="665" height="452" alt="dig markdown.tw, " srcset="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg 1024w" /></a></p>
-<p>我的 markdown.tw 在 TFN 註冊的，其實一直很想轉出，但是很怕轉的過程出意外，遲遲沒動手。不過剛剛看到 GitHub Pages 用 custom domain 也正式支援 HTTPS 了，如果是設定 A record 的話需要更新 DNS 設定，於是我就決定認真的來處理這件事，不意外的介面很難理解，決定記錄一下幫助眾生～</p>
-]]><![CDATA[<p>域名要轉出最重要的就是要從原註冊商拿到 authorization code，然後在新註冊商轉入的時候輸入，TFN 要轉出還好不是要聯絡客服，介面上有，然後我就點下去看：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26970973117/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/959/26970973117_e94bf86d90_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/959/26970973117_e94bf86d90_b.jpg 1024w, https://farm1.staticflickr.com/959/26970973117_579cf5d5b0_h.jpg 1600w" /></a></p>
-<p>馬上就卡關了，完全沒有說明，就要我輸入<strong>移轉中密碼</strong>，還是必填欄位，根據我一些以往經驗，我以為這邊是要輸入什麼先跟他們取得的安全驗證碼，然後才會拿到 authorization code，不過卻死活找找不到這個取得安全驗證碼的地方，鬼打牆半個鐘頭後，我決定作一個測試，就是把 <strong>移轉中密碼</strong> 當成就是 authorization code 來試試，然後自己想一個密碼輸入後：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41122773584/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/944/41122773584_37384abe31_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/944/41122773584_37384abe31_b.jpg 1024w, https://farm1.staticflickr.com/944/41122773584_9dbf36d901_h.jpg 1600w" /></a></p>
-<p>就得到成功訊息了！這時候眼尖的人會發現左邊的目錄多了個<strong>取消轉出</strong>的選項，看到這選項的我時在忍不住想看看裡面有什麼訊息，就點了下去：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/41122773934/" title="TFN domain transfer by othree, on Flickr"><img src="https://farm1.staticflickr.com/976/41122773934_eba87c97b9_b.jpg" width="1024" height="846" alt="TFN domain transfer, " srcset="https://farm1.staticflickr.com/976/41122773934_eba87c97b9_b.jpg 1024w, https://farm1.staticflickr.com/976/41122773934_f040f1fe0f_h.jpg 1600w" /></a></p>
-<p>恩恩，真是不意外的結果啊，總之我就重新操作一次，然後拿著我自己設定的密碼去 Gandi 那邊當 authorization code 轉入，弄完等了一陣子後，竟然就通過了！</p>
-<p>所以結論是，TFN 域名轉出時要輸入的<strong>移轉中密碼</strong>其實就是給使用者自訂 authorization code，而且還有個蠻短的長度限制 XD，現在雖然 nameserver 都轉好了，不過我的 GitHub Pages HTTPS 還是沒生效啊～</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/05/02/tfn-domain-transfer-out/</link>
-<guid>https://blog.othree.net/log/2018/05/02/tfn-domain-transfer-out/</guid>
-<category>web</category>
-<pubDate>2018-05-02 12:13</pubDate>
 </item>
 
 

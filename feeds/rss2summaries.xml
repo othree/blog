@@ -4,11 +4,441 @@
 <title>O3noBLOG</title>
 <link>https://blog.othree.net/</link>
 <description></description>
-<copyright>Copyright 2020</copyright>
-<lastBuildDate>Thu, 06 Aug 2020 23:30:04 +0800</lastBuildDate>
+<copyright>Copyright 2022</copyright>
+<lastBuildDate>Tue, 23 Aug 2022 22:27:35 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>HTTP 103 Early Hints</title>
+<description><![CDATA[<p>前幾天晚上前同事陶百貼了個 Tweet，說到 Chrome 要移除 HTTP/2 Server Push 了：</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">HTTP/2 PUSH is finally going away in Chrome 106: <a href="https://t.co/FFL8hmkRyf">https://t.co/FFL8hmkRyf</a><br /><br />HTTP 103 is the best way to early-hint out-of-band.<br /><br />Thanks to the community and teams that made this possible (standards teams for 103, CDNs for implementing, Net team, huge effort)</p>-- Patrick Meenan (@patmeenan) <a href="https://twitter.com/patmeenan/status/1559943970481913856?ref_src=twsrc%5Etfw">August 17, 2022</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>仔細看一下，發現原來大家用 Server Push 都還是為了提升網頁第一屏的速度，但是 Server Push 一直有<a href="https://www.fastly.com/blog/faster-websites-early-priority-hints#but-what-about-http/2-server-push">一些難解的問題</a>，像是不知道 client 端有沒有 cache，實作和支援比較麻煩，而 Chrome 要移除 Server Push 前，其實先實作了 <a href="https://datatracker.ietf.org/doc/html/rfc8297">RFC-8279 的
+HTTP 103: Early Hints</a>，為的就要讓 Server Push 現在作的事情先有替代方案。</p>
+<p>Early Hint 應該算是 Fastly 提出的，RFC 文件作者是 <a href="https://twitter.com/kazuho/">Kazuho Oku</a>，實際上應該也有其他 Fastly 的人參與構思和試驗，支援 Early Hints 的環境下，一個 HTTP request 看起來就像是下面這樣：</p>
+<pre><code>Client request:
+
+  GET / HTTP/1.1
+  Host: example.com
+
+
+Server response:
+
+  HTTP/1.1 103 Early Hints
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: &lt;/style.css&gt;; rel=preload; as=style
+  Link: &lt;/script.js&gt;; rel=preload; as=script
+
+  &lt;!doctype html&gt;
+  [... rest of the response body is omitted from the example ...]
+</code></pre>
+<p>很特別的，就是在於有兩段 response，第一段就是 103 的 status code，然後內容就是 Link headers 了，接著才是常見的 200 回應，看到這邊，自然的出現第一個問題：現有的瀏覽器能相容嗎？</p>
+<p>這個問題在 <a href="https://stackoverflow.com/questions/73320707/http-103-responses-what-happens-if-a-server-sends-a-103-early-hints-response-to/73320831#73320831">Stack Overflow 也有人問</a>，結果回答在 RFC 文件內其實就有，只不過是放在第三章的安全性那邊，我一開始也因為先跳過這章而沒發現，總之關於這個問題，就是如果是 HTTP/2 的話，就比較沒問題，HTTP/1.1 的話，理論上應該要可以相容（沒功能但是也不出錯），但是無法保證現在有在用的 HTTP/1.1 client 都有正確的處理 1xx response，所以比較建議是 HTTP/2 才回 103。</p>
+<p>過了兩天後，我更仔細的研究一下，發現其實早在 HTTP/1.1 時，就有把 <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.2-3">1xx 的處理需求定義</a>好了：</p>
+<blockquote>
+<p>A client MUST be able to parse one or more 1xx responses received prior to a final response, even if the client does not expect one. A user agent MAY ignore unexpected 1xx responses.</p>
+</blockquote>
+<p>就是說早在 HTTP/1.1 時的設計，就允許 1xx 接 200 的回應，而且還應該要支援多個 1xx 回應，而最後的那個 200（其實是 2xx 到 5xx 都可以），則是稱為 final response，至於這處理的方式，在 WHATWG 的 fetch 的 4.7 章則有清楚的寫下流程，在該章節的第九項裡面的第五子項目，寫成程式碼大概長成：</p>
+<pre><code class="language-js">while (true) {
+  const response = await networkTransmit();
+  const status = response.statusCode;
+    
+  if (status &gt;= 100 &amp;&amp; status &lt;= 199) {
+    // handle 1xx response
+    continue;
+  } else {
+    break;
+  }
+}
+
+// handle final response
+</code></pre>
+<p>所以理論上，Early Hints 的設計在正確支援 HTTP/1.1 但是還沒有支援 Early Hints 的瀏覽器就應該要可以正常的略過，而不會把它當成是 final response。</p>
+<p>解決完第一個問題後，接著來仔細的看看剛剛範例的 server response：</p>
+<pre><code>HTTP/1.1 103 Early Hints
+Link: &lt;/style.css&gt;; rel=preload; as=style
+Link: &lt;/script.js&gt;; rel=preload; as=script
+
+HTTP/1.1 200 OK
+Date: Fri, 26 May 2017 10:02:11 GMT
+Content-Length: 1234
+Content-Type: text/html; charset=utf-8
+Link: &lt;/style.css&gt;; rel=preload; as=style
+Link: &lt;/script.js&gt;; rel=preload; as=script
+
+&lt;!doctype html&gt;
+[... rest of the response body is omitted from the example ...]
+</code></pre>
+<p>不知道會不會有人疑惑，為什麼不直接用 200 response 裡面回應的 Link header 就好了？其實我一開始也是這樣想，不過這完全是因為這個問題落入身為前端工程師的我的盲點之中，因為現在前端開發主流是 SPA，通常 HTTP server 回的就是一個靜態的 HTML 檔案，所以回應速度超快。不過，如果回應的 HTML 文件，是由程式語言動態生成的，或許還需要查詢一下資料庫之類的，那這個回應時間就會變慢了，而 HTTP 103 Early Hints 就是在這種狀態下用的，在你的 server 端程式開始處理 request 之前，就先丟 103 的 status code 和 Early Hints 的內容回給瀏覽器，然後才接著處理資料和生成 HTML 文件，這種情境下，Early Hints 就顯得比較有差異了。Nitropack 的<a href="https://nitropack.io/blog/post/early-hints">文章</a>就解釋的很清楚，還有附上詳細的說明圖。</p>
+<p>相較於 Server Push，其實 Early Hints 的設計簡單很多，所有的傳輸還是從 client 端看有沒有 cache ，決定要不要發 request，而這種操作已經非常成熟（相較於 server push），相信很多地方可以直接使用現有的程式碼來實作，最大的隱憂，就只是不相容 HTTP/1.0，然後會擔心有 HTTP/1.1 的 client 端沒正確實作吧，畢竟 1xx 的處理機制雖然早早就設計好，但是實際上 1xx 有被廣泛使用也是這幾年的事。</p>
+<p>目前 Chrome 是從 103 <a href="https://developer.chrome.com/blog/new-in-chrome-103/">開始支援 Early Hints</a> 的，並且預計在 106 <a href="https://developer.chrome.com/blog/removing-push/">正式移除 Server Push</a>，至於其他瀏覽器則是都還沒有支援， Firefox 是有計畫要支援，<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1407355">進度</a>有點緩慢就是。</p>
+<p>最後，Fastly 其實有提供一個測試用的網站：<a href="https://early-hints.fastlylabs.com/">https://early-hints.fastlylabs.com/</a>，不過這個網站不是用來測試你的瀏覽器支不支援 Early Hints 的，而是用來測試先 103 status 後 200 的 response 會不會有非預期的問題（也就是相容性的測試），如果想要直接看看來回的內容，也可以直接用 curl：</p>
+<pre><code class="language-sh">curl -v https://early-hints.fastlylabs.com
+</code></pre>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</link>
+<guid>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</guid>
+<category>web</category>
+<pubDate>Tue, 23 Aug 2022 22:27:35 +0800</pubDate>
+</item>
+
+<item>
+<title>Shopify App</title>
+<description><![CDATA[<p>之前開發 Shopify App 時，為了搞定他的安裝搞了蠻久，所以決定來紀錄一下踩到的坑，這篇文章適合已經開始在開發 Shopify App 的人閱讀，有些 Shopify App 的基本知識就不會提到，以下內文幾個名詞先定義清楚一下：</p>
+<ul>
+<li>App 指的是我們開發的 Shopify 第三方 app</li>
+<li>Merchant 指的是在 Shopify 上開店的商家</li>
+<li>安裝 app 指的是 merchant 在他們的 Shopify 商店上安裝我們開發的第三方 app</li>
+</ul>
+<p>首先就是，我踩的很多坑有一部分原因是因為我用 NodeJS 作為 server 端的語言，選的是 Express，但是官方的 Express 架構的 app 範例已經停止維護了，取而代之的，是 Koa 版本的 <a href="https://github.com/Shopify/koa-shopify-auth">@shopify/koa-shopify-auth</a>，只有負責驗證相關的 middleware，不過其實我也就剛好是需要 auth 相關的部分，只是差在不是 Express 版，我也還可以研究看看要怎樣自己實作了。</p>
+<p>大概看一下，發現其實還有另外一個 <a href="https://github.com/Shopify/shopify-api-node">@shopify/shopify-api</a> 是底層負責處理跟 Shopify 相關的邏輯，所以理論上我也可以使用它來搭配 Express，不過這裡首先就有一個坑了，初始化的範例是長這樣：</p>
+<pre><code class="language-js">Shopify.Context.initialize({
+  API_KEY: process.env.SHOPIFY_API_KEY,
+  API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
+  SCOPES: process.env.SHOPIFY_APP_SCOPES,
+  HOST_NAME: process.env.SHOPIFY_APP_URL.replace(/^https:\/\//, ''),
+  API_VERSION: ApiVersion.October20,
+  IS_EMBEDDED_APP: true,
+  // More information at https://github.com/Shopify/shopify-node-api/blob/main/docs/issues.md#notes-on-session-handling
+  SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
+});
+</code></pre>
+<p>可以看到，最後有一個 <code>SESSION_STORAGE</code>，這是個處理 merchant 在安裝 app 時，我們的 app 拿到的 access token 的儲存方式的 adapter，不過官方的範例是用 Memory Storage，這個 adpater 是只有存在記憶體內，其實只適用於開發用，只要你的 server 一重開，所有的 merchant 就都要重新安裝你的 app，不然你的 app 會沒有 access token 跟 Shopify 溝通，實際上你應該要參考 <a href="https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/customsessions.md">Custom Session Storage</a> 這份文件，挑選適用的 adapter，我則是參考範例寫了一個 GCP FireStore 的版本，當然另外沒特別提到的就是，因為是儲存 access token，最好要考慮一下 DB 的加密。</p>
+<p>第二個坑，就是要怎樣做 Shopify 的 authentication 以及 identification，先來說如何驗證 request 是可信的，在 Shopify API 的設計，就是要靠 query string parameter 裡面的 hmac，他是根據你的 App 的 secret 來計算出來的，然後，這裡的坑就是官方套件 <code>@shopify/shopify-api</code> 內有個 <code>validateHmac</code> 可以用，但是它的計算其實是不正確的，它是用白名單只有取部分的 query string parameter 來計算，結果和 Shopify 給的就會有出入，所以我是參考 GitHub issue 討論串內 Muhammad Kamal 給的<a href="https://github.com/Shopify/shopify-node-api/issues/275#issuecomment-1059968699">範例</a>來使用。</p>
+<p>第三個坑，則是安裝 App 用的 route 了，Shopify 的設計有點特別，所有的初始 request （不論是第一次安裝、還是從 Shopify 後台進入 App 的設定畫面），都長的很接近，所以你就要根據各種狀況來決定該做什麼事情，以下是所有可能的狀況：</p>
+<ul>
+<li>第一次來安裝</li>
+<li>安裝後進到設定畫面</li>
+<li>曾經安裝過，但是需要重新授權，可能的原因：
+<ul>
+<li>App 需要的權限有變動</li>
+<li>App 端的 access token 失效了</li>
+</ul>
+</li>
+<li>Shopify 認為已經安裝了，但是 app 端沒資料</li>
+</ul>
+<p>扣除需要的權限有變動之外，其實就是排列組合，Shopify 端認為有沒有安裝過，和 App 端認為有沒有安裝過，二乘二共四種可能性，不過實際上只有三種處理方式：初次安裝、重新授權、安裝沒問題的快樂路線（happy path）整理成程式流程大概是：</p>
+<ol>
+<li>驗證 hmac，沒過可以直接回 400</li>
+<li>判斷 shop 是否有在資料庫中</li>
+<li>2 有的話驗證資料庫中的 access token</li>
+<li>3 驗證通過的話，狀態就是 happy path，Shopify 認為 app 有裝，app 端檢查也沒問題，我把這狀態命名為 <code>valid</code></li>
+<li>3 驗證沒通過的話，判斷有沒有 <code>session</code> 這個 query string 參數</li>
+<li>5 有的話，狀態就是 app 端的 access token 不能用了，需要走重新授權的流程，我把這狀態命名為 <code>invalid</code></li>
+<li>5 沒有的話，就是第一次安裝的流程，我把這狀態命名為 <code>not_found</code></li>
+<li>最後就是 2 沒有的話也是走初次安裝的授權流程，同樣也可以叫 <code>not_found</code></li>
+</ol>
+<p>然後 app 需要的權限變動的話，理論上是每次進來，驗證 access token 的時候，可以去打 API 問目前 <a href="https://shopify.dev/api/usage/access-scopes#checking-granted-access-scopes">token 的 access scope</a>，不過這部份我沒實做，因為目前我還沒有相關需求。</p>
+<p>網路上可能可以找到 <code>X-Shopify-API-Request-Failure-Reauthorize</code> 這個 header，不過這個其實不是 Shopify API 的回應，而是 Shopify 的 <a href="https://github.com/Shopify/shopify-app-template-node/blob/main/server/middleware/verify-request.js">app-template</a> 裡面設計的機制，它們的 app template 裡面，server 端在轉發 Ajax API request 時，如果收到 Shopify 端的錯誤後，就加上這個 header 回給 app 前端，app 前端收到這個 header 後就可以透過 Shopify app-bridge 進入重新授權的流程。</p>
+<p>講到這邊，或許有人會好奇，為什麼需要把安裝 app 和重新授權兩個流程的處理方式分開？其實這可以算是第四個坑，也是和使用者體驗有關係，狀況就是，Shopify 認為是初次安裝時，是直接進入 OAuth 的流程，所以是瀏覽器的最上層視窗直接轉址到 auth 頁面，但是如果是需要重新授權的情形，則是 Shopify 端認為已經安裝好，但是 app 這邊認為需要重新跑一次 OAuth，而這時候，連到 app server 的瀏覽器視窗是在 Shopify 商店後台的 iframe 內，在 iframe 內也無法正確的完成 OAuth 授權，所以需要用 Shopify 現在一套叫 app-bridge 的工具幫忙，讓 OAuth 流程從最上層視窗開始，所以需要回一個 HTML 頁面，<a href="https://shopify.dev/apps/tools/app-bridge/getting-started/app-setup#set-up-shopify-app-bridge-in-your-app">引入 app-bridge 的 script</a>，然後執行以下的的 JS：</p>
+<pre><code class="language-js">const AppBridge = window['app-bridge'];
+const createApp = AppBridge.default;
+const Redirect = AppBridge.actions.Redirect;
+const app = createApp({
+	apiKey: '{{API_KEY}}',
+	host: '{{HOST}}',
+});
+const redirect = Redirect.create(app);
+
+redirect.dispatch(
+	Redirect.Action.REMOTE,
+	'/url/to/your/auth?shop={{SHOP}}'
+);
+
+</code></pre>
+<p>當然記得要把該替換的東西替換上去，然後就可以看到正確的從最上層視窗開始進入 OAuth 授權的流程了。</p>
+<p>最後一個坑，其實就是 merchant 反安裝 app 後，Shopify 和 app 端的狀態就會不一致的問題，Shopify 端認為沒安裝，但是 app 端認為有安裝，雖然我上面設計的程式流程已經可以處理這種狀況（驗證 access token 會失敗，然後沒有 <code>session</code> 參數，所以會進入初次安裝），但是這種情形還是應該要能避免就避免，而解法就是要支援 webhook，要作的事情就是：</p>
+<ol>
+<li>安裝完成的 callback 去訂閱 <code>APP_UNINSTALLED</code> 這個 webhook event</li>
+<li>然後在收到這個事件後，把資料庫中的對應資料刪除</li>
+</ol>
+<p>這邊我是用 <code>@shopify/shopify-api</code> 提供的工具像是
+<code>Shopify.Webhooks.Registry.register</code> 和 <code>Shopify.Utils.deleteOfflineSession</code>，真的想要自己作也不是辦不到，不過我記得 Shopify 的 webhook 處理起來有點麻煩。</p>
+<p>這些細節就是官方文件沒有好好寫清楚，雖然官方文件內容已經很多，有努力整理了，但是實際上要自己接就還是遇到了不少問題，所以特別寫一篇文章紀錄，雖然不知道會不會有其他中文圈的人需要自己來做 Shopify app 就是了，可以直接用他們的 app template 還是比較簡單啦。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2022/08/18/shopify-app/</link>
+<guid>https://blog.othree.net/log/2022/08/18/shopify-app/</guid>
+<category>web</category>
+<pubDate>Thu, 18 Aug 2022 20:48:14 +0800</pubDate>
+</item>
+
+<item>
+<title>COSCUP 2022</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52253486310/" title=" by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52253486310_6b0fb625bc_b.jpg" width="1024" height="768" alt="" srcset="https://live.staticflickr.com/65535/52253486310_52f4492e44_k.jpg 2x" /></a></p>
+<p>(照片是今年的新玩意，紀錄組的形象照)</p>
+<p>今年 COSCUP 恢復實體活動，而我和我的稿件間的緣份也終於來了（有來聽的就知道我等緣份到等了兩年有），所以今年是小孩出生後難得有稿可以投，也幸運的投上了，於是就參加了第一天的活動，今年活動的人潮我目測和往年差不多，後來晚上官方也很快速的公布了明調的數字，也有一千三四百筆數據。</p>
+<p>我的分享時間是下午的兩點，我大概早上十點半才到會場，先去摩斯買杯紅茶，然後在門口報到區遇到昨天晚上在前夜 party 淋雨全濕的菜骨，接著我先去攤位區亂晃，在 MozTW 的攤位跟 Irvin 閒聊一下，還有遇到 Ett 和 RJ，之後又在形象照（今年紀錄組的新玩意）區遇到丞相還有幾位紀錄組的新朋友（Ada 和另外一位沒記起名字），拍了些 COSCUP 形象照，還遇到 Bob 和哈維、日落，這邊要先岔題澄清一下，就是我常被誤認我有當過 COSCUP 紀錄組長，不過其實沒有，某一年 Bob 有詢問過我意願，那一年我想要拼研究所畢業所以思考過後還是放棄，結果同一年我後來還是接了其他場活動的紀錄組長，因為我後來還是放棄該年度畢業了...</p>
+<p>之後去買了一批 COSCUP 紀念品，然後攤位區拿了一點小點心要回家給小孩，接著亂晃一下發現時間已經接近十二點了，而且肚子有點餓就趕快去覓食，不意外的摩斯爆炸，所以轉戰到一餐點了個可以快速吃完的東西，快速的解決後回到會場，然後和一位台大社團的學弟閒聊一陣子，中間還有遇到大助、Trista、Singing 等人，差不多到一點的時候我決定先去教室內休息等待，途中剛好經過 OCF 攤位有跟 Rock、Max 打招呼，然後也看了一下開源星手村桌遊，OCF 攤位還有位朋友（應該是 OCF 實習生）說之前有到我的動森島上參觀過，之後我就到教室坐著休息一下，接著就是 Max 的分享場次了，他分享的題目是<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>，是我的前一個場次。</p>
+<p>其實即使到現在，我還是有點難恢復純會眾的角色，到了會場就是會想到處走來走去，有點難靜下心來聽別人分享，連排想聽的主題都有點難，實在是當太多次志工的後遺症，今年聽 <a href="https://sakanamax.github.io/">Max</a> 的分享是我近年難得有真的能夠靜下心來認真作聽眾的經驗，必須說這真的是緣份，要不是剛好排在我的前一個場次，我也不會能夠靜下來聽，而且不聽還好，一聽下去發現內容有很多地方和我的講題部分想說的地方有呼應到，甚至是我想表達但是我沒有很明確寫出來的。</p>
+<p>總之接著就換我分享了，今年有認真練習了幾次，有發現時間有點緊，所以實際分享時有一些細節漏了，這邊剛好列一下：</p>
+<ul>
+<li>如何開始貢獻那邊，原本有想提到 <a href="https://opensource.guide/zh-hant/">opensource.guide</a>，第二天小飛機的分享：<a href="https://coscup.org/2022/zh-TW/session/GKDWQF">如何跟隨開源技術保持你的職涯發展</a>似乎也有提到，期待之後的錄影</li>
+<li><a href="https://github.com/mlinksva">Mike Linksvayer</a> 和 <a href="https://github.com/benbalter">Ben Balter</a> 的介紹，兩位都是 GitHub 員工，不過看職位似乎也不是專門處理 open source license 相關的，倒是會後 Bob 在 FB 有提到他也認識(?) Mike</li>
+<li>如何跟 Mike Linksvayer 和 Ben Balter 溝通關於使用 Vim License 的那超過一千個的 public repositories</li>
+<li>開 issue 跟 PR 時應該怎樣說明</li>
+<li>更進一步介紹怎樣比對 Licensee 的比對原理</li>
+<li>選擇你最舒服的方式參與，這句是從 Max 的投影片借來的，我自己的分享是說了兩三次佛系貢獻、等待緣份，其實和 Max 說的「選擇你最舒服的方式參與」是很接近的，我想表達的比較是不給自己和對方壓力</li>
+<li>本來還想畫張 timeline 的，還有投稿之後準備內容時於到的外部誘惑等等（那個什麼法環的）</li>
+<li>然後就有點離題的商業和開源難分難解的關係</li>
+</ul>
+<p>其實我在分享講話的時候，大腦沒什麼在思考的感覺，很像是直覺反射那樣，所以不太能臨時性的控制和調整，這些缺漏就只能等等看之後寫成文字紀錄的時候能不能補上了，附上分享的<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>：</p>
+<iframe class="speakerdeck-iframe" style="border: 0px none; background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0% padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 560px; height: 314px;" src="https://speakerdeck.com/player/0256360bb6ec4a79b562fcdcb63d49f3" title="How GitHub Supports Vim License Detection, The Five Years Journey" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" data-dashlane-frameid="1533303324720" data-ratio="1.78343949044586" frameborder="0"></iframe>
+<p>除了缺漏之外，其實這次分享還有點可惜是投影解析度不太夠，因為我其中一張投影片的動畫的關係（SPDX 那邊的討論串），我選擇用自己的電腦，不過為了配合大會的錄影，現場的投影解析度就有點低，對現場的聽眾是不太好意思，希望錄影的部分能夠正常可以觀看，其實事後回想，或許我還可以選擇輸出的解析度測試看看，只是不知道那個擷取裝置有沒有支援，當時有點慌忙都忽略了。</p>
+<p>分享結束之後我去買了杯氮氣咖啡就快速收工回家了，後來在柏強的 FB 提到了「看到問題的能力」，我就想到我確實之前就有意識到這一點，不過我意識到的是，相較於平常沒主動分享（寫文章或是演講）的人，我確實很容易知道，哪些我的經驗（工作上的、生活上的、興趣上的）可以匯集成一個主題，可能可以寫成文章，也可能可以投稿分享，不過這個<strong>能力</strong>本身似乎不是這麼容易能分享給新手的。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2022/07/31/coscup-2022/</link>
+<guid>https://blog.othree.net/log/2022/07/31/coscup-2022/</guid>
+<category>diary</category>
+<pubDate>Sun, 31 Jul 2022 22:24:42 +0800</pubDate>
+</item>
+
+<item>
+<title>貓聽得懂人話嗎</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8997762712/in/photolist-236z5zf-22ms8cB-23HUtwV-X3kfUu-TF7f8Y-RoEKe7-RyyKvA-QoqGRP-RyB6t7-QkDFnQ-RyB5XN-QkDGgd-RoGwzq-RyB7NG-Bcfmhj-BB5dJA-BB5e4U-A1AFfr-qAfKsg-eH6TnS-2mnSMWp-eGZPpp-eH6TN1-eGZNXH" title="菲貓 by othree, on Flickr"><img src="https://live.staticflickr.com/3690/8997762712_4915c923b5_b.jpg" width="1024" height="683" alt="菲貓" srcset="https://live.staticflickr.com/3690/8997762712_e24a8ff6e5_k.jpg 2x" /></a></p>
+<p>不知道別人家的貓是怎樣，不過我是蠻相信我家的貓是聽得懂的，我們家的貓咪年紀大了，開始有腎臟問題，行動力也差很多，有一陣子看他身體不舒服，然後還要移動去尿尿埋沙好像很辛苦，於是有一次我就跟他說不要埋了我幫他處理，結果，從此之後他就再也不埋尿尿便便了，即使後來身體比較好也一樣...</p>
+<p>我們家貓咪的名字叫菲菲，其實他是一隻蠻特別的貓咪，一來他是很少見的母的橘貓，根據我隨便搜尋了一下，好像要有兩組 DNA 的基因都要是橘色基因，然後機率都是三分之一的樣子；二來他的叫聲很特別，別的貓咪是喵喵叫，他都是凹凹叫，而且很多話；另外就是耳朵的尖端還有些毛也很少在橘貓上見到。這幾個特點之外，其他的地方就和一般常見的橘貓很像了，愛吃、親人、喜歡摸摸，根據我的觀察，家裡的成員當中，他最喜歡我摸他了，常常摸頭頭下巴摸一摸他就乾脆整顆頭都不出力支撐，直接倒在我手上了，啊，他還有一個特色是很會騙人，就我所知有好幾個藍星人跟他接觸之後覺得貓咪很可愛也開始養貓了。</p>
+<p>回到聽得懂人話嗎這個問題上，另外一個例子是他前幾兩週身體狀況惡化很多，後腳無力，幾乎走不太動了，尿尿便便常常會來不及跑去貓沙盆，雖然有鋪尿布但是他不一定躺在上面，我就跟他說有事情要叫我們，要便便尿尿都跟我們說，結果就真的開始偶爾會突然開始叫幾聲，然後我們問他什麼事情，他就開始尿尿了（不過還是蠻堅持想要到貓沙上面）。</p>
+<p>其實菲菲這次身體狀況惡化，醫生是已經無法處理了，我們就是在家裡讓他盡量過的舒適，晚上事情忙完就會去客廳陪他摸摸他，順便玩對馬戰鬼導演版，所幸他還算可以安靜躺著，因為不知道他到底這樣會不會需要其他協助，還跑去問醫生，不過根據醫生說法，痛苦的話貓咪還是會有反應，像是焦慮、一直換姿勢或是嘔吐等等，總之就是會更慘烈就是，還好菲菲這樣還蠻平靜。菲菲最後是在上週六晚上離開的，他挑了一個剛好沒人在旁邊的時間離開，就是我晚上去倒垃圾的時候，我離開家裡之前還跟他說我要去倒垃圾了，一下子就會回來陪他了，等到我回來時他狀況已經驟變了，呼吸變成很慢，大概好幾秒鐘才一次，然後很吃力了，眼睛也都完全沒反應了，之後只有再呼吸幾次就停了，告別就這樣突然的來到，本來最近看房子還在想不知道到新房子的話要讓他佔據那邊呢，悲傷之餘跟老婆先查過的廠商聯絡，心裡其實也有點逃避現實的想著會不會菲菲其實還活著呢，但是也不敢再多看他幾眼，維持在一個自以為的薛丁格的貓的狀態。</p>
+<p>隔天週日天氣很好，週六其實下了很大的雨，所以週日天空特別的蔚藍，空氣很乾淨能見度很高，比這兩天颱風前的天空還要漂亮，在開車往火化園區的路上，看著這一大片蔚藍的天空，想到岳母前幾天有說貓咪在挑日子，就覺得他真的是很會挑日子和時間，挑到天氣這麼這麼好的一天，不過一路上還是會逃避現實的想著他會不會其實還活著，要是還活著就把他送進去火化太可怕了吧，不過這種不切實際的幻想終於還是在禮儀師幫菲菲清潔身體時被打破了，看著完全沒反應不會動的貓咪身體，我心理想著：「啊，真的死了」，等火化出來時，看著骨頭想著：「啊，就這樣變成這樣了」。</p>
+<p>跟小孩說貓咪去當小天使了，他雖然不常摸菲菲，但是還是會說不想要看不到貓咪，會想他，看到放在桌上的貓咪罐頭還會怕他去當小天使肚子餓怎麼辦（只好趕快裝到箱子），雖然他沒有反應很大不過似乎這陣子也是有比較敏感。至於我，一開始面對空曠的客廳時感到很不習慣，甚至想逃避那個空間，過了快一週是已經沒那麼害怕客廳了，不過大概是很難繼續玩對馬戰鬼了吧，本來甚至很怕會無法看其他貓咪影片照片的，結果似乎也還好，不過以前要出門時，我都會跟佔據在客廳的菲菲報備一下，這個習慣的慣性即使到現在都還在，或許遲早我還是會習慣菲菲不在了，出門再也不會有要跟他報備的衝動吧，也或許更讓人難受的是知道自己遲早會漸漸忘懷他吧。</p>
+<p>PS. 本來想放小孩跟貓咪的合照，不過實在沒很多張，最後挑的是我幫他拍的第一張照片。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2021/09/10/does-cat-understand-what-we-say/</link>
+<guid>https://blog.othree.net/log/2021/09/10/does-cat-understand-what-we-say/</guid>
+<category>diary</category>
+<pubDate>Fri, 10 Sep 2021 21:37:58 +0800</pubDate>
+</item>
+
+<item>
+<title>CSP for Lambda@Edge</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset="" /></a></p>
+<p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
+<p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
+<p>這個專案內容就只是一個簡單的 function：</p>
+<pre><code class="language-javascript">const CSP = (directives) =&gt; {
+  return directives
+    .map((directive) =&gt; {
+    	return `${directive.name} ${directive.value.join(' ')};`;
+    })
+    .join(' ');
+};
+</code></pre>
+<p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
+<pre><code class="language-json">{
+  &quot;default-src&quot;: [&quot;'none'&quot;],
+  &quot;script-src&quot;: [&quot;'self'&quot;],
+  &quot;connect-src&quot;: [&quot;blah&quot;, &quot;blah&quot;]
+}
+</code></pre>
+<p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;default-src&quot;,
+    &quot;value&quot;: [&quot;'none'&quot;]
+  },
+  {
+    &quot;name&quot;: &quot;script-src&quot;&quot;,
+    &quot;value&quot;: [&quot;'self'&quot;]
+  }
+]
+</code></pre>
+<p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
+<pre><code class="language-typescript">type Source = string;
+
+type Directive = {
+  name: string;
+  value: Source[];
+};
+
+type Policy = {
+  source: &quot;header&quot; | &quot;meta&quot;;
+  disposition: &quot;enforce&quot; | &quot;report&quot;;
+  directiveSet: OrderedSet&lt;Directive&gt;;
+};
+
+type Policies = Policy[];
+</code></pre>
+<p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
+<pre><code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
+</code></pre>
+<p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
+<p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
+<p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</link>
+<guid>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</guid>
+<category>script</category>
+<pubDate>Thu, 12 Aug 2021 11:59:16 +0800</pubDate>
+</item>
+
+<item>
+<title>Static Site Hosting 服務需求</title>
+<description><![CDATA[<p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
+<h4>支援 CDN</h4>
+<p>這個需求沒什麼好說了吧。</p>
+<h4>支援 HTTP/2</h4>
+<p>主要的服務應該都支援了，不過還是列一下。</p>
+<h4>支援加上 Security Headers</h4>
+<p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
+<h4>支援 HTTP 轉成 HTTPS</h4>
+<p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
+<p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
+<h4>支援全站轉址</h4>
+<p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
+<p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
+<p>以下算是非必備的需求</p>
+<h4>支援把 404 改寫成 200</h4>
+<p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
+<h4>支援 CORS</h4>
+<p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
+<h4>支援 Basic Auth</h4>
+<p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
+<h4>支援根據 Header 切換 origin</h4>
+<p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
+<h4>支援根據路徑切換 origin</h4>
+<p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
+<h4>支援 brotli</h4>
+<p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2021/08/02/static-site-hosting/</link>
+<guid>https://blog.othree.net/log/2021/08/02/static-site-hosting/</guid>
+<category>server</category>
+<pubDate>Mon, 02 Aug 2021 22:23:14 +0800</pubDate>
+</item>
+
+<item>
+<title>MacOS 我的設定</title>
+<description><![CDATA[<p>最近因應新工作買了台新的 M1 Mac mini，所以重新把常用設定弄了一下，這篇文章來紀錄一下。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51318768736/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51318768736_786d7e9446_b.jpg" width="668" height="696" alt="Mac OS Preference by othree" srcset="" /></a></p>
+<p>首先是 <strong>一般</strong> 裡面的顯示捲軸（scrollbar），預設的設定是 <strong>自動依據滑鼠或觸控軌跡板</strong> ，這個選項的意思是，如果你用的是蘋果的滑鼠或觸控板，那他就會用自動隱藏的那種捲軸，如果有其他品牌的外接游標控制設備，那捲軸就是傳統的，有得捲動時就是會一直出現在那，佔據一塊空間，其實我對於這個預設行為有疑惑很久了，為什麼其他品牌的滑鼠就一定要用傳統的捲軸模式？直到某一天在系統篇好設定亂逛的時候才發現原來就是這個選項。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2021/07/19/macos-my-pref/">閱讀 「MacOS 我的設定」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2021/07/19/macos-my-pref/</link>
+<guid>https://blog.othree.net/log/2021/07/19/macos-my-pref/</guid>
+<category>mac</category>
+<pubDate>Mon, 19 Jul 2021 00:37:19 +0800</pubDate>
+</item>
+
+<item>
+<title>三浦建太郎逝世</title>
+<description><![CDATA[<p>本部落格的 ACG 類別真的都用來發這種文了，5 月 20 日的時候，白泉社官方發布訃文，三浦建太郎老師在 5 月 6 日因為主動脈剝離逝世了，享年 54 歲。</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">【三浦建太郎先生　ご逝去の報】<br />『ベルセルク』の作者である三浦建太郎先生が、2021年5月6日、急性大動脈解離のため、ご逝去されました。三浦先生の画業に最大の敬意と感謝を表しますとともに、心よりご冥福をお祈りいたします。<br />2021年5月20日　株式会社白泉社　ヤングアニマル編集部 <a href="https://t.co/vy923fIqiP">pic.twitter.com/vy923fIqiP</a></p>-- ヤングアニマル公式 (@YoungAnimalHaku) <a href="https://twitter.com/YoungAnimalHaku/status/1395213014182162436?ref_src=twsrc%5Etfw">May 20, 2021</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+<p>白泉社官網還有<a href="https://www.hakusensha.co.jp/information/60696/">多國語言版本</a>的訃文。</p>
+<p>最令人惋惜的就是他的代表作品<a href="https://zh.wikipedia.org/wiki/%E7%83%99%E5%8D%B0%E5%8B%87%E5%A3%AB">烙印勇士</a>（ベルセルク）還未完成了吧，從我還在國高中時就開始看了，不過後來連載速度慢了很多，當時我想說他是不是被夕映治癒了，靈魂內黑黑的東西被洗滌一空，後來才知道他健康出問題了，其實也是不意外，烙印勇士雖然是月刊連載，但是很多畫面其實都是畫的非常精細，很難想像早期要維持那樣的作畫精細度和連載速度要投入多少精力，這幾年速度就慢很多了，差不多都是一兩年才出一本單行本。目前白泉社還沒有說烙印勇士之後要怎樣，不過有特別提到之後確定後會在跟大家說，我自己是認為三浦應該是對於整個故事的發展早就都規劃好了，不過有留下多少資料又是另外一回事，還有就是如果要找人接手，那個作畫也是一個大問題吧。</p>
+<p>最後放上兩張圖，是烙印勇士當中我印象最深刻的地方。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51242950039/" title="ベルセルク by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51242950039_d261b0b123_b.jpg" width="600" height="800" alt="ベルセルク" srcset="https://live.staticflickr.com/65535/51242950039_d261b0b123_b.jpg 768w, https://live.staticflickr.com/65535/51242950039_99358ade99_h.jpg 1200w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51241472177/" title="ベルセルク by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51241472177_402bb4e123_b.jpg" width="600" height="800" alt="ベルセルク" srcset="https://live.staticflickr.com/65535/51241472177_402bb4e123_b.jpg 768w, https://live.staticflickr.com/65535/51241472177_41da5f9fe8_h.jpg 1200w" /></a></p>
+<p>PS. 東立有出數位版，而且說現在是<a href="https://www.facebook.com/TongLiComic/photos/a.247930171901325/2945108425516806/">沒有任何修剪的版本</a>了，至於實體書去年有再版過，現在應該是缺貨中。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2021/05/20/berserk/</link>
+<guid>https://blog.othree.net/log/2021/05/20/berserk/</guid>
+<category>acg</category>
+<pubDate>Thu, 20 May 2021 00:10:08 +0800</pubDate>
+</item>
+
+<item>
+<title>HTML 文件圖片預設寬高比</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50660948372/" title="Intrinsic aspect ratio of incomplete image by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50660948372_745a2dd865_b.jpg" width="1024" height="718" alt="Intrinsic aspect ratio of incomplete image" srcset="https://live.staticflickr.com/65535/50660948372_745a2dd865_b.jpg 1024w, https://live.staticflickr.com/65535/50660948372_7b5b33b5cd_h.jpg 1600w" /></a></p>
+<p>我在 2018 年有篇文章 <a href="https://blog.othree.net/log/2018/09/21/intrinsic-size/">Intrinsic Size 媒體寬高比</a>，介紹一個標準的草案 <code>intrinsicsize</code> ，為什麼會需要這東西在那篇文章也有講，主要就是要搭配像是：</p>
+<pre><code class="language-css">img {
+  max-width: 100%;
+  height: auto;
+}
+</code></pre>
+<p>這種寫法非常通用，但是在圖片讀取完成前，<code>&lt;img /&gt;</code> 標籤的佔位會無法先知道，這會造成頁面在圖片讀取完成後瀏覽器會需要比較大的重新繪製的工作。</p>
+<p>這幾天想起來去查了一下近況，發現竟然早早就停止發展了，caniuse <a href="https://caniuse.com/mdn-html_elements_img_intrinsicsize">那邊</a> 也顯示瀏覽器都把一些實驗中的支援都拿掉了，<a href="https://github.com/WICG/intrinsicsize-attribute/issues/16">細看下去</a>，發現 Firefox 的人當時說要開始試驗另一個比較優雅的方法，也有和 CSS WG 的人開始討論，他們當時的想法就是直接用 <code>width</code> 和 <code>height</code> 屬性來計算寬高比（aspect ratio），不過之後就都沒有標準文件相關的發展細節或連結了。</p>
+<p>搜尋一番後，發現 Firefox 在 71 開始就已經發佈這個修改了，當時的 <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/71#CSS">release note</a> 其實有寫，而且 MDN 上還有一篇文章：<a href="https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping">Mapping the width and height attributes of media container elements to their aspect-ratio</a>，也有介紹這個修改要解決的問題以及技術上是怎樣處理的，簡單一點形容就是：</p>
+<pre><code class="language-css">img { 
+  aspect-ratio: attr(width) / attr(height); 
+}
+</code></pre>
+<p>不過實際上不是真的使用這條 User Agent style 來實作就是了，因為這個透過  <code>width</code> 和  <code>height</code> 計算出來的寬高比只有在圖片還沒讀取的時候會有效，圖片讀取完成後就會改成用圖片實際的尺寸來計算怎麼顯示了，所以要說它是預設的寬高比也不太正確。</p>
+<p>在 CSS Image 這個 Module 的第四章：<a href="https://drafts.csswg.org/css-images/#sizing">Sizing Images and Objects in CSS</a> 中，有詳細的定義要怎樣決定圖片在繪製在網頁上時要怎樣處理，還定義了一些專有名詞：</p>
+<ul>
+<li><strong>Intrinsic dimensions</strong> 簡單一點形容就是圖片的原始尺寸，尺寸包含了寬（intrinsic width）、高和寬高比，不一定會全部都有，像是向量圖就只有寬高比，另外 intrinsic 中文翻譯是固有、或是根本的，所以 intrinsic dimentions 也不是真的就是圖片原始尺寸，它的文字敘述是：a preferred or natural size of the object itself。</li>
+<li><strong>Specified size</strong> 使用 CSS 設定的物件大小。</li>
+<li><strong>Concrete object size</strong> 根據上面兩個資訊所決定的實際上物件要繪製的大小，也就是我們眼睛所會看到的圖片呈現的大小。</li>
+</ul>
+<p>所以主要就是在寫怎樣計算 concrete object size 了，大概計算過程就是和各位腦袋中想的不會差距太大。不過在這個地方，有一個細節是在 CSS 文件中故意沒有講出來的，就是怎樣取得 intrinsic dimensions，CSS 文件中沒有明確的說 intrinsic width 是來自圖片標籤的 <code>width</code> 屬性，或是圖片的實際寬度（早在 CSS 2.1 就有<a href="https://www.w3.org/TR/CSS21/conform.html#intrinsic">寫出</a> CSS 文件不定義怎樣取得該數值了）。其實 HTML 圖片的 intrinsic dimensions 要怎麼取得是放在 HTML 文件的 <a href="https://html.spec.whatwg.org/multipage/rendering.html#dimRendering">15.4.3</a>，15 章都在講 rendering，15.4 則是 replaced elements，也就是圖片、影片之類的內容會整個替換掉的元素，15.4.3 最後一段的第一點是說圖片如果有抓下來的話就直接用圖片的 intrinsic aspect ratio，而第二點是這樣寫的：「If img's <code>width</code> and <code>height</code> attribute values, when parsed using the rules for parsing dimension values), are both not an error, not a percentage, and non-zero, then use   the ratio resulting from dividing the <code>width</code> attribute value   by the <code>height</code> attribute value.」這邊就明確的寫到用兩個屬性來計算 intrinsic aspect ratio 了，不過針對這個圖片讀取完成前的 intrinsic aspect ratio，並沒有定義一個專有名詞，所以可以看到 cnaiuse 用一個<a href="https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes">複雜的文字</a>來敘述這項修改，要是我的話應該會把這個值命名為 intrinsic aspect ratio of incomplete image 之類的吧。</p>
+<p>最後整理一下：</p>
+<ul>
+<li>圖片讀取完成前，如果有設定正確的數值的 width 和 hieght 的話，瀏覽器會先它們來計算 intrinsic aspect ratio</li>
+<li>圖片讀取完成後，瀏覽器會用圖片原始的寬高比來作為 intrinsic aspect ratio</li>
+<li>本來是希望能用在所有的 replaced elements，不過會造成既有網站壞掉所以目前限制在 <code>&lt;img&gt;</code> 標籤</li>
+<li>以上的修改是大約是今年前半年才進入瀏覽器的</li>
+</ul>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2020/11/29/intrinsic-aspect-ratio-of-incomplete-image/</link>
+<guid>https://blog.othree.net/log/2020/11/29/intrinsic-aspect-ratio-of-incomplete-image/</guid>
+<category>css-html</category>
+<pubDate>Sun, 29 Nov 2020 23:05:12 +0800</pubDate>
+</item>
+
+<item>
+<title>Scroll Margin/Padding</title>
+<description><![CDATA[<p>這篇文章要介紹一組算是蠻新的 CSS 屬性，分別是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-margin"><code>scroll-margin</code></a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-padding"><code>scroll-padding</code></a>，這兩個屬性是在 <a href="https://stackoverflow.com/questions/4086107/fixed-page-header-overlaps-in-page-anchors">Scroll Snap Module Level 1</a> 裡面定義的，目前主要的瀏覽器都有<a href="https://caniuse.com/mdn-css_properties_scroll-margin">支援</a>，IE 完全不支援，Safari 則是還在使用舊的非標準的屬性名稱，為什麼要介紹這兩個屬性呢？因為它除了原來 scroll-snap 微調的需求之外，還順便解決了一個存在已久的問題，也就是如果網頁的設計有固定浮動在頁面頂端的 header 時（Sticky/Fixed Header），使用 link 的 fragment 直接定位到頁面特定位置的時候，最上面一部份想顯示給訪客的內容會被 header 覆蓋到。</p>
+<p>這個問題大概是從 Sticky Header 出現時就存在了，Stack Overflow 上就可以找到<a href="https://stackoverflow.com/questions/4086107/fixed-page-header-overlaps-in-page-anchors">十年前的發問</a>，以前的主要的解決方法就是讓連結的目標有看不到的高度，像是用 <code>padding-top</code>，比較乾淨一點是用 pseudo-element 的 <code>:before</code> 來把內容往下推，不過這幾個方法雖然有用，但是對我來說卻一直不是個最佳解，所以一直以來我都期待能有更漂亮的解決方案，有事沒事就會搜尋一下，然後，終於我發現了這組 CSS 屬性可以用來讓瀏覽器自己捲動到目標時有指定的偏移。</p>
+<p><code>scroll-margin</code> 是用在你想要捲動到的目標元件上，也就是有 id 的那個，像我的 blog 就是 <code>&lt;article&gt;</code> 標籤，給它加個 <code>scroll-margin-top: 56px;</code> 就可以了：</p>
+<pre><code class="language-css">article {
+  scroll-margin-top: 56px;
+}
+</code></pre>
+<p><code>scroll-padding</code> 則是要用在 <a href="https://developer.mozilla.org/en-US/docs/Glossary/Scroll_container">scroll container</a> 上的，而不是目標的父母層，舉例來說，在我這邊，沒有特別設定任何 <code>overflow</code> 的情形下，scroll container 會落在 <code>&lt;html&gt;</code> 元件上，而不是 <code>&lt;article&gt;</code> 外面的 <code>&lt;main&gt;</code>，所以設定就要改成：</p>
+<pre><code class="language-css">html {
+  scroll-padding-top: 56px;
+}
+</code></pre>
+<p>這組 CSS 屬性我是今年才發現的，不過其實 CSS Trick 在去年就有文章介紹了：<a href="https://css-tricks.com/fixed-headers-on-page-links-and-overlapping-content-oh-my/">Fixed Headers, On-Page Links, and Overlapping Content, Oh My! </a>，真是太後知後覺了（其實也是因為我現在沒用 RSS reader 的關係）。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2020/11/25/scroll-margin-padding/</link>
+<guid>https://blog.othree.net/log/2020/11/25/scroll-margin-padding/</guid>
+<category>css-html</category>
+<pubDate>Wed, 25 Nov 2020 22:18:02 +0800</pubDate>
+</item>
+
+<item>
+<title>Realforce R2 Mac Key Mapping</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624884456/" title="system-preference-switch by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624884456_79c8476838_b.jpg" intrinsicsize="1024x891" width="1024" height="891" alt="system-preference-switch" srcset="https://live.staticflickr.com/65535/50624884456_79c8476838_b.jpg 1024w, https://live.staticflickr.com/65535/50624884456_be71932787_h.jpg 1336w" /></a></p>
+<p>換了 Realforce R2 TKL(Tenkeyless) 其實好一陣子了，本來是沒有特別要發一篇文章的，不過前陣子因故裝起了 <a href="https://mizage.com/divvy/">Divvy</a> 和 <a href="https://karabiner-elements.pqrs.org/">Karabiner-Elements</a>，然後接著的一些設定和發現可以作為之後買新鍵盤的一些參考，所以還是發個一篇文章來紀錄一下。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2020/11/20/realforce-r2-mac-key-mapp/">閱讀 「Realforce R2 Mac Key Mapping」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2020/11/20/realforce-r2-mac-key-mapp/</link>
+<guid>https://blog.othree.net/log/2020/11/20/realforce-r2-mac-key-mapp/</guid>
+<category>buy</category>
+<pubDate>Fri, 20 Nov 2020 23:40:43 +0800</pubDate>
+</item>
 
 <item>
 <title>USB-C、DisplayPort</title>
@@ -100,271 +530,6 @@
 <guid>https://blog.othree.net/log/2020/05/02/2019/</guid>
 <category>diary</category>
 <pubDate>Sat, 02 May 2020 21:53:25 +0800</pubDate>
-</item>
-
-<item>
-<title>Scroll to Text</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/49561392806/" title="Scroll To Text by othree, on Flickr"><img src="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg" intrinsicsize="1024x869" width="1024" height="869" alt="Scroll To Text" srcset="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg 1024w, https://live.staticflickr.com/65535/49561392806_a7ec190efb_h.jpg 1600w" /></a></p>
-<p>Chrome 最近有個新功能叫做 <a href="https://chromestatus.com/feature/4733392803332096">Scroll to Text Fragment</a>，雖然在 Chrome Platform Status 網站那邊寫 M80 會可以用，不過我實際上測試正式版的 Chrome 80 還沒有，但是 Chrome Canary 已經是預設啟用了。這個功能讓你可以在網址內的 Fragment 段（<code>#</code> 後面那段），用新定義的語法來讓瀏覽器直接捲動到指定的文字位置，語法如下：</p>
-<pre><code>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
-          context  |-------match-----|  context
-</code></pre>
-<p>如果有在用 Chrome Canary 的可以直接試試看<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/#:%7E:text=%E6%AD%A3%E5%A4%A7%E5%85%89%E6%98%8E">這個連結</a>。這個語法其實還蠻靈活的，可以和以前 id identifier 並用：</p>
-<pre><code>#targetID:~:text=theText
-</code></pre>
-<p>這樣如果找不到文字，瀏覽器還可以改用 targetID 定位；如果網頁內有多個一樣的文字，可以用 <code>prefix-</code> 和 <code>-suffix</code> 給出前後文來讓瀏覽器找到正確的目標；再來就是如果要標註的文字很長，也可以用 <code>textStart,textEnd</code> 來標註，這樣就不用在網址內放一大串文字了；然後也可以標註多段文字，用 <code>&amp;</code> 切開，和給參數的格式一樣：</p>
-<pre><code>#:~:text=firstText&amp;text=secondText
-</code></pre>
-<p><a href="https://wicg.github.io/ScrollToTextFragment/">正式的文件</a>現在是放在 WICG 那邊，GitHub 那邊的 <a href="https://github.com/WICG/ScrollToTextFragment/">Proposal repo</a> 則是有一段解釋<a href="https://github.com/WICG/ScrollToTextFragment/#enter-">為什麼選擇用 <code>:~:</code></a> 當分割符號的段落，我覺得這種脈絡的紀錄是很重要的，這邊簡單說一下，一開始有考慮過 <code>##</code> 這種比較容易想到形式，但是有些 URL parser 是由右到左的可能會有錯誤，再來他們列出一堆不太會有人去用的組合來當候選，然後去看 Google 那邊過去五年的紀錄，結果就是 <code>:~:</code> 最沒人用，只有 0.0000039% 的比例，所以目前是選擇這個分割符號。</p>
-<p>我是蠻喜歡這新功能（標準？）的，<a href="https://github.com/mozilla/standards-positions/issues/194">Mozilla 也覺得還可以考慮看看</a>，不過目前這個功能似乎還沒在 stable channel 啟用，應該是因為<a href="https://www.theregister.co.uk/2020/02/20/chrome_deploys_deeplinking/">隱私問題</a>，Chrome 負責的團隊也有整理相關的<a href="https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.uoiwg23pt0tx">資訊</a>，大概簡單說就是有可能透過頁面的讀取時間或是 <code>scrollTop</code> 的值來判斷你開啟的頁面內有沒有特定字串，然後就會有外洩的疑慮。另外還有一個讓人擔心的問題是這個功能可能會讓那些本來用 fragment 當成 route 的 SPA 壞掉，<a href="https://github.com/w3ctag/design-reviews/issues/392">W3C TAG design review</a> 那邊他們自己也有提到。</p>
-<p>其實這個 scroll to text 的功能在之前還有一套提案，不過不是由瀏覽器開發商所提，而是 indieweb 提的，叫做 <a href="https://indieweb.org/fragmention">Fragmention</a>，這組提案功能就比較陽春而且不成熟了：</p>
-<pre><code>#some%20text
-</code></pre>
-<p>重點在裡面那個 <code>%20</code>，也就是空白字元，Freagmention 的提案是你的目標文字要有空白，因為 HTML 的 id 不能包含空白字元，所以如果有空白字元就表示不是要找 id，這個提案由我來看就是很明顯沒搞過 i18n 的啊～</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2020/02/21/scroll-to-text/</link>
-<guid>https://blog.othree.net/log/2020/02/21/scroll-to-text/</guid>
-<category>web</category>
-<pubDate>Fri, 21 Feb 2020 00:15:26 +0800</pubDate>
-</item>
-
-<item>
-<title>W3C TAG</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/49471463826/" title="3874462 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg" width="320" height="320" alt="" srcset="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg 320w" /></a></p>
-<p>去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 <a href="https://www.w3.org/2001/tag/">W3C TAG(Technical Architecture Group)</a> 的 <a href="https://github.com/w3ctag/design-reviews">design-reviews</a>，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 <a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，還有剛提出的 <a href="https://github.com/w3ctag/design-reviews/issues/467">Partial freezing of the User-Agent string</a>。</p>
-<p>W3C 有一份 <a href="https://www.w3.org/2019/Process-20190301/">Consortium Process Document</a> 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到 W3C Rec（推薦標準），除此之外，這份文件還有制訂了兩個獨立組別的構成方法，這兩個組分別為：<a href="https://www.w3.org/2002/ab/">Advisory Board</a>（顧問團） 和 Technical Architecture Group（TAG、技術架構組），兩者都有負責解決跨技術報告（aka 標準）之間的問題，前者是負責非技術的問題，後者則是負責技術問題。W3C TAG 的成員結構現在是：</p>
-<ul>
-<li>Tim Bernes Lee 為終生成員</li>
-<li>W3C 總監</li>
-<li>總監可以提名三位成員</li>
-<li>另外有六名成員則是由 Advisory Committee（諮詢委員會，其實就是所有 W3C 會員代表人）選出</li>
-</ul>
-<p>其實看他們的審查意見都覺得真的很厲害，不過這些成員的名字其實曝光都很少。然後我一直很好奇，為什麼幾乎所有的技術報告都來這邊提審查，應該是有在技術報告開發流程上寫到才會這麼多，結果那份 Process 文件找來找去就是沒找到，花了幾個小時最後終於在其中一分外連的「如何建立一個工作/興趣小組」的文件中找到，其實找 TAG 做審查是 <a href="https://www.w3.org/Guide/process/charter.html#horizontal-review">Horizontal Review</a>（橫向審查） 的一部分，Horizontal Review 指的是技術報告在發展的過程中，找各個相關/相依的小組一起來做審查，而這些組別間的關係其實是寫在小組各自的章程裡面的，該份文件還有列出一些比較關鍵的組別：</p>
-<ul>
-<li><a href="https://www.w3.org/WAI/APA/">WAI Accessible Platform Architectures (APA) Working Group</a> 親和力</li>
-<li><a href="https://www.w3.org/International/review-request">Internationalization Working Group</a> 多國語言支援</li>
-<li><a href="https://www.w3.org/Security/wiki/IG">Security Interest Group</a> 安全性</li>
-<li><a href="https://www.w3.org/Privacy/">Privacy Interest Group</a> 隱私</li>
-<li><a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> 技術架構</li>
-</ul>
-<p>這五個確實是非常跨技術的主題，尤其是 TAG，技術的議題都跑不掉，我也循線去其它四個小組看了一下，發現真的也有相關的審查請求，不過不同小組申請審查的管道不一樣，有的還是用 W3C 傳統的 mailing-list，TAG 已經用 GitHub 算是非常先進而且方便訂閱了，從開發者的角度如果要關心網路標準的新發展可以以這邊為主，明顯比較缺的就是 CSS 的新東西不會發到這邊，我自己是還有訂 CSS Working Group 的 issue list。</p>
-<p>最後就是現在台灣的 W3C 會員似乎只剩下 <a href="http://www.dpublishing.org.tw/">台灣數位出版聯盟</a>，日本現在倒是很多組織有加入了，像是不知道為什麼加入的 DWANGO，看起來也沒參加 Chinese Interest Group 的 <a href="https://w3c.github.io/danmaku/api.zh.html">Danmaku</a>。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2020/02/01/w3c-tag/</link>
-<guid>https://blog.othree.net/log/2020/02/01/w3c-tag/</guid>
-<category>web</category>
-<pubDate>Sat, 01 Feb 2020 23:40:51 +0800</pubDate>
-</item>
-
-<item>
-<title>DNS CAA record</title>
-<description><![CDATA[<p>過年前因為工作關係第一次注意到 <a href="https://en.wikipedia.org/wiki/DNS_Certification_Authority_Authorization">CAA record</a> (Certification Authority Authorization) 這個東西，簡單說明就是透過 DNS record 來設定你的 SSL cert 的簽發單位白名單，一開始的規範是 <a href="https://www.rfc-editor.org/rfc/rfc6844.html">RFC6844</a>，其實原理也不複雜，不過我就在遇到用 AWS ACM 簽發憑證時說檢查不過的狀況，有趣的是該 domain 沒有設定任何 CAA，搜尋研究一陣子後發現可能是因為該 domain 是 CNAME 去到別的第三方 domain 才會這樣，然後果然發現這個<a href="https://forums.aws.amazon.com/thread.jspa?messageID=924285&amp;#924285">問題</a>其實很久了。</p>
-<p>不過其實原始版本的 RFC6844 其實沒有要求檢查 CNAME 目標的 CAA，而是在 2017 年的<a href="https://www.rfc-editor.org/errata/eid5065">勘誤 5065</a> 中才加入的，不過這個修改造成很多問題，所以 letsencrypt 在同一年就又<a href="https://community.letsencrypt.org/t/legacy-caa-implementation/42335">換回舊的實做</a>了。CAA record 看起來也因此放棄這個修改了，在用來取代 RFC6844 的 <a href="https://www.rfc-editor.org/rfc/rfc8659.html#name-differences-from-rfc-6844">RFC8659</a> 中，就完全沒有提到 CNAME 的檢查，甚至在與舊版相異的附錄也是特別提到這點差異，不過 RFC8659 還很新，是 2019 年 11 月的，看起來 AWS 還沒修正也情有可原(?)。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2020/01/27/dns-caa/</link>
-<guid>https://blog.othree.net/log/2020/01/27/dns-caa/</guid>
-<category>web</category>
-<pubDate>Mon, 27 Jan 2020 23:41:16 +0800</pubDate>
-</item>
-
-<item>
-<title>Public Suffix List</title>
-<description><![CDATA[<p>最近因為花了很多時間研究 Safari 和第三方 Cookie，常常看到一個專有名詞 <strong>eTLD+1</strong>，之前只知道和 domain name 及 TLD 相關，不清楚確切的定義，所以又去查了一下，結果找到解釋最清楚的竟然是 Go 的 publicsuffix 套件的<a href="https://godoc.org/golang.org/x/net/publicsuffix">說明文件</a>，總之簡單比較不明確的解釋，eTLD 指的是 effective TLD，像是 <code>net</code>、<code>net.tw</code> 這類，域名註冊商可以提供的網址後綴，依此類推，eTLD+1 就是 eTLD 再多一段，也就是一般人可以註冊到的網域名稱，像是我這邊用的 <code>othree.net</code>，至於部落格的子網域 <code>blog.othree.net</code> 就不是 eTLD+1 了。</p>
-<p>其中的 eTLD 又稱為 Public Suffix，然後 Mozilla 有維護一份 <a href="https://publicsuffix.org/">Public Suffix List</a>，給瀏覽器用的，主要用途就是避免寫入太高權限的 cookie，例如我要是把 cookie 寫到 <code>.net</code> 層的話，所有的 <code>.net</code> 域名的網站都會讀的到它，就會有安全性問題，這份清單現在已經是主要瀏覽器開發商都有在使用了，它的內容除了那些 eTLD 之外，其實還有私人公司提交的，像是 blogspot 列了一大串，還有 github 有列 <code>github.io</code> 和 <code>githubusercontent.com</code>，<code>github.io</code> 是 GitHub Pages 的預設 domain，像我的 Github Page 就會用 othree.github.io，GitHub 提交這筆記錄，在現代瀏覽器就會限制我在 <code>othree.github.io</code> 不能寫 cookie 到 <code>github.io</code>，這樣可以確保所有使用者的頁面不會互相影響。</p>
-<p>我還順便亂瀏覽一下內容，發現 Amazon 手上好多的 gTLD，像是 <code>book</code>、<code>song</code>，然後他們的 <code>cloudfront.net</code> 也有提交，還有一堆其它的 aws 網域名稱；另外就是 DynDNS 和 no-ip 兩個類似服務都提交超多的；然後還發現一間叫 <a href="https://nymnom.com/">nymnom.com</a> 的域名註冊商，專門提供一堆 <code>nom</code> 或 <code>nym</code> 結尾的域名，搞不清楚這兩個單字的意思啊。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2020/01/05/public-suffix-list/</link>
-<guid>https://blog.othree.net/log/2020/01/05/public-suffix-list/</guid>
-<category>web</category>
-<pubDate>Sun, 05 Jan 2020 23:23:59 +0800</pubDate>
-</item>
-
-<item>
-<title>ENTER or SPACE, KEYDOWN or KEYUP</title>
-<description><![CDATA[<p>前一篇文章<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/">作動行為 Activation Behavior</a> 發佈之後，卡西又做了一些測試，發現到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 的觸發時機其實不一樣：</p>
-<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 <a href="https://t.co/ec1rMlFVvO">https://t.co/ec1rMlFVvO</a></p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1186268152184766464?ref_src=twsrc%5Etfw">October 21, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-<p>然後我仔細測試過發現真的是這樣，而且 <kbd>SPACE</kbd> 有 <code>keypress</code> 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 <a href="https://github.com/w3c/aria-practices/issues/610">WAI-ARIA Authoring Practices Issue 610</a>，於是我就覺得這應該和 Web 標準定義沒關係，應該是更古老的預設行為，於是改變方向改找 Windows 預設行為相關的文件，搜尋一陣子其實也找不太到東西，大概是因為 GUI 和 Windows 剛出的時候其實 www 還不知道在哪裡吧，不過後來還是找到兩篇 stackoverflow 的問答看起來是相關的：</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/16090578/why-do-enter-and-space-keys-behave-differently-for-buttons">Why do Enter and Space keys behave differently for buttons?</a></li>
-<li><a href="https://stackoverflow.com/questions/6706689/keyboard-control-of-gui-dialogs-should-default-button-change-with-focus">Keyboard control of GUI dialogs - Should default button change with focus?</a></li>
-</ul>
-<p>總和這兩篇的內容，大概整理一下：</p>
-<p>這個行為應該是 Windows 一開始的時候就如此設計的了（看起來是很難找到相關設計的文件），然後實際上和 <kbd>ENTER</kbd> 相關（相對）的操作其實是 <kbd>ESC</kbd> 鍵，<kbd>ENTER</kbd> 鍵代表的是直接點 default button（例如 form 的 submit、dialog 的 ok 之類的），或是可以說是執行元件預設的行為，至於 <kbd>ESC</kbd> 鍵則是取消，不過取消在網頁的控制元件中幾乎是不存在的，過去有的大概只有 <code>&lt;select&gt;</code> 展開下拉選單後又決定不選時可以取消，到 HTML5 則又多了 <code>&lt;dialog&gt;</code> 有取消的行為（關閉 dialog），大概也是因為這個原因讓人忽略了 <kbd>ENTER</kbd> 和 <kbd>ESC</kbd> 的關係，變成注意到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 都可以操作元件；至於 <kbd>SPACE</kbd> 鍵其實就像是滑鼠點擊，<code>keyDown</code> 如同 <code>mouseDown</code>，<code>keyUp</code> 如同 <code>mouseUp</code>，要到 <code>keyUp</code> 才算一個點擊的動作，也就是到這時候才會去觸發 <code>click</code> 事件。</p>
-<p>搞清楚這現象的原理之後，其實也就更容易理解 <a href="https://github.com/w3c/aria-practices">WAI-ARIA Authoring Practices</a> 的範例那些 <kbd>ENTER</kbd>、<kbd>ESC</kbd>、<kbd>SPACE</kbd> 幾個按鍵行為為什麼是那樣了，當然，以後需要客製 widget 時也不用再對這幾個按鍵的行為該怎樣定義苦惱了。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/</link>
-<guid>https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/</guid>
-<category>css-html</category>
-<pubDate>Tue, 22 Oct 2019 22:54:22 +0800</pubDate>
-</item>
-
-<item>
-<title>作動行為 Activation Behavior</title>
-<description><![CDATA[<p>前幾天全知全能的米奧大人在 Twitter 上徵求中階的 JavaScript 課程：</p>
-<blockquote class="twitter-tweet" data-theme="light"><p lang="zh" dir="ltr">想求推薦中階 JavaScript 課程，唯一期望是想要有實務向的練習題，不用解答都沒關係，但我的腦需要靠自己動手來體會「使用 OOO 可以做出 XXX，OOO 是有用的！」才能學會東西 +_+，如果剛好有看過這樣的東西還請各位大人不吝推薦給我（跪）</p>-- Miau Huang (@miau715) <a href="https://twitter.com/miau715/status/1183625099137540098?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
-<p>然後 Jedi 提供了一個題目：</p>
-<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">困難的簡單習題（平均起來就是中階）：<br/>讓一個 &lt;span&gt; 獲得跟 &lt;a&gt; 完全一樣的行為，以及讓一個 &lt;div&gt; 獲得跟 &lt;button&gt; 完全一樣的行為（提示：空白鍵跟 Enter 的差別、按下按鍵還沒放開前又按下 Esc、滑鼠中鍵把連結開到新分頁、是否已訪問過、停用狀態、Accessibility Tree / AOM 等）。</p>-- Jedi (@JediLin) <a href="https://twitter.com/JediLin/status/1183634431929503744?ref_src=twsrc%5Etfw">October 14, 2019</a></blockquote>
-<p>後來米奧大人真的交作業了，也有提出一些問題，然後卡西有回應：</p>
-<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">button 比較明顯的問題有：<br/>* 點了 button 後不放開滑鼠，移到 button 外，不該 active 該 button ，但該取得 focus<br/>* button 上的文字不該被選取<br/>* keyup 該觸發 button 上的 onclick</p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1184838289603231744?ref_src=twsrc%5Etfw">October 17, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-<p>其中，「keyup 該觸發 button 上的 onclick」這句引起了我的興趣。</p>
-<p>為了要顧及到網頁親和力，所有的控制元件的操作都應該要可以用鍵盤執行，所以像是 button 的動作也應該要可以用鍵盤控制，但是其實我以前一直搞不清楚，這之間正確的關係應該是怎樣，就三種可能性：</p>
-<ul>
-<li>key 事件觸發 click 事件，click 事件有 default handler</li>
-<li>click 事件觸發 key 事件，key 事件有 default handler</li>
-<li>click 事件和 key 事件都有同一個 default handler</li>
-</ul>
-<p>當我看到卡西那段文字的時候，我覺得他應該說的是有憑據的，不過我也覺得有些不正確，像是就我的認知，button 的 key 事件預設是不會觸發 click 事件的，於是我就花了點時間研究一下網路標準，這次終於找到規範和正確的關係了。</p>
-<p>我先從 button 標籤開始查起，然後注意到一段，在說明 button 的 <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> 行為應該如何的文字，行為分成 submit button、reset button 和 button 三種，其中前兩個就像是在說 submit button 和 reset button 的行為一樣，所以我就了解到，activation behavior 就是我要找的關鍵字了，目前將它翻譯為「作動行為」。</p>
-<p>然後在 <a href="https://html.spec.whatwg.org/multipage/interaction.html#activation">HTML 6.3 Activation</a> 找到：</p>
-<blockquote>
-<p>Certain elements in HTML have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a>, which means that the user  can activate them. This is always caused by a <code>click</code> event.</p>
-<p>The user agent should allow the user to manually trigger elements that have an <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation   behavior</a>, for instance using keyboard or voice input, or through mouse clicks. When the  user triggers an element with a defined <a href="https://dom.spec.whatwg.org/#eventtarget-activation-behavior">activation behavior</a> in a manner other than  clicking it, the default action of the interaction event must be to <a href="https://html.spec.whatwg.org/multipage/webappapis.html#fire-a-click-event">fire a <code>click</code> event</a> at the element.</p>
-</blockquote>
-<p>第一段就是說作動行為（activation behavior）都是 <code>click</code> 事件觸發，第二段則是說瀏覽器要讓其它方法（像是鍵盤、語音操作等）可以觸發作動行為的話，實做的方法應該是在該事件的處理器（event handler）內觸發 <code>click</code> 事件來觸發該 HTML 元素的作動行為。這段文字就可以證明卡西說的基本上沒錯，另外就是我有疑惑的，應該是 <code>keydown</code> 還是 <code>keyup</code> 事件呢？根據我自己的實驗結果應該是要用 <code>keydown</code>，不過總還是想找一下標準定義的出處，雖然沒有找到很明確的文字說明，不過 <a href="https://www.w3.org/TR/uievents/#event-flow-activation">UI Events 3.5. Activation triggers and behavior</a> 裡面的 EXAMPLE 4 內確實是寫 keydown event，當然 <code>keydown</code> 的時間點也比較符合期待，目前在不同標準文件內看到的範例也都是用 keydown。</p>
-<p>查到這邊大概就可以確定，正確的關係應該是「key 事件觸發 click 事件，click 事件有 default handler」，<del>不過卡西說的小錯誤是應該要用 keydown 事件，然後我在 twitter 有回說普通 button 不應該 keydown 觸發 click 則是我當時的錯誤認知</del>（請見 <a href="https://blog.othree.net/log/2019/10/22/enter-space-keydown-keyup/">ENTER or SPACE, KEYDOWN or KEYUP</a>）。</p>
-<p>再來，其實我還很好奇，哪裡有定義不同的元素分別用哪些按鍵 <strong>active</strong> 呢？因為表單送出是用 <kbd>ENTER</kbd> 鍵，但是像是 checkbox 的狀態切換卻是用 <kbd>SPACE</kbd> 鍵；上面提供的幾份文件也都沒講到這部分的定義，有種刻意避開的感覺，後來又找了許久才終於找到，其實是放在 WAI-ARIA Authoring Practices 這份 Working Group Note 內，拿 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-4">checkbox</a> 為例，在它的 Keyboard Interaction 段落內就明白寫了：</p>
-<blockquote>
-<p>When the checkbox has focus, pressing the Space key changes the state of the checkbox.</p>
-</blockquote>
-<p>當然也有 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-3">button</a> 的規範，就是同時有定義 <code>space</code> 和 <code>enter</code> ；由於這份文件是 Working Group Note，規範的硬性比較低，這應該也是故意為之的。</p>
-<p>最後來整理一下，首先是 HTML 文件有定義，預設的作動行為都是透過 <code>click</code> 事件觸發，但是同時也要保留其它操作介面觸發作動行為的可能性，像是常見的鍵盤行為，而其它操作方式都要透過觸發 <code>click</code> 事件的方式來觸發作動行為；再來就是不同 HTML 元素的作動行為要做哪些事情也是在 HTML 文件內；至於不同 HTML 元素要支援哪些按鍵呢，這部分就要交叉參考 <a href="https://w3c.github.io/html-aria">ARIA in HTML</a> 和 <a href="https://www.w3.org/TR/wai-aria-practices-1.2/">WAI-ARIA Authoring Practices</a> 兩份文件了，前者用來查詢 HTML 元素對應的 ARIA role，後者可以根據 role 來判斷要支援哪些鍵盤按鍵。</p>
-<p>以後要做自訂的控制元件的時候，就可以正大光明的把主要的動作寫在 onclick 事件下了（然後根據情況去加上 key event）。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/10/20/activation-behavior/</link>
-<guid>https://blog.othree.net/log/2019/10/20/activation-behavior/</guid>
-<category>css-html</category>
-<pubDate>Sun, 20 Oct 2019 14:22:27 +0800</pubDate>
-</item>
-
-<item>
-<title>Circle CI run Terraform and AWS deployment</title>
-<description><![CDATA[<p>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來：</p>
-<p>Terraform 是用 hashicorp 官方的 <a href="https://hub.docker.com/r/hashicorp/terraform/">image</a>，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 <a href="https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command">BASH_ENV</a> 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command 執行：</p>
-<pre><code class="language-sh">echo &quot;export S3_ID=`terraform output s3_bucket_name`&quot; &gt;&gt; $BASH_ENV
-</code></pre>
-<p>當然你的 terraform module 要有定義好 output。</p>
-<p>第二個是重點是 <code>$BASH_ENV</code> 的值，個人建議是設定絕對路徑，直接寫出完整路徑，不要用其它環境變數來組合，然後位置要放在 working directory 內，好方便能  <code>persist_to_workspace</code>，這樣才能夠跨 job 使用，另外就是檔名建議不要用 <code>.</code> 開頭的隱藏檔名，我遇到過各種找不到檔案的錯誤訊息，然後 working directory 建議不要放在 home 目錄下，一來 <code>$BASH_ENV</code> 去用 <code>$HOME</code> 組合出來我遇到錯誤過，用 <code>~</code> 來寫路徑也是遇到錯誤過，二來不同 image 的 home 目錄路徑不同，如果要在 config 內直接寫死絕對路徑，建議直接定一個固定的位置，我現在是用：</p>
-<pre><code>/tmp/workspace
-</code></pre>
-<p>然後這樣後面就可以用官方的 s3 orb 下指令了：</p>
-<pre><code class="language-yaml">- aws-s3/sync:
-    from: build
-    to: &quot;s3://${S3_ID}&quot;
-    aws-region: &quot;ap-northeast-1&quot;
-</code></pre>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/08/22/circleci-terraform-aws-deploy/</link>
-<guid>https://blog.othree.net/log/2019/08/22/circleci-terraform-aws-deploy/</guid>
-<category>script</category>
-<pubDate>Thu, 22 Aug 2019 23:02:19 +0800</pubDate>
-</item>
-
-<item>
-<title>COSCUP 2019</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/48582240846/" title="COSCUP 2019 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="COSCUP 2019" srcset="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg 1024w, https://live.staticflickr.com/65535/48582240846_26f337902f_h.jpg 1600w" /></a></p>
-<p>今年發生什麼事大家都知道了，我今年負責的是 Open Web Technologies 議程軌，相對是受影響比較小的單位，不過還是想從我的角度來記錄一下，這篇就流水帳吧。</p>
-<p>前一天晚上聽到說台科大停電的時候，還沒什麼實感，而且研揚大樓很快就恢復了，想說應該不會停太久吧，直到後來要睡前都沒有恢復才有一點緊張感，不過基本上也做不了什麼事情，還是準時去睡覺，還把龍王的工作八給看完了，隔天早上七點多醒來一看已經確定要換場地了，各管道的宣傳也開始在跑了，我就邊處理小孩的東西，先發了一封信件給今天的所有講者說場地要換大樓了，當時新教室的位置還沒出來。然後也邊跟另外一位社群協調人 hlb 聯絡，他還要從新竹出發過來，比我還早出門，後來教室確定後我又再發一封郵件，還有在 Telegram 的 Mozillians at COSCUP 2019 群（專門開給國外來參加 COSCUP 的 Mozilla 人的群）也趕快發通知，剛好那邊還有今天下午的兩位講者在裡面。</p>
-<p>我自己本來的規劃是九點到場，後來因為確定狀況和發信等等後來有比較晚到，不過還是去採買了要給講者喝的水，我準備了一個保冷袋還加買兩包冰塊，後來冰塊到離開時都還沒融化完，可是冷卻效果不是很好，或許還是專用的保冷劑效果會比較好，另外就是有一包冰塊好像袋子還有破洞漏水。停到研揚大樓停車場的時候，竟然只能使用悠遊卡，然後一刷，只剩下 80 塊，這表示我要離開前勢必要先找地方加值了，當然，當時校內的便利商店也都停電了 ～＿～</p>
-<p>九點多到場時很感謝 hlb 都已經確認完場地狀況了，而且看起來幾乎場地都已經準備好了，雖然還有攤位沒準備完，樓下其實還一直在搬東西過來，不過真的是要讓演講開始已經完全沒問題了，像是教室指標、背版、麥克風備用電池，甚至連新印的單間會議廳的議程表都有，隔壁教室的贊助商攤位看起來也很有一回事了。</p>
-<p>之後就都還蠻順利的，講者都有準時到，沒有開空窗，也沒有人超時卡到下一位講者，分享後互動最熱烈的那場，也剛好排在午餐前，比較可惜是我的主持還不太行，介紹講者的部分都不太好，當然週五無法先去找講者聊一下也是蠻有影響的，不過更大的因素是我自己事前準備還不夠，沒有練習好，這部分就明年繼續努力了。</p>
-<p>今年 Open Web Technologies 下午有三位海外講者，其實都是他們各自籌經費，Mozilla 的 Rabimba 和 Bob 都是 Mozilla Tech Speaker，所以應該是從那邊申請經費的，另外一位則是 LINE 的 Trustin Lee，LINE 也是今年贊助商之一，講者的經費應該是公司出的，剛好攤位就在隔壁教室，好像也有該主題自己的攤位和其它一起從韓國來的朋友，開場前就看到他們開始在拍照，然後我才想到，像這種公司出錢來的海外講者，要是因為活動因故取消的話，人都到了不知道他們的旅費要怎麼處理，這時才第一次體會到，推廣國際能見度其實也是伴隨而來更多的責任的啊。</p>
-<p>總之議程過程還算順利，我自己因為主持的關係幾乎離不開，只有挑了一場演講開始的時間去 HKOSC 買預計要入手的 kotties，還有去拿個人贊助的紀念品，不過我沒有拿到大會手冊就是，最後議程結束後，我就把東西收好走去長興街 7-11 儲值悠遊卡，那段時間雨還不小，回來時在一樓跟小耕打招呼，他也提到了場佈兩次的事情，我腦中就響起了這個旋律：</p>
-<blockquote>
-<p>每條大街小巷<br />
-每個人的嘴裡<br />
-見面第一句話<br />
-場佈快不快樂</p>
-</blockquote>
-<p>搭配音樂：</p>
-<div class="embed_16_9">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/7BNPbS1lmy8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
-</div>
-<p>之後還在閃電講時間，我去了記錄組工作區晃了一下，還遇到不少老人回來要準備幫忙撤場，沒停留多久就回家顧小孩了，停車費 400（應該是 50 x 8 小時），大概九點弄完才有時間去找出 YouTube 直播留存的影片來看最後的閃電講和閉幕，看完覺得第二天能順利辦完真是太好了，不只是對贊助商和講者的交代，要是沒有辦起來也沒機會再次緬懷 Ilya 和阿怪了。</p>
-<p>最後個人想法，其實我聽到要換場地的時候，我腦中倒是完全沒有懷疑過 COSCUP 團隊會辦不到，有個替代場地可以用反而是我覺得真的是撿到的，不知道為什麼一開始會先把研揚大樓的供電恢復，而且校方還能迅速幫忙協調出空間給我們用這真的是非常關鍵，如果今天在其它地方辦搞不好就真的無法找到替代空間了；然後在研揚辦的效果其實也還不錯，走道有空調真是舒適不少，第一次到台科辦的時候好像也有考慮過這個位置就是，不過大概就是因為沒有比較正式的會議廳吧。第二是 Bobchao 從前年開始推動的社群議程其實也在這次事件發揮蠻大的功效，不然整個議程相關的問題就會擠在議程組內了，現在這樣倒是可以把很多事務和權責放到外部，對我來說，其實更換場地影響沒有很大（當然是因為我到場時東西都已經準備好了，十點社群議程才開始也提供了相當充足的時間），最重要的就是確定新的會議廳位置以及想辦法通知講者，尤其是海外講者，這次我們軌三位海外講者中有兩位都有 IM 管道可以跟他們聯繫（感謝 Irvin 有先建立群組），所以我都有確定他們知道場地變動的訊息，以後也可以考慮先建立好跟講者聯繫的 IM 管道。</p>
-<p>然後比較個人部分的感想，要顧一間做整天的主持人，幾乎都沒有機會離開啊，更不用說拍什麼照片了，其實攝影器材有帶不少但是大概用不到一半，希望以後能更多時間到場，然後可以分個半天一天做自由記錄。</p>
-<p>最後的最後就放其它人的紀錄吧（不過目前看到的公開的只有四貓的，歡迎提供其它連結）：</p>
-<ul>
-<li><a href="https://blog.catcatcatcat.cc/2019/08/19/coscup2019/">四貓</a></li>
-<li><a href="https://medium.com/@nijia.lin/chatbottw-in-coscup-2019-%E5%BE%9E%E6%9C%83%E7%9C%BE%E8%AE%8A%E6%88%90%E8%B2%A0%E8%B2%AC%E4%BA%BA%E7%9A%84%E5%BF%83%E8%B7%AF%E6%AD%B7%E7%A8%8B-d58ddfe61328">NiJia</a></li>
-<li><a href="https://www.facebook.com/bigbody2/posts/10158315999530752">大隻</a></li>
-<li><a href="https://pingyeh.blogspot.com/2019/08/coscup-2019.html">pingooo</a></li>
-</ul>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/08/20/coscup-2019/</link>
-<guid>https://blog.othree.net/log/2019/08/20/coscup-2019/</guid>
-<category>diary</category>
-<pubDate>Tue, 20 Aug 2019 15:13:53 +0800</pubDate>
-</item>
-
-<item>
-<title>京都動畫公司縱火事件</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/48315611637/" title="#PrayForKyoani by othree, on Flickr"><img src="https://live.staticflickr.com/65535/48315611637_98b6a090b2_b.jpg" intrinsicsize="542x1024" width="343" height="648" alt="#PrayForKyoani" srcset="https://live.staticflickr.com/65535/48315611637_98b6a090b2_b.jpg 542w" /></a></p>
-<p>想不到我在這個類別隔這麼的發文又是為了記錄這種事情。</p>
-<p>今天（2019 年 7 月 18 日）京都動畫第一工作室遭縱火，目前<a href="https://www.fdma.go.jp/disaster/info/items/1907182201.pdf">死者 33 人</a>，不過也有十名重傷，火災重傷後續也很辛苦，所以數字還不排除有變化的可能性。這場火災是日本近年來死傷最嚴重的縱火事件，我一早就看到消息了，然後整天就一直看著傷亡數字上升，很難受。</p>
-<p>其實我對京阿尼還算蠻有情感的，想當年他們要開始獨立製作動畫時，還有發新聞稿，強調他們要以著重動畫品質的時候，我還想著就來看看結果會如何，結果後來就是大家所知道的，他們推出了一部又一部品質精美的動畫作品，我自己很喜歡的一張我拍的 <a href="https://www.flickr.com/photos/othree/8477826443/">cosplay 照片</a> 的角色六花也是從他們的作品中出來的，今天我認真的查了一下我看過哪些，發現沒看過的其實沒幾部，就這樣從我大學一直到現在。這個消息在全世界動漫圈都傳很大，美國的發行商 Sentai Filmworks 還為他們發起了<a href="https://www.gofundme.com/f/help-kyoani-heal">募款活動</a>，本來五十萬美金的目標已經達標，現在是新目標 75 萬，<a href="https://twitter.com/search?q=%23PrayForKyoani&amp;f=live">#PrayForKyoani</a> 這個 hashtag 也在世界趨勢中維持在第一位一整天了。</p>
-<p>動物朋友的監督 たつき 在 twitter 上發表了一段文字，我想很正確的表達了這件事情為什麼讓人感受這麼深：</p>
-<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">亡くなられた方がどれだけの、膨大で地道な時間を人知れずアニメに使ってきたか、のべ何万人何億人のひとの時間を豊かにしたか、ヒトの幸せの総量を増やしたか。そんな方々がなぜこんな苦しいつらい終わり方をしないといけないのか。</p>－ たつき／irodori (@irodori7) <a href="https://twitter.com/irodori7/status/1151776349121417216?ref_src=twsrc%5Etfw">July 18, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-<p>借一下 plurk 上 AT2 的<a href="https://www.plurk.com/p/nes3xm">翻譯</a>：</p>
-<blockquote>
-<p>逝世者們到底花費多少龐大且踏實的時間，在不為人知的情況下拿來做動畫。
-豐富了幾萬、甚至幾億人的時間，增加了人們幸福的總指標。
-為什麼這樣的人們要非得以這麼痛苦、這麼悲傷的方法離世呢</p>
-</blockquote>
-<p>最後就是突然又想到 ZEGAPAIN 這部動畫，ZEGAPAIN 其實是 ZEGA 和 PAIN 兩個單字，意思是人類（整個人類種族）難以承受的巨大傷痛，想我當年看完這部作品心情嚴重低落三天，嚴重到我爸媽問我怎麼了，今天這件事來看好像又更能體會一點了。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/07/18/kyoani-fire/</link>
-<guid>https://blog.othree.net/log/2019/07/18/kyoani-fire/</guid>
-<category>acg</category>
-<pubDate>Thu, 18 Jul 2019 22:48:26 +0800</pubDate>
-</item>
-
-<item>
-<title>Robots Exclusion Protocol</title>
-<description><![CDATA[<p>Google Webmaster Central Blog 昨天發表了 <a href="https://webmasters.googleblog.com/2019/07/rep-id.html">Formalizing the Robots Exclusion Protocol Specification</a> 這篇文章，介紹到 Robots Exclusion Protocol (REP) 這個正在標準化的<a href="https://tools.ietf.org/html/draft-rep-wg-topic-00">草案</a>，REP 其實就是已經被廣泛使用的 <a href="https://support.google.com/webmasters/answer/6062608?hl=zh-Hant">robots.txt</a> 檔案，robots.txt 誕生至今已經 25 年了，當初是由 <a href="https://en.wikipedia.org/wiki/Martijn_Koster">Martijn Koster</a> 所設計，早期網路的東西基本上就是先做，設計的不錯大家就跟著抄，不一定會有什麼標準的文件，robots.txt 就是這樣其實一直都沒正式的標準文件，我以前還真的有懷疑過怎麼找不到，直到 Google 這篇文章才確定了，真的一直以來是沒標準的，雖然 Google 衝網路標準太快讓人有不少意見，不過這次我倒是覺得樂觀其成，而且他們也還公開了他們的 robots.txt 的 <a href="https://github.com/google/robotstxt">parser matcher lib</a>。</p>
-<p><a href="https://twitter.com/igrigorik/status/1145778175898599424">消息來源</a></p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/07/02/robots-exclusion-protocol/</link>
-<guid>https://blog.othree.net/log/2019/07/02/robots-exclusion-protocol/</guid>
-<category>web</category>
-<pubDate>Tue, 02 Jul 2019 12:35:06 +0800</pubDate>
-</item>
-
-<item>
-<title>2018</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47958934008/" title="Baby by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47958934008_fa8ebe7a70_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Baby" srcset="https://live.staticflickr.com/65535/47958934008_fa8ebe7a70_b.jpg 1024w, https://live.staticflickr.com/65535/47958934008_3e58bcf3f0_h.jpg 1600w" /></a></p>
-<p>2018 年回顧拖了快要半年還沒出來，主要原因是現在空閒時間很少，而且本來想先把記錄組文章的第二篇寫出來，不過想一想還是放棄這個方案，免得到了 2020 年還沒寫好。</p>
-<p>去年對我來說變化很大，忙碌到沒有每個月都有拍照，所以放棄以往一個月一張照片的方式，改以文字為主。所以去年有什麼變化呢？去年我換了工作、搬了家、小孩出生然後還買了新車，買車主要是為了方便帶小孩出門時，以前開的是我哥的老車，考慮到安全性和舒適性的問題，決定還是買台新車，然後因為車款熱門所以等很久才拿到車就是。</p>
-<p>搬家也是為了小孩，因為考慮到本來住的兩房不夠大才搬的，本來有一間很大環境不錯、價錢不錯還有車位的陰錯陽差沒租到，不過那間缺點是比較偏僻，之後又一直找不太到適合的，然後現在租的也是有點運氣才租到的，本來跟房東約好週末要去看房子，結果前一天房東就打來說租出去了，然後又過了不知道多久那位房東又打來說本來要租的因故無法承租了，然後才輪到我有機會去看，然後一看就覺得不錯就先訂下來，大約是二十年的房子，實際上住進來當然還是有些缺點，不過還算 OK，不過有覺得現在的空間也還無法以後給小孩獨立一間房間，大概過幾年又要再看看了。</p>
-<p>工作的部分，其實現在也有點想不起來完整決定離職的原因，不過之前工作有段時間有心理影響生理的狀況出現，現在的工作則是託朋友的福才有的，當時其實最想要的是找國外的遠端工作，第一目標是 Elastic，對於 Kibana 開發還蠻有興趣的，不過可惜連履歷那關都沒過XD，還有一家很想加入的是 DuckDuckGo，其實是第一個投的，履歷的品質和後來的版本差很多，也是一樣沒下文，其它有得到大約兩家的面試機會，不過都沒順利過關，自我評量大概是英文表達能力還明顯不足，現在的工作則是想要的外國公司都失敗後，開始要在國內找時，先有一些朋友來找我，然後我就從中挑了其中一個工作了，其實本來有想公開找的，不過也是還沒機會公開說就確定了。之後大概等小孩大一點就要開始來加強英文了，這部分真的是應該早點開始的。</p>
-<p>最後終於要來談談小孩的事了，我家小孩是 5/3 號晚上出生的，剛好預產期同一天，差一點就變成原力寶寶了，不過講真的生產過程也是很辛苦，老婆痛了將近 20 小時，差點就要全餐了，然後還臍帶繞頸，生出來之後給小兒科那邊弄了好久才哭出聲音來，等待的時候真的是很緊張，還好沒什麼其它異狀，大概就是不好帶吧，不愛吃不愛睡，即使到今天已經滿一歲了還是一樣，還好長得很可愛，不然早就忍不住垂下去了(?)，說可愛也不是父母視點，是真的客觀來說長得很可愛，在外面常常被當成小女生，睫毛超長，甚至有過一次背著他走路時，路邊一個大叔看到驚呼：「太可愛了吧！」不過隨著年紀越來越大可愛度似乎也有下降了。有小孩之後生活和心境都變化不少，也必須放棄不少東西，要寫的話好像可以寫一堆，所以還是不寫了，不過就是，在某些時候，就突然想起了 About Time 的劇情，曾經一直想著為什麼主角不再穿越時間，似乎現在也明白了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47958942466/" title="Baby by othree, on Flickr"><img src="https://live.staticflickr.com/65535/47958942466_b59151817c_b.jpg" intrinsicsize="1024x680" width="1024" height="680" alt="Baby" srcset="https://live.staticflickr.com/65535/47958942466_b59151817c_b.jpg 1024w, https://live.staticflickr.com/65535/47958942466_9087ab3f96_h.jpg 1600w" /></a></p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2019/05/29/2018/</link>
-<guid>https://blog.othree.net/log/2019/05/29/2018/</guid>
-<category>diary</category>
-<pubDate>Wed, 29 May 2019 23:28:57 +0800</pubDate>
 </item>
 
 

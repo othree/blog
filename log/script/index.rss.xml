@@ -4,11 +4,73 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2019</copyright>
-<lastBuildDate>2019-08-22 23:02</lastBuildDate>
+<copyright>Copyright 2021</copyright>
+<lastBuildDate>2021-08-12 11:59</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>CSP for Lambda@Edge</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset="" /></a></p>
+<p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
+<p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
+<p>這個專案內容就只是一個簡單的 function：</p>
+<pre><code class="language-javascript">const CSP = (directives) =&gt; {
+  return directives
+    .map((directive) =&gt; {
+    	return `${directive.name} ${directive.value.join(' ')};`;
+    })
+    .join(' ');
+};
+</code></pre>
+<p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
+<pre><code class="language-json">{
+  &quot;default-src&quot;: [&quot;'none'&quot;],
+  &quot;script-src&quot;: [&quot;'self'&quot;],
+  &quot;connect-src&quot;: [&quot;blah&quot;, &quot;blah&quot;]
+}
+</code></pre>
+<p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;default-src&quot;,
+    &quot;value&quot;: [&quot;'none'&quot;]
+  },
+  {
+    &quot;name&quot;: &quot;script-src&quot;&quot;,
+    &quot;value&quot;: [&quot;'self'&quot;]
+  }
+]
+</code></pre>
+<p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
+<pre><code class="language-typescript">type Source = string;
+
+type Directive = {
+  name: string;
+  value: Source[];
+};
+
+type Policy = {
+  source: &quot;header&quot; | &quot;meta&quot;;
+  disposition: &quot;enforce&quot; | &quot;report&quot;;
+  directiveSet: OrderedSet&lt;Directive&gt;;
+};
+
+type Policies = Policy[];
+</code></pre>
+<p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
+<pre><code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
+</code></pre>
+<p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
+<p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
+<p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
+]]></description>
+<link>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</link>
+<guid>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</guid>
+<category>script</category>
+<pubDate>2021-08-12 11:59</pubDate>
+</item>
 
 <item>
 <title>Circle CI run Terraform and AWS deployment</title>
@@ -492,32 +554,6 @@ subQuery
 <guid>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</guid>
 <category>script</category>
 <pubDate>2018-02-07 12:29</pubDate>
-</item>
-
-<item>
-<title>分號大戰 again</title>
-<description><![CDATA[<p>今天一早起來就看到有人說 TC39 要準備建議 JavaScript 程式碼應該要加分號：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">TC39 is recommending that JS programmers use semicolons at the end of statements in code, rather than relying on ASI.<a href="https://t.co/9FY4i29iqs">https://t.co/9FY4i29iqs</a></p>-- Daniel Ehrenberg (@littledan) <a href="https://twitter.com/littledan/status/951523844262637568?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<p>然後下面就一大串了，本來想說 <a href="https://standardjs.com/">standardjs</a> 要哭哭了，難道 <a href="https://www.npmjs.com/package/semistandard">semistandard</a> 要扶正了嗎？不過我仔細端詳了一下，發現這個 <a href="https://github.com/tc39/ecma262/pull/1062">PR</a> 還是 open 狀態，而且 Brendan Eich 甚至表態反對：</p>
-<blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">I dissent.</p>-- BrendanEich (@BrendanEich) <a href="https://twitter.com/BrendanEich/status/951554266535141377?ref_src=twsrc%5Etfw">2018年1月11日</a></blockquote>
-<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>原因之一是已經有很多 standardjs 的 code 其實運作的很好，不過另外一個原因我覺得更有力，就是 TC39 的文件，做為 spec 似乎不該提出<strong>建議</strong>，當然提出這個 PR 的 Daniel Ehrenberg 其實也不是單純因為支持加分號才提的，他其實是 <a href="https://github.com/tc39/proposal-class-fields">Class field declarations</a> 的主要貢獻者，這是什麼呢？就是：</p>
-<pre><code class="language-javascript">class Counter extends HTMLElement {
-  x = 0;
-
-  clicked() {
-    this.x++;
-    window.requestAnimationFrame(this.render.bind(this));
-  }
-}
-</code></pre>
-<p>這種在 class method 外面定義 class 屬性和預設值的語法（另外還有 private property），而這種很像是 expression 的語句，一定要 semicolon，不然會有他稱為 AST hazard 的情形，也就是很難評斷開發者實際上意圖的情形發生，也就無法用 ASI 自動補分號，對此 Brendan Eich 有個建議是在 class field 裡面關掉 ASI 機制，也就是這些 property 定義一定要加分號做結。</p>
-<p>目前看起來，Brendan Eich 提的那點，TC39 不該做語法的建議實在很強而有力，應該也反駁不了，所以結果應該就是沒有收 PR，或是改成更中性的文字，不是建議的文字，不過想來想去還是沒有比較適合的，畢竟在 spec 文件裡面還提建議、警告開發者用的語法就很怪。</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</link>
-<guid>https://blog.othree.net/log/2018/01/12/recommend-semicolon/</guid>
-<category>script</category>
-<pubDate>2018-01-12 10:54</pubDate>
 </item>
 
 

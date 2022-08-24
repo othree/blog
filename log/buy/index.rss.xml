@@ -4,11 +4,40 @@
 <title>O3noBLOG - buy</title>
 <link>https://blog.othree.net//log/ buy/</link>
 <description></description>
-<copyright>Copyright 2020</copyright>
-<lastBuildDate>2020-08-06 23:30</lastBuildDate>
+<copyright>Copyright 2021</copyright>
+<lastBuildDate>2020-11-20 23:40</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Realforce R2 Mac Key Mapping</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624884456/" title="system-preference-switch by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624884456_79c8476838_b.jpg" intrinsicsize="1024x891" width="1024" height="891" alt="system-preference-switch" srcset="https://live.staticflickr.com/65535/50624884456_79c8476838_b.jpg 1024w, https://live.staticflickr.com/65535/50624884456_be71932787_h.jpg 1336w" /></a></p>
+<p>換了 Realforce R2 TKL(Tenkeyless) 其實好一陣子了，本來是沒有特別要發一篇文章的，不過前陣子因故裝起了 <a href="https://mizage.com/divvy/">Divvy</a> 和 <a href="https://karabiner-elements.pqrs.org/">Karabiner-Elements</a>，然後接著的一些設定和發現可以作為之後買新鍵盤的一些參考，所以還是發個一篇文章來紀錄一下。</p>
+]]><![CDATA[<p>Divvy 是用來調整視窗大小的付費軟體，Karabiner-Elements 則是鍵盤按鍵功能的定義軟體，是開源的，而且算是同類型軟體的佼佼者，支援到複雜的 mapping 設定，例如可以定義組合鍵送出完全不一樣的 key code。一開始的想法只是因為 Divvy 有支援 global hotkey，所以想說要設定一組給它，不過苦思不到一個適合的按鍵組合，剛好 Karabiner-Elements 有一組內建的 complex rule 就是把 <kbd>Caps Lock</kbd> 改成 <kbd>Command</kbd> + <kbd>Control</kbd> + <kbd>Option</kbd> + <kbd>Shift</kbd>，這樣就不會和任何預設的組合鍵相衝，然後我也沒在用 <kbd>Caps Lock</kbd>，所以就決定來用這個組合了。</p>
+<p>然後用一陣子之後，突然發現我本來在系統偏好設定那邊有設定好的 <kbd>Alt</kbd> 當成 <kbd>Command</kbd> 和 <kbd>Windows</kbd> 鍵當成 <kbd>Option</kbd> 鍵的設定失效了，大概是因為 Karabiner-Elements 把系統設定覆蓋掉了，所以就改成用它的 Simple Modification 來做這兩個按鍵的互換。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624138548/" title="karabiner-switch by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624138548_9557d9789d_b.jpg" intrinsicsize="1024x586" width="1024" height="586" alt="karabiner-switch" srcset="https://live.staticflickr.com/65535/50624138548_9557d9789d_b.jpg 1024w, https://live.staticflickr.com/65535/50624138548_a31149ed34_h.jpg 1600w" /></a></p>
+<p>然後又過沒多久，發現我在 VSCode 蠻常用的 <kbd>F12</kbd> 失效了，然後我才發現其實在系統偏好設定的鍵盤那邊，有個選項是「使用 F1、F2 等按鍵作為標準功能鍵」，預設應該是勾選的，沒勾選的話會變成特殊功能，也就是調整亮度、媒體音量控制等等，但是現在失效了，應該也是設定被覆蓋掉了，我就去 Karabiner-Elements 翻找一翻，在 Function keys 那邊底部有個「Use all F1, F2, etc. Keys as standard function keys」，把它勾選後就正常了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624986862/" title="system-prefernce-function-keys by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624986862_050714ab3d_b.jpg" intrinsicsize="1024x891" width="1024" height="891" alt="system-prefernce-function-keys" srcset="https://live.staticflickr.com/65535/50624986862_050714ab3d_b.jpg 1024w, https://live.staticflickr.com/65535/50624986862_4d5aff0687_h.jpg 1336w" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624986782/" title="karabiner-function-keys by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624986782_46509ed75f_b.jpg" intrinsicsize="1024x586" width="1024" height="586" alt="karabiner-function-keys" srcset="https://live.staticflickr.com/65535/50624986782_46509ed75f_b.jpg 1024w, https://live.staticflickr.com/65535/50624986782_5432237a9c_h.jpg 1600w" /></a></p>
+<p>然後我就想說，乾脆把 <kbd>F12</kbd> 右邊的按鍵也照蘋果的鍵盤那樣定義成 <kbd>F13</kbd>、<kbd>F14</kbd>、<kbd>F15</kbd> 吧，結果，發現 <kbd>F14</kbd> 那個中間位置的按鍵，本來是 <kbd>Num Lock</kbd> 兼 <kbd>Scroll Lock</kbd> 的按鍵，在 Realforce R2 上有硬體的功能，它同時會送出 <code>keypad_num_lock</code> 和改變鍵盤的配置，會把主要打字區一小塊改成 Keypad，結果就是這樣根本會無法正常使用，而且 R2 TKL 不像是以前的 87U 有 DIP Switch 可以把 <kbd>Num Lock</kbd> 關掉（不過外殼到是有保留那個位置），所以只好放棄 <kbd>F13</kbd> 到 <kbd>F15</kbd>，反正本來也沒特別用途就是。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624138438/" title="realforce-r2-tkl-dip by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624138438_314a720657_b.jpg" intrinsicsize="1024x569" width="1024" height="569" alt="realforce-r2-tkl-dip" srcset="https://live.staticflickr.com/65535/50624138438_314a720657_b.jpg 1024w, https://live.staticflickr.com/65535/50624138438_efccbffe2c_h.jpg 1600w" /></a></p>
+<p>既然弄到 <kbd>F1</kbd>、<kbd>F2</kbd>，我就想到可以趁這個機會把一直很想設定起來的 global 的媒體控制快速鍵設定起來，畢竟 Mac 本來的鍵盤就有這個功能，如果是直接用筆電的鍵盤就是 <kbd>F7</kbd>、<kbd>F8</kbd>、<kbd>F9</kbd> 這幾個，然後看情況可能要用 <kbd>fn</kbd> 組合一下而已，蘋果自己的鍵盤的話就有個 <kbd>fn</kbd> 鍵，然後我就想說，Realforce R2 也有個 <kbd>Fn</kbd> 鍵，不是很方便嗎，結果才發現，那個 <kbd>Fn</kbd> 鍵只有硬體功能，像是可以 <kbd>Fn</kbd> + <kbd>F7</kbd>，然後就會硬體把 <kbd>Caps Lock</kbd> 和 <kbd>Ctrl</kbd> 互換，但是單獨按不會送出 <code>fn</code> 的 key code 給電腦！結果只能望 <kbd>Fn</kbd> 鍵興歎，看著好久之後，發現到現在 Apple 的全尺寸鍵盤，一般鍵盤 <kbd>Insert</kbd> 鍵的位置（<kbd>Delete</kbd> 上面）是 <kbd>fn</kbd> 鍵！於是我就決定從善如流，把它改過去了，反正我也沒有過幾次真的要用 Insert 的經驗。弄到這樣其實差不多了，我後來還加了一組 Spotlight 的快速鍵，用 <kbd>Caps Lock</kbd> 加 <kbd>Space</kbd>，本來預設的那組會和常用的切換上一個輸入法相衝突。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624884566/" title="apple-full-keyboard by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624884566_2314df07fd_b.jpg" intrinsicsize="1024x512" width="1024" height="512" alt="apple-full-keyboard" srcset="https://live.staticflickr.com/65535/50624884566_2314df07fd_b.jpg 1024w, https://live.staticflickr.com/65535/50624884566_04036e6b65_h.jpg 1600w" /></a></p>
+<p>其實我中間還有去研究了一下 Realforce R2 Mac 版，它的鍵位就是根據 Mac 設計的，所以就沒有硬體 Num Lock 功能，本來右下的 <kbd>Fn</kbd> 就換成了一個特殊鍵，用來切換 F1、F2 那排按鍵是普通功能還是特殊功能，其實整體而言要是以 Mac 使用為主，應該還是買 Mac 版比較好，不過對於細節我還是有不少不滿意的地方：</p>
+<ol>
+<li>首先是顏色感覺不對，一開始想說哪來的銀色，後來發現他是仿照現在的 Apple Magic Keyboard 的配色，只是 Apple 的鍵帽沒有深度，整體就搭配的比較和諧，Realforce R2 Mac 版整個厚度不一樣，看起來就是有違和感，還不如模仿<a href="https://commons.wikimedia.org/wiki/File:Apple_Wireless_Keyboard_(A1016).png">前兩代全白的設計</a>；</li>
+<li>右上燈號那邊太過擁擠，有點不合整體的感覺；</li>
+<li><kbd>F1</kbd>、<kbd>F2</kbd> 那排還是一樣四個一組，但是會讓 <kbd>F7</kbd> 到 <kbd>F9</kbd> 預設是控制媒體，<kbd>F10</kbd> 到 <kbd>F12</kbd> 是控制音量，是三個一組，被切開感覺不太好。</li>
+</ol>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/50624138443/" title="realforce-r2-mac by othree, on Flickr"><img src="https://live.staticflickr.com/65535/50624138443_c125ab0fb2_b.jpg" intrinsicsize="1024x410" width="1024" height="410" alt="realforce-r2-mac" srcset="https://live.staticflickr.com/65535/50624138443_c125ab0fb2_b.jpg 1024w, https://live.staticflickr.com/65535/50624138443_241e71a355_h.jpg 1600w" /></a></p>
+<p>如果不買 Mac 版，還有一個方法就是換鍵帽，不過 Realforce 的很難找，也有賣轉 Cherry 鍵帽的轉接環，我是沒用過就是了，販賣的商品中，目前看到比較好的就是 <a href="https://kbdfans.com/collections/electrostatic-capacitive-keycaps/products/kbdfans-ec-keycaps-set">KDBFANS</a> 了吧，但是因為 R2 的空白鍵寬度是新的，所以目前買的到的組合都不支援，不過有說有在設計中了，或許之後可以買一組來換吧。</p>
+]]></description>
+<link>https://blog.othree.net/log/2020/11/20/realforce-r2-mac-key-mapp/</link>
+<guid>https://blog.othree.net/log/2020/11/20/realforce-r2-mac-key-mapp/</guid>
+<category>buy</category>
+<pubDate>2020-11-20 23:40</pubDate>
+</item>
 
 <item>
 <title>USB-C、DisplayPort</title>
@@ -432,17 +461,6 @@
 <guid>https://blog.othree.net/log/2011/10/20/mnemosyne/</guid>
 <category>buy</category>
 <pubDate>2011-10-20 07:00</pubDate>
-</item>
-
-<item>
-<title>HTML5 盾牌</title>
-<description><![CDATA[<p><a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/5763109772/" title="ThinkGeek HTML5 T-Shirt by othree, on Flickr"><img src="https://farm3.staticflickr.com/2646/5763109772_38521c684a_b.jpg" width="768" height="1024" alt="ThinkGeek HTML5 T-Shirt" srcset="https://farm3.staticflickr.com/2646/5763109772_38521c684a_b.jpg 1024w" /></a></p>
-]]>
-</description>
-<link>https://blog.othree.net/log/2011/05/27/html5/</link>
-<guid>https://blog.othree.net/log/2011/05/27/html5/</guid>
-<category>buy</category>
-<pubDate>2011-05-27 05:29</pubDate>
 </item>
 
 

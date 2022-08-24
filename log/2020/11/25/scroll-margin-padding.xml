@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000974" baseName="scroll-margin-padding">Scroll Margin/Padding</b:listData>
+
+			<b:previous>
+				<b:mTitle>Realforce R2 Mac Key Mapping</b:mTitle>
+				<b:mDate>2020-11-20</b:mDate>
+				<b:mBase>realforce-r2-mac-key-mapp</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>HTML 文件圖片預設寬高比</b:mTitle>
+				<b:mDate>2020-11-29</b:mDate>
+				<b:mBase>intrinsic-aspect-ratio-of-incomplete-image</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000974" baseName="scroll-margin-padding">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2020-11-25</b:date>
+				<b:time>22:18:02</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Scroll Margin/Padding</b:title>
+			<b:content>
+				<b:summary>這篇文章要介紹一組算是蠻新的 CSS 屬性，分別是 scroll-margin 和 scroll-padding，這兩個屬性是在 Scroll Snap Module Level 1 裡面定義的，目前主要的瀏覽器都有支援，IE 完全不支援，Safari 則是還在使用舊的非標準的屬性名稱，為什麼要介紹這兩個屬性呢？因為它除了原來 scroll-snap 微調的需求之外，還順便解決了一個存在已久的問題，也就是如果網頁的設計有固定浮動在頁面頂端的 header 時（Sticky/Fixed Header），使用 link 的 fragment 直接定位到頁面特定位置的時候，最上面一部份想顯示給訪客的內容會被 header 覆蓋到。 這個問題大概是從 Sticky Header 出現時就存在了，Stack Overflow 上就可以找到十年前的發問，以前的主要的解決方法就是讓連結的目標有看不到的高度，像是用 padding-top，比較乾淨一點是用 pseudo-element 的 :before 來把內容往下推，不過這幾個方法雖然有用，但是對我來說卻一直不是個最佳解，所以一直以來我都期待能有更漂亮的解決方案，有事沒事就會搜尋一下，然後，終於我發現了這組 CSS 屬性可以用來讓瀏覽器自己捲動到目標時有指定的偏移。 scroll-margin 是用在你想要捲動到的目標元件上，也就是有...</b:summary>
+				<b:mainContent><p>這篇文章要介紹一組算是蠻新的 CSS 屬性，分別是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-margin"><code>scroll-margin</code></a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-padding"><code>scroll-padding</code></a>，這兩個屬性是在 <a href="https://stackoverflow.com/questions/4086107/fixed-page-header-overlaps-in-page-anchors">Scroll Snap Module Level 1</a> 裡面定義的，目前主要的瀏覽器都有<a href="https://caniuse.com/mdn-css_properties_scroll-margin">支援</a>，IE 完全不支援，Safari 則是還在使用舊的非標準的屬性名稱，為什麼要介紹這兩個屬性呢？因為它除了原來 scroll-snap 微調的需求之外，還順便解決了一個存在已久的問題，也就是如果網頁的設計有固定浮動在頁面頂端的 header 時（Sticky/Fixed Header），使用 link 的 fragment 直接定位到頁面特定位置的時候，最上面一部份想顯示給訪客的內容會被 header 覆蓋到。</p>
+<p>這個問題大概是從 Sticky Header 出現時就存在了，Stack Overflow 上就可以找到<a href="https://stackoverflow.com/questions/4086107/fixed-page-header-overlaps-in-page-anchors">十年前的發問</a>，以前的主要的解決方法就是讓連結的目標有看不到的高度，像是用 <code>padding-top</code>，比較乾淨一點是用 pseudo-element 的 <code>:before</code> 來把內容往下推，不過這幾個方法雖然有用，但是對我來說卻一直不是個最佳解，所以一直以來我都期待能有更漂亮的解決方案，有事沒事就會搜尋一下，然後，終於我發現了這組 CSS 屬性可以用來讓瀏覽器自己捲動到目標時有指定的偏移。</p>
+<p><code>scroll-margin</code> 是用在你想要捲動到的目標元件上，也就是有 id 的那個，像我的 blog 就是 <code>&lt;article&gt;</code> 標籤，給它加個 <code>scroll-margin-top: 56px;</code> 就可以了：</p>
+<pre><code class="language-css">article {
+  scroll-margin-top: 56px;
+}
+</code></pre>
+<p><code>scroll-padding</code> 則是要用在 <a href="https://developer.mozilla.org/en-US/docs/Glossary/Scroll_container">scroll container</a> 上的，而不是目標的父母層，舉例來說，在我這邊，沒有特別設定任何 <code>overflow</code> 的情形下，scroll container 會落在 <code>&lt;html&gt;</code> 元件上，而不是 <code>&lt;article&gt;</code> 外面的 <code>&lt;main&gt;</code>，所以設定就要改成：</p>
+<pre><code class="language-css">html {
+  scroll-padding-top: 56px;
+}
+</code></pre>
+<p>這組 CSS 屬性我是今年才發現的，不過其實 CSS Trick 在去年就有文章介紹了：<a href="https://css-tricks.com/fixed-headers-on-page-links-and-overlapping-content-oh-my/">Fixed Headers, On-Page Links, and Overlapping Content, Oh My! </a>，真是太後知後覺了（其實也是因為我現在沒用 RSS reader 的關係）。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>
