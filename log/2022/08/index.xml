@@ -14,6 +14,11 @@
 			</b:previous>
 
 
+			<b:next>
+				<b:mTitle>December 2022</b:mTitle>
+				<b:mDate>2022/12</b:mDate>				
+			</b:next>
+
 		</b:entriesMeta>
 
 		<b:entry entryID="000983" baseName="http-103-early-hints">
@@ -35,7 +40,7 @@
 <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <p>仔細看一下，發現原來大家用 Server Push 都還是為了提升網頁第一屏的速度，但是 Server Push 一直有<a href="https://www.fastly.com/blog/faster-websites-early-priority-hints#but-what-about-http/2-server-push">一些難解的問題</a>，像是不知道 client 端有沒有 cache，實作和支援比較麻煩，而 Chrome 要移除 Server Push 前，其實先實作了 <a href="https://datatracker.ietf.org/doc/html/rfc8297">RFC-8279 的
 HTTP 103: Early Hints</a>，為的就要讓 Server Push 現在作的事情先有替代方案。</p>
-<p>Early Hint 應該算是 Fastly 提出的，RFC 文件作者是 <a href="https://twitter.com/kazuho/">Kazuho Oku</a>，實際上應該也有其他 Fastly 的人參與構思和試驗，支援 Early Hints 的環境下，一個 HTTP request 看起來就像是下面這樣：</p>
+<p>Early Hints 應該算是 Fastly 提出的，RFC 文件作者是 <a href="https://twitter.com/kazuho/">Kazuho Oku</a>，實際上應該也有其他 Fastly 的人參與構思和試驗，支援 Early Hints 的環境下，一個 HTTP request 看起來就像是下面這樣：</p>
 <pre><code>Client request:
 
   GET / HTTP/1.1
@@ -98,7 +103,7 @@ Link: &lt;/script.js&gt;; rel=preload; as=script
 <p>不知道會不會有人疑惑，為什麼不直接用 200 response 裡面回應的 Link header 就好了？其實我一開始也是這樣想，不過這完全是因為這個問題落入身為前端工程師的我的盲點之中，因為現在前端開發主流是 SPA，通常 HTTP server 回的就是一個靜態的 HTML 檔案，所以回應速度超快。不過，如果回應的 HTML 文件，是由程式語言動態生成的，或許還需要查詢一下資料庫之類的，那這個回應時間就會變慢了，而 HTTP 103 Early Hints 就是在這種狀態下用的，在你的 server 端程式開始處理 request 之前，就先丟 103 的 status code 和 Early Hints 的內容回給瀏覽器，然後才接著處理資料和生成 HTML 文件，這種情境下，Early Hints 就顯得比較有差異了。Nitropack 的<a href="https://nitropack.io/blog/post/early-hints">文章</a>就解釋的很清楚，還有附上詳細的說明圖。</p>
 <p>相較於 Server Push，其實 Early Hints 的設計簡單很多，所有的傳輸還是從 client 端看有沒有 cache ，決定要不要發 request，而這種操作已經非常成熟（相較於 server push），相信很多地方可以直接使用現有的程式碼來實作，最大的隱憂，就只是不相容 HTTP/1.0，然後會擔心有 HTTP/1.1 的 client 端沒正確實作吧，畢竟 1xx 的處理機制雖然早早就設計好，但是實際上 1xx 有被廣泛使用也是這幾年的事。</p>
 <p>目前 Chrome 是從 103 <a href="https://developer.chrome.com/blog/new-in-chrome-103/">開始支援 Early Hints</a> 的，並且預計在 106 <a href="https://developer.chrome.com/blog/removing-push/">正式移除 Server Push</a>，至於其他瀏覽器則是都還沒有支援， Firefox 是有計畫要支援，<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1407355">進度</a>有點緩慢就是。</p>
-<p>最後，Fastly 其實有提供一個測試用的網站：<a href="https://early-hints.fastlylabs.com/">https://early-hints.fastlylabs.com/</a>，不過這個網站不是用來測試你的瀏覽器支不支援 Early Hints 的，而是用來測試先 103 status 後 200 的 response 會不會有非預期的問題（也就是相容性的測試），如果想要直接看看來回的內容，也可以直接用 curl：</p>
+<p>最後，Fastly 其實有提供一個測試用的網站：<a href="https://early-hints.fastlylabs.com/">https://early-hints.fastlylabs.com/</a>，不過這個網站不是用來測試你的瀏覽器支不支援 Early Hints 的，而是用來測試先 103 然後接 200 的 response 會不會有非預期的問題（也就是相容性的測試），如果想要直接看看來回的內容，也可以直接用 curl：</p>
 <pre><code class="language-sh">curl -v https://early-hints.fastlylabs.com
 </code></pre>
 </b:mainContent>

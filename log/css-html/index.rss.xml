@@ -4,11 +4,116 @@
 <title>O3noBLOG - css-html</title>
 <link>https://blog.othree.net//log/ css-html/</link>
 <description></description>
-<copyright>Copyright 2020</copyright>
-<lastBuildDate>2020-11-29 23:05</lastBuildDate>
+<copyright>Copyright 2023</copyright>
+<lastBuildDate>2023-01-13 22:52</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>wbr 的這些那些</title>
+<description><![CDATA[<p>在 responsive design 成為主流之後，有個問題也隨之被突顯出來，就是文字的換行，尤其是標題文字的換行位置，現在的瀏覽器的換行方式簡單來說就是超出區塊範圍的東西都往下放到下一行，所以在某些情況下，就會有第一行很長第二行很短的狀況，視覺上非常不平衡，以下圖為例，網頁的副標題沒有作特殊處理，所以會有可能會變成兩行長度差距很大的樣子：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52622679026/" title="line breaking by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52622679026_dce07ba029_b.jpg" width="1024" height="626" alt="line breaking" srcset="https://live.staticflickr.com/65535/52622679026_a03a8ede93_k.jpg 2x" /></a></p>
+<p>這個問題有蠻多解決方法的，目前我知道的就有：</p>
+<ol>
+<li>微調 responsvie 的樣式來避免出現不平衡的狀態</li>
+<li>在特定地方插入 <code>&amp;nbsp;</code> 避免換行</li>
+<li>用 flex layout 來控制換行位置</li>
+</ol>
+<p>基本上就是只要你不擇手段，問題還是可以解決的，不過我一直以來都是會偏好用標準的方法來解決問題，所以整理了一下我所知道可以拿來用的東西：</p>
+<ol>
+<li><code>&lt;wbr&gt;</code> HTML element</li>
+<li><code>white-space</code> CSS property</li>
+<li><code>&lt;nobr&gt;</code> HTML element</li>
+<li><code>text-wrap</code> CSS property</li>
+</ol>
+<p>首先的想法是 <code>&lt;wbr&gt;</code> 配上 <code>white-space: nowrap;</code> 或是 <code>&lt;nobr&gt;</code>，不過意外的是大部分瀏覽器都不支援這個組合，也就是說，包在 <code>&lt;nobr&gt;</code> 內的 <code>&lt;wbr&gt;</code> 的地方在現在大部分主流瀏覽器內是不會換行的：</p>
+<pre><code class="language-html">&lt;nobr&gt;ChatGPT: Optimizing&lt;wbr&gt;Language Models&lt;wbr&gt;for Dialogue&lt;/nobr&gt;
+</code></pre>
+<p>這就激起了我的好奇心了，於是我開始仔細的找資料，看看 <code>&lt;nobr&gt;</code> 和 <code>&lt;wbr&gt;</code> 到底是怎樣運作的。首先，就來看看 <code>&lt;wbr&gt;</code> 吧，雖然他第一次出現在 W3C 的文件內就是在 HTML5，但是其實它已經出現了 20 年以上，最早是作為 <a href="https://web.archive.org/web/20000303182655/http://www.netscape.com/assist/net_sites/html_extensions.html">Netscape 的 HTML 2 extension</a> 的一員：</p>
+<blockquote>
+<p>The WBR element stands for <strong>W</strong>ord <strong>BR</strong>eak. This is for the very rare case when you have a NOBR section and you know exactly where you want it to break. Also, any time you want to give the Netscape Navigator help by telling it where a word is allowed to be broken. The WBR element does not force a line break (BR does that) it simply lets the Netscape Navigator know where a line break is allowed to be inserted if needed.</p>
+</blockquote>
+<p>在 Internet Archive 上找到的備份，最早的定義其實明確的說著 <code>&lt;wbr&gt;</code> 處應該是要可以優先於 <code>&lt;nobr&gt;</code> 的，我甚至還在 bugzilla 上找到一個 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=6347">24 年前的 bug report</a> 在講這件事，根據這張票最後的關掉前的討論，其實可以用 <code>&lt;/nobr&gt;&lt;nobr&gt;</code> 來達成一樣的效果，然後 Firefox 不打算支援 <code>&lt;wbr&gt;</code>，看到這邊，我只能說這解法怎麼這麼天才（稱讚的意味）。</p>
+<p>查到這邊，我還是很好奇為什麼現在的主流瀏覽器依然 <code>&lt;wbr&gt;</code> 優先度比 <code>&lt;nobr&gt;</code> 還低，所以繼續找資料，這次看的就是最新的文件了，首先是 <code>&lt;wbr&gt;</code> 的<a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element">定義</a>，在 HTML5 中變成：</p>
+<blockquote>
+<p>The <code><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element">wbr</a></code> element <a href="https://html.spec.whatwg.org/multipage/dom.html#represents">represents</a> a line break opportunity.</p>
+</blockquote>
+<p>從 &quot;word break&quot; 變成 &quot;line break opportunity&quot; 了，<code>&lt;nobr&gt;</code> 則和 <code>&lt;wbr&gt;</code> 一樣一開始是 Netscape extension，不過他倒是沒有進到 HTML5，事實上，雖然 <code>&lt;nobr&gt;</code> 不是 HTML5 的一員，但是文件中<a href="https://html.spec.whatwg.org/multipage/rendering.html#phrasing-content-3">定義的 default style 還是有它</a>：</p>
+<pre><code class="language-css">br { display-outside: newline; } /* this also has bidi implications */
+nobr { white-space: nowrap; }
+wbr { display-outside: break-opportunity; } /* this also has bidi implications */
+nobr wbr { white-space: normal; }
+</code></pre>
+<p>其實就是等價於 <code>white-space: nowrap</code>，而 <code>white-space</code> 屬性<a href="https://www.w3.org/TR/CSS2/text.html#white-space-prop">在 CSS2 時</a>是用來定義空白的處理方式：</p>
+<blockquote>
+<p>This property declares how white space inside the element is handled.</p>
+</blockquote>
+<p>到 CSS Text Level 3 時<a href="https://www.w3.org/TR/css-text-3/#white-space-property">定義</a>說的更明確，是用來決定遇到 &quot;line break opportunity&quot; 時的處理方式和是不是要合併 space 字元的屬性：</p>
+<blockquote>
+<ul>
+<li>whether and how <a href="https://www.w3.org/TR/css-text-3/#white-space">white space</a> is collapsed</li>
+<li>whether lines may <a href="https://www.w3.org/TR/css-text-3/#wrapping">wrap</a> at unforced <a href="https://www.w3.org/TR/css-text-3/#soft-wrap-opportunity">soft wrap opportunities</a></li>
+</ul>
+</blockquote>
+<p>其實在 <a href="https://www.w3.org/TR/css-text-4/#white-space-property">Level 4</a> 更是可以分開設定兩種屬性，<code>white-space</code> 變成一個 shorthand，而看到這些定義的演進，其實也讓人發現最早命名時其實只有考慮到西方語言的特色。</p>
+<p>看到這邊，會發現有一個新的名詞：&quot;line break opportunity&quot;，有些地方是稱為 &quot;wrap opportunity&quot;，這個名詞其實是出現在 CSS Module Text 文件中的，顧名思義，就是可以換行的位置，而這份文件也是<a href="https://www.w3.org/TR/css-text-4/#line-breaking">定義換行邏輯</a>的文件，不過這邊其實沒把換行演算法（line breaking algorithm）明確定義下來，而是闡明各種相關的 CSS 屬性和它們會怎樣影響換行的結果，例如換行有分強制（<code>&lt;br&gt;</code>）和非強制（<code>&lt;wbr&gt;</code>），然後不同 CSS 屬性會影響這些換行點的出現與否，至於文本之中，哪些地方可以換行，就是換行演算法的部分了，這部份在 W3C 文件沒有定義死，所以是允許瀏覽器自己決定的，不過有提供一些參考文件，像是 Unicode 的附件 14：&quot;Unicode Line Breaking Algorithm&quot;，或是稱為 UAX14，這份文件要搭配 Unicode Database（UCD） 的 <a href="https://www.unicode.org/Public/UCD/latest/ucd/LineBreak.txt">Line_Break Property 資料</a>，文件中的第五章有仔細的說明各種不同的 line breaking class，然後資料庫則是定義了所有 Unicode 字元的 Line_Break property，接著的第六章就是最重要的換行演算法了，這邊列出了 31 條規則，基本上是反向列舉，說哪些地方不能換行，例如 WJ（word joiner）前後都不能換行，數字中間的符號前後也不能換行之類的，不過不確定哪些瀏覽器是實作 UAX14 的，Chrome 似乎有用到 UCD，Firefox 則是以 JIS X 4051 為基礎做的<a href="https://searchfox.org/mozilla-central/rev/6566d92dd46417a2f57e75c515135ebe84c9cef5/intl/lwbrk/LineBreaker.cpp">換行演算法</a>，其實 JIS X 4051 是我所知道，二戰後世界，最早的正式的文字編排的標準，查到的紀錄是 <a href="https://www.klnet.pref.kanagawa.jp/find-books/kawasaki/kikaku/kikaku-list/jis-hb-x-03.html">1989 有一版</a>，而 UAX14 第一個非草稿的版本則是要到 1999 年才出來。</p>
+<p>回到現在主流瀏覽器不支援 <code>&lt;wbr&gt;</code> 放在 <code>white-space: nowrap</code> 裡面無法換行的問題，其實要回到這個 HTML 標籤在繪製時，是不是有 magic 的，什麼是 magic 呢？簡單說就是，你能不能用 CSS 來定義該標籤的樣子，以及你能不能用 CSS 來改掉這些預設的樣式，而 <code>&lt;br&gt;</code> 和 <code>&lt;wbr&gt;</code> 正好是有 magic 的標籤，可以想想看，要怎樣用 CSS 讓文字內產生一個換行點，可能有人會說剛剛上面才看到的，不過，其實那幾個 <code>display-outside</code> 的值只存在於以前的草稿中，CSS-WG 決議不為了這個問題<a href="https://github.com/w3c/csswg-drafts/issues/610">新增多的 display 狀態</a>，所以問題就回到 HTML-WG 這邊了，CSS-WG 的 fantasai 其實有給了一組 default style：</p>
+<pre><code class="language-css">br { all: unset !important; display: contents !important; content: &quot;\a&quot; !important; white-space: pre !important; }
+wbr { all: unset !important; display: contents !important; content: &quot;\200B&quot; !important; }
+</code></pre>
+<p>我把 <code>!important</code> 拿掉整理一下：</p>
+<pre><code class="language-css">br {
+  all: unset;
+  display: contents;
+  content: &quot;\a&quot;;
+  white-space: pre;
+}
+wbr {
+  all: unset;
+  display: contents;
+  content: &quot;\200B&quot;;
+}
+</code></pre>
+<p>其中，<code>\a</code> 就是<a href="https://util.unicode.org/UnicodeJsps/character.jsp?a=000A&amp;B1=Show">換行字元</a>，<code>\200B</code> 則是 <a href="https://util.unicode.org/UnicodeJsps/character.jsp?a=200B&amp;B1=Show">ZWSP</a>，zero width space，因為是 zero width，所以看不到，然後又因為是 space，所以可以用來把字切開，也就表示可以在該處斷行。不過這個版本有些問題，因為有很多瀏覽器還不支援在 <code>::before, ::after</code> 以外的物件上套用 <code>content</code> 屬性，所以 fantasai 又提供一版用 <code>::before</code> 的版本：</p>
+<pre><code class="language-css">br, wbr { all: unset !important; display: contents !important; white-space: pre !important; }
+br::before { all: unset !important; content: &quot;\a&quot; !important; }
+wbr::before { all: unset !important; content: &quot;\200B&quot; !important; }
+</code></pre>
+<p>但是，實際上直接拿這組定義來用，還是一樣有問題，就是有些瀏覽器已經讓 <code>&lt;wbr&gt;</code> 有 magic 了，結果 <code>wbr::before</code> 是沒有用的，目前 <a href="https://github.com/whatwg/html/pull/2298">HTML 標準的修改也就還卡在這邊</a>（issue 則是<a href="https://github.com/whatwg/html/issues/2291">另外一個</a>），HTML-WG 的 Domenic 開了這個 PR 要讓 <code>&lt;br&gt;</code> 和 <code>&lt;wbr&gt;</code> 就用 magic 來實現效果，不過這討論已經停很久了，所以最後會是怎樣的方案還不知道。</p>
+<p>總之目前的結論就是，現在如果想要讓 <code>&lt;wbr&gt;</code> 照其定義的一樣，可以在 <code>&lt;nobr&gt;</code> 或是 <code>white-space: nowrap</code> 內產生換行，是辦不到的，不過可以用其他的標籤來辦到，像是：</p>
+<pre><code class="language-css">.wbr::before {
+  display: inline;
+  content: &quot;\00200B&quot;;
+  white-space: normal;
+}
+</code></pre>
+<p>配上</p>
+<pre><code class="language-html">&lt;nobr&gt;ChatGPT: Optimizing&lt;span class=&quot;wbr&quot;&gt;Language Models&lt;span class=&quot;wbr&quot;&gt;for Dialogue&lt;/nobr&gt;
+</code></pre>
+<p>這個寫法也有出現在一份由 Leif Halvard Silli 在提交 <a href="https://bugs.webkit.org/show_bug.cgi?id=64005">bug</a> 給 WebKit 所做的 <a href="https://www.m%C3%83%C2%A5lform.no/testing/html5/nobr+wbr.html">test 內</a>。</p>
+<p>到這邊，大概已經把自己控制換行位置的部分講的差不多了，不過其實，還有一個方法可以處理一開始所提到的換行結果不理想的問題，就是在 CSS Text Module Level 4 中有一個新的屬性叫做 <code>text-wrap</code>，其中有一個屬性值是 <code>balance</code>，合起來<a href="https://www.w3.org/TR/css-text-4/#valdef-text-wrap-balance">就是</a>：</p>
+<pre><code class="language-css">text-wrap: balance;
+</code></pre>
+<p>這樣設定，預期的結果就是會換行換在每一行的寬度最接近的位置，不過當然還沒有瀏覽器支援，連 caniuse 都還查不到 <code>text-wrap</code> 屬性，只是還是有 JS 的解決方案：</p>
+<ul>
+<li><a href="https://github.com/adobe/balance-text">Adobe 的 balance text</a>，是 jQuery plugin，因為是認真去算長度的，效能比較不好；</li>
+<li><a href="https://github.com/qgustavor/vanilla-balance-text">vanilla 版本的 balance text</a>；</li>
+<li><a href="https://github.com/nytimes/text-balancer">nytimes（紐約時報）的 text-balancer</a>，透過 binary search 改寬度來調整換行位置，效能比較好；</li>
+<li><a href="https://react-wrap-balancer.vercel.app/">React wrap balancer</a>，React component，基本原理和前者一樣，但是還多支援 <code>ratio</code> 屬性。</li>
+</ul>
+<p>最後的最後補上一些參考資料，一篇是古老的 IE 時代的東西，一篇則是現在的相關 CSS 屬性，一篇則是 balance wrap 的介紹：</p>
+<ul>
+<li><a href="https://jkorpela.fi/html/nobr.html">Word division in IE</a></li>
+<li><a href="https://codersblock.com/blog/deep-dive-into-text-wrapping-and-word-breaking/">Deep Dive into Text Wrapping and Word Breaking</a></li>
+<li><a href="https://www.ctrl.blog/entry/text-wrap-balance.html">Improving the New York Times' line wrap balancer</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2023/01/13/wbr-and-nobr/</link>
+<guid>https://blog.othree.net/log/2023/01/13/wbr-and-nobr/</guid>
+<category>css-html</category>
+<pubDate>2023-01-13 22:52</pubDate>
+</item>
 
 <item>
 <title>HTML 文件圖片預設寬高比</title>
@@ -496,59 +601,6 @@ background: #123456 url('the-bg@2x.png') center center/32px 32px;
 <guid>https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/</guid>
 <category>css-html</category>
 <pubDate>2016-02-28 14:34</pubDate>
-</item>
-
-<item>
-<title>srcset</title>
-<description><![CDATA[<p>Responsive Image 大概定案成 <code>srcset</code> 和 <code>&lt;picture&gt;</code> 都有了，src-N 已經消失，雖然我還蠻喜歡，不過總之最近發現 <code>srcset</code> 和我當初<a href="https://blog.othree.net/log/2012/12/02/srcset/">介紹</a>時已經差蠻多，中文資源有找到 Zhusee 有另外一篇<a href="http://blog.zhusee.in/post/248199/basic-responsive-image-with-srcset-property">介紹</a>，不過其實我去看現在的 spec 的時候發現，又有些修改了！最早 srcset 後面是用類似 media query 的設計，後來改成對圖片的 metadata，spec 裡面稱為 descriptor，分別有 width descriptor 用 <code>w</code> 和 density descriptor 用 <code>x</code>，而且限制 srcset 裡面只能用同一種 descriptor，例如全部用 <code>x</code> 或是全部用 <code>w</code>，所以：</p>
-
-<ol>
-<li>不能在一張圖片裡面同時有 <code>w</code> 和 <code>x</code></li>
-<li>全部都用 <code>w</code> 或是全部都用 <code>x</code></li>
-<li>不可有相同的數值，例如兩個 <code>1x</code> 或是兩個 <code>760w</code> </li>
-<li>Descriptor 可以算是該圖片的資訊</li>
-</ol>
-]]><![CDATA[<p>不過最新的 spec 裡面少了第二點的限制，所以會有一組 srceset 混和 width descriptor 和 density descriptor 的情形，然後怎麼挑選圖片的<a href="https://html.spec.whatwg.org/multipage/embedded-content.html#select-an-image-source">地方</a>寫說：</p>
-
-<blockquote>
-  <p>In a user agent-specific manner, choose one image source from source set. Let this be selected source.</p>
-</blockquote>
-
-<p>就是叫瀏覽器自己想辦法的意思，我就很好奇，如果我想設定一組規則，要分成四個組合：</p>
-
-<ul>
-<li>小螢幕低密度</li>
-<li>小螢幕高密度</li>
-<li>大螢幕低密度</li>
-<li>大螢幕高密度</li>
-</ul>
-
-<p>的話，我要怎樣設定 srcset 才能達到目標，因為現在已經不是用 media query 來寫 srcset 了，不能直接寫這樣四組，所以我就去找了 Firefox 和 Chromium 的原始碼來看看他們怎麼做的，Firefox 的找沒多久就<a href="https://dxr.mozilla.org/mozilla-central/source/dom/base/ResponsiveImageSelector.cpp#274">找到</a>了，因為他們有 <a href="https://github.com/mozilla/dxr">dxr</a> 專案用來方便找程式碼，實際用過覺得真的好用，至於 Chromium 就找比較久了，後來是在 <a href="https://github.com/WebKit/webkit/blob/master/Source/WebCore/html/parser/HTMLSrcsetParser.cpp#L232">WebKit 裡面</a>有找到，然後發現兩個瀏覽器的原理其實都一樣，要處理同時有 width descriptor 和 density descriptor 的狀況，基本上就是都轉成 density 然後來挑最適合的，作法大致如下，細節可能有誤：</p>
-
-<ol>
-<li>先對圖片標籤排版，這邊可能會用到 <code>sizes</code> 屬性，不過 CSS 還是優先，然後會得到圖片在頁面上的寬度，稱為 computed width</li>
-<li>對每張候選圖片計算 effective pixel density，算法是： <code>圖片寬度 / computed width</code>，圖片寬度可以是 width descriptor 來的或是圖片的實際寬度，如果 descriptor 是 density descriptor 的話就不用計算，直接拿來用</li>
-<li>比對 effective pixel density 和現在 device 螢幕的 density，取最接近的</li>
-</ol>
-
-<p>其中第三步驟的比較，大概是考慮效能和記憶體問題，兩個瀏覽器都沒真的做很嚴謹，都是照順序跑過一遍而已，所以在寫 srcset 的時候建議也要照圖片的大小排，至於要大的先還是小的先，就看開發者希望是 density 略大的優先還是略小的優先了，所以如果我寫：</p>
-
-<pre><code>srcset="aaa.jpg 1x, bbb.jpg 1.4x, ccc.jpg 1.6x, ddd.jpg 2x"
-</code></pre>
-
-<p>然後我現在圖片需要 <code>1.5x</code> 的話，應該就會拿到 1.4x 的 <code>bbb.jpg</code>，而如果我偏好用 1.6x <code>ccc.jpg</code> 的話，就要改成：</p>
-
-<pre><code>srcset="ddd.jpg 2x, ccc.jpg 1.6x, bbb.jpg 1.4x, aaa.jpg 1x"
-</code></pre>
-
-<p>後來發現這個挑選圖片的原則，其實在 WHATWG 的 <a href="https://html.spec.whatwg.org/multipage/embedded-content.html#embedded-content">HTML Spec 裡面有寫</a>，不過是 non-normative 的段落，就是說這不是一定要遵守，只是建議，而且前面也有提到 spec 內是寫說挑選的原則是瀏覽器自己處理，而會這樣設計相信是為了像 mobile device 之類的裝置，網路速度如果比較慢，或是需要節省流量時，就可以挑選比較小的檔案，而不一定是挑出顯示上最好的那張圖片。</p>
-
-<p>最後，其實 descriptor 除了 density 和 width 兩種之外，還有一種 height descriptor，不過目前只是保留可能性，spec 還沒定義要怎樣處理，其實還蠻能理解目前會以寬度為主的狀況，在 Matt Brubeck 的 Let's build a browser engine! 系列文章中的第六篇「<a href="http://limpet.net/mbrubeck/2014/09/17/toy-layout-engine-6-block.html">Block layout</a>」這篇文章有介紹到一般瀏覽器是怎樣排版畫 layout 的，而其處理的原則就是先從左上角開始把東西往右排，所以寬度一定先決定，然後才決定高度，相信這也是垂直置中搞這麼多年的原因吧。</p>
-]]></description>
-<link>https://blog.othree.net/log/2015/04/08/more-on-srcset/</link>
-<guid>https://blog.othree.net/log/2015/04/08/more-on-srcset/</guid>
-<category>css-html</category>
-<pubDate>2015-04-08 00:53</pubDate>
 </item>
 
 
