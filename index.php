@@ -116,7 +116,7 @@ echo $output;
 
 //xsl transform function
 function xslt($xml, $xsl, $canonical, $mime, $dpr, $w) {
-    if (preg_match("/^7/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
+    if (preg_match("/^[78]/",phpversion()) && (extension_loaded('xsl') || dl("xsl".$suffix))) {
     // if (preg_match("/^5/",phpversion()) && (extension_loaded('xsl'))) {
         $xmlo = new DOMDocument; // from /ext/dom
         $xmlo->load($xml);

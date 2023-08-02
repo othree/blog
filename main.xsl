@@ -44,6 +44,9 @@
         <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet" /> 
         <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
         <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
         <link rel="made" href="mailto:othree@gmail.com"/>
@@ -208,11 +211,12 @@
                         <xsl:with-param name="by" select="'%2F'"/>
                       </xsl:call-template>
                     </xsl:variable>
-                    <iframe id="fb-button" referrerpolicy="no-referrer" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"/>
+                    <button id="share-button" type="button">Share</button>
 		    <!--
+                    <iframe id="fb-button" referrerpolicy="no-referrer" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" scrolling="no" src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;width&amp;layout=box_count&amp;action=like&amp;show_faces=false&amp;share=true&amp;height=65&amp;appId=263583993673371"/>
                     <iframe id="gp-button" scrolling="no" src="//plusone.google.com/_/+1/fastbutton?size=tall&amp;hl=zh-TW&amp;url={$permalink}"/>
-                    -->
                     <iframe id="tw-button" referrerpolicy="no-referrer" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" scrolling="no" src="//platform.twitter.com/widgets/tweet_button.html?size=l&amp;count=vertical&amp;via=othree&amp;lang=zh-tw&amp;url={$permalink}"/>
+                    -->
                     <!-- <xsl:variable name="permalink" select="concat('/log/',translate(//b:blog/b:entries/b:entry/b:datetime/b:date,'-','/'),'/',//b:blog/b:entries/b:entry/@baseName,'/',$ext)" /> -->
                     <!-- <div class="fb-like" data-href="https://blog.othree.net{$permalink}" data-send="false" data-layout="box_count" data-show-faces="false" data-font="lucida grande"><xsl:text> </xsl:text></div> -->
                     <!-- <div class="g-plusone" data-size="tall" data-href="https://blog.othree.net{$permalink}"><xsl:text> </xsl:text></div> -->
@@ -603,10 +607,12 @@ google_color_url = "008000";
         <!--<xsl:with-param name="entryID" select="@entryID" />-->
         <!--<xsl:with-param name="accepted" select="b:PingsAccepted/text()" />-->
         <!--</xsl:apply-templates>-->
+	<!-- Disable comment
         <xsl:apply-templates select="b:comments">
           <xsl:with-param name="entryID" select="@entryID"/>
           <xsl:with-param name="accepted" select="b:CommentsAccepted/text()"/>
         </xsl:apply-templates>
+	-->
       </xsl:if>
     </article>
     <hr/>
