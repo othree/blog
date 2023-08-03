@@ -200,8 +200,8 @@
                 <xsl:if test="$listType = 's'">
                   <h3>關於本文章</h3>
                   <p><strong><xsl:value-of select="//b:blog/b:entries/b:entriesMeta/b:listData"/></strong>發表於 <xsl:value-of select="//b:blog/b:entries/b:entry/b:datetime/b:date"/>，文章類別為
-                        <xsl:choose><xsl:when test="//b:blog/b:entries/b:entry/b:category != ''"><a href="{$logPath}{//b:blog/b:entries/b:entry/b:category}/{$ext}"><xsl:variable name="temp" select="//b:blog/b:entries/b:entry/b:category"/><xsl:choose><xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()"><xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription"/></xsl:when><xsl:otherwise><xsl:value-of select="b:category"/></xsl:otherwise></xsl:choose></a></xsl:when><xsl:otherwise><xsl:text> 無類別 </xsl:text></xsl:otherwise></xsl:choose>
-                        ，你可以為此篇文章<a href="#comments">留下你的想法</a>。</p>
+			  <xsl:choose><xsl:when test="//b:blog/b:entries/b:entry/b:category != ''"><a href="{$logPath}{//b:blog/b:entries/b:entry/b:category}/{$ext}"><xsl:variable name="temp" select="//b:blog/b:entries/b:entry/b:category"/><xsl:choose><xsl:when test="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription/text()"><xsl:value-of select="$blogCategories/b:category[b:categoryTitle = $temp]/b:categoryDescription"/></xsl:when><xsl:otherwise><xsl:value-of select="b:category"/></xsl:otherwise></xsl:choose></a></xsl:when><xsl:otherwise><xsl:text> 無類別 </xsl:text></xsl:otherwise></xsl:choose>。
+                  </p>
                   <div>
                     <xsl:variable name="permalink">
                       <xsl:value-of select="'https%3A%2F%2Fblog.othree.net'"/>

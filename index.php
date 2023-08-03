@@ -39,6 +39,7 @@ if ($xsl == 'amp.xsl') {
 $format = "html";
 $target_file = substr($query, 1);
 $hash_file = substr($target_file, 0, -4) . '.md5';
+$html_file = substr($target_file, 0, -4) . '.html';
 
 if (is_file($target_file)) {
     if (!is_file($hash_file) || filemtime($target_file) > filemtime($hash_file)) {
@@ -50,7 +51,8 @@ if (is_file($target_file)) {
 }
 
 $request_hash = $_SERVER['HTTP_IF_NONE_MATCH'];
-if (isset($request_hash) && $request_hash == '"'.$hash.'"') {
+
+if (isset($request_hash) && $request_hash == 'W/"'.$hash.'"') {
     header("Cache-Control: max-age=3600, public");
     header("Expires: ".gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
     header("HTTP/1.0 304 Not Modified");
@@ -101,14 +103,29 @@ if ($format == "html") {
             "-->");
         header("Content-type: text/html; charset=UTF-8");
     }
+
     //xsl transform
-    $output = preg_replace($patterns, $replacements, xslt($target_file, $xsl, $canonical, $format, $dpr, $w) );
+    $raw_output = '';
+
+    if (file_exists($html_file) && file_exists($md5_file) && filemtime($html_file) > filemtime($md5_time)) {
+        $raw_output = file_get_contents($html_file);
+        file_put_contents($html_file, $raw_output);
+    } else {
+        $raw_output = xslt($target_file, $xsl, $canonical, $format, $dpr, $w);
+    }
+
+    $output = preg_replace($patterns, $replacements, $raw_output);
 } else if ($format == "xml") {
     $handle = fopen($target_file, "r");
     $output = fread($handle, filesize($target_file));
+
     fclose($handle);
-    if (preg_match("/IE/", $UA)) sheader("Content-type: text/xml; charset=UTF-8");
-    else header("Content-type: application/xml; charset=UTF-8");
+
+    if (preg_match("/IE/", $UA)) {
+	header("Content-type: text/xml; charset=UTF-8");
+    } else {
+	header("Content-type: application/xml; charset=UTF-8");
+    }
 }
 
 echo $output;
