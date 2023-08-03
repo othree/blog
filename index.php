@@ -109,9 +109,9 @@ if ($format == "html") {
 
     if (file_exists($html_file) && file_exists($md5_file) && filemtime($html_file) > filemtime($md5_time)) {
         $raw_output = file_get_contents($html_file);
-        file_put_contents($html_file, $raw_output);
     } else {
         $raw_output = xslt($target_file, $xsl, $canonical, $format, $dpr, $w);
+        file_put_contents($html_file, $raw_output);
     }
 
     $output = preg_replace($patterns, $replacements, $raw_output);
