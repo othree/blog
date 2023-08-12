@@ -31,5 +31,5 @@ scripts/prism.js.br: scripts/prism.js
 scripts/prism.js.gz: scripts/prism.js
 	zopfli scripts/prism.js
 
-scripts/all.js: scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/googleanalytic.js scripts/share.js
-	uglifyjs scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/googleanalytic.js scripts/share.js > scripts/all.js
+scripts/all.js: scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/share.js
+	uglifyjs scripts/detect_cleartype.js scripts/device-pixel-ratio.js scripts/nav-search.js scripts/share.js > scripts/all.js
