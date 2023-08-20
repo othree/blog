@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Native DOM Event Module : O3noBLOG</title>
+    <meta name="description" content="我是在看 tap.js 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 dispatchEvent 這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的文章。 dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他： var event =..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Dependency Injection of AngularJS" href="/log/2013/06/01/dependency-injection-of-angularjs/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2013/06/18/dom-event-module/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2013/06/18/dom-event-module/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Native DOM Event Module"/>
+    <meta property="og:description" content="我是在看 tap.js 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 dispatchEvent 這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的文章。 dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他： var event =..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2013/06/18/dom-event-module/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-dom-event-module">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-06-18T16:51:19" id="date-2013-06-18">
+                <span class="mon">06月</span>
+                <span class="day">18日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2013/06/18/dom-event-module/">Native DOM Event Module</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>我是在看 <a href="http://alxgbsn.co.uk/2012/03/12/tap-js-a-lightweight-tap-event-javascript-plugin/">tap.js</a> 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.dispatchEvent">dispatchEvent</a>  這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的<a href="https://blog.othree.net/log/2010/05/20/jquery-events/">文章</a>。</p>
+              <p>dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他：</p>
+              <pre>
+                <code>var event = document.createEvent('Event');
+event.initEvent(type, true, true);
+
+domnode.dispatchEvent(event);
+</code>
+              </pre>
+              <p>其中的 type 才是你想要觸發的事件名稱，而第一個 createEvent 收的參數，除了 "Event" 這個最通用的之外，還有很多種<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent">原生事件</a>，如果是要自訂事件的話，可以用最通用的 "Event"。不過其實，還有一個比較新的 API：</p>
+              <pre>
+                <code>var event = new CustomEvent(type, {bubbles: true, cancelable: true});
+</code>
+              </pre>
+              <p>這是 DOM Level 4 裡面提出來的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">Custom Event Constructor</a>，在這之前的 Level 3 就可以用第一個範例的方法產生 custom event，要先 create 再 init。這邊岔題一下，應該有人會注意到，createEvent 後 initEvent 那邊的 API 設計和 CustomEvent 不一樣，initEvent 收三個值，後面兩個都傳了 true，可是這樣的 API 設計近年來都被認為是不好的，因為你看程式碼，你完全不知道這兩個 true 是什麼意思，所以都是建議用第二種 API 的設計，收一個 options 物件，其實，initEvent 那兩個 true 分別就是 CustomEvent 後面的 bubbles 和 cancelable，但是後者的設計就可以讓程式碼看一眼就知道那兩個 true 是什麼用途的，看到這種不止開發者的程式在進化，連標準也跟著一起演進的現象還蠻有趣的~</p>
+              <p>Custom Event Constructor 目前 IE 的支援還比較差，所以還不能直接使用，還是要做一下 feature detection。至於哪些物件可以使用這些 method，除了 DOM Node，外，其實一般瀏覽器都還有一些物件可以聽事件，像是 window、document、 XMLHttpRequest instance 等，很可惜不是任意物件都可以，事實上，這些可以使用 DOM Event Module 的物件都是實作了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget">EventTarget</a> 這個介面，不過又要再說一次很可惜的，目前沒辦法把瀏覽器內的這些實作偷出來給其它物件使用，幸好 Andrea Giammarchi 有做了 <a href="https://github.com/WebReflection/event-target">一個</a> 放在 Github 上，可以給一般物件繼承去用。</p>
+              <p>我曾經寫過一篇文章介紹 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，這篇文章的最後我要來介紹第二個參數，第二個參數一般都是丟 function 進去，不過他其實也可以丟 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventListener">EventListener</a> 進去，基本上就是一個物件有 handleEvent 來當事件的 callback 而已，不過像 tap.js 就有很有趣的用法，它不管是什麼事件，在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L35">加上 addEventListener 時</a>丟進去的都是 this 物件，實際上則是統一在 handleEvent 裡面在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L97">根據事件的不同去作不同的事情</a>：</p>
+              <pre>
+                <code>Tap.prototype.handleEvent = function (e) {
+    switch (e.type) {
+        case 'touchstart': this.start(e); break;
+        case 'touchmove': this.move(e); break;
+        case 'touchend': this.end(e); break;
+        case 'touchcancel': this.cancel(e); break;
+        case 'mousedown': this.start(e); break;
+        case 'mousemove': this.move(e); break;
+        case 'mouseup': this.end(e); break;
+    }
+};
+</code>
+              </pre>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Native DOM Event Module</strong>發表於 2013-06-18，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2013/06/01/dependency-injection-of-angularjs/"><span class="prefix">上一篇：</span>Dependency Injection of AngularJS<time>2013-06-01</time></a><a class="next pn" href="/log/2013/06/19/options-object/"><span class="prefix">下一篇：</span>Options Object<time>2013-06-19</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

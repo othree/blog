@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>September 2016 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="August 2016" href="/log/2016/08/"/>
+    <link rel="next" title="October 2016" href="/log/2016/10/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2016/09/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>September 2016</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="August 2016" href="/log/2016/08/">« August 2016</a> | <a href="../">上一層</a> | <a title="October 2016" href="/log/2016/10/">October 2016 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-safari-10">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-09-21T23:57:08" id="date-2016-09-21">
+                <span class="mon">09月</span>
+                <span class="day">21日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/09/21/safari-10/">Safari 10 for Developer</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>Safari 10 跟著 macOS 一起出來了，這次更新了不少東西（對於網頁開發者來說），Apple 也依舊放了一份<a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html">文件</a>在他們的 Developer Library 裡面，以下列出我覺得比較有趣的：</p>
+              <h4>CSP 2.0</h4>
+              <p>CSP 2.0 和之前的版本相比，最主要是多了非常多可以控制的權限，也有幾個名稱有改掉，不過基本上格式是相容的。</p>
+              <h4>Shadow DOM</h4>
+              <p>Shadow DOM 1.0 標準，這也讓 Web Component 的理想又往前賣進一步了。</p>
+              <h4>ES 6</h4>
+              <p>號稱支援度 100%，看起來是依據 <a href="http://kangax.github.io/compat-table/es6/#safari10">ECMAScript compatable table</a> 的，不過在 module 的面前，還沒有真的 100% 的啊，另外主流瀏覽器其實支援度都蠻高了，之前 Edge 還放話說領先的，沒想到現在就已經被 Safari 10 和 Chrome 超過了，而 Chrome 看來也之差 tail call 而已，接下來應該又要開始效能比拼了吧。</p>
+              <h4>Inline and Auto Video Playback in iOS</h4>
+              <p>這也是等很久的功能，之前就有先開放靜音影片能直接在 iOS Safari 上自動播放，主要的考量是，gif 和 mp4 相比，還是 gif 比較吃資源啊。</p>
+              <h4>ES Internationalization</h4>
+              <p>ECMA-402 支援，這也是希望快點普及的東西啊，不然數字、日期什麼的搞本地化實在很麻煩。</p>
+              <h4>WOFF 2.0 Support</h4>
+              <p>令人意外的有點慢，不過還算很有誠意的把很新的 <a href="https://drafts.csswg.org/css-font-loading/">CSS Font Loading Module Level 3</a> 的 API 做好了。</p>
+              <h4>#RRGGBBAA</h4>
+              <p>新的 CSS color 格式，也是前陣子才 propose 出來而已，這樣以後就可以讓 CSS 裡的顏色格式統一點了。</p>
+              <h4>Right-to-Left Language Support</h4>
+              <p>主要是 RTL 頁面 scrollbar 的位置終於會換邊了。</p>
+              <h4>Media Query for Wide Color Gamut Support</h4>
+              <p>廣色域的 CSS media query，主要是因為最新的 iMac 和 iPhone 7 都有支援 P3 色域了。</p>
+              <h4>WebDriver Support</h4>
+              <p>主流瀏覽器最後一個支援的...</p>
+              <h4>Apple Pay for the Web</h4>
+              <p>這真的蠻兇狠的，不過 Google 也有在 Android 做類似的<a href="https://android.googleblog.com/2016/09/tap-pay-yes-android-pay-welcomes-chase.html">事</a>就是了。</p>
+              <p>大概就這些了，其實也列出超過一半的項目了，Safari 這種更新頻率其實比起其它幾家來說吃虧不少，不過還是一直有跟上最新進度，其實也蠻厲害的，更何況現在 Google 都把人拉到 Blink 去，有回到 Webkit 的貢獻似乎比例上不高。</p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-git-mrt">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-09-17T11:41:49" id="date-2016-09-17">
+                <span class="mon">09月</span>
+                <span class="day">17日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/09/17/git-mrt/">MRT &amp; GIT</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+              <p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
+              <div class="embed_16_9">
+                <iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"/>
+              </div>
+              <em class="extended">
+                <a href="/log/2016/09/17/git-mrt/">閱讀「MRT &amp; GIT」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-input-event">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-09-11T00:21:40" id="date-2016-09-11">
+                <span class="mon">09月</span>
+                <span class="day">11日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/09/11/input-event/">Input Event</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/acerriteno/4111105424/" title="Playtime Credit Card by Alberto+Cerriteño, on Flickr">
+                  <img itemprop="url image" src="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1" width="640" height="427" alt="Playtime Credit Card, " srcset="https://farm3.staticflickr.com/2487/4111105424_0fbd64cbd9_z.jpg?zz=1 640w">
+                    <meta itemprop="width" content="640"/>
+                    <meta itemprop="height" content="427"/>
+                  </img>
+                </a>
+              </p>
+              <p>今天做了一個特殊的 input 欄位，其實目標只是做成類似像輸入信用卡號那樣，輸入 <code>1234</code> 完，準備要輸入 <code>5</code> 的時候，會在 <code>4</code> 後面補上一個 <code>-</code>，變成 <code>1234-5</code>，不過我預期做的完美一點，所以考慮了很多狀況，例如：</p>
+              <ul>
+                <li>複製貼上沒有 <code>-</code> 的資料後會自動格式化</li>
+                <li>已經輸入一部分資料後，游標移到前面插入資料也會正確格式化</li>
+                <li>直接用 <code>DEL</code> 或 <code>Backspace</code> 來刪除資料，要讓使用者感覺不到 <code>-</code></li>
+                <li>先選取一些字元然後用 <code>DEL</code> 或 <code>Backspace</code> 甚至是剪下來刪除資料後會重新格式化</li>
+                <li>以上幾種操作都不會讓游標亂跳</li>
+              </ul>
+              <p>簡單看過目前一些信用卡相關的 library，在卡號輸入的部分是沒有全部達到的，要達成這些目標，幾乎是等於每個使用者的操作都要攔截下來，然後要抓到當欄位內的值，會用到的事件包括了 keyup、keydown、paste 和 input，等，其中本來我對於一般使用者敲打鍵盤輸入的事件是用 keyup，keyup 事件後會判斷游標位置和輸入的內容，如果需要的話就加上 <code>-</code>，然後調整游標位置，通常是 +1，弄好後測試一陣，發現如果按鍵輸入很快的話，游標位置會亂掉，應該要 +1 的卻錯過了，深入除錯一陣子之後發現，keyup 事件其實和欄位內的 value 變更是非同步的，所以不能確保 keyup 事件拿到的欄位值是正確的，能確保欄位值正確的，其實是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/Events/input">input 事件</a>，不過 input 事件沒有 keyCode，所以只能自己判斷輸入了什麼，另外刪除內容時也不會觸發 input，還好 <code>DEL</code> 和 <code>Backspace</code> 是用 keydown 事件來處理，兩邊剛好錯開了。</p>
+              <p>雖然 input 事件似乎很好用，不過其實它在早期的時候支援度是不太好的，算是比較新的事件，有類似狀況的還有一個是 change 事件，我的印象中是某些瀏覽器的行為會不太正確，所以其實我一直都還不太使用，至於 input 事件，我則是需要在不支援的瀏覽器中 fallback 到 keyup 事件，所以就會需要偵測，找了一下在 Modernizr 有<a href="https://github.com/Modernizr/Modernizr/blob/master/feature-detects/event/oninput.js">支援</a>，仔細看一下內容其實可以發現不是很好偵測，然後我也不是很喜歡 Modernizr 的介面，所以目前用的是在 Modernizr <a href="https://github.com/modernizr/modernizr/issues/210#issuecomment-1325576">Issue 210</a> 裡面 AndyE 提供的版本，稍微精簡一些：</p>
+              <pre>
+                <code>var inputSupport = "oninput" in document.body || checkEvent(document.body);
+/*
+   The following function tests an element for oninput support in Firefox.  Many thanks to
+        http://blog.danielfriesen.name/2010/02/16/html5-browser-maze-oninput-support/
+*/
+function checkEvent(el) {
+    // First check, for if Firefox fixes its issue with el.oninput = function
+    el.setAttribute("oninput", "return");
+    if (typeof el.oninput == "function")
+        return true;
+
+    // Second check, because Firefox doesn't map oninput attribute to oninput property
+    try {
+        var e  = document.createEvent("KeyboardEvent"),
+            ok = false,
+            tester = function(e) {
+                ok = true;
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0, "e".charCodeAt(0));
+        document.body.appendChild(el);
+        el.addEventListener("input", tester, false);
+        el.focus();
+        el.dispatchEvent(e);
+        el.removeEventListener("input", tester, false);
+        document.body.removeChild(el);
+        return ok;
+    } catch(e) {}
+}
+</code>
+              </pre>
+              <p>測試困難的主因是 Firefox 4 有 bug，所以需要真的建立一個 input 元件，然後用完整模擬 input 事件。然後雖然這個版本的比較精簡好懂，不過之後還是會因為 license 的關係改用 Modernizr 的版本吧。至於我做的 input field 呢，現在當然還是公司資產，大概要等我有空在假日重寫一個 Credit Card 的版本才會放出來吧。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2016/08/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

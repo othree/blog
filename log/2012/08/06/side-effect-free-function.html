@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Side Effect Free Function : O3noBLOG</title>
+    <meta name="description" content=" 在 Functional Programming 裡面，有個名詞叫做 pure function，要稱為 pure function 要滿足兩個條件： 不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。 執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。 哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。 再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。 要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用： var neko = { meow: function () { console.log(this); }..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="WHATWG and W3C 版 HTML5 分家" href="/log/2012/08/05/whatwg-and-w3c-html5/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2012/08/06/side-effect-free-function/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2012/08/06/side-effect-free-function/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Side Effect Free Function"/>
+    <meta property="og:description" content=" 在 Functional Programming 裡面，有個名詞叫做 pure function，要稱為 pure function 要滿足兩個條件： 不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。 執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。 哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。 再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。 要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用： var neko = { meow: function () { console.log(this); }..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2012/08/06/side-effect-free-function/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm3.staticflickr.com/2087/2511071028_98ed598b90_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="683"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-side-effect-free-function">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2012-08-06T01:26:10" id="date-2012-08-06">
+                <span class="mon">08月</span>
+                <span class="day">06日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2012/08/06/side-effect-free-function/">Side Effect Free Function</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/shereen84/2511071028/" title=" by Shereen M, on Flickr">
+                  <img itemprop="url image" src="https://farm3.staticflickr.com/2087/2511071028_98ed598b90_b.jpg" width="1024" height="683" alt="" srcset="https://farm3.staticflickr.com/2087/2511071028_98ed598b90_b.jpg 1024w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>在 Functional Programming 裡面，有個名詞叫做 <strong>pure function</strong>，要稱為 pure function 要滿足兩個條件：</p>
+              <ol>
+                <li>不管在什麼情況下，用什麼方法執行，相同的輸入參數一定會產生相同的輸出。</li>
+                <li>執行這個 function 不會產生任何副作用，副作用指的是像變數的污染等。</li>
+              </ol>
+              <p>哪些 function 是 pure function 呢，簡單來說，大部分你所見過的數學函數都是 pure function，像是三角函數，sin、cos ，不管你什麼時候執行，用什麼方法執行，只要給同樣的輸入，輸出的結果就一定是一樣的，而且這些函數本身也不會對外部有任何的影響。</p>
+              <p>再來，function 執行會有什麼副作用呢？其實就是去存取其他外部的變數或函式時，改變了外部變數的數值，如果該變數有其他地方會使用，那可能會因為這些改變，造成程式的執行結果和預期的有出入，也就是產生了 bug，這其實也是為什麼會說要避免使用全域變數的原因。</p>
+              <p>要避免改變到外部變數其實還算簡單，除了做這事情本來就是目標之一的情形外（也就是你的 function 或是物件和其他東西會有相依性），程式在設計的時候有注意到應該都可以避免，那還有什麼情形可能造成意外的副作用呢？事實上，function 的執行方法的不同會有機會產生副作用：</p>
+              <pre>
+                <code>var neko = {
+    meow: function () {
+        console.log(this);
+    }
+};
+
+neko.meow(); // neko
+
+var func = neko.meow;
+func(); // window
+</code>
+              </pre>
+              <p>上面的範例中，我定義了一個物件，並且給了它一個 function 作為 method，接著用兩種不同的方法來執行這個 method，然後會發現兩種執行方式會讓 function 內的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/this">this</a> 是不一樣的，而且很不巧的，this 在物件導向程式設計上，其實還蠻常會需要它的，因為你會需要存取該物件的屬性，最簡單的方法就是用 this 來代表該物件，設計上合理，語意上也合理，可是物件的 method 的執行方法的不同卻會讓它存取到不同的 this，結果就是會有意外的副作用，JavaScript 的這種特性其實也不全然是壞處，有種稱為 "borrowing method" （或是 <a href="https://github.com/shichuan/javascript-patterns/blob/master/code-reuse-patterns/borrowing-methods.html">code reuse</a>）的 pattern 就可以利用這個特性，現在最可靠的判斷某變數是否是陣列的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/isArray#See_also">方法</a>，也是一種 "borrowing method" 的應用。</p>
+              <p>要確保 this 不變，有不少方法，像是多包一層用 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/apply">apply</a>、<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/call">call</a> 來執行，或是用新的 <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind">bind</a> 來指定好 this 的值，一些 JavaScript Library 也有對應的功能可以利用，像是 jQuery 的 <a href="http://api.jquery.com/jQuery.proxy/">proxy</a>，不過用 apply 或是 call 來執行其實效率上會比較差，所以我想介紹的是另一種方法，利用 JavaScript 的另外一種特性：<strong>closure</strong>，closure 指的是，在多層的 variable scope 環境下，內層的 scope 可以去存取外層 scope 的變數，一個簡單例子：</p>
+              <pre>
+                <code>var Dog = function () {
+    var gender = 'male';
+
+    this.getGender = function () {
+        return gender;
+    };
+};
+
+dog = new Dog();
+dog.getGender(); // male
+</code>
+              </pre>
+              <p>dog 這個物件會得到一個 method 叫做 getGender，而它會回傳在這個 method 外一層，也就是 dog 物件的建構函式裡面定義的 gender 變數，這個 method 並不會因為他的 scope 內沒有 gender 變數就噴出錯誤訊息，取而代之的，它會往上一層的 variable scope 找同樣名稱的變數，一直找到最外層，也就是 root 物件那層，以網頁應用的話，root 物件就是 window 了，如果還是找不到才有機會出現錯誤訊息，利用這個特性，就可以完全的避免使用到 this 這個關鍵字來建立物件，不使用 this 的話自然就沒有我上面說的副作用了，這樣該物件的 method 不管是怎樣執行的，都不會影響到內部去存取的變數。</p>
+              <p>jQuery 裡面也有使用到這種技巧， jQuery 的 <a href="http://api.jquery.com/category/callbacks-object/">Callbacks</a> 就是這樣子設計的物件，所以你可以在使用 Callbacks 的 <a href="http://api.jquery.com/category/deferred-object/">Deferred</a> 裡面看到這樣的<a href="https://github.com/jquery/jquery/blob/master/src/deferred.js#L74">程式碼</a>：</p>
+              <pre>
+                <code>deferred[ tuple[0] ] = list.fire;
+deferred[ tuple[0] + "With" ] = list.fireWith;
+</code>
+              </pre>
+              <p>前面的 tuple[0] 是 'resolve', 'reject' 或 'notify'，而 list 就是相對應的 Callbacks 物件，這段程式碼實際上就是在定義 Deferred 物件的 resolve, resolveWith, reject, rejectWith... 等屬性，可以看到他的指派方法就是直接把 Callbacks 物件的 fire 和 fireWith method 借給 Deferred 物件，所以執行 Deferred.resolve 其實就等同於執行對應 Callbacks 物件的 fire 方法，而由於 Callback 內部沒有使用到 this ，所以這樣的使用完全是沒有問題的。</p>
+              <p>這樣子的用法有什麼好處呢？我們可以先反過來看看要確保 this 正確的話，程式碼要改成怎樣：</p>
+              <pre>
+                <code>deferred[ tuple[0] ] = function () {
+    list.fire();
+};
+deferred[ tuple[0] + "With" ] =  function () {
+    list.fireWith();
+};
+</code>
+              </pre>
+              <p>這樣子寫可以確保 list 裡面方法的 this 就是 Callbacks 物件本身，不過其實這樣改會造成 jQuery 的 Chain Ability 爛掉，請不要真的去改。這樣的寫法有兩個缺點：</p>
+              <ol>
+                <li>多了一層 scope，雖然現在瀏覽器的 JavaScript 引擎讓 scope 層數和 performance 之間的影響比以前小很多了，不過還是能少就少。</li>
+                <li>程式碼變得比較不漂亮，程式碼漂不漂亮和好不好讀、好不好維護息息相關。</li>
+              </ol>
+              <p>Side effect free 的 function 還有哪些地方可以用呢，除了像 jQuery 這樣供物件之間呼叫執行，最多的還是作為 callback function 了吧，不管是事件的 callback function 還是 XHR 的 callback function，都可以利用到這些好處，讓程式碼更好看，也減少 scope chain 的層數。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Side Effect Free Function</strong>發表於 2012-08-06，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2012/08/05/whatwg-and-w3c-html5/"><span class="prefix">上一篇：</span>WHATWG and W3C 版 HTML5 分家<time>2012-08-05</time></a><a class="next pn" href="/log/2012/08/13/top-keyboard/"><span class="prefix">下一篇：</span>鍵盤攻頂這檔事<time>2012-08-13</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

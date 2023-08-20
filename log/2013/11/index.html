@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>November 2013 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="October 2013" href="/log/2013/10/"/>
+    <link rel="next" title="December 2013" href="/log/2013/12/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2013/11/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>November 2013</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="October 2013" href="/log/2013/10/">« October 2013</a> | <a href="../">上一層</a> | <a title="December 2013" href="/log/2013/12/">December 2013 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-web-component">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-11-27T19:35:38" id="date-2013-11-27">
+                <span class="mon">11月</span>
+                <span class="day">27日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2013/11/27/web-component/">Web Component</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近覺得可以開始玩 Web Component 了，然後就開始研究，本來以為應該會是個簡單的東西，結果意外的有一些細節還蠻複雜，有些設計目前也不知道為什麼，不過還是從基本的來開始整理吧。</p>
+              <p>Web Component 其實最早只有 Shaodw DOM 的概念，不過現在已經變成好幾個標準合在一起來構成 component 了，這些標準中，最主要的三個分別是：</p>
+              <ul>
+                <li>
+                  <a href="http://www.w3.org/TR/shadow-dom/">Shadow DOM</a>
+                </li>
+                <li>
+                  <a href="http://www.w3.org/TR/custom-elements/">Custom Element</a>
+                </li>
+                <li>
+                  <a href="http://www.w3.org/TR/html-imports/">HTML Imports</a>
+                </li>
+              </ul>
+              <p>這三者分別都是構成 Web Component 很重要的元素，不過也分別規範了一些不是單純只能應用在 Web Component 上的功能，這篇文章不一定會說到這些特色，一切都看緣份吧～</p>
+              <em class="extended">
+                <a href="/log/2013/11/27/web-component/">閱讀「Web Component」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-start-ssl-ocsp">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-11-13T20:27:47" id="date-2013-11-13">
+                <span class="mon">11月</span>
+                <span class="day">13日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2013/11/13/start-ssl-ocsp/">Start SSL 的 OCSP 錯誤</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="794"/>
+                  </img>
+                </a>
+              </p>
+              <p>在 StartSSL 上有看到相關 <a href="https://forum.startcom.org/viewtopic.php?f=15&amp;t=2654">討論</a>，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。</p>
+            </section>
+            <footer>
+              <a href="/log/server/" rel="tag">Server Side</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-olympus-e-m1">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-11-07T00:54:19" id="date-2013-11-07">
+                <span class="mon">11月</span>
+                <span class="day">07日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2013/11/07/olympus-e-m1/">Olympus E-M1</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/10453308904/" title="Olympus E-M1 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm8.staticflickr.com/7383/10453308904_30d8f00143_b.jpg" width="1024" height="683" alt="Olympus E-M1" srcset="https://farm8.staticflickr.com/7383/10453308904_30d8f00143_b.jpg 1024w, https://farm8.staticflickr.com/7383/10453308904_e0116dd04e_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>我覺得最近的數位相機市場有點時代轉捩點的感覺，我第一次接觸比較正式的相機是爸爸的 Canon AE-1，底片的相機，金屬機身，很重，不過很喜歡用裂相對焦轉對焦環對焦，然後按快門，手捲底片的連續動作，之後沒多久就進入了數位時代，在這個時期我其實等了很久，目標是和底片相機差不多大小的機種，當時或多或少有期待全幅的機種吧，抱持的想法是，底片相機做得到的大小，沒道理數位時代就不行。</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/10710491495/" title="Canon AE-1 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm8.staticflickr.com/7430/10710491495_a9c8d117a4_b.jpg" width="1024" height="683" alt="Canon AE-1" srcset="https://farm8.staticflickr.com/7430/10710491495_a9c8d117a4_b.jpg 1024w, https://farm8.staticflickr.com/7430/10710491495_06f2f4e618_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <em class="extended">
+                <a href="/log/2013/11/07/olympus-e-m1/">閱讀「Olympus E-M1」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/buy/" rel="tag">敗家</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-bad-part-of-css-transition">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-11-05T15:59:22" id="date-2013-11-05">
+                <span class="mon">11月</span>
+                <span class="day">05日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2013/11/05/bad-part-of-css-transition/">Transition 之惡</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
+              <p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
+              <pre>
+                <code>.case1.active {
+    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease;
+}
+
+.case2.active {
+    transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease;
+}
+</code>
+              </pre>
+              <p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
+              <p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
+              <p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2013/10/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

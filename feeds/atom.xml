@@ -2,11 +2,101 @@
 <feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="zh-TW">
 <title>O3noBLOG</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/" />
-<modified>2023-08-02T13:53:53Z</modified>
+<modified>2023-08-15T02:57:55Z</modified>
 <tagline></tagline>
 <id>tag:blog.othree.net,2023://1</id>
 <generator url="http://www.movabletype.org/" version="4.381">Movable Type</generator>
 <copyright>Copyright (c) 2023, othree</copyright>
+
+<entry>
+<title>Common Log Format</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2023/08/14/common-log-format/" />
+<modified>2023-08-15T02:57:55Z</modified>
+<issued>2023-08-14T13:29:05Z</issued>
+<id>tag:blog.othree.net,2023://1.993</id>
+<created>2023-08-14T13:29:05Z</created>
+<summary type="text/plain"> 這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 AWStats，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 Common Log Format，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。 Common Log Format 的 Wikipedia 條目 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 httpd 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>unix</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format" /></a></p>
+<p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
+<p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
+<p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
+<ul>
+<li><a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a></li>
+</ul>
+<p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
+<pre><code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] &quot;request&quot; ddd bbbb
+
+- host: Either the DNS name or the IP number of the remote client
+- rfc931: Any information returned by identd for this person, - otherwise.
+- authuser: If user sent a userid for authentication, the user name, - otherwise.
+- DD: Day
+- Mon: Month (calendar name)
+- YYYY: Year
+- hh: hour (24-hour format, the machine's timezone)
+- mm: minutes
+- ss: seconds
+- request: The first line of the HTTP request as sent by the client.
+- ddd: the status code returned by the server, - if not available.
+- bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
+</code></pre>
+<p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
+<p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
+<pre><code>time remotehost request 
+</code></pre>
+<p>實作是：</p>
+<pre><code>fprintf(log, &quot;%24.24s %s %s\n&quot;,
+		asctime(gorl), HTClientHost, n_noth(HTReqLine));
+</code></pre>
+<p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
+<pre><code>Www Mmm dd hh:mm:ss yyyy
+</code></pre>
+<p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
+<p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
+<p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
+<ul>
+<li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
+<li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
+<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+</ul>
+<p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
+]]>
+
+</content>
+</entry>
+
+<entry>
+<title>Vim Boss Passed Away</title>
+<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2023/08/11/vim-boss-passed-away/" />
+<modified>2023-08-11T12:19:16Z</modified>
+<issued>2023-08-11T12:16:47Z</issued>
+<id>tag:blog.othree.net,2023://1.992</id>
+<created>2023-08-11T12:16:47Z</created>
+<summary type="text/plain"> Vim 的作者 Bram Moolenaar 在月初過世，消息出來至今大約已經過了一週，Vim 官網也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些方向了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。 Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 The Register 的報導中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有健康問題，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。 回到我與 Vim 之間的關係，除了我早期花很多心力在...</summary>
+<author>
+<name>othree</name>
+
+<email>othree@gmail.com</email>
+</author>
+<dc:subject>vim</dc:subject>
+<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
+<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x" /></a></p>
+<p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
+<p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
+<p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
+<p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
+]]>
+
+</content>
+</entry>
 
 <entry>
 <title>比宇宙更遠的地方</title>
@@ -112,7 +202,7 @@
 <entry>
 <title>大宮鐵道博物館</title>
 <link rel="alternate" type="text/html" href="https://blog.othree.net/log/2023/05/04/the-railroad-museum/" />
-<modified>2023-05-04T09:14:00Z</modified>
+<modified>2023-08-11T08:32:23Z</modified>
 <issued>2023-05-04T09:03:45Z</issued>
 <id>tag:blog.othree.net,2023://1.989</id>
 <created>2023-05-04T09:03:45Z</created>
@@ -146,7 +236,7 @@
 <p>然後其實這個戶外區繼續走下走，可以到南館，有一些體驗活動是在這邊之外，這裡還有 400 系和 E5 系的新幹線列車，這些都是現役的車型，我們沒注意到錯過了這區有點可惜，除了這幾台新幹線，其實初代那個圓頭藍白配色的新幹線也是有獨立一個區域給它（台灣也有一台，但是保存和展示就...）。</p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855283190/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855283190_6909e726e1_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855283190_2a88d1d97d_k.jpg 2x" /></a></p>
 <p>然後說到便當攤，其實博物館內有兩個，分別在往南館和往北館方向的戶外，我們那天先經過南館方向的沒開，以為現在沒有賣火車便當就跑去二樓的餐廳吃，結果其實當天北館方向的有開。</p>
-<p>我們因為小孩還小，所以這天不是很深入的行程，屬於走馬看花的方式，主要是因為很多要抽選體驗的設施，都是要小學以上，所以我們逛的區域就是車輛展示區、二樓的日本食堂餐廳午餐、火車模型區、科學區和迷你運轉列車（可以大人開小孩搭），這樣隨意逛一逛也是到下午兩點多了，回程不免俗的要逛一下紀念品商店，當時還有日本全國 IC 連通時週年紀念特區。</p>
+<p>我們因為小孩還小，所以這天不是很深入的行程，屬於走馬看花的方式，主要是因為很多要抽選體驗的設施，都是要小學以上，所以我們逛的區域就是車輛展示區、二樓的日本食堂餐廳午餐、火車模型區、科學區和迷你運轉列車（可以大人開小孩搭），這樣隨意逛一逛也是到下午兩點多了，回程不免俗的要逛一下紀念品商店，當時還有日本全國 IC 連通十週年紀念特區。</p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855062919/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855062919_8368233e8e_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855062919_aeb6a6231b_k.jpg 2x" /></a></p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854306637/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854306637_3fafc086b8_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854306637_a5173be9e6_k.jpg 2x" /></a></p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854889616/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854889616_f9e9e83d28_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854889616_3226c02453_k.jpg 2x" /></a></p>
@@ -900,92 +990,6 @@ type Policies = Policy[];
 <p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
 ]]>
 
-</content>
-</entry>
-
-<entry>
-<title>Static Site Hosting 服務需求</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2021/08/02/static-site-hosting/" />
-<modified>2021-08-02T14:23:47Z</modified>
-<issued>2021-08-02T14:23:14Z</issued>
-<id>tag:blog.othree.net,2021://1.978</id>
-<created>2021-08-02T14:23:14Z</created>
-<summary type="text/plain">前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。 支援 CDN 這個需求沒什麼好說了吧。 支援 HTTP/2 主要的服務應該都支援了，不過還是列一下。 支援加上 Security Headers 現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。 支援 HTTP 轉成 HTTPS 在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。 雖然我自己是都會把...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>server</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
-<h4>支援 CDN</h4>
-<p>這個需求沒什麼好說了吧。</p>
-<h4>支援 HTTP/2</h4>
-<p>主要的服務應該都支援了，不過還是列一下。</p>
-<h4>支援加上 Security Headers</h4>
-<p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
-<h4>支援 HTTP 轉成 HTTPS</h4>
-<p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
-<p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
-<h4>支援全站轉址</h4>
-<p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
-<p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
-<p>以下算是非必備的需求</p>
-<h4>支援把 404 改寫成 200</h4>
-<p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
-<h4>支援 CORS</h4>
-<p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
-<h4>支援 Basic Auth</h4>
-<p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
-<h4>支援根據 Header 切換 origin</h4>
-<p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
-<h4>支援根據路徑切換 origin</h4>
-<p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
-<h4>支援 brotli</h4>
-<p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
-]]>
-
-</content>
-</entry>
-
-<entry>
-<title>MacOS 我的設定</title>
-<link rel="alternate" type="text/html" href="https://blog.othree.net/log/2021/07/19/macos-my-pref/" />
-<modified>2021-07-19T02:41:18Z</modified>
-<issued>2021-07-18T16:37:19Z</issued>
-<id>tag:blog.othree.net,2021://1.977</id>
-<created>2021-07-18T16:37:19Z</created>
-<summary type="text/plain">最近因應新工作買了台新的 M1 Mac mini，所以重新把常用設定弄了一下，這篇文章來紀錄一下。 首先是 一般 裡面的顯示捲軸（scrollbar），預設的設定是 自動依據滑鼠或觸控軌跡板 ，這個選項的意思是，如果你用的是蘋果的滑鼠或觸控板，那他就會用自動隱藏的那種捲軸，如果有其他品牌的外接游標控制設備，那捲軸就是傳統的，有得捲動時就是會一直出現在那，佔據一塊空間，其實我對於這個預設行為有疑惑很久了，為什麼其他品牌的滑鼠就一定要用傳統的捲軸模式？直到某一天在系統篇好設定亂逛的時候才發現原來就是這個選項。...</summary>
-<author>
-<name>othree</name>
-
-<email>othree@gmail.com</email>
-</author>
-<dc:subject>mac</dc:subject>
-<content type="text/html" mode="escaped" xml:lang="en" xml:base="https://blog.othree.net/">
-<![CDATA[<p>最近因應新工作買了台新的 M1 Mac mini，所以重新把常用設定弄了一下，這篇文章來紀錄一下。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51318768736/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51318768736_786d7e9446_b.jpg" width="668" height="696" alt="Mac OS Preference by othree" srcset="" /></a></p>
-<p>首先是 <strong>一般</strong> 裡面的顯示捲軸（scrollbar），預設的設定是 <strong>自動依據滑鼠或觸控軌跡板</strong> ，這個選項的意思是，如果你用的是蘋果的滑鼠或觸控板，那他就會用自動隱藏的那種捲軸，如果有其他品牌的外接游標控制設備，那捲軸就是傳統的，有得捲動時就是會一直出現在那，佔據一塊空間，其實我對於這個預設行為有疑惑很久了，為什麼其他品牌的滑鼠就一定要用傳統的捲軸模式？直到某一天在系統篇好設定亂逛的時候才發現原來就是這個選項。</p>
-]]>
-<![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51319775775/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51319775775_4a69089b1f_b.jpg" width="668" height="576" alt="Mac OS Preference by othree" srcset="" /></a></p>
-<p>第二個設定是 <strong>桌面與螢幕保護程式</strong> 裡面，右下角的 <strong>熱點</strong>，這是我覺得很方便的功能，相對於觸控板的手勢，滑鼠用熱點比較方便，熱點只有螢幕的四個角落可以設定，如果有設定的話，只要游標移動到四個角落，就會執行設定的相對應的功能，原來預設是都沒有動作，我則是改成：</p>
-<ul>
-<li>右上：顯示桌面</li>
-<li>右下：讓顯示器進入睡眠（我因為外接鍵盤的關係，都只有讓顯示器進入睡眠而沒有讓主機休眠）</li>
-<li>左下：指揮中心</li>
-</ul>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51318029837/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51318029837_5f17c70a62_b.jpg" width="668" height="542" alt="Mac OS Preference by othree" srcset="" /></a></p>
-<p>再來是 <strong>Dock 與選單列</strong>，這個項目在最新的 MacOS 中改變很多，因為多了 <a href="https://support.apple.com/zh-tw/guide/mac-help/mchl50f94f8f/mac"><strong>控制中心</strong></a> 相關的東西，我基本上沒有改什麼，就是日期時間格式，還有讓 <strong>輔助使用快速鍵這個項目</strong> 顯示在控制中心，然後也因為控制中心的關係，新的 MacOS 現在選單列一定要顯示時鐘了，如果你真的很不想要，就是可以選擇不顯示日期，然後時間用類比，這樣就只會有佔用一個 icon 的空間。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51319849320/" title="MacOS System Preference by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51319849320_8dab974432_b.jpg" width="668" height="542" alt="MacOS System Preference" srcset="" /></a></p>
-<p>然後還有一個比較特別的是，我有開啟每小時語音報時，比較不會不小心忘記時間，其實還蠻有幫助的，不過我比較想要一個提示音就好，但是目前的系統設計都還是會報時，後來有用英語語音發現只會念數字，短很多。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51319890810/" title="MacOS System Preference by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51319890810_eb7a21418a_b.jpg" width="668" height="587" alt="MacOS System Preference" srcset="" /></a></p>
-<p>然後 <strong>通知</strong> 的 <strong>勿擾模式</strong> 裡面，勾選 <strong>當顯示器進入睡眠時</strong> ，因為我基本上是沒讓主機進入休眠，只有讓顯示器睡眠，所以要是沒勾選這項，又沒關喇叭的話，半夜就可能會很吵鬧。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51318768696/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51318768696_21a8a5a08a_b.jpg" width="668" height="587" alt="Mac OS Preference by othree" srcset="" /></a></p>
-<p>然後是 <strong>安全性與隱私權</strong> 裡面的 <strong>進入睡眠或開始螢幕保護程式 5 秒後 喚醒電腦需要輸入密碼</strong>，這個項目本來應該是一進入螢幕保護程式之後，要喚醒就會要求輸入密碼，不過有時候剛好誤觸，馬上就被迫輸入密碼也是有點惱人，所以我是設定 5 秒後。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51318768726/" title="Mac OS Preference by othree by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51318768726_cc05cbfb0d_b.jpg" width="668" height="461" alt="Mac OS Preference by othree" srcset="" /></a></p>
-<p>最後一項則是 <strong>能源節約器</strong> 裡面設定 **避免電腦在顯示器關閉時自動進入睡眠** ，主要是因為 MacOS 對於外接鍵盤有個 bug 是休眠回來後，外接鍵盤會有需要重新辨識的狀況，很不方便，所以乾脆都不要讓機器休眠了。</p>
-]]>
 </content>
 </entry>
 

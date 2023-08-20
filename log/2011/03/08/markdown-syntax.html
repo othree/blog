@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Markdown : O3noBLOG</title>
+    <meta name="description" content="這個部落格最早的文章，我是直接寫原始的 HTML 碼，後來久了也是會嫌煩，就開始用 Textile ，功能蠻多，而且還可以寫 id、class 之類的，不過同時，我對另外一個也是類似的 text to HTML 的文件格式 Markdown 就一直很有印象，不過那時候只覺得他的語法功能比較少，還感覺不出他的特色，直到過了幾年，在學校寫了幾篇論文，有訂閱的 mailing-list，寫作的觀念和態度也被指導教授盯過之後，某一天又再次看到一篇 Markdown 格式的文件，它的連結用的很像是論文的參考文獻的用法，它的程式碼區塊很像我部落格上排版過顯示的樣子，而它的引言看起來和 BBS 的幾乎一樣，每個細節都非常的熟悉，於是再次讓我對它產生了興趣，就開始試著用 Markdown 來寫部落格了，沒想到一試成主顧，因為語法都很熟悉，幾乎是不用再花時間學，而且我覺得更棒的一點是 Markdown 的文件直接閱讀也很方便，它的語法可以讓文章的感覺保持的很好。 Markdown 是 John Gruber 在 2004 年左右推出的，然後他自己提供了 Perl 版的程式碼，當時支援 MovableType 和 BLOSXOM 兩個部落格系統，也可以用在命令列直接執行轉換文字檔，而現在使用比例最高的 Wordpress 也有人寫 外掛 讓它支援 ，程式語言的部份除了..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="狀況更新" href="/log/2011/03/07/update/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2011/03/08/markdown-syntax/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2011/03/08/markdown-syntax/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Markdown"/>
+    <meta property="og:description" content="這個部落格最早的文章，我是直接寫原始的 HTML 碼，後來久了也是會嫌煩，就開始用 Textile ，功能蠻多，而且還可以寫 id、class 之類的，不過同時，我對另外一個也是類似的 text to HTML 的文件格式 Markdown 就一直很有印象，不過那時候只覺得他的語法功能比較少，還感覺不出他的特色，直到過了幾年，在學校寫了幾篇論文，有訂閱的 mailing-list，寫作的觀念和態度也被指導教授盯過之後，某一天又再次看到一篇 Markdown 格式的文件，它的連結用的很像是論文的參考文獻的用法，它的程式碼區塊很像我部落格上排版過顯示的樣子，而它的引言看起來和 BBS 的幾乎一樣，每個細節都非常的熟悉，於是再次讓我對它產生了興趣，就開始試著用 Markdown 來寫部落格了，沒想到一試成主顧，因為語法都很熟悉，幾乎是不用再花時間學，而且我覺得更棒的一點是 Markdown 的文件直接閱讀也很方便，它的語法可以讓文章的感覺保持的很好。 Markdown 是 John Gruber 在 2004 年左右推出的，然後他自己提供了 Perl 版的程式碼，當時支援 MovableType 和 BLOSXOM 兩個部落格系統，也可以用在命令列直接執行轉換文字檔，而現在使用比例最高的 Wordpress 也有人寫 外掛 讓它支援 ，程式語言的部份除了..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2011/03/08/markdown-syntax/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-markdown-syntax">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2011-03-08T21:28:45" id="date-2011-03-08">
+                <span class="mon">03月</span>
+                <span class="day">08日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2011/03/08/markdown-syntax/">Markdown</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>這個部落格最早的文章，我是直接寫原始的 HTML 碼，後來久了也是會嫌煩，就開始用 <a href="http://www.textism.com/tools/textile/">Textile</a> ，功能蠻多，而且還可以寫 id、class 之類的，不過同時，我對另外一個也是類似的 text to HTML 的文件格式 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> 就一直很有印象，不過那時候只覺得他的語法功能比較少，還感覺不出他的特色，直到過了幾年，在學校寫了幾篇論文，有訂閱的 mailing-list，寫作的觀念和態度也被指導教授盯過之後，某一天又再次看到一篇 Markdown 格式的文件，它的連結用的很像是論文的參考文獻的用法，它的程式碼區塊很像我部落格上排版過顯示的樣子，而它的引言看起來和 BBS 的幾乎一樣，每個細節都非常的熟悉，於是再次讓我對它產生了興趣，就開始試著用 Markdown 來寫部落格了，沒想到一試成主顧，因為語法都很熟悉，幾乎是不用再花時間學，而且我覺得更棒的一點是 Markdown 的文件直接閱讀也很方便，它的語法可以讓文章的感覺保持的很好。</p>
+              <p>Markdown 是  John Gruber 在 2004 年左右推出的，然後他自己提供了 Perl 版的程式碼，當時支援 <a href="http://www.movabletype.org/">MovableType</a> 和 <a href="http://www.blosxom.com/">BLOSXOM</a> 兩個部落格系統，也可以用在命令列直接執行轉換文字檔，而現在使用比例最高的 Wordpress 也有人寫 <a href="http://wordpress.org/extend/plugins/markdown-for-wordpress-and-bbpress/">外掛</a> 讓它支援 ，程式語言的部份除了 Perl 外，還有 <a href="http://michelf.com/projects/php-markdown/">PHP</a>、<a href="http://deveiate.org/projects/BlueCloth/">Ruby</a> 等，在 <a href="http://xbeta.org/wiki/show/Markdown">Markdown Wiki</a> 還有一份更詳細的清單，其實支援很廣泛，可惜的是大部分的 BSP 都沒有提供，目前似乎就只有 <a href="http://www.tumblr.com/">Tumblr</a> 而已，而這幾年在推廣上，我覺得有兩個網站的功勞不小，第一個是 <a href="https://github.com/">github</a> ，因為他支援用 Markdown 寫 README ，其實它還支援很多其他的格式，不過我看到使用最多的還是 Markdown，就這樣，為了寫出可以在 github 上顯示的良好結構的 HTML README 文件，很多人就寫起了 Markdown 文件， github 支援的格式其實是一個修改過的版本，叫做 <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavored Markdown</a> ，稍微有些行為上的不一樣，然後多加了一些方便 Github 使用的功能，不過整體而言其實可以說是一樣的文件格式。</p>
+              <p>另一個則是 <a href="http://stackoverflow.com/">StackOverflow</a> ，Markdown 是 StackOverflow 發問、回覆所使用的預設格式，而且 StackOverflow 還有即時的預覽功能，實在很棒，我在深入了解之後，才發現 他們用的編輯器還有一段故事。StackOverflow 用的是 <em>John Fraser</em> 的 WMD Editor，他同時也是 JavaScript 版的 Markdown 轉換器，showdown.js 的作者，如果去看現在版本的 WMD Editor 和 showdown.js 的程式碼，都還可以看到他的名字，本來 StackOverflow 和 John 是有合作而不是只是單純拿它的編輯器來用，結果有一天突然就聯絡不上 John 了，就這樣一直無法聯繫上 John <a href="http://blog.stackoverflow.com/2008/12/reverse-engineering-the-wmd-editor/">四個月</a> 後，StackOveflow 的 Jeff Atwood 在網路跟大家說了這件事情，除了持續的想要連絡上 John 或是了解他狀況之外，還發起了一個工作，就是要對 WMD Editor 做反向工程，因為當時他們手上只有最小化過 JavaScript 檔案，裡面的變數名稱什麼的，都已經是失去意義的了，確認過授權沒問題後，一群社群朋友就開始幫忙了，後來他們利用 github 作為協做平台，成果就是現在 StackOverflow 的 <a href="https://github.com/cky/wmd">版本</a> ，至於 John Fraser 到底發生了什麼事，則是到現在也沒人知道。</p>
+              <p>如果想要看看 Markdown 文件長怎樣，可以看看 <a href="http://daringfireball.net/projects/markdown/basics">Markdown Basics</a> 這篇文章，至於完整的文件，我正找了幾位網友在翻譯中，等全部處理好就會公開了，雖然這樣說，其實東西都在 github 上啦。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Markdown</strong>發表於 2011-03-08，文章類別為
+			  <a href="/log/css-html/">CSS &amp; HTML</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2011/03/07/update/"><span class="prefix">上一篇：</span>狀況更新<time>2011-03-07</time></a><a class="next pn" href="/log/2011/03/09/jquery-ujs/"><span class="prefix">下一篇：</span>jQuery-ujs<time>2011-03-09</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

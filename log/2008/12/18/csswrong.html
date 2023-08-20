@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Everything You Know About CSS Is Wrong 書評 : O3noBLOG</title>
+    <meta name="description" content=" 本書評由othree 評論於2008/12/18 ，評分為3.5分（滿分5分） ，採創用 CC 姓名標示 授權條款釋出。 先節錄一下我在IRC上講的內容摘要： 01:01 @othree 基本上就是在講css-table來排版 01:01 @othree 可能遇到的問題 ex: position:ralative, colspan, rowspan 01:02 @othree 然後要如何應付就瀏覽器 1.不理他 2.做個簡單排版給他 3.用現在的技術做給他 01:03 @othree 中間有稍微講如果要做到3那為什麼還要用css-table 01:03 @othree 最後講css3的一些排版的新東西 01:04 @othree multicolumn, grid, advanced layout(書內是用template layout) 我是覺得這本書的中心思想是不錯的，不該拿來做排版的東西就不應該拿來排版，不過css-table也不像是拿來排版的東西啊，CSS規格書上的說法讓我覺得他是為了XML那種資料格式可以直接使用表格形式呈現而設計的，我是覺得不該用作來做為整個網頁的版面配置用，CSS一直以來都有一個問題，就是程式設計師和平面設計師學起來都不容易，在這個問題點上，我覺得用上css-table其實也沒什麼改變，更何況css-table沒真的table靈活，沒有colspan和rowspan，要做到類似的效果變成要用nested-table，大福增加HTML結構的複雜度，怎麼看都是弊大於利，我實在是不覺得用css-table來做排版是個好選擇。 最後，如果要我挑理想的排版方法的話，我是覺得還在制定中的CSS..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Mockups" href="/log/2008/12/13/mockups/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2008/12/18/csswrong/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2008/12/18/csswrong/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Everything You Know About CSS Is Wrong 書評"/>
+    <meta property="og:description" content=" 本書評由othree 評論於2008/12/18 ，評分為3.5分（滿分5分） ，採創用 CC 姓名標示 授權條款釋出。 先節錄一下我在IRC上講的內容摘要： 01:01 @othree 基本上就是在講css-table來排版 01:01 @othree 可能遇到的問題 ex: position:ralative, colspan, rowspan 01:02 @othree 然後要如何應付就瀏覽器 1.不理他 2.做個簡單排版給他 3.用現在的技術做給他 01:03 @othree 中間有稍微講如果要做到3那為什麼還要用css-table 01:03 @othree 最後講css3的一些排版的新東西 01:04 @othree multicolumn, grid, advanced layout(書內是用template layout) 我是覺得這本書的中心思想是不錯的，不該拿來做排版的東西就不應該拿來排版，不過css-table也不像是拿來排版的東西啊，CSS規格書上的說法讓我覺得他是為了XML那種資料格式可以直接使用表格形式呈現而設計的，我是覺得不該用作來做為整個網頁的版面配置用，CSS一直以來都有一個問題，就是程式設計師和平面設計師學起來都不容易，在這個問題點上，我覺得用上css-table其實也沒什麼改變，更何況css-table沒真的table靈活，沒有colspan和rowspan，要做到類似的效果變成要用nested-table，大福增加HTML結構的複雜度，怎麼看都是弊大於利，我實在是不覺得用css-table來做排版是個好選擇。 最後，如果要我挑理想的排版方法的話，我是覺得還在制定中的CSS..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2008/12/18/csswrong/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="http://blog.othree.net/log/2008/12/18/csswrong/cover.jpg"/>
+    <meta property="og:image:width" content="156"/>
+    <meta property="og:image:height" content="203"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-csswrong">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2008-12-18T01:12:07" id="date-2008-12-18">
+                <span class="mon">12月</span>
+                <span class="day">18日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2008/12/18/csswrong/">Everything You Know About CSS Is Wrong 書評</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <div class="hreview" id="hreview-Everything-You-Know-About-CSS-Is-Wrong">
+                <p class="item">
+                  <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="fn url" href="http://www.sitepoint.com/books/csswrong1/">
+                    <img itemprop="url image" alt="The Principles of Beautiful Web Design" src="//blog.othree.net/log/2008/12/18/csswrong/cover.jpg" class="photo" width="156" height="203">
+                      <meta itemprop="width" content="156"/>
+                      <meta itemprop="height" content="203"/>
+                    </img>
+                  </a>
+                </p>
+                <p class="entry-info">
+  本書評由<span class="reviewer vcard"><span class="fn nickname">othree</span></span>
+  評論於<abbr class="dtreviewed" title="20081218">2008/12/18</abbr>
+  ，評分為<abbr title="3.5" class="rating">3.5分（滿分5分）</abbr>
+  ，採<a rel="license" href="http://creativecommons.org/licenses/by/2.5/tw/">創用 CC 姓名標示 授權條款</a>釋出。
+  </p>
+                <div class="description">
+                  <p>先節錄一下我在IRC上講的內容摘要：</p>
+                  <pre>01:01 @othree 基本上就是在講css-table來排版
+01:01 @othree 可能遇到的問題 ex: position:ralative, colspan, rowspan
+01:02 @othree 然後要如何應付就瀏覽器 1.不理他 2.做個簡單排版給他 3.用現在的技術做給他
+01:03 @othree 中間有稍微講如果要做到3那為什麼還要用css-table
+01:03 @othree 最後講css3的一些排版的新東西
+01:04 @othree multicolumn, grid, advanced layout(書內是用template layout)</pre>
+                  <p>我是覺得這本書的中心思想是不錯的，不該拿來做排版的東西就不應該拿來排版，不過css-table也不像是拿來排版的東西啊，<a href="http://www.w3.org/TR/CSS21/tables.html#table-display">CSS規格書</a>上的說法讓我覺得他是為了XML那種資料格式可以直接使用表格形式呈現而設計的，我是覺得不該用作來做為整個網頁的版面配置用，CSS一直以來都有一個問題，就是程式設計師和平面設計師學起來都不容易，在這個問題點上，我覺得用上css-table其實也沒什麼改變，更何況css-table沒真的table靈活，沒有colspan和rowspan，要做到類似的效果變成要用nested-table，大福增加HTML結構的複雜度，怎麼看都是弊大於利，我實在是不覺得用css-table來做排版是個好選擇。</p>
+                  <p>最後，如果要我挑理想的排版方法的話，我是覺得還在制定中的<a href="http://www.w3.org/Style/CSS/current-work#layout">CSS Template Layout</a>比較理想，畢竟是圖形化的編排方式，對於設計師來說直觀許多，而且在設計上也確實是排版用的屬性。</p>
+                </div>
+              </div>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Everything You Know About CSS Is Wrong 書評</strong>發表於 2008-12-18，文章類別為
+			  <a href="/log/books/">與書相關</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2008/12/13/mockups/"><span class="prefix">上一篇：</span>Mockups<time>2008-12-13</time></a><a class="next pn" href="/log/2008/12/18/anobii-api/"><span class="prefix">下一篇：</span>aNobii API<time>2008-12-18</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

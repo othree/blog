@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>September 2013 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="August 2013" href="/log/2013/08/"/>
+    <link rel="next" title="October 2013" href="/log/2013/10/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2013/09/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>September 2013</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="August 2013" href="/log/2013/08/">« August 2013</a> | <a href="../">上一層</a> | <a title="October 2013" href="/log/2013/10/">October 2013 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-javascript-object-you-dont-know">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-09-16T20:47:28" id="date-2013-09-16">
+                <span class="mon">09月</span>
+                <span class="day">16日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2013/09/16/javascript-object-you-dont-know/">你所不知道的 JavaScript Object</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>以前在寫 VB 時，看到物件有 set/get 可以用，你可以用簡單的存取方式設定或取得物件的某個屬性，但是實際上存取時做一些操作和運算，對物件外來說，就和一般屬性一樣的，當時覺得這個特性還蠻方便的，不過這不是所有程式語言都有的，像是當年的 JavaScript 就沒有，不過時光飛逝，歲月如梭，其實現在 JavaScript 也支援 get/set 了，只是要用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty">defineProperty</a> 來設定，沒辦法用 Good Part 裡面建議的，單純用 object literal notation，當然比較舊的 IE 也不支援，寫起來如下：</p>
+              <pre>
+                <code>var square = {
+    side: 1
+};
+
+Object.defineProperty(square, 'area', {
+    get: function () {
+        return Math.pow(this.side, 2);
+    },
+    set: function (val) {
+        this.side = Math.pow(val, 0.5);
+    }
+});
+</code>
+              </pre>
+              <p>不過，defineProperty 的功能可不止於此，它提供了更改更為底層設定的能力，包括 configurable、enumerable 和 writable 三個設定。configurable 表示這個屬性的設定是否可以再次用 defineProperty 更改，writable 比較簡單就是表示這個屬性的值是否可以修改，enumerable 則是設定這個屬性在列舉的時候會不會被列出，物件的列舉其實就是用 <code>for in</code>：</p>
+              <pre>
+                <code>for (attr in obj) {
+    obj[attr] = 'foo';
+}
+</code>
+              </pre>
+              <p>如果有在用 JSLint 可能會看過這樣寫的話都會跳出下面的錯誤訊息：</p>
+              <blockquote>
+                <p>The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype</p>
+              </blockquote>
+              <p>這是因為用 <code>for in</code> 的話，會把 prototype 裡面的屬性也列舉出來，這樣會有什麼問題呢，以前在做陣列的新 method 的 polyfill 時，會有個狀況就是，我們手動新增的 method，會在列舉時被列出，所以變成所有的陣列都不能用 <code>for in</code> 來跑，但是現在有 defneProperty 的 enumerable 了，未來在有類似的狀況，可以直接給陣列新增 method 而不會影響 <code>for in</code> 的行為。</p>
+              <p>除了 defineProperty 之外，還有 defineProperties 可以大量設定屬性，另外也可以在 Object.create 時直接設定好。</p>
+              <p>第二個要說的是，現在 JavaScript 的物件可以 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/seal">封</a>(seal) 起來或是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze">凍</a>(freeze) 起來了，seal 做的事情是限制物件屬性的新增或刪除，既有屬性的值還是可以修改，freeze 則是把物件完全凍結住，連修改屬性都不可以。而且這些行為是不可逆的，沒有提供可以 unseal 或是 unfreeze 的方法，不過倒是有 <code>isSealed</code> 和 <code>isFrozen</code> 可以判斷物件狀態。</p>
+              <p>在 strict mode 下，上面兩個特性有限制的地方在被違反的時候，都會 throw error，普通模式下是不會有錯誤，不過他的行為還是不變，使用時需要注意。</p>
+              <p>最後要介紹的是還不能使用的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">observe</a>，observe 又稱為觀察者，在 Backbone 有利用 set 和事件系統來實做，是在開發應用程式時很有用的 pattern，TC39 有打算把它加進 JavaScript 之中，目前還只有草案就是，要能用應該還要好一陣子就是了。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2013/08/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

@@ -4,11 +4,65 @@
 <title>O3noBLOG - unix</title>
 <link>https://blog.othree.net//log/ unix/</link>
 <description></description>
-<copyright>Copyright 2022</copyright>
-<lastBuildDate>2022-12-03 00:38</lastBuildDate>
+<copyright>Copyright 2023</copyright>
+<lastBuildDate>2023-08-14 21:29</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>Common Log Format</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format" /></a></p>
+<p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
+<p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
+<p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
+<ul>
+<li><a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a></li>
+</ul>
+<p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
+<pre><code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] &quot;request&quot; ddd bbbb
+
+- host: Either the DNS name or the IP number of the remote client
+- rfc931: Any information returned by identd for this person, - otherwise.
+- authuser: If user sent a userid for authentication, the user name, - otherwise.
+- DD: Day
+- Mon: Month (calendar name)
+- YYYY: Year
+- hh: hour (24-hour format, the machine's timezone)
+- mm: minutes
+- ss: seconds
+- request: The first line of the HTTP request as sent by the client.
+- ddd: the status code returned by the server, - if not available.
+- bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
+</code></pre>
+<p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
+<p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
+<pre><code>time remotehost request 
+</code></pre>
+<p>實作是：</p>
+<pre><code>fprintf(log, &quot;%24.24s %s %s\n&quot;,
+		asctime(gorl), HTClientHost, n_noth(HTReqLine));
+</code></pre>
+<p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
+<pre><code>Www Mmm dd hh:mm:ss yyyy
+</code></pre>
+<p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
+<p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
+<p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
+<ul>
+<li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
+<li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
+<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+</ul>
+<p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
+]]></description>
+<link>https://blog.othree.net/log/2023/08/14/common-log-format/</link>
+<guid>https://blog.othree.net/log/2023/08/14/common-log-format/</guid>
+<category>unix</category>
+<pubDate>2023-08-14 21:29</pubDate>
+</item>
 
 <item>
 <title>Archlinux 修復紀錄</title>
@@ -375,23 +429,6 @@ https://www.dropbox.com/cli_link?host_id=01d51f8e353b4f9a45085***********
 <guid>https://blog.othree.net/log/2010/01/07/wq-post-bbs-article/</guid>
 <category>unix</category>
 <pubDate>2010-01-07 20:25</pubDate>
-</item>
-
-<item>
-<title>在 screen windows 裡開一個比較小的 terminal</title>
-<description><![CDATA[<p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
-
-
-
-<pre><code>width -d 80 24</code></pre>
-
-
-
-<p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p>]]></description>
-<link>https://blog.othree.net/log/2010/01/05/screen-windows-terminal/</link>
-<guid>https://blog.othree.net/log/2010/01/05/screen-windows-terminal/</guid>
-<category>unix</category>
-<pubDate>2010-01-05 21:18</pubDate>
 </item>
 
 

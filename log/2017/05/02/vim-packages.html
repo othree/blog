@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content="Vim 8 有兩個我覺得比較大的新功能，一是開始有 Asynchronous I/O，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 runtime 目錄下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 pathogen.vim 後才被解決，pathogen 是藉由修改 runtimepath 變數（有點像是系統的 PATH 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 Vundle、neobundle、vim-plug 等，基礎原理應該都是一樣的。 Vim..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2017/05/02/vim-packages/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2017/05/02/vim-packages/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2017-05-02T23:05:39",
+        "dateModified": "2017-05-02T23:05:39",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://blog.othree.net/images/O3-240x240.png",
+          "width": 240,
+          "height": 240
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
+    <nav>
+      <div class="nav-inner">
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    關於
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article id="entry-vim-packages">
+            <header>
+              <time datetime="2017-05-02T23:05:39" id="date-2017-05-02">
+                <span class="mon">05月</span>
+                <span class="day">02日</span>
+              </time>
+              <h3>Vim Packages</h3>
+            </header>
+            <section>
+              <p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+              <p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+              <pre>
+                <code>~/.vim/bundle/html5.vim
+~/.vim/bundle/yajs.vim
+</code>
+              </pre>
+              <p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+              <pre>
+                <code>~/.vim/pack/my-js/start/yajs.vim
+~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
+~/.vim/pack/my-js/start/simple-javascript-indenter
+</code>
+              </pre>
+              <p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+              <p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+            </section>
+            <footer>
+      文章分類：
+      <a href="/log/vim/" rel="tag">VIM</a><a class="canonical" href="/log/2017/05/02/vim-packages/" title="「Vim Packages」的原始位置">原始位置</a></footer>
+          </article>
+          <hr/>
+        </main>
+      </div>
+    </div>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
+  </body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Electron 入門 : O3noBLOG</title>
+    <meta name="description" content=" 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="webappsec" href="/log/2015/07/03/webappsec/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2015/08/03/electron-intro/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2015/08/03/electron-intro/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Electron 入門"/>
+    <meta property="og:description" content=" 前陣子花了些時間用 Electron 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。 為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的文件，整頁的第一篇文章是 Application distribution，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 Quick Start 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2015/08/03/electron-intro/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="683"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-electron-intro">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2015-08-03T21:27:43" id="date-2015-08-03">
+                <span class="mon">08月</span>
+                <span class="day">03日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2015/08/03/electron-intro/">Electron 入門</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/20249299982/" title="electron by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg" width="1024" height="683" alt="electron" srcset="https://farm1.staticflickr.com/312/20249299982_763c6a25a6_b.jpg 1024w, https://farm1.staticflickr.com/312/20249299982_ba032442b2_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>前陣子花了些時間用 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Electron</a> 寫了個桌面應用程式，覺得有些資訊應該記錄一下，其實我覺得 Electron 的文件弄得超爛的，非常沒有 Github 的水準，Github 當初能夠起來，我認為一個很大的原因就是文件做的很好，而且在頁面上都會提供相對應操作的說明文件，不只讓網站的易用性提昇很多，連帶的也推廣了 Git 的使用，算是相輔相成起來的，不過 Electron 剛推出的時候，我就覺得，這是有文件嗎？甚至讓我有個印像是，我們雖然推出 Electron 但是沒很想讓你們用，所以文件隨便寫寫。</p>
+              <p>為什麼這樣說，拿現在最新版 0.3.0 來說，其實這應該只是自動產生的<a href="http://electron.atom.io/docs/v0.30.0/">文件</a>，整頁的第一篇文章是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/application-distribution/">Application distribution</a>，這真的沒有哪裡搞錯嗎？而且這份文件還很爛，有關鍵的地方沒說，之後會講。總之，要開始寫 Electron App 應該要看的是 <a href="http://electron.atom.io/docs/v0.30.0/tutorial/quick-start/">Quick Start</a> 才對，這份文件用了一個很簡單的範例讓你開始可以跑 Electron App，只要會寫網頁，從這邊就可以開始做 Electron App，但是一個應用程式哪有這麼單純，只靠 Web 端的技術一定是有不足的，例如我要做的程式就需要讀取 key 去登入 SSH 然後做事情，這登入 SSH 然後做事的部分用的是 node 的 code，不能跑在瀏覽器環境，在 Electron 的架構下，瀏覽器環境稱為 renderer，而另外一邊用來起始 renderer process 的則稱為 main process，要登入 SSH 的 code 就要寫在 main process 這邊，那兩邊要怎麼溝通呢？Electron 提供了 IPC 模組來用。</p>
+              <p>IPC 模組應該是稱為 Inter Process Communication 吧，我覺得這在 Electron App 開發當中應該是超重要的一部份，結果在 Quick Start 那篇文章中竟然沒有範例介紹，只有簡單的一句話說如果兩邊要溝通要用這個（或是另外一個 remote 模組），而且點過去也只有 <a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">API 文件</a>，沒有範例，後來出的 remote 模組的<a href="http://electron.atom.io/docs/v0.30.0/api/ipc-renderer/">文件</a>才有範例說明，總之這樣弄來弄去還是有解決兩邊的溝通問題，所以下一個遇到的，就是我要怎麼讓使用者選檔案了。</p>
+              <p>因為 Electron 是跨平台的，我的程式設計是用 private key 去登入遠端的機器做事情，Linux 或 OSX 都可以假設 key 的位置，但是 Windows 不行，所以我就要提供可以讓使用者選檔案的功能，這部分文件也是沒有好好的連結，你看完 Quick Start，看一遍文件目錄，其實都看不出來到底要怎麼做到這件事，事實上它被稱為 <a href="http://electron.atom.io/docs/v0.30.0/api/dialog/">dialog</a>，這不把整份 API 文件翻完真的不知道是放在這名字下面。</p>
+              <p>然後，Electron 的 renderer process 端雖然和瀏覽器環境幾乎一樣，不過還是有些差異，一部份是 Chrome 引擎的問題，例如最近的 <code>fetch</code>，在 renderer process 會受到 CORS 限制，但是 XHR 不會，這是因為 fetch 還沒有檢查 Chrome 的 safety flag，所以如果要用 fetch API 接 ES6 Promise 的話，就要用 Github 的 polyfill，自己把檢查的程式碼拿掉，另外一個類似的問題是，如果要在 renderer process 中，引入第三方的 library，有兩種用法，一個是用新出現的 <code>require</code> 來引入 npm module，或是像一般網頁一樣，直接用 <code>&lt;script&gt;</code> 標籤引入 js 檔案，但是就會發生一個問題，因為 jQuery 會判斷現在的環境，然後來決定要不要 expose <code>$</code> 變數到 global scope 下，剛好，Electron 的環境下，雖然是要當成瀏覽器環境，但是又多了 <code>require</code> 可以用，結果就是被誤判成在 Node 環境，想當成一般網頁環境用 jQuery 就會找不到 <code>$</code>，結果也是要自己去修改檢查部分的程式碼。</p>
+              <p>最後，把程式功能弄得差不多了，要打包給其他人時，發現竟然無從下手，本文開頭提到的 Application distribution 這份文件說的很簡單，就是把某個目錄換掉就好了，可是真的到了這一步才意識到，是換掉哪裡的目錄？結果只好上網找別人弄好的打包工具，這邊我用的是 <a href="https://www.npmjs.com/package/electron-packager">electron-packager</a>，研究一下才發現，原來是要抓 Github 上 <a href="https://github.com/atom/electron/releases">release</a> 那的檔案下來處理，整個過程其實還蠻不愉快的，因為根本不是難懂，而是文件作不好造成一堆時間浪費啊。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Electron 入門</strong>發表於 2015-08-03，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2015/07/03/webappsec/"><span class="prefix">上一篇：</span>webappsec<time>2015-07-03</time></a><a class="next pn" href="/log/2015/08/07/first-patch-to-firefox/"><span class="prefix">下一篇：</span>My First Patch to Firefox<time>2015-08-07</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

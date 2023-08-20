@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Apache2 and HTTP/2 : O3noBLOG</title>
+    <meta name="description" content=" 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="前端測試入門" href="/log/2015/10/17/f2e-test/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2015/10/19/apache2-http2/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2015/10/19/apache2-http2/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Apache2 and HTTP/2"/>
+    <meta property="og:description" content=" 最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 OpenSSL 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 ALPN ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯： ./config make sudo make install 會把檔案裝到 /usr/local/ssl 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 /usr/local..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2015/10/19/apache2-http2/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg"/>
+    <meta property="og:image:width" content="570"/>
+    <meta property="og:image:height" content="427"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-apache2-http2">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2015-10-19T23:04:03" id="date-2015-10-19">
+                <span class="mon">10月</span>
+                <span class="day">19日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2015/10/19/apache2-http2/">Apache2 and HTTP/2</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w">
+                    <meta itemprop="width" content="570"/>
+                    <meta itemprop="height" content="427"/>
+                  </img>
+                </a>
+              </p>
+              <p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
+              <pre>
+                <code>./config
+make
+sudo make install
+</code>
+              </pre>
+              <p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
+              <p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
+              <pre>
+                <code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
+tar zxvf ./httpd-2.4.17.tar.gz
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
+tar zxvf ./apr-util-1.5.4.tar.gz
+mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
+ar zxvf ./apr-util-1.5.4.tar.gz 
+mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
+</code>
+              </pre>
+              <p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
+              <pre>
+                <code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
+make
+sudo make install
+</code>
+              </pre>
+              <p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
+              <pre>
+                <code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
+</code>
+              </pre>
+              <p>或是：</p>
+              <pre>
+                <code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
+</code>
+              </pre>
+              <p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
+              <pre>
+                <code>&lt;VirtualHost *:80&gt;
+    Protocols h2c http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+</code>
+              </pre>
+              <p>還有</p>
+              <pre>
+                <code>&lt;VirtualHost *:443&gt;
+    Protocols h2 http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+</code>
+              </pre>
+              <p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
+              <pre>
+                <code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+SSLProtocol All -SSLv2 -SSLv3
+</code>
+              </pre>
+              <p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
+              <ul>
+                <li>Firefox 27</li>
+                <li>Chrome 22</li>
+                <li>IE 11</li>
+                <li>Opera 14</li>
+                <li>Safari 7</li>
+                <li>Android 4.4</li>
+                <li>Java 8 </li>
+              </ul>
+              <p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
+              <p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
+              <pre>
+                <code>brew install curl --with-nghttp2
+brew link curl
+
+/usr/local/bin/curl -v --http2 https://othree.net
+</code>
+              </pre>
+              <p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
+              <pre>
+                <code>brew install nghttp2
+
+nghttp -uv https://othree.net
+</code>
+              </pre>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w">
+                    <meta itemprop="width" content="570"/>
+                    <meta itemprop="height" content="427"/>
+                  </img>
+                </a>
+              </p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w">
+                    <meta itemprop="width" content="570"/>
+                    <meta itemprop="height" content="427"/>
+                  </img>
+                </a>
+              </p>
+              <p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="531"/>
+                  </img>
+                </a>
+              </p>
+              <p>然後是 2.0：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="531"/>
+                  </img>
+                </a>
+              </p>
+              <p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
+            </section>
+            <footer>
+              <a href="/log/server/" rel="tag">Server Side</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Apache2 and HTTP/2</strong>發表於 2015-10-19，文章類別為
+			  <a href="/log/server/">Server Side</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2015/10/17/f2e-test/"><span class="prefix">上一篇：</span>前端測試入門<time>2015-10-17</time></a><a class="next pn" href="/log/2015/11/19/ula-umbrella/"><span class="prefix">下一篇：</span>ULA 雨傘<time>2015-11-19</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

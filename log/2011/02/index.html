@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>February 2011 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="January 2011" href="/log/2011/01/"/>
+    <link rel="next" title="March 2011" href="/log/2011/03/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2011/02/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>February 2011</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="January 2011" href="/log/2011/01/">« January 2011</a> | <a href="../">上一層</a> | <a title="March 2011" href="/log/2011/03/">March 2011 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-jquery-deferred-object">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2011-02-27T12:09:36" id="date-2011-02-27">
+                <span class="mon">02月</span>
+                <span class="day">27日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2011/02/27/jquery-deferred-object/">jQuery Deferred Object</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>jQuery 的 <a href="http://api.jquery.com/ready/">.ready()</a> 有兩個特性，一是可以丟多個函式進去，它會照順序執行，第二個就是如果文件已經讀完，還丟函式進去的話，變成會馬上執行，這兩個特性讓 .ready() 變得非常好用，寫程式寫到有需要在頁面讀完才執行的東西，隨時都可以丟個函式進去，不過同樣是讀取資料下來，ajax 的 request 卻沒辦法做到一樣的事情，只能使用 callback ，所有要做的事情都要一次指定好，侷限了程式的結構設計。</p>
+              <p><a href="http://api.jquery.com/category/version/1.5/">jQuery 1.5</a> 的幾個新功能中，有一項特別吸引人注目的，就是 <a href="http://api.jquery.com/category/deferred-object">deferred 物件</a> 這個新的物件兼行為，我剛開始看文件時，一直不能了解為什麼要設計這個物件和設計它這樣的行為，直到我遇到前一段的問題時才整個豁然開朗， jQuery 1.5 把 ajax 改寫，其中一項變化就是回傳的值從 XMLHttpRequest 變成 <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> 物件，而這個 jqXHR 物件其實就是個 deferred 物件，deferred 物件用來代表某件事情，我們可以用來設定該事情的結果是否成功，並且根據不同的結果要做哪些事情，程式執行到可以判斷這個 deferred 物件代表的事件是成功的話就執行 <a href="http://api.jquery.com/deferred.resolve/">resolve()</a>，deferred 物件會把它所知道，事情成功的話要做的事情照順序做過，失敗的話就執行 <a href="http://api.jquery.com/deferred.resolve/">reject()</a>，一樣 deferred 物件會把失敗時要做的事情做一遍。而在事件結果確定之後，deferred 物件還是可以繼續接收函式，只是就像 <code>.ready()</code> 一樣，會變成馬上執行（或是直接丟掉不裡）。而 jqXHR 物件本身就代表 XMLHttpRequest 這件事情，request 的結果就是 jqXHR 的結果，它會在 request 成功的時候 resolve，失敗的時候 reject，換成這樣的架構後，做 ajax 變成可以在任何時間丟入複數的 callback，再也不用在建立 request 的時候就把需要的 callback 都準備好，使用上整個方便很多，程式的架構也因此可以變得更自由。</p>
+              <p>而除了 ajax 相關的函式之外， jQuery 也提供函式可以產生空白的 deferred 物件，然後程式設計師可以自己設計它代表的事件以及其行為，相信這個新的設計可以讓 jQuery 的 plugin 開發變得更簡單，基本上非同步的東西都可以使用 deferred 物件，我想應該不少的使用者行為可以用 deferred 物件來重新設計並且有更好的架構才是。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-gundovim">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2011-02-27T00:01:32" class="same-date">
+                <span class="mon">02月</span>
+                <span class="day">27日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2011/02/27/gundovim/">Gundo.vim</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/5478866289/" title="Gundo by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm6.staticflickr.com/5260/5478866289_5f64b4da86_b.jpg" width="670" height="656" alt="Gundo" srcset="https://farm6.staticflickr.com/5260/5478866289_5f64b4da86_b.jpg 1024w">
+                    <meta itemprop="width" content="670"/>
+                    <meta itemprop="height" content="656"/>
+                  </img>
+                </a>
+              </p>
+              <p>詳細可以看 Vimcast 最新的一期：<a href="http://vimcasts.org/episodes/undo-branching-and-gundo-vim/">Undo branching and Gundo.vim</a>，簡單說就是 Vim 有個 undo branch 讓你 undo 後又做了修改後，還可以回到原來 undo 前的版本，不過標準的操作方式並不好用，甚至很多人都不知道有這個功能，因此  <a href="http://stevelosh.com/">Steve Losh</a> 做了個 <a href="http://sjl.bitbucket.org/gundo.vim/">Gundo</a> ，讓 undo branch 圖形化，並且可以直接移動到特定的版本，實在是非常強大，還在開發的時候我就一直很注意了，沒想到忘了一陣子，它就已經發展到 2.0 了，總之看到後馬上就變成必備的 vim plugin 了:P。</p>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-dom-range-ierange-rangy">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2011-02-26T20:44:02" id="date-2011-02-26">
+                <span class="mon">02月</span>
+                <span class="day">26日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2011/02/26/dom-range-ierange-rangy/">DOM Range, IERange, rangy</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>有在接觸 JavaScript 編輯器的比較會遇到這問題，就是如何存取、甚至修改使用者選取的文字，按照標準的話，應該是使用 <a href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html">DOM 的 Range</a> ，不過一如往常，IE 不支援，預計是 <a href="http://blogs.msdn.com/b/ie/archive/2010/05/11/dom-range.aspx">IE9 才會有正式的支援</a>，而之前的版本則是用他們自己的 <a href="http://msdn.microsoft.com/en-us/library/ms535872.aspx">TextRange</a> ，基本上，TextRange 這個標準還蠻難懂的（意思就是我也還沒能了解），然後總之就是不好使用，所以就有了 <a href="https://github.com/tcr/IERange">IERange</a> 這個函式庫，利用 TextRange 實作了 W3C 的 DOM Range ，而且發展蠻久了，還蠻可靠。</p>
+              <p>不過 IERange 還有一個問題沒辦法解決，就是輸入欄位如 input 和 textarea 內，文字選取狀態的存取，現在大部分瀏覽器都是支援 <code>selectionStart</code> 、 <code>selectionEnd</code> 這兩個屬性和 <code>setSelectionRange()</code> ，標準是定在 <a href="http://dev.w3.org/html5/spec/Overview.html#textFieldSelection">HTML5 的 text field selections API</a> 裡面，IE 的話則是要使用上面提到的 TextRange 來存取，而且實際上操作也沒很簡單，所以也有位 <a href="http://stackoverflow.com/users/96100/tim-down">Tim Down</a> 弄了 <a href="https://github.com/timdown/rangyinputs">rangyinputs</a> 這個 <a href="https://github.com/timdown/rangy">rangy</a> 的簡化版，專門針對跨瀏覽器、文字輸入框的選取所做的函式庫，也有包好的 jQuery Plugin，我看 Stack Overflow 上不少篇相關的問題都有人推薦 rangy （作者本人的推薦也不少XD），實際上下去並測了一下還沒有遇到什麼問題，雖然功能上沒什麼問題，不過還是有些地方有些可惜，就是它的 API 沒有跟著 HTML 標準，然後沒有文件，所以要怎麼用要自己看原始碼，另外我覺得有一些地方設計似乎不是很好，像是 <code>getSelection()</code> 會傳回 range 物件，但是 <code>setSelection()</code> 卻不能直接把 range 物件送進去，要把選取的開始和結束兩個直分成兩個參數丟進去，不過相較於要跟 TextRange 打交道這檔事，這些缺點根本就是優點啊！</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2011/01/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

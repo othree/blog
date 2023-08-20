@@ -7,9 +7,8 @@
     <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
     <link rel="made" href="mailto:othree@gmail.com"/>
@@ -72,6 +71,118 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-common-log-format">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-08-14T21:29:05" id="date-2023-08-14">
+                <span class="mon">08月</span>
+                <span class="day">14日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/08/14/common-log-format/">Common Log Format</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format">
+                    <meta itemprop="width" content="512"/>
+                    <meta itemprop="height" content="380"/>
+                  </img>
+                </a>
+              </p>
+              <p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
+              <p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
+              <p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
+              <ul>
+                <li>
+                  <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a>
+                </li>
+                <li>
+                  <a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a>
+                </li>
+                <li>
+                  <a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a>
+                </li>
+              </ul>
+              <p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
+              <pre>
+                <code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
+
+- host: Either the DNS name or the IP number of the remote client
+- rfc931: Any information returned by identd for this person, - otherwise.
+- authuser: If user sent a userid for authentication, the user name, - otherwise.
+- DD: Day
+- Mon: Month (calendar name)
+- YYYY: Year
+- hh: hour (24-hour format, the machine's timezone)
+- mm: minutes
+- ss: seconds
+- request: The first line of the HTTP request as sent by the client.
+- ddd: the status code returned by the server, - if not available.
+- bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
+</code>
+              </pre>
+              <p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
+              <p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
+              <pre>
+                <code>time remotehost request 
+</code>
+              </pre>
+              <p>實作是：</p>
+              <pre>
+                <code>fprintf(log, "%24.24s %s %s\n",
+		asctime(gorl), HTClientHost, n_noth(HTReqLine));
+</code>
+              </pre>
+              <p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
+              <pre>
+                <code>Www Mmm dd hh:mm:ss yyyy
+</code>
+              </pre>
+              <p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
+              <p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
+              <p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
+              <ul>
+                <li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
+                <li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
+                <li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+              </ul>
+              <p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
+            </section>
+            <footer>
+              <a href="/log/unix/" rel="tag">UNIX</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-boss-passed-away">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-08-11T20:16:47" id="date-2023-08-11">
+                <span class="mon">08月</span>
+                <span class="day">11日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/08/11/vim-boss-passed-away/">Vim Boss Passed Away</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="684"/>
+                  </img>
+                </a>
+              </p>
+              <p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
+              <p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
+              <p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
+              <p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
           <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-yorimoi">
             <header>
               <time itemprop="datePublished dateModified" datetime="2023-08-02T19:46:42" id="date-2023-08-02">
@@ -101,7 +212,6 @@
             </section>
             <footer>
               <a href="/log/acg/" rel="tag">動畫、漫畫、遊戲</a>
-              <a href="/log/2023/08/02/yorimoi/#comments" title="「比宇宙更遠的地方」的迴響">迴響</a>
             </footer>
           </article>
           <hr/>
@@ -238,7 +348,6 @@
             </section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
-              <a href="/log/2023/05/12/singapore-2022/#comments" title="「新加坡 2022」的迴響">迴響</a>
             </footer>
           </article>
           <hr/>
@@ -268,94 +377,10 @@
             </section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
-              <a href="/log/2023/05/04/the-railroad-museum/#comments" title="「大宮鐵道博物館」的迴響">迴響</a>
             </footer>
           </article>
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-sakura-tram">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2023-05-03T10:56:12" id="date-2023-05-03">
-                <span class="mon">05月</span>
-                <span class="day">03日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2023/05/03/sakura-tram/">荒川線（Sakura Tram）一日遊</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/52857686013/" title="都電荒川線 by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/52857686013_ddac4c75dd_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857686013_e476726098_k.jpg 2x">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>續前一篇，這次東京自由行最後一個整天我們因為所以然後選擇了荒川線一日遊，結果而言蠻不錯的，網路上介紹過荒川線一日遊的文章其實也不少，所以這篇就來紀錄我們去的地方就好。</p>
-              <em class="extended">
-                <a href="/log/2023/05/03/sakura-tram/">閱讀「荒川線（Sakura Tram）一日遊」全文</a>
-              </em>
-            </section>
-            <footer>
-              <a href="/log/diary/" rel="tag">日記</a>
-              <a href="/log/2023/05/03/sakura-tram/#comments" title="「荒川線（Sakura Tram）一日遊」的迴響">迴響</a>
-            </footer>
-          </article>
-          <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-2023-tokyo">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2023-05-01T23:18:19" id="date-2023-05-01">
-                <span class="mon">05月</span>
-                <span class="day">01日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2023/05/01/2023-tokyo/">2023 Tokyo</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/52852893699/" title="東京 by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/52852893699_3827342974_b.jpg" width="1024" height="683" alt="東京" srcset="https://live.staticflickr.com/65535/52852893699_6f3f08c711_k.jpg 2x">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>睽違三年，終於又去了日本了，這次因為太久沒去所以排比較多天，來回共十一天，從週五跨一個週間到週一，這篇想紀錄一下這次的行程規劃、後來實際進行的狀況以及覺得有點缺憾錯過的東西。</p>
-              <p>這趟的主行程其實是三年前本來要去的，結果遇到疫情爆發，當時想的就是帶小朋友去迪士尼玩和順便去看富士山泡溫泉，所以這次行程規劃也就把那次的缺憾放進來，不過我們決定的有點晚，加上日本最近一直有國內旅遊補助，所以安排住宿的時候一直蠻困擾的，最後基本上規劃成：</p>
-              <pre>
-                <code>4/14 入境、上野採買
-4/15 銀座採買
-4/16 淺草、台場
-4/17 迪士尼
-4/18 迪士尼
-4/19 富士山
-4/20 富士山
-4/21 大宮鐵道博物館
-4/22 隨意
-4/23 隨意
-4/24 出境
-</code>
-              </pre>
-              <p>在帶著一個拖油瓶的情況下，入住的飯店一共換了四間其實有點多，前三天住上野御徒町，然後迪士尼樂園大飯店，大倉東京灣酒店，然後河口湖，最後在池袋王子住四天，這樣安排主要是迪士尼本家飯店一來比較貴，二來也很難同一間連住兩天，本來是想說第二天玩完回去市區住，方便隔天搭巴士去河口湖，本來預期的兩大挑戰是：</p>
-              <ol>
-                <li>從上野到迪士尼，需要轉車加上搬運大量行李</li>
-                <li>從迪士尼往富士山，需要去東京車站轉巴士，還要寄送行李到最後的住宿地：池袋王子大飯店</li>
-              </ol>
-              <p>這兩個路程我都有仔細研究過，轉車要去哪一站，搭車要搭哪個位置上車比較好，還有怎樣的路線才有電梯等等，不過最後都沒派上用場，首先是從迪士尼離開去河口湖這段，我在出發前就決定改成租車去，這樣雖然有比較貴，但是好處多很多，最棒的就是我時間變多所以還多去了木更津的三井 outlet，以及穿越東京灣的 Aqualine 和海中間的水上螢火蟲休息站（本來是想繞東京灣一圈的，結果發現要兩個小時），尤其是後者我實在蠻有興趣，但是作為觀光客實在很難有機會，所以我的規劃就是一早搭 Disney Resort Line 單軌去舞濱站轉公車，不用跑去其他地方，直接在車站前面的公車站等公車，搭到<strong>猫実</strong>站（念作 Nekozane 四個音，我一時以為是三個音，還好司機聽得出來）然後走到 Toyota 租車<strong>浦安やなぎ通り店</strong>，接著開車回去大倉裝行李。</p>
-              <p>PS. 我蠻喜歡這間 Toyota 租車的，還有飲料可以給你外帶上車，包括咖啡、果汁、紅茶花傳無糖紅茶，相較於後來還車的東池袋店真是差很多。</p>
-              <p>至於第一個挑戰，其實本來還沒打算花錢解決，後來因為第一天光是從機場到飯店帶著拖油瓶就累死了，我們帶了兩個大行李箱、小孩有給他推車坐，雖然基本上是都找的到斜坡和無障礙的路線，但是常常需要一直繞路，並且有些路段也不是很好推，體力消耗不小，加上第三天招待我們的朋友也覺得花錢解決比較好，而且前兩天採買過後行李已經變多，所以那天變成直接用 uber 叫大車子來去迪士尼樂園大飯店，意外的很好叫。</p>
-              <em class="extended">
-                <a href="/log/2023/05/01/2023-tokyo/">閱讀「2023 Tokyo」全文</a>
-              </em>
-            </section>
-            <footer>
-              <a href="/log/diary/" rel="tag">日記</a>
-              <a href="/log/2023/05/01/2023-tokyo/#comments" title="「2023 Tokyo」的迴響">迴響</a>
-            </footer>
-          </article>
-          <hr/>
-          <a id="prev-link" href="/log/2023/01/#entry-wbr-and-nobr">➡ 看看其它文章</a>
+          <a id="prev-link" href="/log/2023/05/#entry-sakura-tram">➡ 看看其它文章</a>
         </main>
         <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
           <hr/>
@@ -383,8 +408,8 @@
             <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(19)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(43)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

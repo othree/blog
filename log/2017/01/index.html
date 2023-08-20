@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>January 2017 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="November 2016" href="/log/2016/11/"/>
+    <link rel="next" title="February 2017" href="/log/2017/02/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2017/01/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>January 2017</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="November 2016" href="/log/2016/11/">« November 2016</a> | <a href="../">上一層</a> | <a title="February 2017" href="/log/2017/02/">February 2017 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-nodejs-es-module">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2017-01-14T12:22:32" id="date-2017-01-14">
+                <span class="mon">01月</span>
+                <span class="day">14日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2017/01/14/nodejs-es-module/">NodeJS and ES Module</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/27325803313/" title="香港 2016 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg" width="1024" height="683" alt="香港 2016" srcset="https://farm8.staticflickr.com/7286/27325803313_0fd50750d0_b.jpg 1024w, https://farm8.staticflickr.com/7286/27325803313_daa4621d44_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>今天看了 TC39 一月會議的 Agenda 後才注意到，nodejs 用的 <a href="https://nodejs.org/docs/latest/api/modules.html">CommonJS Module</a> 和 <a href="https://hacks.mozilla.org/2015/08/es6-in-depth-modules/">ECMAScript Module</a>(ES Module) 在特定情況下會有混淆的情形發生，所謂的特定情形就是沒有 <code>import/require</code> 也沒 <code>export/exports</code> 的模組，例如寫東西在 root 物件上，只產生 side effect 的模組：</p>
+              <pre>
+                <code class="language-javascript">(function (root) {
+
+  root.lib = {};
+
+}(this));
+</code>
+              </pre>
+              <p>像這樣的檔案，Parser 就無法判斷他是 CommonJS Module 還是 ES Module，這樣會產生什麼問題呢，其實 ES Module 有一些特色，例如它必須要使用 strict mode 來解析並執行，而光是這個差異，就會讓相同的程式碼有不一樣的執行結果了，而需要同時支援 CommonJS Module 和 ES Module 的主要是 NodeJS 環境，當然它目前還沒有兩種都支援，但是勢必需要支援 ES Module 的，所以 NodeJS 需要能夠百分之百正確的判斷每個 JavaScript 程式碼是屬於 CommonJS Module 還是 ES Module，這在目前是辦不到的，也因為這個問題所以 NodeJS 雖然已經支援大部分的 ES2015 的新功能，但卻遲遲還無法支援 ES Module，相關的討論至少也半年有了，當時還提出了新的副檔名 <code>.mjs</code><a href="https://github.com/nodejs/node-eps/blob/5dae5a537c2d56fbaf23aaf2ae9da15e74474021/002-es6-modules.md#51-determining-if-source-is-an-es-module">這種解法</a>，多一種副檔名聽起來有點不可思議，也引此還有個 Twitter <a href="https://twitter.com/nodemjs">帳號專門</a>在關注相關情報的，不過目前最新的解決方法，則是 ES Spec <a href="https://github.com/bmeck/UnambiguousJavaScriptGrammar">修改</a> Module 的 Grammer 來解決這個問題，修改的方式是就是以後 ES Module 一定要至少有一個 <code>import</code> 或是 <code>export</code> statement，如果是上面那種沒有需要 import 也沒有 export 的模組，那就要加上 <code>export {}</code>，變成：</p>
+              <pre>
+                <code class="language-javascript">(function (root) {
+
+  root.lib = {};
+
+}(this));
+
+export {};
+</code>
+              </pre>
+              <p>語意上剛好等於沒有匯出任何東西，所以不會和現在的 ES2015 版的 Module 有衝突，這份提案已經是 accept 狀態了，所以沒意外應該今年的 ES2017 就會包含進去了，當然這會影響到以前寫出這種 ES Module 的程式碼，不過目前也還沒有那個環境有直接使用 ES Module 的能力，都還是先過 bundler 轉成現在環境可以使用的形式，Web 的 <code>&lt;script type="module"&gt;</code> 也才正要有瀏覽器支援，所以這個時間點做出這個修改影響還算是很小，之後大概就是有記得應該就沒問題了，我自己是比較期待 nodejs 能快點原生支援 ES Module 啦。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-smartypants-js">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2017-01-10T22:47:59" id="date-2017-01-10">
+                <span class="mon">01月</span>
+                <span class="day">10日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2017/01/10/smartypants-js/">smartypants.js</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/31387550094/" title="大阪新年 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg" width="1024" height="683" alt="大阪新年" srcset="https://farm1.staticflickr.com/293/31387550094_01791b5764_b.jpg 1024w, https://farm1.staticflickr.com/293/31387550094_6f388b3f83_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p><a href="https://daringfireball.net/projects/smartypants/">SmartyPants</a> 這個東西也是很久了，和 Markdown 差不多時期，都是 John Gruber 幫當時的網路文字出版軟體（ex: MovableType）所做的，而 SmartyPants 是用來處理一些標點符號的，其中，最容易被人注意到的就是引號「"」的轉換了。</p>
+              <p>雖然鍵盤上的引號按鍵只有一個，但是傳統的文書寫作上，引號是有分左邊（開始）的「“」和右邊（結束）的「”」，只不過早期為了減少鍵盤按鍵數，還有字元編碼上的限制，所以合併成為只有一個，不過隨著計算機的發展，可以使用的字元編碼資料量增加後，就還是有定義了開始和結束的兩種引號，並且有單引號和雙引號兩種：</p>
+              <ul>
+                <li>左單引號 ‘</li>
+                <li>右單引號 ’</li>
+                <li>左雙引號 “</li>
+                <li>右雙引號 ”</li>
+              </ul>
+              <p>理想上，寫作文章時也應該正確的使用這些引號，不過其實因為輸入上比較麻煩，一般人打字也不會特別注意，所以常常被忽略，比較常見的是軟體本身在使用者輸入文字時自動做轉換，例如 Apple 的 Pages、Keynote、微軟的 Skype 等等，講到 Keynote 自動轉換引號這點就要另外岔題一下，就是偶爾都會看到頭影片裡面的程式碼，其中的引號也被轉換過，其實就是因為貼上 code 到 Keynote 的時候被轉換了，如果作者沒有注意到的話就直接釋出，然後讀者 copy 程式碼出來試試看時，就會編譯失敗而無法執行。回到標點符號上，這類標點符號其實不止有引號，SmartyPants 可以處理的還包括：</p>
+              <ul>
+                <li><code>--</code> 轉成 en-dash –</li>
+                <li><code>---</code> 轉成 em-dash —</li>
+                <li><code>...</code> 轉成 ellipsis …</li>
+              </ul>
+              <p>而且它對於引號的轉換還算是聰明，會判斷是不是真的用來包起文字的，還支援用 backtick 來模擬的雙引號，看起來像：</p>
+              <pre>
+                <code>``quoted string''
+</code>
+              </pre>
+              <p>另為也會針對年代的特殊寫法做處理，例如 <code>'80s</code> 會轉成 ’80s，並且會避開 HTML 標籤的部分，不會把 HTML 標籤裡面的屬性值的引號也做轉換，像是 <code>&lt;html lang="en"&gt;</code> 這種。前陣子因為工作上要處理翻譯字串，想要順便好好的處理這些符號，所以就想到了這個工具，因為我一般寫小 script 做事情是用 JavaScript 然後用 node 來執行，所以要用 SmartyPants 就沒辦法那麼直接了，一開始先找 JavaScript 的 solution，找到一個簡單的，只用幾條 regular epxression 的<a href="https://gist.github.com/danburzo/1cc866400cb4f810c493">版本</a>，其實運作的也還不錯，但是無法避開不處理 HTML 標籤，所以產生出來的結果也不能用，接著改成用 STDIO 丟給 John Gruber 的 Perl 版，結果這效率實在太差，所以又繼續研究一番，發現還有一套叫 <a href="https://www.npmjs.com/package/typogr">typogr</a> 的文字處理工具有實做，不過不想要太多功能，所以最後我決定自己把 Perl 版 SmartyPants 移植成 NPM module，也因此有了 <a href="https://github.com/othree/smartypants.js">smartypants.js</a>。</p>
+              <p>這次開發我選擇的語言是 TypeScript，原因可以參考我上一篇文章 <a href="https://blog.othree.net/log/2016/11/18/20k-for-of/">20k-for-of</a>，然後用 Makefile 加上一些指令轉成類似 <a href="https://github.com/jquery/jquery/blob/master/src/wrapper.js">jQuery UMD</a> 形式的 JavaScript 檔案發佈到 NPM 上，目前的 smartypants.js 是完完全全把 Perl 版的邏輯翻過來，不過只有實作轉換編碼的部分加上 CLI 的介面，另外 Perl 版的只能轉換成 HTML entity 的格式，不過現在 UTF-8 已經算是很廣泛應用的文字編碼了，所以我還加上了一個轉成 UTF-8 字元的版本，用 UTF-8 編碼的雙引號其實很不錯，在 JSON 或是 csv 裡面也不用 escape，肉眼看起來也美觀許多。</p>
+              <p>實做過程比較緊張的地方大概就是要把 Perl 的 regular expression 轉成 JavaScript 的版本了，一度看到沒看過的用法都覺得會不會沒辦法用 JavaScript 做起來，還好沒用到很神奇的語法。另外它處理 HTML 語法的部分，其實是先過一個簡單的 lexer 轉成 token list，裡面兩種 token 分別就是一般文字和 HTML 標籤兩種，接著只針對一般文字 token 來做標點符號轉換，不過其實這個 tokenize 的部分有 bug，例如：</p>
+              <pre>
+                <code>&lt;span title="&gt;"&gt;HAHA&lt;/span&gt;
+</code>
+              </pre>
+              <p>就會被分解成如下的 token：</p>
+              <ul>
+                <li>
+                  <code>&lt;span title="&gt;</code>
+                </li>
+                <li>
+                  <code>"&gt;HAHA</code>
+                </li>
+                <li>
+                  <code>&lt;/span&gt;</code>
+                </li>
+              </ul>
+              <p>而且這種方法就也無法處理到一些文字內容的 HTML 屬性，例如 title 和 alt 等，所以接下來還可以做的改進，一個就是改進這部分的 lexer，然後也要對這些屬性值轉換標點符號，大概需要建立一個白名單，另外還有一個想加強的地方就是補上 test case 了，目前完全沒有相關的 test case 可以用，所以其實也沒很正式的驗證過，不過總之目前是都還運作正常，如果有相似需求的人可以參考一下。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2016/11/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

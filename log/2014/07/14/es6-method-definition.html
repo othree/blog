@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>ES6 Method Definition : O3noBLOG</title>
+    <meta name="description" content="以前在產生 function 時，一定不外乎是 function declaration： function foo() { return; } 或是 function expression： var foo = function () { return; } 不過在 ES6 有一種新的特殊的語法可以使用，叫做 method definition，顧名思義，這個新的語法是專門用在產生物件的 method 上用的，所以嚴格說來不是用來做 function 的，然後也因此很特別的不需要使用到 function 這個關鍵字，基本的用法通常會在 class syntax 中使用： class foo { constructor() {..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="SIMD in JavaScript" href="/log/2014/06/26/simd-in-javascript/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2014/07/14/es6-method-definition/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2014/07/14/es6-method-definition/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="ES6 Method Definition"/>
+    <meta property="og:description" content="以前在產生 function 時，一定不外乎是 function declaration： function foo() { return; } 或是 function expression： var foo = function () { return; } 不過在 ES6 有一種新的特殊的語法可以使用，叫做 method definition，顧名思義，這個新的語法是專門用在產生物件的 method 上用的，所以嚴格說來不是用來做 function 的，然後也因此很特別的不需要使用到 function 這個關鍵字，基本的用法通常會在 class syntax 中使用： class foo { constructor() {..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2014/07/14/es6-method-definition/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-es6-method-definition">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2014-07-14T16:47:15" id="date-2014-07-14">
+                <span class="mon">07月</span>
+                <span class="day">14日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2014/07/14/es6-method-definition/">ES6 Method Definition</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>以前在產生 function 時，一定不外乎是 function declaration：</p>
+              <pre>
+                <code>function foo() { return; }
+</code>
+              </pre>
+              <p>或是 function expression：</p>
+              <pre>
+                <code>var foo = function () { return; }
+</code>
+              </pre>
+              <p>不過在 ES6 有一種新的特殊的語法可以使用，叫做 <strong>method definition</strong>，顧名思義，這個新的語法是專門用在產生物件的 method 上用的，所以嚴格說來不是用來做 function 的，然後也因此很特別的不需要使用到 function 這個關鍵字，基本的用法通常會在 class syntax 中使用：</p>
+              <pre>
+                <code>class foo {
+  constructor() {
+    //blah
+  }
+
+  fooMeth() {
+    //blah
+  }
+}
+</code>
+              </pre>
+              <p>在上面這段程式碼中，<code>constructor</code> 和 <code>fooMeth</code> 都是 method definition，其實就很接近以前的 prototype method，但是大幅簡化了語法，而除了這樣使用，還可以配合 <code>get</code>、<code>set</code> 讓它變成 accessor function：</p>
+              <pre>
+                <code>class foo {
+  get bar() {
+    return this._bar;      
+  }
+  set bar(v) {
+    this._bar = v + this._bar;
+  }
+}
+</code>
+              </pre>
+              <p>Accessor 其實在 ES5 就已經有了，不過因為一直被 IE 卡著所以不太有人用，而且寫起來實在也麻煩很多，以前是要用 <code>defineProperty</code> 才能定義 accessor：</p>
+              <pre>
+                <code>Object.defineProperty(foo.prototype, 'bar', {
+  get: function () {
+    return this._bar;
+  },
+  set: function (v) {
+    this._bar = v + this._bar;
+  }
+});
+</code>
+              </pre>
+              <p>當然除了比較麻煩外，還有一個問題就是 <code>defineProperty</code> 只能用在實體物件上，所以上面的 class 範例，要做出一樣效果就要在 prototype 上使用，實在不直觀，加上 <code>defineProperty</code> 其他功能真的是很少看到使用需求，新的語法這樣設計真的是很不錯，不過看到 <code>defineProperty</code> 要在實體物件上用，就會讓人反過來想，method definition 可以不用在 class 上，而是用在普通物件上嗎？事實上是可以的，ES6 的物件語法多了簡化的寫法，其中一個就是支援 method definition，所以可以這樣寫：</p>
+              <pre>
+                <code>var object = {
+  value: 42,
+  toString() {
+    return this.value;
+  }
+};
+</code>
+              </pre>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>ES6 Method Definition</strong>發表於 2014-07-14，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2014/06/26/simd-in-javascript/"><span class="prefix">上一篇：</span>SIMD in JavaScript<time>2014-06-26</time></a><a class="next pn" href="/log/2014/07/14/yajs/"><span class="prefix">下一篇：</span>YAJS: Yet Another JavaScript Syntax for Vim<time>2014-07-14</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

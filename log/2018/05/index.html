@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>May 2018 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="April 2018" href="/log/2018/04/"/>
+    <link rel="next" title="June 2018" href="/log/2018/06/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2018/05/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>May 2018</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="April 2018" href="/log/2018/04/">« April 2018</a> | <a href="../">上一層</a> | <a title="June 2018" href="/log/2018/06/">June 2018 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-smooshgate">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2018-05-28T12:32:28" id="date-2018-05-28">
+                <span class="mon">05月</span>
+                <span class="day">28日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2018/05/28/smooshgate/">SmooshGate</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>之前應該沒在這邊提過這件事，總之就是之前 TC39 有個 flatten 的 proposal，搞一搞後，發現這東西實做啟用後 MooTools 會爛掉，詳細的原因 Google 那邊有一篇文章<a href="https://developers.google.com/web/updates/2018/03/smooshgate">解釋</a>，標題就是 SmooshGate，Smoosh 這個單字其實有點少見，我大概查一下，雖然有說是 flatten、squash 的意思，不過目前覺得應該是作畫時把顏料抹平那種動作感覺最對吧，總之，當初為了這個問題第一個提案的改名就是 <a href="https://github.com/tc39/proposal-flatMap/pull/56"><code>smoosh</code></a>，不過這個單字整體感覺和 flatten 差距實在太大，所以出現一堆聲音，有的是建議加上 <code>"use es2019"</code> 的 statement 來開啟 <code>flatten</code>，像是 stirct mode 一樣，有的建議其他名字，當然也有些人是覺得管 MooTools 去死的，不過因為 Don't Break the Web 的大原則所以還是要處理這個問題。</p>
+              <p>其實我覺得當初提案 smoosh 的人搞不好是故意挑這個字的，藉此增加話題性引發討論和建議，效果其實很好，在 Twitter 上還出現了 <a href="https://twitter.com/hashtag/smooshgate">#SmooshGate</a> 這樣的 hashtag，不過，總之在最近一次五月的 TC39 會議，確定 proposal 改新的名稱：<code>flat</code> ，雖然詞性不同，不過大家都還蠻可以接受，或許也可能是相較於 smoosh 來說很可以接受吧。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-github-pages-custom-domain-https">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2018-05-04T19:12:21" id="date-2018-05-04">
+                <span class="mon">05月</span>
+                <span class="day">04日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2018/05/04/github-pages-custom-domain-https/">GitHub Pages Custom Domain HTTPS</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/41138623844/" title="GitHub Pages by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/957/41138623844_b976542030_b.jpg 1024w">
+                    <meta itemprop="width" content="730"/>
+                    <meta itemprop="height" content="491"/>
+                  </img>
+                </a>
+              </p>
+              <p>等了好久終於出來的功能，<a href="https://github.com/isaacs/github/issues/156">追了蠻久</a>，昨天 DK 也有<a href="https://blog.gslin.org/archives/2018/05/02/8295/github-%E9%80%8F%E9%81%8E-lets-encrypt-%E6%8F%90%E4%BE%9B%E8%87%AA%E8%A8%82%E7%B6%B2%E5%9F%9F%E7%9A%84-https-%E6%9C%8D%E5%8B%99/">提到</a>，其實正式發佈前就看到有人已經可以用了，不過總之這篇稍微記錄一下如果已經是舊有的 GitHub Pages 還不能用可以怎麼處理，不過不完全有效，舊有的專案在設定看起來會像是：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/41127813434/" title="GitHub Pages by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg" width="730" height="491" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/972/41127813434_4219cc0fa1_b.jpg 1024w">
+                    <meta itemprop="width" content="730"/>
+                    <meta itemprop="height" content="491"/>
+                  </img>
+                </a>
+              </p>
+              <p>下面有寫說因為用了 custom domain 就不能用，這時候把 custom domain 刪除，然後儲存重新加回去就會變成：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/40945601525/" title="GitHub Pages by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg" width="730" height="512" alt="GitHub Pages" srcset="https://farm1.staticflickr.com/863/40945601525_2331845c36_b.jpg 1024w">
+                    <meta itemprop="width" content="730"/>
+                    <meta itemprop="height" content="512"/>
+                  </img>
+                </a>
+              </p>
+              <p>然後就等，我大概是等到隔天就有了（變成第一張圖的狀態），不過這幾天剛好完全沒空，到現在才有空檔紀錄一下。</p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-dank-mono">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2018-05-02T22:46:24" id="date-2018-05-02">
+                <span class="mon">05月</span>
+                <span class="day">02日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2018/05/02/dank-mono/">Dank Mono</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/40940786465/" title="Dank Mono Regular by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/870/40940786465_3dbdd2972e_b.jpg" width="400" height="345" alt="Dank Mono Regular, " srcset="https://farm1.staticflickr.com/870/40940786465_3dbdd2972e_b.jpg 800w">
+                    <meta itemprop="width" content="400"/>
+                    <meta itemprop="height" content="345"/>
+                  </img>
+                </a>
+              </p>
+              <p>上週在 Twitter 上看到有人轉推作者的發文，發現這個新的 coding 字型：<a href="https://dank.sh">Dank Mono</a>，然後我就買來用用看了，在這之前我是用 <a href="https://adobe-fonts.github.io/source-code-pro/">Source Code Pro</a> 的，一剛開始設定下去覺得還有點不習慣，不過強迫用了一下卻適應的蠻快的。</p>
+              <p>套用上我的編輯環境後是這樣：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/27971035788/" title="Dank Mono by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/959/27971035788_ac9bef913e_b.jpg" width="970" height="707" alt="Dank Mono, " srcset="https://farm1.staticflickr.com/959/27971035788_ac9bef913e_b.jpg 1024w, https://farm1.staticflickr.com/959/27971035788_964e25aeb6_h.jpg 1600w">
+                    <meta itemprop="width" content="970"/>
+                    <meta itemprop="height" content="707"/>
+                  </img>
+                </a>
+              </p>
+              <em class="extended">
+                <a href="/log/2018/05/02/dank-mono/">閱讀「Dank Mono」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/buy/" rel="tag">敗家</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-tfn-domain-transfer-out">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2018-05-02T12:13:08" class="same-date">
+                <span class="mon">05月</span>
+                <span class="day">02日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2018/05/02/tfn-domain-transfer-out/">TFN 域名轉出</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/41839613061/" title="dig markdown.tw by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg" width="665" height="452" alt="dig markdown.tw, " srcset="https://farm1.staticflickr.com/908/41839613061_4caec6e31e_b.jpg 1024w">
+                    <meta itemprop="width" content="665"/>
+                    <meta itemprop="height" content="452"/>
+                  </img>
+                </a>
+              </p>
+              <p>我的 markdown.tw 在 TFN 註冊的，其實一直很想轉出，但是很怕轉的過程出意外，遲遲沒動手。不過剛剛看到 GitHub Pages 用 custom domain 也正式支援 HTTPS 了，如果是設定 A record 的話需要更新 DNS 設定，於是我就決定認真的來處理這件事，不意外的介面很難理解，決定記錄一下幫助眾生～</p>
+              <em class="extended">
+                <a href="/log/2018/05/02/tfn-domain-transfer-out/">閱讀「TFN 域名轉出」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2018/04/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

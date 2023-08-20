@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>ctrlp.vim  : O3noBLOG</title>
+    <meta name="description" content=" Mac 上很有名的編輯軟體 TextMate 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 open source 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 Vim 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 snipmate.vim，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。 Vim 也很快的就有人做出了相似的功能，第一套叫做 command-t，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： ctrlp.vim，ctrlp.vim 剛好就把我在 command-t..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="schema.org  " href="/log/2012/11/04/schemaorg/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2012/11/10/ctrlpvim/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2012/11/10/ctrlpvim/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="ctrlp.vim "/>
+    <meta property="og:description" content=" Mac 上很有名的編輯軟體 TextMate 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 open source 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 Vim 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 snipmate.vim，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。 Vim 也很快的就有人做出了相似的功能，第一套叫做 command-t，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： ctrlp.vim，ctrlp.vim 剛好就把我在 command-t..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2012/11/10/ctrlpvim/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm9.staticflickr.com/8339/8157305010_8f603b1e30_b.jpg"/>
+    <meta property="og:image:width" content="1003"/>
+    <meta property="og:image:height" content="775"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-ctrlpvim">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2012-11-10T00:11:53" id="date-2012-11-10">
+                <span class="mon">11月</span>
+                <span class="day">10日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2012/11/10/ctrlpvim/">ctrlp.vim </a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8157305010/" title="Ctrl + P on Vim with ctrlp.vim by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm9.staticflickr.com/8339/8157305010_8f603b1e30_b.jpg" width="1003" height="775" alt="Ctrl + P on Vim with ctrlp.vim" srcset="https://farm9.staticflickr.com/8339/8157305010_8f603b1e30_b.jpg 1024w">
+                    <meta itemprop="width" content="1003"/>
+                    <meta itemprop="height" content="775"/>
+                  </img>
+                </a>
+              </p>
+              <p>Mac 上很有名的編輯軟體 <a href="http://macromates.com/">TextMate</a> 在推出時，有很多厲害的功能是以前從未見過的，雖然現在 TextMate 幾乎是處於停滯狀態，新版本遲遲生不出來，最後甚至整個 <a href="https://github.com/textmate/textmate">open source</a> 出來了，不過當年 TextMate 的出現可以說是掀起一波風潮，各家編輯器都開始出現類似的功能，甚至還有些更厲害的變化出現，可以說是文字編輯軟體的革命時期了吧，其中 <a href="http://www.vim.org/">Vim</a> 這個本來就有廣大的開發者使用的編輯器，當然也出現不少 TextMate 功能的 plugin，像是 <a href="https://github.com/garbas/vim-snipmate">snipmate.vim</a>，就是其中之一，至於今天要介紹的，則是另一個很實用的功能，在 TextMate 開啟專案後，可以用 CMD + T 的快速鍵叫出一個快速尋找專案內檔案的小視窗，然後使用者就可以輸入關鍵字來搜尋檔案以便開啟，特別的地方是，這裡它收的關鍵字不是比對檔案內容，而是路徑和檔名，這個功能對於程式設計師這種命令列工具用的很多的人來說，實在是非常的方便，對程式設計師來說，自己想要開啟的檔案路徑、檔名基本上都會有些印象，加上鍵盤打字打的很習慣了，這種操作模式簡直是如魚得水。</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8166619003/" title="CMD + T on Textmate by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm8.staticflickr.com/7262/8166619003_a615549145_b.jpg" width="1000" height="673" alt="CMD + T on Textmate" srcset="https://farm8.staticflickr.com/7262/8166619003_a615549145_b.jpg 1024w">
+                    <meta itemprop="width" content="1000"/>
+                    <meta itemprop="height" content="673"/>
+                  </img>
+                </a>
+              </p>
+              <p>Vim 也很快的就有人做出了相似的功能，第一套叫做 <a href="https://wincent.com/products/command-t">command-t</a>，我在初期有嘗試使用過，不過發現一些問題，一是它是使用 Ruby 寫的，不是原生的 Vim Script，所以使用的 Vim 可能還需要自己重新編譯過，第二個問題是它想要把 CMD + T 這個快速鍵也帶過來，不過我記得設定上有些麻煩。因為這兩個原因我後來就沒使用下去。而後來出現的，就是今天的主角： <a href="https://github.com/ctrlpvim/ctrlp.vim">ctrlp.vim</a>，ctrlp.vim 剛好就把我在 command-t 上面遇到的兩個問題都解決了，一是它是純 Vim Script ，有使用 cache 機制做好索引，所以效能也不差，再來，它直接拋棄 CMD + T 這組快速鍵，而挑選了另外一組： Ctrl + P，用 Ctrl 的優點在於跨平台，設定簡單，用了一陣子感覺都很順暢，至於 command-t 我則就沒再使用過了，不過它還有在開發，有興趣的人還是可以試試看，或許我說的那些問題已經小很多了吧。</p>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>ctrlp.vim </strong>發表於 2012-11-10，文章類別為
+			  <a href="/log/vim/">VIM</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2012/11/04/schemaorg/"><span class="prefix">上一篇：</span>schema.org  <time>2012-11-04</time></a><a class="next pn" href="/log/2012/11/17/yilang/"><span class="prefix">下一篇：</span>宜蘭 <time>2012-11-17</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

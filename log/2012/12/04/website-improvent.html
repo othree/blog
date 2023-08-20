@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>WebSite Improvent : O3noBLOG</title>
+    <meta name="description" content="這篇文章整理一下這次改版大概是做了哪些東西，其實一開始的目標很簡單，就是對以前的樣式不滿很久了，想要一個簡潔，沒有多餘東西的版面，不過實際上讓我動手的原因其實是我開始有 Responsive Web Site 的需求了，我想很多人都知道，現在全世界可以上網的設備，手持裝置的數量已經和電腦不相上下了，以前我想說要看文章應該不會想在手機上看，可是後來我慢慢瞭解，有很多時候可能是點到朋友在 Twitter 上的分享，所以訪客才會用手機打開你的網頁，如果訪客這時候點開的網頁有支援行動裝置的低解析度，那使用者體驗會好很多。總之，我就想要讓我的部落格也有支援就是，一開始只是想要套用 Twitter Bootstrap，不過之後又陸續加上不少東西，整理如下： Bootstrap 這次使用 Bootstrap 的 CSS Framework 來支援不同解析度的瀏覽介面，套用起來很簡單，預設的樣式就很不錯，像是表單之類的元件我就不用另外費心思來處理，主要是調整行高之類的改善排版，讓中文文章的閱讀更輕鬆些，顏色和背景則是從 日本的傳統色 那裡挑來的，目前是還沒考慮到配色的協調，應該還會再調整。 Web Fonts 用了 Google Web fonts，分別在頁首 logo 和程式碼區塊，範例： @media (-webkit-min-device-pixel-ratio: 2), (min--moz-device-pixel-ratio: 2), (min-resolution: 2dppx) Logo 部分當然就是要讓它比較不一樣些，所以找了個很特別的 8bit 風格字體，至於程式碼區塊，有一個基本要求是要是等寬字形，不然程式碼每個字元垂直對不齊會超難受的，後來用的是設計給 Android 手機的 Droid..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="id 的由來  " href="/log/2012/12/04/id-quest/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2012/12/04/website-improvent/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2012/12/04/website-improvent/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="WebSite Improvent"/>
+    <meta property="og:description" content="這篇文章整理一下這次改版大概是做了哪些東西，其實一開始的目標很簡單，就是對以前的樣式不滿很久了，想要一個簡潔，沒有多餘東西的版面，不過實際上讓我動手的原因其實是我開始有 Responsive Web Site 的需求了，我想很多人都知道，現在全世界可以上網的設備，手持裝置的數量已經和電腦不相上下了，以前我想說要看文章應該不會想在手機上看，可是後來我慢慢瞭解，有很多時候可能是點到朋友在 Twitter 上的分享，所以訪客才會用手機打開你的網頁，如果訪客這時候點開的網頁有支援行動裝置的低解析度，那使用者體驗會好很多。總之，我就想要讓我的部落格也有支援就是，一開始只是想要套用 Twitter Bootstrap，不過之後又陸續加上不少東西，整理如下： Bootstrap 這次使用 Bootstrap 的 CSS Framework 來支援不同解析度的瀏覽介面，套用起來很簡單，預設的樣式就很不錯，像是表單之類的元件我就不用另外費心思來處理，主要是調整行高之類的改善排版，讓中文文章的閱讀更輕鬆些，顏色和背景則是從 日本的傳統色 那裡挑來的，目前是還沒考慮到配色的協調，應該還會再調整。 Web Fonts 用了 Google Web fonts，分別在頁首 logo 和程式碼區塊，範例： @media (-webkit-min-device-pixel-ratio: 2), (min--moz-device-pixel-ratio: 2), (min-resolution: 2dppx) Logo 部分當然就是要讓它比較不一樣些，所以找了個很特別的 8bit 風格字體，至於程式碼區塊，有一個基本要求是要是等寬字形，不然程式碼每個字元垂直對不齊會超難受的，後來用的是設計給 Android 手機的 Droid..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2012/12/04/website-improvent/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm9.staticflickr.com/8489/8215041817_a15170fb3d_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="845"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-website-improvent">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2012-12-04T23:06:16" id="date-2012-12-04">
+                <span class="mon">12月</span>
+                <span class="day">04日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2012/12/04/website-improvent/">WebSite Improvent</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>這篇文章整理一下這次改版大概是做了哪些東西，其實一開始的目標很簡單，就是對以前的樣式不滿很久了，想要一個簡潔，沒有多餘東西的版面，不過實際上讓我動手的原因其實是我開始有 Responsive Web Site 的需求了，我想很多人都知道，現在全世界可以上網的設備，手持裝置的數量已經和電腦不相上下了，以前我想說要看文章應該不會想在手機上看，可是後來我慢慢瞭解，有很多時候可能是點到朋友在 Twitter 上的分享，所以訪客才會用手機打開你的網頁，如果訪客這時候點開的網頁有支援行動裝置的低解析度，那使用者體驗會好很多。總之，我就想要讓我的部落格也有支援就是，一開始只是想要套用 Twitter Bootstrap，不過之後又陸續加上不少東西，整理如下：</p>
+              <h5>Bootstrap</h5>
+              <p>這次使用 Bootstrap 的 CSS Framework 來支援不同解析度的瀏覽介面，套用起來很簡單，預設的樣式就很不錯，像是表單之類的元件我就不用另外費心思來處理，主要是調整行高之類的改善排版，讓中文文章的閱讀更輕鬆些，顏色和背景則是從 <a href="https://blog.othree.net/log/2012/11/22/nippon-colors/">日本的傳統色</a> 那裡挑來的，目前是還沒考慮到配色的協調，應該還會再調整。</p>
+              <h5>Web Fonts</h5>
+              <p>用了 <a href="http://www.google.com/webfonts">Google Web fonts</a>，分別在頁首 logo 和程式碼區塊，範例：</p>
+              <pre>
+                <code>@media (-webkit-min-device-pixel-ratio: 2),
+       (min--moz-device-pixel-ratio: 2),
+       (min-resolution: 2dppx)
+</code>
+              </pre>
+              <p>Logo 部分當然就是要讓它比較不一樣些，所以找了個很特別的 8bit 風格字體，至於程式碼區塊，有一個基本要求是要是等寬字形，不然程式碼每個字元垂直對不齊會超難受的，後來用的是設計給 Android 手機的 Droid Sans，Google Web Fonts 有個好處是完全照標準 CSS 的用法，而且免費。</p>
+              <h5>DevicePixelRatio Support</h5>
+              <p>這也是之前 <a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">介紹</a> 過，讓高解析度螢幕的環境可以使用比較大張的圖片，配合 flickr 的命名規則作的，自己用 iPad 看起來是蠻漂亮的啦。</p>
+              <h5>Default sans-serif font</h5>
+              <p>以前有介紹過判斷訪客瀏覽器是否支援字體渲染的 <a href="https://blog.othree.net/log/2011/03/06/default-font-style/">方法</a>，當時我給 Windows 的預設是不支援，不過時代在改變，所以現在預設的字型都是黑體了，如果瀏覽器判斷出來不支援字體渲染，那會改用系統預設字形，通常會是新細明體，會做這樣的改變事我自己有時候會看到切換字型那瞬間的跳動，老實說一直跳是不太舒服啦，所以我想讓看到的人盡量減少，考量到現在數據上訪客用 Windows 7 的使用者已經大於其他所有的 Windows 的使用者的總和，所以我就這樣改了。</p>
+              <h5>Twitter Cards and Open Graph Protocol</h5>
+              <p>接下來的改造則是社群網路的結合，這部分是以前完全沒弄過的部分，主要的原因是太多社群網路了，但是每個社群網路間都有堵 <a href="http://www.w3.org/2010/Talks/0303-socialcloud-tbl/">高牆</a>，使用者要跨越這些高牆非常困難，一個只用 Facebook 的人無法和只用 Twitter 的人從社群網路上有太多互動，就像是陷入飛彈發射井一樣。</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8215041817/" title="Social Network Silos by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm9.staticflickr.com/8489/8215041817_a15170fb3d_b.jpg" width="1024" height="845" alt="Social Network Silos" srcset="https://farm9.staticflickr.com/8489/8215041817_a15170fb3d_b.jpg 1024w, https://farm9.staticflickr.com/8489/8215041817_ff6172b27f_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="845"/>
+                  </img>
+                </a>
+              </p>
+              <p>從網站開發者這端來看，要減少這個社群網路的壟斷，基本上就是增加支援不同的社群網路，不過社群網站太多了，簡單 Google 一下 <a href="https://www.google.com.tw/search?num=10&amp;hl=zh-TW&amp;site=imghp&amp;tbm=isch&amp;source=hp&amp;q=social+network+buttons&amp;oq=social+network+buttons">Social Network Buttons</a> 就可以看到一大堆按鈕，要公平的對待每個社群網路，那就是每個都支援，可以想像要是每篇文章都這麼多按鈕要加，那是會多可怕的畫面，所以現狀雖然很殘酷，不過網際網路目前確實是被社群網路控制著的，最大的就是 Facebook 和 Twitter 兩家。</p>
+              <p>不過先不看社群網路的壟斷問題，資訊在網路上傳播的方式已經從最早的入口網站、搜尋網站這種使用者主動尋找的模式，經過 RSS 訂閱機制這種半被動方式，到現在透過社群網路分享，使用者只要做這那邊等朋友們分享的資訊，看似被動模式，不過其實是角色之間界線的消失了，在社群網路內的每個人都可能是資訊的提供者、傳播者或接收者。</p>
+              <p>話題有點扯遠了，總之社群網站礙於使用性我不可能全部支援，所以就挑最大的三家支援，Facebook、Twitter、Google+，而第一步就是 <a href="https://blog.othree.net/log/2012/11/02/opengraph-protocol-twitter-card/">Twitter Cards 和 Open Graph Protocol</a>，其中 Twitter Cards 目前需要申請，而且我自己測試過，個人網站也是會通過的。</p>
+              <h5>Twitter Feed</h5>
+              <p>第二步就是讓新文章能主動發佈到社群網站上，這邊是使用 <a href="http://twitterfeed.com/">twitter feed</a> 這個服務，目前由於 Google+ 沒有開放 API，所以只支援 Twitter 和 Facebook，只要給該服務你網站內容的 RSS 並透過社群網站的授權機制授權給它發文，它就會在 RSS 有更新時，自動用你的帳號在你的 timeline 貼連結，不過這個服務其實是 <a href="https://bitly.com/">bit.ly</a> 的相關服務，所以貼過去的連結其實是 bit.ly 短網址，好處是會有 bit.ly 的統計資料，而且也不影響 Twitter Card 的功能。</p>
+              <h5>Social Network Buttons</h5>
+              <p>最後一個社群網站相關的修改是加上這三個社群網站的分享按鈕，也是很基本就照文件說明，不過比較麻煩的是按鈕樣式的選擇，本來是想要放最小的，20px 高的那種，可是因為寬度問題，由於都是用 iframe 實做，iframe 裡不同網域的程式碼無法動到 iframe 本身的大小，結果就是會讓這些按鈕後面需要預留空間，當多個按鈕要放一起時，就會出現間距不相同的情形。後來我就改成現在的形式，好處是寬高固定，比較可以控制位置，不過我發現三家社群網路的類似形式的按鈕還是故意有些不相容，眼尖的人可以能會發現他們高度不一樣，分別有 59px、60px、61px，如果把 Pinterest 也算上來，那還有 57px，還真是不知道該說什麼...</p>
+              <h5>HTTPS</h5>
+              <p>最後還有一個比較不重要，純粹是自爽的，就是現在本 blog 支援 HTTPS 連線了，一開始的動機只是因為看到 Chrome 會說網站尚未驗證身份，所以就一不做二不休，弄到有綠色鎖頭出現，不過目前還有一些問題需要處理，所以沒有弄成強制轉成 HTTPS，像是 Twitter Card 白名單好像有分，還有提交給搜尋引擎的 sitemap.xml，還有 canonical url 等都要統一，其實還很多細節要處理就是。</p>
+              <p>這一兩個月大概就是做了這些改進，斷斷續續的修改，看到什麼就修什麼，其實沒有先列清單，其實還有剛完成的 <a href="https://blog.othree.net/log/2012/12/02/srcset/">srcset</a> 支援的東西就是。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>WebSite Improvent</strong>發表於 2012-12-04，文章類別為
+			  <a href="/log/css-html/">CSS &amp; HTML</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2012/12/04/id-quest/"><span class="prefix">上一篇：</span>id 的由來  <time>2012-12-04</time></a><a class="next pn" href="/log/2012/12/08/flickr-share-with-templat/"><span class="prefix">下一篇：</span>Flickr Share with Template <time>2012-12-08</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

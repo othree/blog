@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>256色終端機環境 : O3noBLOG</title>
+    <meta name="description" content="前兩天重灌OSX，在搞定OSX上的終端機（目前換用 iTerm）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。 Linux端 Linux 是 Ubuntu 8.04，內建的.bashrc會判斷 $TERM 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為： sudo aptitude install ncurses-term 裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。 PuTTY端 我目前使用 PuTTY Tray，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「xterm-256color」，二是要把 Backspace 設為 Control-H ，選項位置在 Terminal → Keyboard 的 Change the..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="JavaScript 優良部分" href="/log/2008/10/12/javascript-the-good-parts/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2008/10/19/256-color-terminal/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2008/10/19/256-color-terminal/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="256色終端機環境"/>
+    <meta property="og:description" content="前兩天重灌OSX，在搞定OSX上的終端機（目前換用 iTerm）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。 Linux端 Linux 是 Ubuntu 8.04，內建的.bashrc會判斷 $TERM 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為： sudo aptitude install ncurses-term 裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。 PuTTY端 我目前使用 PuTTY Tray，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「xterm-256color」，二是要把 Backspace 設為 Control-H ，選項位置在 Terminal → Keyboard 的 Change the..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2008/10/19/256-color-terminal/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="http://farm4.static.flickr.com/3276/2962106594_9f865fda34.jpg"/>
+    <meta property="og:image:width" content="500"/>
+    <meta property="og:image:height" content="314"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-256-color-terminal">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2008-10-19T01:28:16" id="date-2008-10-19">
+                <span class="mon">10月</span>
+                <span class="day">19日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2008/10/19/256-color-terminal/">256色終端機環境</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>前兩天重灌OSX，在搞定OSX上的終端機（目前換用 <a href="http://iterm.sourceforge.net/">iTerm</a>）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。</p>
+              <h4>Linux端</h4>
+              <p>Linux 是 <a href="http://www.ubuntu-tw.org/">Ubuntu 8.04</a>，內建的.bashrc會判斷 <strong>$TERM</strong> 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為：</p>
+              <pre>sudo aptitude install ncurses-term</pre>
+              <p>裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。</p>
+              <h4>PuTTY端</h4>
+              <p>我目前使用 <a href="http://www.xs4all.nl/~whaa/putty/">PuTTY Tray</a>，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「<strong>xterm-256color</strong>」，二是要把 Backspace 設為 <strong>Control-H</strong> ，選項位置在 Terminal → Keyboard 的 Change the sequences sent by 內，這樣設完重新連線應該就可以使用256色的環境了，不確定有沒有成功的可以去抓 <a href="http://www.system-linux.net/doc/xterm/colortest.pl">colortest.pl</a> 這個perl script來跑跑看。</p>
+              <p>256色有什麼好處呢？雖然掛BBS和IRC是都沒差，不過平常操作和vim的樣式就可以使用比較多顏色了，我現在在主機上的vim就改用 <a href="http://blog.infinitered.com/entries/show/8">IR_Black</a> 這個 color schema 了，顏色漂亮不少。</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/2962106594/" title="Flickr 上 othree 的 vim">
+                  <img itemprop="url image" src="//farm4.static.flickr.com/3276/2962106594_9f865fda34.jpg" width="500" height="314" alt="vim">
+                    <meta itemprop="width" content="500"/>
+                    <meta itemprop="height" content="314"/>
+                  </img>
+                </a>
+              </p>
+              <ul>
+                <li>
+                  <a href="http://push.cx/2008/256-color-xterms-in-ubuntu">256-Color XTerms in Ubuntu</a>
+                </li>
+                <li>
+                  <a href="http://blog.yzlin.org/2008/05/14/22/">Make <span class="caps">UTF</span>-8 Environment Comfortable</a>
+                </li>
+              </ul>
+            </section>
+            <footer>
+              <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>256色終端機環境</strong>發表於 2008-10-19，文章類別為
+			  <a href="/log/software/">軟體推薦、TIP</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2008/10/12/javascript-the-good-parts/"><span class="prefix">上一篇：</span>JavaScript 優良部分<time>2008-10-12</time></a><a class="next pn" href="/log/2008/10/22/ie8-dont-support-css-expression/"><span class="prefix">下一篇：</span>IE8標準模式將不支援CSS expression<time>2008-10-22</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

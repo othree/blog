@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>January 2019 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="December 2018" href="/log/2018/12/"/>
+    <link rel="next" title="February 2019" href="/log/2019/02/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2019/01/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>January 2019</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="December 2018" href="/log/2018/12/">« December 2018</a> | <a href="../">上一層</a> | <a title="February 2019" href="/log/2019/02/">February 2019 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-async-await-try-catch">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2019-01-26T17:21:51" id="date-2019-01-26">
+                <span class="mon">01月</span>
+                <span class="day">26日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2019/01/26/async-await-try-catch/">async, await and try catch</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/27075072839/" title="New Zeland by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="New Zeland" srcset="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg 1024w, https://farm5.staticflickr.com/4536/27075072839_ef2586e741_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>這篇想說一下 <code>async</code>﹑<code>await</code> 語法的一些小細節，首先從 <code>async</code> 來說吧，一般來說，async function 是在內部有需要用 <code>await</code> 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會<a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-async-functions-abstract-operations">自動被包成 Promise</a>，所以像下面的程式：</p>
+              <pre>
+                <code class="language-js">async function wow () {
+    return Promise.resolve(100);
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code>
+              </pre>
+              <p>就等同於：</p>
+              <pre>
+                <code class="language-js">async function wow () {
+    return 100;
+}
+
+wow().then(v =&gt; { console.log(v); });
+</code>
+              </pre>
+              <p>和直接回 Promise value 比起來，效能上不會有什麼顯著差異，從建議的實做方法來看就是多一個判斷。再來看看 <code>await</code> 吧，首先一樣，<code>await</code> 一般是用來接 Promise 的，不過其實也是可以接非 Promise value 的</p>
+              <pre>
+                <code class="language-js">async function wow () {
+  var r = await 1;
+  console.log(1);
+}
+
+wow();
+console.log(2);
+</code>
+              </pre>
+              <p>所以這樣的程式碼也可以正確執行，不過 await 那邊的執行方式還是會維持非同步的（實際上應該是後面的東西都會用 Promise 包起來一次），所以這段程式碼的輸出會是先輸出 <code>2</code> 再輸出 <code>1</code>。</p>
+              <p>再來這點可能比較多人知道，就是連續的多個 <code>await</code> 不會讓這些非同步操作同時開始：</p>
+              <pre>
+                <code class="language-js">async function wow () {
+  const a = await fetch('/a');
+  const b = await fetch('/b');
+  const c = await fetch('/c');
+
+  return [a, b, c];
+}
+</code>
+              </pre>
+              <p>這樣其實三個請求會照順序執行，<code>a</code> 有結果了才去要 <code>b</code>，<code>b</code> 有結果了才去要 <code>c</code>，而不是同時處理，如果要同時發出請求則還是需要用 <code>Promise.all</code>，然後不用 <code>async</code> 了：</p>
+              <pre>
+                <code class="language-js">function wow () {
+  return Promise.all([
+    fetch('/a'),
+    fetch('/b'),
+    fetch('/c')
+  ]);
+}
+</code>
+              </pre>
+              <p>不要  <code>await</code> 的話，也是可以先 assign 給變數的：</p>
+              <pre>
+                <code class="language-js">function wow () {
+  const a = fetch('/a');
+  const b = fetch('/b');
+  const c = fetch('/c');
+
+  return Promise.all([a, b, c]);
+}
+</code>
+              </pre>
+              <p>然後其實 <code>Promise.all</code> 是要所有的 Promise 都 fulfilled 時才會 resolve，另外一個角度來看，就是其中只要一個 rejected 的話，就不會 resolve，實際上使用起來變化有點少，而且要做忽略錯誤的 <code>fetch</code> 也有點麻煩，所以現在 TC39 還有個新的草案叫 <a href="https://docs.google.com/presentation/d/1fWK9kMsvn2o66Lk6QUw3yITEfsE87yjZdTngoLTsUQ0/edit#slide=id.g41da6c5107_0_0">Promise.allSettled</a>，不管是 resolve 還是 reject，只要所有參數內的 Promise 都結束了，<code>allSettled</code> 就會 resolve，目前這草案還在 stage 1，過幾天的會議有望升到 stage 2，不過這是題外話。</p>
+              <p>最後一個想說的就是 <code>await</code> 處理 rejected Promise 的問題，如果是從 jQuery 時期就開始寫 Deferred/Promise 的人，可能會很習慣的把 Promise 的兩種狀態拿來當成值的一部份，事實上這也是 <code>jQuery.ajax</code> 的設計，如果用這種想法來寫 <code>await</code> 接值的時候，就會覺得很難處理 <code>rejected</code> 的狀態，因為要用 <code>try...catch</code>：</p>
+              <pre>
+                <code class="language-js">async function wow () {
+  try {
+    const a = await fetch('/a');     
+  } catch (error) {
+    // deal with non-ok fetch
+  }
+}
+</code>
+              </pre>
+              <p>要這樣寫還不如用舊的 <code>.then</code> 來接看起來還漂亮一點。不過實際上，這是錯誤的理解 Promise，Promise 不是用來取得兩種狀態用的，而是用來非同步取得單一個數值用的機制，而所謂 <code>rejected</code> 的狀態，其實就是發生非預期狀況（unexpected exception）的情形，這也就是為什麼 ECMAScript 版的 Promise 是用 <code>throw Error</code> 的方式來 reject Promise。</p>
+              <p>我一直覺得用 HTTP 請求來比較這兩種設計蠻好理解的，使用 jQuery 的 <code>ajax</code>，server 端回非 200 的 status 的話，就會被當成是錯誤，然後回傳的 Promise 就會被 reject，但是在使用 ECMAScript Promise 的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 中，不管 server 端回應的 status code，fetch 都會 resolve，而會 reject 的情形，就只有網路有問題的時候，像是網路斷線、存取被拒絕（CORS）等完全碰不到遠端主機的情形，也就是對於一個 HTTP 請求來說，真正的非預期狀況，所以如果你有兩種狀況要處理，那應該是回傳值的一部份，後面再用 <code>if...else</code> 來做分支。</p>
+              <p>回來看 <code>await</code> 的使用，究竟應該什麼時候來用 <code>try...catch</code> 呢，我自己有一個很簡單的初步判斷條件，就是這個取值的程式碼，如果不是非同步，沒有使用 <code>await</code> 的話，你會不會用 <code>try...catch</code> 包起來，不會的話，那改成非同步操作的程式碼應該也不用 <code>try...catch</code>。不過現實世界當然還是比較難一點，非同步的取值風險和狀況還是比較多的，例如 <code>fetch</code> 遇到網路問題會 reject，但是還是需要處理這種狀況，不用 <code>try...catch</code> 的話，怎樣寫比較好呢？我的想法是，用 <code>.then/catch</code> 處理好需要處理的情形，然後把結果包起來傳回去，所以要處理 <code>fetch</code> 的非預期狀況的話，就可以改成：</p>
+              <pre>
+                <code class="language-js">async function wow () {
+  const a = await fetch('/a').catch(error =&gt; {
+    return {
+      ok: false,
+      status: -1,
+      error: error,  
+    };
+  });
+  
+  if (a.status === -1) {
+    // exception error handling
+  }
+}
+</code>
+              </pre>
+              <p>這邊我設計成有非預期狀況時，status code 為 <code>-1</code>，並且把 error 資訊也傳回去，然後後面就可以直接拿來判斷是不是非預期狀況，當然也可以把這個處理包成一個自己的 <code>myFetch</code>：</p>
+              <pre>
+                <code class="language-js">const myFetch = (url, options) =&gt;
+  fetch(url, options)
+    .catch(error =&gt; {
+      ok: false,
+      status: -1,
+      error: error,  
+    });
+</code>
+              </pre>
+              <p>然後原來的程式就可以直接拿 <code>myFetch</code> 取代 <code>fetch</code> 了。</p>
+              <p>如果要通用一點的，其實有一個叫 <a href="https://www.npmjs.com/package/await-to-js">await-to-js</a> 的套件我覺得蠻不錯的，直接拿官方的範例看吧：</p>
+              <pre>
+                <code class="language-js">import to from 'await-to-js';
+
+async function asyncTaskWithCb(cb) {
+  let [err, user] = await to(UserModel.findById(1));
+  if (!user) return cb('No user found');
+}
+</code>
+              </pre>
+              <p>它可以包裝 Promise 物件，然後不管那個 Promise 成功還是失敗，它自己都會 resolve，resolve 的值就是 <code>[error, value]</code> 這樣形式的陣列，一來符合 node 的 <a href="https://nodejs.org/api/errors.html#errors_error_first_callbacks">error-first callbacks</a>，再來就是配合 destructuring assignment 其實程式碼是蠻漂亮的。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-esm-for-npm-package">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2019-01-10T22:27:07" id="date-2019-01-10">
+                <span class="mon">01月</span>
+                <span class="day">10日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2019/01/10/esm-for-npm-package/">ES Module for NPM Package</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/38820559832/" title="Queenstown by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Queenstown" srcset="https://farm5.staticflickr.com/4560/38820559832_4124a4cb13_b.jpg 1024w, https://farm5.staticflickr.com/4560/38820559832_998d7ad575_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>For English reader: <a href="https://github.com/othree/til/blob/master/js/esm-package.md">https://github.com/othree/til/blob/master/js/esm-package.md</a></p>
+              <p>這個問題我卡蠻久了，最近才解決加上找好一些資訊的來源，目標就是要讓一個 NPM package 同時提供 CommonJS module 和 ES module 的版本，現在很多地方可以用 ES module 了，像是 Node.js 自己有經有在測試用 <a href="https://nodejs.org/api/esm.html">mjs</a> 副檔名，webpack 和 rollup 也都支援 ES module 的 bundle，而且要 <a href="https://webpack.js.org/guides/tree-shaking/">tree shaking</a> 的功能也需要使用 ES module，用以前的 CommonJS 是不支援的，不多廢話，直接看怎樣做吧：</p>
+              <pre>
+                <code class="language-js">{
+  "name": "smartypants",
+  "version": "0.1.1",
+  "main": "smartypants",
+  "module": "smartypants.es6.js",
+  "jsnext:main": "smartypants.es6.js",
+  ...
+}
+</code>
+              </pre>
+              <p>package.json 這樣寫，然後需要提供以下三個檔案：</p>
+              <pre>
+                <code class="language-sh">-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.es6.js
+-rw-r--r--  1 othree  staff  24885 Jan  9 17:12 smartypants.js
+-rw-r--r--  1 othree  staff  21874 Jul 14 10:38 smartypants.mjs
+</code>
+              </pre>
+              <p>這段是我從 <a href="https://github.com/othree/smartypants.js">smartypants.js</a> 那邊拿來的，重點在：</p>
+              <ol>
+                <li><code>main</code> 裡面的檔名不寫副檔名，該檔名要同時提供 <code>js</code> 和 <code>mjs</code> 兩種</li>
+                <li>多加上 <code>module</code> 這筆設定</li>
+              </ol>
+              <p>說明一下，Node.js 現在判斷是哪種模組格式的方式是看副檔名，所以一定要 <code>mjs</code> 的檔案才會當成 ES module，然後剛好解析 <code>main</code> 檔案時的副檔名會自動補，所以就乾脆拿掉，同時提供 <code>smartypants.js</code> 和 <code>smartypants.mjs</code> 兩個檔案，其實都是 <code>main</code> 用的；再來是 <code>module</code> 這個設定和 Node.js 以及 NPM 無關，其實是 <a href="https://rollupjs.org/guide/en">rollup</a> 提出來的 <a href="https://github.com/rollup/rollup/wiki/pkg.module">pkg.module</a>，rollup 如果在解析模組實有看到這個設定，就可以把這個檔案拿來用，當時設計是這個設定 ES module，以前的 main 則是 CommonJS module，雖然是 rollup 提出的，不過 webpack 現在也支援了，範例中還有一筆 <code>jsnext:main</code> 則是比較早期用的 key。</p>
+              <p>再更進階一點，還有目標對象的問題，就是產出是瀏覽器用的還是 server 端用的，以前這問題不太常見，不過隨著 server side rendering 越來越普及，這問題就開始比較多人關注了，webpack 就有支援 bundle 的目標對象，也有支援 <a href="https://github.com/defunctzombie/package-browser-field-spec">pkg.browser</a> 設定，webpack 的 <a href="https://github.com/webpack/webpack/issues/5673">issue #5673</a> 有不少討論，有興趣的可以參考看看，不過要注意的是 <code>browser</code> 似乎是第一順位，設定的時候要小心點。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2018/12/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

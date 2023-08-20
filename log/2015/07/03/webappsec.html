@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>webappsec : O3noBLOG</title>
+    <meta name="description" content=" 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="GHCJS" href="/log/2015/06/18/ghcjs/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2015/07/03/webappsec/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2015/07/03/webappsec/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="webappsec"/>
+    <meta property="og:description" content=" 這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 2011 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 CORS 和 CSP，然後他們現在也很跟的上潮流，把標準的制訂也移到 Github 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。 第一個是 Secure Contexts，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2015/07/03/webappsec/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="576"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-webappsec">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2015-07-03T23:13:21" id="date-2015-07-03">
+                <span class="mon">07月</span>
+                <span class="day">03日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2015/07/03/webappsec/">webappsec</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr">
+                  <img itemprop="url image" src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg 1024w, https://farm3.staticflickr.com/2948/15191563939_42b2305e22_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="576"/>
+                  </img>
+                </a>
+              </p>
+              <p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+              <p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+              <p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+              <pre>
+                <code>navigator.credentials.get({ "password": true }).then(
+  function(credential) {
+    if (!credential) {
+      // The user either doesn't have credentials for this site, or
+      // refused to share them. Insert some code here to show a basic
+      // login form (or, ideally, do nothing, since this API should
+      // really be progressive enhancement on top of an existing form).
+      return;
+    }
+    if (credential.type == "password") {
+      credential.send("https://example.com/loginEndpoint")
+        .then(function (response) {
+          // Notify the user that signin succeeded! Do amazing, signed-in things!
+        });
+    } else {
+      // See the Federated Sign-in example
+    }
+  }
+);
+</code>
+              </pre>
+              <p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+              <p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+              <pre>
+                <code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+        integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+</code>
+              </pre>
+              <p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+              <p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+              <pre>
+                <code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code>
+              </pre>
+              <p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+              <pre>
+                <code>HTTPS: 1
+</code>
+              </pre>
+              <p>很簡潔不過還沒瀏覽器支援就是了。</p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>webappsec</strong>發表於 2015-07-03，文章類別為
+			  <a href="/log/web/">Web</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2015/06/18/ghcjs/"><span class="prefix">上一篇：</span>GHCJS<time>2015-06-18</time></a><a class="next pn" href="/log/2015/08/03/electron-intro/"><span class="prefix">下一篇：</span>Electron 入門<time>2015-08-03</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

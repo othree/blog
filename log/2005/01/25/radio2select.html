@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>radio模仿單選select : O3noBLOG</title>
+    <meta name="description" content=" 為什麼要用radio模仿select呢，因為select標籤也是沒辦法完全依照自己希望設定樣式的物件之一，舉例來說，他的邊框我就沒辦法設定。因此我一直在尋找方法來處理這個問題，直到想到之前的:checked應用的方法之後，才似乎出現了一絲署光，不過一直拖到最近才有座法的構想，沒想到實際做起來還是遇到不少問題，但還是做出了一個可以用的版本，雖然還有些問題。..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="ケロロ將軍" href="/log/2005/01/23/keroro-shojun/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2005/01/25/radio2select/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2005/01/25/radio2select/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="radio模仿單選select"/>
+    <meta property="og:description" content=" 為什麼要用radio模仿select呢，因為select標籤也是沒辦法完全依照自己希望設定樣式的物件之一，舉例來說，他的邊框我就沒辦法設定。因此我一直在尋找方法來處理這個問題，直到想到之前的:checked應用的方法之後，才似乎出現了一絲署光，不過一直拖到最近才有座法的構想，沒想到實際做起來還是遇到不少問題，但還是做出了一個可以用的版本，雖然還有些問題。..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2005/01/25/radio2select/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="http://blog.othree.net/log/2005/01/25/radio2select/radio2select.png"/>
+    <meta property="og:image:width" content="359"/>
+    <meta property="og:image:height" content="180"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-radio2select">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2005-01-25T12:41:57" id="date-2005-01-25">
+                <span class="mon">01月</span>
+                <span class="day">25日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2005/01/25/radio2select/">radio模仿單選select</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <img itemprop="url image" src="http://blog.othree.net/log/2005/01/25/radio2select/radio2select.png" alt="radio2select抓圖" height="180" width="359" class="right">
+                  <meta itemprop="width" content="359"/>
+                  <meta itemprop="height" content="180"/>
+                </img>
+              </p>
+              <p>為什麼要用<strong>radio模仿select</strong>呢，因為select標籤也是沒辦法完全依照自己希望設定樣式的物件之一，舉例來說，他的邊框我就沒辦法設定。因此我一直在尋找方法來處理這個問題，直到想到之前的<a href="http://blog.othree.net/log/2004/11/08/checked-example/">:checked應用</a>的方法之後，才似乎出現了一絲署光，不過一直拖到最近才有座法的構想，沒想到實際做起來還是遇到不少問題，但還是做出了一個<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select.html">可以用的版本</a>，雖然還有些問題。</p>
+              <p>接著我們來看看這是怎麼做到的，為了模仿select標籤，我們的要求有幾個：</p>
+              <ol>
+                <li>滑鼠移過去時選項會垂直展開（很可惜做不到點選式的）。</li>
+                <li>展開時會浮在下方物件的上面，不會因此而把物件往下推。</li>
+                <li>可以只用鍵盤做到選擇選項（親合力）。</li>
+                <li>inline物件。</li>
+              </ol>
+              <p>首先簡單的把radio物件和label標籤列出來，如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-1.html">範例一</a>，接著我們要把radio隱藏起來，讓label垂直條列，隱藏radio用的方法和以前一樣，讓label垂直條列我是用<strong>float+clear</strong>的方法來達成，當然，還是要配合<strong>+</strong>選擇子，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.html">範例二</a>，其中radio的style需要特別說明一下：</p>
+              <pre>
+                <code>input[type='radio']
+{
+	opacity: 0;
+	margin-bottom: -2em;
+	float: left;
+	clear: left;
+}
+</code>
+              </pre>
+              <p>和之前的:checked應用不一樣，因為float和clear的設定，radio和label會一個一個交錯的疊在一起，看起來就像<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.1.html">範例二之一</a>一樣，接著設定margin-bottom為"-2em"，目的是為了讓radio物件下方的東西能和他完全重疊，就變成<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-2.2.html">範例二之二</a>的樣子，，在這個範例裡我把label的底色改成透明，好讓大家能看到現在radio的位置。接著設定opacity就可以讓radio隱藏起來。</p>
+              <p>再來我們設定一下:hover和:checked的樣式，好讓我們能清楚判斷現在選項的狀況，這部分主要是選擇子的設定，就不詳細說明，詳見<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-3.html">範例三</a>。在來是要求之ㄧ的展開效果了，在範例一的HTML碼裡面可以看到radio和label外面有一層span標籤，基本上我們就是利用它來針對我們要處理的label標籤做選擇的，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-4.html">範例四</a>，這時候已經有展開動作了，但是還會把下面的東西推開，所以接下來我們就針對這點來做修改，而範例四中其他關於border的設定，是為了把兩個label間較粗的邊框改成和旁邊一樣細的邊框。</p>
+              <p>要讓label可以浮在其他物件的上面，我們要更改的就是他的margin值，我的想法是把class=select的那個span物件的margin-bottom設成<strong>-100%</strong>，我們先來看看這樣子會發生什麼事，請見<a href="http://blog.othree.net/log/2006/05/11//log/2005/01/25/radio2select/radio2select-5.1.html">範例五之一</a>，可以見到，之前會影響到下方排版的問題已經解決了，但是select物件卻和後面的按鈕重疊在一起了，這是因為我的<strong>margin: -100%;</strong>的設定讓select物件在版面中不佔任何空間，所以本來應該排在後面的按鈕就往前移動了，為了解決這個問題，我必須被迫增加一層span標籤（這是我不滿的第一點），或許有人會說可以設定動態的margin值，讓它剛好有點高度，但是問題是我不知道會有幾個選項，如果選項數固定的話，確實可以這樣做，但是這樣對於未來的維護實在不方便，所以我不採用這個方法。<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-5.html">範例五</a>，是我多加一層span並且已經把該有的css設定都弄上了，結果完全OK，CSS <span class="caps">CODE</span>如下。</p>
+              <pre>
+                <code>span.select&gt;span
+{
+	display: block;
+	margin-bottom: -100%;
+	position: relative;
+}
+span.select
+{
+	display: block;
+	float: left;
+	height: 1px;
+}
+</code>
+              </pre>
+              <p>我指定外層的span的<strong>height=1px</strong>，然後之前對於select物件的設定全部給內層的span，結果就是一個1px高的block物件裡面包著一個0px高的block物件，外層是用來製造寬度，內層是用來讓它的高度等於0。於是四個目標達成了兩個，接著便是鍵盤的控制了。</p>
+              <p>要讓鍵盤能操控，只要用上focus，讓tab鍵移動游標到該選項時使用者能知道，不過我再配合:after虛擬選擇器和content屬性質，增加一點提示，結果如<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-6.html">範例六</a>，這時大家可以試試看用tab和空白鍵更換選擇看看，不過唯一需要注意的是這裡新增的CSS值必須要放在範例四的<strong>span.select:hover label</strong>的設定前面，不然margin值會有錯誤，當然你也可以選擇不要修改margin，這樣要放哪都可以(吧XD)。</p>
+              <p>終於，只剩下最後一個目標了，讓它是inline物件，放在它後面的東西看起來沒問題，但是放在它前面的呢？就先來看看會怎樣吧，<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-7.1.html">範例七之ㄧ</a>，果然，變亂了...orz，這個問題，我想了很久要如何解決，最後，只能讓它前面的文字也是<strong>float:left;</strong>（這是第二個我不滿的地方），於是我新增了一個class叫label，<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-7.html">範例七</a>。</p>
+              <p>終於，四個目標都達到了，完整的HTML和CSS見<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-final.html">最後一個範例</a>，雖然還有些覺得還可以改進的地方，而且Opera會亂掉，不過因為用了一些蠻有趣的技巧，所以還是把它寫出來了，延伸的用法，可以看看<a href="http://blog.othree.net/log/2005/01/25/radio2select/radio2select-show.html">應用</a>。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>radio模仿單選select</strong>發表於 2005-01-25，文章類別為
+			  <a href="/log/css-html/">CSS &amp; HTML</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2005/01/23/keroro-shojun/"><span class="prefix">上一篇：</span>ケロロ將軍<time>2005-01-23</time></a><a class="next pn" href="/log/2005/02/03/gravator/"><span class="prefix">下一篇：</span>GRAVATOR<time>2005-02-03</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

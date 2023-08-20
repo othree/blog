@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>靠右的sidebar : O3noBLOG</title>
+    <meta name="description" content="要用CSS製造一個sidebar靠在右邊，不是什麼困難的事，而且方法很多，這裡的右邊的sidebar就是用CSS弄出來的，不過雖然方法很多，卻因為我的一些小龜毛，加上IE的bug，害我花了不少時間才弄到滿意。..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="除夕" href="/log/2004/01/21/new-year-eve/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2004/01/22/right-sidebar/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2004/01/22/right-sidebar/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="靠右的sidebar"/>
+    <meta property="og:description" content="要用CSS製造一個sidebar靠在右邊，不是什麼困難的事，而且方法很多，這裡的右邊的sidebar就是用CSS弄出來的，不過雖然方法很多，卻因為我的一些小龜毛，加上IE的bug，害我花了不少時間才弄到滿意。..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2004/01/22/right-sidebar/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-right-sidebar">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2004-01-22T23:30:33" id="date-2004-01-22">
+                <span class="mon">01月</span>
+                <span class="day">22日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2004/01/22/right-sidebar/">靠右的sidebar</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>要用CSS製造一個sidebar靠在右邊，不是什麼困難的事，而且方法很多，這裡的右邊的sidebar就是用CSS弄出來的，不過雖然方法很多，卻因為我的一些小龜毛，加上IE的bug，害我花了不少時間才弄到滿意。</p>
+              <p>首先要解釋一下何謂我的龜毛。分為兩點，一是我希望HTML原始碼中，sidebar的資訊在主要內容之後，這樣不支援CSS的瀏覽器就可以不必理會sidebar而可以先看到主要內容。二是我不希望對主要內容的位置或是float做設定，也就是保持預設的狀態，因為怕對CSS支援不完整或不正確的瀏覽器會把主要內容搞不見。這兩點其實單獨存在都還好，不過一起出現就殺掉了許多種可以用的方法，例如把sidebar內容放在主要內容前，然後讓sidebar的float屬性是right，這樣就可以做出靠右的sidebar，而且後面要提的IE的bug也不會出現。</p>
+              <p>一開始我是參考<a href="http://www.stopdesign.com/" title="stopdesign">stopdesign</a>的做法，把sidebar的position設成absolute，top和right設成0，本來一切OK的，直到用IE看了之後，發現到sidebar最右邊多了1px的空隙，這是不正確的，應該是IE的bug。我做了很多試驗後，發現問題在「right: 0;」上，如果是靠左「left: 0;」的話不會有這問題，又如果是用float來讓它靠右也不會有這問題，不過因為上面提過的原因，所以我不打算用float來處理，而且IE處理float似乎有問題，雖然我還不清楚是怎樣的bug。</p>
+              <p>為了處理這個問題，我測試了好久，最後終於成功了，不過不是真正的靠右，而是讓margin-left和width的值加起來是100%，當然margin-right和padding都是0，這種做法有個缺點是只能用百分比值來設定sidebar的寬度，其他像是em,px等等都不能用了，就算用了也只能對一種解析度做到真的是靠右的sidebar。下面是我的sidebar部分的css</p>
+              <pre>
+                <code>#sidebar
+{
+	position: absolute;
+	top: 3em;
+	width: 32%;
+	margin-left: 68%;
+	padding: 0.5em 0;
+	background-color: #933;
+}</code>
+              </pre>
+              <p><code>position: absolute;</code>還是必要的，<code>top: 3em</code>是爲了保留最上面banner的空間，其實也可以設成0，然後用一個<code>position: relative;</code>的div標籤包起來，不過因為我不想要那麼多層div，就用現在這種方法了。在來就是主角，width和margin-left加起來剛好是100%。padding這樣設定是表示上下0.5em，左右0的意思，最後一行就是背景色了。再來是主要內容部份的css。</p>
+              <pre>
+                <code>#content
+{
+	margin-right: 32%;
+	padding: 0.5em;
+}</code>
+              </pre>
+              <p>要說明的只有第一行，<code>margin-right: 32%;</code>，這是爲了保留sidebar的空間，因為我的sidebar不是用float指派，所以必須要幫它保留好空間，不然會造成重疊的狀況，而這裡的margin-right的值和sidebar的width的一樣，當然也可以自己做調整，故意造成重疊的狀況，或是留些空白。</p>
+              <p>補充：發表完這篇過沒多久，我就在<a href="http://www.mezzoblue.com/">mezzoblue</a>看到他最新的文章<a href="http://www.mezzoblue.com/archives/2004/01/23/friday_chall/">Friday Challenge</a>，剛好就是討論同樣的問題，後面也有人提供了很有趣的處理方法，不過迴響部分我還沒看完。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>靠右的sidebar</strong>發表於 2004-01-22，文章類別為
+			  <a href="/log/css-html/">CSS &amp; HTML</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2004/01/21/new-year-eve/"><span class="prefix">上一篇：</span>除夕<time>2004-01-21</time></a><a class="next pn" href="/log/2004/01/25/textile/"><span class="prefix">下一篇：</span>Textile<time>2004-01-25</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

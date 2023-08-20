@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>glob : O3noBLOG</title>
+    <meta name="description" content="最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如： ls *.js 後面的 *.js 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 man glob.7 或是 man 7 glob 就可以找到官方文件了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 ? 和 * 雖然是任意字元，但是 / 不屬於任意字元，/ 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 ls..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="addEventListener 的第三個參數" href="/log/2019/03/20/third-argument-of-addeventlistener-2/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2019/04/30/glob/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2019/04/30/glob/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="glob"/>
+    <meta property="og:description" content="最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如： ls *.js 後面的 *.js 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 man glob.7 或是 man 7 glob 就可以找到官方文件了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 ? 和 * 雖然是任意字元，但是 / 不屬於任意字元，/ 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 ls..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2019/04/30/glob/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-glob">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2019-04-30T23:32:23" id="date-2019-04-30">
+                <span class="mon">04月</span>
+                <span class="day">30日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2019/04/30/glob/">glob</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近在搞 jsctags-oasis 這個專案，因此認真的研究了一下 glob，glob 這東西其實有在使用 CLI 的話，一定是使用過的，例如：</p>
+              <pre>
+                <code class="language-sh">ls *.js
+</code>
+              </pre>
+              <p>後面的 <code>*.js</code> 就是 glob，應該可以稱為一種表達式吧，沒有正規表示式（Regular Expression）強大，是專用於匹配檔案的，現在也已經是內建於 Linux shell 內的功能了，所以其實只要 <code>man glob.7</code> 或是 <code>man 7 glob</code> 就可以找到<a href="http://man7.org/linux/man-pages/man7/glob.7.html">官方文件</a>了（不過 macOS 上沒有），然後 glob 和正規表示式相比，有個很關鍵的差異就是 glob 是有判斷路徑階層的，也就是其實 <code>?</code> 和 <code>*</code> 雖然是任意字元，但是 <code>/</code> 不屬於任意字元，<code>/</code> 又被稱為 path separator，如果要找不同層子目錄的檔案，就要把路徑寫好，不然比對時不會如願找到想要的目標，而這個差異其實也說明了為什麼 <code>ls subfolder/*</code> 只會印出該層子目錄下的檔案，而不是把第二第三層子目錄下的東西也都印出來，雖然有 <code>**</code> 這個寫法，不過我是在 nodejs 開始蓬勃發展之後才在 node-glob 文件上看到的。</p>
+              <p>其實我第一次看到 <strong>glob</strong> 這個單字也是 <a href="https://github.com/isaacs/node-glob">node-glob</a>，不過當時以為 node-glob 和命令列的那套不相容，只是借用名字而已，因為那個 <code>**/*.js</code> 的語法我以前沒看過，一直以為是 node-glob 自己做的，直到這次研究才發現其實 <code>**</code> 是 <a href="http://man7.org/linux/man-pages/man1/bash.1.html">bash</a> 提供的擴充語法，bash 的 extglob 提供了一些更接近正規表示式的語法：</p>
+              <pre>
+                <code>?(pattern-list)
+       Matches zero or one occurrence of the given patterns
+*(pattern-list)
+       Matches zero or more occurrences of the given patterns
++(pattern-list)
+       Matches one or more occurrences of the given patterns
+@(pattern-list)
+       Matches one of the given patterns
+!(pattern-list)
+       Matches anything except one of the given patterns
+</code>
+              </pre>
+              <p>另外還有很多設定可以調整 glob 的行為，其中一樣叫做 <code>globstar</code> 的，就是讓 <code>**</code> 可以 recursive 的 match 子目錄的檔案，這個功能是在 <a href="https://github.com/bminor/bash/blob/3185942a5234e26ab13fa02f9c51d340cec514f8/CHANGES#L524">bash 4.0 alpha</a> 版的時候新增的，到今天其實也已經超過十年了。</p>
+              <p>至於為什麼會研究起 glob 呢？是因為我在做 jsctags-oasis 時，要盡量的支援 <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a> 支援的參數，其中做到 <code>exclude</code> 的時候，一開始偷懶用了 node-glob 的 ignore，但是實際上要拿 <a href="https://github.com/ludovicchabant/vim-gutentags">vim-gutentags</a> 來用時卻行為不如預期，為了能正確支援就研究起這實際上怎麼串起來的，首先是 vim-gutentags 會拿 Vim 那邊的 <a href="https://vimhelp.org/options.txt.html#%27wildignore%27">wildignore</a> 送給 ctags，wildignore 使用的表達式是 Vim 自己的 <a href="https://vimhelp.org/autocmd.txt.html#file-pattern">filepattern</a>，和 glob 有點接近，像是 <code>*</code> 都是正規表示式的 <code>.*</code>，還有 <code>?</code> 都是正規表示式的 <code>.</code>，不過 <code>*</code> 有特別說到：</p>
+              <blockquote>
+                <p>Unusual: includes path separators</p>
+              </blockquote>
+              <p>這行為就和 glob 不一樣了，所以假設 ctags 的 <code>exclude</code> 也是用 glob 表示式，那是不是表示 vim-gutentags 這邊實做有不正確呢？結果我發現 Exuberant Ctags 的文件是這樣說的：</p>
+              <blockquote>
+                <p>each <em>pattern</em> specified using this
+option will be compared against both the complete path (e.g.
+some/path/base.ext) and the base name (e.g. base.ext) of the
+file, thus allowing patterns which match a given file name
+irrespective of its path, or match only a specific path. If
+appropriate support is available from the runtime library of
+your C compiler, then <em>pattern</em> may contain the usual
+shell wildcards (not regular expressions) common on Unix (be
+sure to quote the option parameter to protect the wildcards
+from being expanded by the shell before being passed to
+<strong>ctags</strong>; also be aware that wildcards can match the
+slash character, '/').</p>
+              </blockquote>
+              <p>這時候就要感謝那時期的文件都有寫得很詳細，不用花時間去看程式碼，這邊的說明就是說會比對 basename （檔名加附檔名）和完整的 pathname，另外對於 wildcard 的支援則是看系統，是用 <a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">shell wildcards</a>，其實就是 glob 表達式，不過照這樣說，應該就和 Vim filepattern 不一樣了，研究許久才注意到關鍵的地方就在上面那段文件的最後一句，提到 wildcards 也會 match 到 <code>/</code> 字元，也就是最前面提到的 path separator，結果就是， Vim filepattern 和 Exuberant Ctags 的 <code>exclude</code> 用的表示式基本上是相容的，但是也因為特性就無法用 node-glob 的 <code>ignore</code> 來支援了。所以我就照著說明自己實做了比對的部分，然後有用到一個叫 <a href="https://www.npmjs.com/package/globrex">globrex</a> 的 npm package，這個是 <a href="https://www.npmjs.com/package/tiny-glob">tiny-glob</a> 底層用的工具，算是個偷吃步，不管 path separator 直接把 glob 轉成正規表示式的作法，根據原始碼，它會直接把 <code>*</code> 轉換成 <code>.*</code>，這樣就會 match 到 <code>/</code> 字元了，本來是偷吃步的作法，卻意外的剛好合用，理論上這樣就可以正確的支援 ctags 的 <code>exclude</code> 才是吧。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>glob</strong>發表於 2019-04-30，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2019/03/20/third-argument-of-addeventlistener-2/"><span class="prefix">上一篇：</span>addEventListener 的第三個參數<time>2019-03-20</time></a><a class="next pn" href="/log/2019/05/27/incrementally-better-cookies/"><span class="prefix">下一篇：</span>SameSite Cookie<time>2019-05-27</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

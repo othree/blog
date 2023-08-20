@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>August 2019 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="July 2019" href="/log/2019/07/"/>
+    <link rel="next" title="October 2019" href="/log/2019/10/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2019/08/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>August 2019</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="July 2019" href="/log/2019/07/">« July 2019</a> | <a href="../">上一層</a> | <a title="October 2019" href="/log/2019/10/">October 2019 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-circleci-terraform-aws-deploy">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2019-08-22T23:02:19" id="date-2019-08-22">
+                <span class="mon">08月</span>
+                <span class="day">22日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2019/08/22/circleci-terraform-aws-deploy/">Circle CI run Terraform and AWS deployment</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近花很多時間在 CI，其中一個比較大的目標是跑 Terraform 加上用它輸出的 S3 name 來作為後面發佈步驟的發佈目標，然後加上不想要用第三方的 docker image 和 orbs，不過網路上都沒看到有這樣子做的範例，所以花了些時間嘗試、看文件和範例，這篇就是把一些目前的結論記錄下來：</p>
+              <p>Terraform 是用 hashicorp 官方的 <a href="https://hub.docker.com/r/hashicorp/terraform/">image</a>，基本上就是 alpine + go + terraform 而已，shell 只有 sh 沒有 bash，不過其實 Circle CI 的一些文件看起來，他們應該是建議要使用 bash 為主，其中一個主要原因就是 <a href="https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-shell-command">BASH_ENV</a> 這個環境變數有沒有支援，支援的話就可以很輕鬆的在不同 command 間傳遞環境變數了，不過還好我在 Terraform 這邊只需要寫入，還不需要讀出，所以就是 Terraform 執行完之後加一個 command 執行：</p>
+              <pre>
+                <code class="language-sh">echo "export S3_ID=`terraform output s3_bucket_name`" &gt;&gt; $BASH_ENV
+</code>
+              </pre>
+              <p>當然你的 terraform module 要有定義好 output。</p>
+              <p>第二個是重點是 <code>$BASH_ENV</code> 的值，個人建議是設定絕對路徑，直接寫出完整路徑，不要用其它環境變數來組合，然後位置要放在 working directory 內，好方便能  <code>persist_to_workspace</code>，這樣才能夠跨 job 使用，另外就是檔名建議不要用 <code>.</code> 開頭的隱藏檔名，我遇到過各種找不到檔案的錯誤訊息，然後 working directory 建議不要放在 home 目錄下，一來 <code>$BASH_ENV</code> 去用 <code>$HOME</code> 組合出來我遇到錯誤過，用 <code>~</code> 來寫路徑也是遇到錯誤過，二來不同 image 的 home 目錄路徑不同，如果要在 config 內直接寫死絕對路徑，建議直接定一個固定的位置，我現在是用：</p>
+              <pre>
+                <code>/tmp/workspace
+</code>
+              </pre>
+              <p>然後這樣後面就可以用官方的 s3 orb 下指令了：</p>
+              <pre>
+                <code class="language-yaml">- aws-s3/sync:
+    from: build
+    to: "s3://${S3_ID}"
+    aws-region: "ap-northeast-1"
+</code>
+              </pre>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-coscup-2019">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2019-08-20T15:13:53" id="date-2019-08-20">
+                <span class="mon">08月</span>
+                <span class="day">20日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2019/08/20/coscup-2019/">COSCUP 2019</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/48582240846/" title="COSCUP 2019 by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="COSCUP 2019" srcset="https://live.staticflickr.com/65535/48582240846_0a6a7576c2_b.jpg 1024w, https://live.staticflickr.com/65535/48582240846_26f337902f_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>今年發生什麼事大家都知道了，我今年負責的是 Open Web Technologies 議程軌，相對是受影響比較小的單位，不過還是想從我的角度來記錄一下，這篇就流水帳吧。</p>
+              <p>前一天晚上聽到說台科大停電的時候，還沒什麼實感，而且研揚大樓很快就恢復了，想說應該不會停太久吧，直到後來要睡前都沒有恢復才有一點緊張感，不過基本上也做不了什麼事情，還是準時去睡覺，還把龍王的工作八給看完了，隔天早上七點多醒來一看已經確定要換場地了，各管道的宣傳也開始在跑了，我就邊處理小孩的東西，先發了一封信件給今天的所有講者說場地要換大樓了，當時新教室的位置還沒出來。然後也邊跟另外一位社群協調人 hlb 聯絡，他還要從新竹出發過來，比我還早出門，後來教室確定後我又再發一封郵件，還有在 Telegram 的 Mozillians at COSCUP 2019 群（專門開給國外來參加 COSCUP 的 Mozilla 人的群）也趕快發通知，剛好那邊還有今天下午的兩位講者在裡面。</p>
+              <p>我自己本來的規劃是九點到場，後來因為確定狀況和發信等等後來有比較晚到，不過還是去採買了要給講者喝的水，我準備了一個保冷袋還加買兩包冰塊，後來冰塊到離開時都還沒融化完，可是冷卻效果不是很好，或許還是專用的保冷劑效果會比較好，另外就是有一包冰塊好像袋子還有破洞漏水。停到研揚大樓停車場的時候，竟然只能使用悠遊卡，然後一刷，只剩下 80 塊，這表示我要離開前勢必要先找地方加值了，當然，當時校內的便利商店也都停電了 ～＿～</p>
+              <p>九點多到場時很感謝 hlb 都已經確認完場地狀況了，而且看起來幾乎場地都已經準備好了，雖然還有攤位沒準備完，樓下其實還一直在搬東西過來，不過真的是要讓演講開始已經完全沒問題了，像是教室指標、背版、麥克風備用電池，甚至連新印的單間會議廳的議程表都有，隔壁教室的贊助商攤位看起來也很有一回事了。</p>
+              <p>之後就都還蠻順利的，講者都有準時到，沒有開空窗，也沒有人超時卡到下一位講者，分享後互動最熱烈的那場，也剛好排在午餐前，比較可惜是我的主持還不太行，介紹講者的部分都不太好，當然週五無法先去找講者聊一下也是蠻有影響的，不過更大的因素是我自己事前準備還不夠，沒有練習好，這部分就明年繼續努力了。</p>
+              <p>今年 Open Web Technologies 下午有三位海外講者，其實都是他們各自籌經費，Mozilla 的 Rabimba 和 Bob 都是 Mozilla Tech Speaker，所以應該是從那邊申請經費的，另外一位則是 LINE 的 Trustin Lee，LINE 也是今年贊助商之一，講者的經費應該是公司出的，剛好攤位就在隔壁教室，好像也有該主題自己的攤位和其它一起從韓國來的朋友，開場前就看到他們開始在拍照，然後我才想到，像這種公司出錢來的海外講者，要是因為活動因故取消的話，人都到了不知道他們的旅費要怎麼處理，這時才第一次體會到，推廣國際能見度其實也是伴隨而來更多的責任的啊。</p>
+              <p>總之議程過程還算順利，我自己因為主持的關係幾乎離不開，只有挑了一場演講開始的時間去 HKOSC 買預計要入手的 kotties，還有去拿個人贊助的紀念品，不過我沒有拿到大會手冊就是，最後議程結束後，我就把東西收好走去長興街 7-11 儲值悠遊卡，那段時間雨還不小，回來時在一樓跟小耕打招呼，他也提到了場佈兩次的事情，我腦中就響起了這個旋律：</p>
+              <blockquote>
+                <p>每條大街小巷<br/>
+每個人的嘴裡<br/>
+見面第一句話<br/>
+場佈快不快樂</p>
+              </blockquote>
+              <p>搭配音樂：</p>
+              <div class="embed_16_9">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/7BNPbS1lmy8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"/>
+              </div>
+              <p>之後還在閃電講時間，我去了記錄組工作區晃了一下，還遇到不少老人回來要準備幫忙撤場，沒停留多久就回家顧小孩了，停車費 400（應該是 50 x 8 小時），大概九點弄完才有時間去找出 YouTube 直播留存的影片來看最後的閃電講和閉幕，看完覺得第二天能順利辦完真是太好了，不只是對贊助商和講者的交代，要是沒有辦起來也沒機會再次緬懷 Ilya 和阿怪了。</p>
+              <p>最後個人想法，其實我聽到要換場地的時候，我腦中倒是完全沒有懷疑過 COSCUP 團隊會辦不到，有個替代場地可以用反而是我覺得真的是撿到的，不知道為什麼一開始會先把研揚大樓的供電恢復，而且校方還能迅速幫忙協調出空間給我們用這真的是非常關鍵，如果今天在其它地方辦搞不好就真的無法找到替代空間了；然後在研揚辦的效果其實也還不錯，走道有空調真是舒適不少，第一次到台科辦的時候好像也有考慮過這個位置就是，不過大概就是因為沒有比較正式的會議廳吧。第二是 Bobchao 從前年開始推動的社群議程其實也在這次事件發揮蠻大的功效，不然整個議程相關的問題就會擠在議程組內了，現在這樣倒是可以把很多事務和權責放到外部，對我來說，其實更換場地影響沒有很大（當然是因為我到場時東西都已經準備好了，十點社群議程才開始也提供了相當充足的時間），最重要的就是確定新的會議廳位置以及想辦法通知講者，尤其是海外講者，這次我們軌三位海外講者中有兩位都有 IM 管道可以跟他們聯繫（感謝 Irvin 有先建立群組），所以我都有確定他們知道場地變動的訊息，以後也可以考慮先建立好跟講者聯繫的 IM 管道。</p>
+              <p>然後比較個人部分的感想，要顧一間做整天的主持人，幾乎都沒有機會離開啊，更不用說拍什麼照片了，其實攝影器材有帶不少但是大概用不到一半，希望以後能更多時間到場，然後可以分個半天一天做自由記錄。</p>
+              <p>最後的最後就放其它人的紀錄吧（不過目前看到的公開的只有四貓的，歡迎提供其它連結）：</p>
+              <ul>
+                <li>
+                  <a href="https://blog.catcatcatcat.cc/2019/08/19/coscup2019/">四貓</a>
+                </li>
+                <li>
+                  <a href="https://medium.com/@nijia.lin/chatbottw-in-coscup-2019-%E5%BE%9E%E6%9C%83%E7%9C%BE%E8%AE%8A%E6%88%90%E8%B2%A0%E8%B2%AC%E4%BA%BA%E7%9A%84%E5%BF%83%E8%B7%AF%E6%AD%B7%E7%A8%8B-d58ddfe61328">NiJia</a>
+                </li>
+                <li>
+                  <a href="https://www.facebook.com/bigbody2/posts/10158315999530752">大隻</a>
+                </li>
+                <li>
+                  <a href="https://pingyeh.blogspot.com/2019/08/coscup-2019.html">pingooo</a>
+                </li>
+              </ul>
+            </section>
+            <footer>
+              <a href="/log/diary/" rel="tag">日記</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2019/07/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

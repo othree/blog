@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>August 2007 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="July 2007" href="/log/2007/07/"/>
+    <link rel="next" title="September 2007" href="/log/2007/09/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2007/08/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>August 2007</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="July 2007" href="/log/2007/07/">« July 2007</a> | <a href="../">上一層</a> | <a title="September 2007" href="/log/2007/09/">September 2007 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-web-fonts">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-30T17:21:19" id="date-2007-08-30">
+                <span class="mon">08月</span>
+                <span class="day">30日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/30/web-fonts/">Web Fonts</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p><a href="http://www.alistapart.com/">A List Apart</a>最新一期裡的<a href="http://www.alistapart.com/articles/cssatten"><span class="caps">CSS </span>@ Ten: The Next Big Thing</a>這篇文章裡面，提到接下來CSS會發展的一個主要方向，就是網路字型(web fonts)，這其實也不是新東西，早在1998年的CSS2裡面就有<a href="http://www.w3.org/TR/1998/REC-CSS2-19980512/fonts.html#font-descriptions">font-face</a>，不過很不幸的，IE和Netscape都不支援truetype字型，結果網頁設計師都沒在使用，然後到了<a href="http://www.w3.org/TR/CSS21/"><span class="caps">CSS2.1</span></a>這功能也被屏棄了，現在這功能有希望回來了，不過其實我不是很樂觀啦，或許web fonts會回到CSS，不過等CSS 3制定出來不知道還要多久（個人推測10年），而且更大的問題是中文字型和歐美語系字型的大小差很多，如果做到像PDF可以只包含需要的部份，那變成伺服器端要支援，想起來就是一整個很難實行，中日文這些有漢字的地方大概還是只能繼續用系統有內建的字型和圖片吧。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-setting-background">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-29T11:08:20" id="date-2007-08-29">
+                <span class="mon">08月</span>
+                <span class="day">29日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/29/setting-background/">CSS設定背景時</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近逛網站時比較常發現的小問題，很多人在設計版面時，為了質感或是排版會使用背景圖，而使用了背景圖，不過使用了背景圖，卻沒設定背景色，這樣會有什麼問題呢？</p>
+              <em class="extended">
+                <a href="/log/2007/08/29/setting-background/">閱讀「CSS設定背景時」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-dublin-core">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-29T00:46:49" class="same-date">
+                <span class="mon">08月</span>
+                <span class="day">29日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/29/dublin-core/">Dublin Core</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>這陣子都有稍微看一下這東西的相關資訊，不過卻對起源不甚了解，今天承蒙<a href="http://b6s.blogspot.com/">b6s</a>解惑，留一下紀錄，因為只詢問過b6s的意見，所以只保留我和他的對話，以下內容保留一切權利，不採創用CC授權條款。</p>
+              <p>23:04 &lt;@othree&gt; ._./ Dublin Core有人研究過嗎？<br/>
+23:08 &lt;@othree&gt; 其實我搞不懂DCMI的成員是哪些，還有當初為什麼會來制定這個<br/>
+23:39 &lt; b6s&gt; othree: dublin core 比較像是哲學層次的事<br/>
+23:39  * b6s flee<br/>
+23:41 &lt; b6s&gt; othree: 說正經的，那個基本上是圖書館學的東西<br/>
+23:41 &lt; b6s&gt; 然後順便拿來做 semantic web<br/>
+23:42 &lt; b6s&gt; 最近則擴大到本來就有分類學的領域，像是生物分類學<br/>
+23:42 &lt; b6s&gt; 不過最近搞這個的派別變多了，有另一派叫 SUMO<br/>
+23:42 &lt;@othree&gt; @@<br/>
+23:42 &lt;@othree&gt; sumomomomomomo<br/>
+23:43 &lt; b6s&gt; dublin core 因為是圖書館學的人主導，所以比較偏向資訊本身的 metadata<br/>
+23:44 &lt; b6s&gt; SUMO 則是知識的 metadata<br/>
+23:44 &lt;@othree&gt; SUMO就是全名？<br/>
+23:44 &lt;@b6s&gt; suggested upper merged ontology<br/>
+23:45 &lt;@othree&gt; ontology ~_~<br/>
+23:45 &lt;@b6s&gt; dublin core 比較實用，因為它基本上就是 RDF 的媽媽<br/>
+23:45 &lt;@othree&gt; 之前上XML課上完後就特別討厭這個字<br/>
+23:45 &lt;@b6s&gt; 其實 dublin core 也是 ontology, 只是它是 data 的 ontology<br/>
+23:46 &lt;@othree&gt; 大概是因為老師來不及上所以都不懂吧XD<br/>
+23:47 &lt;@b6s&gt; ontology 其實是人的本能，只是把那個本能抽象化到大家會吵架的地步<br/>
+23:49 &lt;@b6s&gt; 就像 Java 的所有東西都繼承自 Objetct, 但是 JavaScript 則不一定需要這種事<br/>
+23:49 &lt;@othree&gt; :P<br/>
+23:50 &lt;@othree&gt; 不過現在ontology能處理不同語言嗎？<br/>
+23:50 &lt;@othree&gt; 例如英語和中文的同義詞<br/>
+23:51 &lt;@b6s&gt; 那個是 SUMO 的下層才能處理的事<br/>
+23:52 &lt;@othree&gt; @@<br/>
+23:53 &lt;@b6s&gt; 首先有個別語言的 ontology, 像 WordNet<br/>
+23:55 &lt;@b6s&gt; 然後有個組織叫 ISLE/EAGLES 做了 MILE, 來把各種語言的 lexicon 連結起來<br/>
+00:00 &lt;@b6s&gt; 說起來 ISLE 就是另一個派別，它並沒有特別想要跟 SUMO 接起來<br/>
+00:00 &lt;@b6s&gt; <a href="http://www.mpi.nl/ISLE/">http://www.mpi.nl/ISLE/</a><br/>
+00:00 &lt; kerobot&gt; b6s: [Link Info] title: EAGLES/ISLE Meta Data Initiative<br/>
+00:00 &lt;@othree&gt; 一副大家都想自己搞的樣子...<br/>
+00:02 &lt;@b6s&gt; 其實這反映了經濟實力<br/>
+00:02 &lt;@b6s&gt; ISLE 是歐系的<br/>
+00:02 &lt;@b6s&gt; dublin core 是美系的<br/>
+00:03 &lt;@b6s&gt; 亞洲人最可憐了，只能都吃下來<br/>
+00:04 &lt;@b6s&gt; 非洲人現在則忙著炒股 *誤*<br/>
+00:06 &lt;@othree&gt; 最近台灣也是啊</p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-designer-or-developer">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-28T11:09:49" id="date-2007-08-28">
+                <span class="mon">08月</span>
+                <span class="day">28日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/28/designer-or-developer/">Designer  ? Developer ?</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p><a href="http://www.456bereastreet.com/">Roger Johansson</a>前陣子寫了一篇文章「<a href="http://www.456bereastreet.com/archive/200708/are_we_designers_or_developers/">Are we designers or developers?</a>」，講到了很都人可能都面臨過的狀況，像別人介紹自己職業時，不知道該說什麼，網頁設計師？但其實又不是真的只做網頁的設計，開發者？但其實外觀設計還是自己搞得...。</p>
+              <p>我雖然不以此維生，但確實也有遇過這樣的狀況，即使對方知道有人又做後台又做前端的，好像也沒有一個詞可以來代表，Roger的說法是他會依照對象、情境來決定他該怎麼介紹自己，在大部分的時候他會說：「我從事網路相關的工作。」或是「我作網站。」這兩個回答我覺得都相當不錯，對一般人這樣說就很足夠了，如果對方還有興趣了解更深入在解釋就可以，不過其實以我來說，我還不會稱自己是網頁設計師，畢竟我是從code那邊來的，現在雖然有少量接觸設計的資訊，而且以我目前設計外觀的方法和成品，我認為離稱得上設計師還有段距離，所以我至少不會在設計師或開發者間混淆，但是卻反而會怕對方混淆，又多解釋了不少東西，然後可能對方也有聽沒有懂吧。</p>
+              <p>另一個設計師相關的事是<a href="http://www2.jeffcroft.com/">Jeff Croft</a>花了些時間去看W3C的工作小組成員，結果竟然發現裡面<a href="http://www2.jeffcroft.com/blog/2007/aug/18/w3c-where-are-web-designers-and-developers/">找不到任何有名的網頁設計師/開發者</a>，這樣當然會產生一些問題，因為到時候這些角色會使用到制定出來的標準，但是制定的過程卻沒有人參與。<a href="http://www.zeldman.com/">Jeffery Zeldman</a>則做出回應是說W3C有想要改變這個狀況，不過有時候事情不會這麼順利，像是找不到相關領域的人來參與，不過我想W3C既然知道有這問題，也有想辦法改變，我想狀況應該就不會演變到多差吧，而且CSS3和HTML5都不知道還要多久才會成為推薦標準。</p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-google-maps-update">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-23T00:22:25" id="date-2007-08-23">
+                <span class="mon">08月</span>
+                <span class="day">23日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/23/google-maps-update/">Google Maps更新</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>Google Maps今天更新，主要兩個更新點，我的地圖變得更好用，不過這個我比較不確定是不是今天更新的，另一個我確定的是，新增像YouTube那樣可以直接提供程式碼，複製貼上就可以把地圖放上網頁的便利功能，所以我做了一個我的上學路線的小地圖，不過我發現FireBug會抓到錯誤訊息。</p>
+              <p class="update"> 結果我看到的錯誤訊息是<a href="https://addons.mozilla.org/en-US/firefox/addon/4106">Operator</a>的錯誤訊息，和Google Maps無關。</p>
+              <p>
+                <iframe width="425" height="350" frameborder="no" scrolling="no" marginheight="0" marginwidth="0" src="//www.google.com/maps/ms?ie=UTF8&amp;hl=zh-TW&amp;om=1&amp;s=AARTsJq4LuwxHGVshPSZq9bOzbdwg2wPCw&amp;msa=0&amp;msid=115547205223566529488.0004384c16d8c7f68eb50&amp;ll=25.004961,121.541404&amp;spn=0.027225,0.036478&amp;z=14&amp;output=embed"/>
+                <br/>
+                <a href="http://www.google.com/maps/ms?ie=UTF8&amp;hl=zh-TW&amp;om=1&amp;msa=0&amp;msid=115547205223566529488.0004384c16d8c7f68eb50&amp;ll=25.004961,121.541404&amp;spn=0.027225,0.036478&amp;z=14&amp;source=embed" style="color:#0000FF;text-align:left;font-size:small">檢視較大的地圖</a>
+              </p>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-wa-ch1-and-ch2">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-22T21:17:26" id="date-2007-08-22">
+                <span class="mon">08月</span>
+                <span class="day">22日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/22/wa-ch1-and-ch2/">有告有希望？</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>這篇其實是Web Accessibility第一、二章的感想。</p>
+              <p>第一章就是簡單介紹網頁親和力，包括基本認識、好處、迷思等等，其中迷思的部份有興趣的可以看看我之前翻譯過的<a href="http://blog.othree.net/log/2005/08/04/accessibility-myths-and-misconceptions/">親和力迷思與錯誤觀念</a>，不過書中講的還要更多一點。</p>
+              <p>第二章則是網頁親和力的法律簡述，看了之後才知道，美國的發展是因為有身心障礙者因為無法使用網站，提出告訴，然後政府才開始有注意，之後才有了相關法律和<a href="http://www.section508.gov/">Section 508</a>，而Section 508其實也不只是網站的親和力方針而已，其實包含了軟體、作業系統、網站、網路應用程式、資訊、文件和支援等等，而<a href="http://www.w3.org/TR/WAI-WEBCONTENT/" title="Web Content Accessibility Guidelines"><span class="caps">WCAG</span></a>就只是針對網頁而已。回過來看台灣，網頁親和力議題這麼不受重視，想必是因為還沒人告吧，不過我覺得這也是民情造成，台灣的人大概比較不會往自己的權益受到侵害的方面想，更不用說要對公家單位提出告訴了，讓我想到暑假上英文時，外籍老師知道我們18歲要當兵，但是20歲才能投票時，驚訝的說：「你們在還不能決定國家大事的時候就要被迫上場打仗！」</p>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-repaired">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-21T21:56:54" id="date-2007-08-21">
+                <span class="mon">08月</span>
+                <span class="day">21日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/21/repaired/">回復完工</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>花了不少時間總算弄完，中途主機root不知原因掛掉還重灌一次，最後有兩篇文章的附檔沒辦法找回來，都是HemiDemi的Firefox擴充套件，不過反正都是測試版的，所以就放著不理了，以後要是有新版在直接加註吧。</p>
+              <p>另外昨天看到hlb提到W3C的working group是開放給所有人加入的，還有一篇文章教人怎樣加入「<a href="http://ln.hixie.ch/?start=1173385976&amp;count=1"> How <span class="caps">YOU </span>can join the <span class="caps">W3C HTML5</span> Working Group in six easy steps</a>」，我目前有在考慮加入，實際參與規格的制定好像還蠻有趣的，畢竟以前都只能跟著別人的腳步走。</p>
+            </section>
+            <footer>
+              <a href="/log/about/" rel="tag">關於這裡</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-bad-bad-bad">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-16T20:23:39" id="date-2007-08-16">
+                <span class="mon">08月</span>
+                <span class="day">16日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/16/bad-bad-bad/">慘事發生</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>本站實體檔案回溯到2006/03，所以包括樣板和哪之後的文章的圖片都掛掉了，所幸本文是都有備份到，會發生這樣的事故主要是我的備份設定似乎沒做好，結果每天備份都是作假的，於是我一不做二不休，先升級到MT4，接著再來設計新的樣板，不過應該只會拿之前的再做些修改，畢竟那個樣板我還蠻滿意的，而且還有半成品的備份。版面和設定弄好之後再來慢慢把以前的附檔補上，不過也只能補有辦法補的。看來看書進度會delay好一陣子。</p>
+              <p class="update">現在開始每天會固定回復舊文章的連結和圖片，會造成feed內不斷有舊文跑出，還請見諒。</p>
+            </section>
+            <footer>
+              <a href="/log/about/" rel="tag">關於這裡</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-jedi-and-web-accessibility">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-12T13:05:06" id="date-2007-08-12">
+                <span class="mon">08月</span>
+                <span class="day">12日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/12/jedi-and-web-accessibility/">絕地大師與網頁親和力</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>絕地大師有鑑於國內實在太少網頁親和力的資訊和資源，所以決定自己跳下火海，撰寫一本，或許會是一系列關於網頁親和力的書，而其第一步就是開啟一個新的部落格，作為紀錄寫書的歷程之用，現在已經放了不少文章上去，除了以前寫給OSSF自由軟體電子報的相關文章外，還有對這本書的構想和大綱。我一直對這領域似懂非懂，大概是見山似山的階段吧，有點認知又知道其實比我的認知還要大，現在絕地大師決心投入為國內的網頁親和力議題盡一份心力，我自然是樂觀其成啦，不過在那之前還是要先把Web Accessibility看完。</p>
+              <p>話說我實在沒想到國內沒有任何網路公司有親和力團隊。</p>
+              <ul>
+                <li>
+                  <a href="http://blog.accessibility.tw/">網頁親和力 台灣第一本《網頁親和力》專書的部落格</a>
+                </li>
+              </ul>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-new-books">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-09T22:20:32" id="date-2007-08-09">
+                <span class="mon">08月</span>
+                <span class="day">09日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/09/new-books/">兩本網站相關新書</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>這兩天注意到兩本新書，應該都會買吧。</p>
+              <ul>
+                <li>
+                  <a href="http://www.simplebits.com/notebook/2007/08/08/bpwd2.html">Bulletproof Web Design 2nd Edition</a>
+                </li>
+                <li>
+                  <a href="http://www.friendsofed.com/book.html?isbn=1590598563">AdvancED <span class="caps">DOM</span> Scripting: Dynamic Web Design Techniques</a>
+                </li>
+              </ul>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-the-principles-of-beautif">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-09T21:55:30" class="same-date">
+                <span class="mon">08月</span>
+                <span class="day">09日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/09/the-principles-of-beautif/">The Principles of Beautiful Web Design 書評</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <div class="hreview" id="hreview-The-Principles-of-Beautiful-Web-Design">
+                <p class="item">
+                  <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="fn url" href="http://www.sitepoint.com/books/design1/">
+                    <img itemprop="url image" alt="The Principles of Beautiful Web Design" src="//blog.othree.net/log/2007/08/09/the-principles-of-beautif/cover.jpg" class="photo" width="155" height="200">
+                      <meta itemprop="width" content="155"/>
+                      <meta itemprop="height" content="200"/>
+                    </img>
+                  </a>
+                </p>
+                <p class="entry-info">
+  本書評由<span class="reviewer vcard"><span class="fn nickname">othree</span></span>
+  評論於<abbr class="dtreviewed" title="20070809">2007/08/09</abbr>
+  ，評分為<abbr title="5" class="rating">5分（滿分5分）</abbr>
+  ，採<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/tw/deed.zh_TW">創用 CC 姓名標示-相同方式分享 授權條款</a>釋出。
+  </p>
+                <div class="description">
+                  <p>這是一本設計書，雖然說是網頁設計，但裡面高達八成都是在講設計的東西，只有少部份的HTML和CSS code，設計的內容包括平面設計的基礎、名詞、顏色...，到設計的流程，而本書所講的設計流程也就是這本書的架構，五大章節，從版面配置開始接著依序是顏色、質感、文字排版、圖片選擇與製作，照著書上的流程來設計，而不是一股腦的就把想法畫出來，相信都可以得到不錯的效果。</p>
+                  <p>我剛好是這本書設定的對象，所以對我來說實在是幫助不小，雖然看過色彩學和一些平面排版的書籍，不過還是缺了設計流程，以至於我雖然有了一些基礎知識，卻不知道怎麼應用，不過這本書剛好幫我把這些知識都串了起來，一下子感覺學到了不少東西，接下來要設計網站就照這流程來試試看吧。</p>
+                </div>
+              </div>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-safety-fonts-for-web">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-08T01:28:29" id="date-2007-08-08">
+                <span class="mon">08月</span>
+                <span class="day">08日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/08/safety-fonts-for-web/">英文的安全字形 for 網頁用</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <ul>
+                <li>Arial</li>
+                <li>Arial Black</li>
+                <li>Comic Sans MS</li>
+                <li>Courier New</li>
+                <li>Georigia</li>
+                <li>Impact</li>
+                <li>Time News Roman</li>
+                <li>Trebuchet MS</li>
+                <li>Verdana</li>
+              </ul>
+              <em class="extended">
+                <a href="/log/2007/08/08/safety-fonts-for-web/">閱讀「英文的安全字形 for 網頁用」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-hreview">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-04T01:26:59" id="date-2007-08-04">
+                <span class="mon">08月</span>
+                <span class="day">04日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/04/hreview/">開始使用hReview</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>從<a href="http://blog.othree.net/log/2007/08/04/html_mastery/"><span class="caps">HTML</span> Mastery這本書的書評</a>開始，我大概都會改成先在<a href="http://www.anobii.com/">aNobii</a>發表評論後在用<a href="http://microformats.org/wiki/hreview">hReview</a>的格式在這裡發表吧，這樣我寫評論的時候比較不需要去想版面呈現的東西，感覺寫起來輕鬆不少，順便正式使用hReview這個microformats，實際上在決定格式的時候還蠻難抉擇的，我想盡量保持標籤簡潔，又不能省掉太都東西，結果花了兩個小時以上才弄成現在的樣子，我想以後還是有可能修改啦，沒想到hReview比其他幾種格式複雜不少啊，要考慮的東西多很多。</p>
+            </section>
+            <footer>
+              <a href="/log/about/" rel="tag">關於這裡</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-html-mastery">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-04T00:45:28" class="same-date">
+                <span class="mon">08月</span>
+                <span class="day">04日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/04/html-mastery/">HTML Mastery 書評</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <div class="hreview" id="hreview-HTML-Mastery">
+                <p class="item">
+                  <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="fn url" href="http://htmlmastery.com/">
+                    <img itemprop="url image" alt="HTML Mastery" src="//blog.othree.net/log/2007/08/04/html-mastery/hm-cover-md.gif" class="photo">
+                      <meta itemprop="width" content=""/>
+                      <meta itemprop="height" content=""/>
+                    </img>
+                  </a>
+                </p>
+                <p class="entry-info">
+  本書評由<span class="reviewer vcard"><span class="fn nickname">othree</span></span>
+  評論於<abbr class="dtreviewed" title="20070803">2007/08/03</abbr>
+  ，評分為<abbr title="5" class="rating">5分（滿分5分）</abbr>
+  ，採<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/tw/deed.zh_TW">創用 CC 姓名標示-相同方式分享 授權條款</a>釋出。
+  </p>
+                <div class="description">
+                  <p>我一直在尋找如何正確使用每個HTML標籤的文件，不過一直以來的網頁製作書籍都沒有這種資訊，當我看到microformats時，曾經有一度認為他就是我要找的，不過microformats仍然不是我要找的。</p>
+                  <p>終於我看到了這本書，不是每個HTML標籤都提出來一個一個講，但卻更正確的告訴你哪些標籤該在什麼時候使用、如何建構一個結構良好的HTML文件、如何給予適合的id和class。除了HTML外，他也適當的提供CSS和javascript，讓你了解如何同時保持良好的HTML結構，又能夠達到各種需求，當然，現在的瀏覽器支援問題也沒有少。</p>
+                  <p>這本書是我目前看到最好的HTML書，也希望國內能夠翻譯引進，或是這些設計理念能在國內推廣出去，我實在不想一直看到國內的網頁製作公司在這種時代還持續的產生table layout的網頁。</p>
+                </div>
+              </div>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-new-books">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2007-08-03T00:44:26" id="date-2007-08-03">
+                <span class="mon">08月</span>
+                <span class="day">03日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2007/08/03/new-books/">新書購入</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/984760770/">
+                  <img itemprop="url image" src="//farm2.static.flickr.com/1389/984760770_32fa4dc8b5.jpg?v=0" alt="八本書排排站" longdesc="WEB ACCESSIBILITY、PRO JAVASCRIPT　TECHNIQUES、THE PRINCIPLES OF BEAUTIFUL WEB DESIGN、海潮之聲、海潮之聲 2、沙丘魔堡 上、沙丘魔堡 下、說話前 請先想好要伸哪隻手">
+                    <meta itemprop="width" content=""/>
+                    <meta itemprop="height" content=""/>
+                  </img>
+                </a>
+              </p>
+              <p>昨天一口氣買了8本書，三本是網站相關，參考Jedi之前的書評挑選的，約花了四千塊，剩下幾本則是小說和雜書，都是中文的，只有一千出頭。</p>
+            </section>
+            <footer>
+              <a href="/log/books/" rel="tag">與書相關</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2007/07/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

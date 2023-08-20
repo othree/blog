@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>YAJS: Yet Another JavaScript Syntax for Vim : O3noBLOG</title>
+    <meta name="description" content="前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 YAJS，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 github repo 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下： 用 javascript 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 SyntaxComplete 使用 完整重新整理過的 Web API、DOM、JS 關鍵字..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="ES6 Method Definition" href="/log/2014/07/14/es6-method-definition/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2014/07/14/yajs/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2014/07/14/yajs/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="YAJS: Yet Another JavaScript Syntax for Vim"/>
+    <meta property="og:description" content="前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 YAJS，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 github repo 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下： 用 javascript 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 SyntaxComplete 使用 完整重新整理過的 Web API、DOM、JS 關鍵字..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2014/07/14/yajs/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-yajs">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2014-07-14T18:35:34" id="date-2014-07-14">
+                <span class="mon">07月</span>
+                <span class="day">14日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2014/07/14/yajs/">YAJS: Yet Another JavaScript Syntax for Vim</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 <a href="http://www.vim.org/scripts/script.php?script_id=4974">YAJS</a>，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 <a href="https://github.com/othree/yajs.vim">github repo</a> 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下：</p>
+              <ul>
+                <li>用 <code>javascript</code> 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 <code>SyntaxComplete</code> 使用</li>
+                <li>完整重新整理過的 Web API、DOM、JS 關鍵字</li>
+                <li>可以完美的和 javascript-libraries-syntax.vim 共用</li>
+                <li>把許多歷史遺跡的 syntax rule 都砍掉了</li>
+                <li>當然最後就是支援許多的 ES6 syntax，像是 arrow function、 method definition 等</li>
+              </ul>
+              <p>第一點這問題很久了，我好像之前也有說過，第二個一開始弄之前有點猶豫，因為關鍵字真的很多，目前整理了大概有 1800 個上下，不過後來看到 Vim 內建的 xs 的 <a href="https://code.google.com/p/vim/source/browse/runtime/syntax/xs.vim">syntax</a> 我就釋懷了，這個檔案有三千多行，而定義關鍵字的每行都有數個關鍵字，1800 其實還只整理了一部份，除了 Global 物件都有加上外，很多新 Spec 是還沒整理的，例如 Mozilla 為了 Firefox OS 定的那些和硬體溝通的 API 等。</p>
+              <p>第三點是我重新整理的時候才注意到的，本來我的 javascript-libraries-syntax.vim 會把 <code>.</code> 的 group 取代掉，也就是原來的 syntax rule 裡面，和 <code>.</code> 有關的東西在套用過 libraries syntax 之後就會消失，只是不太容易注意到，這次修改就讓這個問題不會發生，不過 JS 僅限於 YAJS，，其他還有 CoffeeScript、LiveScript 其實不受影響，不過是因為他們本來在 <code>.</code> 之後就沒其他的 syntax highlight 了。</p>
+              <p>第四點就是把一些不明用途或是過時的東西砍掉，最後就是 ES6 的語法了，目前大概知道會有的都已經做上去了像是 block scope、let、const、class、新的 number literal 等都支援，如果有缺什麼歡迎報 bug 摟。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>YAJS: Yet Another JavaScript Syntax for Vim</strong>發表於 2014-07-14，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2014/07/14/es6-method-definition/"><span class="prefix">上一篇：</span>ES6 Method Definition<time>2014-07-14</time></a><a class="next pn" href="/log/2014/07/15/es6-int/"><span class="prefix">下一篇：</span>ES6 的數字<time>2014-07-15</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

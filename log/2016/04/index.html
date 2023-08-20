@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>April 2016 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="March 2016" href="/log/2016/03/"/>
+    <link rel="next" title="July 2016" href="/log/2016/07/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2016/04/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>April 2016</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="March 2016" href="/log/2016/03/">« March 2016</a> | <a href="../">上一層</a> | <a title="July 2016" href="/log/2016/07/">July 2016 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-nginx-fcgiwrap">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-04-22T21:52:05" id="date-2016-04-22">
+                <span class="mon">04月</span>
+                <span class="day">22日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/04/22/nginx-fcgiwrap/">nginx &amp; fcgiwrap</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
+              <p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
+              <pre>
+                <code>location ~ ^/path/to/mt/mt.*\.cgi {
+    gzip off;
+    fastcgi_index index.cgi;
+    fastcgi_split_path_info ^(.+?\.cgi)(/.*)$;
+    if (!-e $document_root$fastcgi_script_name) {
+        return 404;
+    }
+    include fastcgi.conf;
+
+    ## MT-related
+    fastcgi_param PERL5LIB $document_root/mt/lib;
+    fastcgi_param MT_HOME $document_root/mt/;
+    fastcgi_param MT_CONFIG $document_root/mt/mt-config.cgi;
+
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param PATH_TRANSLATED $fastcgi_path_info;
+    fastcgi_pass unix:/var/run/fcgiwrap.sock;
+}
+</code>
+              </pre>
+              <p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
+              <p>最後要說一下 conf 裡的這行：</p>
+              <pre>
+                <code>    include fastcgi.conf;
+</code>
+              </pre>
+              <p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
+              <pre>
+                <code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+fastcgi_param  REQUEST_SCHEME     $scheme;
+fastcgi_param  HTTPS              $https if_not_empty;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only, required if PHP was built with --enable-force-cgi-redirect
+fastcgi_param  REDIRECT_STATUS    200;
+</code>
+              </pre>
+              <p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
+            </section>
+            <footer>
+              <a href="/log/server/" rel="tag">Server Side</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-360-test">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-04-10T19:21:34" id="date-2016-04-10">
+                <span class="mon">04月</span>
+                <span class="day">10日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/04/10/360-test/">360 Test</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" data-flickr-embed="true" data-vr="true" href="https://www.flickr.com/photos/othree/25933704672/in/dateposted-public/" title="摩茲工寮">
+                  <img itemprop="url image" src="https://farm2.staticflickr.com/1478/25933704672_4e4641723f_b.jpg" width="1024" height="512" alt="摩茲工寮">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="512"/>
+                  </img>
+                </a>
+              </p>
+            </section>
+            <footer>
+              <a href="/log/diary/" rel="tag">日記</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-purecss">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-04-08T22:48:28" id="date-2016-04-08">
+                <span class="mon">04月</span>
+                <span class="day">08日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/04/08/purecss/">Pure.css</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
+              <p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
+              <p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-ssh-agent-forward">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-04-05T22:22:39" id="date-2016-04-05">
+                <span class="mon">04月</span>
+                <span class="day">05日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/04/05/ssh-agent-forward/">SSH Agent Forward</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="576"/>
+                  </img>
+                </a>
+              </p>
+              <p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
+              <em class="extended">
+                <a href="/log/2016/04/05/ssh-agent-forward/">閱讀「SSH Agent Forward」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/server/" rel="tag">Server Side</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-kyushu-rail">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-04-05T10:26:33" class="same-date">
+                <span class="mon">04月</span>
+                <span class="day">05日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2016/04/05/kyushu-rail/">九州鐵道</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23906413032/" title="九洲JR by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg" width="1024" height="683" alt="九洲JR" srcset="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg 1024w, https://farm2.staticflickr.com/1631/23906413032_280443efa8_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="683"/>
+                  </img>
+                </a>
+              </p>
+              <p>之前去了一趟九州，順便觀察了一下聽說很厲害的九州鐵道（不只是 JR），覺得果然名不虛傳，整個就是設計的比較有質感，不論是普通車還是特急列車都感覺的出來比其他地區的還要搶眼些，這次搭到比較特別的列車是特急KAMOME（特急かもめ），從博多到長崎，還有由布院之森（ゆふいんの森），從久留米到由步院，首先就來看一下特急KAMOME（以下圖多）。</p>
+              <em class="extended">
+                <a href="/log/2016/04/05/kyushu-rail/">閱讀「九州鐵道」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/diary/" rel="tag">日記</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2016/03/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

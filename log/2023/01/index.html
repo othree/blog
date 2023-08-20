@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>January 2023 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="December 2022" href="/log/2022/12/"/>
+    <link rel="next" title="May 2023" href="/log/2023/05/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2023/01/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>January 2023</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="December 2022" href="/log/2022/12/">« December 2022</a> | <a href="../">上一層</a> | <a title="May 2023" href="/log/2023/05/">May 2023 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-wbr-and-nobr">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-01-13T22:52:00" id="date-2023-01-13">
+                <span class="mon">01月</span>
+                <span class="day">13日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/01/13/wbr-and-nobr/">wbr 的這些那些</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>在 responsive design 成為主流之後，有個問題也隨之被突顯出來，就是文字的換行，尤其是標題文字的換行位置，現在的瀏覽器的換行方式簡單來說就是超出區塊範圍的東西都往下放到下一行，所以在某些情況下，就會有第一行很長第二行很短的狀況，視覺上非常不平衡，以下圖為例，網頁的副標題沒有作特殊處理，所以會有可能會變成兩行長度差距很大的樣子：</p>
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/52622679026/" title="line breaking by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/52622679026_dce07ba029_b.jpg" width="1024" height="626" alt="line breaking" srcset="https://live.staticflickr.com/65535/52622679026_a03a8ede93_k.jpg 2x">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="626"/>
+                  </img>
+                </a>
+              </p>
+              <p>這個問題有蠻多解決方法的，目前我知道的就有：</p>
+              <ol>
+                <li>微調 responsvie 的樣式來避免出現不平衡的狀態</li>
+                <li>在特定地方插入 <code>&amp;nbsp;</code> 避免換行</li>
+                <li>用 flex layout 來控制換行位置</li>
+              </ol>
+              <p>基本上就是只要你不擇手段，問題還是可以解決的，不過我一直以來都是會偏好用標準的方法來解決問題，所以整理了一下我所知道可以拿來用的東西：</p>
+              <ol>
+                <li><code>&lt;wbr&gt;</code> HTML element</li>
+                <li><code>white-space</code> CSS property</li>
+                <li><code>&lt;nobr&gt;</code> HTML element</li>
+                <li><code>text-wrap</code> CSS property</li>
+              </ol>
+              <p>首先的想法是 <code>&lt;wbr&gt;</code> 配上 <code>white-space: nowrap;</code> 或是 <code>&lt;nobr&gt;</code>，不過意外的是大部分瀏覽器都不支援這個組合，也就是說，包在 <code>&lt;nobr&gt;</code> 內的 <code>&lt;wbr&gt;</code> 的地方在現在大部分主流瀏覽器內是不會換行的：</p>
+              <pre>
+                <code class="language-html">&lt;nobr&gt;ChatGPT: Optimizing&lt;wbr&gt;Language Models&lt;wbr&gt;for Dialogue&lt;/nobr&gt;
+</code>
+              </pre>
+              <p>這就激起了我的好奇心了，於是我開始仔細的找資料，看看 <code>&lt;nobr&gt;</code> 和 <code>&lt;wbr&gt;</code> 到底是怎樣運作的。首先，就來看看 <code>&lt;wbr&gt;</code> 吧，雖然他第一次出現在 W3C 的文件內就是在 HTML5，但是其實它已經出現了 20 年以上，最早是作為 <a href="https://web.archive.org/web/20000303182655/http://www.netscape.com/assist/net_sites/html_extensions.html">Netscape 的 HTML 2 extension</a> 的一員：</p>
+              <blockquote>
+                <p>The WBR element stands for <strong>W</strong>ord <strong>BR</strong>eak. This is for the very rare case when you have a NOBR section and you know exactly where you want it to break. Also, any time you want to give the Netscape Navigator help by telling it where a word is allowed to be broken. The WBR element does not force a line break (BR does that) it simply lets the Netscape Navigator know where a line break is allowed to be inserted if needed.</p>
+              </blockquote>
+              <p>在 Internet Archive 上找到的備份，最早的定義其實明確的說著 <code>&lt;wbr&gt;</code> 處應該是要可以優先於 <code>&lt;nobr&gt;</code> 的，我甚至還在 bugzilla 上找到一個 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=6347">24 年前的 bug report</a> 在講這件事，根據這張票最後的關掉前的討論，其實可以用 <code>&lt;/nobr&gt;&lt;nobr&gt;</code> 來達成一樣的效果，然後 Firefox 不打算支援 <code>&lt;wbr&gt;</code>，看到這邊，我只能說這解法怎麼這麼天才（稱讚的意味）。</p>
+              <p>查到這邊，我還是很好奇為什麼現在的主流瀏覽器依然 <code>&lt;wbr&gt;</code> 優先度比 <code>&lt;nobr&gt;</code> 還低，所以繼續找資料，這次看的就是最新的文件了，首先是 <code>&lt;wbr&gt;</code> 的<a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element">定義</a>，在 HTML5 中變成：</p>
+              <blockquote>
+                <p>The <code><a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-wbr-element">wbr</a></code> element <a href="https://html.spec.whatwg.org/multipage/dom.html#represents">represents</a> a line break opportunity.</p>
+              </blockquote>
+              <p>從 "word break" 變成 "line break opportunity" 了，<code>&lt;nobr&gt;</code> 則和 <code>&lt;wbr&gt;</code> 一樣一開始是 Netscape extension，不過他倒是沒有進到 HTML5，事實上，雖然 <code>&lt;nobr&gt;</code> 不是 HTML5 的一員，但是文件中<a href="https://html.spec.whatwg.org/multipage/rendering.html#phrasing-content-3">定義的 default style 還是有它</a>：</p>
+              <pre>
+                <code class="language-css">br { display-outside: newline; } /* this also has bidi implications */
+nobr { white-space: nowrap; }
+wbr { display-outside: break-opportunity; } /* this also has bidi implications */
+nobr wbr { white-space: normal; }
+</code>
+              </pre>
+              <p>其實就是等價於 <code>white-space: nowrap</code>，而 <code>white-space</code> 屬性<a href="https://www.w3.org/TR/CSS2/text.html#white-space-prop">在 CSS2 時</a>是用來定義空白的處理方式：</p>
+              <blockquote>
+                <p>This property declares how white space inside the element is handled.</p>
+              </blockquote>
+              <p>到 CSS Text Level 3 時<a href="https://www.w3.org/TR/css-text-3/#white-space-property">定義</a>說的更明確，是用來決定遇到 "line break opportunity" 時的處理方式和是不是要合併 space 字元的屬性：</p>
+              <blockquote>
+                <ul>
+                  <li>whether and how <a href="https://www.w3.org/TR/css-text-3/#white-space">white space</a> is collapsed</li>
+                  <li>whether lines may <a href="https://www.w3.org/TR/css-text-3/#wrapping">wrap</a> at unforced <a href="https://www.w3.org/TR/css-text-3/#soft-wrap-opportunity">soft wrap opportunities</a></li>
+                </ul>
+              </blockquote>
+              <p>其實在 <a href="https://www.w3.org/TR/css-text-4/#white-space-property">Level 4</a> 更是可以分開設定兩種屬性，<code>white-space</code> 變成一個 shorthand，而看到這些定義的演進，其實也讓人發現最早命名時其實只有考慮到西方語言的特色。</p>
+              <p>看到這邊，會發現有一個新的名詞："line break opportunity"，有些地方是稱為 "wrap opportunity"，這個名詞其實是出現在 CSS Module Text 文件中的，顧名思義，就是可以換行的位置，而這份文件也是<a href="https://www.w3.org/TR/css-text-4/#line-breaking">定義換行邏輯</a>的文件，不過這邊其實沒把換行演算法（line breaking algorithm）明確定義下來，而是闡明各種相關的 CSS 屬性和它們會怎樣影響換行的結果，例如換行有分強制（<code>&lt;br&gt;</code>）和非強制（<code>&lt;wbr&gt;</code>），然後不同 CSS 屬性會影響這些換行點的出現與否，至於文本之中，哪些地方可以換行，就是換行演算法的部分了，這部份在 W3C 文件沒有定義死，所以是允許瀏覽器自己決定的，不過有提供一些參考文件，像是 Unicode 的附件 14："Unicode Line Breaking Algorithm"，或是稱為 UAX14，這份文件要搭配 Unicode Database（UCD） 的 <a href="https://www.unicode.org/Public/UCD/latest/ucd/LineBreak.txt">Line_Break Property 資料</a>，文件中的第五章有仔細的說明各種不同的 line breaking class，然後資料庫則是定義了所有 Unicode 字元的 Line_Break property，接著的第六章就是最重要的換行演算法了，這邊列出了 31 條規則，基本上是反向列舉，說哪些地方不能換行，例如 WJ（word joiner）前後都不能換行，數字中間的符號前後也不能換行之類的，不過不確定哪些瀏覽器是實作 UAX14 的，Chrome 似乎有用到 UCD，Firefox 則是以 JIS X 4051 為基礎做的<a href="https://searchfox.org/mozilla-central/rev/6566d92dd46417a2f57e75c515135ebe84c9cef5/intl/lwbrk/LineBreaker.cpp">換行演算法</a>，其實 JIS X 4051 是我所知道，二戰後世界，最早的正式的文字編排的標準，查到的紀錄是 <a href="https://www.klnet.pref.kanagawa.jp/find-books/kawasaki/kikaku/kikaku-list/jis-hb-x-03.html">1989 有一版</a>，而 UAX14 第一個非草稿的版本則是要到 1999 年才出來。</p>
+              <p>回到現在主流瀏覽器不支援 <code>&lt;wbr&gt;</code> 放在 <code>white-space: nowrap</code> 裡面無法換行的問題，其實要回到這個 HTML 標籤在繪製時，是不是有 magic 的，什麼是 magic 呢？簡單說就是，你能不能用 CSS 來定義該標籤的樣子，以及你能不能用 CSS 來改掉這些預設的樣式，而 <code>&lt;br&gt;</code> 和 <code>&lt;wbr&gt;</code> 正好是有 magic 的標籤，可以想想看，要怎樣用 CSS 讓文字內產生一個換行點，可能有人會說剛剛上面才看到的，不過，其實那幾個 <code>display-outside</code> 的值只存在於以前的草稿中，CSS-WG 決議不為了這個問題<a href="https://github.com/w3c/csswg-drafts/issues/610">新增多的 display 狀態</a>，所以問題就回到 HTML-WG 這邊了，CSS-WG 的 fantasai 其實有給了一組 default style：</p>
+              <pre>
+                <code class="language-css">br { all: unset !important; display: contents !important; content: "\a" !important; white-space: pre !important; }
+wbr { all: unset !important; display: contents !important; content: "\200B" !important; }
+</code>
+              </pre>
+              <p>我把 <code>!important</code> 拿掉整理一下：</p>
+              <pre>
+                <code class="language-css">br {
+  all: unset;
+  display: contents;
+  content: "\a";
+  white-space: pre;
+}
+wbr {
+  all: unset;
+  display: contents;
+  content: "\200B";
+}
+</code>
+              </pre>
+              <p>其中，<code>\a</code> 就是<a href="https://util.unicode.org/UnicodeJsps/character.jsp?a=000A&amp;B1=Show">換行字元</a>，<code>\200B</code> 則是 <a href="https://util.unicode.org/UnicodeJsps/character.jsp?a=200B&amp;B1=Show">ZWSP</a>，zero width space，因為是 zero width，所以看不到，然後又因為是 space，所以可以用來把字切開，也就表示可以在該處斷行。不過這個版本有些問題，因為有很多瀏覽器還不支援在 <code>::before, ::after</code> 以外的物件上套用 <code>content</code> 屬性，所以 fantasai 又提供一版用 <code>::before</code> 的版本：</p>
+              <pre>
+                <code class="language-css">br, wbr { all: unset !important; display: contents !important; white-space: pre !important; }
+br::before { all: unset !important; content: "\a" !important; }
+wbr::before { all: unset !important; content: "\200B" !important; }
+</code>
+              </pre>
+              <p>但是，實際上直接拿這組定義來用，還是一樣有問題，就是有些瀏覽器已經讓 <code>&lt;wbr&gt;</code> 有 magic 了，結果 <code>wbr::before</code> 是沒有用的，目前 <a href="https://github.com/whatwg/html/pull/2298">HTML 標準的修改也就還卡在這邊</a>（issue 則是<a href="https://github.com/whatwg/html/issues/2291">另外一個</a>），HTML-WG 的 Domenic 開了這個 PR 要讓 <code>&lt;br&gt;</code> 和 <code>&lt;wbr&gt;</code> 就用 magic 來實現效果，不過這討論已經停很久了，所以最後會是怎樣的方案還不知道。</p>
+              <p>總之目前的結論就是，現在如果想要讓 <code>&lt;wbr&gt;</code> 照其定義的一樣，可以在 <code>&lt;nobr&gt;</code> 或是 <code>white-space: nowrap</code> 內產生換行，是辦不到的，不過可以用其他的標籤來辦到，像是：</p>
+              <pre>
+                <code class="language-css">.wbr::before {
+  display: inline;
+  content: "\00200B";
+  white-space: normal;
+}
+</code>
+              </pre>
+              <p>配上</p>
+              <pre>
+                <code class="language-html">&lt;nobr&gt;ChatGPT: Optimizing&lt;span class="wbr"&gt;Language Models&lt;span class="wbr"&gt;for Dialogue&lt;/nobr&gt;
+</code>
+              </pre>
+              <p>這個寫法也有出現在一份由 Leif Halvard Silli 在提交 <a href="https://bugs.webkit.org/show_bug.cgi?id=64005">bug</a> 給 WebKit 所做的 <a href="https://www.m%C3%83%C2%A5lform.no/testing/html5/nobr+wbr.html">test 內</a>。</p>
+              <p>到這邊，大概已經把自己控制換行位置的部分講的差不多了，不過其實，還有一個方法可以處理一開始所提到的換行結果不理想的問題，就是在 CSS Text Module Level 4 中有一個新的屬性叫做 <code>text-wrap</code>，其中有一個屬性值是 <code>balance</code>，合起來<a href="https://www.w3.org/TR/css-text-4/#valdef-text-wrap-balance">就是</a>：</p>
+              <pre>
+                <code class="language-css">text-wrap: balance;
+</code>
+              </pre>
+              <p>這樣設定，預期的結果就是會換行換在每一行的寬度最接近的位置，不過當然還沒有瀏覽器支援，連 caniuse 都還查不到 <code>text-wrap</code> 屬性，只是還是有 JS 的解決方案：</p>
+              <ul>
+                <li><a href="https://github.com/adobe/balance-text">Adobe 的 balance text</a>，是 jQuery plugin，因為是認真去算長度的，效能比較不好；</li>
+                <li><a href="https://github.com/qgustavor/vanilla-balance-text">vanilla 版本的 balance text</a>；</li>
+                <li><a href="https://github.com/nytimes/text-balancer">nytimes（紐約時報）的 text-balancer</a>，透過 binary search 改寬度來調整換行位置，效能比較好；</li>
+                <li><a href="https://react-wrap-balancer.vercel.app/">React wrap balancer</a>，React component，基本原理和前者一樣，但是還多支援 <code>ratio</code> 屬性。</li>
+              </ul>
+              <p>最後的最後補上一些參考資料，一篇是古老的 IE 時代的東西，一篇則是現在的相關 CSS 屬性，一篇則是 balance wrap 的介紹：</p>
+              <ul>
+                <li>
+                  <a href="https://jkorpela.fi/html/nobr.html">Word division in IE</a>
+                </li>
+                <li>
+                  <a href="https://codersblock.com/blog/deep-dive-into-text-wrapping-and-word-breaking/">Deep Dive into Text Wrapping and Word Breaking</a>
+                </li>
+                <li>
+                  <a href="https://www.ctrl.blog/entry/text-wrap-balance.html">Improving the New York Times' line wrap balancer</a>
+                </li>
+              </ul>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+              <a href="/log/2023/01/13/wbr-and-nobr/#comments" title="「wbr 的這些那些」的迴響">迴響</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2022/12/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

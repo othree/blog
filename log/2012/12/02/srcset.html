@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>srcset 支援 : O3noBLOG</title>
+    <meta name="description" content=" 之前的 Device Pixel Ratio 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 picture 標籤和 srcset 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像： &lt;picture&gt; &lt;source media=&quot;(min-width: 40em)&quot; srcset=&quot;big.jpg 1x, big-hd.jpg 2x&quot;&gt; &lt;source srcset=&quot;small.jpg 1x, small-hd.jpg 2x&quot;&gt; &lt;img src=&quot;fallback.jpg&quot; alt=&quot;&quot;&gt; &lt;/picture&gt; 至於 srcset 就長的像： &lt;img src=&quot;fallback.jpg&quot; alt=&quot;&quot; srcset=&quot;small.jpg 640w 1x,..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="PHP and XSLT 2.0" href="/log/2012/12/01/php-xslt-2/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2012/12/02/srcset/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2012/12/02/srcset/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="srcset 支援"/>
+    <meta property="og:description" content=" 之前的 Device Pixel Ratio 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 picture 標籤和 srcset 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像： &lt;picture&gt; &lt;source media=&quot;(min-width: 40em)&quot; srcset=&quot;big.jpg 1x, big-hd.jpg 2x&quot;&gt; &lt;source srcset=&quot;small.jpg 1x, small-hd.jpg 2x&quot;&gt; &lt;img src=&quot;fallback.jpg&quot; alt=&quot;&quot;&gt; &lt;/picture&gt; 至於 srcset 就長的像： &lt;img src=&quot;fallback.jpg&quot; alt=&quot;&quot; srcset=&quot;small.jpg 640w 1x,..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2012/12/02/srcset/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="768"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-srcset">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2012-12-02T17:52:46" id="date-2012-12-02">
+                <span class="mon">12月</span>
+                <span class="day">02日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2012/12/02/srcset/">srcset 支援</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8229879792/" title="Large by othree, on Flickr">
+                  <img itemprop="url image" src="https://farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg" width="1024" height="768" alt="Large" srcset="https://farm9.staticflickr.com/8202/8229879792_f364c8645f_b.jpg 1024w, https://farm9.staticflickr.com/8202/8229879792_8577728ef2_h.jpg 1600w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="768"/>
+                  </img>
+                </a>
+              </p>
+              <p>之前的 <a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/">Device Pixel Ratio</a> 支援過後，繼續花了時間研究目前的 responsive image spec，目前大概就是 <a href="http://picture.responsiveimages.org/">picture</a> 標籤和 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 屬性兩種，好像是會兩種併行，picture 標籤的話看起來就像：</p>
+              <pre>
+                <code>&lt;picture&gt;
+  &lt;source media="(min-width: 40em)" srcset="big.jpg 1x, big-hd.jpg 2x"&gt;
+  &lt;source srcset="small.jpg 1x, small-hd.jpg 2x"&gt;
+  &lt;img src="fallback.jpg" alt=""&gt;
+&lt;/picture&gt;
+</code>
+              </pre>
+              <p>至於 srcset 就長的像：</p>
+              <pre>
+                <code>&lt;img src="fallback.jpg" alt="" srcset="small.jpg 640w 1x, small-hd.jpg 640w 2x, med.jpg 1x, med-hd.jpg 2x "&gt;
+</code>
+              </pre>
+              <p>基本上差異就是，picture 標籤內可以用 <a href="http://www.w3.org/TR/css3-mediaqueries/">media-query</a>，而 srcset 裡面的寬高則是代表最大值，也就是等價於 max-width 和 max-height，而不能設定 min-width 或 min-height，目前這兩份標準都是由 <a href="http://responsiveimages.org/">Responsive Images Community Group</a>(RICG) 來制訂，這個 Community Group(CG) 我覺得還蠻特別的，因為他們有自己的 domain，自己的網站，還有 <a href="https://twitter.com/respimg">twitter 帳號</a>、<a href="https://github.com/responsiveimagescg">Github 帳號</a>，和以往的標準 CG 比起來實在差蠻多，不知道組成成員是哪些，都用些很新世代的服務。</p>
+              <p>我自己是比較喜歡 srcset 這個作法，簡潔很多，不過相對的也就沒有 picture 那樣結構化，不過兩者都有正確的 fallback 機制，所以不管選那個方法，目前的瀏覽器至少都還是可以顯示圖片。現在由於還沒有任何一個瀏覽器開始支援，所以要能實現 responsive image，要碼就是用 javascript library 來實做，要碼就是在 server 端做這件事，RICG 他們推薦的 polyfill library 是 <a href="https://github.com/scottjehl/picturefill">picturefill</a> 這套，不過我不太喜歡，因為它不是用 picture 標籤，而是自定義了一組用 div 和 data attribute 的寫法：</p>
+              <pre>
+                <code>&lt;div data-picture data-alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;div data-src="small.jpg"&gt;&lt;/div&gt;
+    &lt;div data-src="medium.jpg"     data-media="(min-width: 400px)"&gt;&lt;/div&gt;
+    &lt;div data-src="large.jpg"      data-media="(min-width: 800px)"&gt;&lt;/div&gt;
+    &lt;div data-src="extralarge.jpg" data-media="(min-width: 1000px)"&gt;&lt;/div&gt;
+
+    &lt;!-- Fallback content for non-JS browsers. Same img src as the initial, unqualified source element. --&gt;
+    &lt;noscript&gt;
+        &lt;img src="external/imgs/small.jpg" alt="A giant stone face at The Bayon temple in Angkor Thom, Cambodia"&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+</code>
+              </pre>
+              <p>目前 <a href="http://dribbble.com/">dribbble</a> 是使用這套，另外有一套實做 srcset 的 library 叫 <a href="https://github.com/borismus/srcset-polyfill">srcset-polyfill</a>，這套就是完全照 spec 草稿下去寫的，不過我自己是沒用過，因為我自己是能少用 polyfill 就少用的那種，剛好我的 blog 架構有多一層 XSLT，所以我就把支援做在那層了。我的作法就是 server 端想辦法判斷應該要給瀏覽器哪張圖片，然後 parse 網頁內容後，對有 srcset 的圖片作處理，把原來的 src 替換成適合的圖片位置，做在 XSLT 端的好處是反正那邊本來就要處理網頁的 DOM tree 了，用專門 XML parser 來做這件事情比較不會發生意外這樣，不過基本上就是個 server 端實做，也沒很特別，倒是判斷依據和規則想比較久。</p>
+              <pre>
+                <code>&lt;a class="thumbnail" href="http://www.flickr.com/photos/othree/7877215448/" title="Flickr 上 othree 的 花蓮"&gt;
+    &lt;img src="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg" width="1024" height="683" alt="花蓮" 
+        srcset="//farm9.staticflickr.com/8431/7877215448_1d8dcf278c.jpg 768w,
+            //farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg 768w 2x,
+            //farm9.staticflickr.com/8431/7877215448_9a51e0f42a_k.jpg 2x" /&gt;
+&lt;/a&gt;
+</code>
+              </pre>
+              <p>目前我會在 srcset 裡面放三張圖，寬度分別是 500px、1024px 和 2048px 的，500px 那張的主要目標是給手機，1024px 那張是一般電腦，2048px 則是要給螢幕夠大且支援 HiDPI 的設備，像是 MBPR 和 iPad 3，基本上和 Device Pixel Ratio 的方法一樣，第一次來的訪客會寫入 cookie，記錄寬高最短邊的長度，只要最短邊小於 768 就給他最小張的寬 500px 的圖，剩下的情形就看 Dvice Pixel Ratio 決定要給哪張。不過光是這樣的規則其實還有些問題，就是頻寬的問題，像是用手機的人用 3G 網路加上螢幕不大，即使只是第一次來也很不需要抓 1024px 的圖片，所以第一次來的訪客我還會用 <a href="https://github.com/serbanghita/Mobile-Detect">Mobile_Detect</a> 來判斷，如果發現是手機的話第一次就會給 500px 的小圖。</p>
+              <p>目前用 Android Chrome、iPad Safari 還有桌上型電腦測過都有符合預期目標，目前也還沒想到其他改進的方向，可能等市面上的裝置分布有改變的話再調整了吧，不過如果瀏覽器直接支援 srcset 的話，那是最好，我也不需要在修改了:P。</p>
+            </section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+              <a href="/log/2012/12/02/srcset/#comments" title="「srcset 支援」的迴響">迴響</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>srcset 支援</strong>發表於 2012-12-02，文章類別為
+			  <a href="/log/css-html/">CSS &amp; HTML</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2012/12/01/php-xslt-2/"><span class="prefix">上一篇：</span>PHP and XSLT 2.0<time>2012-12-01</time></a><a class="next pn" href="/log/2012/12/04/id-quest/"><span class="prefix">下一篇：</span>id 的由來  <time>2012-12-04</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

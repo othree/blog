@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Common Log Format : O3noBLOG</title>
+    <meta name="description" content=" 這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 AWStats，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 Common Log Format，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。 Common Log Format 的 Wikipedia 條目 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 httpd 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Vim Boss Passed Away" href="/log/2023/08/11/vim-boss-passed-away/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2023/08/14/common-log-format/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2023/08/14/common-log-format/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Common Log Format"/>
+    <meta property="og:description" content=" 這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 AWStats，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 Common Log Format，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。 Common Log Format 的 Wikipedia 條目 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 httpd 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2023/08/14/common-log-format/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg"/>
+    <meta property="og:image:width" content="512"/>
+    <meta property="og:image:height" content="380"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-common-log-format">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-08-14T21:29:05" id="date-2023-08-14">
+                <span class="mon">08月</span>
+                <span class="day">14日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2023/08/14/common-log-format/">Common Log Format</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format">
+                    <meta itemprop="width" content="512"/>
+                    <meta itemprop="height" content="380"/>
+                  </img>
+                </a>
+              </p>
+              <p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
+              <p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
+              <p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
+              <ul>
+                <li>
+                  <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a>
+                </li>
+                <li>
+                  <a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a>
+                </li>
+                <li>
+                  <a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a>
+                </li>
+              </ul>
+              <p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
+              <pre>
+                <code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
+
+- host: Either the DNS name or the IP number of the remote client
+- rfc931: Any information returned by identd for this person, - otherwise.
+- authuser: If user sent a userid for authentication, the user name, - otherwise.
+- DD: Day
+- Mon: Month (calendar name)
+- YYYY: Year
+- hh: hour (24-hour format, the machine's timezone)
+- mm: minutes
+- ss: seconds
+- request: The first line of the HTTP request as sent by the client.
+- ddd: the status code returned by the server, - if not available.
+- bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
+</code>
+              </pre>
+              <p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
+              <p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
+              <pre>
+                <code>time remotehost request 
+</code>
+              </pre>
+              <p>實作是：</p>
+              <pre>
+                <code>fprintf(log, "%24.24s %s %s\n",
+		asctime(gorl), HTClientHost, n_noth(HTReqLine));
+</code>
+              </pre>
+              <p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
+              <pre>
+                <code>Www Mmm dd hh:mm:ss yyyy
+</code>
+              </pre>
+              <p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
+              <p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
+              <p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
+              <ul>
+                <li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
+                <li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
+                <li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+              </ul>
+              <p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
+            </section>
+            <footer>
+              <a href="/log/unix/" rel="tag">UNIX</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Common Log Format</strong>發表於 2023-08-14，文章類別為
+			  <a href="/log/unix/">UNIX</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2023/08/11/vim-boss-passed-away/"><span class="prefix">上一篇：</span>Vim Boss Passed Away<time>2023-08-11</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

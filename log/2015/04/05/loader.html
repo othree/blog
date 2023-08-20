@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Loader : O3noBLOG</title>
+    <meta name="description" content="Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 AMD 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="ECMAScript 6 Final Draft Approved" href="/log/2015/03/30/ecmascript-6-final-draft/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2015/04/05/loader/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2015/04/05/loader/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Loader"/>
+    <meta property="og:description" content="Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 AMD 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2015/04/05/loader/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-loader">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2015-04-05T14:50:09" id="date-2015-04-05">
+                <span class="mon">04月</span>
+                <span class="day">05日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2015/04/05/loader/">Loader</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>Loader 是 ECMAScript 定義要來處理 module import/export 等等事情的底層介面，ES6 的 module 我一直都很好奇，到底要怎麼去找 import 進來模組的原始碼，會好奇這點是因為如果是網頁環境，所有其它模組的原始碼一定是在遠端的 server 上，要拿到勢必是一個 request，然後還要等下載，總之就是非同步的流程，以前在 ES5 的話，要做非同步控制大概就是要做成 callback 的形式，所以會有像 <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">AMD</a> 那樣的設計出來，加上 module 名稱和檔案名稱可能又有差別，像是差個副檔名之類的，而 ES6 提供了原生的 import/export 語法來定義 module，所以我就很好奇它的底層要怎樣設計才能標準化。</p>
+              <p>Addy Osmani 有建立一個 Loader 的 polyfill 給 ES5 環境使用 Loader API，就叫做 <a href="https://github.com/ModuleLoader/es6-module-loader">ES6 Module Loader Polyfill</a>，這個 polyfill 內部實做是照當初 ES6 draft 來寫的，其實還蠻複雜，不過把讀取一個 module 的事情拆分一下，可以分成以下幾個步驟：</p>
+              <ol>
+                <li>Normalize：根據給的名稱取得實際的 module name</li>
+                <li>Locate：根據實際的 module name 取得 module 的位置</li>
+                <li>Fetch：根據 module 位置去取得檔案內容</li>
+                <li>Translate：如果有需要對檔案內容作任何修改，就在這裡處理</li>
+                <li>Instaniate：最後是根據檔案內容（程式碼），判斷有哪些相依模組和知道如何初始化這個模組</li>
+              </ol>
+              <p>以上幾個步驟是屬於 Loader 可自訂化的部分，到 instaniate 完成後，Loader 就繼續去讀其它相依的模組，相依模組都準備好之後，就可以使用模組的的程式碼，正式的把模組建立起來，ES spec 細部還定義了很多實做細節，像是非同步的操作都是用 Promise 來做流程控制，還有 Loader 也有個 module 的 registry 可以來保存已經讀好的模組，就不用一直重新建立，另外還有一些內部溝通的資料結構，像 instaniate 步驟要回傳一個物件，裡面有兩個屬性分別是 <code>deps</code> 和 <code>execute</code>， <code>deps</code> 是相依模組名稱的陣列， <code>execute</code> 則是該模組本身的初始化函數，參數的數量要剛好和相依模組數量一樣，回傳的則是 Module 物件等等。</p>
+              <p>其實目前的 ES6 spec draft 已經把 Loader 拿掉了，TC39 決定把他獨立出來，目前是 WHATWG 接手<a href="https://github.com/whatwg/loader">繼續</a>，最新的版本已經改很大了，看起來感覺有簡化不少，不過上面的五個步驟基本上還是存在，我一開始看到這五個步驟加上說可以自訂還沒什麼感覺，只是覺得奇怪為什麼細節沒寫，沒錯，這五個步驟在 spec draft 都只有介紹目的，不像其它的操作有詳細的寫出 method 內的流程，關鍵的地方就在於 JavaScript 已經不是單純只是在瀏覽器上跑的語言了，把這部分抽象化就是為了讓它可以同時在瀏覽器環境和單機環境下都可以實做，根據不同的 JS 環境去實做相對應的步驟細節，像是 <code>fetch</code> 在瀏覽器下就是真的用 fetch 去拉檔案，但是在 node 下就變成讀檔案，而在 ES6 Module Loader Polyfill 下，就有實做一組瀏覽器環境下的操作，不過這組操作的實做未來也不會真的進到瀏覽器內，最大的問題在於第五個步驟的 instaniate。</p>
+              <p>Instaniate 這個步驟是要實做 ES6 module 一個很關鍵的部分，關鍵之處在於要把 module 的 dependency 找出來，在 ES6 module 裡面，有一個限制是每個 module 都必須要獨立一個檔案，所以不能一個檔案定義兩個 module，然後假設瀏覽器已經支援 ES6 module 了，只要 parse 程式碼成 AST 找出裡面的 <code>import</code> 就可以把 dependency 列出來。不過現在是 polyfill，瀏覽器也還不支援 <code>import</code>，所以要實做 instaniate 自然需要能處理這個問題，ES6 Module Loader Polyfill 的作法是使用 transpiler，目前支援 <a href="https://github.com/google/traceur-compiler">Traceur</a> 和 <a href="https://babeljs.io/">Babel</a>，把本來用 <code>import</code> 、 <code>export</code> 寫的模組轉成用類似的 AMD 模組定義的型式，而這邊用的型式是 <a href="https://github.com/systemjs/systemjs">systemjs</a> 裡面提供的 <a href="https://github.com/systemjs/systemjs/blob/master/lib/extension-register.js">System.register</a>，這個方法本身並不是 ES spec 裡面定義的，比較像是為了處理這尷尬時間點所設計的替代方案。</p>
+              <p>本來我是想看看，是不是能夠只靠 Loader 就把 ES6 的 module 機制在現在的瀏覽器上建立起來，結果發現只靠 ES6 Module Loader Polyfill 是辦不到的，Loader API 並沒有定義模組的語法，如果用 ES6 的語法來定義模組還需要 transpiler 來從程式碼中分析出 module dependency，不過我不太想要把整包 transpiler 也放到 translate 裡面用，雖然可以自己寫一個什麼事情都不做的 translate function，但是要解決 dependency 的話還是會需要像 <code>System.register</code> 的幫助，總之到這邊，可以發現一個重點是，Loader 不管 module 定義的方法，雖然假想情境下是用 ES6 module 語法，每個檔案代表一個 module，然後用 <code>import</code> 和 <code>export</code> 來定義相依模組和提供的 method，不過其實 Loader 也是可以處理 AMD、<a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS</a> 甚至是 <a href="https://nodejs.org/api/modules.html">NodeJS</a> 型式的模組定義，只是要有人去實做這部分的 translate 和 instantiate 的部分，而 SystemJS最新版（0.16）就是這樣一個專案，它號稱是 universal module loader，支援 AMD、CommonJS、NodeJS 和 ES6 的模組定義，然後在最新的版本，改成使用 ES6 Module Loader Polyfill 的機制來做 module 的讀取、相依性的判斷和模組初始化，雖然有些地方沒有真的照之前的 spec 來實做。</p>
+              <p>另外一個之前不太清楚的問題也藉此搞清楚了，ES6 module 有限制一個檔案定義一個 module，而現在的 web application 常常為了效能問題，都把多個檔案合併成一個檔案，這時就不能用 ES6 module 了，當然也可以用像現在 SystemJS 的作法來處理，不過其實再過一兩年 HTTP/2 普及後，也不需要這樣搞了，會變成只需要 minimize，這部分倒是還可以接受。</p>
+              <p>ES6 裡面的 Loader 本身其實是一個 constructor，放在另外一個 ES6 提供的新東西 <code>Reflect</code> 下面，而用 <code>Reflect.Loader</code> 建立 Loader instance 時可以順便給他一些參數，像是前面提到的讀模組的五個步驟的實做，或是領域（realm），而 <code>System</code> 物件則是該 JS 環境下的預設的 Loader，理論上如果是瀏覽器環境，它就會知道怎樣去 fetch 遠端的程式碼回來，如果是 NodeJS 就會改用 file system 讀檔案，而且也知道要把模組放到那個 realm（理論上不同 frame 就是不同 realm），這樣大部分的使用都可以用 <code>System</code> 就好了，只有很少數的情形需要自己建立 Loader。其實上面說的 Loader API 不知道為什麼是移到 WHATWG 之後，幾乎是重新開始編寫，完整度欠佳，有些章節還是空的，另外也沒有定義 <code>System</code> 或是其它的新的替代方案，所以現在想要看看到底 Loader 內部怎麼做的話，要看舊版的 spec，可以去抓 2014 年 8 月的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#august_24_2014_draft_rev_27">ES6 draft rev 27</a> 然後看看 CH 26, 15，對照 ES6 Module Loader Polyfill 的程式碼可能比好懂。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Loader</strong>發表於 2015-04-05，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2015/03/30/ecmascript-6-final-draft/"><span class="prefix">上一篇：</span>ECMAScript 6 Final Draft Approved<time>2015-03-30</time></a><a class="next pn" href="/log/2015/04/08/more-on-srcset/"><span class="prefix">下一篇：</span>srcset<time>2015-04-08</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

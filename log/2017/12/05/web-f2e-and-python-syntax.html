@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Web F2E 看 Python Syntax : O3noBLOG</title>
+    <meta name="description" content=" 雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 Flake8 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。 內建支援 String Formatting 第一個我覺得很棒的是，Python 內建有 String Formatting Operations 可以用，超方便的，所以我只要寫： '%d: The answer to the ultimate question of life, the universe and everything' % 42 就可以把..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="問號出頭天" href="/log/2017/11/19/question-mark-in-es/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Web F2E 看 Python Syntax"/>
+    <meta property="og:description" content=" 雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 Flake8 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。 內建支援 String Formatting 第一個我覺得很棒的是，Python 內建有 String Formatting Operations 可以用，超方便的，所以我只要寫： '%d: The answer to the ultimate question of life, the universe and everything' % 42 就可以把..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2017/12/05/web-f2e-and-python-syntax/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="576"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-web-f2e-and-python-syntax">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2017-12-05T18:39:38" id="date-2017-12-05">
+                <span class="mon">12月</span>
+                <span class="day">05日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2017/12/05/web-f2e-and-python-syntax/">Web F2E 看 Python Syntax</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/mrtopf/3681678882/" title="Bruce Eckel's keynote by MrTopf, on Flickr">
+                  <img itemprop="url image" src="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg" width="1024" height="576" alt="Bruce Eckel's keynote, " srcset="https://farm3.staticflickr.com/2655/3681678882_1211d131ce_b.jpg 1024w">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="576"/>
+                  </img>
+                </a>
+              </p>
+              <p>雖然主業是 Web Front End，不過其實要搞好 Front End，後端也不可不知，所以我工作內容其實也寫 Python 寫了不少，最近終於可以跟 <a href="https://pypi.python.org/pypi/flake8">Flake8</a> 相安無事，所以想來記錄一些對我來說很有趣的 Python Syntax，不全是喜歡的就是了，以下內容以 2.7 為主。</p>
+              <h4>內建支援 String Formatting</h4>
+              <p>第一個我覺得很棒的是，Python 內建有 <a href="https://docs.python.org/2/library/stdtypes.html#string-formatting">String Formatting Operations</a> 可以用，超方便的，所以我只要寫：</p>
+              <pre>
+                <code class="language-python">'%d: The answer to the ultimate question of life, the universe and everything' % 42
+</code>
+              </pre>
+              <p>就可以把 42 填進去字串裡面了，雖然我第一次看到 <code>％</code> 放最後面還以為是什麼奇妙的註解符號；傳統的 formatting 用來做翻譯字串就會發現，如果有多個變數，它們的順序在不同的語言可能有不同，傳統的 formatting 只能處理固定順序，不適合這種情景，這時候還有新的 <code>format()</code> 可以用，幫變數命名好、然後丟參數進去就可以了，例如：</p>
+              <pre>
+                <code class="language-python">'{author} wrote {name}'.format(author='JRR', name='TLOR')
+</code>
+              </pre>
+              <p>雖然 Python 的 string format 很好用，不過文件寫得太高深了，所以還有人做了 <a href="https://pyformat.info/">pyformat.info</a> 這個站，收集了不少實用的範例幫助大家理解，而且仔細看過之後發現舊的格式也可以用 dict 格式丟命名變數進去。</p>
+              <h4>Multiline String</h4>
+              <p>多行字串也是我蠻喜歡的，像是要弄 template 的時候就很方便，JavaScript 一直到 ES6 的 tempalte string 才算是有內建，Python 就用三個引號框起來就可以了：</p>
+              <pre>
+                <code class="language-python">template_string = """&lt;div&gt;
+                       Wow
+                     &lt;/div&gt;"""
+</code>
+              </pre>
+              <p>不過很理所當然的，那些為了縮排所填入的空白，就都是真的字串內容，所以 <code>Wow</code> 前面就是有 23 個空白字元，如果字串在 class 或是 function 定義裡面，那空白就會更多，在一些使用情境下，空白數量是影響很大的，所以就會有到底該怎樣排的問題，StackOverflow 上就可以找到相關的<a href="https://stackoverflow.com/questions/2504411/proper-indentation-for-python-multiline-strings">問題</a>，還好我處理 HTML template 的話，影響不大，當然結果會造成一些多餘的資料傳輸啦。</p>
+              <h4>Keyword Arguments</h4>
+              <p>很久以前我寫過一篇 <a href="https://blog.othree.net/log/2013/06/19/options-object/">options object</a> 的文章，為的就是處理參數太多造成程式碼不好解讀的問題，沒想到 Python 可以在呼叫函數的時候，傳入參數的名稱，例如以下的函數：</p>
+              <pre>
+                <code class="language-python">def func(a, b, c, d):
+    return a + b + c + d
+</code>
+              </pre>
+              <p>呼叫的時候可以分別說明每個參數的 key 和 value 對應關係：</p>
+              <pre>
+                <code class="language-python">func(a=1, b=2, c=3, d=4)
+</code>
+              </pre>
+              <p>而且也可以混用：</p>
+              <pre>
+                <code class="language-python">func(1, 2, c=3, d=4)
+</code>
+              </pre>
+              <p>覺得這語法真是領先超多，當然 ECMAScript 現在可以用 destructing assignment 的語法做到類似效果，不過我覺得還是有些差距。</p>
+              <p>而針對 Keyword Argument 其實還有特殊的 syntax 是 <code>**kwargs</code>，其實我一開始是先看到這個語法的，想說 Python 怎麼有個很像 C++ 指標的東西，看了許久，某天終於會意到 kw 是 keyword 的意思，然後才終於理解是怎麼回事，後來查資料才知道還有 <a href="https://www.saltycrane.com/blog/2008/01/how-to-use-args-and-kwargs-in-python/"><code>*args</code></a>，現在的 ECMAScript 的話可以用 <code>...</code> spread operator 做到。</p>
+              <h4>Circular Dependency</h4>
+              <p>恩，可以做到循環相依，第一次看到真是覺得不可思議，不過後來慢慢瞭解限制，大概也知道怎麼實際上是如何跑的了。</p>
+              <h4>Ternary Operator</h4>
+              <p>三元運算，Python 的語法真的是比較特別一點，其它語言比較常看到的是用 <code>?</code>，不過 Python 是用後置的 <code>if else</code>：</p>
+              <pre>
+                <code class="language-python">reality = True if isReal else False
+</code>
+              </pre>
+              <p>其實我還蠻喜歡後置的 <code>if</code> 語句，第一次看到這種寫法是在 CoffeeScript，我很常用在一些參數特殊狀況的處理，一樣 CoffeeScript，不用後置 <code>if</code> 的時候：</p>
+              <pre>
+                <code class="language-coffeescript">filename = file.name
+
+if file.hash
+  filename = filename + '-' + file.hash
+  
+if file.ext
+  filename = filename + '.' + file.ext
+</code>
+              </pre>
+              <p>用了後置 <code>if</code> 的話可以寫成：</p>
+              <pre>
+                <code class="language-coffeescript">filename = file.name
+
+filename = filename + '-' + file.hash if file.hash
+
+filename = filename + '.' + file.ext if file.ext
+</code>
+              </pre>
+              <p>看起來整齊許多，視覺上(?)少了一層縮排，不過 Python 的三元運算，和 CoffeeScript 的後置 <code>if</code> 語法是不一樣的東西，雖然可以用來做類似的事情，但是因為他是三元運算，所以一定要提供 <code>else</code> 區段：</p>
+              <pre>
+                <code class="language-python">filename = filename + '.' + file.ext if file.ext else filename
+</code>
+              </pre>
+              <p>就比較不喜歡這樣就是了。</p>
+              <h4>Tuple</h4>
+              <p>Python 的 List 資料型態可以比做 JS 的 Array、Dict 可以比做 Object，兩種資料型態分別是使用中括號和大括號，不過在 Python 語言裡，還有一種用小括號的 Tuple 資料型態。</p>
+              <p>Tuple 資料型態似乎還蠻少見的，我第一次聽到這個名詞的時候是在學校學資料庫系統的時候，一筆資料稱為一個 Tuple，不知道為什麼印象很深，然後第一次看到使用 tuple 的程式碼自然是不太理解，不過還算直觀看的懂，後來不知道為什麼查到這種語法其實是一種資料型態叫 Tuple 的，意義上和資料庫系統的 Tuple 感覺還蠻像的，理解這是個資料型態之後用起來覺得順手很多，而且 Python 還蠻自由，很多地方和 List 都可以用一樣的操作，像是 <code>in</code> 運算，或是作為 function 的多個回傳值（多回傳值的函數也蠻方便的）。</p>
+              <h4>in 運算</h4>
+              <p>上面提到的 <code>in</code> 運算，用來判斷一個 List 或 Tuple 是否包含特定元素：</p>
+              <pre>
+                <code class="language-python">if target.stat in ('ACTIVE', 'PREMIUM')
+    ok()
+</code>
+              </pre>
+              <p>對於常在古早 JS 開發的人，真的是超羨慕的，可能有人說可以用 <code>indexOf</code> 做，雖然 JS String 的 indexOf 很早就有了，但是 Array 的 indexOf 卻是到 ES5.1 才正式進標準，IE9 之前的都不支援，所以要用他來判斷一個元素是否在一個陣列內，首先要確定你不支援 IE8 之前的瀏覽器，不過就算支援，其實程式碼也沒 <code>in</code> 運算來的漂亮，後來 ES2015 有個比較好一點的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"><code>Array.includes</code></a> 可以用就是了。</p>
+              <h4>Dict</h4>
+              <p>Dict 可以比做 JS 的 Object 比較好理解，對於這個我不能適應的有兩個地方，一是 Dict 不是 class，所以不能直接用 <code>.</code> 取屬性，一定要用 <code>[]</code> 或是內建的 <code>get()</code> ，再來就是用 <code>[]</code> 取屬性的時候，一定要 key 存在，用到不存在的 key 就會噴錯誤，如果一定要這樣操作就要改用 <code>get()</code>，get 還有一個特點是可以給 default 值，如果是複雜的結構，想要一口氣很深入就可以寫成：</p>
+              <pre>
+                <code class="language-python">data.get('attr1', {}).get('attr2', {}).get('attr3', None)
+</code>
+              </pre>
+              <p>實在是有點難看，CoffeeScript 是有 Existential Operator 可以做這種多階層的取值：</p>
+              <pre>
+                <code class="language-coffeescript">data.attr1?.attr2?.attr3?
+</code>
+              </pre>
+              <p>在 TC39 的草案也有類似的 <a href="https://github.com/TC39/proposal-optional-chaining">Optional Chainging</a>，這兩樣都是上一篇文章有提到的東西。</p>
+              <h4>Unix Timestamp</h4>
+              <p>內建的 datetime 似乎沒有支援直接輸出 Unix Timestamp，是說目前有需要都用 <a href="https://pendulum.eustace.io/">Pendulum</a>，還蠻好用的，API 介面也蠻直接，也有完整的時區、Period、Duration 等觀念。</p>
+              <h4>PEP8, Flake8</h4>
+              <p>文章一開始提到的 Flake8 把好幾個 code checker 包進去，包括了官方的 <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>、PyFlakes、pycodestyle 等，我用 Vim 的 <a href="https://github.com/vim-syntastic/syntastic">Syntastic</a> 都有支援，只要有安裝就會偵測到執行檔，然後就可以用來檢查了，一開始裝起來的時候就和第一次用 JSLint 一樣傷感情，不過兩個月過後到是還蠻適應的，其中比較和以往習慣不一樣的就是 function 參數的值，不論是定義時的 default value 還是呼叫時的 keyword argument，<code>=</code> 的左右兩邊都是不加空白的，例如：</p>
+              <pre>
+                <code class="language-python">def hello(name='John'):
+  return 'Hello ' + name
+
+hello(name='Hancock')
+</code>
+              </pre>
+              <p>另外就是特殊情況需要循環相依，或是 import 但是不使用時，會需要關閉一些檢查，可以在該行末端加上註解關閉特定項目：</p>
+              <pre>
+                <code class="language-python">import pages  # noqa: F401
+</code>
+              </pre>
+              <p>錯誤的編號可以參考 Flake8 的<a href="http://flake8.pycqa.org/en/latest/user/error-codes.html">文件</a>。</p>
+              <h4>Python Enhancement Proposals (PEPs)</h4>
+              <p>之前在研究 Joda Time 的時候，發現 Java 有個 <a href="https://jcp.org/en/jsr/all">JSR</a> (Java Specification Requests)，在找 Python 的 coding style 的時候則是發現了 <a href="https://www.python.org/dev/peps/">PEPs</a> (Python Enhancement Proposals)，不過 ECMAScript 目前是沒有類似的、完整的收集並編目各個 Proposal 文件的地方，甚至連語言本身的官網都沒有啊...XDrz</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Web F2E 看 Python Syntax</strong>發表於 2017-12-05，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2017/11/19/question-mark-in-es/"><span class="prefix">上一篇：</span>問號出頭天<time>2017-11-19</time></a><a class="next pn" href="/log/2018/01/12/recommend-semicolon/"><span class="prefix">下一篇：</span>分號大戰 again<time>2018-01-12</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>20K for...of : O3noBLOG</title>
+    <meta name="description" content="for...of 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 for...in 或是用傳統的取長度，然後 i++ 的方法： var arr = [1, 2, 3]; var i, v, len; for (i in arr) { v = arr[i]; console.log(v); } for (i = 0, len = arr.length; i &lt; len; i++)..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Vim Filename Complete" href="/log/2016/10/29/vim-filename-complete/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2016/11/18/20k-for-of/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2016/11/18/20k-for-of/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="20K for...of"/>
+    <meta property="og:description" content="for...of 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 for...in 或是用傳統的取長度，然後 i++ 的方法： var arr = [1, 2, 3]; var i, v, len; for (i in arr) { v = arr[i]; console.log(v); } for (i = 0, len = arr.length; i &lt; len; i++)..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2016/11/18/20k-for-of/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-20k-for-of">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2016-11-18T00:00:52" id="date-2016-11-18">
+                <span class="mon">11月</span>
+                <span class="day">18日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2016/11/18/20k-for-of/">20K for...of</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of"><code>for...of</code></a> 是 ECMAScript 2016 的新語法，有了他之後，要用迴圈跑過陣列不用像以前一樣先用 <code>for...in</code> 或是用傳統的取長度，然後 <code>i++</code> 的方法：</p>
+              <pre>
+                <code>var arr = [1, 2, 3];
+var i, v, len;
+
+for (i in arr) {
+    v = arr[i];
+    console.log(v);
+}
+
+for (i = 0, len = arr.length; i &lt; len; i++) {
+    v = arr[i];
+    console.log(v);
+}
+</code>
+              </pre>
+              <p>現在只要用簡單的 <code>for...of</code> 就可以了：</p>
+              <pre>
+                <code>var arr = [1, 2, 3];
+
+for (let v of arr) {
+    console.log(v);
+}
+</code>
+              </pre>
+              <p>不過目前還是需要考慮只有 ECMAScript 5 的環境，例如 IE11，所以一般都還是會用像是 <a href="https://babeljs.io/">Babel</a> 之類的 transpiler 來把 ES2015 的 syntax 轉成 ES5 的 code，結果轉出來如下：</p>
+              <pre>
+                <code>"use strict";
+
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+    for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var v = _step.value;
+
+        console.log(v);
+    }
+} catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+} finally {
+    try {
+        if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+            _iterator.return();
+        }
+    } finally {
+        if (_didIteratorError) {
+            throw _iteratorError;
+        }
+    }
+}
+</code>
+              </pre>
+              <p>結果其實有點意外，一個簡單的 <code>for...of</code> 竟然變的這麼長，事實上是因為 <code>for...of</code> 其實沒想像中簡單，因為它可以用的地方其實不只是陣列，而是 <a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">iterable 物件</a>，不過為了要完整的支援 <code>for...of</code>，就變成需要有 iterator, generator, symbol 等等的支援，當然上面的程式碼不能在 ES5 環境下執行，而 Babel 依靠的是 <a href="https://babeljs.io/docs/usage/polyfill/">babel-polyfill</a>，裡面其實就是 <a href="https://github.com/zloirock/core-js">core-js</a> 和 <a href="https://facebook.github.io/regenerator/">regenerator</a>，不過這一整包，其實有點龐大，要 228KB，即使最小化之後也還要 95KB，所以，就想著是不是能夠只捆包進需要的部分就好了，研究過後，發現有 Babel plugin 叫做 <a href="https://babeljs.io/docs/plugins/transform-runtime/">transform-runtime</a>，套用上去後：</p>
+              <pre>
+                <code>import _getIterator from "babel-runtime/core-js/get-iterator";
+var arr = [1, 2, 3];
+
+var _iteratorNormalCompletion = true;
+var _didIteratorError = false;
+var _iteratorError = undefined;
+
+try {
+  for (var _iterator = _getIterator(arr), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    var v = _step.value;
+
+    console.log(v);
+  }
+} catch (err) {
+  _didIteratorError = true;
+  _iteratorError = err;
+} finally {
+  try {
+    if (!_iteratorNormalCompletion &amp;&amp; _iterator.return) {
+      _iterator.return();
+    }
+  } finally {
+    if (_didIteratorError) {
+      throw _iteratorError;
+    }
+  }
+}
+</code>
+              </pre>
+              <p>可以看到原來用 <code>Symbol</code> 取 iterator 的地方變成用 <code>_getIterator</code> 了，而且還有一行：</p>
+              <pre>
+                <code>import _getIterator from "babel-runtime/core-js/get-iterator";
+</code>
+              </pre>
+              <p>如果要真的把這部分也打包進來，則需要讓 bundler 處理，我個人是偏好 <a href="http://rollupjs.org/">rollup</a>，搭配以下兩個 plugin：</p>
+              <ul>
+                <li><a href="https://github.com/rollup/rollup-plugin-node-resolve">rollup-plugin-node-resolve</a> 用來尋找 <code>node_modules</code> 目錄裡的模組</li>
+                <li><a href="https://github.com/rollup/rollup-plugin-commonjs">rollup-plugin-commonjs</a> 用來解析 CommonJS 型式的模組</li>
+              </ul>
+              <p>然後用以下的設定：</p>
+              <pre>
+                <code>babel({
+  exclude: 'node_modules/**',
+  plugins: ['transform-runtime'],
+  presets: ['es2015-loose-rollup'],
+  runtimeHelpers: true
+}),
+nodeResolve({ jsnext: true }),
+commonjs({
+  include: 'node_modules/**'
+})
+</code>
+              </pre>
+              <p>結果，就可以得到夢寐以求的 20KB 的<a href="https://github.com/othree/20k-for-of/blob/master/out/bundle-all.js">程式碼</a>了，當然 20KB 的部分不是預期的啦，相較於一開始的程式碼只有 72Bytes，為了一個 <code>for...of</code> 變成 20KB 好像有點本末倒置，畢竟我只有要在 Array 上用，難道不能只是簡單的轉成 <code>for...in</code> 型式嗎。</p>
+              <p>事實上是有辦法的，第一個就是改寫 <a href="https://www.typescriptlang.org/">TypeScript</a>，TypeScript 對於 <code>for...of</code> 只有兩種處理方法，而且結果都不會如此膨脹，第一種就是變成 <code>for...in</code>，第二種則是不變動，保留 <code>for...of</code> 的語法，後者是在 target 設定成 ES6 的時候使用的，官網也有相關的<a href="https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#targeting-es5-and-es3">說明</a>。</p>
+              <p>第二種方法則是用 <a href="https://buble.surge.sh/">Bublé</a> 取代 Babel 做為 transpiler，Bublé 是 rollup 的作者 <a href="http://www.rich-harris.co.uk/">Rich Harris</a> 的另外一個作品，我個人是蠻喜歡他的哲學的，Bublé 的哲學則是對於 code 做簡單、直接明瞭的轉換，所以 <code>for...of</code> 就只會轉成 <code>for...in</code> 的型式，不過也因此無法支援 iterable 物件，所以預設是不開啟支援的，歸類在 <a href="https://buble.surge.sh/guide/#dangerous-transforms">dangerious transofrm 之下</a>，另外 Bublé 也還不支援 Async/Await，因為要做出支援 ES3/5 的同樣效果的 code 會增加太多的<a href="https://gitlab.com/Rich-Harris/buble/issues/71">複雜度</a>，不符合他的哲學理念，所以目前還沒有計畫支援，這點倒是 TypeScript 支援比較完整，目前的 <a href="https://github.com/Microsoft/TypeScript/wiki/Roadmap#21-november-2016">2.1 RC</a> 已經支援把 Async/Await 轉成 ES3/5 的版本了。</p>
+              <p>最後結論，基本上就是個取捨，Babel、TypeScript、Bublé 各自有它們的優缺點，所以只能看情況選擇了，如果要 Map/Set 也要在這些物件上用 <code>for...of</code> 語法然後也要 Async/Await，那就只能用 Babel 加上 babel-polyfill；如果可以不要 Map, Set 或是可以接受不在這些物件上使用 <code>for...of</code> 語法（還可以用 forEach），那可以選擇 TypeScript，然後加上 Map/Set 的 polyfill，如果不用 Async/Await，也不用 Map/Set 的話，可以考慮用個 Bublé 看看。不過如果完全不需要考慮 ES3/5 的環境的話（Edge, Firefox, Chrome 都已經對 ES2015 支援很完整了），好像問題突然就小很多了XD，最後附上這篇文章提到的各種作法產生的檔案參考，目前都放在 github 上的 <a href="https://github.com/othree/20k-for-of/">20k-for-of</a> 這個專案。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>20K for...of</strong>發表於 2016-11-18，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2016/10/29/vim-filename-complete/"><span class="prefix">上一篇：</span>Vim Filename Complete<time>2016-10-29</time></a><a class="next pn" href="/log/2017/01/10/smartypants-js/"><span class="prefix">下一篇：</span>smartypants.js<time>2017-01-10</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

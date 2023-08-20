@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>避開編碼問題升級MySQL 4.1 : O3noBLOG</title>
+    <meta name="description" content="MySQL 4.1不向下相容，最主要的原因就是他在語系編碼的支援上大幅度的進步，但是剛裝起來的人一定都覺得奇怪，為什麼會跑出一堆亂碼，我昨天經過一整晚的折騰後，終於把問題解決了，最主要的原因是他預設的語言編碼是latin1。另外，這篇是以UTF-8編碼的資料為範例，Big5應該也可以，不過我沒測試過，想測試的人就把文章中一些編碼的參數改成Big5應該就可以了。還有我的環境是Windows XP。..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="PHP5的XSL似乎有bug" href="/log/2005/05/16/bug-of-xsl-in-php-5/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2005/05/17/update-mysql-4-1-without-problem/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2005/05/17/update-mysql-4-1-without-problem/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="避開編碼問題升級MySQL 4.1"/>
+    <meta property="og:description" content="MySQL 4.1不向下相容，最主要的原因就是他在語系編碼的支援上大幅度的進步，但是剛裝起來的人一定都覺得奇怪，為什麼會跑出一堆亂碼，我昨天經過一整晚的折騰後，終於把問題解決了，最主要的原因是他預設的語言編碼是latin1。另外，這篇是以UTF-8編碼的資料為範例，Big5應該也可以，不過我沒測試過，想測試的人就把文章中一些編碼的參數改成Big5應該就可以了。還有我的環境是Windows XP。..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2005/05/17/update-mysql-4-1-without-problem/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-update-mysql-4-1-without-problem">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2005-05-17T23:13:20" id="date-2005-05-17">
+                <span class="mon">05月</span>
+                <span class="day">17日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2005/05/17/update-mysql-4-1-without-problem/">避開編碼問題升級MySQL 4.1</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p><a href="http://www.mysql.com/">MySQL</a> 4.1不向下相容，最主要的原因就是他在語系編碼的支援上大幅度的進步，但是剛裝起來的人一定都覺得奇怪，為什麼會跑出一堆亂碼，我昨天經過一整晚的折騰後，終於把問題解決了，最主要的原因是他預設的語言編碼是latin1。另外，這篇是以<strong><span class="caps">UTF</span>-8</strong>編碼的資料為範例，Big5應該也可以，不過我沒測試過，想測試的人就把文章中一些編碼的參數改成Big5應該就可以了。還有我的環境是Windows XP。</p>
+              <p>既然這篇要講的是升級問題，當然有個步驟，首先在升級之前，備份的你的資料庫，這點很重要，當你即使照著我的方法還是失敗時，你還有一條退路，而且將資料輸出成sql檔案也是我的升級步驟一。備份資料的方法有三個，如果有裝<a href="http://www.phpmyadmin.net/">phpMyadmin</a>，可以直接用他的匯出功能輸出sql檔案，記得不要只輸出結構，資料也要輸出。另一個方法是用<a href="http://dev.mysql.com/doc/mysql/en/mysqldump.html">mysqldump</a>，檔案在<strong>mysql安裝目錄的bin子目錄</strong>裡面，你必須進入指令列模式（DOS視窗）才可以正確的操作該程式，要備份所有的資料庫，你可以輸入<code>mysqldump --all-databases &gt; all_databases.sql</code>，這樣會把所有的資料都輸出到<strong>all_databases.sql</strong>這個檔案，檔案位置應該就是在<strong>bin</strong>裡面，如果有另外指定就看你指定到哪了。如果只要複製其中幾個資料庫則是用<code>mysqldump --databases db_name1 db_name2 &gt; databases.sql</code>這樣的指令，db_name的部分就看你要匯出哪些資料庫。第三個方法是直接把mysql下的data子目錄的檔案都備份下來，但是這樣並不會有後面需要用的sql檔案，如果你用這個方法備份資料庫，你還是需要用前面兩個方法的其中一個來取得sql檔案。</p>
+              <p>備份完資料庫，取得sql檔案後，最好先用文字編輯軟體打開他，確定有沒有亂碼，如果你原先的資料不是UTF-8的話，可以趁這個機會用其他程式把sql檔案轉成UTF-8，這個檔案的編碼就是你後面設定mysql要用的編碼了。</p>
+              <p>接下來就可以安裝MySQL 4.1了，這部分可以用他的安裝檔，或用他的免安裝版都可以，只要確定能執行就可以。安裝完之後，我們要來修改<strong>my.ini</strong>這個檔案，這個檔案有可能在<strong>windows</strong>目錄裡面，也可能在<strong>mysql</strong>目錄裡面，如果不存在的話，你就必須要自己建立一個。如果已經存在的話，用文字編輯軟體打開來應該可以看到一些設定，我們要加設定的地方有四個，分別是<strong>[mysql]</strong>、<strong>[mysqld]</strong>、<strong>[client]</strong>、<strong>[mysqldump]</strong>四個地方，都在裡面加入<code>default-character-set = utf8</code>這個設定，如果沒有的話，你可以簡單建立一個內容如下的my.ini檔案：</p>
+              <pre>
+                <code>[mysqld]
+default-character-set = utf8
+
+[mysqldump]
+default-character-set = utf8
+
+[mysql]
+default-character-set = utf8
+
+[client]
+default-character-set = utf8
+</code>
+              </pre>
+              <p>檔案是放到windows目錄下比較保險，我自己用無安裝版是要放到那才會讀到，雖然好像可以調整位置，但是我還沒測試成功。OK之後重新啟動mysql，如果是直接安裝升級的話可能會有資料已經存在了，不過選取出來看應該會是亂碼，這時候你可以先手動刪除，或是你用phpMyadmin輸出的sql檔會先把重複的資料庫刪除（有選項可以勾選），那你也可以不用理會它，再來就是最後一步了，把你匯出的sql檔放回去，我是用phpMyAdmin來做這件事，發法是先隨便選一個資料庫（新安裝的也有預建好的test資料庫可以選），然後選擇sql這個選項，下面的<strong>文字檔案的位置</strong>處把你的sql檔案上傳，編碼選正確，然後送出就可以了。另外還可以用mysqldump，指令：<code>mysqldump db_name &lt; database.sql</code>，不過這個方式我沒測試過，而且看說明檔提供的範例指令，看起來都是還原單一資料庫，又或許db_name可以隨便給吧。</p>
+              <p>如果一切順利，現在還原的資料庫編碼就是正確的了，要確認最好的方法是用phpMyAdmin來檢視，因為他有支援MySQL 4.1的編碼功能，只要沒問題，用他來檢視資料就不會有亂碼。雖然資料沒問題，不過原來的程式還要做修改，<a href="http://www.sixapart.com/movabletype/">MovableType</a>算是很簡單的了，我在一個日本網站有看到詳細的說明和解決辦法，<a href="http://iandeth.dyndns.org/mt/ian/archives/000112.html">iandeth.: Movable Type + MySQL 4.1 を組み合わせると日本語が文字化けする不具合／障害の解決方法:</a>，說明的很詳細，其中解決辦法的部分我想不會日文也可以看的懂，就不多做解釋了（第一個方法只是加一行、不過第二個方法是比較好的解決方法）。</p>
+              <p>寫了這麼多，基本上不建議貿然升級4.1啦，最後才講好像不好XD。</p>
+            </section>
+            <footer>
+              <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>避開編碼問題升級MySQL 4.1</strong>發表於 2005-05-17，文章類別為
+			  <a href="/log/software/">軟體推薦、TIP</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2005/05/16/bug-of-xsl-in-php-5/"><span class="prefix">上一篇：</span>PHP5的XSL似乎有bug<time>2005-05-16</time></a><a class="next pn" href="/log/2005/05/18/maid-in-taiwan/"><span class="prefix">下一篇：</span>Maid in Taiwan<time>2005-05-18</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

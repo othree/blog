@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>JavaScript Promise : O3noBLOG</title>
+    <meta name="description" content="最近 JavaScript 圈很熱的一則消息就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。 在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。 之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Accessibility in US" href="/log/2013/12/10/accessibility-in-us/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2013/12/21/javascript-promise/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2013/12/21/javascript-promise/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="JavaScript Promise"/>
+    <meta property="og:description" content="最近 JavaScript 圈很熱的一則消息就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。 在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。 之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2013/12/21/javascript-promise/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-javascript-promise">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2013-12-21T00:13:01" id="date-2013-12-21">
+                <span class="mon">12月</span>
+                <span class="day">21日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2013/12/21/javascript-promise/">JavaScript Promise</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>最近 JavaScript 圈很熱的一則<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">消息</a>就是要有原生的 Promise 了，不過這個時間點再來介紹 Promise 物件好像有點重複且不必要了，所以想來講一下標準這部份的發展。</p>
+              <p>在繼續下去前要先作些名詞統一，因為實際上 spec 用的名詞和 jQuery 用的不太一樣，首先是 promise、deferred 甚至是 future 在這邊其實都是同義詞，而 fulfill 則是 jQuery 的 resolve 那樣的動作，reject 就沒有不一樣詞彙，最後是 thenable，代表的是可以丟進 Promise 裡一起 chaining 的物件，只要有定義 then function 就可以算了。</p>
+              <p>之前的文章也有提過，JavaScript 領域的 Promise 基本上是 jQuery Deferred 實作後才開始受到廣為注目，而 jQuery 實作的說是基於 CommonJS <a href="http://wiki.commonjs.org/wiki/Promises">Promise/A</a> 這個標準，不過其實去看 Promise/A 會發現他內容根本就很少，不知道怎麼和 jQuery Deferred 扯上邊的，最近才了解，Promise/A 其實只有最基本的 Promise 的功能定義，而它的定義就只有說有個值未來會拿到，然後你要給他 <code>then</code> 這個 method。</p>
+              <p>而其它像是怎樣 fulfill，有沒有 <code>when</code> 那種功能之類的，都沒有定義，完全就是個自由發揮，所以 jQuery 的實作才會看起來和 Promise/A 比起來差距這麼多，不過更糟的是，第一版的 jQuery Deferred 卻還把 then 實作錯了，在 spec 中描述 then 的部份的第二段文字：</p>
+              <blockquote>
+                <p>This function should return a new promise that is fulfilled when the given fulfilledHandler or errorHandler callback is finished. This allows promise operations to be chained together. The value returned from the callback handler is the fulfillment value for the returned promise. If the callback throws an error, the returned promise will be moved to failed state. </p>
+              </blockquote>
+              <p>這邊其實是在說 then 要回傳一個新的 promise 物件，然後你的 Promise 才會有 chaining 的特性，在 jQuery 一開始的版本，這個特性其實是要利用 <code>pipe</code> 來達成而不是 <code>then</code> 的，我想這也是後來為什麼 jQuery Deferred 把 then 的行為改成 pipe 的行為的原因，不過即使如此， jQuery 的 API 還是和 Promise/A 有些差距就是了，說來尷尬，Promise/A 只規範了 then，結果把 Promise 發揚光大的 jQuery 實作卻把 then 做錯了。</p>
+              <p>由於 Promise/A 只有描述行為，而不是詳細的實作，於是就有了 <a href="http://promises-aplus.github.io/promises-spec/">Promise/A+</a>，這個 spec 不是 CommonJS 的 spec，而是由一群人自主發起的，把 Promise/A 裡面所缺的詳細規範補齊，像是 Promise fulfill 時要怎樣處理之類的，定義得很詳細，這份標準完全沒宣告著作權，用的是 CC0，像 <a href="https://github.com/tildeio/rsvp.js">rsvp.js</a> 和 <a href="https://github.com/kriskowal/q">Q</a> 用的就是 Promise/A+ 標準來實作，不過 Promise/A+ 還是只有定義 then 的部份，怎樣 fulfill，怎樣 reject 部分的 API 還是沒碰，所以不同的實作都還是會有些差異。其實 Promise/A+ 組織的 github 帳號上可以看到有關於這部份的<a href="https://github.com/promises-aplus/resolvers-spec">討論</a>，雖然是沒寫出任何草案，我想應該就是直接進了 TC39 的 <a href="https://github.com/domenic/promises-unwrapping">Promise spec</a> 了吧，畢竟好像編輯有重複的<a href="https://twitter.com/domenic">人</a>。</p>
+              <p>TC39 的 Promise 就和 Promise/A+ 的差不多一樣，fulfill 和 reject 的 API 設計就是用他們討論時的其中一個選項，結果是和 rsvp.js 的時作比較接近，fulfill 和 reject function 是在 promise 物件的建構時給的 callback 裡面才會拿到，和 jQuery Deferred 物件可以從外面來 resolve/reject 的設計不一樣：</p>
+              <pre>
+                <code>new Promise(function (fulfill, reject, progress) {
+    // blah....
+});
+</code>
+              </pre>
+              <p>我對於 JavaScript 原生要支援 Promise 這件事是非常樂觀看待啦，畢竟常常只想要它又不想要 jQuery 或是另外引入其他 Library，以後原生支援就省事很多了。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>JavaScript Promise</strong>發表於 2013-12-21，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2013/12/10/accessibility-in-us/"><span class="prefix">上一篇：</span>Accessibility in US<time>2013-12-10</time></a><a class="next pn" href="/log/2013/12/21/ipad-air/"><span class="prefix">下一篇：</span>iPad Air<time>2013-12-21</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

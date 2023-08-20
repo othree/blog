@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Archlinux 修復紀錄 : O3noBLOG</title>
+    <meta name="description" content=" 之前我在推特上有說過我不小心把我放 blog 的主機搞壞，當時就是用 pacman 更新過後，出現一些錯誤，我快速的重跑 pacman -Syu 然後就開始一直出現錯誤了，當時想說是因為我太久沒更新，然後有相依性錯誤造成系統幾乎爛掉，一度要放棄，不過因為網站相關的 instance 都還跑著，所以我就想說暫時放著，等有空把資料弄出來再重建系統，然後十一月中去了一趟新加坡，這趟行程要邊顧小孩其實很累，然後就在回來當天晚上就收到 Linode 的緊急維護，已經把我的 Linode 主機重開了，網站當然也死了，真的是晴天霹靂，不過實在太累了我也只能先放著不管。 過了幾天終於比較有力氣來看看看問題，我當時的狀況是，無法使用 pacman，然後更進一步發現是 curl 就死掉，curl 死掉會造成很多東西一起掛掉，像是 git、wget 也都掛了，結果我能使用的工具和手段就變的很少，總之先來看看錯誤訊息吧： /usr/lib/libcurl.so.4: undefined symbol: BrotliDecoderCreateInstance 由此可知基本上問題就是動態連結 Brotli 的 library 時出錯，我還記得我當初裝機器時，Archlinux 還沒有正式 Brotli 的套件，所以我還自己編譯了一版給 nginx 用，而我的 nginx 也是自己編譯的，沒想到不知不覺 Archlinux 已經有正式的..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="HTTP 103 Early Hints" href="/log/2022/08/23/http-103-early-hints/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2022/12/03/fix-my-archlinux/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2022/12/03/fix-my-archlinux/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Archlinux 修復紀錄"/>
+    <meta property="og:description" content=" 之前我在推特上有說過我不小心把我放 blog 的主機搞壞，當時就是用 pacman 更新過後，出現一些錯誤，我快速的重跑 pacman -Syu 然後就開始一直出現錯誤了，當時想說是因為我太久沒更新，然後有相依性錯誤造成系統幾乎爛掉，一度要放棄，不過因為網站相關的 instance 都還跑著，所以我就想說暫時放著，等有空把資料弄出來再重建系統，然後十一月中去了一趟新加坡，這趟行程要邊顧小孩其實很累，然後就在回來當天晚上就收到 Linode 的緊急維護，已經把我的 Linode 主機重開了，網站當然也死了，真的是晴天霹靂，不過實在太累了我也只能先放著不管。 過了幾天終於比較有力氣來看看看問題，我當時的狀況是，無法使用 pacman，然後更進一步發現是 curl 就死掉，curl 死掉會造成很多東西一起掛掉，像是 git、wget 也都掛了，結果我能使用的工具和手段就變的很少，總之先來看看錯誤訊息吧： /usr/lib/libcurl.so.4: undefined symbol: BrotliDecoderCreateInstance 由此可知基本上問題就是動態連結 Brotli 的 library 時出錯，我還記得我當初裝機器時，Archlinux 還沒有正式 Brotli 的套件，所以我還自己編譯了一版給 nginx 用，而我的 nginx 也是自己編譯的，沒想到不知不覺 Archlinux 已經有正式的..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2022/12/03/fix-my-archlinux/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://live.staticflickr.com/65535/52538205764_932f161e34_b.jpg"/>
+    <meta property="og:image:width" content="1024"/>
+    <meta property="og:image:height" content="768"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-fix-my-archlinux">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2022-12-03T00:38:10" id="date-2022-12-03">
+                <span class="mon">12月</span>
+                <span class="day">03日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2022/12/03/fix-my-archlinux/">Archlinux 修復紀錄</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>
+                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/52538205764/" title="Universal Studio Singapore by othree, on Flickr">
+                  <img itemprop="url image" src="https://live.staticflickr.com/65535/52538205764_932f161e34_b.jpg" width="1024" height="768" alt="Universal Studio Singapore" srcset="https://live.staticflickr.com/65535/52538205764_0282fbb78d_k.jpg 2x">
+                    <meta itemprop="width" content="1024"/>
+                    <meta itemprop="height" content="768"/>
+                  </img>
+                </a>
+              </p>
+              <p>之前我在推特上有說過我不小心把我放 blog 的主機搞壞，當時就是用 pacman 更新過後，出現一些錯誤，我快速的重跑 <code>pacman -Syu</code> 然後就開始一直出現錯誤了，當時想說是因為我太久沒更新，然後有相依性錯誤造成系統幾乎爛掉，一度要放棄，不過因為網站相關的 instance 都還跑著，所以我就想說暫時放著，等有空把資料弄出來再重建系統，然後十一月中去了一趟新加坡，這趟行程要邊顧小孩其實很累，然後就在回來當天晚上就收到 Linode 的緊急維護，已經把我的 Linode 主機重開了，網站當然也死了，真的是晴天霹靂，不過實在太累了我也只能先放著不管。</p>
+              <p>過了幾天終於比較有力氣來看看看問題，我當時的狀況是，無法使用 pacman，然後更進一步發現是 curl 就死掉，curl 死掉會造成很多東西一起掛掉，像是 git、wget 也都掛了，結果我能使用的工具和手段就變的很少，總之先來看看錯誤訊息吧：</p>
+              <pre>
+                <code>/usr/lib/libcurl.so.4: undefined symbol: BrotliDecoderCreateInstance
+</code>
+              </pre>
+              <p>由此可知基本上問題就是動態連結 Brotli 的 library 時出錯，我還記得我當初裝機器時，Archlinux 還沒有正式 Brotli 的套件，所以我還自己編譯了一版給 nginx 用，而我的 nginx 也是自己編譯的，沒想到不知不覺 Archlinux 已經有正式的 Brotli 套件，而且 curl 還相依於它。</p>
+              <p>接著我就開始各種嘗試，想辦法重新裝 Brotli 套件，curl 雖然不能動，但是我還可以用 scp 傳檔案上去，不過就算傳上去 pacman 也還是完全無法跑起來，即使我只是想要他安裝本地的檔案，而不是要連網路，然後我也去看了 <code>/use/local/</code> 裡面 brotli 套件的 header 檔案，查看內容，發現真的沒有 <code>BrotliDecoderCreateInstance</code>，不過這個 symbol 在 Brotli 的 repo 內是有的，而且已經存在了有四年之久，所以顯然，我系統內安裝的版本很有問題，雖然確定問題在哪，但是還是一直沒有解決方法，重裝套件需要 pacman，但是 pacman 需要修好 brotli 才能動，陷入死結當中，更糟的是，我在網路上搜尋就是找不到有一樣問題的人。</p>
+              <p>然後我就開始研究 pacman 掛掉要怎麼辦，找了許久終於找到有一個 <a href="https://github.com/chaitanyarahalkar/Pacman-Static">pacman-static</a> 的工具，是預先編譯好，並且是靜態連結的 pacman 執行檔，抓下來後發現真的可以用，真的是感動的痛哭流涕，然後我立馬執行 <code>pacman -Syu</code>，一切執行順利，感動QQ，然後我執行了 <code>curl</code> 想確認有沒有修好，結果我再次看到了那個一樣的，熟悉的錯誤訊息...</p>
+              <p>這時我百思不得其解，我用 pacman 看安裝的套件版本確實是新的，我去解開套件來看也是新的，但是我去系統的 <code>/usr/local/</code> 下看裡面的檔案卻是舊的，重新裝了很多次也都是一樣狀況，就這樣鬼打牆很久之後，我突然察覺，<code>/usr/local/</code> 下的東西，其實是我們手動編譯安裝的，也是路徑中優先權較高的，然後我在前面有提過，我很久以前有手動編譯安裝 Brotli 套件，終於，一切真相大白，我手動裝的時間點是五年前，所以該版本沒有 <code>BrotliDecoderCreateInstance</code>，然後 Archlinux 用的是四年前版本，所以系統中其他需要 Brotli 的東西都會因此而掛掉，解決方法就是把手動裝的全部砍光光就好了。</p>
+              <p>不過砍掉我手動編譯的 Brotli，也同時造成我的 nginx 再起不能，因為在設定檔內它是需要我手動編譯安裝的那那個套件，解決方法是很簡單，就把需要的 module 路徑改到 pacman 安裝的套件那邊，然後我的 nginx 就可以起來了，不過我的 blog 還是死的，非 blog 的部分倒是活著，我一開始想說是 php-fpm 的問題，看錯誤訊息發現有 permission 問題，就去改 socket file permisson 成 666，然後網站還是起不來，我研究了很久，想要看看 PHP 的錯誤訊息，但是一直看不到東西，也去看 nginx error log，journalctl 也是看沒錯誤，還以為 php-fpm 是死的，還用了</p>
+              <pre>
+                <code>&lt;? echo phpinfo(); ?&gt;
+</code>
+              </pre>
+              <p>然後開瀏覽器看到原始碼直接回回來，搞了一陣子想起要改用 <code>&lt;?php</code>，改下去結果又發現一切正常，最後才發現，問題是因為我在用 pacman 更新整個系統時，把 PHP 7 升級到 8，然後我的程式碼裡面有個地方寫死大版號不對的話會回錯誤訊息，但是我沒有把錯誤訊息寫到 log 中，結果就造成我一直找不到問題點。</p>
+              <p>PHP 的問題解決後，我的 blog 就回到線上了，不過其實，這時候我的 mariadb 還是死的，透過 journalctl 看 log</p>
+              <pre>
+                <code>sudo journalctl -xeu mariadb.service
+</code>
+              </pre>
+              <p>有一行寫著：</p>
+              <pre>
+                <code>Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+</code>
+              </pre>
+              <p>一開始想說是安裝失敗，後來往上找發現還有另外一行：</p>
+              <pre>
+                <code>InnoDB: Upgrade after a crash is not supported. The redo log was created with MariaDB 10.4.8
+</code>
+              </pre>
+              <p>意思就是如果你的 DB crash 後，沒有正常關閉的狀態下，去更新 mariadb，就會有這個錯誤，不過一開始我不以為意，因為我認為我只有 upgrade，但是不知道是何時 crash 過，後來回想，應該是 brotli 爛掉時，mariadb 就跟著起不來了，總之，這個問題的解決方法，就是退回舊的 10.4.8 然後重新啟動 DB，所以就研究了一下 Archlinux 怎樣安裝舊版的套件，基本上 pacman 是不能指定版本的，有兩個方法可以裝舊版，一個是透過系統內的 pacman cache，不過我之前在修理的時候已經清掉了，所以就只能從 <a href="https://archive.archlinux.org/packages/">Arch Linux Package Archive</a> 那邊下載特定版本的 package tar 檔案，下來用 <code>pacman -U</code> 安裝，然後因為有相依性問題，所以要把幾個需要的套件都抓下來，一起安裝：</p>
+              <pre>
+                <code>pacman -U mariadb-10.4.8-2-x86_64.pkg.tar.xz \
+  mariadb-clients-10.4.8-2-x86_64.pkg.tar.xz \
+  mariadb-libs-10.4.8-2-x86_64.pkg.tar.xz
+</code>
+              </pre>
+              <p>反正如果啟動失敗，也會有訊息提示你要看 log，結果把 mariadb 三個都裝下去後還真的有問題，說找不到 openssl 1.1 的檔案，所以也去抓下來手動安裝：</p>
+              <pre>
+                <code>pacman -S openssl-1.1
+</code>
+              </pre>
+              <p>至此，總算是修好了，接下來就是有時間要把我的 blog 系統容器化吧，有太多不是很好安裝的東西了。</p>
+              <p>PS. 這篇發的出去表示真的修好了。</p>
+            </section>
+            <footer>
+              <a href="/log/unix/" rel="tag">UNIX</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Archlinux 修復紀錄</strong>發表於 2022-12-03，文章類別為
+			  <a href="/log/unix/">UNIX</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2022/08/23/http-103-early-hints/"><span class="prefix">上一篇：</span>HTTP 103 Early Hints<time>2022-08-23</time></a><a class="next pn" href="/log/2022/12/23/japan-postal-code/"><span class="prefix">下一篇：</span>日本郵便番号<time>2022-12-23</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>December 2009 : O3noBLOG</title>
+    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="September 2009" href="/log/2009/09/"/>
+    <link rel="next" title="January 2010" href="/log/2010/01/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="O3noBLOG"/>
+    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:url" content="https://blog.othree.net/log/2009/12/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>December 2009</h2>
+            </div>
+            <div id="page-nav" class="span2"><a title="September 2009" href="/log/2009/09/">« September 2009</a> | <a href="../">上一層</a> | <a title="January 2010" href="/log/2010/01/">January 2010 »</a><!--fix for ie--></div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-basic-javascript-auto-unit-test">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-31T10:18:41" id="date-2009-12-31">
+                <span class="mon">12月</span>
+                <span class="day">31日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/31/basic-javascript-auto-unit-test/">簡單的 JavaScript 自動單元測試</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>前幾天弄完 <a href="http://github.com/hallettj/jslint.vim"><span class="caps">JSL</span>int.vim</a> 後，就對 server side JavaScript 產生了一些興趣，還抓了 <a href="http://code.google.com/p/v8/">v8 引擎</a> 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 <a href="http://docs.jquery.com/QUnit">QUnit</a> ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 <span class="caps">DOM </span>和 <span class="caps">BOM</span>，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 <a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">env.js</a> 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 <a href="http://www.mozilla.org/rhino/">Rhino</a> 下，因為他是 java based ，可以在 JavaScript 裡面寫 Java ，所以可以做很多壞事，但是其他的 js shell 沒辦法這樣跑， John Resig 好像有想要 port 成 python + v8 的版本，不過不知道有沒有成功，因為也 <a href="http://groups.google.com/group/envjs/browse_thread/thread/132617236878676b#">沒放出</a> 。</p>
+              <em class="extended">
+                <a href="/log/2009/12/31/basic-javascript-auto-unit-test/">閱讀「簡單的 JavaScript 自動單元測試」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-closure-compiler-osx">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-29T23:16:50" id="date-2009-12-29">
+                <span class="mon">12月</span>
+                <span class="day">29日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/29/closure-compiler-osx/">closure-compiler on OSX</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>Google 的 <a href="http://code.google.com/intl/en/closure/compiler/">Closure Cmpiler</a> 要 Java 1.6 ，蘋果雖然有提供 1.6 的 <a href="http://www.apple.com/downloads/macosx/apple/application_updates/javaformacosx105update1.html">更新</a> ，不過在終端機下直接打 java 還是 1.5 版，至於 1.6 版則是放在</p>
+              <pre>
+                <code>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Commands/java</code>
+              </pre>
+              <p>如果要跑 closure-compiler 建立shell script 時 java 執行檔要改用這個。</p>
+            </section>
+            <footer>
+              <a href="/log/unix/" rel="tag">UNIX</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-foo-eq-foo-or-default">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-29T12:42:23" class="same-date">
+                <span class="mon">12月</span>
+                <span class="day">29日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/29/foo-eq-foo-or-default/">var foo = foo || {};</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <pre>
+                <code>foo = foo || {};</code>
+              </pre>
+              <p>這樣的寫法大家一定不陌生，如果 ab 有值的話就繼續用，不然就讓他成為空物件。通常會用到的地方有兩種，函式設定參數預設值，或是跨檔案的公用函式庫，這種時候會把變數放在 global scope 下，也就是全域變數，要宣告全域變數的話不用 var，直接變數名稱就可以了，就像上面那段 code，不過實際上，這樣寫是會出錯的，沒寫 var 的話，第二個 foo 會跑出 foo 尚未定義的錯誤，所以寫成標題那樣是比較沒問題的，不過有時候，程式碼會全部包在一個 function scope 裡面，避免安全的問題，但是在這個 scope 裡面用 var 宣告變數的話，變數又不會是全域的，這時其實加上 window 就可以了：</p>
+              <pre>
+                <code>(function () {
+foo = window.foo || {};
+})();</code>
+              </pre>
+              <p>也可以用 if 判斷：</p>
+              <pre>
+                <code>(function () {
+if (! window.foo ) { window.foo = {} }
+})();</code>
+              </pre>
+              <p>最後我還發現一件趣事，大家可以猜猜看下面的 code 會不會有錯誤：</p>
+              <pre>
+                <code>(function () {
+foo = undefined;
+foo = foo || {};
+})()</code>
+              </pre>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-spidermonkey-utf-8">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-27T16:01:39" id="date-2009-12-27">
+                <span class="mon">12月</span>
+                <span class="day">27日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/27/spidermonkey-utf-8/">spidermonkey 的 UTF-8 支援</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p><a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 其實是用 javascript 寫的 javascript 語法檢查工具， <a href="http://github.com/hallettj/jslint.vim">jslint.vim</a> 並沒有把它轉成 vim script ，而是呼叫 JS 引擎來跑 <span class="caps">JSL</span>int ，最好找的 JS 引擎就是 mozilla 的 <a href="http://www.mozilla.org/js/spidermonkey/">spidermonkey</a> ，很多 linux 有包好的套件，FreeBSD 也有 <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/lang/spidermonkey/">port</a> ，不過實際上用的時候發現有個問題，就是不支援 <span class="caps">UTF</span>-8 字串，結果就是在 <span class="caps">JSL</span>int 的字元檢查時會把一些中文當成不安全字元，例如：「下」。</p>
+              <p>其實要 spidermonkey 支援 <span class="caps">UTF</span>-8 字串也不難，FreeBSD 的話在裝 port 時加個參數就可以了，OSX 的話把 <a href="http://www.macports.org/">MacPorts</a> 更新到新版的再裝就可以了，Linux 的話就沒辦法用套件安裝，要自己抓來編， 1.7 的話要去修改 Makefile 讓 <span class="caps">CFLAGS </span>加上 "-DJS_C_STRINGS_ARE_UTF8" 這個參數，或是參考 <a href="http://www.mongodb.org/display/DOCS/Building+Spider+Monkey">mongoDB</a> 的作法，如果是 1.8 版的話有內建支援，不用修改 makefile，但是以後要執行的 js 檔案裡面都要先呼叫 <a href="https://developer.mozilla.org/En/SpiderMonkey/JSAPI_Reference/JS_CStringsAreUTF8">JS_CStringsAreUTF8</a> 這個函式，以 jslint.vim 來說就要加到 ~/.vim/plugin/jslint/runjslint.js 這個檔案。</p>
+              <p>其實要解決 <span class="caps">UTF</span>-8 問題還有其他方法，就是換其他的 JS 引擎，像是 <a href="http://code.google.com/p/v8/">Google V8</a> ， 要用 V8 的話 <a href="http://code.google.com/apis/v8/build.html">編譯</a> 時要編 developer shell ，產生的執行檔檔名叫 <strong>d8</strong> ，弄個鏈結讓 <strong>js</strong> 這個指令可以執行就可以了，V8 直接支援 <span class="caps">UTF</span>-8 ，弄起來就可以用了，不用再去改其他東西，理論上速度應該也比較快吧，JSLint 都跑很快，無從比較XD。</p>
+            </section>
+            <footer>
+              <a href="/log/unix/" rel="tag">UNIX</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-javascript-on-vim">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-26T20:10:45" id="date-2009-12-26">
+                <span class="mon">12月</span>
+                <span class="day">26日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/26/javascript-on-vim/">JavaScript on vim</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>因為現在主要都是在寫 javascript 為主，所以這兩天調整 <a href="http://www.vim.org" target="_blank">Vim</a> 主要目標都是為了 javascript，這篇整理一下使用的 plugin 和相關設定，不過在開始前，請先把 Vim 升級到 7.2，套件沒有的話自己編譯也可以。</p>
+              <h4>syntax/indent</h4>
+              <p>Vim 雖然有內建支援 javascript 的縮排和語法標籤，不過另外都有人維護比較完整的版本，而且不只一種，我沒詳細比較，只是挑看起來比較有在維護的：</p>
+              <ul>
+                <li>
+                  <a href="http://www.vim.org/scripts/script.php?script_id=1491" target="_blank">JavaScript syntax : Better JavaScrirpt syntax support</a>
+                </li>
+                <li>
+                  <a href="http://www.vim.org/scripts/script.php?script_id=1840" target="_blank">Javascript Indentation : Indentation for Javascript</a>
+                </li>
+              </ul>
+              <p>照說明把檔案放到正確的位置即可，另外雖然有 <a href="http://www.vim.org/scripts/script.php?script_id=2416" target="_blank">jQuery 的 syntax</a> ，不過我安裝後發現會和 <a href="http://www.vim.org/scripts/script.php?script_id=1218" target="_blank">The <span>NERD</span> Commenter</a> 衝突，而且看一下內容覺得也沒做的很好，就沒用了。縮排的部份也有人是用外部程式來處理，詳細可以 <a href="http://groups.google.com/group/vim-taiwan" target="_blank">vim-taiwan</a> 上的 <a href="http://groups.google.com/group/vim-taiwan/browse_thread/thread/a371c30000e3138e" target="_blank">討論</a> ，我目前是還沒覺得有需求。</p>
+              <em class="extended">
+                <a href="/log/2009/12/26/javascript-on-vim/">閱讀「JavaScript on vim」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-bug-of-html-complete">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-25T23:58:29" id="date-2009-12-25">
+                <span class="mon">12月</span>
+                <span class="day">25日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/25/bug-of-html-complete/">htmlcomplete#CompleteTags 的 bug</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p>
+              <em class="extended">
+                <a href="/log/2009/12/25/bug-of-html-complete/">閱讀「htmlcomplete#CompleteTags 的 bug」全文</a>
+              </em>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-zen-coding-on-vim">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-25T11:18:41" class="same-date">
+                <span class="mon">12月</span>
+                <span class="day">25日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/25/zen-coding-on-vim/">Zen Coding on vim</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>前兩天試了一下，還蠻厲害的，不過不知道是不是我現在的設定有點亂，所以沒辦法 tab 觸發自動完成，一定要按 Ctrl + E，另外就是目前只支援 <span class="caps">HTML </span>的樣子，我看原始碼發現判斷檔案格式的函式直接回傳 "HTML"，不過這也還好，因為 <span class="caps">CSS </span>有其他自動完成可以用，zen-coding 在 <span class="caps">CSS </span>處理上沒特別強，但是 <span class="caps">HTML </span>要到這樣厲害目前沒其他方案，下面記錄一下安裝方法。</p>
+              <p>先到 <a href="http://code.google.com/p/zen-coding/issues/detail?id=16">這串討論</a> 抓最下面的 	zencoding.vim 和 zencoding_vim.py 兩個檔案，放到 ~/.vim/plugin/ 裡，再來到 <a href="http://code.google.com/p/zen-coding/downloads/list">zen-coding 下載頁</a> 抓 Zen Coding for TextMate v0.3.1.zip, TextMate.Zen.HTML.1.3.1.zip, TextMate.Zen.CSS.1.3.1.zip 三個檔案一樣解開放到 ~/.vim/plugin/ 裡面，這樣就可以了，測試方法就是隨便打個 css selector 然後按 Ctrl+E ，另外記得 selector 裡面不要有空白，這個 plugin 其實是用 Vim 跑 python ，所以 Vim 要先支援執行 Python Script ，我的就是裝完就可以，所以沒對這部份下去研究，如果有人跑不起來可以看看是不是這方面的問題。</p>
+            </section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-string-and-string-object">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-21T11:05:15" id="date-2009-12-21">
+                <span class="mon">12月</span>
+                <span class="day">21日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/21/string-and-string-object/">String and String Object</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例：</p>
+              <pre>
+                <code>var sv = "1234567890";
+var so = new String("1234567890");</code>
+              </pre>
+              <p>以前我一直以為兩種是等價的，不過在看 <a href="http://dev.opera.com/articles/view/efficient-javascript/">Efficient JavaScript</a> 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下：</p>
+              <pre>
+                <code>var s = "1234567890";
+//var s = new String("1234567890");
+
+var start = (new Date()).getTime();
+for( var j = 0; j &lt; 10000; j++ ) {
+  for( var i = 0; i &lt; s.length; i++ ) {
+    s.charAt(i);
+  }
+}
+var end = (new Date()).getTime();
+alert(end-start);</code>
+              </pre>
+              <p>結果如下：</p>
+              <style type="text/css">
+#content table {
+  margin:1em 290px 1em 4em;
+}
+#content table th, #content table td {
+  padding: 4px;
+  margin: 1em;
+}
+</style>
+              <table>
+                <tr>
+                  <th/>
+                  <th>Opera</th>
+                  <th>Firefox</th>
+                  <th>IE</th>
+                </tr>
+                <tr>
+                  <th>"blah"</th>
+                  <td>234</td>
+                  <td>313</td>
+                  <td>344</td>
+                </tr>
+                <tr>
+                  <th>new String()</th>
+                  <td>156</td>
+                  <td>381</td>
+                  <td>266</td>
+                </tr>
+                <tr>
+                  <td colspan="4" style="text-align: right;">unit: micro seconds</td>
+                </tr>
+              </table>
+              <p>可以發現 Opera 用 new String() 時有比較快， IE 雖然也有，不過我在某些電腦上測試結果是和 Firefox 差不多，沒列出來的 safari 其實表現也和 Firefox 差不多，至於 Google Chrome 在編譯的時候有最佳化過，結果都是超快，無法作為參考。所以結論是，還是繼續用普通的方法就好了XD。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-javascript-trivials">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2009-12-08T17:20:53" id="date-2009-12-08">
+                <span class="mon">12月</span>
+                <span class="day">08日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2009/12/08/javascript-trivials/">JavaScript 二三事</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>好久沒寫 blog 了，來記錄一下最近和 JavaScript 有關的消息，首先是新書， <a href="http://www.amazon.com/dp/059680279X/">High Performance JavaScript</a> ，是除了 <a href="http://jsninja.com/">JavaScript Ninja</a> 外我最近比較期待的新書，不過兩本都是明年才會出，JavaScript Ninja 是 <a href="http://ejohn.org/">John Resig</a> 寫的，目標讀者是開發 JavaScript Framework 的開發者，所以內容相當深，我有先買預覽的電子版，裡面的 code 就常常看到暈頭， High Performance 那本則是 <span class="caps">YUI </span>的開發者之一 <a href="http://www.nczonline.net/">Zakas Nicholas</a> 寫的，之前也寫過不少書，不過我都沒看過就是，目前期待主要是書名的關係。</p>
+              <p>第二個則是 <a href="http://www.stevesouders.com/blog/2009/12/07/downloading-javascript-as-strings/">Loading JavaScript as strings</a> 這篇文章，提到如果先把 js 程式碼先用字串形式讀進來，再用 eval() 來執行速度反而會比直接邊讀邊執行還要快，這項技巧可以用在 js 量大的 web application，對於之後才要用的 code 就用這種方法讀，讓頁面的生成可以快一點，詳細的內容在 12/8 的 <a href="http://en.oreilly.com/velocityfall09#faster-load-times"><span class="caps">O'R</span>eilly Velocity Online Conference</a> 會介紹並 demo ，換算成台灣時間好像是週三凌晨一點多開始。</p>
+              <p>最後一個不是新東西，其實是 <a href="http://code.google.com/speed/articles/optimizing-javascript.html">Google 的文章</a> ，裡面有講到會造成 memory leak 的原因，第一種是 IE 的 event function 可能會造成記憶體浪費（其實原因和下面的很像），解法是自己寫一個 event dispatcher ，像是 jQuery 就是這樣，第二種就是把資料附加在 <span class="caps">DOM </span>元件上，例如：</p>
+              <pre>
+                <code>var node = document.getElementById('getMe');
+node.myData = 123;
+</code>
+              </pre>
+              <p>像這樣可以把資料付在 <span class="caps">DOM </span>node 物件上，再某些情況下很有用，但是如果這些附加的資料包含其他 <span class="caps">DOM </span>node 的話，就會造成 memory leak ，建議的處理方法是完全不用這種特性，至於 jQuery 則是有個 <a href="http://docs.jquery.com/Data">data</a> 可以用，用法就像是 key, value 的資料型態。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+          <a id="prev-link" href="/log/2009/09/">➡ 前一個月的文章</a>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> </div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>讓你的特效更平順 : O3noBLOG</title>
+    <meta name="description" content="前幾天在改hidden links時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用時間來決定要移動到哪。..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Opera 9 coming" href="/log/2005/09/24/opera-9-coming/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2005/09/26/move-smoothly/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2005/09/26/move-smoothly/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="讓你的特效更平順"/>
+    <meta property="og:description" content="前幾天在改hidden links時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用時間來決定要移動到哪。..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2005/09/26/move-smoothly/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-move-smoothly">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2005-09-26T20:13:52" id="date-2005-09-26">
+                <span class="mon">09月</span>
+                <span class="day">26日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2005/09/26/move-smoothly/">讓你的特效更平順</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody">
+              <p>前幾天在改<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hidden links</a>時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用<strong>時間</strong>來決定要移動到哪。</p>
+              <p>我以前的方法有兩個缺點，一就是移動可能很不順，二則是可能會因為重複的觸發起動條件而造成速度倍增，但是改用時間來作判斷的話就沒有這個問題。在javascript中要取得時間很簡單，應該是每個瀏覽器的方法都一樣（Safari、IE、Opera、Firefox這幾個我測試過都OK）：</p>
+              <pre>
+                <code>timestamp = new Date().getTime();</code>
+              </pre>
+              <p>這樣就可以取得unix time stamp了（從1970年1月1日開始計算的時間戳記），只不過比較特別的是單位是1/1000秒，而要使用這個時間戳記，你還需要另外一個時間戳記記錄你的特效開始的時間。有了這兩個時間戳記後，要讓效果能跑，還需要幾個東西，一是物件的起迄點，二是特效要花多久時間（週期），三是移動的方式（ex: 要減速效果。也可以說是位置的時間函數）。</p>
+              <p>以上幾樣東西都設定好了之後，我們就可以寫主要的script了，假設我的時間戳記變數名稱是<code>ts</code>、開始的時間戳記是<code>st</code>、物件要從<code>sp</code>處移動到<code>ep</code>處、移動要花一秒鐘，用等速度移動，那我可以寫成下面這樣：</p>
+              <pre>
+                <code>ts = new Date().getTime();
+p = (ts - ss) / 1000;
+p = (p&gt;1)1:p;
+target.style.top = sp + (ep - sp) * p + "px";
+if (p == 1)
+{
+	clearInterval(Interval);
+}</code>
+              </pre>
+              <p>第一行在取得現在的時間，第二行則是算現在是進行到整個動作的那個部分（幾個週期），第三行則是避免移動過頭，第四行才是指定新的位置給物件，接下來的if回圈則是動作結束的處理，大概的流程就是這樣，我把我的hidden links的這部份的code貼在下面，可以看的更完整：</p>
+              <pre>
+                <code>function hlGo (type)
+{
+	if (!ts &amp;&amp; !(type ^ hlFlag))
+	{
+		(type)?(tS.display = "block",delEvent(tA, "mouseover", hlMouseIn)):delEvent(body, "mousemove", hlMouseMove);
+		ss = ts = new Date().getTime();
+		this.Interval = setInterval("hlMove("+type+");", 20);
+	}
+}
+
+function hlMove (type)
+{
+	ts = new Date().getTime();
+	p = (ts-ss)/period;
+	p = (p&gt;1)?1:p;
+	p = (type)?p:1-p;
+	tS.top = iP+Math.sin(p*Math.PI/2)*tH+"px";
+	if (isO) tS.opacity = p*0.96;
+	if (!(p - type))
+	{
+		if (type &amp;&amp; autofocus) tList.firstChild.firstChild.focus();
+		ts = 0;
+		clearInterval(this.Interval);
+		(type)?addEvent(body, "mousemove", hlMouseMove):(tS.display = "none",addEvent(tA, "mouseover", hlMouseIn));
+	}
+}</code>
+              </pre>
+              <p>要觸發事件只要呼叫<code>hlGo</code>這個function就好了，有多的判斷都是針對hidden links的需要放上的，除了<code>hlGo</code>裡面會先判斷<code>ts</code>受否不存在才繼續，這是為了避免重複觸發動作，當然事件結束就要把<code>ts</code>給清除掉（設為0）。</p>
+            </section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>讓你的特效更平順</strong>發表於 2005-09-26，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2005/09/24/opera-9-coming/"><span class="prefix">上一篇：</span>Opera 9 coming<time>2005-09-24</time></a><a class="next pn" href="/log/2005/09/29/irc-port-banned/"><span class="prefix">下一篇：</span>學校檔了IRC的port<time>2005-09-29</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
+            </li>
+            <li>
+              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
+            </li>
+            <li>
+              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>
