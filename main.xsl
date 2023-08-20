@@ -44,9 +44,8 @@
         <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet" /> 
+        <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous" />
+        <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet" /> 
         <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
         <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
         <link rel="made" href="mailto:othree@gmail.com"/>
@@ -576,8 +575,8 @@
             <xsl:text> 無類別 </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響</a>
-        <!--<a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
+        <!-- <a href="{$permalink}#comments" title="「{b:title}」的迴響">迴響</a> -->
+        <!-- <a href="{$permalink}#trackbacks" title="「{b:title}」的引用">引用(<xsl:value-of select="b:trackbacks/@trackbackCount" />)</a>-->
       </footer>
       <xsl:if test="$listType = 's'">
         <xsl:if test="$mime = 'xhtml'">
