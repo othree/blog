@@ -5,10 +5,98 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2023</copyright>
-<lastBuildDate>Mon, 14 Aug 2023 21:29:05 +0800</lastBuildDate>
+<lastBuildDate>Fri, 15 Sep 2023 11:41:56 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>digital envelope routines::unsupported</title>
+<description><![CDATA[<p>Node.js 16 LTS 已經結束維護，所以手上的東西就開始需要升級升級，然後就必須要來正面面對這個我逃避已久的錯誤訊息：</p>
+<pre><code>digital envelope routines::unsupported
+</code></pre>
+<p>這錯誤基本上就是發生在幾個網站的專案，尤其是 build 專案時特別會容易看到，而且這個錯誤其實和一般看到的 JS 錯誤長得不太一樣，全貌其實是這樣：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53186660279/" title="digital envelope routines::unsupported by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53186660279_4f2b82bbbc_b.jpg" width="1024" height="738" alt="digital envelope routines::unsupported" srcset="https://live.staticflickr.com/65535/53186660279_a5cd706923_k.jpg 2x" /></a></p>
+<pre><code>Error: error:0308010C:digital envelope routines::unsupported
+</code></pre>
+<p>首先是錯誤訊息，前面有一些 hex 值，不知道是什麼，然後下面 trace 的地方，可以看到幾乎都是 node_module 內的東西，不是因為我們自己的 code 造成的，所以就很讓人困惑，想說是不是什麼系統問題、還是有什麼偷用非公開 API 造成不相容的狀況。總之以前就是遇到這個問題就是又降版回來，沒有仔細深究，這次終於要來認真處理，不過搜尋結果，幾乎都是說加一個 <code>--openssl-legacy-provider</code> flag，都沒人說到底是什麼問題，尋找許久，終於在 StackOverflow 找到一則<a href="https://stackoverflow.com/a/73027407/443051">最正確的答案</a>，沒想到和 OpenSSL 1.x 的生命已經到盡頭有關。</p>
+<p>結果這個錯誤，其實是因為 Node.js 17 開始，從 OpenSSL 1.x 換到 3.x，然後 OpenSSL 3.x 不是向下相容的，所以有些東西有機會出錯，這邊爛掉的，其實是一些 legacy 的 hash method 預設是拿掉的，而 Webpack 在建立 bundle 檔案時，如果檔名有用到 hash 的話，預設的 hash method 用的就是已經被淘汰的 <a href="https://www.openssl.org/docs/man3.1/man3/MD4.html">md4</a>，然後 md4 是用 Node.js 的 <a href="https://nodejs.org/docs/latest-v20.x/api/crypto.html#cryptocreatehashalgorithm-options">crypto</a> 來呼叫 OpenSSL 做事，Node.js 的文件也有提到支援的演算法是依據你的 OpenSSL 版本和系統而定，所以其實並沒有保證 <strong>md4</strong> 一定可以用，而如果使用了 OpenSSL 不支援的演算法，跑出來的錯誤訊息就是像上面截圖一樣特別了，然後我還特別去用 OpenSSL 3 cli 跑跑看，結果出來的錯誤訊息真的就是差不多：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53188641438/" title="OpenSSL 3 error by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53188641438_3493041848_b.jpg" width="512" height="341" alt="OpenSSL 3 error" srcset="" /></a></p>
+<p>使用 flag 開啟舊演算法的支援其實我覺得還算可以接受，畢竟是 build 而已，不是拿來跑服務，不過這個 flag 似乎有點特殊，似乎不能直接放在 <code>NODE_OPTIONS</code> 裡面，而且同個程式庫要是拿到舊版 Node.js 環境去跑，加這個 flag 反而跑不起來，所以最理想還是把問題解決掉。</p>
+<p>那這個問題應該怎麼處理呢？其實簡單說就是把套件升級升級就好了，因為現在的套件新版本都有處理這個問題，不過走上升級這條路之前可以先試試看 StackOverflow 上的解法（有可能讓你專案爛掉，請先備份）：</p>
+<pre><code class="language-bash">npm audit fix --force 
+</code></pre>
+<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的我升級到 4.x 就沒事了。</p>
+<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案複概過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
+<p>PS. 還要小心其他升級的後遺症，如果是 app 最好要測試過各種行為，像我遇到 Webpack 5 不支援 polyfill Buffer 的問題，剛好那個錯誤又被 catch 掉，所以我 build 是沒問題的，就是測試跑不過，後來參考網路上的<a href="https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5">文章</a>處理。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</link>
+<guid>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</guid>
+<category>script</category>
+<pubDate>Fri, 15 Sep 2023 11:41:56 +0800</pubDate>
+</item>
+
+<item>
+<title>Vim License 的故事（下）</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x" /></a></p>
+<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
+<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2023/09/11/vim-license-2/">閱讀 「Vim License 的故事（下）」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2023/09/11/vim-license-2/</link>
+<guid>https://blog.othree.net/log/2023/09/11/vim-license-2/</guid>
+<category>vim</category>
+<pubDate>Mon, 11 Sep 2023 17:27:11 +0800</pubDate>
+</item>
+
+<item>
+<title>Vim License 的故事（上）</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
+<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
+<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">閱讀 「Vim License 的故事（上）」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2023/09/10/vim-license-1/</link>
+<guid>https://blog.othree.net/log/2023/09/10/vim-license-1/</guid>
+<category>vim</category>
+<pubDate>Sun, 10 Sep 2023 23:32:05 +0800</pubDate>
+</item>
+
+<item>
+<title>Remove Disqus</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger" /></a></p>
+<p>前陣子有整理了一下部落格的東西，大致上作的事情是：</p>
+<ul>
+<li>拿掉 Google Analytic</li>
+<li>拿掉所有的 SNS 按鈕</li>
+<li>拿掉 Disqus</li>
+<li>換 web font 服務</li>
+</ul>
+<p>首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析軟體</a>，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 <a href="https://goaccess.io/">goaccess</a> 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有<a href="https://twitter.com/hsins_/status/1690038318732611584">朋友</a>推薦了 <a href="https://www.goatcounter.com/">GoatCounter</a> 和 <a href="https://umami.is/">umami</a>，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫。</p>
+<p>第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview">Web Intent</a> 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API">Web Share API</a> 的按鈕。</p>
+<p>然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。</p>
+<p>我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的<a href="https://twitter.com/hackmdio/status/1692158313704910982">消息</a>，跟著原推文下去找其實也有不少的替代方案，像是 <a href="https://cusdis.com/">cusdis</a>、用 GitHub 的 <a href="https://giscus.app/">giscus</a> 和 <a href="https://utteranc.es/">utterances</a> 等，其實 <a href="https://www.wappalyzer.com/technologies/comment-systems/">Wappalyzer</a> 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。</p>
+<p>其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 <a href="https://activitypub.rocks/">ActivityPub</a> 和 <a href="https://indieweb.org/Webmention">Webmention</a> ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少<a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/">手工</a>；另外一個選擇 Webmention，則可以參考 Jason 的「<a href="https://jason-memo.dev/posts/webmention/">透過 webmention 來搜集 blog 的社群迴響</a>」，基本上是可以透過第三方服務來弄成純前端的方案。</p>
+<p>最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 <a href="https://twitter.com/littlegoodjack/status/1691699453877682247">Laravel 因為 GDPR 的關係改用</a> <a href="https://fonts.bunny.net/">Bunny Fonts</a> 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。</p>
+<p>然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，<a href="https://www.eff.org/pages/privacy-badger">EFF Privacy Badger</a> 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2023/08/23/remove-disqus/</link>
+<guid>https://blog.othree.net/log/2023/08/23/remove-disqus/</guid>
+<category>about</category>
+<pubDate>Wed, 23 Aug 2023 23:03:25 +0800</pubDate>
+</item>
 
 <item>
 <title>Common Log Format</title>
@@ -54,7 +142,7 @@
 <ul>
 <li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
 <li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
-<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種 log。</li>
 </ul>
 <p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
 ]]>
@@ -477,203 +565,6 @@ Link: &lt;/script.js&gt;; rel=preload; as=script
 <guid>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</guid>
 <category>web</category>
 <pubDate>Tue, 23 Aug 2022 22:27:35 +0800</pubDate>
-</item>
-
-<item>
-<title>Shopify App</title>
-<description><![CDATA[<p>之前開發 Shopify App 時，為了搞定他的安裝搞了蠻久，所以決定來紀錄一下踩到的坑，這篇文章適合已經開始在開發 Shopify App 的人閱讀，有些 Shopify App 的基本知識就不會提到，以下內文幾個名詞先定義清楚一下：</p>
-<ul>
-<li>App 指的是我們開發的 Shopify 第三方 app</li>
-<li>Merchant 指的是在 Shopify 上開店的商家</li>
-<li>安裝 app 指的是 merchant 在他們的 Shopify 商店上安裝我們開發的第三方 app</li>
-</ul>
-<p>首先就是，我踩的很多坑有一部分原因是因為我用 NodeJS 作為 server 端的語言，選的是 Express，但是官方的 Express 架構的 app 範例已經停止維護了，取而代之的，是 Koa 版本的 <a href="https://github.com/Shopify/koa-shopify-auth">@shopify/koa-shopify-auth</a>，只有負責驗證相關的 middleware，不過其實我也就剛好是需要 auth 相關的部分，只是差在不是 Express 版，我也還可以研究看看要怎樣自己實作了。</p>
-<p>大概看一下，發現其實還有另外一個 <a href="https://github.com/Shopify/shopify-api-node">@shopify/shopify-api</a> 是底層負責處理跟 Shopify 相關的邏輯，所以理論上我也可以使用它來搭配 Express，不過這裡首先就有一個坑了，初始化的範例是長這樣：</p>
-<pre><code class="language-js">Shopify.Context.initialize({
-  API_KEY: process.env.SHOPIFY_API_KEY,
-  API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
-  SCOPES: process.env.SHOPIFY_APP_SCOPES,
-  HOST_NAME: process.env.SHOPIFY_APP_URL.replace(/^https:\/\//, ''),
-  API_VERSION: ApiVersion.October20,
-  IS_EMBEDDED_APP: true,
-  // More information at https://github.com/Shopify/shopify-node-api/blob/main/docs/issues.md#notes-on-session-handling
-  SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
-});
-</code></pre>
-<p>可以看到，最後有一個 <code>SESSION_STORAGE</code>，這是個處理 merchant 在安裝 app 時，我們的 app 拿到的 access token 的儲存方式的 adapter，不過官方的範例是用 Memory Storage，這個 adpater 是只有存在記憶體內，其實只適用於開發用，只要你的 server 一重開，所有的 merchant 就都要重新安裝你的 app，不然你的 app 會沒有 access token 跟 Shopify 溝通，實際上你應該要參考 <a href="https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/customsessions.md">Custom Session Storage</a> 這份文件，挑選適用的 adapter，我則是參考範例寫了一個 GCP FireStore 的版本，當然另外沒特別提到的就是，因為是儲存 access token，最好要考慮一下 DB 的加密。</p>
-<p>第二個坑，就是要怎樣做 Shopify 的 authentication 以及 identification，先來說如何驗證 request 是可信的，在 Shopify API 的設計，就是要靠 query string parameter 裡面的 hmac，他是根據你的 App 的 secret 來計算出來的，然後，這裡的坑就是官方套件 <code>@shopify/shopify-api</code> 內有個 <code>validateHmac</code> 可以用，但是它的計算其實是不正確的，它是用白名單只有取部分的 query string parameter 來計算，結果和 Shopify 給的就會有出入，所以我是參考 GitHub issue 討論串內 Muhammad Kamal 給的<a href="https://github.com/Shopify/shopify-node-api/issues/275#issuecomment-1059968699">範例</a>來使用。</p>
-<p>第三個坑，則是安裝 App 用的 route 了，Shopify 的設計有點特別，所有的初始 request （不論是第一次安裝、還是從 Shopify 後台進入 App 的設定畫面），都長的很接近，所以你就要根據各種狀況來決定該做什麼事情，以下是所有可能的狀況：</p>
-<ul>
-<li>第一次來安裝</li>
-<li>安裝後進到設定畫面</li>
-<li>曾經安裝過，但是需要重新授權，可能的原因：
-<ul>
-<li>App 需要的權限有變動</li>
-<li>App 端的 access token 失效了</li>
-</ul>
-</li>
-<li>Shopify 認為已經安裝了，但是 app 端沒資料</li>
-</ul>
-<p>扣除需要的權限有變動之外，其實就是排列組合，Shopify 端認為有沒有安裝過，和 App 端認為有沒有安裝過，二乘二共四種可能性，不過實際上只有三種處理方式：初次安裝、重新授權、安裝沒問題的快樂路線（happy path）整理成程式流程大概是：</p>
-<ol>
-<li>驗證 hmac，沒過可以直接回 400</li>
-<li>判斷 shop 是否有在資料庫中</li>
-<li>2 有的話驗證資料庫中的 access token</li>
-<li>3 驗證通過的話，狀態就是 happy path，Shopify 認為 app 有裝，app 端檢查也沒問題，我把這狀態命名為 <code>valid</code></li>
-<li>3 驗證沒通過的話，判斷有沒有 <code>session</code> 這個 query string 參數</li>
-<li>5 有的話，狀態就是 app 端的 access token 不能用了，需要走重新授權的流程，我把這狀態命名為 <code>invalid</code></li>
-<li>5 沒有的話，就是第一次安裝的流程，我把這狀態命名為 <code>not_found</code></li>
-<li>最後就是 2 沒有的話也是走初次安裝的授權流程，同樣也可以叫 <code>not_found</code></li>
-</ol>
-<p>然後 app 需要的權限變動的話，理論上是每次進來，驗證 access token 的時候，可以去打 API 問目前 <a href="https://shopify.dev/api/usage/access-scopes#checking-granted-access-scopes">token 的 access scope</a>，不過這部份我沒實做，因為目前我還沒有相關需求。</p>
-<p>網路上可能可以找到 <code>X-Shopify-API-Request-Failure-Reauthorize</code> 這個 header，不過這個其實不是 Shopify API 的回應，而是 Shopify 的 <a href="https://github.com/Shopify/shopify-app-template-node/blob/main/server/middleware/verify-request.js">app-template</a> 裡面設計的機制，它們的 app template 裡面，server 端在轉發 Ajax API request 時，如果收到 Shopify 端的錯誤後，就加上這個 header 回給 app 前端，app 前端收到這個 header 後就可以透過 Shopify app-bridge 進入重新授權的流程。</p>
-<p>講到這邊，或許有人會好奇，為什麼需要把安裝 app 和重新授權兩個流程的處理方式分開？其實這可以算是第四個坑，也是和使用者體驗有關係，狀況就是，Shopify 認為是初次安裝時，是直接進入 OAuth 的流程，所以是瀏覽器的最上層視窗直接轉址到 auth 頁面，但是如果是需要重新授權的情形，則是 Shopify 端認為已經安裝好，但是 app 這邊認為需要重新跑一次 OAuth，而這時候，連到 app server 的瀏覽器視窗是在 Shopify 商店後台的 iframe 內，在 iframe 內也無法正確的完成 OAuth 授權，所以需要用 Shopify 現在一套叫 app-bridge 的工具幫忙，讓 OAuth 流程從最上層視窗開始，所以需要回一個 HTML 頁面，<a href="https://shopify.dev/apps/tools/app-bridge/getting-started/app-setup#set-up-shopify-app-bridge-in-your-app">引入 app-bridge 的 script</a>，然後執行以下的的 JS：</p>
-<pre><code class="language-js">const AppBridge = window['app-bridge'];
-const createApp = AppBridge.default;
-const Redirect = AppBridge.actions.Redirect;
-const app = createApp({
-	apiKey: '{{API_KEY}}',
-	host: '{{HOST}}',
-});
-const redirect = Redirect.create(app);
-
-redirect.dispatch(
-	Redirect.Action.REMOTE,
-	'/url/to/your/auth?shop={{SHOP}}'
-);
-
-</code></pre>
-<p>當然記得要把該替換的東西替換上去，然後就可以看到正確的從最上層視窗開始進入 OAuth 授權的流程了。</p>
-<p>最後一個坑，其實就是 merchant 反安裝 app 後，Shopify 和 app 端的狀態就會不一致的問題，Shopify 端認為沒安裝，但是 app 端認為有安裝，雖然我上面設計的程式流程已經可以處理這種狀況（驗證 access token 會失敗，然後沒有 <code>session</code> 參數，所以會進入初次安裝），但是這種情形還是應該要能避免就避免，而解法就是要支援 webhook，要作的事情就是：</p>
-<ol>
-<li>安裝完成的 callback 去訂閱 <code>APP_UNINSTALLED</code> 這個 webhook event</li>
-<li>然後在收到這個事件後，把資料庫中的對應資料刪除</li>
-</ol>
-<p>這邊我是用 <code>@shopify/shopify-api</code> 提供的工具像是
-<code>Shopify.Webhooks.Registry.register</code> 和 <code>Shopify.Utils.deleteOfflineSession</code>，真的想要自己作也不是辦不到，不過我記得 Shopify 的 webhook 處理起來有點麻煩。</p>
-<p>這些細節就是官方文件沒有好好寫清楚，雖然官方文件內容已經很多，有努力整理了，但是實際上要自己接就還是遇到了不少問題，所以特別寫一篇文章紀錄，雖然不知道會不會有其他中文圈的人需要自己來做 Shopify app 就是了，可以直接用他們的 app template 還是比較簡單啦。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2022/08/18/shopify-app/</link>
-<guid>https://blog.othree.net/log/2022/08/18/shopify-app/</guid>
-<category>web</category>
-<pubDate>Thu, 18 Aug 2022 20:48:14 +0800</pubDate>
-</item>
-
-<item>
-<title>COSCUP 2022</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52253486310/" title=" by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52253486310_6b0fb625bc_b.jpg" width="1024" height="768" alt="" srcset="https://live.staticflickr.com/65535/52253486310_52f4492e44_k.jpg 2x" /></a></p>
-<p>(照片是今年的新玩意，紀錄組的形象照)</p>
-<p>今年 COSCUP 恢復實體活動，而我和我的稿件間的緣份也終於來了（有來聽的就知道我等緣份到等了兩年有），所以今年是小孩出生後難得有稿可以投，也幸運的投上了，於是就參加了第一天的活動，今年活動的人潮我目測和往年差不多，後來晚上官方也很快速的公布了明調的數字，也有一千三四百筆數據。</p>
-<p>我的分享時間是下午的兩點，我大概早上十點半才到會場，先去摩斯買杯紅茶，然後在門口報到區遇到昨天晚上在前夜 party 淋雨全濕的菜骨，接著我先去攤位區亂晃，在 MozTW 的攤位跟 Irvin 閒聊一下，還有遇到 Ett 和 RJ，之後又在形象照（今年紀錄組的新玩意）區遇到丞相還有幾位紀錄組的新朋友（Ada 和另外一位沒記起名字），拍了些 COSCUP 形象照，還遇到 Bob 和哈維、日落，這邊要先岔題澄清一下，就是我常被誤認我有當過 COSCUP 紀錄組長，不過其實沒有，某一年 Bob 有詢問過我意願，那一年我想要拼研究所畢業所以思考過後還是放棄，結果同一年我後來還是接了其他場活動的紀錄組長，因為我後來還是放棄該年度畢業了...</p>
-<p>之後去買了一批 COSCUP 紀念品，然後攤位區拿了一點小點心要回家給小孩，接著亂晃一下發現時間已經接近十二點了，而且肚子有點餓就趕快去覓食，不意外的摩斯爆炸，所以轉戰到一餐點了個可以快速吃完的東西，快速的解決後回到會場，然後和一位台大社團的學弟閒聊一陣子，中間還有遇到大助、Trista、Singing 等人，差不多到一點的時候我決定先去教室內休息等待，途中剛好經過 OCF 攤位有跟 Rock、Max 打招呼，然後也看了一下開源星手村桌遊，OCF 攤位還有位朋友（應該是 OCF 實習生）說之前有到我的動森島上參觀過，之後我就到教室坐著休息一下，接著就是 Max 的分享場次了，他分享的題目是<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>，是我的前一個場次。</p>
-<p>其實即使到現在，我還是有點難恢復純會眾的角色，到了會場就是會想到處走來走去，有點難靜下心來聽別人分享，連排想聽的主題都有點難，實在是當太多次志工的後遺症，今年聽 <a href="https://sakanamax.github.io/">Max</a> 的分享是我近年難得有真的能夠靜下心來認真作聽眾的經驗，必須說這真的是緣份，要不是剛好排在我的前一個場次，我也不會能夠靜下來聽，而且不聽還好，一聽下去發現內容有很多地方和我的講題部分想說的地方有呼應到，甚至是我想表達但是我沒有很明確寫出來的。</p>
-<p>總之接著就換我分享了，今年有認真練習了幾次，有發現時間有點緊，所以實際分享時有一些細節漏了，這邊剛好列一下：</p>
-<ul>
-<li>如何開始貢獻那邊，原本有想提到 <a href="https://opensource.guide/zh-hant/">opensource.guide</a>，第二天小飛機的分享：<a href="https://coscup.org/2022/zh-TW/session/GKDWQF">如何跟隨開源技術保持你的職涯發展</a>似乎也有提到，期待之後的錄影</li>
-<li><a href="https://github.com/mlinksva">Mike Linksvayer</a> 和 <a href="https://github.com/benbalter">Ben Balter</a> 的介紹，兩位都是 GitHub 員工，不過看職位似乎也不是專門處理 open source license 相關的，倒是會後 Bob 在 FB 有提到他也認識(?) Mike</li>
-<li>如何跟 Mike Linksvayer 和 Ben Balter 溝通關於使用 Vim License 的那超過一千個的 public repositories</li>
-<li>開 issue 跟 PR 時應該怎樣說明</li>
-<li>更進一步介紹怎樣比對 Licensee 的比對原理</li>
-<li>選擇你最舒服的方式參與，這句是從 Max 的投影片借來的，我自己的分享是說了兩三次佛系貢獻、等待緣份，其實和 Max 說的「選擇你最舒服的方式參與」是很接近的，我想表達的比較是不給自己和對方壓力</li>
-<li>本來還想畫張 timeline 的，還有投稿之後準備內容時於到的外部誘惑等等（那個什麼法環的）</li>
-<li>然後就有點離題的商業和開源難分難解的關係</li>
-</ul>
-<p>其實我在分享講話的時候，大腦沒什麼在思考的感覺，很像是直覺反射那樣，所以不太能臨時性的控制和調整，這些缺漏就只能等等看之後寫成文字紀錄的時候能不能補上了，附上分享的<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>：</p>
-<iframe class="speakerdeck-iframe" style="border: 0px none; background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0% padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 560px; height: 314px;" src="https://speakerdeck.com/player/0256360bb6ec4a79b562fcdcb63d49f3" title="How GitHub Supports Vim License Detection, The Five Years Journey" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" data-dashlane-frameid="1533303324720" data-ratio="1.78343949044586" frameborder="0"></iframe>
-<p>除了缺漏之外，其實這次分享還有點可惜是投影解析度不太夠，因為我其中一張投影片的動畫的關係（SPDX 那邊的討論串），我選擇用自己的電腦，不過為了配合大會的錄影，現場的投影解析度就有點低，對現場的聽眾是不太好意思，希望錄影的部分能夠正常可以觀看，其實事後回想，或許我還可以選擇輸出的解析度測試看看，只是不知道那個擷取裝置有沒有支援，當時有點慌忙都忽略了。</p>
-<p>分享結束之後我去買了杯氮氣咖啡就快速收工回家了，後來在柏強的 FB 提到了「看到問題的能力」，我就想到我確實之前就有意識到這一點，不過我意識到的是，相較於平常沒主動分享（寫文章或是演講）的人，我確實很容易知道，哪些我的經驗（工作上的、生活上的、興趣上的）可以匯集成一個主題，可能可以寫成文章，也可能可以投稿分享，不過這個<strong>能力</strong>本身似乎不是這麼容易能分享給新手的。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2022/07/31/coscup-2022/</link>
-<guid>https://blog.othree.net/log/2022/07/31/coscup-2022/</guid>
-<category>diary</category>
-<pubDate>Sun, 31 Jul 2022 22:24:42 +0800</pubDate>
-</item>
-
-<item>
-<title>貓聽得懂人話嗎</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/8997762712/in/photolist-236z5zf-22ms8cB-23HUtwV-X3kfUu-TF7f8Y-RoEKe7-RyyKvA-QoqGRP-RyB6t7-QkDFnQ-RyB5XN-QkDGgd-RoGwzq-RyB7NG-Bcfmhj-BB5dJA-BB5e4U-A1AFfr-qAfKsg-eH6TnS-2mnSMWp-eGZPpp-eH6TN1-eGZNXH" title="菲貓 by othree, on Flickr"><img src="https://live.staticflickr.com/3690/8997762712_4915c923b5_b.jpg" width="1024" height="683" alt="菲貓" srcset="https://live.staticflickr.com/3690/8997762712_e24a8ff6e5_k.jpg 2x" /></a></p>
-<p>不知道別人家的貓是怎樣，不過我是蠻相信我家的貓是聽得懂的，我們家的貓咪年紀大了，開始有腎臟問題，行動力也差很多，有一陣子看他身體不舒服，然後還要移動去尿尿埋沙好像很辛苦，於是有一次我就跟他說不要埋了我幫他處理，結果，從此之後他就再也不埋尿尿便便了，即使後來身體比較好也一樣...</p>
-<p>我們家貓咪的名字叫菲菲，其實他是一隻蠻特別的貓咪，一來他是很少見的母的橘貓，根據我隨便搜尋了一下，好像要有兩組 DNA 的基因都要是橘色基因，然後機率都是三分之一的樣子；二來他的叫聲很特別，別的貓咪是喵喵叫，他都是凹凹叫，而且很多話；另外就是耳朵的尖端還有些毛也很少在橘貓上見到。這幾個特點之外，其他的地方就和一般常見的橘貓很像了，愛吃、親人、喜歡摸摸，根據我的觀察，家裡的成員當中，他最喜歡我摸他了，常常摸頭頭下巴摸一摸他就乾脆整顆頭都不出力支撐，直接倒在我手上了，啊，他還有一個特色是很會騙人，就我所知有好幾個藍星人跟他接觸之後覺得貓咪很可愛也開始養貓了。</p>
-<p>回到聽得懂人話嗎這個問題上，另外一個例子是他前幾兩週身體狀況惡化很多，後腳無力，幾乎走不太動了，尿尿便便常常會來不及跑去貓沙盆，雖然有鋪尿布但是他不一定躺在上面，我就跟他說有事情要叫我們，要便便尿尿都跟我們說，結果就真的開始偶爾會突然開始叫幾聲，然後我們問他什麼事情，他就開始尿尿了（不過還是蠻堅持想要到貓沙上面）。</p>
-<p>其實菲菲這次身體狀況惡化，醫生是已經無法處理了，我們就是在家裡讓他盡量過的舒適，晚上事情忙完就會去客廳陪他摸摸他，順便玩對馬戰鬼導演版，所幸他還算可以安靜躺著，因為不知道他到底這樣會不會需要其他協助，還跑去問醫生，不過根據醫生說法，痛苦的話貓咪還是會有反應，像是焦慮、一直換姿勢或是嘔吐等等，總之就是會更慘烈就是，還好菲菲這樣還蠻平靜。菲菲最後是在上週六晚上離開的，他挑了一個剛好沒人在旁邊的時間離開，就是我晚上去倒垃圾的時候，我離開家裡之前還跟他說我要去倒垃圾了，一下子就會回來陪他了，等到我回來時他狀況已經驟變了，呼吸變成很慢，大概好幾秒鐘才一次，然後很吃力了，眼睛也都完全沒反應了，之後只有再呼吸幾次就停了，告別就這樣突然的來到，本來最近看房子還在想不知道到新房子的話要讓他佔據那邊呢，悲傷之餘跟老婆先查過的廠商聯絡，心裡其實也有點逃避現實的想著會不會菲菲其實還活著呢，但是也不敢再多看他幾眼，維持在一個自以為的薛丁格的貓的狀態。</p>
-<p>隔天週日天氣很好，週六其實下了很大的雨，所以週日天空特別的蔚藍，空氣很乾淨能見度很高，比這兩天颱風前的天空還要漂亮，在開車往火化園區的路上，看著這一大片蔚藍的天空，想到岳母前幾天有說貓咪在挑日子，就覺得他真的是很會挑日子和時間，挑到天氣這麼這麼好的一天，不過一路上還是會逃避現實的想著他會不會其實還活著，要是還活著就把他送進去火化太可怕了吧，不過這種不切實際的幻想終於還是在禮儀師幫菲菲清潔身體時被打破了，看著完全沒反應不會動的貓咪身體，我心理想著：「啊，真的死了」，等火化出來時，看著骨頭想著：「啊，就這樣變成這樣了」。</p>
-<p>跟小孩說貓咪去當小天使了，他雖然不常摸菲菲，但是還是會說不想要看不到貓咪，會想他，看到放在桌上的貓咪罐頭還會怕他去當小天使肚子餓怎麼辦（只好趕快裝到箱子），雖然他沒有反應很大不過似乎這陣子也是有比較敏感。至於我，一開始面對空曠的客廳時感到很不習慣，甚至想逃避那個空間，過了快一週是已經沒那麼害怕客廳了，不過大概是很難繼續玩對馬戰鬼了吧，本來甚至很怕會無法看其他貓咪影片照片的，結果似乎也還好，不過以前要出門時，我都會跟佔據在客廳的菲菲報備一下，這個習慣的慣性即使到現在都還在，或許遲早我還是會習慣菲菲不在了，出門再也不會有要跟他報備的衝動吧，也或許更讓人難受的是知道自己遲早會漸漸忘懷他吧。</p>
-<p>PS. 本來想放小孩跟貓咪的合照，不過實在沒很多張，最後挑的是我幫他拍的第一張照片。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2021/09/10/does-cat-understand-what-we-say/</link>
-<guid>https://blog.othree.net/log/2021/09/10/does-cat-understand-what-we-say/</guid>
-<category>diary</category>
-<pubDate>Fri, 10 Sep 2021 21:37:58 +0800</pubDate>
-</item>
-
-<item>
-<title>CSP for Lambda@Edge</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr"><img src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset="" /></a></p>
-<p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
-<p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
-<p>這個專案內容就只是一個簡單的 function：</p>
-<pre><code class="language-javascript">const CSP = (directives) =&gt; {
-  return directives
-    .map((directive) =&gt; {
-      return `${directive.name} ${directive.value.join(' ')};`;
-    })
-    .join(' ');
-};
-</code></pre>
-<p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
-<pre><code class="language-json">{
-  &quot;default-src&quot;: [&quot;'none'&quot;],
-  &quot;script-src&quot;: [&quot;'self'&quot;],
-  &quot;connect-src&quot;: [&quot;blah&quot;, &quot;blah&quot;]
-}
-</code></pre>
-<p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
-<pre><code class="language-json">[
-  {
-    &quot;name&quot;: &quot;default-src&quot;,
-    &quot;value&quot;: [&quot;'none'&quot;]
-  },
-  {
-    &quot;name&quot;: &quot;script-src&quot;&quot;,
-    &quot;value&quot;: [&quot;'self'&quot;]
-  }
-]
-</code></pre>
-<p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
-<pre><code class="language-typescript">type Source = string;
-
-type Directive = {
-  name: string;
-  value: Source[];
-};
-
-type Policy = {
-  source: &quot;header&quot; | &quot;meta&quot;;
-  disposition: &quot;enforce&quot; | &quot;report&quot;;
-  directiveSet: OrderedSet&lt;Directive&gt;;
-};
-
-type Policies = Policy[];
-</code></pre>
-<p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
-<pre><code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
-</code></pre>
-<p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
-<p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
-<p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</link>
-<guid>https://blog.othree.net/log/2021/08/12/csp-for-lambdaedge/</guid>
-<category>script</category>
-<pubDate>Thu, 12 Aug 2021 11:59:16 +0800</pubDate>
 </item>
 
 

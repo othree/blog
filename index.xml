@@ -9,6 +9,246 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="000997" baseName="digital-envelope-routines-unsupported">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-15</b:date>
+				<b:time>11:41:56</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>digital envelope routines::unsupported</b:title>
+			<b:content>
+				<b:summary>Node.js 16 LTS 已經結束維護，所以手上的東西就開始需要升級升級，然後就必須要來正面面對這個我逃避已久的錯誤訊息： digital envelope routines::unsupported 這錯誤基本上就是發生在幾個網站的專案，尤其是 build 專案時特別會容易看到，而且這個錯誤其實和一般看到的 JS 錯誤長得不太一樣，全貌其實是這樣： Error: error:0308010C:digital envelope routines::unsupported 首先是錯誤訊息，前面有一些 hex 值，不知道是什麼，然後下面 trace 的地方，可以看到幾乎都是 node_module 內的東西，不是因為我們自己的 code 造成的，所以就很讓人困惑，想說是不是什麼系統問題、還是有什麼偷用非公開 API 造成不相容的狀況。總之以前就是遇到這個問題就是又降版回來，沒有仔細深究，這次終於要來認真處理，不過搜尋結果，幾乎都是說加一個 --openssl-legacy-provider flag，都沒人說到底是什麼問題，尋找許久，終於在 StackOverflow 找到一則最正確的答案，沒想到和 OpenSSL 1.x 的生命已經到盡頭有關。 結果這個錯誤，其實是因為 Node.js 17 開始，從 OpenSSL 1.x...</b:summary>
+				<b:mainContent><p>Node.js 16 LTS 已經結束維護，所以手上的東西就開始需要升級升級，然後就必須要來正面面對這個我逃避已久的錯誤訊息：</p>
+<pre><code>digital envelope routines::unsupported
+</code></pre>
+<p>這錯誤基本上就是發生在幾個網站的專案，尤其是 build 專案時特別會容易看到，而且這個錯誤其實和一般看到的 JS 錯誤長得不太一樣，全貌其實是這樣：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53186660279/" title="digital envelope routines::unsupported by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53186660279_4f2b82bbbc_b.jpg" width="1024" height="738" alt="digital envelope routines::unsupported" srcset="https://live.staticflickr.com/65535/53186660279_a5cd706923_k.jpg 2x" /></a></p>
+<pre><code>Error: error:0308010C:digital envelope routines::unsupported
+</code></pre>
+<p>首先是錯誤訊息，前面有一些 hex 值，不知道是什麼，然後下面 trace 的地方，可以看到幾乎都是 node_module 內的東西，不是因為我們自己的 code 造成的，所以就很讓人困惑，想說是不是什麼系統問題、還是有什麼偷用非公開 API 造成不相容的狀況。總之以前就是遇到這個問題就是又降版回來，沒有仔細深究，這次終於要來認真處理，不過搜尋結果，幾乎都是說加一個 <code>--openssl-legacy-provider</code> flag，都沒人說到底是什麼問題，尋找許久，終於在 StackOverflow 找到一則<a href="https://stackoverflow.com/a/73027407/443051">最正確的答案</a>，沒想到和 OpenSSL 1.x 的生命已經到盡頭有關。</p>
+<p>結果這個錯誤，其實是因為 Node.js 17 開始，從 OpenSSL 1.x 換到 3.x，然後 OpenSSL 3.x 不是向下相容的，所以有些東西有機會出錯，這邊爛掉的，其實是一些 legacy 的 hash method 預設是拿掉的，而 Webpack 在建立 bundle 檔案時，如果檔名有用到 hash 的話，預設的 hash method 用的就是已經被淘汰的 <a href="https://www.openssl.org/docs/man3.1/man3/MD4.html">md4</a>，然後 md4 是用 Node.js 的 <a href="https://nodejs.org/docs/latest-v20.x/api/crypto.html#cryptocreatehashalgorithm-options">crypto</a> 來呼叫 OpenSSL 做事，Node.js 的文件也有提到支援的演算法是依據你的 OpenSSL 版本和系統而定，所以其實並沒有保證 <strong>md4</strong> 一定可以用，而如果使用了 OpenSSL 不支援的演算法，跑出來的錯誤訊息就是像上面截圖一樣特別了，然後我還特別去用 OpenSSL 3 cli 跑跑看，結果出來的錯誤訊息真的就是差不多：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53188641438/" title="OpenSSL 3 error by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53188641438_3493041848_b.jpg" width="512" height="341" alt="OpenSSL 3 error" srcset="" /></a></p>
+<p>使用 flag 開啟舊演算法的支援其實我覺得還算可以接受，畢竟是 build 而已，不是拿來跑服務，不過這個 flag 似乎有點特殊，似乎不能直接放在 <code>NODE_OPTIONS</code> 裡面，而且同個程式庫要是拿到舊版 Node.js 環境去跑，加這個 flag 反而跑不起來，所以最理想還是把問題解決掉。</p>
+<p>那這個問題應該怎麼處理呢？其實簡單說就是把套件升級升級就好了，因為現在的套件新版本都有處理這個問題，不過走上升級這條路之前可以先試試看 StackOverflow 上的解法（有可能讓你專案爛掉，請先備份）：</p>
+<pre><code class="language-bash">npm audit fix --force 
+</code></pre>
+<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的我升級到 4.x 就沒事了。</p>
+<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案複概過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
+<p>PS. 還要小心其他升級的後遺症，如果是 app 最好要測試過各種行為，像我遇到 Webpack 5 不支援 polyfill Buffer 的問題，剛好那個錯誤又被 catch 掉，所以我 build 是沒問題的，就是測試跑不過，後來參考網路上的<a href="https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5">文章</a>處理。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000996" baseName="vim-license-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-11</b:date>
+				<b:time>17:27:11</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim License 的故事（下）</b:title>
+			<b:content>
+				<b:summary> 接續前一篇。 Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 Tagbar；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x" /></a></p>
+<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
+<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
+</b:mainContent>
+				<b:extendContent><p>解決了上游問題，回到 Licensee 偵測的問題，我本來的 PR 沒被合併，而是 Mike 另外弄了一個比較通用的解法，是根據條款文本內的替換字串來動態調整差異的容許範圍，然後接著 2020/03/13，Licensee 9.13.1 作為第一版支援 Vim License 的 Licensee 發佈了，接下來，我理論上就只要等 GitHub 更新 Licensee 的版本就好了，這我倒是不太擔心，我是有種感覺 GitHub 是有在認真更新這些東西的，然後，時間快轉到三個月後，這段期間其實我都有偶爾上去 GitHub 看一下 Vim License 有沒有被偵測出來，想著要是終於完成的話就可以投個稿了，當時的時間大概是搞了三年這樣，總之因為過有點久了，我又去拉了最新版 Licensee 來測試，結果讓我嚇了一跳，竟然偵測不出來了！</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177845605/" title="Licensee 9.13.1 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177845605_dbd6f40e06_b.jpg" width="1024" height="684" alt="Licensee 9.13.1" srcset="https://live.staticflickr.com/65535/53177845605_169f7db9ba_k.jpg 2x" /></a></p>
+<p>所以我又花時間下去查原因，結果是 2020/05/12 的 9.14 開始爛掉的，Mike 在 9.14 有修改一部分的演算法，在比對兩份文件時，因為有替換字串的關係，不可能用完全比對的方式，所以在有替換字串時，文件的長度差異會影響相似度，有個動態的 <code>max_delta</code>，如果替換字串後長度差異太大超過 <code>max_delta</code> 的話，就會被判定為不同的文件，在 9.14 則是把這個機制拿掉，直接把替換字串的影響弄進相似度之中，不過其中長度差異的懲罰太大，結果造成 Vim 專案本身的判斷失準，發現原因之後，我就發了 PR 調整懲罰的參數，讓 Vim 剛好可以過關這樣，結果我發 PR 時 Mike 早已經發現這個問題，也已經修改好開了 PR 只是還在 review，而該 PR 的方法是則是動態的根據替換字串的數量來調整文件長度差異的值，除此之外，Vim License 還被加到測試之中，所以以後應該不會再發生這種問題了。</p>
+<p>然後，我就等這個 PR merge 等了三個月，不過還好 merge 後馬上就發佈 9.14.1 了，接著又回到等 GitHub 更新的時間了，我就一直等，一直等，偶爾上去 GitHub 的 Vim repo 確認一下，2021 年初我還寫信去 GitHub Support 問他們當時使用的版本是哪一版，Support 還有認真去幫我確認是沒更新，然後就這樣一直等一直等到 2022 年初，有天在用 GitHub 的搜尋功能時，突然發現到，可以用條件設定搜尋特定授權條款的專案，然後我就想說可以來試試看 Vim License：<code>license:vim</code>，結果竟然有<a href="https://github.com/search?q=license%3Avim&amp;type=repositories">符合條件的專案</a>出現！讓我大吃一驚！原來不知何時 GitHub 已經偵測的到 Vim License 了，可是 Vim 那個 repo 結果卻還是不正確，深入了解一下，推測應該是 GitHub 有 cache 機制，找了一下文件發現到有提到說如果有發現專案的授權條款標示不正確，可以聯絡 support，於是我就發了 support request，這次很快就收到回應，然後在 2022/01/12 這天，確認了 GitHub 上的 Vim 專案有正確的顯示為 Vim License 了，歷時將近五年，那天我還發推慶祝了一下。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177410816/" title="Search result of Vim Licensed repo by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177410816_564bde201f_b.jpg" width="1024" height="684" alt="Search result of Vim Licensed repo" srcset="https://live.staticflickr.com/65535/53177410816_1f295d5269_k.jpg 2x" /></a></p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">自己挖了將近五年的坑今天終於填平了，今年終於可以投個稿</p>-- othree (@othree) <a href="https://twitter.com/othree/status/1481290722368458757?ref_src=twsrc%5Etfw">January 12, 2022</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>之後，終於可以準備投稿，然後順利投上 2022 年的 COSCUP，題目是「<a href="https://coscup.org/2022/zh-TW/session/ESQUUF">歷時五年的開源貢獻，GitHub 支援 Vim License 的故事</a>」（<a href="https://www.youtube.com/watch?v=YM7RHRwIrKU">影片</a>、<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>），在準備分享的過程也是遭受很多的<del>電玩干擾</del>阻力，分享過程還算順利，自己有點小不滿意不過還算可以接受，不滿意的地方是有些我一開始有想要分享的點忘了說，不過也是在這篇文章有補齊了。</p>
+<p>其實在初期那段等待的時間之間，我還開了一個小專案 <a href="https://vim-license.dev/">Vim License Gen</a>，用來幫人產生自己的專案/軟體用的 Vim License 文件，為什麼要有這個工具是因為以前的純文字文件，每行的寬度大概都在 80 個字元以內，但是每個專案的名稱都不一樣，如果直接做替換，有可能會破版，所以這個工具一是會保持版面，二是它可以正確的只替換需要替換的部分，然後這個專案就是用 Vim License 開源，並且是用自己產生 Vim License 文件，然後我也把他列為使用 Vim License 的三個專案之一（另外兩個分別是 Vim 和 vim-pathogen），這也是個 self-hosting 的實現。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177408966/" title="Vim License Gen by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177408966_62bd21b8ab_b.jpg" width="1024" height="684" alt="Vim License Gen" srcset="https://live.staticflickr.com/65535/53177408966_c7baf853ea_k.jpg 2x" /></a></p>
+<p>故事並沒有到這邊就結束，COSCUP 分享之後的目標就是把這篇文章寫下來了，不過一拖再拖，其中一個主因是以前我是先把文章寫好順便作整理，但是這次因為準備時間不夠，無法在分享前先把文章寫好，變成後寫，沒了趕稿壓力，加上又有像是王國之淚等讓人分心的東西，就一直無限期拖搞，直到今年 2023/08/05 傳出了 Vim 的作者 Bram Moolenaar 於八月三日因病過世的消息了。</p>
+<p>Bram 過世之後，除了緬懷之外，大家也會擔心起 Vim 的後續誰維護的問題，還好 Vim GitHub 組織內還有另外兩位成員，其中 Christian Brabandt 算是接起主持人的角色，他同時也是我用很久的 vim-airline 的作者，然後很快的也發了 PR 做了一些相關的修改，像是在 doc 裡面緬懷 Bram、更新檔案內的維護者資訊等，只不過其中一項修改，改到了 LICENSE 檔案！改的地方當然就是那個高度耦合的 Vim Maintainer 的部分：</p>
+<blockquote>
+<p>The current maintainer is Bram Moolenaar <a href="mailto:Bram@vim.org">Bram@vim.org</a>.</p>
+</blockquote>
+<p>改成</p>
+<blockquote>
+<p>The current maintainers are listed here: https://github.com/orgs/vim/people.</p>
+</blockquote>
+<p>然後我還是被 ping 了才知道這 PR 已經合併，這下我可緊張了，其實我本來也是有在想 Vim License 的問題，只不過想說 Bram 才剛過世，可以晚點再提出，當時有想了幾個方案，理想上要能同時繼續支援現有的使用 Vim License 的專案、然後也要能讓授權條款內的文字正確的更新，不過當時不管哪個方案，都無法保證兩全齊美，當時想的方案為：</p>
+<ul>
+<li>方案一：更改條款內文並且發布新版，可能是叫 Vim License 1.1 之類的，缺點是可能需要重新提交提交新版的條款到 choosealicense，但是現況來看幾乎不可能符合提交的一千個專案的條件；</li>
+<li>方案二：更改條款內文，繼續用一樣的條款名，不推修改到 choosealicense，缺點是 Licensee 可能辨認不出來，結果就是 Vim 專案自己無法被辨識為使用 Vim License；</li>
+<li>方案三：同二，但是該推送修改的地方如 SPDX License List 和 choosealicense 都送，缺點是使用舊版授權條款文字的可能都再也辨認不出來，另一個問題是這樣的變化 Mike 是否會接受？</li>
+</ul>
+<p>就之前的紀錄，當時版本偵測出來的相似度也只有 98.45%，這樣一改下去，會不會就爆炸又偵測不出來了呢，於是我趕快找了個時間拉最新版的 Vim 和 Licnesee 下來測試，結果，竟然還是 98.45%，這結果又讓我驚呆了，直覺是因為 Licensee 的演算法改的更好了，一查下去，原來剛好在今年初的 Licensee 9.16.0 其中的一項修改就是針對替換字串提供更高的差異容許範圍，所以舊版 Vim License 下去比對會有 99.12% 的相似度，剛好足夠新版修改後的差異，而這結果就剛好克服了方案三的缺點，所以接下來應該就是會朝這個方向進行，先提交新版的文字給 SPDX License List，然後再更新 choosealicense 內的範本吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53176812027/" title="Vim License detection by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53176812027_c95d17b663_b.jpg" width="1024" height="666" alt="Vim License detection" srcset="" /></a></p>
+<p>以上，就是到目前為主的故事了，最後想來作一個總結，也就是談談當初為什麼想在 COSCUP 分享這個呢？其實我當初假想的聽眾是開源的新手，我想分享的其中一點是，對於開源專案的貢獻，我完全是照自己的步調，也不給任何一邊壓力，所有的等待過程我都沒去催促過任何人，不過標題的「五年」或許造成反效果也說不定，投稿時 Rock 有建議過我可以調整一下標題，不過我實在是想不到什麼其他好標題，結果就都沒改，後來，當天在我的前一場是 Max 的「<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>」（<a href="https://www.youtube.com/watch?v=OxuQ1sdLhks">影片</a>），就有提到這點，可以選擇你最舒服的方式參與，不用害怕參與；第二點想分享的東西則是關於在這個過程中學到的東西，像是 Licensee 的判斷原理，SPDX 相關的東西，和各個群體溝通的過程，很多東西都是我之前並不清楚的，像是我以前知道有個 SPDX License Indentifier，但是並不清楚 SPDX 是搞什麼用的，然後它們有維護 License List，甚至授權條款文本裡面可以有替換字串等，我覺得這些都是蠻有趣的知識；最後一點則是分享這一整個過程，中間一波三折，坑坑相連到天邊的轉折，我自己都覺得很有趣。</p>
+<p>以下列出我一路以來開過的 PR、Issue 和討論:</p>
+<ul>
+<li><a href="https://github.com/github/choosealicense.com/issues/498">choosealicense.com/issues/498</a> 最初的 issue</li>
+<li><a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">vim_dev: A Questions about Vim License</a> 跟 Bram 詢問　Vim License 的細節</li>
+<li><a href="https://github.com/licensee/licensee/issues/385">licensee/issues/385</a> 提出 Vim License 偵測的問題</li>
+<li><a href="https://github.com/spdx/license-list-XML/pull/901">license-list-XML/pull/901</a> 幫 SPDX License List 裡面的 Vim License 加上替換字串</li>
+<li><a href="https://github.com/vim/vim/pull/5458">vim/pull/5458</a> 幫 Vim 加入　LICENSE 檔案</li>
+<li><a href="https://github.com/tpope/vim-pathogen/pull/210">vim-pathogen/pull/210</a> 幫 vim-pathogen 加入 LICENSE 檔案</li>
+<li><a href="https://github.com/github/choosealicense.com/pull/717">choosealicense.com/pull/717</a> 最重要的那個 PR，加 vim.txt 到 choosealicense</li>
+<li><a href="https://github.com/licensee/licensee/pull/445">licensee/pull/445</a> 修改新版 Licensee 的問題</li>
+<li><a href="https://github.com/othree/vim-license/issues/2">vim-license/issues/2</a> Vim License Gen 紀錄各個連結用的 issue</li>
+</ul>
+<p>最後的最後就來個簡單的 timeline 吧：</p>
+<pre><code>- 2013/07/15 Choose a license released
+- 2016/09/21 Display/detect the license
+- 2017/03/26 Open issue to choosealicense
+- 2018/06/15 First issue closed
+- 2019/06/23 Discuss the License text with Bram
+- 2019/06/27 Issue about Vim License detection
+- 2019/07/11 SPDX PR
+- 2019/09/25 Last comment of the SPDX PR
+- 2019/10/19 SPDX PR merged
+- 2020/01/08 PR add License to Vim
+- 2020/01/18 PR add License to vim-pathogen
+- 2020/01/21 PR add vim.txt to choosealicense
+- 2020/03/13 Licensee 9.13.1 released, Vim added
+- 2020/05/12 Licensee 9.14 release, Vim detection failed
+- 2020/07/04 PR to fix detection issue
+- 2020/10/14 Issue fix merged v9.14.1
+- 2021/02/05 Contact GitHub support 1st time
+- 2022/01/12 Contact GitHub support 2nd time, 確認上線
+- 2022/05/22 投稿、開始寫文章
+- 2022/07/29 COSCUP 2022
+- 2023/08/03 Bram Passed away
+- 2023/08/13 Vim License file updated
+- 2023/09/04 再次開始寫文章
+- 2023/09/12 發表文章
+</code></pre>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000995" baseName="vim-license-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-10</b:date>
+				<b:time>23:32:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim License 的故事（上）</b:title>
+			<b:content>
+				<b:summary> 這篇是我去年 COSCUP 分享的文字版，拖稿許久終於寫出來了，以下正文開始。 Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub 發佈了一個小網站 叫 choosealicense.com，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。 而到了 2016 年，GitHub 更進一步提供了授權條款的偵測功能，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。 在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
+<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
+<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
+</b:mainContent>
+				<b:extendContent><p>我一直把這念頭放在心裡，後來終於有一天有時間有衝動，認真去研究要怎樣新增支援的授權條款，簡單來說，GitHub 用來偵測專案所使用的授權條款的工具，是一套用 Ruby 寫的，叫做 <a href="https://licensee.github.io/licensee/">Licensee</a>（我都當成 license + see）的工具，而這個工具所使用來參考比對的條款文本，則是從 choosealicense 專案來的（使用 git submodule 引入），如果要加新的授權條款到 choosealicense 裡面，有些<a href="https://github.com/github/choosealicense.com/blob/gh-pages/CONTRIBUTING.md#adding-a-license">條件</a>要先達到：</p>
+<ul>
+<li>要有 SPDX License Identifier</li>
+<li>要名列在幾個主要的開源授權清單中</li>
+<li>至少要有一千個專案使用它</li>
+<li>要列舉三個使用該授權條款的有名的專案（作為網站上的範例）</li>
+</ul>
+<p>我研究了一會兒，大部分條件沒問題，就是那個一千個專案的需求我也不是很確定，根據搜尋結果可以保證有數百個，但是有沒有一千個實在無法保證，不過我還是去開了個 <a href="https://github.com/github/choosealicense.com/issues/498">issue</a> 建議說要加入 Vim License，其中一千個專案那個條件的部分則是提供我的所知（各種搜尋結果和 Vim 生態的狀態，推論應該會有達標），時間是 2017/03/26，當時我想的是 Vim 這麼有名，應該開個需求就會有人處理了吧，然後 choosealicense 的主要貢獻者之一 Mike Linksvayer，跟我來往幾次討論之後，我就放置在那幾乎忘了他，結果過了一年後，那個 issue 就因沒有動靜被關掉了！</p>
+<p>我開的第一張 issue 被關掉的當下當然是有點震驚的，直白一點的說我心中的想法大概是：「原來 Vim 這麼有名也是沒有特權的啊！」總之之後我還是繼續放著，直到大概又過了一年，到了 2019 年六月，我才又開始重新投入到這件事情，既然開 issue 沒人做，那就只好改開 PR 了，於是我才開始認真的研究，目標當然就是把 Vim License 推進 choosealicense 裡面，所以就是先認真的要提供的文本檔案的格式，首先我發現的是，授權條款的文本裡面，除了那些 metadata 之外，文本本身是可以有替換字串（substitution）的，像是常見的年份、名稱等：</p>
+<pre><code>MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+...
+</code></pre>
+<p>其中，用 <code>[]</code> 包起來的像是 <code>[year]</code>、<code>[fullname]</code> 就是要替換掉的字串，發現這點之後，我也覺得需要重新檢視 Vim License 的文字是不是也有這種地方，然而一旦認真看待這點，便發現問題不小，而這個問題就是 Vim License 不是 context free 的，而是高度和 Vim 耦合在一起的，一般而言，開源授權都是 context free 的，怎樣算是 context free 的授權條款呢？就是那個條款文字要拿去哪個專案，都可以直接用，不需要去修改文字內容，頂多是修改頭尾的名稱、年份和所有權人的資訊，但是 Vim License 不是，光是 <strong>Vim</strong> 這個單字，就在文本內出現了 29 次，而這些 Vim 單字，大部分時候代表的是使用這個授權的軟體的名稱，所以假設我今天是 vim-pathogen 要使用 Vim License，那就應該要在 LICENSE 文件內把 Vim 單字都換成 pathogen.vim 才對，不過在這堆 Vim 之中，還有一些地方是代表不一樣的意義，這些地方就是在作為 <strong>Vim Maintainer</strong> 的時候，所以到底，這麼多的 Vim 都應該要改為替換的字串嗎？為此我就去問了 Vim 的作者，當然同時也是 Vim License 的作者 Bram Moolenaar，其實我蠻快就<a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">得到答案</a>了，結論就是，Vim Maintainer 需要保留原樣，但是其他時候在作為代表使用該授權的軟體時，<strong>Vim</strong> 應該要改為該軟體的名稱。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177608139/" title="Discuss Vim License with Bram by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177608139_7e1d12cf42_b.jpg" width="1024" height="684" alt="Discuss Vim License with Bram" srcset="https://live.staticflickr.com/65535/53177608139_fd6999e91a_k.jpg 2x" /></a></p>
+<p>那麼為什麼會出現 Vim Maintainer 呢？這邊就要來介紹一下 Vim License 的內容了，條款內容簡單翻譯（非正式翻譯，請勿用於法律用途）如下：</p>
+<ol>
+<li>可以自由任意的散佈未修改過的 Vim；</li>
+<li>如果要散佈修改過的 Vim，需要符合以下條件之一；
+<ol>
+<li>發佈時同時提供聯絡方式，當 Vim Maintainer 向你索取你的修改，你必須無償提供，並且 Vim Maintainer 保留把你的修改加進官方版本 Vim 的權力；</li>
+<li>如果你取得經由前一條所述方式散佈的 Vim，你可以不受限制的散佈該版本，如果有新的修改，則需依照相同的方式散佈；</li>
+<li>發佈時同時提供和原始版本的原始碼差異；</li>
+<li>使用前一條的方式發佈時，符合以下所有條件時可以不用提供原始碼；
+<ul>
+<li>你所使用的授權條款不會讓 Vim Maintainer 無法免費取得你修改的內容；</li>
+<li>你必須保留你修改的內容（原始碼的差異）至少三年，如果使用者或是 Vim Maintainer 在這段時間內跟你索取修改的內容，你必須要提供；</li>
+<li>你必須確保你所提供的聯絡方式在三年內是有效的。</li>
+</ul>
+</li>
+<li>如果你的修改使用 GPL，你可以使用 GPLv2 發佈你修改過的版本。</li>
+</ol>
+</li>
+<li>如果你發佈修改過的 Vim，強烈建議你使用 Vim License 並把修改的原始碼提供給 Vim Maintainer；</li>
+<li>不可把授權條款移除。</li>
+</ol>
+<p>仔細看下來，其實這份文件，主要目標就是在確保 Vim Maintainer 能取得其他人的修改，如果不是 Vim 使用這份授權條款的話，不管你使用這份條款的軟體是什麼，有修改再發佈的話，你都必須要讓 Vim Maintainer 可以無償取得你的軟體原始碼，並且 Vim Maintainer 可以決定是否要給原軟體使用，而這也造成了 Vim License 成為了少見的，不是 context free 的開源授權，而這個細節我相信是在我跟 Bram 的討論後才是第一次闡明，當時討論時我有舉了一個極端的例子來確認：假設我有一個軟體 X，使用 Vim License 授權，後來有人修改我的 X 後改為 Y 發佈但是沒有開源，有權力去取得 Y 的修改內容並決定要不要給 X 的，其實是 Vim Maintainer，而不是我（X 的作者）。</p>
+<p>知道哪些地方才是可以替換掉之後就簡單了，我快速的準備好要用來發 PR 的 vim.txt 檔案，然後想說先來測試一下，結果，偵測竟然失敗了！研究再三，發現偵測出來的相似度只有 97.x%，而 Licensee 設定的閾值是 98%，至於會造成相似度這麼低的原因，其實是因為文本內有太多的替換字串了，當時的 Licensee 對於替換字串的比對處理的不太好，替換前後文字的長短差異也會有影響，知道原因後我就在想要來怎麼處理，當然最簡單的方法就是用特例處理，我當時的作法就是如果是在偵測 Vim License 的話，就會降低判斷用的閾值，本地測試沒問題後，就準備提交回去給 Licensee 了，不過因為我還不確定這樣的作法好不好，所以我先開了個 issue，解釋了前因後果然後附上我目前的修改，想說問問看負責的人的想法，如果他們覺得可以接受我再發 PR，結果，Mike Linksvayer 又出現了！我才發現 choosealicense 和 Licensee 他都是主要貢獻者！至於知道他的經歷則是在 COSCUP 分享後才聽 Bobchao 說的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177406736/" title="vim.txt in Licensee by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177406736_71659e1fd6_b.jpg" width="1024" height="684" alt="vim.txt in Licensee" srcset="https://live.staticflickr.com/65535/53177406736_7ce7bb487f_k.jpg 2x" /></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Mike_Linksvayer">Mike Linksvayer</a> 當時是 GitHub 的 Policy Director 專門負責公共相關的事務，而在之前則是當過 CC 的 CTO 和 VP，也曾擔任過數個不同組織的董事會成員，像是 OpenHatch、Software Freedom Conservancy 和 Open Definition Advisory Council，所以可以說是已經在自由開源領域活躍已久，甚至是特長於授權條款相關的領域。不過其實當時我不知道，也沒想說要去了解，主要對他的印象是頭像看起來有點嚴肅，一直給我 T1000 的感覺，加上我後來就是幾乎都是跟他往來為主（應該說我提交的貢獻就是他在把關的），所以某些層面上來看我其實是對他有點心生畏懼的。</p>
+<p>Mike 在 Licensee 這邊提出的問題是，我在 Vim License 裡面定的那些替換字串，並沒有出現在 <a href="https://spdx.org/licenses/Vim.html">SPDX License List</a> 那邊，SPDX 全名是 Software Package Data Exchange，其實這是屬於一般開發者比較少接觸的到的東西，目前最常看到的應用扣除 License List 之外，應該是軟體供應鍊相關的東西，不過其實他們所維護的 <a href="https://spdx.org/licenses/">SPDX License List</a> 幾乎已經成為業界標準，尤其是那個 license 的 identifier 更是到處都看得到，像是 npm 的 <a href="https://docs.npmjs.com/cli/v6/configuring-npm/package-json#license">package.json</a> 裡面就是使用它。然後其實 SPDX License List 這邊的檔案格式（自訂的 XML）和 Licensee 用的檔案格式（自訂的純文字）不一樣，不過由於 SPDX License List 已經是一個大家都會當作參考索引的資料源頭，所以也自然的成為 choosealicense 的上游（upstream），這次經驗我也讓我了解到開源的圈子真的是蠻重視 upstream 的，之前我也在 neovim 遇過類似的情形，總之也因此我應該要先去提交 PR 修改 SPDX License List，然後才發 PR 給 choosealicense，所以我就整理整理後去那邊發了 PR 加上這些替換字串，然後，<strong>Mike Linksvayer</strong> 又出現了！他也是 SPDX License List 的貢獻者之一！</p>
+<p>接<a href="https://blog.othree.net/log/2023/09/11/vim-license-2/">下一篇</a>。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000994" baseName="remove-disqus">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-08-23</b:date>
+				<b:time>23:03:25</b:time>
+			</b:datetime>
+			<b:category>about</b:category>
+			<b:title>Remove Disqus</b:title>
+			<b:content>
+				<b:summary> 前陣子有整理了一下部落格的東西，大致上作的事情是： 拿掉 Google Analytic 拿掉所有的 SNS 按鈕 拿掉 Disqus 換 web font 服務 首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 web log 分析軟體，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 goaccess 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有朋友推薦了 GoatCounter 和 umami，分別是 golang 和 js...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger" /></a></p>
+<p>前陣子有整理了一下部落格的東西，大致上作的事情是：</p>
+<ul>
+<li>拿掉 Google Analytic</li>
+<li>拿掉所有的 SNS 按鈕</li>
+<li>拿掉 Disqus</li>
+<li>換 web font 服務</li>
+</ul>
+<p>首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析軟體</a>，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 <a href="https://goaccess.io/">goaccess</a> 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有<a href="https://twitter.com/hsins_/status/1690038318732611584">朋友</a>推薦了 <a href="https://www.goatcounter.com/">GoatCounter</a> 和 <a href="https://umami.is/">umami</a>，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫。</p>
+<p>第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview">Web Intent</a> 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API">Web Share API</a> 的按鈕。</p>
+<p>然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。</p>
+<p>我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的<a href="https://twitter.com/hackmdio/status/1692158313704910982">消息</a>，跟著原推文下去找其實也有不少的替代方案，像是 <a href="https://cusdis.com/">cusdis</a>、用 GitHub 的 <a href="https://giscus.app/">giscus</a> 和 <a href="https://utteranc.es/">utterances</a> 等，其實 <a href="https://www.wappalyzer.com/technologies/comment-systems/">Wappalyzer</a> 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。</p>
+<p>其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 <a href="https://activitypub.rocks/">ActivityPub</a> 和 <a href="https://indieweb.org/Webmention">Webmention</a> ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少<a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/">手工</a>；另外一個選擇 Webmention，則可以參考 Jason 的「<a href="https://jason-memo.dev/posts/webmention/">透過 webmention 來搜集 blog 的社群迴響</a>」，基本上是可以透過第三方服務來弄成純前端的方案。</p>
+<p>最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 <a href="https://twitter.com/littlegoodjack/status/1691699453877682247">Laravel 因為 GDPR 的關係改用</a> <a href="https://fonts.bunny.net/">Bunny Fonts</a> 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。</p>
+<p>然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，<a href="https://www.eff.org/pages/privacy-badger">EFF Privacy Badger</a> 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000993" baseName="common-log-format">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -65,7 +305,7 @@
 <ul>
 <li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
 <li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
-<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
+<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種 log。</li>
 </ul>
 <p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
 </b:mainContent>
@@ -96,236 +336,6 @@
 <p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000991" baseName="yorimoi">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2023-08-02</b:date>
-				<b:time>19:46:42</b:time>
-			</b:datetime>
-			<b:category>acg</b:category>
-			<b:title>比宇宙更遠的地方</b:title>
-			<b:content>
-				<b:summary> 在剛進入串流時代之時，我想著以後不太需要買什麼 DVD/BD 之類的了，因為想看的東西應該以後網路上都可以看的到，不過過了幾年下來，我的想法又慢慢的改變了，因為這些作品的授權都有個期限，過期之後不一定會重新上架，甚至連自家的原創作品都可能會下架，所以我慢慢的心中開始有了幾部作品，是覺得應該收藏一份實體版下來，其中的評斷標準算是我個人主觀，不過有一個條件倒是比較明確，就是希望讓我兒子長大後能看的，其實在這清單之中也沒幾個作品，而且很少有新增，不過就在最近新增了一部：「比宇宙更遠的地方」，簡稱為よりもい（yorimoi）。 這部我一直都有聽到不錯的評價，第一印象是屬於那種「一群女孩去完成一件事」的日常系作品，其實我在看之前也沒有深入了解，本來以為就是一群女高中生因為對南極的憧憬，想方設法去南極旅遊的過程吧，畢竟這種類型作品很多是流水帳般將主角們有趣的生活演出來，這樣的日常系作品雖然也是會很有趣，但是就比較會變成打發時間用的，可能看過一陣子就會慢慢淡忘。 結果，看完よりもい之後我第一個感想就是：「真是太好我有看到這部作品了。」我也實在是非常幸運能在作品出來將近五年後還能在沒被捏他到的情況下看完這部作品。其實這陣子因為小孩去過暑假，所以我多了很多時間可以補看之前沒空看的東西，看了很多不錯的作品，也在推特上紀錄了一些心得，不過よりもい是第一部我特別想寫一篇文章紀錄的，因為他帶給我的不是風景多漂亮、劇情多有趣，而是更深刻的，故事中幾位角色的成長與自我突破。 以下有劇情，沒看過的話建議迴避，或是可以轉去看看 YouTube，匯雨有一個比較沒劇透的推坑影片。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53088711466/" title="宇宙よりも遠い場所 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53088711466_b346a743d6_b.jpg" width="600" height="787" alt="宇宙よりも遠い場所" srcset="" /></a></p>
-<p>在剛進入串流時代之時，我想著以後不太需要買什麼 DVD/BD 之類的了，因為想看的東西應該以後網路上都可以看的到，不過過了幾年下來，我的想法又慢慢的改變了，因為這些作品的授權都有個期限，過期之後不一定會重新上架，甚至連自家的原創作品都可能會下架，所以我慢慢的心中開始有了幾部作品，是覺得應該收藏一份實體版下來，其中的評斷標準算是我個人主觀，不過有一個條件倒是比較明確，就是希望讓我兒子長大後能看的，其實在這清單之中也沒幾個作品，而且很少有新增，不過就在最近新增了一部：「<a href="https://ani.gamer.com.tw/animeVideo.php?sn=16507">比宇宙更遠的地方</a>」，簡稱為<strong>よりもい</strong>（yorimoi）。</p>
-<p>這部我一直都有聽到不錯的評價，第一印象是屬於那種「一群女孩去完成一件事」的日常系作品，其實我在看之前也沒有深入了解，本來以為就是一群女高中生因為對南極的憧憬，想方設法去南極旅遊的過程吧，畢竟這種類型作品很多是流水帳般將主角們有趣的生活演出來，這樣的日常系作品雖然也是會很有趣，但是就比較會變成打發時間用的，可能看過一陣子就會慢慢淡忘。</p>
-<p>結果，看完よりもい之後我第一個感想就是：「真是太好我有看到這部作品了。」我也實在是非常幸運能在作品出來將近五年後還能在沒被捏他到的情況下看完這部作品。其實這陣子因為小孩去過暑假，所以我多了很多時間可以補看之前沒空看的東西，看了很多不錯的作品，也在推特上紀錄了一些心得，不過よりもい是第一部我特別想寫一篇文章紀錄的，因為他帶給我的不是風景多漂亮、劇情多有趣，而是更深刻的，故事中幾位角色的成長與自我突破。</p>
-<p>以下有劇情，沒看過的話建議迴避，或是可以轉去看看 YouTube，匯雨有一個比較沒劇透的<a href="https://www.youtube.com/watch?v=O8qowhGwjyc">推坑影片</a>。</p>
-</b:mainContent>
-				<b:extendContent><p>防雷保護<br />
-防雷保護<br />
-防雷保護</p>
-<p>雖然劇情主軸是前往南極，不過故事的核心其實是成長，而且每個角色都有一個明確的成長目標，不是什麼不著邊際的東西，所以每當有人有了自我突破，觀眾都能確實的感受到：小決（キマリ、kimari）想要能夠更獨立，不再依賴親友惠；報瀬（しらせ、shirase）則是需要走出母親過世的心理陰影(?)；日向的部分我就先跳過，她的部分來的又急又快，雖然前面早有鋪陳，但是我一直沒放在心上，後來覺得根本是編劇給觀眾的一場襲擊，但是還好有這段，讓這個角色的一切行為變得合理許多；結月則是想要交朋友，但是她其實連怎樣算是朋友也不知道，而在這邊，小決藉由 Line 來形容她心中的朋友這段我也是很喜歡。</p>
-<p>故事的最高潮當然就是從一開始就一心只想去南極的報瀬的部分了，她的母親三年前在南極失蹤（沒找到屍體、不過可以說等於死亡了），因為南極任務一去就是幾個月，所以她本來就已經是和外祖母一起生活邊等媽媽回來，母親失蹤，她的生活也沒什麼變化，結果讓她沒有母親已經過世的實感，所以她一直想去南極確認母親是不是真的不在了，在劇中她也還時不時的寄信給媽媽，最後，他們終於到了內陸的基地，小決他們在基地中找到報瀬媽媽的筆電，報瀬打開電腦，收信軟體跟著啟動和收信，包括了她寄給母親的信，隨著未讀信件的增加，報瀬終於體認到母親過世的事實，大哭了一場。</p>
-<p>其實小時候，我都會覺得什麼婚禮喪禮這些儀式很麻煩，不過長大後，我的想法跟著我的經歷有了變化，我發現儀式這些東西其實是為了人心而存在的，因為人心有慣性，生命中的重要的東西的喪失，人是可以一直逃避假裝沒有發生一樣，所以才會有這些儀式存在的必要，藉由這些儀式的突兀感，讓人真真正正的體認到接下來不一樣了，不論是生命中少了些存在，或是多了重要的人都是，而對於報瀬來說，在那個時候，才真的是她跟媽媽道別的儀式吧。</p>
-<p>故事中還有很多我很喜歡的小細節，像是<strong>キマリ</strong>這個暱稱的由來，然後這個暱稱卻又和她的個性不合；報瀬（しらせ）的發音其實和破冰船的船名白瀨（劇中退役前和現實世界）一樣，而那個昭和基地和白瀨號破冰船其實是日本現在都還在用的，而且兩個都長得和真的一樣，去到日本<a href="https://www.nipr.ac.jp/antarctic/">極地研究所的網站</a>一開始就可以看到基地的空拍；還有像是去到內陸為什麼比較冷雖然沒明說，不過想在那邊建立天文台，應該是海拔高很多位置，日本其實有在富士冰穹建立過一個基地作科學研究，那邊海拔 3810 公尺，距離昭和基地一千公里，氣溫也低上非常多；白瀨號和昭和基地內的郵筒，現在都還有在運作，特別的郵戳也一直都有，還有相關的<a href="https://allabout.co.jp/gm/gc/463441/">報導</a>，好像有一直更新，不確定是不是每年換新圖案，我還有找到去年日本郵局的特別郵戳<a href="https://www.post.japanpost.jp/notification/pressrelease/2021/03_tokyo/1022_01_01.pdf">公告</a>；最後我還查了那幾年的觀測隊員同行者，沒有發現看起來和動畫製作有關係的人，極地研究所應該是提供照片給動畫公司吧。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53088845553/" title="昭和基地 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53088845553_516dcd996d_b.jpg" width="1024" height="576" alt="昭和基地" srcset="" /></a></p>
-<p>其他我還有查到一些有趣的資料，日本的南極觀測船總共有四艘：</p>
-<ul>
-<li>初代：<a href="https://ja.wikipedia.org/wiki/%E5%AE%97%E8%B0%B7_(%E8%88%B9)">宗谷</a></li>
-<li>2代：<a href="https://ja.wikipedia.org/wiki/%E3%81%B5%E3%81%98_(%E7%A0%95%E6%B0%B7%E8%89%A6)" title="ふじ (砕氷艦)">ふじ</a></li>
-<li>3代：<a href="https://ja.wikipedia.org/wiki/%E3%81%97%E3%82%89%E3%81%9B_(%E7%A0%95%E6%B0%B7%E8%89%A6%E3%83%BB%E5%88%9D%E4%BB%A3)" title="しらせ (砕氷艦・初代)">しらせ（初代）</a></li>
-<li>4代：<a href="https://ja.wikipedia.org/wiki/%E3%81%97%E3%82%89%E3%81%9B_(%E7%A0%95%E6%B0%B7%E8%89%A6%E3%83%BB2%E4%BB%A3)" title="しらせ (砕氷艦・2代)">しらせ（2代目）</a></li>
-</ul>
-<p>其實我一開始覺得有點奇怪，為什麼四代目還是叫しらせ而不換名字呢？後來才發現，日本首位的南極探險家就叫做<a href="https://zh.wikipedia.org/wiki/%E7%99%BD%E7%80%A8%E7%9F%97">白瀬矗</a>（Shirase Nobu），所以しらせ這個名字的傳承其實比我一開始想的還要久遠。</p>
-<p>另外一個是日本南極觀測隊確實有人<a href="https://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E7%B4%B3">罹難</a>過，而且遺體是八年後才發現。可以想見那邊的地域是多麼艱險，然後我才想起幾年前去過紐西蘭的南極中心，裡面就有一個設施是可以讓人體驗暴風雪，雖然有提供超厚的防寒服，不過氣溫極低，風一直在吹的情況下，體感溫度還是降的很快的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25482185598/" title="International Antarctic Centre by othree, on Flickr"><img src="https://live.staticflickr.com/4644/25482185598_59dec02bcf_b.jpg" width="1024" height="683" alt="International Antarctic Centre" srcset="https://live.staticflickr.com/4644/25482185598_41ae37af4a_k.jpg 2x" /></a></p>
-<p>最後附上一些其他人的文章：</p>
-<ul>
-<li>hinac 的<a href="https://talk.ltn.com.tw/article/breakingnews/2901936">聖地巡禮</a> <a href="https://talk.ltn.com.tw/article/breakingnews/2908856">之二</a></li>
-<li><a href="https://medium.com/allen365/a-place-further-than-the-universe-88f042f36a1b">艾倫蘋果的感想</a></li>
-</ul>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000990" baseName="singapore-2022">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2023-05-12</b:date>
-				<b:time>21:03:03</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>新加坡 2022</b:title>
-			<b:content>
-				<b:summary> 去年因緣際會去了一趟新加坡，是我第一次去新加坡，看到不少建築覺得實在很厲害，想說紀錄一下。 這趟行程中，我看到覺得很厲害特別想介紹的建築有三個，首先第一個是聖陶沙上的 Resort World，規模超大，有飯店商場賭場等等，環球影城也是其中的一部分，不過只是這樣還不會到讓我覺得超厲害，最讓我驚艷的其實是它的地下車道，我不確定他是往下挖還是往上蓋（應該是往上蓋比較簡單），不過整個 Resort World 人行的地方，那些商店廣場的下面其實都是空的： 我只有拍這張照片，不過就是你仔細看你會發現對面深不見底，是不可思議的大的地下空間，裡面有錯綜複雜的車道、接送區、巴士站、停車場、甚至還有卡丁車賽車場，這個是屬於理論上做的出這種東西，技術上應該也沒太大困難，只是我沒想到會有人做出這麼大規模的地下車道系統。 第二個是彰宜機場的 JEWEL 的中間的那一區，就是有很多植物和中間一個瀑布（不知道該不該稱為瀑布，其實它叫 Rain Vortex）的那一區，那一區其實叫 Forest Valley。 這區我覺得讓我感到覺得驚豔的地方有兩個，第一個是那個瀑布，要怎樣能讓他不漏水。 這個瀑布水流到 B2 那層時，是一整圈透明的牆（我不確定材質）圍起來，不知道要怎樣能確保水不會滲漏，我有直接摸摸看，也找不到接縫，該不會是整塊玻璃一體成形吧。 PS. 我後來找到 News Asia 的專題，那塊是壓克力的，不過我還是不知道是怎樣可以弄成無縫的這麼大一塊，然後這個專題對於那個瀑布的介紹是聚焦在水流怎樣下來又上去的。 當時很趕時間沒拍照，還好 Google 街景有。 除了瀑布的漏水問題外，這區還有非常多的植物，而且不是小顆的花花草草，也有比較高大的樹木，置身在其中會覺得非常難以想像有人會放這麼多的植物在室內空間（請見影片），然後我就又想到他們的樹根會一直成長變長，不知道要如何確保數十年後，這些樹木的下面，通常是商店的地方，不會有漏水的問題出現... 最後一個要介紹的，是金沙酒店（Marina Bay Sands）的 Apple Store： 其實本來也沒特別有安排要去金沙酒店，後來也是最後一晚了不知道要幹嘛就跑去看水舞光雕表演，然後才發現這個 Apple Store，遠遠看到的時候就覺得：「不可能吧！」真的走到旁邊看的時候就覺得非常誇張，怎麼這麼有錢有閒弄一個浮在水中間的球。 裡面往上看圓頂。 圓弧形自動門，等很久都等不到全關，一直有人進出。 不意外的對得很齊，甚至對齊到地板的金屬飾板（請見影片）。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582537844/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582537844_f258048019_b.jpg" width="1024" height="768" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582537844_ff3392033d_k.jpg 2x" /></a></p>
-<p>去年因緣際會去了一趟新加坡，是我第一次去新加坡，看到不少建築覺得實在很厲害，想說紀錄一下。</p>
-<p>這趟行程中，我看到覺得很厲害特別想介紹的建築有三個，首先第一個是聖陶沙上的 Resort World，規模超大，有飯店商場賭場等等，環球影城也是其中的一部分，不過只是這樣還不會到讓我覺得超厲害，最讓我驚艷的其實是它的地下車道，我不確定他是往下挖還是往上蓋（應該是往上蓋比較簡單），不過整個 Resort World 人行的地方，那些商店廣場的下面其實都是空的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582514829/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582514829_83d43f970d_b.jpg" width="1024" height="350" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582514829_89c9ed9983_k.jpg 2x" /></a></p>
-<p>我只有拍這張照片，不過就是你仔細看你會發現對面深不見底，是不可思議的大的地下空間，裡面有錯綜複雜的車道、接送區、巴士站、停車場、甚至還有卡丁車賽車場，這個是屬於理論上做的出這種東西，技術上應該也沒太大困難，只是我沒想到會有人做出這麼大規模的地下車道系統。</p>
-<p>第二個是彰宜機場的 JEWEL 的中間的那一區，就是有很多植物和中間一個瀑布（不知道該不該稱為瀑布，其實它叫 Rain Vortex）的那一區，那一區其實叫 Forest Valley。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52581818242/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52581818242_688d196a1f_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52581818242_5829768040_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582796203/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582796203_5607541fbc_b.jpg" width="1024" height="768" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582796203_bcea3340df_k.jpg 2x" /></a></p>
-<p>這區我覺得讓我感到覺得驚豔的地方有兩個，第一個是那個瀑布，要怎樣能讓他不漏水。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582719915/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582719915_136a013e3c_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582719915_c9f07b8487_k.jpg 2x" /></a></p>
-<p>這個瀑布水流到 B2 那層時，是一整圈透明的牆（我不確定材質）圍起來，不知道要怎樣能確保水不會滲漏，我有直接摸摸看，也找不到接縫，該不會是整塊玻璃一體成形吧。</p>
-<p>PS. 我後來找到 News Asia 的<a href="https://infographics.channelnewsasia.com/jewel-changi-airport/index.html">專題</a>，那塊是壓克力的，不過我還是不知道是怎樣可以弄成無縫的這麼大一塊，然後這個專題對於那個瀑布的介紹是聚焦在水流怎樣下來又上去的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52870391415/" title="Changi Jewel B2 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52870391415_9e06be9147_b.jpg" width="1024" height="684" alt="Changi Jewel B2" srcset="https://live.staticflickr.com/65535/52870391415_7cc90e6f6c_k.jpg 2x" /></a></p>
-<p>當時很趕時間沒拍照，還好 Google 街景有。</p>
-<p>除了瀑布的漏水問題外，這區還有非常多的植物，而且不是小顆的花花草草，也有比較高大的樹木，置身在其中會覺得非常難以想像有人會放這麼多的植物在室內空間（請見<a href="https://flickr.com/photos/othree/52871953754/">影片</a>），然後我就又想到他們的樹根會一直成長變長，不知道要如何確保數十年後，這些樹木的下面，通常是商店的地方，不會有漏水的問題出現...</p>
-<p>最後一個要介紹的，是金沙酒店（Marina Bay Sands）的 Apple Store：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582539949/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582539949_df324fb346_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582539949_1e3709311d_k.jpg 2x" /></a></p>
-<p>其實本來也沒特別有安排要去金沙酒店，後來也是最後一晚了不知道要幹嘛就跑去看水舞光雕表演，然後才發現這個 Apple Store，遠遠看到的時候就覺得：「不可能吧！」真的走到旁邊看的時候就覺得非常誇張，怎麼這麼有錢有閒弄一個浮在水中間的球。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582713440/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582713440_3590a10a6e_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582713440_95c1473d95_k.jpg 2x" /></a></p>
-<p>裡面往上看圓頂。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582717675/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582717675_9d8da122ac_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582717675_3f955709d9_k.jpg 2x" /></a></p>
-<p>圓弧形自動門，等很久都等不到全關，一直有人進出。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582276986/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582276986_abd01e3106_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582276986_25de161fc6_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582711635/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582711635_e4f494b6d6_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582711635_5d7eb3dd6f_k.jpg 2x" /></a></p>
-<p>不意外的對得很齊，甚至對齊到地板的金屬飾板（請見<a href="https://www.flickr.com/photos/othree/52871206437/in/dateposted-public/">影片</a>）。</p>
-<p>逛一逛意外的發現有電扶梯通往樓下，覺得不是獨立在水上的一顆球嗎，怎麼還有地下室，然後又想到，那行動不便的怎麼辦，蘋果不可能沒考慮到吧，尋找一陣子之後，發現了一個鏡面的圓柱體（請見<a href="https://www.flickr.com/photos/othree/52872219398/in/dateposted-public/">影片</a>），裡面就藏著電梯，然後下到樓下走一走，才發現是有通道金沙酒店商場內的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582719930/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582719930_a96637b686_b.jpg" width="1024" height="457" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582719930_5b235277c7_k.jpg 2x" /></a></p>
-<p>我只能說這個建築設計真的是讓我當場覺得驚呆了，當時我以為這個 Apple Store 是一開始在蓋金沙酒店時就一起設計進去的，結果回來研究一下資料發現不是，這個 Apple Store 是後蓋的，努力搜尋一番有找到篇文章有些施工當時的照片。</p>
-<ul>
-<li><a href="https://www.archigardener.com/2020/01/is-this-apples-coolest-new-store.html">Is this Apple's Coolest new Store?</a></li>
-</ul>
-<p>基本上就是圍了一塊範圍把水排掉後把它蓋起來，是可以想像得到的工法，只是想不到會有人這樣設計（<a href="https://www.fosterandpartners.com/projects/apple-marina-bay-sands">Foster + Partners</a> 設計的），而且真的願意這樣施工，然後不免俗的，我又擔心起會不會漏水的問題了，不過後來想一想如果認真要處理防水應該不是問題吧，實在是被台灣的房子會漏水的觀念荼毒太久了。</p>
-<p>新加坡整體而言，城市的魅力還是蠻高的，尤其是這些建築的設計更是讓我驚艷，光是來看看這些建築我就覺得蠻不錯的，不過物價實在是很高，然後天氣也是蠻熱的，有機會的話我是會願意再來一次去看看這次沒見到的地方，像是植物園那邊，金沙酒店這次也沒仔細逛（金沙酒店本身也是很厲害，商場裡面還有人工河和瀑布）。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000989" baseName="the-railroad-museum">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2023-05-04</b:date>
-				<b:time>17:03:45</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>大宮鐵道博物館</b:title>
-			<b:content>
-				<b:summary> 大宮鐵道博物館（簡稱鐵博）也是知名景點了，網路上一堆介紹，所以這篇除了我們的遊記之外，還會有些博物館本身以外的內容。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855334718/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855334718_f9d565503c_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855334718_f0185f6ce7_k.jpg 2x" /></a></p>
-<p><a href="https://www.railway-museum.jp/">大宮鐵道博物館</a>（簡稱鐵博）也是知名景點了，網路上一堆介紹，所以這篇除了我們的遊記之外，還會有些博物館本身以外的內容。</p>
-</b:mainContent>
-				<b:extendContent><p>大宮鐵道博物館基本上就是 JR 東日本的博物館，其實東京市區還有一些其他公司的博物館，像是 Tokyo Metro 有一間<a href="https://www.chikahaku.jp/">地下鉄博物館</a>、東武也有自己的<a href="https://www.tobu.co.jp/museum/">東武博物館</a>，不過對 JR 還是乘載比較多數人的回憶，加上還有新幹線的加持，大宮鐵道博物館對我們來說還是參觀的首選，不過既然是 JR 東日本的博物館，我在查詢交通時，就出現一個問號，為什麼要到大宮站後，搭乘另外一個非 JR 的 <a href="https://www.new-shuttle.jp/">New Shuttle（伊奈線）</a> 才能到鐵道博物館呢？</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854309317/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854309317_3253e3b70b_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854309317_3f48aeffa3_k.jpg 2x" /></a></p>
-<p>New Shuttle 列車駕駛室，車到站時還有特別的進站音樂，好像是銀河鐵道 999 的主題曲。</p>
-<p>我當初還研究地圖許久，覺得其實好像是走的到的距離，不過還好我當天沒真的去用走的，實際上距離超遠，千萬不要用走的！不過如果你真的想用走的，其實路邊有放一台<a href="https://goo.gl/maps/xkvrwsc3H8pM49yq7">蒸気機関車D51 187号機</a>可以看，似乎是大宮工廠生產的第一號火車頭。</p>
-<p>New Shuttle 的軌道很特別，似乎是加掛在 JR 的高架鐵道兩邊的，回來台灣我才開始研究，發現其實 New Shuttle 是埼玉和 JR 東日本為主合資的地方線路，因為是大股東了，所以名正言順的拿鐵道博物館來作宣傳也完全不是問題，官網首頁圖片就是新幹線、New Shuttle 和鐵道博物館一起入框。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52866711619/" title="New Shuttle by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52866711619_b84f06f897_b.jpg" width="1024" height="684" alt="New Shuttle" srcset="https://live.staticflickr.com/65535/52866711619_697c94d98f_k.jpg 2x" /></a></p>
-<p>從 Google 街景上可以看到，New Shuttle 軌道看起來是另外加掛在 JR 軌道主結構旁邊。</p>
-<p>從大宮搭一站就可以到達<strong>鉄道博物館</strong>站，這一站裡面有很多很多的轉蛋機，都是以鐵道為主的，有興趣的可以在這邊好好的轉一轉，出站後直走就是鐵道博物館方向，應該沒人會走錯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854309247/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854309247_3be068bfd9_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854309247_bcefaa4dd7_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855281925/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855281925_3a15c22943_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855281925_bf2f79a815_k.jpg 2x" /></a></p>
-<p>現在門票都要先買好（便利商店機台買），現場不賣，日本越來越多地方是用這種售票機制，可以順便控制人流，另外當日票是會比較貴的。進到鐵道博物館後，第一個映入眼簾的就是天皇專用列車的機關車了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854309142/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854309142_20e5791c7e_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854309142_fa40568a7c_k.jpg 2x" /></a></p>
-<p>然後這邊開始分成左右兩邊，簡單說明一下，進館後左邊是往北館方向，基本上就是去小孩區，往右邊是往南就是網路上很多照片的車輛展示區。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854890236/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854890236_3951bbe36d_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854890236_fe54cdd001_k.jpg 2x" /></a></p>
-<p>展示區展示很多車輛，我就不一一介紹，不過特別想說的是，這區走到底可以走出去，外面有一個火車便當攤，那邊還有一台在戶外的已經退役的 Max 號新幹線，家裡有小朋友有買大科學的話應該很熟悉。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854307132/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854307132_4b36a2674f_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854307132_794a55d335_k.jpg 2x" /></a></p>
-<p>然後其實這個戶外區繼續走下走，可以到南館，有一些體驗活動是在這邊之外，這裡還有 400 系和 E5 系的新幹線列車，這些都是現役的車型，我們沒注意到錯過了這區有點可惜，除了這幾台新幹線，其實初代那個圓頭藍白配色的新幹線也是有獨立一個區域給它（台灣也有一台，但是保存和展示就...）。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855283190/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855283190_6909e726e1_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855283190_2a88d1d97d_k.jpg 2x" /></a></p>
-<p>然後說到便當攤，其實博物館內有兩個，分別在往南館和往北館方向的戶外，我們那天先經過南館方向的沒開，以為現在沒有賣火車便當就跑去二樓的餐廳吃，結果其實當天北館方向的有開。</p>
-<p>我們因為小孩還小，所以這天不是很深入的行程，屬於走馬看花的方式，主要是因為很多要抽選體驗的設施，都是要小學以上，所以我們逛的區域就是車輛展示區、二樓的日本食堂餐廳午餐、火車模型區、科學區和迷你運轉列車（可以大人開小孩搭），這樣隨意逛一逛也是到下午兩點多了，回程不免俗的要逛一下紀念品商店，當時還有日本全國 IC 連通十週年紀念特區。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855062919/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855062919_8368233e8e_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855062919_aeb6a6231b_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854306637/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854306637_3fafc086b8_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854306637_a5173be9e6_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854889616/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854889616_f9e9e83d28_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854889616_3226c02453_k.jpg 2x" /></a></p>
-<p>科學區很像是科教館那樣，有很多和火車有關係的物理現象的介紹。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52854306357/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52854306357_3ea09ea57b_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52854306357_4e848d6bf4_k.jpg 2x" /></a></p>
-<p>特別可以買到各家吉祥物的機會。</p>
-<p>我是沒在這邊買紀念品，反而在回到 JR 大宮站時，在站內發現另外一間小小的鐵道商品店，結果反而在這邊買了一些磁鐵，然後這邊還有特別展示了一款結合日本傳統技藝製作的 Suica 企鵝商品，看起來很吸引人，不過上面貼著完售，所以我只有大概記一下，想說之後再查查看。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857683998/" title="JR 磁鐵 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857683998_51192b4c37_b.jpg" width="1024" height="683" alt="JR 磁鐵" srcset="https://live.staticflickr.com/65535/52857683998_6196516a1d_k.jpg 2x" /></a></p>
-<p>回來之後我就開始想要找到當時看到的那樣商品，一開始是了解到，博物館裡面的紀念品商店是 <a href="https://twitter.com/trainiart">TRAINIART</a>，這間商店的商品是比較貼近生活一點，和我在大宮站看到那間店不太一樣，於是又搜尋好一會兒，才找到大宮站裡面的紀念品商店是 <a href="https://twitter.com/gs_railyard">Railyard</a>，這間的商品就比較沒有設計和加工過，像我買的磁鐵就是那些牌子原原本本的樣子拿來用，不過找到這兩間商店，上他們在 JRE Mall 的<a href="https://www.jreastmall.com/shop/c/c08/">網路商店</a>找，也找不到我想要找的那樣商品，倒是意外看到一個很好笑的紀念品：</p>
-<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">こんな商品あったんだ<a href="https://twitter.com/hashtag/TRAINIART?src=hash&amp;ref_src=twsrc%5Etfw">#TRAINIART</a> では、どこかでみたことある！？面白い商品を販売中！<br /><br />その名も・・・<br />【駅構内にあるゴミ箱マルチポーチ（ＪＲ東日本編）】です<br /><br />ぜひホンモノのゴミ箱と見比べてみてください <a href="https://t.co/lhHoi300no">pic.twitter.com/lhHoi300no</a></p>-- TRAINIART（トレニアート）【公式】 (@trainiart) <a href="https://twitter.com/trainiart/status/1644914122952409088?ref_src=twsrc%5Etfw">April 9, 2023</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>沒錯，就是大家曾經都非常熟悉的那個 JR 月台的超大垃圾桶，這次去搭 JR 幾趟其實我都沒看到了，事實上這兩年這些超大垃圾桶一直在減少，連鐵道博物館內都有展示出來了，不知道是本來就有還是是因為快要變成歷史痕跡之一了呢。</p>
-<p>PS. 日本這幾年比較有為了環保改變一些東西，像是有很多購物提袋已經變要付錢了</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52855283245/" title="The Railroad Museum by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52855283245_1363caedb5_b.jpg" width="1024" height="683" alt="The Railroad Museum" srcset="https://live.staticflickr.com/65535/52855283245_e6a7bcc2f0_k.jpg 2x" /></a></p>
-<p>回到鐵道商品，這兩間商店都和 JR 關係不小，除了大宮之外，TRAINIART 在東京車站還有分店，而 Railyard 則是在秋葉原站，如果想要逛逛但是沒要到鐵博也是可以在都內解決。至於我一直很想找到的那樣商品到底如何了呢？後來我終於用圖片搜尋找到了，是印傳屋的合作商品：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52869325771/in/dateposted-public/" title="Suica 印傳屋"><img src="https://live.staticflickr.com/65535/52869325771_9d1d0c2f11_z.jpg" width="640" height="640" alt="Suica 印傳屋"/></a></p>
-<p><a href="http://www.jizaingxinden.com/product/suica.html">http://www.jizaingxinden.com/product/suica.html</a></p>
-<p>在東京車站那邊有專賣的店，線上也有一些商品，不過也已經沒黑皮黑漆的款式了（我在大宮站看到說完售的款式）。</p>
-<p>而除了鐵道商品專門店外，東京蠻多分店的百元商店 <a href="https://www.seria-group.com/">Seria</a>，也有出 JR 貨櫃款的小鐵盒，有兩種尺寸各三種顏色，我這次只有看到比較小的款式：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857632415/" title="Seria JR Container by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857632415_ebe954b612_b.jpg" width="1024" height="683" alt="Seria JR Container" srcset="https://live.staticflickr.com/65535/52857632415_059da6b976_k.jpg 2x" /></a></p>
-<p>這其實是<a href="http://www.yamadakagaku.co.jp/">山田化學</a>的產品，山田化學有不少塑膠生活製品，品質也不差，像我以前就買了好幾個 SIKIRI 10 號收納盒裝摩比人，這個貨櫃小鐵盒也是，只不過 JR 款是和 Seria 合作的商品，只有 Seria 賣。</p>
-<p>文章最後，想說一下我出發前心中關於鐵博的兩個疑問，其中第一個是 New Shuttle 是哪來的，是不是一定要搭它，在前面已經提過了，第二個問題則是，為什麼在大宮？這個問題的答案也是在到現場後有了一些概念，在搭乘 New Shuttle 從大宮到鐵博時，經過的那段路就可以看到整片都是 JR 的廠房，回來仔細研究一下，才了解大宮那邊以前是大宮工廠，是生產車輛的地方，現在則是車輛整備中心，鐵博那塊地以前則是車輛解體工廠，而大宮市還是曾經官方認定的12個鐵道都市之一（因鐵道而發展起來的）。</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000988" baseName="sakura-tram">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2023-05-03</b:date>
-				<b:time>10:56:12</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>荒川線（Sakura Tram）一日遊</b:title>
-			<b:content>
-				<b:summary> 續前一篇，這次東京自由行最後一個整天我們因為所以然後選擇了荒川線一日遊，結果而言蠻不錯的，網路上介紹過荒川線一日遊的文章其實也不少，所以這篇就來紀錄我們去的地方就好。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857686013/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857686013_ddac4c75dd_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857686013_e476726098_k.jpg 2x" /></a></p>
-<p>續前一篇，這次東京自由行最後一個整天我們因為所以然後選擇了荒川線一日遊，結果而言蠻不錯的，網路上介紹過荒川線一日遊的文章其實也不少，所以這篇就來紀錄我們去的地方就好。</p>
-</b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856666477/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856666477_2e6f28dd7b_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52856666477_9c73201d12_k.jpg 2x" /></a></p>
-<p>會選擇這條路線除了因為鬧區人太多很可怕之外，還有一個原因是我們剛好住在東池袋，然後荒川線有一站就是東池袋四丁目，走路就可以到，我們的行程就是先搭到最後一站<a href="https://www.kotsu.metro.tokyo.jp/toden/kanren/omoidekan.html"><strong>三ノ輪橋</strong></a>，然後慢慢往回走，回到池袋。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857247291/" title="三ノ輪橋 都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857247291_851b9cbb68_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857247291_53a1cbec16_k.jpg 2x" /></a></p>
-<p>三ノ輪橋那邊有一個<a href="https://www.kotsu.metro.tokyo.jp/toden/kanren/omoidekan.html">三ノ輪橋おもいで館</a>（回憶館）是都營交通的設施，裡面有相關的紀念品在販售，還有放一點古老的紀念物，還有大張的紙本路線圖可以拿，不過我更想要以前那種 Tokyo Metro 的路線圖小卡啊。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857636335/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857636335_a7e65bb8a8_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857636335_d5feb019d2_k.jpg 2x" /></a></p>
-<p>三ノ輪橋的商店街是比較不熱鬧，我們在這邊就是隨意逛逛而已，有很多比較老式的商店，像是日式肉店、味噌店、蔬菜店等。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857636175/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857636175_cc8d47438b_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857636175_d0221c8832_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857412774/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857412774_1f23829df0_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857412774_453dffa7ba_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857412809/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857412809_1626d9c2e2_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857412809_33b12ca88a_k.jpg 2x" /></a></p>
-<p>我們在其中一間とりふじ（鳥富士）賣熟食的買了一些串燒填肚子。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856666837/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856666837_4b7327d371_b.jpg" width="683" height="1024" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52856666837_1f5c65ec62_k.jpg 2x" /></a></p>
-<p>接著就往回搭車去到<strong>荒川二丁目</strong>，據說這邊可以拍到荒川線電車和天空樹的合影，找了幾個路口才找到比較好的位置，結果其實比較靠近<strong>荒川区役所前</strong>了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857246556/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857246556_2e3824eaf4_b.jpg" width="683" height="1024" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52857246556_92e520b2f0_k.jpg 2x" /></a></p>
-<p>拍完天空樹後就繼續搭車到<strong>荒川車庫前</strong>，這一站其實就是荒川線的基地，除了車庫之外，還有<strong>荒川電車営業所</strong>也在這，司機也是在這邊交班，來這站的主要目的是來旁邊的都電おもいで広場（Toden Memorial Square）玩，這邊有放兩台很老的都電列車，還有展示一些歷史資料和物件。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856665422/" title="Toden Memorial Square 都電おもいで広場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856665422_a98219ef22_b.jpg" width="1024" height="683" alt="Toden Memorial Square 都電おもいで広場" srcset="https://live.staticflickr.com/65535/52856665422_f9fc7ec95a_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857684203/" title="Toden Memorial Square 都電おもいで広場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857684203_399672697c_b.jpg" width="1024" height="683" alt="Toden Memorial Square 都電おもいで広場" srcset="https://live.staticflickr.com/65535/52857684203_d9f4f456bf_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856665952/" title="Toden Memorial Square 都電おもいで広場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856665952_b73fc8e04c_b.jpg" width="1024" height="683" alt="Toden Memorial Square 都電おもいで広場" srcset="https://live.staticflickr.com/65535/52856665952_077861485f_k.jpg 2x" /></a></p>
-<p>操縱席可以隨便小朋友玩。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856665027/" title="都電荒川線 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856665027_fc7bc2ffca_b.jpg" width="1024" height="683" alt="都電荒川線" srcset="https://live.staticflickr.com/65535/52856665027_6ffbfe3e3c_k.jpg 2x" /></a></p>
-<p>一個設計得很巧妙的模擬裝置，拿來讓小朋友玩倒是很不錯，我就不說穿其中秘密了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857246036/" title="Toden Memorial Square 都電おもいで広場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857246036_a0bc5c9943_b.jpg" width="1024" height="683" alt="Toden Memorial Square 都電おもいで広場" srcset="https://live.staticflickr.com/65535/52857246036_b73724db3b_k.jpg 2x" /></a></p>
-<p>古早的都電路線圖，在轉變成地鐵為主之前，路上電車的線路其實是很多的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857245821/" title="Toden Memorial Square 都電おもいで広場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857245821_eaebf3b0fd_b.jpg" width="683" height="1024" alt="Toden Memorial Square 都電おもいで広場" srcset="https://live.staticflickr.com/65535/52857245821_1ed8a271d4_k.jpg 2x" /></a></p>
-<p>除了車庫之外，供電的主線路也在這邊。</p>
-<p>因為小朋友玩的很高興，在這邊停留許久後，才繼續前往下一站<strong>庚申塚</strong>，這一站可以通到巢鴨商店街，也算是有點名氣的地方，其實這條商店街的全名是：<a href="https://sugamo.or.jp/"><strong>巣鴨地蔵通り商店街</strong></a>。</p>
-<p>巢鴨商店街真的很好逛，我們一路上買了<a href="https://sugamo.or.jp/shop/tobiyasu/">飛安商店</a>的鯛魚燒（有上過電視，Tabelog 上好像也是很高分，真的蠻好吃，回來才發現完全沒拍照就吃光光了，而且我們回程還買了第二次也沒拍到照片）、まる天花枝串、鹽大福、杉養蜂園的霜淇淋等一堆東西吃，那邊有名的雜貨店マルジ也是超好逛，有超多婆婆媽媽會喜歡的商品，然後還有超便宜的 OS Drug，我一路上看到最便宜的合力他命就是在這邊看到的，含稅比別人未稅還要便宜，店內也一直是滿滿的結帳人潮，如果時間夠多我們大概還會在這邊找間咖啡廳吃個點心休息一下吧，這邊也有幾間咖啡廳，還有不少的餐廳，三大便利商店和 Aeon 小超市，生活機能也很強。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857633705/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857633705_8dae169da0_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857633705_d88a65a430_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52856664457/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52856664457_fb6e14003d_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52856664457_f1272017de_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857633595/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857633595_07e0e2693e_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857633595_3b5046e852_k.jpg 2x" /></a></p>
-<p>郵局的郵筒上還有他們的吉祥物。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857632080/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857632080_0cd7e7db59_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857632080_18e194756a_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857244761/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857244761_9e5a59fce0_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857244761_5119665b8b_k.jpg 2x" /></a></p>
-<p>マルジ還有一間專賣紅內褲的分店也很有名。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857414419/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857414419_7f83aae010_b.jpg" width="1024" height="683" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857414419_3bd75bf5d7_k.jpg 2x" /></a></p>
-<p>隨處可見他們的吉祥物，商店街的向心力感覺很高，這理也是這整趟行程中我最喜歡的商店街了。</p>
-<p>走到另外一頭，靠近 JR 巢鴨站那邊才發現那一側其實也很熱鬧，查了一下還有不少的住宿可以選擇，像是位置最顯眼的 APA Hotel 看起來就有很多房間，或許以後也可以考慮住在這塊，交通上有山手線可以搭，而且也有一條地鐵，雖然那條好像對於觀光客不是那麼有機會用到的路線。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52857633360/" title="巢鴨地藏通商店街 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52857633360_3e62772029_b.jpg" width="683" height="1024" alt="巢鴨地藏通商店街" srcset="https://live.staticflickr.com/65535/52857633360_fb9aeab48e_k.jpg 2x" /></a></p>
-<p>逛完巢鴨商店街後，我們就搭車回東池袋四丁目了，因為已經快要晚餐時間，而且有預約的餐廳了，我們就沒有往另外一個方向去逛了，其實另外一個方向也還有想去的站，其中最想去的就是<strong>鬼子母神前</strong>了吧。</p>
-<p>文章最後，其實有一個站我特別想介紹，就是<strong>大塚駅前</strong>了，要是沒有帶小孩出們我這站一定會特別下車拍照，這個站特別的地方是在路上電車的軌道有開過 JR 大塚站的正前方，結果呈現一個很特別的，路上電車跑在車站的正前方的畫面，可惜我只能找 Google 地圖街景來給大家看看想像一下而已，這邊是行人要過軌道要等電車過去，看起來就像是普通行人紅綠燈而已，可惜沒有平交道的竿子，要是整個長得更像鐵路平交道，那這邊的街貌就會更特別了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52864829396/" title="大塚駅前 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52864829396_21f10296bc_b.jpg" width="1024" height="684" alt="大塚駅前" srcset="https://live.staticflickr.com/65535/52864829396_4a77bb8c63_k.jpg 2x" /></a></p>
-</b:extendContent>
 			</b:content>
 
 

@@ -70,12 +70,10 @@ if ($format == "html") {
     $patterns = array("/<(script|textarea|iframe)((\s+[\w-]+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)\/>/",
         "/([\"\'])\/>/",
         "/ *<(\/?(pre|code))> */is",
-        "/\s*<(\/?a)((\s+\w+=(\w+|\"[^\"]*\"|\'[^\']*\'))*)>\s*/",
         "/&(?!(amp|lt|gt|nbsp);)/");
     $replacements = array("<\\1\\2></\\1>",
         "\\1 />",
         "<\\1>",
-        "<\\1\\2>",
         "&amp;");
     if (!preg_match("/IE/", $UA)) {
         array_push($patterns, "/\s*<(\/?(pre|code))>\s*/is");

@@ -3,7 +3,6 @@
   <!-- <xsl:import href="calendar.xsl" /> -->
   <!--xsl:output method="xml" encoding="UTF-8" media-type="application/xhtml+xml" omit-xml-declaration="no" indent="yes" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" doctype-public="-//W3C//DTD XHTML 1.1//EN" cdata-section-elements="script" /-->
   <xsl:output method="xml" encoding="utf-8" omit-xml-declaration="yes" indent="yes"/>
-  <xsl:strip-space elements="*"/>
   <xsl:param name="ext"/>
   <xsl:param name="canonical">https://blog.othree.net</xsl:param>
   <xsl:param name="mime">html</xsl:param>
@@ -37,7 +36,7 @@
               <xsl:when test="$listType = 's'">
                 <xsl:value-of select="//b:blog/b:entries/b:entry/b:content/b:summary"/>
               </xsl:when>
-              <xsl:otherwise>本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄</xsl:otherwise>
+              <xsl:otherwise>本網站是 othree 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </meta>
@@ -120,7 +119,7 @@
             <meta name="twitter:card" content="summary"/>
             <meta name="twitter:creator" content="@othree"/>
             <meta property="og:title" content="{b:blogTitle}"/>
-            <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+            <meta property="og:description" content="本網站是 othree 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄"/>
             <meta property="og:url" content="{$canonical}"/>
             <meta property="og:type" content="website"/>
             <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
@@ -252,7 +251,7 @@
               <xsl:if test="$listType != 'about'">
                 <h3>關於本網誌</h3>
                 <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-                  <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+                  <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
                 </address>
               </xsl:if>
               <xsl:if test="$listType = 'i'">
@@ -916,6 +915,9 @@ google_color_url = "008000";
     </xsl:attribute>
   </xsl:template>
   <!-- template copy without namespace -->
+  <xsl:template mode="copy-no-ns" match="text()">
+    <xsl:value-of select="." />
+  </xsl:template>
   <xsl:template mode="copy-no-ns" match="*">
     <xsl:element name="{local-name()}">
       <xsl:if test="local-name() = 'a' and count(current()/*[local-name() = 'img']) = '1'">
@@ -988,7 +990,13 @@ google_color_url = "008000";
           <xsl:copy-of select="@*"/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates mode="copy-no-ns"/>
+      <xsl:choose>
+        <xsl:when test="self::text()">
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="copy-no-ns"/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:if test="local-name() = 'img'">
         <meta itemprop="width" content="{@width}"/>
         <meta itemprop="height" content="{@height}"/>

@@ -11,7 +11,7 @@
     if (meta.getAttribute('property') === 'og:title') {
       shareData.title = meta.getAttribute('content');
     } else if (meta.getAttribute('property') === 'og:description') {
-      shareData.text = meta.getAttribute('content');
+      shareData.text = meta.getAttribute('content').substring(0, 150);
     } else if (meta.getAttribute('property') === 'og:url') {
       shareData.url = meta.getAttribute('content');
     }
