@@ -85,19 +85,25 @@
                 <a itemprop="mainEntityOfPage" href="/log/2008/03/12/firefox-3-memory-usage/">Firefox 3的記憶體管理</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Firefox 3是我第一次作為一個網路使用者期待的瀏覽器，其中很大的因素是它在效能和記憶體管理上有很大的改善，在我之前翻譯的<a href="http://mozlinks-zh.blogspot.com/2008/03/firefox-3.html">Firefox 3 終極特色：效能</a>這篇文章就有提到相關資訊，而<a href="http://blog.pavlov.net/">Pavlov</a>今天則發表了一篇<a href="http://blog.pavlov.net/2008/03/11/firefox-3-memory-usage/">Firefox 3 Memory Usage</a>，專門介紹Firefox 3中記憶體管理相關的改進，以下簡要說一下文章內容。</p>
-              <h4>減少破碎記憶體</h4>
-              <p>除了減少產生破碎的記憶體空位，現在的版本記憶體用量只有之前的2/3。</p>
-              <h4>Fixed cycles with the Cycle collector</h4>
-              <p>Cycle我不知道該怎樣翻，不過它指的是兩個物件互有對方的指標（或參考）這種情形，要人工正確的判斷何時該刪除這些cycle並不容易，現在工作團隊建立了一個cycle collector可以自動收集並管理cycle的記憶體狀況，並在需要時自動刪除他們。</p>
-              <h4>暫存機制的調整</h4>
-              <p>現在程式會判斷使用者的使用狀況來管理暫存的網頁和圖片，以網頁本身來說，上一頁的內容通常都會放在暫存記憶體內，不過要是超過30分沒有動到，這些內容就會清除掉。而圖片則不再暫存未壓縮的圖檔，本來的話，圖片會以未壓縮的形式放進記憶體內暫存，未壓縮的圖片大小有多大相信大家都知道。</p>
-              <h4>找出記憶體遺漏（Memory leak）</h4>
-              <p>現在才發現Memory leak好像沒個比較通用的譯名。工作團隊已經修正了400多個關於記憶體遺漏的錯誤回報了，這要多虧了新發展的偵測工具。</p>
-              <h4>測試結果</h4>
-              <p>Pavlov設計了一套測試流程，最後顯示記憶體用量比Firefox 2和IE 7都要低上許多。</p>
-            </section>
+            <section itemprop="articleBody"><p>Firefox 3是我第一次作為一個網路使用者期待的瀏覽器，其中很大的因素是它在效能和記憶體管理上有很大的改善，在我之前翻譯的<a href="http://mozlinks-zh.blogspot.com/2008/03/firefox-3.html">Firefox 3 終極特色：效能</a>這篇文章就有提到相關資訊，而<a href="http://blog.pavlov.net/">Pavlov</a>今天則發表了一篇<a href="http://blog.pavlov.net/2008/03/11/firefox-3-memory-usage/">Firefox 3 Memory Usage</a>，專門介紹Firefox 3中記憶體管理相關的改進，以下簡要說一下文章內容。</p><h4>減少破碎記憶體</h4>
+
+<p>除了減少產生破碎的記憶體空位，現在的版本記憶體用量只有之前的2/3。</p>
+
+<h4>Fixed cycles with the Cycle collector</h4>
+
+<p>Cycle我不知道該怎樣翻，不過它指的是兩個物件互有對方的指標（或參考）這種情形，要人工正確的判斷何時該刪除這些cycle並不容易，現在工作團隊建立了一個cycle collector可以自動收集並管理cycle的記憶體狀況，並在需要時自動刪除他們。</p>
+
+<h4>暫存機制的調整</h4>
+
+<p>現在程式會判斷使用者的使用狀況來管理暫存的網頁和圖片，以網頁本身來說，上一頁的內容通常都會放在暫存記憶體內，不過要是超過30分沒有動到，這些內容就會清除掉。而圖片則不再暫存未壓縮的圖檔，本來的話，圖片會以未壓縮的形式放進記憶體內暫存，未壓縮的圖片大小有多大相信大家都知道。</p>
+
+<h4>找出記憶體遺漏（Memory leak）</h4>
+
+<p>現在才發現Memory leak好像沒個比較通用的譯名。工作團隊已經修正了400多個關於記憶體遺漏的錯誤回報了，這要多虧了新發展的偵測工具。</p>
+
+<h4>測試結果</h4>
+
+<p>Pavlov設計了一套測試流程，最後顯示記憶體用量比Firefox 2和IE 7都要低上許多。</p></section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -122,6 +128,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -142,19 +157,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -166,7 +172,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

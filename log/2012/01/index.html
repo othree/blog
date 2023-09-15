@@ -81,27 +81,30 @@
                 <a href="/log/2012/01/23/coffee-check-vim/">coffee-check.vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a><a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
-              <p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
-              <pre>
-                <code>au BufRead,BufNewFile *.coffee set ft=coffee
-</code>
-              </pre>
-              <p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
-              <ol>
-                <li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
-                <li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
-                <li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
-              </ol>
-              <p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
-              <p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
-              <pre>
-                <code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
-</code>
-              </pre>
-              <p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
-            </section>
+            <section itemprop="articleBody"><p>上一篇文章提到使用 <a href="http://requirejs.org/">RequireJS</a> 的 <a href="http://coffeescript.org/">CoffeeScript</a> <a href="https://github.com/jrburke/require-cs">plugin</a> 時，如果寫的 CoffeeScript 語法不正確，瀏覽器即時 compile 就會有錯誤，而且在瀏覽器那邊看到的錯誤訊息根本看不出來是錯誤是在哪個檔案、哪一行，如果專案內檔案很多，那除錯會變得很難，所以我想到的解法就是在寫 coffee 檔的時候就檢查 compile error，就像 <a href="https://github.com/hallettj/jslint.vim">jslint.vim</a> 的行為一樣，上網搜尋了一下 <a href="http://www.vim.org/">Vim</a> 的 CoffeeScript 相關外掛，發現都沒人做這功能，於是花了一些時間從 jslint.vim 那邊移植過來，使用的檢查方式是直接 <code>coffee -c</code> 來編譯，看會不會有錯誤訊息，現在已經發佈到 github 上了，叫 <a href="https://github.com/othree/coffee-check.vim">coffee-check.vim</a>。</p>
+
+<p>安裝還算簡單，先確定系統已經有安裝 node，然後只要用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="http://blog.othree.net/log/2011/06/05/vundle/">Vundle</a> 把套件裝起來，接著在 vimrc 內加上一行：</p>
+
+<pre><code>au BufRead,BufNewFile *.coffee set ft=coffee
+</code></pre>
+
+<p>之後每次儲存 *.coffee 檔就會自動跑 CoffeeCompile compile，然後把錯誤訊息丟到 Quickfix Window 裡面，目前有一些已知問題：</p>
+
+<ol>
+<li>CoffeeScript compile 一次只會有一個錯誤，而不是從頭到尾的完整檢查，所以如果檔案內有兩個以上的錯誤，那就要重複幾次才能把錯誤都修正。</li>
+<li>有一些錯誤訊息是沒有行號的，但是不給行號的話 Quickfix 那邊會有些行為不一樣，所以這種錯誤訊息我都統一說錯誤是在第一行。</li>
+<li>第三是現在是用 node require 的方式來跑 compile，和系統自己用 npm 裝的 coffee 沒有關係，我還在考慮要不要用 npm 裝的 coffee 指令，一開始不用是因為用 coffee 指令是因為它 compile 出錯的話不只會有錯誤訊息，還會有錯誤的 trace 的資訊，不過這是我不需要的資訊。</li>
+</ol>
+
+<p>第一和第二個問題基本上是目前無解，除非以後有什麼其它的 syntax error checker 來做這件事，現在的我也還寫不出這種東西，第三點則是近期可能會有更新，如果其它還有什麼建議或問題回報都歡迎，可以直接到 github 開 <a href="https://github.com/othree/coffee-check.vim/issues">issue</a>。</p>
+
+<p>補充，有人提了我才發現，<a href="https://github.com/kchmck/vim-coffee-script">vim-coffee-script</a> 也可以做到幾乎一樣的事情，只要在 vimrc 加入這行：</p>
+
+<pre><code>au BufWritePost *.coffee silent CoffeeMake! -b | cwindow | redraw!
+</code></pre>
+
+<p>使用 vim-coffee-script 的話，因為 <code>CoffeeMake</code> 是把 coffee 轉成 js 的指令，所以如果沒有錯誤，就會產生 js 檔案，不過我自己的使用情境是不需要那個 js 檔案的，這也是我當初決定自己做一個的原因，單純只有做語法檢查。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -117,10 +120,9 @@
                 <a href="/log/2012/01/22/module-amd-requirejs/">Module, AMD, RequireJS</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
-              <pre>
-                <code>function Person(age, gender) {
+            <section itemprop="articleBody"><p>JavaScript 的物件並沒有封裝的概念，所有綁在該物件上的屬性都是外部可見的，不過還是有辦法做到物件封裝的效果，那就是 <a href="http://www.yuiblog.com/blog/2007/06/12/module-pattern/">Module Pattern</a>，作法很簡單，想要保持 private 的私有屬性就宣告成建構函式的區域變數，在建構函式的最後回傳一組你要保持 public 的屬性或是 method，範例如下：</p>
+
+<pre><code>function Person(age, gender) {
     var _age = age || 16,
         _gender = gender || 1;
 
@@ -130,23 +132,25 @@
         }
     };
 }
-</code>
-              </pre>
-              <p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
-              <p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
-              <pre>
-                <code>define('moduleA', [dep1, dep2], function (export1, export2) {
+</code></pre>
+
+<p>這個範例中，age 和 gender 就是私有屬性，在 Person 物件外的操作無法碰到它們，唯一可以做的事情就是用 getAge 來讀取 age 的值，就這樣，我們有了有封裝特性的模組，不過在實際的應用的時候，還有一些問題需要處理，首當其衝的，便是模組之間的相依問題，不管你的程式架構多好，使用了各種設計模式來減少相依性問題，一定還是會有相依性的問題存在，在 server side 的 JavaScript 應用中，模組的相依問題還不明顯，因為你需要的模組都應該在本機系統存在，你的程式才能執行，以現在最熱門的 <a href="http://nodejs.org/">nodejs</a> 來說，用的是 <a href="http://www.commonjs.org/">CommonJS</a> 定的 <a href="http://www.commonjs.org/specs/modules/1.0/">Module/1.0</a>，只要把要匯出給其它人用的介面指派給 exports 這個變數，其它程式就可以很簡單的用 require 來取得，程式運作的流程就是很線性的從第一行跑到最後一行下來。</p>
+
+<p>在網頁上的應用多了一個可能的變化，就是為了效能考量，讓一些資源像是 CSS、JavaScript 等檔案用非同步的方法讀取，這時候如果程式需要的模組檔案還沒讀下來，就還會有非同步執行的問題要處理，雖然 XMLHttpRequest 可以使用同步執行的方式，但是這樣會把整個瀏覽器定住，使用者用起來會覺得瀏覽器死當完全沒反應，所以這種作法完全不列入選擇之中，也因此有了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition">AMD</a> 這個非同步模組的規範，它的寫法也很簡單：</p>
+
+<pre><code>define('moduleA', [dep1, dep2], function (export1, export2) {
     //do something..
     return {
         method1: function () {},
         method2: function () {},
     };
 });
-</code>
-              </pre>
-              <p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
-              <p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
-            </section>
+</code></pre>
+
+<p>define 是一個全域的函式，專門用來宣告和註冊模組，它吃三個參數，前兩個都是非必要的，第一個參數是模組的名稱，其它模組如果有需要用到這個模組的話，就會用這麼名字來相認，第二個參數是一個字串的陣列，內容是需要的其它的模組名稱，第三個參數則是模組的建構函式，建構函數的參數則是根據前面第二個參數設定的相依模組來決定，會照定義順序傳入相依模組輸出的介面，而模型的建構函式最後面還需要回傳一個給其它人使用的介面，和 Module Pattern 一樣，其實背後的設計就是把建構函式當成相依模組建置完成的 callback function，所以就可以確保相依模組可以非同步的動態讀入，都準備好了才進入下一步。</p>
+
+<p>AMD 最有名的實作就是 <a href="http://requirejs.org/">RequireJS</a> 了，它完整實作了規範沒有講到的，瀏覽器動態且平行的讀取遠端主機上的檔案，用正確的順序執行，然後還把每個模組輸出的介面都管的好好的，不過其實 RequireJS 還提供了更多功能，像是作為 reousrce loader 來讀取 JavaScript 以外的資源，配合 <a href="https://github.com/jrburke/require-cs">plugin</a> 可以直接寫 <a href="http://coffeescript.org/">CoffeeScript</a> 不需要先 compile 好，還有 <a href="http://requirejs.org/docs/optimization.html">optimize</a> 和 <a href="https://github.com/mishoo/UglifyJS">uglify</a> 等 deploy 相關的機制，讓開發環境和正式環境的接軌變得容易許多，不過上面講的都是優點，其實 RequireJS 還是有些缺點的，其中最大的問題就是文件條理不好，會讓把環境和設定搞起來這件事難度增加許多，再來是除錯變得困難許多，像是用 CoffeeScript plugin 即時編譯的話，剛好其中一隻 coffee 檔有語法錯誤，那會變的很難除錯等等，至於是利多還是弊多我覺得是利多，大部分的問題都是搞清楚就好了，CoffeeScript 的錯誤也可以用編輯器外掛來找。所以最後結論，我是蠻推薦可以導入 AMD 到中大型的 Web Application 專案的。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -162,105 +166,32 @@
                 <a href="/log/2012/01/11/2011/">2011</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5365746768/" title="20110117 morning by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5126/5365746768_c2d0b20015_b.jpg" width="768" height="1024" alt="20110117 morning" srcset="https://farm6.staticflickr.com/5126/5365746768_c2d0b20015_b.jpg 1024w">
-                    <meta itemprop="width" content="768"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-              <p>每個月挑了一張照片</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5433630228/" title="P2086946 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5175/5433630228_c7d67ca9ce_b.jpg" width="1024" height="768" alt="P2086946" srcset="https://farm6.staticflickr.com/5175/5433630228_c7d67ca9ce_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5502324004/" title="E61 咖啡 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5211/5502324004_c6f3139d40_b.jpg" width="1024" height="768" alt="E61 咖啡" srcset="https://farm6.staticflickr.com/5211/5502324004_c6f3139d40_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5648432817/" title="大大～ by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5301/5648432817_c4bb9340e3_b.jpg" width="768" height="1024" alt="大大～" srcset="https://farm6.staticflickr.com/5301/5648432817_c4bb9340e3_b.jpg 768w">
-                    <meta itemprop="width" content="768"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5777914827/" title="San Luis Obispo by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2156/5777914827_5b7925e938_b.jpg" width="1024" height="768" alt="San Luis Obispo" srcset="https://farm3.staticflickr.com/2156/5777914827_5b7925e938_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5868396835/" title="日星鑄字行 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3158/5868396835_c6ae8a67bc_b.jpg" width="1024" height="768" alt="日星鑄字行" srcset="https://farm4.staticflickr.com/3158/5868396835_c6ae8a67bc_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5924220024/" title="華盛頓大學 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm7.staticflickr.com/6021/5924220024_2a6e15a4a2_b.jpg" width="1024" height="768" alt="華盛頓大學" srcset="https://farm7.staticflickr.com/6021/5924220024_2a6e15a4a2_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6097360188/" title="工作人員們 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm7.staticflickr.com/6148/6097360188_f20d97e8e7_b.jpg" width="683" height="1024" alt="工作人員們" srcset="https://farm7.staticflickr.com/6148/6097360188_f20d97e8e7_b.jpg 683w">
-                    <meta itemprop="width" content="683"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6155207113/" title="Foxmosa by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm7.staticflickr.com/6189/6155207113_cb5c64b4df_b.jpg" width="683" height="1024" alt="Foxmosa" srcset="https://farm7.staticflickr.com/6189/6155207113_cb5c64b4df_b.jpg 683w">
-                    <meta itemprop="width" content="683"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6270922439/" title="九族文化村 海賊王 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm7.staticflickr.com/6226/6270922439_62df09918d_b.jpg" width="1024" height="683" alt="九族文化村 海賊王" srcset="https://farm7.staticflickr.com/6226/6270922439_62df09918d_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6316696955/" title="貓村 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm7.staticflickr.com/6053/6316696955_fbcca71ba4_b.jpg" width="1024" height="683" alt="貓村" srcset="https://farm7.staticflickr.com/6053/6316696955_fbcca71ba4_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6610157129/" title="二年坂 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7153/6610157129_0365b94329_b.jpg" width="683" height="1024" alt="二年坂" srcset="https://farm8.staticflickr.com/7153/6610157129_0365b94329_b.jpg 683w">
-                    <meta itemprop="width" content="683"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5365746768/" title="20110117 morning by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5126/5365746768_c2d0b20015_b.jpg" width="768" height="1024" alt="20110117 morning" srcset="https://farm6.staticflickr.com/5126/5365746768_c2d0b20015_b.jpg 1024w"><meta itemprop="width" content="768"/><meta itemprop="height" content="1024"/></img></a></p>
+
+<p>每個月挑了一張照片</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5433630228/" title="P2086946 by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5175/5433630228_c7d67ca9ce_b.jpg" width="1024" height="768" alt="P2086946" srcset="https://farm6.staticflickr.com/5175/5433630228_c7d67ca9ce_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5502324004/" title="E61 咖啡 by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5211/5502324004_c6f3139d40_b.jpg" width="1024" height="768" alt="E61 咖啡" srcset="https://farm6.staticflickr.com/5211/5502324004_c6f3139d40_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5648432817/" title="大大～ by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5301/5648432817_c4bb9340e3_b.jpg" width="768" height="1024" alt="大大～" srcset="https://farm6.staticflickr.com/5301/5648432817_c4bb9340e3_b.jpg 768w"><meta itemprop="width" content="768"/><meta itemprop="height" content="1024"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5777914827/" title="San Luis Obispo by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2156/5777914827_5b7925e938_b.jpg" width="1024" height="768" alt="San Luis Obispo" srcset="https://farm3.staticflickr.com/2156/5777914827_5b7925e938_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5868396835/" title="日星鑄字行 by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3158/5868396835_c6ae8a67bc_b.jpg" width="1024" height="768" alt="日星鑄字行" srcset="https://farm4.staticflickr.com/3158/5868396835_c6ae8a67bc_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/5924220024/" title="華盛頓大學 by othree, on Flickr"><img itemprop="url image" src="https://farm7.staticflickr.com/6021/5924220024_2a6e15a4a2_b.jpg" width="1024" height="768" alt="華盛頓大學" srcset="https://farm7.staticflickr.com/6021/5924220024_2a6e15a4a2_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6097360188/" title="工作人員們 by othree, on Flickr"><img itemprop="url image" src="https://farm7.staticflickr.com/6148/6097360188_f20d97e8e7_b.jpg" width="683" height="1024" alt="工作人員們" srcset="https://farm7.staticflickr.com/6148/6097360188_f20d97e8e7_b.jpg 683w"><meta itemprop="width" content="683"/><meta itemprop="height" content="1024"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6155207113/" title="Foxmosa by othree, on Flickr"><img itemprop="url image" src="https://farm7.staticflickr.com/6189/6155207113_cb5c64b4df_b.jpg" width="683" height="1024" alt="Foxmosa" srcset="https://farm7.staticflickr.com/6189/6155207113_cb5c64b4df_b.jpg 683w"><meta itemprop="width" content="683"/><meta itemprop="height" content="1024"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6270922439/" title="九族文化村 海賊王 by othree, on Flickr"><img itemprop="url image" src="https://farm7.staticflickr.com/6226/6270922439_62df09918d_b.jpg" width="1024" height="683" alt="九族文化村 海賊王" srcset="https://farm7.staticflickr.com/6226/6270922439_62df09918d_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6316696955/" title="貓村 by othree, on Flickr"><img itemprop="url image" src="https://farm7.staticflickr.com/6053/6316696955_fbcca71ba4_b.jpg" width="1024" height="683" alt="貓村" srcset="https://farm7.staticflickr.com/6053/6316696955_fbcca71ba4_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/6610157129/" title="二年坂 by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7153/6610157129_0365b94329_b.jpg" width="683" height="1024" alt="二年坂" srcset="https://farm8.staticflickr.com/7153/6610157129_0365b94329_b.jpg 683w"><meta itemprop="width" content="683"/><meta itemprop="height" content="1024"/></img></a></p>
+</section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -283,7 +214,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -295,7 +226,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

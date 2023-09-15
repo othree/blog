@@ -85,28 +85,23 @@
                 <a itemprop="mainEntityOfPage" href="/log/2015/10/17/f2e-test/">前端測試入門</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w">
-                    <meta itemprop="width" content="640"/>
-                    <meta itemprop="height" content="640"/>
-                  </img>
-                </a>
-              </p>
-              <p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
-              <p>其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了<a href="https://github.com/othree/moztw-download-validation">下載檔案的自動檢查</a>，就順便把相關的名詞和觀念弄清楚。</p>
-              <p>之前最搞不清楚的其實就是 <a href="https://mochajs.org/">Mocha</a>（摩卡咖啡） 和 <a href="http://chaijs.com/">Chai</a>（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 <strong>斷言</strong> 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha 網站上就列出了四套 assert library 供大家選擇，除此之外，像我之前在介紹 TypeScript 時提過的 <a href="http://angular.github.io/assert/">assert.js</a> 也可以使用，不過 assert.js 只能檢查型別就是。至於要挑選哪套 assert library 就看各人喜好了，主要是看要怎麼寫斷言，像我挑選 Chai 的原因是他的語法，支援 BDD ，可以寫的看起來很像一句英語：</p>
-              <pre>
-                <code>foo.should.be.a('string');
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/dopey/123646856/" title="Test Well by ~db~, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg" width="640" height="640" alt="Test Well" srcset="https://farm1.staticflickr.com/35/123646856_89367fecab_z.jpg 768w"><meta itemprop="width" content="640"/><meta itemprop="height" content="640"/></img></a></p>
+
+<p>這篇也是之前花一些時間搞清楚的觀念，想著要記錄下來一陣子了，不過最近很忙碌，一直到這幾個連假才有時間寫下來。</p>
+
+<p>其實身為工程師，我一直沒什麼寫測試，只有在少數幾個工具的 library 中有加上 unit test，大概的原因是因為前端的測試沒這麼好做起來，如果是單一 JavaScript 模組的單元測試還好，不過要做整合測試，或是在瀏覽器上真的測試就麻煩很多了，總之前陣子一方面為了工作需要，一方面幫 Moztw 做了<a href="https://github.com/othree/moztw-download-validation">下載檔案的自動檢查</a>，就順便把相關的名詞和觀念弄清楚。</p>
+
+<p>之前最搞不清楚的其實就是 <a href="https://mochajs.org/">Mocha</a>（摩卡咖啡） 和 <a href="http://chaijs.com/">Chai</a>（印度拉茶） 到底分別是什麼定位，後來終於弄清楚了，Chai 只是提供 BDD 語法的測試用的 <strong>斷言</strong> 函數庫（assert library），什麼是斷言呢，英文是 assert，例如明確知道某個函數的結果是什麼，把他說出來，就是斷言，如果結果和說的不一樣，就是測試到錯誤，一般的情形，這些 assert library 就會 throw error，至於 Mocha 則是 Test Framework，用來組織和管理你的測試的程式碼，Mocha 本身的設計是不含 assert library，所以可以自己挑選喜歡的 assert library，只要它在出錯誤時會 throw error 就好，Mocha 網站上就列出了四套 assert library 供大家選擇，除此之外，像我之前在介紹 TypeScript 時提過的 <a href="http://angular.github.io/assert/">assert.js</a> 也可以使用，不過 assert.js 只能檢查型別就是。至於要挑選哪套 assert library 就看各人喜好了，主要是看要怎麼寫斷言，像我挑選 Chai 的原因是他的語法，支援 BDD ，可以寫的看起來很像一句英語：</p>
+
+<pre><code>foo.should.be.a('string');
 foo.should.equal('bar');
 foo.should.have.length(3);
 tea.should.have.property('flavors').with.length(3);
-</code>
-              </pre>
-              <p>很容易就知道是什麼意思，而且自由度還蠻大的。另外一個原因則是他有支援 Promise，就是所謂的 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>，為什麼這個很重要呢，因為 JS 很常遇到需要非同步的操作流程，如果沒有支援，Test Framework 當下把他的 function 跑完，沒有 catch 到 error 就認為沒有錯誤了，當然像 mocha 是有支援非同步的，內建有個等待的機制，<code>done</code>：</p>
-              <pre>
-                <code>describe('User', function() {
+</code></pre>
+
+<p>很容易就知道是什麼意思，而且自由度還蠻大的。另外一個原因則是他有支援 Promise，就是所謂的 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>，為什麼這個很重要呢，因為 JS 很常遇到需要非同步的操作流程，如果沒有支援，Test Framework 當下把他的 function 跑完，沒有 catch 到 error 就認為沒有錯誤了，當然像 mocha 是有支援非同步的，內建有個等待的機制，<code>done</code>：</p>
+
+<pre><code>describe('User', function() {
   describe('#save()', function() {
     it('should save without error', function(done) {
       var user = new User('Luna');
@@ -117,38 +112,43 @@ tea.should.have.property('flavors').with.length(3);
     });
   });
 });
-</code>
-              </pre>
-              <p>就是每個 <code>it</code> 區塊裡面，其實都會收到一個函數 <code>done</code>，如果有要測試非同步的程式，可以在非同步的部分測試完後，才執行 <code>done()</code>，這樣 Mocha 才有機會知道你的測試是不是有非同步的部分，還有什麼時候才是測試完成，不過 Chai 是 BDD，不會容許這樣不直觀的寫法的，所以 Domenic Denicola 開發了 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>：</p>
-              <pre>
-                <code>promise.should.be.fulfilled;
+</code></pre>
+
+<p>就是每個 <code>it</code> 區塊裡面，其實都會收到一個函數 <code>done</code>，如果有要測試非同步的程式，可以在非同步的部分測試完後，才執行 <code>done()</code>，這樣 Mocha 才有機會知道你的測試是不是有非同步的部分，還有什麼時候才是測試完成，不過 Chai 是 BDD，不會容許這樣不直觀的寫法的，所以 Domenic Denicola 開發了 <a href="https://github.com/domenic/chai-as-promised/">chai-as-promised</a>：</p>
+
+<pre><code>promise.should.be.fulfilled;
 promise.should.eventually.deep.equal("foo");
 promise.should.become("foo"); // same as `.eventually.deep.equal`
 promise.should.be.rejected;
-</code>
-              </pre>
-              <p>只是要這樣簡潔的寫法，還需要先設定一下：</p>
-              <pre>
-                <code>var chai = require("chai");
+</code></pre>
+
+<p>只是要這樣簡潔的寫法，還需要先設定一下：</p>
+
+<pre><code>var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 
 chai.use(chaiAsPromised);
-</code>
-              </pre>
-              <p>其實 chai-as-promised 是 chai 的 plugin，然後用 <code>chai.use</code> 來使用它，底層怎樣運作我還沒深入研究，覺得還有點 magic，不過還算是想的到怎樣實做出來的程度，猜測可能有用到 function 的 <code>toString</code> 來判斷有沒有引用 <code>next</code> 參數。</p>
-              <p>再來，測試蠻常會用到的假物件，mock 和 stub，兩者的差異其實蠻多文章有說明了，我個人覺得簡單分法就是 stub 沒有副作用，mock 則是有副作用的假物件，至於要說要用哪種物件來完成測試的話，基本上就是 stub 可以達成你的測試需求的話就用 stub，在 JavaScript 的測試環境下，好像只有看到 <a href="http://sinonjs.org/">Sinon.js</a> 這套比較多人用，去查了一下名稱典故，覺得一個比較可能的來源是特洛伊木馬故事中，騙特洛伊人把木馬搬進去城裡的那位（Mocha 和 Chai 的名稱應該是互相影響的，不過不確定誰先出來的）。另外還有個角色和 mock、stub 很常一起提到的叫 spy（常見用複數形 spies），最常用來當 callback 之類的，在非同步測試案例中，可以用來確保 callback 有被執行到，甚至可以偷看（spy）被執行了幾次，收到什麼參數等等，總之就是個可以測試函數被執行的次數和方式的物件。</p>
-              <p>最後要說的則是 e2e test，因為 JS 很多時候都是用來在瀏覽器端實做 UI 和使用者行為的 handler，其實要做完整整合的測試不太容易，e2e 指的是 End to End，端點到端點，通常是說一個流程的起點到終點的意思，例如上網站註冊帳號，這樣算是一個流程，或是上網登入購買東西到結帳完成，這樣也是一個流程，由於 Web App 的環境下，跑 JS 的是瀏覽器，沒辦法簡單的介入，所以以往真的要做 e2e 測試幾乎都是要靠人工，後來有了 <a href="http://www.seleniumhq.org/">Selenium</a> 和 WebDriver，才開始可以讓這些測試自動化。</p>
-              <p>以前的 Selenium 要控制瀏覽器靠的是 <a href="http://www.seleniumhq.org/projects/remote-control/">Selenium RC</a>，用比較暴力的方式介入瀏覽器，不過現在的 Selenium 2 則是透過 <a href="http://www.w3.org/TR/webdriver/">WebDriver</a> 這個 API 來操作，WebDriver 能進 W3C 標準化其實也是 Selenium 貢獻者的努力，背後也是有些大公司的影子在，目前主流的瀏覽器包括微軟最新的 Edge 也都支援，不過其實 Selenium 因為是 Java 寫的，雖然控制瀏覽器的 script 沒有限制要用 Java，我還是一直不太習慣，所以都沒深入，直到前陣子開始看到 Paul 在 Facebook 上<a href="https://www.facebook.com/notes/paul-li/protractor-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E7%AF%87/10152948608982211">連載</a>介紹 <a href="https://angular.github.io/protractor/#/">Protractor</a>，才又開始有想嘗試的動力，Protractor 的名稱由來也還蠻有趣的，意思是量角器，而 AngularJS 則有諧音 angle 的感覺在，當初出來也是為了要測試 AngularJS 的，Github 上 Protractor 是 AngularJS 下的一個專案，Protractor 和 Selenium 的差別就在於，Protractor 是一個 test framework，然後建好了 WebDriver binding，可以直接透過 WebDriver 來跟瀏覽器溝通，不再需要 Selenium 介面那塊了。</p>
-              <p>後來 Carl 跟我說到有 <a href="http://webdriver.io/">WebdriverIO</a> 這個專案，是只有 WebDriver 介面的部分，可以寫 node script 來叫瀏覽器做事，當然也可以做測試，可以挑自己喜歡的 test framework 和 assert library 來搭配使用，於是我就做了一個可以去 moztw.org 下載安裝檔回來驗證正確性的<a href="https://github.com/othree/moztw-download-validation">專案</a>，在這個專案中，還用了一個特殊的寫法：</p>
-              <pre>
-                <code>it('Download OSX Installer', function* () {
+</code></pre>
+
+<p>其實 chai-as-promised 是 chai 的 plugin，然後用 <code>chai.use</code> 來使用它，底層怎樣運作我還沒深入研究，覺得還有點 magic，不過還算是想的到怎樣實做出來的程度，猜測可能有用到 function 的 <code>toString</code> 來判斷有沒有引用 <code>next</code> 參數。</p>
+
+<p>再來，測試蠻常會用到的假物件，mock 和 stub，兩者的差異其實蠻多文章有說明了，我個人覺得簡單分法就是 stub 沒有副作用，mock 則是有副作用的假物件，至於要說要用哪種物件來完成測試的話，基本上就是 stub 可以達成你的測試需求的話就用 stub，在 JavaScript 的測試環境下，好像只有看到 <a href="http://sinonjs.org/">Sinon.js</a> 這套比較多人用，去查了一下名稱典故，覺得一個比較可能的來源是特洛伊木馬故事中，騙特洛伊人把木馬搬進去城裡的那位（Mocha 和 Chai 的名稱應該是互相影響的，不過不確定誰先出來的）。另外還有個角色和 mock、stub 很常一起提到的叫 spy（常見用複數形 spies），最常用來當 callback 之類的，在非同步測試案例中，可以用來確保 callback 有被執行到，甚至可以偷看（spy）被執行了幾次，收到什麼參數等等，總之就是個可以測試函數被執行的次數和方式的物件。</p>
+
+<p>最後要說的則是 e2e test，因為 JS 很多時候都是用來在瀏覽器端實做 UI 和使用者行為的 handler，其實要做完整整合的測試不太容易，e2e 指的是 End to End，端點到端點，通常是說一個流程的起點到終點的意思，例如上網站註冊帳號，這樣算是一個流程，或是上網登入購買東西到結帳完成，這樣也是一個流程，由於 Web App 的環境下，跑 JS 的是瀏覽器，沒辦法簡單的介入，所以以往真的要做 e2e 測試幾乎都是要靠人工，後來有了 <a href="http://www.seleniumhq.org/">Selenium</a> 和 WebDriver，才開始可以讓這些測試自動化。</p>
+
+<p>以前的 Selenium 要控制瀏覽器靠的是 <a href="http://www.seleniumhq.org/projects/remote-control/">Selenium RC</a>，用比較暴力的方式介入瀏覽器，不過現在的 Selenium 2 則是透過 <a href="http://www.w3.org/TR/webdriver/">WebDriver</a> 這個 API 來操作，WebDriver 能進 W3C 標準化其實也是 Selenium 貢獻者的努力，背後也是有些大公司的影子在，目前主流的瀏覽器包括微軟最新的 Edge 也都支援，不過其實 Selenium 因為是 Java 寫的，雖然控制瀏覽器的 script 沒有限制要用 Java，我還是一直不太習慣，所以都沒深入，直到前陣子開始看到 Paul 在 Facebook 上<a href="https://www.facebook.com/notes/paul-li/protractor-%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E7%AF%87/10152948608982211">連載</a>介紹 <a href="https://angular.github.io/protractor/#/">Protractor</a>，才又開始有想嘗試的動力，Protractor 的名稱由來也還蠻有趣的，意思是量角器，而 AngularJS 則有諧音 angle 的感覺在，當初出來也是為了要測試 AngularJS 的，Github 上 Protractor 是 AngularJS 下的一個專案，Protractor 和 Selenium 的差別就在於，Protractor 是一個 test framework，然後建好了 WebDriver binding，可以直接透過 WebDriver 來跟瀏覽器溝通，不再需要 Selenium 介面那塊了。</p>
+
+<p>後來 Carl 跟我說到有 <a href="http://webdriver.io/">WebdriverIO</a> 這個專案，是只有 WebDriver 介面的部分，可以寫 node script 來叫瀏覽器做事，當然也可以做測試，可以挑自己喜歡的 test framework 和 assert library 來搭配使用，於是我就做了一個可以去 moztw.org 下載安裝檔回來驗證正確性的<a href="https://github.com/othree/moztw-download-validation">專案</a>，在這個專案中，還用了一個特殊的寫法：</p>
+
+<pre><code>it('Download OSX Installer', function* () {
   var data = yield hashes;
   ...
-</code>
-              </pre>
-              <p>其實就是 async function 加上 <code>yield</code> 來代替 ES2016 的 <code>await</code>，要達成這樣的效果其實會需要一個 async function runner，不是 node 可以直接跑起來的，實際測試過也是跑不起來，所以就只能 WebdriverIO 提供的 <code>wdio</code> 執行檔來執行。</p>
-              <p>這篇還差一點東西沒講到，就是 test coverage，JS 這邊比較常看到的是 <a href="https://gotwarlost.github.io/istanbul/">istanbul.js</a>，名稱的來源是 carpet coverage，然後 Istanbul 是個生產優質地毯的地方～</p>
-            </section>
+</code></pre>
+
+<p>其實就是 async function 加上 <code>yield</code> 來代替 ES2016 的 <code>await</code>，要達成這樣的效果其實會需要一個 async function runner，不是 node 可以直接跑起來的，實際測試過也是跑不起來，所以就只能 WebdriverIO 提供的 <code>wdio</code> 執行檔來執行。</p>
+
+<p>這篇還差一點東西沒講到，就是 test coverage，JS 這邊比較常看到的是 <a href="https://gotwarlost.github.io/istanbul/">istanbul.js</a>，名稱的來源是 carpet coverage，然後 Istanbul 是個生產優質地毯的地方～</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -173,6 +173,15 @@ chai.use(chaiAsPromised);
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -193,19 +202,10 @@ chai.use(chaiAsPromised);
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -217,7 +217,7 @@ chai.use(chaiAsPromised);
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

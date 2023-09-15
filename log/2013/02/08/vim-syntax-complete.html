@@ -85,22 +85,23 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/02/08/vim-syntax-complete/">Vim Syntax Complete</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
-              <pre>
-                <code>setlocal omnifunc=syntaxcomplete#Complete
-</code>
-              </pre>
-              <p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
-              <p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
-              <pre>
-                <code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
+            <section itemprop="articleBody"><p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
+
+<pre><code>setlocal omnifunc=syntaxcomplete#Complete
+</code></pre>
+
+<p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
+
+<p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
+
+<pre><code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
 let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
-</code>
-              </pre>
-              <p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
-              <p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
-            </section>
+</code></pre>
+
+<p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
+
+<p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -125,6 +126,15 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -145,19 +155,10 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -169,7 +170,7 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

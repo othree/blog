@@ -85,11 +85,10 @@
                 <a itemprop="mainEntityOfPage" href="/log/2020/01/05/public-suffix-list/">Public Suffix List</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近因為花了很多時間研究 Safari 和第三方 Cookie，常常看到一個專有名詞 <strong>eTLD+1</strong>，之前只知道和 domain name 及 TLD 相關，不清楚確切的定義，所以又去查了一下，結果找到解釋最清楚的竟然是 Go 的 publicsuffix 套件的<a href="https://godoc.org/golang.org/x/net/publicsuffix">說明文件</a>，總之簡單比較不明確的解釋，eTLD 指的是 effective TLD，像是 <code>net</code>、<code>net.tw</code> 這類，域名註冊商可以提供的網址後綴，依此類推，eTLD+1 就是 eTLD 再多一段，也就是一般人可以註冊到的網域名稱，像是我這邊用的 <code>othree.net</code>，至於部落格的子網域 <code>blog.othree.net</code> 就不是 eTLD+1 了。</p>
-              <p>其中的 eTLD 又稱為 Public Suffix，然後 Mozilla 有維護一份 <a href="https://publicsuffix.org/">Public Suffix List</a>，給瀏覽器用的，主要用途就是避免寫入太高權限的 cookie，例如我要是把 cookie 寫到 <code>.net</code> 層的話，所有的 <code>.net</code> 域名的網站都會讀的到它，就會有安全性問題，這份清單現在已經是主要瀏覽器開發商都有在使用了，它的內容除了那些 eTLD 之外，其實還有私人公司提交的，像是 blogspot 列了一大串，還有 github 有列 <code>github.io</code> 和 <code>githubusercontent.com</code>，<code>github.io</code> 是 GitHub Pages 的預設 domain，像我的 Github Page 就會用 othree.github.io，GitHub 提交這筆記錄，在現代瀏覽器就會限制我在 <code>othree.github.io</code> 不能寫 cookie 到 <code>github.io</code>，這樣可以確保所有使用者的頁面不會互相影響。</p>
-              <p>我還順便亂瀏覽一下內容，發現 Amazon 手上好多的 gTLD，像是 <code>book</code>、<code>song</code>，然後他們的 <code>cloudfront.net</code> 也有提交，還有一堆其它的 aws 網域名稱；另外就是 DynDNS 和 no-ip 兩個類似服務都提交超多的；然後還發現一間叫 <a href="https://nymnom.com/">nymnom.com</a> 的域名註冊商，專門提供一堆 <code>nom</code> 或 <code>nym</code> 結尾的域名，搞不清楚這兩個單字的意思啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>最近因為花了很多時間研究 Safari 和第三方 Cookie，常常看到一個專有名詞 <strong>eTLD+1</strong>，之前只知道和 domain name 及 TLD 相關，不清楚確切的定義，所以又去查了一下，結果找到解釋最清楚的竟然是 Go 的 publicsuffix 套件的<a href="https://godoc.org/golang.org/x/net/publicsuffix">說明文件</a>，總之簡單比較不明確的解釋，eTLD 指的是 effective TLD，像是 <code>net</code>、<code>net.tw</code> 這類，域名註冊商可以提供的網址後綴，依此類推，eTLD+1 就是 eTLD 再多一段，也就是一般人可以註冊到的網域名稱，像是我這邊用的 <code>othree.net</code>，至於部落格的子網域 <code>blog.othree.net</code> 就不是 eTLD+1 了。</p>
+<p>其中的 eTLD 又稱為 Public Suffix，然後 Mozilla 有維護一份 <a href="https://publicsuffix.org/">Public Suffix List</a>，給瀏覽器用的，主要用途就是避免寫入太高權限的 cookie，例如我要是把 cookie 寫到 <code>.net</code> 層的話，所有的 <code>.net</code> 域名的網站都會讀的到它，就會有安全性問題，這份清單現在已經是主要瀏覽器開發商都有在使用了，它的內容除了那些 eTLD 之外，其實還有私人公司提交的，像是 blogspot 列了一大串，還有 github 有列 <code>github.io</code> 和 <code>githubusercontent.com</code>，<code>github.io</code> 是 GitHub Pages 的預設 domain，像我的 Github Page 就會用 othree.github.io，GitHub 提交這筆記錄，在現代瀏覽器就會限制我在 <code>othree.github.io</code> 不能寫 cookie 到 <code>github.io</code>，這樣可以確保所有使用者的頁面不會互相影響。</p>
+<p>我還順便亂瀏覽一下內容，發現 Amazon 手上好多的 gTLD，像是 <code>book</code>、<code>song</code>，然後他們的 <code>cloudfront.net</code> 也有提交，還有一堆其它的 aws 網域名稱；另外就是 DynDNS 和 no-ip 兩個類似服務都提交超多的；然後還發現一間叫 <a href="https://nymnom.com/">nymnom.com</a> 的域名註冊商，專門提供一堆 <code>nom</code> 或 <code>nym</code> 結尾的域名，搞不清楚這兩個單字的意思啊。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -114,6 +113,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -134,19 +142,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -158,7 +157,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

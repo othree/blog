@@ -85,20 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2015/07/03/webappsec/">webappsec</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg 1024w, https://farm3.staticflickr.com/2948/15191563939_42b2305e22_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="576"/>
-                  </img>
-                </a>
-              </p>
-              <p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
-              <p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
-              <p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
-              <pre>
-                <code>navigator.credentials.get({ "password": true }).then(
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/mujitra/15191563939/" title="Safety first. by MIKI Yoshihito (´･ω･), on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg" width="1024" height="576" alt="Safety first." srcset="https://farm3.staticflickr.com/2948/15191563939_80db3b1c3c_b.jpg 1024w, https://farm3.staticflickr.com/2948/15191563939_42b2305e22_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="576"/></img></a></p>
+
+<p>這幾天才注意到 W3C 的 Web Application Security Working Group，簡稱為 webappsec，專門負責安全相關的規範制訂，是 <a href="http://www.w3.org/2011/webappsec/">2011</a> 年就成立的，算是很後知後覺吧，其實現在很多已經很廣為人知的 Web 安全機制都是出自他們之手，像是 <a href="https://developer.mozilla.org/zh-TW/docs/HTTP/Access_control_CORS">CORS</a> 和 <a href="http://devco.re/blog/2014/04/08/security-issues-of-http-headers-2-content-security-policy/">CSP</a>，然後他們現在也很跟的上潮流，把標準的制訂也移到 <a href="https://github.com/w3c/WebAppSec">Github</a> 上了，其實會發現這個 Github repo 是因為最近在看 fetch 的 spec，裡面多了蠻多內容，而且有不少引用到其它新標準的地方，然後看這看著就看到 webappsec 這邊，順便就看了一下，有幾個新草稿好像還蠻有趣的，想說可以介紹一下，不過這些東西大部分都還不能用就是了。</p>
+
+<p>第一個是 <a href="https://w3c.github.io/webappsec/specs/powerfulfeatures/">Secure Contexts</a>，這個新東西目的很簡單，就是判斷現在的連線狀況是否安全，以前的話，前端只能看是不是使用 https protocol 連線，不過 Secure Context 有比較多的判斷流程，例如用 SSL 就不會被當成是安全的，要 TLS 才會被認為是安全，如果不是 TLS 連線則還會判斷連到哪裡，看看白名單黑名單之類的機制。</p>
+
+<p>第二個是 <a href="https://w3c.github.io/webappsec/specs/credentialmanagement/">Credential Management</a>，主要是為了因應現在瀏覽器很多都有記下使用者填的表單資料，包括登入的表單，而這等於是把使用者某個網站的帳號密碼都記錄下來，不過其實瀏覽器要做這些功能也是會遇到很多問題，像是他要怎麼判斷現在的表單是登入表單，哪些欄位是帳號密碼，或是網站用不一樣的機制，例如 XHR 來登入，這樣瀏覽器如果無法知道是什麼機制，就無法替這些特殊機制的網站的使用者提供方便的功能，所以 webappsec 就提出 Credential Management 這個功能讓網站開發者可以透過設計好的介面來告訴瀏覽器他們的網站是怎樣登入的，然後可以儲存帳號密碼在瀏覽器端，之後提供 API 給 JavaScript 呼叫出來送到 Server 端驗證，不過說是呼叫出來，其實 JavaScript 也看不到密碼明碼，而只能直接送出 login 的 request：</p>
+
+<pre><code>navigator.credentials.get({ "password": true }).then(
   function(credential) {
     if (!credential) {
       // The user either doesn't have credentials for this site, or
@@ -117,29 +112,31 @@
     }
   }
 );
-</code>
-              </pre>
-              <p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
-              <p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
-              <pre>
-                <code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
+</code></pre>
+
+<p>這是從 spec 內複製出來的 sample code，一個重點是，JavaScript 程式碼其實碰不到你的密碼，只能直接把 credential send 出去，其它也還支援像是 Facebook 那種第三方登入的設計，以及把 credential 存進 store 等等機制。</p>
+
+<p>第三個是 <a href="https://w3c.github.io/webappsec/specs/subresourceintegrity/">Subresource Integrity</a>：</p>
+
+<pre><code>&lt;script src="https://analytics-r-us.example.com/v1.0/include.js"
         integrity="sha256-Rj/9XDU7F6pNSX8yBddiCIIS+XKDTtdq0//No0MH0AE="
         crossorigin="anonymous"&gt;&lt;/script&gt;
-</code>
-              </pre>
-              <p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
-              <p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
-              <pre>
-                <code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
-</code>
-              </pre>
-              <p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
-              <pre>
-                <code>HTTPS: 1
-</code>
-              </pre>
-              <p>很簡潔不過還沒瀏覽器支援就是了。</p>
-            </section>
+</code></pre>
+
+<p>這是個看範例馬上就能理解幹什麼用的，就是對網頁要用到的其它 resource 檔案包括：js、css 等加上驗證檔案正確性的 hash，為的是避免有第三方的檔案內容被惡意攻擊者修改過。</p>
+
+<p>第四個是 <a href="https://w3c.github.io/webappsec/specs/upgrade/">Upgrade Insecure Requests</a>，這是唯一目前已經可以用的，為的是解決 mixed content 的問題，也就是有的網站可能最近才改為 HTTPS 連線，但是網站內部用到的一些內容還是寫死 URL 用 HTTP，這時候瀏覽器就會跳出說網頁內容可能不安全，然而，這些使用 HTTP 的檔案其實可能用 HTTPS 連線也找的到，像是 Flickr、TED 等都有支援 HTTPS 連線，而 Upgrade 就是跟瀏覽器說如果這些內容找得到 HTTPS 的就用 HTTPS 的，而不是只看寫死的 URL，目前 Chrome 43 已經開始支援了，有個線上 <a href="https://googlechrome.github.io/samples/csp-upgrade-insecure-requests/">demo</a> 可以看，設定方法可以透過 CSP header 加上 <code>upgrade-insecure-requests</code> 或是寫到 meta 標籤裡面（demo 用的）</p>
+
+<pre><code>&lt;meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"&gt;
+</code></pre>
+
+<p>其實這個標準我一開始以為是類似 HSTS，是對現在開的網址本身做判斷是不是有 HTTPS 可供選擇，有的話就改用 HTTPS 連線，仔細看之後才發現是用來處理 mixed content ，可是又看一看發現也有一部份比較新的草稿有講到這個功能，目前討論的版本是用 header：</p>
+
+<pre><code>HTTPS: 1
+</code></pre>
+
+<p>很簡潔不過還沒瀏覽器支援就是了。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -164,6 +161,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -184,19 +190,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -208,7 +205,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

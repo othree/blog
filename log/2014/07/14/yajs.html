@@ -85,19 +85,22 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/07/14/yajs/">YAJS: Yet Another JavaScript Syntax for Vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 <a href="http://www.vim.org/scripts/script.php?script_id=4974">YAJS</a>，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 <a href="https://github.com/othree/yajs.vim">github repo</a> 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下：</p>
-              <ul>
-                <li>用 <code>javascript</code> 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 <code>SyntaxComplete</code> 使用</li>
-                <li>完整重新整理過的 Web API、DOM、JS 關鍵字</li>
-                <li>可以完美的和 javascript-libraries-syntax.vim 共用</li>
-                <li>把許多歷史遺跡的 syntax rule 都砍掉了</li>
-                <li>當然最後就是支援許多的 ES6 syntax，像是 arrow function、 method definition 等</li>
-              </ul>
-              <p>第一點這問題很久了，我好像之前也有說過，第二個一開始弄之前有點猶豫，因為關鍵字真的很多，目前整理了大概有 1800 個上下，不過後來看到 Vim 內建的 xs 的 <a href="https://code.google.com/p/vim/source/browse/runtime/syntax/xs.vim">syntax</a> 我就釋懷了，這個檔案有三千多行，而定義關鍵字的每行都有數個關鍵字，1800 其實還只整理了一部份，除了 Global 物件都有加上外，很多新 Spec 是還沒整理的，例如 Mozilla 為了 Firefox OS 定的那些和硬體溝通的 API 等。</p>
-              <p>第三點是我重新整理的時候才注意到的，本來我的 javascript-libraries-syntax.vim 會把 <code>.</code> 的 group 取代掉，也就是原來的 syntax rule 裡面，和 <code>.</code> 有關的東西在套用過 libraries syntax 之後就會消失，只是不太容易注意到，這次修改就讓這個問題不會發生，不過 JS 僅限於 YAJS，，其他還有 CoffeeScript、LiveScript 其實不受影響，不過是因為他們本來在 <code>.</code> 之後就沒其他的 syntax highlight 了。</p>
-              <p>第四點就是把一些不明用途或是過時的東西砍掉，最後就是 ES6 的語法了，目前大概知道會有的都已經做上去了像是 block scope、let、const、class、新的 number literal 等都支援，如果有缺什麼歡迎報 bug 摟。</p>
-            </section>
+            <section itemprop="articleBody"><p>前陣子把我 fork 的 Enhanced Javascript syntax 大改後，乾脆改名上到 Vim Scripts 了，名字就叫做 <a href="http://www.vim.org/scripts/script.php?script_id=4974">YAJS</a>，全名是 Yet Another JavaScript Syntax for Vim（又一個 JS Syntax），當然也有 <a href="https://github.com/othree/yajs.vim">github repo</a> 方便安裝，為什麼這次會自己大修呢，主要的原因是想要弄支援 ES6 的一些新語法，不過剛好有一些問題也已經很久了，就一口氣處理，大概整理一下和其他版的差異如下：</p>
+
+<ul>
+<li>用 <code>javascript</code> 做 group name 的 prefix，如此才符合 Vim doc 的規範，並且可以直接讓 <code>SyntaxComplete</code> 使用</li>
+<li>完整重新整理過的 Web API、DOM、JS 關鍵字</li>
+<li>可以完美的和 javascript-libraries-syntax.vim 共用</li>
+<li>把許多歷史遺跡的 syntax rule 都砍掉了</li>
+<li>當然最後就是支援許多的 ES6 syntax，像是 arrow function、 method definition 等</li>
+</ul>
+
+<p>第一點這問題很久了，我好像之前也有說過，第二個一開始弄之前有點猶豫，因為關鍵字真的很多，目前整理了大概有 1800 個上下，不過後來看到 Vim 內建的 xs 的 <a href="https://code.google.com/p/vim/source/browse/runtime/syntax/xs.vim">syntax</a> 我就釋懷了，這個檔案有三千多行，而定義關鍵字的每行都有數個關鍵字，1800 其實還只整理了一部份，除了 Global 物件都有加上外，很多新 Spec 是還沒整理的，例如 Mozilla 為了 Firefox OS 定的那些和硬體溝通的 API 等。</p>
+
+<p>第三點是我重新整理的時候才注意到的，本來我的 javascript-libraries-syntax.vim 會把 <code>.</code> 的 group 取代掉，也就是原來的 syntax rule 裡面，和 <code>.</code> 有關的東西在套用過 libraries syntax 之後就會消失，只是不太容易注意到，這次修改就讓這個問題不會發生，不過 JS 僅限於 YAJS，，其他還有 CoffeeScript、LiveScript 其實不受影響，不過是因為他們本來在 <code>.</code> 之後就沒其他的 syntax highlight 了。</p>
+
+<p>第四點就是把一些不明用途或是過時的東西砍掉，最後就是 ES6 的語法了，目前大概知道會有的都已經做上去了像是 block scope、let、const、class、新的 number literal 等都支援，如果有缺什麼歡迎報 bug 摟。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -122,6 +125,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -142,19 +154,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -166,7 +169,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

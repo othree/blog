@@ -85,33 +85,19 @@
                 <a itemprop="mainEntityOfPage" href="/log/2017/03/17/guetzli-new-os-jpeg-encoder/">Guetzli: A New Open Source JPEG Encoder</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33444227946/" title="Guetzli by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3665/33444227946_858cf890f3_b.jpg" width="773" height="699" alt="Guetzli" srcset="">
-                    <meta itemprop="width" content="773"/>
-                    <meta itemprop="height" content="699"/>
-                  </img>
-                </a>
-              </p>
-              <p>今天一早起來就看到 Google <a href="https://research.googleblog.com/2017/03/announcing-guetzli-new-open-source-jpeg.html">發表</a>的新的 JPEG 壓縮程式，叫 Guetzli（一種瑞士餅乾），這是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a>、<a href="https://github.com/google/brotli">Brotli</a> 之後，算是第三個比較容易被大家廣為使用的新的節省網路流量的工具，這次主要針對 JPEG 圖片格式，和之前 Mozilla 的 <a href="https://github.com/mozilla/mozjpeg">mozjpeg</a> 的作法一樣，保持目前 JPEG decoder 的相容性，然後看能加強 JPEG 圖檔到什麼程度，我稍微測試了一下，結果還不錯，目前還沒有 homebrew formula，如果要自己 build 的可以參考<a href="https://agileblaze.com/google-guetzli-image-compression-setup-on-macos/">這篇</a>，基本上就是用 bazel 來編譯，然後可能會需要先裝 libpng 和 gflags，這兩個可以用 homebrew 安裝：</p>
-              <pre>
-                <code class="language-bash">brew install libpng gflags 
-</code>
-              </pre>
-              <p>然後裝 <a href="https://bazel.build/">bazel</a></p>
-              <pre>
-                <code class="language-bash">brew install bazel
-</code>
-              </pre>
-              <p>然後到專案目錄下執行編譯指令：</p>
-              <pre>
-                <code class="language-bash">bazel build -c opt //:guetzli
-</code>
-              </pre>
-              <p>結果就會把執行檔放到 <code>bazel-bin/guetzli</code> 這位置，就可以拿來用了，不過其實官方 GitHub repo 上的 <a href="https://github.com/google/guetzli/releases">release</a> 那邊就有編譯好的版本，抓下來用 Terminal 執行 <code>chmod +x</code> 也可以用（我是自己丟到 <code>/usr/local/bin/</code> 裡面），指令很簡單，可以加上 <code>--quality</code>，預設是 95，不過最小只能 84，設更小的值會跟你說，真的想要的話自己去改原始碼...</p>
-              <p>速度就如大家所說的，和其它工具比起來真的慢很多，感覺是有一些 recursive 找最佳解的過程，輸出的結果我覺得最讓人印象深刻的是對於純色色塊的處理，也比 mozjpeg 好上不少，輸出檔案的大小不一定會是最小的，不過品質好很多，差異是達到我可以放棄這點容量差距，而寧願要這畫質改進，然後就是 Quality 100 可能會體積暴漲，我隨便測試了幾張圖片，看起來設到 90 品質就蠻不錯的，看來目前通行的圖片最佳化工具又要有一輪更新了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33444227946/" title="Guetzli by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3665/33444227946_858cf890f3_b.jpg" width="773" height="699" alt="Guetzli" srcset=""><meta itemprop="width" content="773"/><meta itemprop="height" content="699"/></img></a></p>
+<p>今天一早起來就看到 Google <a href="https://research.googleblog.com/2017/03/announcing-guetzli-new-open-source-jpeg.html">發表</a>的新的 JPEG 壓縮程式，叫 Guetzli（一種瑞士餅乾），這是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a>、<a href="https://github.com/google/brotli">Brotli</a> 之後，算是第三個比較容易被大家廣為使用的新的節省網路流量的工具，這次主要針對 JPEG 圖片格式，和之前 Mozilla 的 <a href="https://github.com/mozilla/mozjpeg">mozjpeg</a> 的作法一樣，保持目前 JPEG decoder 的相容性，然後看能加強 JPEG 圖檔到什麼程度，我稍微測試了一下，結果還不錯，目前還沒有 homebrew formula，如果要自己 build 的可以參考<a href="https://agileblaze.com/google-guetzli-image-compression-setup-on-macos/">這篇</a>，基本上就是用 bazel 來編譯，然後可能會需要先裝 libpng 和 gflags，這兩個可以用 homebrew 安裝：</p>
+<pre><code class="language-bash">brew install libpng gflags 
+</code></pre>
+<p>然後裝 <a href="https://bazel.build/">bazel</a></p>
+<pre><code class="language-bash">brew install bazel
+</code></pre>
+<p>然後到專案目錄下執行編譯指令：</p>
+<pre><code class="language-bash">bazel build -c opt //:guetzli
+</code></pre>
+<p>結果就會把執行檔放到 <code>bazel-bin/guetzli</code> 這位置，就可以拿來用了，不過其實官方 GitHub repo 上的 <a href="https://github.com/google/guetzli/releases">release</a> 那邊就有編譯好的版本，抓下來用 Terminal 執行 <code>chmod +x</code> 也可以用（我是自己丟到 <code>/usr/local/bin/</code> 裡面），指令很簡單，可以加上 <code>--quality</code>，預設是 95，不過最小只能 84，設更小的值會跟你說，真的想要的話自己去改原始碼...</p>
+<p>速度就如大家所說的，和其它工具比起來真的慢很多，感覺是有一些 recursive 找最佳解的過程，輸出的結果我覺得最讓人印象深刻的是對於純色色塊的處理，也比 mozjpeg 好上不少，輸出檔案的大小不一定會是最小的，不過品質好很多，差異是達到我可以放棄這點容量差距，而寧願要這畫質改進，然後就是 Quality 100 可能會體積暴漲，我隨便測試了幾張圖片，看起來設到 90 品質就蠻不錯的，看來目前通行的圖片最佳化工具又要有一輪更新了。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -136,6 +122,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -156,19 +151,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -180,7 +166,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

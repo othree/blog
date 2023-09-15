@@ -85,15 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2012/12/01/php-xslt-2/">PHP and XSLT 2.0</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近弄 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 支援的時候，一度需要 XSLT 2.0 的 <a href="http://www.w3.org/TR/xslt20/#element-function">xsl:function</a>，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 <a href="http://php.net/manual/en/book.xsl.php">extension</a> 用的是 <a href="http://xmlsoft.org/XSLT/">libxslt</a>，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 <a href="http://saxon.sourceforge.net/">SAXON</a> 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 <a href="http://www.saxonica.com/welcome/welcome.xml">Saxonica</a> 這間公司維護的，有 open source 的 home edition。</p>
-              <p>找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 <a href="http://php-java-bridge.sourceforge.net/pjb/">PHP/Java Bridge</a>，不過我覺得還要弄 proxy 有些麻煩，幸好有找到 <a href="http://sourceforge.net/projects/xslt2processor/">XML_XSLT2Processor</a> 這個專門來把第三方 XSLT 引擎包起來給 PHP 用的專案，用起來很簡單，API 開的和 PHP 自己的版本都一樣，只是產生物件時要跟他說是要用那個引擎，檔案位置在哪而已：</p>
-              <pre>
-                <code>$proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
-</code>
-              </pre>
-              <p>像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 &gt;_&lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 <a href="http://www.exslt.org/">EXSLT</a> 的 <a href="http://www.exslt.org/str/functions/tokenize/index.html">tokenize</a> 這個 function，後來根據 stackoverflow 上的 <a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function">回答</a> 改動之後，發現可以動我就換去 PHP extension 了。</p>
-            </section>
+            <section itemprop="articleBody"><p>最近弄 <a href="http://dev.w3.org/html5/srcset/">srcset</a> 支援的時候，一度需要 XSLT 2.0 的 <a href="http://www.w3.org/TR/xslt20/#element-function">xsl:function</a>，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 <a href="http://php.net/manual/en/book.xsl.php">extension</a> 用的是 <a href="http://xmlsoft.org/XSLT/">libxslt</a>，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 <a href="http://saxon.sourceforge.net/">SAXON</a> 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 <a href="http://www.saxonica.com/welcome/welcome.xml">Saxonica</a> 這間公司維護的，有 open source 的 home edition。</p>
+
+<p>找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 <a href="http://php-java-bridge.sourceforge.net/pjb/">PHP/Java Bridge</a>，不過我覺得還要弄 proxy 有些麻煩，幸好有找到 <a href="http://sourceforge.net/projects/xslt2processor/">XML_XSLT2Processor</a> 這個專門來把第三方 XSLT 引擎包起來給 PHP 用的專案，用起來很簡單，API 開的和 PHP 自己的版本都一樣，只是產生物件時要跟他說是要用那個引擎，檔案位置在哪而已：</p>
+
+<pre><code>$proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
+</code></pre>
+
+<p>像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 &gt;_&lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 <a href="http://www.exslt.org/">EXSLT</a> 的 <a href="http://www.exslt.org/str/functions/tokenize/index.html">tokenize</a> 這個 function，後來根據 stackoverflow 上的 <a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function">回答</a> 改動之後，發現可以動我就換去 PHP extension 了。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -118,6 +118,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -138,19 +147,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -162,7 +162,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

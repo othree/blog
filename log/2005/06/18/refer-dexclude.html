@@ -85,30 +85,36 @@
                 <a itemprop="mainEntityOfPage" href="/log/2005/06/18/refer-dexclude/">refer 2.1 的dexclude</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>我有利用<a href="http://www.textism.com/tools/">Textism</a>的<a href="http://www.textism.com/tools/refer/">refer 2.1</a>在觀察訪客從哪來，不過因為會被referer spam攻擊，所以連結拿掉了。</p>
-              <p>用了一段時間一直發現一個問題，就是設定裡面的<strong>dexclude</strong>（不紀錄的目錄）似乎沒有用，因為referer spam直接攻擊我的<strong>refer/index.php</strong>，所以我一直想把refer目錄排除在記錄之外，不過設定來設定去都沒效果，最後我研究了一下程式碼，發現好像有問題，把他修改過後似乎正常了。</p>
-              <p>我有寫信告知原作者，目前正在等候回信，還是先把我修改的地方說一下，找到下面這段code：</p>
-              <pre>
-                <code>		if(is_array($pexclude)) {
+            <section itemprop="articleBody"><p>我有利用<a href="http://www.textism.com/tools/">Textism</a>的<a href="http://www.textism.com/tools/refer/">refer 2.1</a>在觀察訪客從哪來，不過因為會被referer spam攻擊，所以連結拿掉了。</p>
+
+<p>用了一段時間一直發現一個問題，就是設定裡面的<strong>dexclude</strong>（不紀錄的目錄）似乎沒有用，因為referer spam直接攻擊我的<strong>refer/index.php</strong>，所以我一直想把refer目錄排除在記錄之外，不過設定來設定去都沒效果，最後我研究了一下程式碼，發現好像有問題，把他修改過後似乎正常了。</p><p>我有寫信告知原作者，目前正在等候回信，還是先把我修改的地方說一下，找到下面這段code：</p>
+
+
+
+<pre><code>		if(is_array($pexclude)) {
 			foreach($pexclude as $a) {
 				$uri=preg_match("/".preg_quote($a)."/i",$uri)?'':$uri;
 			}
-		}</code>
-              </pre>
-              <p>大約是在123行的位置，在他的後面加上下面的code：</p>
-              <pre>
-                <code>// fix code
+		}</code></pre>
+
+
+
+<p>大約是在123行的位置，在他的後面加上下面的code：</p>
+
+
+
+<pre><code>// fix code
 		if(is_array($dexclude)) {
 			foreach($dexclude as $a) {
 				$uri=preg_match("/".preg_quote($a)."/i",$uri)?'':$uri;
 			}
 		}
 //
-</code>
-              </pre>
-              <p>這樣應該就可以了。</p>
-            </section>
+</code></pre>
+
+
+
+<p>這樣應該就可以了。</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -133,6 +139,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -153,19 +168,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -177,7 +183,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

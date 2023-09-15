@@ -81,10 +81,9 @@
                 <a href="/log/2014/12/10/latest-true-color-vim/">Latest True Color Vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
-              <pre>
-                <code>hg clone https://bitbucket.org/ZyX_I/vim
+            <section itemprop="articleBody"><p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
 cd vim
 cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
@@ -103,17 +102,18 @@ cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
 make
 make install
-</code>
-              </pre>
-              <p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
-              <pre>
-                <code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
+</code></pre>
+
+<p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
+
+<pre><code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
 let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
-</code>
-              </pre>
-              <p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
-              <p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
-            </section>
+</code></pre>
+
+<p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
+
+<p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -129,36 +129,33 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
                 <a href="/log/2014/12/04/typescript-definition/">關於 TypeScript</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15756461070/" title="type-error by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_c.jpg" width="515" height="131" alt="type-error" srcset="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_c.jpg 768w">
-                    <meta itemprop="width" content="515"/>
-                    <meta itemprop="height" content="131"/>
-                  </img>
-                </a>
-              </p>
-              <p>這幾年各種 compile to JavaScript language 盛行，大部分都是朝向讓程式碼更好寫的方向來前進，微軟在 2012 年也推出了 <a href="http://www.typescriptlang.org/">TypeScript</a> 這個 compile to JavaScript language，不過他的方向卻不一樣，TypeScript 是一個 JavaScript 的 superset，意思就是所有的 JavaScript 都是合法的 TypeScript，而 TypeScript 多了一些語法，加入了一些新功能，不過這些新的語法完全都不用也是可以正常的寫程式，給 TypeScript compiler 編譯。</p>
-              <p>TypeScript 顧名思義，它著重的在資料型別這個部分，JavaScript 是 weak type （弱型別）的語言，寫起來算是很方便，不過這個特性卻也是一些問題的來源，首先最常見到的是因為資料型態不嚴謹而造成的 bug，第二個常被提出來的就是為了實做 weak type 而造成的 performance 下降，因此一直有一些聲音在對抗弱型別這個特性，第一個是 Douglas Crockford 先出聲的，不過一開始是從程式碼的嚴謹和可靠性來說的，因為他當時主力在 <a href="http://www.jslint.com/">JSLint</a> 上，所以對於可靠的程式碼的要求比較高，JSLint 一度還把這項檢查放入，後來接著 Google V8 引擎也對沒有改變型別的變數作了最佳化，然後有 TypeScript，接著未來的 ES7 也可能會加入型別宣告的語法進來，這部分似乎是 Douglas 參與推動的，然後 Google 也打算推出 <a href="https://docs.google.com/document/d/11YUzC-1d0V1-Q3V0fQ7KSit97HnZoKVygDxpWzEYW0U/mobilebasic?pli=1&amp;viewopt=127">AtScript</a> 的樣子，AtScript 是 TypeScript 的 superset，更進一步增加了型別相關的特性進來。</p>
-              <p>TypeScript 是一個介於中間的語言，當然為了支援  JavaScript 不能直接把整個環境都改成強型別的，所以 TypeScript 的作法是讓形別的宣告變為可省略的，如果沒有宣告型別，則一切和以前一樣，如果你的變數有宣告型別，那個變數才會是強型別，在編譯的時候，如果把不同型別的值給它，就會跑出警告訊息，像是 JSLint 一樣。TypeScript 的型別宣告語法中，一些比較簡單的可以和程式碼一起寫：</p>
-              <pre>
-                <code>var str:string;
-</code>
-              </pre>
-              <p>可是稍微複雜一點，和物件有關係的話，就要獨立寫一段宣告的程式碼了：</p>
-              <pre>
-                <code>interface HotkeysProvider {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15756461070/" title="type-error by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_c.jpg" width="515" height="131" alt="type-error" srcset="https://farm8.staticflickr.com/7510/15756461070_d3b58d0aca_c.jpg 768w"><meta itemprop="width" content="515"/><meta itemprop="height" content="131"/></img></a></p>
+
+<p>這幾年各種 compile to JavaScript language 盛行，大部分都是朝向讓程式碼更好寫的方向來前進，微軟在 2012 年也推出了 <a href="http://www.typescriptlang.org/">TypeScript</a> 這個 compile to JavaScript language，不過他的方向卻不一樣，TypeScript 是一個 JavaScript 的 superset，意思就是所有的 JavaScript 都是合法的 TypeScript，而 TypeScript 多了一些語法，加入了一些新功能，不過這些新的語法完全都不用也是可以正常的寫程式，給 TypeScript compiler 編譯。</p>
+
+<p>TypeScript 顧名思義，它著重的在資料型別這個部分，JavaScript 是 weak type （弱型別）的語言，寫起來算是很方便，不過這個特性卻也是一些問題的來源，首先最常見到的是因為資料型態不嚴謹而造成的 bug，第二個常被提出來的就是為了實做 weak type 而造成的 performance 下降，因此一直有一些聲音在對抗弱型別這個特性，第一個是 Douglas Crockford 先出聲的，不過一開始是從程式碼的嚴謹和可靠性來說的，因為他當時主力在 <a href="http://www.jslint.com/">JSLint</a> 上，所以對於可靠的程式碼的要求比較高，JSLint 一度還把這項檢查放入，後來接著 Google V8 引擎也對沒有改變型別的變數作了最佳化，然後有 TypeScript，接著未來的 ES7 也可能會加入型別宣告的語法進來，這部分似乎是 Douglas 參與推動的，然後 Google 也打算推出 <a href="https://docs.google.com/document/d/11YUzC-1d0V1-Q3V0fQ7KSit97HnZoKVygDxpWzEYW0U/mobilebasic?pli=1&amp;viewopt=127">AtScript</a> 的樣子，AtScript 是 TypeScript 的 superset，更進一步增加了型別相關的特性進來。</p>
+
+<p>TypeScript 是一個介於中間的語言，當然為了支援  JavaScript 不能直接把整個環境都改成強型別的，所以 TypeScript 的作法是讓形別的宣告變為可省略的，如果沒有宣告型別，則一切和以前一樣，如果你的變數有宣告型別，那個變數才會是強型別，在編譯的時候，如果把不同型別的值給它，就會跑出警告訊息，像是 JSLint 一樣。TypeScript 的型別宣告語法中，一些比較簡單的可以和程式碼一起寫：</p>
+
+<pre><code>var str:string;
+</code></pre>
+
+<p>可是稍微複雜一點，和物件有關係的話，就要獨立寫一段宣告的程式碼了：</p>
+
+<pre><code>interface HotkeysProvider {
     template: string;
     includeCheatSheet: boolean;
     get(combo: string): ng.hotkeys.Hotkey;
     toggleCheatSheet(): void;
 }
-</code>
-              </pre>
-              <p>這段宣告其實是完全獨立於程式碼的邏輯本身，全部砍掉程式也可以運作，本身不牽涉到任何邏輯，所以可以完全獨立出去，在 TypeScript 中稱為 type definition（型別定義） ，常用的副檔名是 <code>.d.ts</code>，感覺上很像是 C 語言的 header file，其實我對於 TypeScript 本身的發展是不太樂觀的，覺得他的佔有率永遠不會起來，但是它的型別定義這塊我到覺得是大有可為，主因是目前沒有比較在業界有使用的到型別定義的語言，寫標準所用的 <a href="http://www.w3.org/TR/WebIDL/#idl">WebIDL</a> 普極度實在很低，相關的工具開發和支援實在很少，反而 .d.ts 檔知道的人比較多，編譯器也都有了，而且多虧 TypeScript 有開放原碼，事實上也有其它專案有借助 TypeScript 定義檔，像是我在用的 <a href="http://ternjs.net/">TernJS</a> 這個 JavaScript 自動補完工具，就有提供一個 <a href="https://github.com/marijnh/tern/blob/master/bin/from_ts">from_ts 工具</a> 可以把 .d.ts 檔轉成它可以讀的定義檔案，加上有 <a href="http://definitelytyped.org/">DefinitelyType</a> 專案，各種不同 JavaScript Library 的定義檔都已經有了，所以 TernJS 就可以利用這些資源，提供各種 Library 的自動補完支援了，不過前提是使用者要知道有這些東西，官方文件其實沒有把這塊講得這麼連貫。</p>
-              <p>除了 TernJS 的應用外，我相信這些定義檔還可以讓編輯器或是 IDE 可以提供更多的輔助功能，像是或許可以拿來產生編輯器用的 syntax 定義檔，在編寫程式時直接提出警告等等，其實現在想的到的這些功能微軟的 Visuall Studio 應該都有了，不過有個公定格式做中介還是比較方便第三方應用，雖然目前好像只有看到 TernJS 的第三方應用，有些可惜，而且微軟的 Compiler 常常偷改，TernJS 提供的 <code>from_ts</code> 是需要使用到一些 compiler 內部的 function 才能用的，而從我接觸 TernJS 以來，微軟至少已經改過兩次改很大造成 <code>from_ts</code>完全不能用的情形。</p>
-              <p>總之微軟的 TypeScript 我覺得使用人數也不會有什麼大變化，但是定義檔 <code>.d.ts</code> 的部分倒是比較可以期待，變成半個 JS 用的標準介面定義文件格式，競爭對手的話應該是 WebIDL 吧，不過 WebIDL 比較不親切，也不太有人去實做和推廣他的應用，ES7 的型別暗示其實是只是針對那五個基本型別為主，沒有像 WebIDL 和 TypeScript 那樣完整。</p>
-            </section>
+</code></pre>
+
+<p>這段宣告其實是完全獨立於程式碼的邏輯本身，全部砍掉程式也可以運作，本身不牽涉到任何邏輯，所以可以完全獨立出去，在 TypeScript 中稱為 type definition（型別定義） ，常用的副檔名是 <code>.d.ts</code>，感覺上很像是 C 語言的 header file，其實我對於 TypeScript 本身的發展是不太樂觀的，覺得他的佔有率永遠不會起來，但是它的型別定義這塊我到覺得是大有可為，主因是目前沒有比較在業界有使用的到型別定義的語言，寫標準所用的 <a href="http://www.w3.org/TR/WebIDL/#idl">WebIDL</a> 普極度實在很低，相關的工具開發和支援實在很少，反而 .d.ts 檔知道的人比較多，編譯器也都有了，而且多虧 TypeScript 有開放原碼，事實上也有其它專案有借助 TypeScript 定義檔，像是我在用的 <a href="http://ternjs.net/">TernJS</a> 這個 JavaScript 自動補完工具，就有提供一個 <a href="https://github.com/marijnh/tern/blob/master/bin/from_ts">from_ts 工具</a> 可以把 .d.ts 檔轉成它可以讀的定義檔案，加上有 <a href="http://definitelytyped.org/">DefinitelyType</a> 專案，各種不同 JavaScript Library 的定義檔都已經有了，所以 TernJS 就可以利用這些資源，提供各種 Library 的自動補完支援了，不過前提是使用者要知道有這些東西，官方文件其實沒有把這塊講得這麼連貫。</p>
+
+<p>除了 TernJS 的應用外，我相信這些定義檔還可以讓編輯器或是 IDE 可以提供更多的輔助功能，像是或許可以拿來產生編輯器用的 syntax 定義檔，在編寫程式時直接提出警告等等，其實現在想的到的這些功能微軟的 Visuall Studio 應該都有了，不過有個公定格式做中介還是比較方便第三方應用，雖然目前好像只有看到 TernJS 的第三方應用，有些可惜，而且微軟的 Compiler 常常偷改，TernJS 提供的 <code>from_ts</code> 是需要使用到一些 compiler 內部的 function 才能用的，而從我接觸 TernJS 以來，微軟至少已經改過兩次改很大造成 <code>from_ts</code>完全不能用的情形。</p>
+
+<p>總之微軟的 TypeScript 我覺得使用人數也不會有什麼大變化，但是定義檔 <code>.d.ts</code> 的部分倒是比較可以期待，變成半個 JS 用的標準介面定義文件格式，競爭對手的話應該是 WebIDL 吧，不過 WebIDL 比較不親切，也不太有人去實做和推廣他的應用，ES7 的型別暗示其實是只是針對那五個基本型別為主，沒有像 WebIDL 和 TypeScript 那樣完整。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -174,14 +171,12 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
                 <a href="/log/2014/12/03/hide-apache-version/">隱藏 Apache 版本號</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>之前有想過是不是能隱藏 HTTP Server 的資訊，不過 <strong>Server</strong> 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：</p>
-              <pre>
-                <code>ServerSignature Off
+            <section itemprop="articleBody"><p>之前有想過是不是能隱藏 HTTP Server 的資訊，不過 <strong>Server</strong> 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：</p>
+
+<pre><code>ServerSignature Off
 ServerTokens Prod
-</code>
-              </pre>
-            </section>
+</code></pre>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -204,7 +199,7 @@ ServerTokens Prod
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -216,7 +211,7 @@ ServerTokens Prod
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

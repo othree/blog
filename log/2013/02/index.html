@@ -81,17 +81,10 @@
                 <a href="/log/2013/02/26/ie10-for-windows7/">IE10 for Windows 7</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8510660798/" title="IE10 vs Aurora on Text rendering by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg" width="996" height="610" alt="IE10 vs Aurora on Text rendering" srcset="https://farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg 1024w">
-                    <meta itemprop="width" content="996"/>
-                    <meta itemprop="height" content="610"/>
-                  </img>
-                </a>
-              </p>
-              <p>剛剛正式 Release 了，第一眼印像是文字渲染方式不太一樣，和 Aurora 比一下。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8510660798/" title="IE10 vs Aurora on Text rendering by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg" width="996" height="610" alt="IE10 vs Aurora on Text rendering" srcset="https://farm9.staticflickr.com/8509/8510660798_b86b070bef_b.jpg 1024w"><meta itemprop="width" content="996"/><meta itemprop="height" content="610"/></img></a></p>
+
+<p>剛剛正式 Release 了，第一眼印像是文字渲染方式不太一樣，和 Aurora 比一下。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -107,12 +100,14 @@
                 <a href="/log/2013/02/26/eregexvim-260/">eregex.vim 2.60</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
-              <p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
-              <p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
-              <p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
-            </section>
+            <section itemprop="articleBody"><p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
+
+<p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
+
+<p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
+
+<p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -128,22 +123,14 @@
                 <a href="/log/2013/02/11/vim-javascript-libraries/">Vim JavaScript Libraries Syntax</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8462979359/" title="JavaScript Libraries Syntax by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 1024w">
-                    <meta itemprop="width" content="1018"/>
-                    <meta itemprop="height" content="840"/>
-                  </img>
-                </a>
-              </p>
-              <p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
-              <ul>
-                <li>
-                  <a href="https://github.com/othree/javascript-libraries-syntax.vim">Github othree/javascript-libraries-syntax.vim</a>
-                </li>
-              </ul>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8462979359/" title="JavaScript Libraries Syntax by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg" width="1018" height="840" alt="JavaScript Libraries Syntax" srcset="https://farm9.staticflickr.com/8373/8462979359_27480834ea_b.jpg 1024w"><meta itemprop="width" content="1018"/><meta itemprop="height" content="840"/></img></a></p>
+
+<p>我的新 Vim Plugin，前幾天整理 Vim 設定和修 plugin 時順手弄的，<a href="http://www.vim.org/scripts/script.php?script_id=4428">JavaScript Libraries Syntax</a>，說順手其實也不太順，為了支援 <a href="https://blog.othree.net/log/2013/02/08/vim-syntax-complete/">SyntaxComplete</a> 以及不要和現有 JavaScript syntax 衝突，還是花很多時間查資料和測試，目前支援的 library 有 <a href="http://jquery.com/">jQuery</a>、<a href="http://underscorejs.org/">underscore.js</a>、<a href="http://backbonejs.org/">Backbone.js</a> 和 <a href="http://gkz.github.com/prelude-ls/">prelude.ls</a>，其中 jQuery 是拿之前就 <a href="http://www.vim.org/scripts/script.php?script_id=2416">有的</a> 為基礎修改，其他都是新寫的。支援 SyntaxComplete 的語言有 JavaScript、<a href="http://coffeescript.org/">CoffeeScript</a> 和 <a href="http://livescript.net/">LiveScript</a>，安裝建議用 <a href="http://www.vim.org/scripts/script.php?script_id=2332">pathogen</a> 或是 <a href="https://github.com/gmarik/vundle">vundle</a>，專案放在 Github 上，patch welcome。</p>
+
+<ul>
+<li><a href="https://github.com/othree/javascript-libraries-syntax.vim">Github othree/javascript-libraries-syntax.vim</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -159,22 +146,23 @@
                 <a href="/log/2013/02/08/vim-syntax-complete/">Vim Syntax Complete</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
-              <pre>
-                <code>setlocal omnifunc=syntaxcomplete#Complete
-</code>
-              </pre>
-              <p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
-              <p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
-              <pre>
-                <code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
+            <section itemprop="articleBody"><p>Vim 的 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-omni">Omni completion</a> 功能推出之時，同時有提供一個 <a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#ft-syntax-omni">syntaxcomplete</a> 的 function 可以拿 syntax highlight 裡面的關鍵字來做自動完成，設定方法很簡單：</p>
+
+<pre><code>setlocal omnifunc=syntaxcomplete#Complete
+</code></pre>
+
+<p>這樣只要觸發 omnicomplete 的動作就會觸發這個 function ，列出 syntax 裡面有定義的關鍵字，不過他有一點小限制，就是該 syntax 設定檔裡面的 syntax group 名稱要是該檔案類型的 filetype 開頭的，例如 javascript 檔案就要 javascriptMethods, javascriptObjects 才會列入，如果是 jsPrototype, styles 為名稱的 group 就不會列出來，這其實也是 vim syntax file 寫作的習慣之一。</p>
+
+<p>而除了這個限制之外，因為設定是直接用上 omnifunc，結果就是其他有自己專屬的 omnifunc 的語言就無法同時使用到 syntaxcomplete 的功能，不然就是要把觸發的指令切開，設定成不同的快速鍵。不過使用上就沒這麼方便，還好我用的 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 有支援使用者自定義的函數，定義的函數介面和 omni complete functilon 一樣，所以我就加上兩行設定：</p>
+
+<pre><code>let g:acp_behaviorUserDefinedMeets = 'acp#meetsForKeyword'
 let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
-</code>
-              </pre>
-              <p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
-              <p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
-            </section>
+</code></pre>
+
+<p>結果就可以用 autocomplpop 內建的的 keyword 觸發條件來觸發 syntax complete，還算蠻符合需求的。</p>
+
+<p>最後回來看一下 syntaxcomplete，這個 function 雖然是 Vim 內建的，不過其實也有放在 <a href="http://www.vim.org/scripts/script.php?script_id=3172">vimscript</a> 上，而且上面還有比較新的版本，最近我有跟作者聯絡，或許還會再有新功能吧。另外就是 autocomplpop 很久沒更新了，所以我有 <a href="https://github.com/othree/vim-autocomplpop">fork 一版</a>出來自己加了些給 js, coffee, css 檔的預設行為，好像還修了一個 bug，本來有想接上新版的 <a href="https://github.com/garbas/vim-snipmate">snipMate</a>，不過比想像的複雜不少，所以暫時放棄了。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -197,7 +185,7 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -209,7 +197,7 @@ let g:acp_behaviorUserDefinedFunction = 'syntaxcomplete#Complete'
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

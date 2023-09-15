@@ -85,29 +85,28 @@
                 <a itemprop="mainEntityOfPage" href="/log/2018/12/27/browser-diversity/">瀏覽器多樣性 Browser Diversity</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子大事就是微軟要放棄自家的 EdgeHTML 引擎，轉用 Chromium 專案為基礎來開發新版的 Edge Browser 了，風聲剛出來的時候，我注意到微軟官方完全沒做出回應，也沒有任何微軟員工出來講話，加上有些媒體早就發現到有 Edge 的開發成員在貢獻 Chromium，我就覺得是真的了，後來十二月六日微軟<a href="https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/">正式回應</a>，還有一份比較長的<a href="https://github.com/MicrosoftEdge/MSEdge">聲明</a>，Mozilla 也有<a href="https://blog.mozilla.org/blog/2018/12/06/goodbye-edge/">回應</a>，其實這件事情對於網路生態算是很大的衝擊，不過一般使用者可能沒什麼感覺，加上都沒看到中文的文章寫這件事情的影響，所以只好我來寫一下了。</p>
-              <p>首先，我講可能沒什麼公信力，所以可以直接來看一下 Google(?) 其中一集 HTTP 203 短片，標題是 Browser Monoculture，Monoculture 剛好是 Diversity 的相對，mono 是單一，單聲道或是黑白影像都是用 mono，culture 就是文化，Monoculture 的意思自然可以明白：</p>
-              <div class="embed_16_9">
-                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IskiTVqHp18" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"/>
-              </div>
-              <p>事實上，當微軟放棄 EdgeHTML 引擎之後，現在整個生態圈只剩下 Firefox 的 Gecko 引擎和 WebKit 家族（Safari 的 WebKit 和 Chrome 的 Blink ），而 WebKit 家族現在的市佔率已經是超過八成的獨大局面，行動裝置領域更是嚴重，如果扣除 iOS 的 Mobile Safari 則幾乎都是 Chrome 的天下了，幾乎是回到 IE 壟斷的時光，不過其實我覺得現在狀況又比那時候更險峻一點，有兩個問題：第一個是現在的 Web Platform 已經太複雜了，HTML 本身還算是單純的部分，但是各種 CSS、Web API 的推陳出新，再加上安全性、親和力、網路連線、Extensible Web 等等，到底有多少東西呢？可以參考我之前貼過的 <a href="https://blog.othree.net/log/2018/09/16/web-platform/">Web Platform</a> 那篇文章中 <a href="https://www.chromestatus.com/features">Google Chrome 的 Platform Status</a>，光這邊登記在案的，現在就有 1255 個功能，還有不少面向的東西不會列在這邊，像是效能、開發工具、WebDriver 等，其實我已經不認為現在有什麼其他第三方勢力還有辦法維護一個獨自的瀏覽器引擎了，就算是 Google 一開始也是從 WebKit，Mozilla 也是從 Gecko 來發展，微軟今天放棄繼續開發 EdgeHTML 之後，可能過一兩年就會讓它難以再次跟上標準的發展，其實微軟當年能從把 IE 重構成現在的 Edge 我覺得實在很厲害了，不過未來這種事情難度只會越來越高。</p>
-              <p>第二個是如果 Chrome 已經佔有率這麼高，它是不是可以自己開始亂搞加功能呢？就像是以前的 IE。答案其實是<strong>可以</strong>，只是現在手法已經進化了，以下舉個例子，不過先消毒，我不是指控 Google Chrome 團隊這件事是 be evil，而是假設要 be evil，這已經是可行的方法，或是換個角度，他們其實不覺得自己在 be evil，只是結果就是這樣了。</p>
-              <p>我要舉的例子是前兩週 Chrome 發表了他們支援 Background Fetch 這個新標準的<a href="https://developers.google.com/web/updates/2018/12/background-fetch">消息</a>，我第一時間反應其實是，WTF 我怎麼完全沒聽過這東西，然後我就去查查怎麼回事，然後了解到：</p>
-              <ol>
-                <li>看介紹大概就了解這個需求確實是有的</li>
-                <li>Chrome 外其他家都還沒有說要支援（根據 <a href="https://www.chromestatus.com/feature/5712608971718656">Chrome Platform Status</a>）</li>
-                <li>標準文件的兩位編輯都是 Google 的人，主要應該是 Jake Archibald</li>
-                <li>WICG <a href="https://discourse.wicg.io/t/proposal-background-fetch/1994">那邊</a>是去年二月也是由 Jake Archibald 提的，然後 W3C 那邊根據 blink-dev 的正向回饋就決定接收提案了</li>
-              </ol>
-              <p>這狀況有點讓我聯想到「進化的獨裁者」，一切該有的過程其實都有，但是就都是他們的人，自己提案說有這需求，有寫好文件了，在自己家的討論區得到正向回饋，然後實做起來馬上就有市場 80% 的支援度了，這樣要不要直接算正式的網路標準了，其他家（aka Firefox）又情何以堪。事實上 Chrome 這樣衝網路標準的狀況也好一陣子了，早在 2015 年 ppk 就已經有提出對於標準發展太快的疑慮而發了一篇 <a href="https://www.quirksmode.org/blog/archives/2015/07/stop_pushing_th.html">Stop pushing the web forward</a>。</p>
-              <p>而除了快速的發展新功能之外，還有一種狀況是擱置他們覺得不重要的 Web API 開發，然後因為已經獨大了，所以開發者就算很想要這個新的 Web API 也是無能為力，這其實也就是 HTTP 203 短片有提到的，多樣性意味著開發者有選擇的權力，而有這個力量才能讓兩邊對等。</p>
-              <p>而除了這兩個問題之外，也有人提出我之前沒想過的安全性問題，剛好就在微軟發佈消息之後沒多久就爆發出 <a href="https://www.zdnet.com/article/sqlite-bug-impacts-thousands-of-apps-including-all-chromium-based-browsers/">SQLite 漏洞</a>，ZDNet 的標題提到影響到所有以 Chromium 為基礎的瀏覽器，這也是一個我之前沒想到過的問題，如果獨大的軟體有嚴重的漏洞，那一下就直接影響超多人，不過其實這次的漏洞連 Firefox 也有受影響，然後也還好不是直接可以遠端就下手的漏洞，其實佔有率高的軟體或服務都一直是駭客的目標，想必 Chromium 的 Blink 核心之後勢必會更加受到駭客關注吧。</p>
-              <p>這陣子這個圈子很多人都已經發表過看法了，像是 <a href="https://www.quirksmode.org/blog/archives/2018/12/chromedge_and_h.html">ppk</a> 和 <a href="https://www.zeldman.com/2018/12/07/browser-diversity-starts-with-us/">Zeldman</a> 都出來發表意見，如果有人不知道這兩位是誰，趁機介紹一下，Jeffery Zeldman 是 <a href="https://en.wikipedia.org/wiki/Designing_with_Web_Standards">Designing with Web Standards</a> 的作者，A List Apart（A Book Apart, An Event Apart 等）和 <a href="https://www.webstandards.org/">Web Standards Project</a> 的發起人，也是當年推動瀏覽器實做應該回歸網路標準的意見領袖，ppk 也是那個時期蠻活躍的，做了很多相容性測試，著有 ppk on JavaScript，當年是很棒的入門書。大部分的人其實都是針對 monoculture 論述，然後建議大家現在就開始行動，包括確保你的網站支援 Firefox、開始使用 Firefox 等等，不過 Lea Verou 有則評論則是針對那些覺得少一個瀏覽器要測試很高興的開發者，講的比較重：</p>
-              <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">If you think a WebKit monoculture is good for web developers or the Web, you're incredibly short-sighted (and likely inexperienced), sorry.</p>- Lea Verou (@LeaVerou) <a href="https://twitter.com/LeaVerou/status/301727973273391104?ref_src=twsrc%5Etfw">February 13, 2013</a></blockquote>
-              <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
-              <p>至於事主之一的 Google 則就裝死當沒他的事。總之，現在雖然 Firefox 還有個 10% 左右的佔有率，光看數字還比 IE 那時候好，但是我卻覺得情勢更加險峻，很難再有新的競爭者出來，只能希望 Google  don't be evil，還有 Mozilla 能夠堅持下去，真是有點想念還有五大主流瀏覽器的時候啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>前陣子大事就是微軟要放棄自家的 EdgeHTML 引擎，轉用 Chromium 專案為基礎來開發新版的 Edge Browser 了，風聲剛出來的時候，我注意到微軟官方完全沒做出回應，也沒有任何微軟員工出來講話，加上有些媒體早就發現到有 Edge 的開發成員在貢獻 Chromium，我就覺得是真的了，後來十二月六日微軟<a href="https://blogs.windows.com/windowsexperience/2018/12/06/microsoft-edge-making-the-web-better-through-more-open-source-collaboration/">正式回應</a>，還有一份比較長的<a href="https://github.com/MicrosoftEdge/MSEdge">聲明</a>，Mozilla 也有<a href="https://blog.mozilla.org/blog/2018/12/06/goodbye-edge/">回應</a>，其實這件事情對於網路生態算是很大的衝擊，不過一般使用者可能沒什麼感覺，加上都沒看到中文的文章寫這件事情的影響，所以只好我來寫一下了。</p>
+<p>首先，我講可能沒什麼公信力，所以可以直接來看一下 Google(?) 其中一集 HTTP 203 短片，標題是 Browser Monoculture，Monoculture 剛好是 Diversity 的相對，mono 是單一，單聲道或是黑白影像都是用 mono，culture 就是文化，Monoculture 的意思自然可以明白：</p>
+<div class="embed_16_9">
+  <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/IskiTVqHp18" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"/>
+</div>
+<p>事實上，當微軟放棄 EdgeHTML 引擎之後，現在整個生態圈只剩下 Firefox 的 Gecko 引擎和 WebKit 家族（Safari 的 WebKit 和 Chrome 的 Blink ），而 WebKit 家族現在的市佔率已經是超過八成的獨大局面，行動裝置領域更是嚴重，如果扣除 iOS 的 Mobile Safari 則幾乎都是 Chrome 的天下了，幾乎是回到 IE 壟斷的時光，不過其實我覺得現在狀況又比那時候更險峻一點，有兩個問題：第一個是現在的 Web Platform 已經太複雜了，HTML 本身還算是單純的部分，但是各種 CSS、Web API 的推陳出新，再加上安全性、親和力、網路連線、Extensible Web 等等，到底有多少東西呢？可以參考我之前貼過的 <a href="https://blog.othree.net/log/2018/09/16/web-platform/">Web Platform</a> 那篇文章中 <a href="https://www.chromestatus.com/features">Google Chrome 的 Platform Status</a>，光這邊登記在案的，現在就有 1255 個功能，還有不少面向的東西不會列在這邊，像是效能、開發工具、WebDriver 等，其實我已經不認為現在有什麼其他第三方勢力還有辦法維護一個獨自的瀏覽器引擎了，就算是 Google 一開始也是從 WebKit，Mozilla 也是從 Gecko 來發展，微軟今天放棄繼續開發 EdgeHTML 之後，可能過一兩年就會讓它難以再次跟上標準的發展，其實微軟當年能從把 IE 重構成現在的 Edge 我覺得實在很厲害了，不過未來這種事情難度只會越來越高。</p>
+<p>第二個是如果 Chrome 已經佔有率這麼高，它是不是可以自己開始亂搞加功能呢？就像是以前的 IE。答案其實是<strong>可以</strong>，只是現在手法已經進化了，以下舉個例子，不過先消毒，我不是指控 Google Chrome 團隊這件事是 be evil，而是假設要 be evil，這已經是可行的方法，或是換個角度，他們其實不覺得自己在 be evil，只是結果就是這樣了。</p>
+<p>我要舉的例子是前兩週 Chrome 發表了他們支援 Background Fetch 這個新標準的<a href="https://developers.google.com/web/updates/2018/12/background-fetch">消息</a>，我第一時間反應其實是，WTF 我怎麼完全沒聽過這東西，然後我就去查查怎麼回事，然後了解到：</p>
+<ol>
+<li>看介紹大概就了解這個需求確實是有的</li>
+<li>Chrome 外其他家都還沒有說要支援（根據 <a href="https://www.chromestatus.com/feature/5712608971718656">Chrome Platform Status</a>）</li>
+<li>標準文件的兩位編輯都是 Google 的人，主要應該是 Jake Archibald</li>
+<li>WICG <a href="https://discourse.wicg.io/t/proposal-background-fetch/1994">那邊</a>是去年二月也是由 Jake Archibald 提的，然後 W3C 那邊根據 blink-dev 的正向回饋就決定接收提案了</li>
+</ol>
+<p>這狀況有點讓我聯想到「進化的獨裁者」，一切該有的過程其實都有，但是就都是他們的人，自己提案說有這需求，有寫好文件了，在自己家的討論區得到正向回饋，然後實做起來馬上就有市場 80% 的支援度了，這樣要不要直接算正式的網路標準了，其他家（aka Firefox）又情何以堪。事實上 Chrome 這樣衝網路標準的狀況也好一陣子了，早在 2015 年 ppk 就已經有提出對於標準發展太快的疑慮而發了一篇 <a href="https://www.quirksmode.org/blog/archives/2015/07/stop_pushing_th.html">Stop pushing the web forward</a>。</p>
+<p>而除了快速的發展新功能之外，還有一種狀況是擱置他們覺得不重要的 Web API 開發，然後因為已經獨大了，所以開發者就算很想要這個新的 Web API 也是無能為力，這其實也就是 HTTP 203 短片有提到的，多樣性意味著開發者有選擇的權力，而有這個力量才能讓兩邊對等。</p>
+<p>而除了這兩個問題之外，也有人提出我之前沒想過的安全性問題，剛好就在微軟發佈消息之後沒多久就爆發出 <a href="https://www.zdnet.com/article/sqlite-bug-impacts-thousands-of-apps-including-all-chromium-based-browsers/">SQLite 漏洞</a>，ZDNet 的標題提到影響到所有以 Chromium 為基礎的瀏覽器，這也是一個我之前沒想到過的問題，如果獨大的軟體有嚴重的漏洞，那一下就直接影響超多人，不過其實這次的漏洞連 Firefox 也有受影響，然後也還好不是直接可以遠端就下手的漏洞，其實佔有率高的軟體或服務都一直是駭客的目標，想必 Chromium 的 Blink 核心之後勢必會更加受到駭客關注吧。</p>
+<p>這陣子這個圈子很多人都已經發表過看法了，像是 <a href="https://www.quirksmode.org/blog/archives/2018/12/chromedge_and_h.html">ppk</a> 和 <a href="https://www.zeldman.com/2018/12/07/browser-diversity-starts-with-us/">Zeldman</a> 都出來發表意見，如果有人不知道這兩位是誰，趁機介紹一下，Jeffery Zeldman 是 <a href="https://en.wikipedia.org/wiki/Designing_with_Web_Standards">Designing with Web Standards</a> 的作者，A List Apart（A Book Apart, An Event Apart 等）和 <a href="https://www.webstandards.org/">Web Standards Project</a> 的發起人，也是當年推動瀏覽器實做應該回歸網路標準的意見領袖，ppk 也是那個時期蠻活躍的，做了很多相容性測試，著有 ppk on JavaScript，當年是很棒的入門書。大部分的人其實都是針對 monoculture 論述，然後建議大家現在就開始行動，包括確保你的網站支援 Firefox、開始使用 Firefox 等等，不過 Lea Verou 有則評論則是針對那些覺得少一個瀏覽器要測試很高興的開發者，講的比較重：</p>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">If you think a WebKit monoculture is good for web developers or the Web, you're incredibly short-sighted (and likely inexperienced), sorry.</p>- Lea Verou (@LeaVerou) <a href="https://twitter.com/LeaVerou/status/301727973273391104?ref_src=twsrc%5Etfw">February 13, 2013</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
+<p>至於事主之一的 Google 則就裝死當沒他的事。總之，現在雖然 Firefox 還有個 10% 左右的佔有率，光看數字還比 IE 那時候好，但是我卻覺得情勢更加險峻，很難再有新的競爭者出來，只能希望 Google  don't be evil，還有 Mozilla 能夠堅持下去，真是有點想念還有五大主流瀏覽器的時候啊。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -132,6 +131,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -152,19 +160,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -176,7 +175,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

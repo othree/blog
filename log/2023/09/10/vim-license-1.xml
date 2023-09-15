@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="000995" baseName="vim-license-1">Vim License 的故事（上）</b:listData>
+
+			<b:previous>
+				<b:mTitle>Remove Disqus</b:mTitle>
+				<b:mDate>2023-08-23</b:mDate>
+				<b:mBase>remove-disqus</b:mBase>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>Vim License 的故事（下）</b:mTitle>
+				<b:mDate>2023-09-11</b:mDate>
+				<b:mBase>vim-license-2</b:mBase>
+			</b:next>
+
+		</b:entriesMeta>
+		<b:entry entryID="000995" baseName="vim-license-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-10</b:date>
+				<b:time>23:32:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>Vim License 的故事（上）</b:title>
+			<b:content>
+				<b:summary> 這篇是我去年 COSCUP 分享的文字版，拖稿許久終於寫出來了，以下正文開始。 Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub 發佈了一個小網站 叫 choosealicense.com，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。 而到了 2016 年，GitHub 更進一步提供了授權條款的偵測功能，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。 在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
+<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
+<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
+</b:mainContent>
+				<b:extendContent><p>我一直把這念頭放在心裡，後來終於有一天有時間有衝動，認真去研究要怎樣新增支援的授權條款，簡單來說，GitHub 用來偵測專案所使用的授權條款的工具，是一套用 Ruby 寫的，叫做 <a href="https://licensee.github.io/licensee/">Licensee</a>（我都當成 license + see）的工具，而這個工具所使用來參考比對的條款文本，則是從 choosealicense 專案來的（使用 git submodule 引入），如果要加新的授權條款到 choosealicense 裡面，有些<a href="https://github.com/github/choosealicense.com/blob/gh-pages/CONTRIBUTING.md#adding-a-license">條件</a>要先達到：</p>
+<ul>
+<li>要有 SPDX License Identifier</li>
+<li>要名列在幾個主要的開源授權清單中</li>
+<li>至少要有一千個專案使用它</li>
+<li>要列舉三個使用該授權條款的有名的專案（作為網站上的範例）</li>
+</ul>
+<p>我研究了一會兒，大部分條件沒問題，就是那個一千個專案的需求我也不是很確定，根據搜尋結果可以保證有數百個，但是有沒有一千個實在無法保證，不過我還是去開了個 <a href="https://github.com/github/choosealicense.com/issues/498">issue</a> 建議說要加入 Vim License，其中一千個專案那個條件的部分則是提供我的所知（各種搜尋結果和 Vim 生態的狀態，推論應該會有達標），時間是 2017/03/26，當時我想的是 Vim 這麼有名，應該開個需求就會有人處理了吧，然後 choosealicense 的主要貢獻者之一 Mike Linksvayer，跟我來往幾次討論之後，我就放置在那幾乎忘了他，結果過了一年後，那個 issue 就因沒有動靜被關掉了！</p>
+<p>我開的第一張 issue 被關掉的當下當然是有點震驚的，直白一點的說我心中的想法大概是：「原來 Vim 這麼有名也是沒有特權的啊！」總之之後我還是繼續放著，直到大概又過了一年，到了 2019 年六月，我才又開始重新投入到這件事情，既然開 issue 沒人做，那就只好改開 PR 了，於是我才開始認真的研究，目標當然就是把 Vim License 推進 choosealicense 裡面，所以就是先認真的要提供的文本檔案的格式，首先我發現的是，授權條款的文本裡面，除了那些 metadata 之外，文本本身是可以有替換字串（substitution）的，像是常見的年份、名稱等：</p>
+<pre><code>MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+...
+</code></pre>
+<p>其中，用 <code>[]</code> 包起來的像是 <code>[year]</code>、<code>[fullname]</code> 就是要替換掉的字串，發現這點之後，我也覺得需要重新檢視 Vim License 的文字是不是也有這種地方，然而一旦認真看待這點，便發現問題不小，而這個問題就是 Vim License 不是 context free 的，而是高度和 Vim 耦合在一起的，一般而言，開源授權都是 context free 的，怎樣算是 context free 的授權條款呢？就是那個條款文字要拿去哪個專案，都可以直接用，不需要去修改文字內容，頂多是修改頭尾的名稱、年份和所有權人的資訊，但是 Vim License 不是，光是 <strong>Vim</strong> 這個單字，就在文本內出現了 29 次，而這些 Vim 單字，大部分時候代表的是使用這個授權的軟體的名稱，所以假設我今天是 vim-pathogen 要使用 Vim License，那就應該要在 LICENSE 文件內把 Vim 單字都換成 pathogen.vim 才對，不過在這堆 Vim 之中，還有一些地方是代表不一樣的意義，這些地方就是在作為 <strong>Vim Maintainer</strong> 的時候，所以到底，這麼多的 Vim 都應該要改為替換的字串嗎？為此我就去問了 Vim 的作者，當然同時也是 Vim License 的作者 Bram Moolenaar，其實我蠻快就<a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">得到答案</a>了，結論就是，Vim Maintainer 需要保留原樣，但是其他時候在作為代表使用該授權的軟體時，<strong>Vim</strong> 應該要改為該軟體的名稱。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177608139/" title="Discuss Vim License with Bram by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177608139_7e1d12cf42_b.jpg" width="1024" height="684" alt="Discuss Vim License with Bram" srcset="https://live.staticflickr.com/65535/53177608139_fd6999e91a_k.jpg 2x" /></a></p>
+<p>那麼為什麼會出現 Vim Maintainer 呢？這邊就要來介紹一下 Vim License 的內容了，條款內容簡單翻譯（非正式翻譯，請勿用於法律用途）如下：</p>
+<ol>
+<li>可以自由任意的散佈未修改過的 Vim；</li>
+<li>如果要散佈修改過的 Vim，需要符合以下條件之一；
+<ol>
+<li>發佈時同時提供聯絡方式，當 Vim Maintainer 向你索取你的修改，你必須無償提供，並且 Vim Maintainer 保留把你的修改加進官方版本 Vim 的權力；</li>
+<li>如果你取得經由前一條所述方式散佈的 Vim，你可以不受限制的散佈該版本，如果有新的修改，則需依照相同的方式散佈；</li>
+<li>發佈時同時提供和原始版本的原始碼差異；</li>
+<li>使用前一條的方式發佈時，符合以下所有條件時可以不用提供原始碼；
+<ul>
+<li>你所使用的授權條款不會讓 Vim Maintainer 無法免費取得你修改的內容；</li>
+<li>你必須保留你修改的內容（原始碼的差異）至少三年，如果使用者或是 Vim Maintainer 在這段時間內跟你索取修改的內容，你必須要提供；</li>
+<li>你必須確保你所提供的聯絡方式在三年內是有效的。</li>
+</ul>
+</li>
+<li>如果你的修改使用 GPL，你可以使用 GPLv2 發佈你修改過的版本。</li>
+</ol>
+</li>
+<li>如果你發佈修改過的 Vim，強烈建議你使用 Vim License 並把修改的原始碼提供給 Vim Maintainer；</li>
+<li>不可把授權條款移除。</li>
+</ol>
+<p>仔細看下來，其實這份文件，主要目標就是在確保 Vim Maintainer 能取得其他人的修改，如果不是 Vim 使用這份授權條款的話，不管你使用這份條款的軟體是什麼，有修改再發佈的話，你都必須要讓 Vim Maintainer 可以無償取得你的軟體原始碼，並且 Vim Maintainer 可以決定是否要給原軟體使用，而這也造成了 Vim License 成為了少見的，不是 context free 的開源授權，而這個細節我相信是在我跟 Bram 的討論後才是第一次闡明，當時討論時我有舉了一個極端的例子來確認：假設我有一個軟體 X，使用 Vim License 授權，後來有人修改我的 X 後改為 Y 發佈但是沒有開源，有權力去取得 Y 的修改內容並決定要不要給 X 的，其實是 Vim Maintainer，而不是我（X 的作者）。</p>
+<p>知道哪些地方才是可以替換掉之後就簡單了，我快速的準備好要用來發 PR 的 vim.txt 檔案，然後想說先來測試一下，結果，偵測竟然失敗了！研究再三，發現偵測出來的相似度只有 97.x%，而 Licensee 設定的閾值是 98%，至於會造成相似度這麼低的原因，其實是因為文本內有太多的替換字串了，當時的 Licensee 對於替換字串的比對處理的不太好，替換前後文字的長短差異也會有影響，知道原因後我就在想要來怎麼處理，當然最簡單的方法就是用特例處理，我當時的作法就是如果是在偵測 Vim License 的話，就會降低判斷用的閾值，本地測試沒問題後，就準備提交回去給 Licensee 了，不過因為我還不確定這樣的作法好不好，所以我先開了個 issue，解釋了前因後果然後附上我目前的修改，想說問問看負責的人的想法，如果他們覺得可以接受我再發 PR，結果，Mike Linksvayer 又出現了！我才發現 choosealicense 和 Licensee 他都是主要貢獻者！至於知道他的經歷則是在 COSCUP 分享後才聽 Bobchao 說的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177406736/" title="vim.txt in Licensee by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177406736_71659e1fd6_b.jpg" width="1024" height="684" alt="vim.txt in Licensee" srcset="https://live.staticflickr.com/65535/53177406736_7ce7bb487f_k.jpg 2x" /></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Mike_Linksvayer">Mike Linksvayer</a> 當時是 GitHub 的 Policy Director 專門負責公共相關的事務，而在之前則是當過 CC 的 CTO 和 VP，也曾擔任過數個不同組織的董事會成員，像是 OpenHatch、Software Freedom Conservancy 和 Open Definition Advisory Council，所以可以說是已經在自由開源領域活躍已久，甚至是特長於授權條款相關的領域。不過其實當時我不知道，也沒想說要去了解，主要對他的印象是頭像看起來有點嚴肅，一直給我 T1000 的感覺，加上我後來就是幾乎都是跟他往來為主（應該說我提交的貢獻就是他在把關的），所以某些層面上來看我其實是對他有點心生畏懼的。</p>
+<p>Mike 在 Licensee 這邊提出的問題是，我在 Vim License 裡面定的那些替換字串，並沒有出現在 <a href="https://spdx.org/licenses/Vim.html">SPDX License List</a> 那邊，SPDX 全名是 Software Package Data Exchange，其實這是屬於一般開發者比較少接觸的到的東西，目前最常看到的應用扣除 License List 之外，應該是軟體供應鍊相關的東西，不過其實他們所維護的 <a href="https://spdx.org/licenses/">SPDX License List</a> 幾乎已經成為業界標準，尤其是那個 license 的 identifier 更是到處都看得到，像是 npm 的 <a href="https://docs.npmjs.com/cli/v6/configuring-npm/package-json#license">package.json</a> 裡面就是使用它。然後其實 SPDX License List 這邊的檔案格式（自訂的 XML）和 Licensee 用的檔案格式（自訂的純文字）不一樣，不過由於 SPDX License List 已經是一個大家都會當作參考索引的資料源頭，所以也自然的成為 choosealicense 的上游（upstream），這次經驗我也讓我了解到開源的圈子真的是蠻重視 upstream 的，之前我也在 neovim 遇過類似的情形，總之也因此我應該要先去提交 PR 修改 SPDX License List，然後才發 PR 給 choosealicense，所以我就整理整理後去那邊發了 PR 加上這些替換字串，然後，<strong>Mike Linksvayer</strong> 又出現了！他也是 SPDX License List 的貢獻者之一！</p>
+<p>接<a href="https://blog.othree.net/log/2023/09/11/vim-license-2/">下一篇</a>。</p>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

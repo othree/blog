@@ -85,23 +85,25 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/11/05/bad-part-of-css-transition/">Transition 之惡</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
-              <p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
-              <pre>
-                <code>.case1.active {
+            <section itemprop="articleBody"><p>好像很久之前有在 Facebook 上說過我對 CSS transition 語法的不滿，因為不是三言兩語可以解釋的，所以一直沒講清楚，之後忙了一陣子之後，今天終於有時間整理一下了。</p>
+
+<p>問題可以說是因為不管有多少 CSS 屬性要 transition 效果，都要寫在同一個 transition 屬性之下造成的，這樣的設計不是不好，但是他產生了兩個問題沒有解決：第一個是如果我有不同的狀態，要的 transition 屬性不一樣的話，唯一的作法就是把全部需要的屬性都重寫，不能只改單一屬性的 transition：</p>
+
+<pre><code>.case1.active {
     transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease, opacity 1s ease;
 }
 
 .case2.active {
     transition: top 1s ease, height 1s ease, left 1s ease, width 1s ease;
 }
-</code>
-              </pre>
-              <p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
-              <p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
-              <p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
-            </section>
+</code></pre>
+
+<p>這樣寫的產生的影響有二，一是造成 code 重複，維護不易，二是重複 code 會增加傳輸量，降低網站的速度。第二個問題是，當我在定義 transition 時，規範要求我將所有 transition 視為一體，但是 transitionend 事件卻是每個屬性分開觸發，我覺得這根本是陷阱，例如上面的 case1 會有 5 個 transitionend 事件一起觸發，如果沒注意到這點的話，你的 transitionend callback 就會每次都多執行了四次，如果我去檢查到底是哪個屬性的 transitionend 事件來決定要不要作 callback 的話，一是程式碼不漂亮，硬是多了個 if 判斷，二是我該選哪個屬性來作代表？會有語意不對的情形，語意不對就會有維護問題，要是未來改了 transition 的定義，剛好被我選上的代表屬性被拿掉了，callback 就不會執行了。</p>
+
+<p>當然我不認為 transitionend 事件應該不分屬性只發生一次，畢竟有要詳細複雜的效果還是要能知道到各別屬性的轉換結束時機。其實這個問題也很難有好方法，提案修改 spec 影響很大，新增東西還比較有機會，我自己是希望要碼就可以完全拆開看，不然就是兩邊都可以視為一體來看，和 transition 比起來，animation 的問題就小一點，因為 animation 整個是被當一體，animation 事件可以用 animationName 來確定沒跑錯 callback，只要 name 沒變，動畫內容怎麼改都沒關係，animationend 事件也不會每個屬性都觸發一次，而是真的動畫結束才被呼叫，不過兩份文件的編輯幾乎一樣....</p>
+
+<p>最後隨便講個 transition 另外的問題吧，就是 Firefox 下，一些屬性，例如高度好了，如果用百分比之類的，或是 auto 這種，不是太明確的值的話，會無法跑出 transition 效果，有點麻煩，尤其是要做全螢幕置中的效果的時候。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -126,6 +128,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -146,19 +157,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -170,7 +172,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

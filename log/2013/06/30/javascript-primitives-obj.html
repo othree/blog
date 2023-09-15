@@ -85,48 +85,48 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/06/30/javascript-primitives-obj/">JavaScript Primitives Objects</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>接續上一篇文章，JavaScript 的資料型別可以分為兩類：基本型別(primitive value)和物件(object)。基本型別包含字串、數值、布林值等，物件除了物件外，還有像是函數、Regular Expression 等。JavaScript 還有一組很特別的 constructor，對應到每種基本型別，所以你可以 <code>new String('blah');</code> 來產生基本型別的物件：</p>
-              <pre>
-                <code>new String('blah');
+            <section itemprop="articleBody"><p>接續上一篇文章，JavaScript 的資料型別可以分為兩類：基本型別(primitive value)和物件(object)。基本型別包含字串、數值、布林值等，物件除了物件外，還有像是函數、Regular Expression 等。JavaScript 還有一組很特別的 constructor，對應到每種基本型別，所以你可以 <code>new String('blah');</code> 來產生基本型別的物件：</p>
+
+<pre><code>new String('blah');
 new Number(42);
 ner Boolean(true);
-</code>
-              </pre>
-              <p>如果看最近的書本和教學都會說不要使用這種方法來建立這些基本型別，缺點有效能問題、API 設計不好，會有混淆等等。不過如果是物件的話，不就可以很方便的做一些操作了嗎？</p>
-              <p>這兩年很受歡迎的 Ruby 有一個特性就是所有的基本型別都是物件，所以就可以很簡單的用一些串接的方式直接對這些基本型別進行操作：</p>
-              <pre>
-                <code>str = 'hello'
+</code></pre>
+
+<p>如果看最近的書本和教學都會說不要使用這種方法來建立這些基本型別，缺點有效能問題、API 設計不好，會有混淆等等。不過如果是物件的話，不就可以很方便的做一些操作了嗎？</p>
+
+<p>這兩年很受歡迎的 Ruby 有一個特性就是所有的基本型別都是物件，所以就可以很簡單的用一些串接的方式直接對這些基本型別進行操作：</p>
+
+<pre><code>str = 'hello'
 str.capitalize        #  Hello
 str.capitalize!
 str                   #  Hello
 str.count('l')        #  2
-</code>
-              </pre>
-              <p>在 JavaScript 中的基本型別其實不需要以物件的形式，也可以做類似的操作：</p>
-              <pre>
-                <code>var str = 'hello';
+</code></pre>
+
+<p>在 JavaScript 中的基本型別其實不需要以物件的形式，也可以做類似的操作：</p>
+
+<pre><code>var str = 'hello';
 str.length;           // 2
 str.contains('l');    // true
 str.indexOf('l');     // 2
-</code>
-              </pre>
-              <p>但是如果想要更進一步的在上面加上屬性或是 method 就會發現行不通：</p>
-              <pre>
-                <code>var str = 'hello';
+</code></pre>
+
+<p>但是如果想要更進一步的在上面加上屬性或是 method 就會發現行不通：</p>
+
+<pre><code>var str = 'hello';
 str.target = 'world';
 str.target;            // undefined
-</code>
-              </pre>
-              <p>這中間到底是有什麼差異呢？這個問題我想了很久，直到看了 <a href="http://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/">The Secret Life of JavaScript Primitives</a> 這篇文章才瞭解，最後面這個例子，其實等同於：</p>
-              <pre>
-                <code>var str = 'hello';
+</code></pre>
+
+<p>這中間到底是有什麼差異呢？這個問題我想了很久，直到看了 <a href="http://javascriptweblog.wordpress.com/2010/09/27/the-secret-life-of-javascript-primitives/">The Secret Life of JavaScript Primitives</a> 這篇文章才瞭解，最後面這個例子，其實等同於：</p>
+
+<pre><code>var str = 'hello';
 (new String(str)).target = 'world';
 (new String(str)).target;
-</code>
-              </pre>
-              <p>當使用物件形式的 <code>.</code> 運算子對基本型別資料操作的時候，會產生一個新的物件，然後用完就丟掉，所以在指派 target 屬性那行操作到的物件，和要取回 target 屬性那行的物件，是完全不一樣的兩個物件，這也就是為什麼這些資料可以用類似物件的方法操作，但是卻不能真的像物件一樣使用。</p>
-            </section>
+</code></pre>
+
+<p>當使用物件形式的 <code>.</code> 運算子對基本型別資料操作的時候，會產生一個新的物件，然後用完就丟掉，所以在指派 target 屬性那行操作到的物件，和要取回 target 屬性那行的物件，是完全不一樣的兩個物件，這也就是為什麼這些資料可以用類似物件的方法操作，但是卻不能真的像物件一樣使用。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -151,6 +151,15 @@ str.target;            // undefined
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -171,19 +180,10 @@ str.target;            // undefined
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -195,7 +195,7 @@ str.target;            // undefined
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

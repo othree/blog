@@ -71,6 +71,46 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-license-2">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-09-11T17:27:11" id="date-2023-09-11">
+                <span class="mon">09月</span>
+                <span class="day">11日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/09/11/vim-license-2/">Vim License 的故事（下）</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
+<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
+<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
+<em class="extended"><a href="/log/2023/09/11/vim-license-2/">閱讀「Vim License 的故事（下）」全文</a></em></section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-license-1">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-09-10T23:32:05" id="date-2023-09-10">
+                <span class="mon">09月</span>
+                <span class="day">10日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/09/10/vim-license-1/">Vim License 的故事（上）</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="576"/></img></a></p>
+<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
+<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 "Same as Vim"，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
+<em class="extended"><a href="/log/2023/09/10/vim-license-1/">閱讀「Vim License 的故事（上）」全文</a></em></section>
+            <footer>
+              <a href="/log/vim/" rel="tag">VIM</a>
+            </footer>
+          </article>
+          <hr/>
           <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-boss-passed-away">
             <header>
               <time itemprop="datePublished dateModified" datetime="2023-08-11T20:16:47" id="date-2023-08-11">
@@ -81,20 +121,12 @@
                 <a href="/log/2023/08/11/vim-boss-passed-away/">Vim Boss Passed Away</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="684"/>
-                  </img>
-                </a>
-              </p>
-              <p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
-              <p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
-              <p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
-              <p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
+<p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
+<p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
+<p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
+<p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -110,13 +142,12 @@
                 <a href="/log/2018/11/29/vimconf-2018/">VimConf 2018</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Next Vim version is decided in Tokyo: Vim 2000! <a href="https://twitter.com/hashtag/vimconf?src=hash&amp;ref_src=twsrc%5Etfw">#vimconf</a><a href="https://t.co/lt83pgnxkH">pic.twitter.com/lt83pgnxkH</a></p>-- Ruslan Osipov (@antistatuquo) <a href="https://twitter.com/antistatuquo/status/1066541845407137793?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
-              <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
-              <p>11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的<a href="https://vimconf.wordpress.com/2018/11/25/vimconf-2018/">投影片收集</a>，我想在這介紹其中三個分享，第一個是 <a href="https://docs.google.com/presentation/d/e/2PACX-1vQKaWJY8w6QJpebvuzg334RfLDbQHv4-J_06yFxdTzLrrjhE_y5iuzA-JxCCuFdUAZQB2QQsidF_mys/pub?start=false&amp;loop=false&amp;delayms=3000#slide=id.p">Effective Modern Vim scripting</a>，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的 synchronous/asynchronous process 機制的程式要怎麼寫，有興趣寫 Vim8 asynchronous script 的人可以參考一下，要找整理好的範例其實不是很好找。</p>
-              <p>第二個想介紹的是 mattn 的 <a href="https://docs.google.com/presentation/d/e/2PACX-1vTj2uCbuCffhaLVBZE6biI538GG6jMi1INbku-T9q5hu5W0zGLwuibN3m5xbEuqdUFTDnhdhtikPyTi/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.p">What is the next feature?</a> 這段分享主要是在介紹 <a href="https://vim-jp.org/">vim-jp</a> 社群，也是 VimConf 的主辦社群，這個社群還蠻活躍的，而和一般的社群比較不一樣的地方是他不只是使用者社群，也是個開發者社群，有在協助幫忙日本想貢獻 Vim 的人，包括像是資源整合、避免重工、協助轉發 bug report 和 patch，還有翻譯文件和一些文件撰寫等，接著就介紹了一些 vim-jp 貢獻的東西，像是 color emoji、lambda 之類的</p>
-              <p>最後一個就是 Bram 的 <a href="https://vimconf.org/2018/slides/Vim_From-hjkl-to-a-platform-for-plugins.pdf">From hjkl To a plaform of plugins</a>，介紹了 Vim 的一些發展史，主要是 plugin 相關的，也提到 Vim scripts performance 的問題（有個建議是換台更快的電腦），最後一段還提到一些未來可能的新功能，其中兩個我很有興趣，第一個是 Bram 打算處理 Plugin dependency 的問題了，投影片中有一些目前可能的解決方法，當然看起來都是走 Vim8 的 package 機制。另外一個則是 text properties，就是可以給一段文字 meta data，這個功能我非常的感興趣，因為這可以用來改善現在的 syntax highlight 機制，理想上，我可以非同步的把程式碼丟給外部的 JS parser tokenize，然後利用結果來加上 text properties，syntax highlight 再根據這個資訊來決定用那個 Highlight Group，這可以解決我的 <a href="https://github.com/othree/yajs.vim">yajs</a> 一直無法解決的 arrow function 的判斷難題，不過還沒預計何時會出來，只能慢慢等了。</p>
-            </section>
+            <section itemprop="articleBody"><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Next Vim version is decided in Tokyo: Vim 2000! <a href="https://twitter.com/hashtag/vimconf?src=hash&amp;ref_src=twsrc%5Etfw">#vimconf</a> <a href="https://t.co/lt83pgnxkH">pic.twitter.com/lt83pgnxkH</a></p>-- Ruslan Osipov (@antistatuquo) <a href="https://twitter.com/antistatuquo/status/1066541845407137793?ref_src=twsrc%5Etfw">November 25, 2018</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
+<p>11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的<a href="https://vimconf.wordpress.com/2018/11/25/vimconf-2018/">投影片收集</a>，我想在這介紹其中三個分享，第一個是 <a href="https://docs.google.com/presentation/d/e/2PACX-1vQKaWJY8w6QJpebvuzg334RfLDbQHv4-J_06yFxdTzLrrjhE_y5iuzA-JxCCuFdUAZQB2QQsidF_mys/pub?start=false&amp;loop=false&amp;delayms=3000#slide=id.p">Effective Modern Vim scripting</a>，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的 synchronous/asynchronous process 機制的程式要怎麼寫，有興趣寫 Vim8 asynchronous script 的人可以參考一下，要找整理好的範例其實不是很好找。</p>
+<p>第二個想介紹的是 mattn 的 <a href="https://docs.google.com/presentation/d/e/2PACX-1vTj2uCbuCffhaLVBZE6biI538GG6jMi1INbku-T9q5hu5W0zGLwuibN3m5xbEuqdUFTDnhdhtikPyTi/pub?start=false&amp;loop=false&amp;delayms=3000&amp;slide=id.p">What is the next feature?</a> 這段分享主要是在介紹 <a href="https://vim-jp.org/">vim-jp</a> 社群，也是 VimConf 的主辦社群，這個社群還蠻活躍的，而和一般的社群比較不一樣的地方是他不只是使用者社群，也是個開發者社群，有在協助幫忙日本想貢獻 Vim 的人，包括像是資源整合、避免重工、協助轉發 bug report 和 patch，還有翻譯文件和一些文件撰寫等，接著就介紹了一些 vim-jp 貢獻的東西，像是 color emoji、lambda 之類的</p>
+<p>最後一個就是 Bram 的 <a href="https://vimconf.org/2018/slides/Vim_From-hjkl-to-a-platform-for-plugins.pdf">From hjkl To a plaform of plugins</a>，介紹了 Vim 的一些發展史，主要是 plugin 相關的，也提到 Vim scripts performance 的問題（有個建議是換台更快的電腦），最後一段還提到一些未來可能的新功能，其中兩個我很有興趣，第一個是 Bram 打算處理 Plugin dependency 的問題了，投影片中有一些目前可能的解決方法，當然看起來都是走 Vim8 的 package 機制。另外一個則是 text properties，就是可以給一段文字 meta data，這個功能我非常的感興趣，因為這可以用來改善現在的 syntax highlight 機制，理想上，我可以非同步的把程式碼丟給外部的 JS parser tokenize，然後利用結果來加上 text properties，syntax highlight 再根據這個資訊來決定用那個 Highlight Group，這可以解決我的 <a href="https://github.com/othree/yajs.vim">yajs</a> 一直無法解決的 arrow function 的判斷難題，不過還沒預計何時會出來，只能慢慢等了。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -132,52 +163,28 @@
                 <a href="/log/2018/07/28/language-server-protocol/">Language Server Protocol</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="640"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近才注意到 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> （<a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol">官方中文介紹</a>）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。</p>
-              <p>LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> 了。</p>
-              <p>LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  <a href="http://langserver.org/">langserver.org</a> 上有一份<a href="http://langserver.org/#implementations-server#implementations-client">清單</a>介紹各個 client 的支援狀況。</p>
-              <p>送到 Language Server 的指令，目前 Protocol 可以提供以下功能：</p>
-              <ul>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion">Completion</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">Hover Information</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp">Signature Help</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition">Goto Definition</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition">Goto Type Definition</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation">Goto Implementation</a>
-                </li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references">Find References</a>
-                </li>
-                <li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction">Action</a>, fix code</li>
-                <li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens">Code Lens</a>, information for specific position</li>
-                <li>
-                  <a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting">Formatting</a>
-                </li>
-                <li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics">Diagnostic</a>, 像是 code lint</li>
-              </ul>
-              <p>其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">官網的</a>，另一份則是 <a href="http://langserver.org#implementations-server">langserver.org</a> 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 <a href="https://about.sourcegraph.com/">Sourcegraph</a> 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。</p>
-              <p>然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 <a href="http://typefox.io">TypeFox</a> 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in VS Code</a> 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 <a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio">JavaScript Language Service</a> 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關<a href="https://github.com/Microsoft/TypeScript/tree/master/src/services">程式碼</a>，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 <a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29">tsserver</a>，TypeScript 的大架構可以參考 <a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview">Architectural Overview</a> 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 <a href="https://github.com/sourcegraph/javascript-typescript-langserver">TypeScript Language Service</a> 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 <a href="https://github.com/theia-ide/typescript-language-server">TypeFox 的</a>比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 <a href="https://github.com/Microsoft/TypeScript/issues/11274">Issue 11274</a>，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。</p>
-              <p>補充：另外有個 debugger 用的 <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a></p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="640"/></img></a></p>
+<p>最近才注意到 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> （<a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol">官方中文介紹</a>）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。</p>
+<p>LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> 了。</p>
+<p>LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  <a href="http://langserver.org/">langserver.org</a> 上有一份<a href="http://langserver.org/#implementations-server#implementations-client">清單</a>介紹各個 client 的支援狀況。</p>
+<p>送到 Language Server 的指令，目前 Protocol 可以提供以下功能：</p>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion">Completion</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover">Hover Information</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp">Signature Help</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition">Goto Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition">Goto Type Definition</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation">Goto Implementation</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references">Find References</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction">Action</a>, fix code</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens">Code Lens</a>, information for specific position</li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting">Formatting</a></li>
+<li><a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics">Diagnostic</a>, 像是 code lint</li>
+</ul>
+<p>其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">官網的</a>，另一份則是 <a href="http://langserver.org#implementations-server">langserver.org</a> 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 <a href="https://about.sourcegraph.com/">Sourcegraph</a> 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。</p>
+<p>然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 <a href="http://typefox.io">TypeFox</a> 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 <a href="https://code.visualstudio.com/docs/languages/javascript">JavaScript in VS Code</a> 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 <a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio">JavaScript Language Service</a> 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關<a href="https://github.com/Microsoft/TypeScript/tree/master/src/services">程式碼</a>，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 <a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29">tsserver</a>，TypeScript 的大架構可以參考 <a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview">Architectural Overview</a> 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 <a href="https://github.com/sourcegraph/javascript-typescript-langserver">TypeScript Language Service</a> 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 <a href="https://github.com/theia-ide/typescript-language-server">TypeFox 的</a>比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 <a href="https://github.com/Microsoft/TypeScript/issues/11274">Issue 11274</a>，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。</p>
+<p>補充：另外有個 debugger 用的 <a href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a></p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -193,35 +200,13 @@
                 <a href="/log/2018/07/15/monokai-pro/">Monokai Pro</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/43359779851/" title="Monokai Pro VSCode by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg" width="1024" height="637" alt="Monokai Pro VSCode" srcset="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg 1024w, https://farm1.staticflickr.com/841/43359779851_8253ea1d98_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="637"/>
-                  </img>
-                </a>
-              </p>
-              <p>因為用 <a href="http://blog.othree.net/log/2018/05/02/dank-mono/">Dank Mono</a> 字體的關係，最近開始有想要讓 Vim 支援斜體的 syntax highlight，於是又花了不少時間測試，過程中想起在 Twitter 上看到有人說過有一款付費的 Sublime/VSCode 佈景主題（印象中是 <a href="https://twitter.com/yorkxin">@yorkxin</a>），叫 <a href="https://www.monokai.pro/">Monokai Pro</a>，因為可以免費評估，可能是用幾天後才會出現 popup 吧，就一時興起就裝來玩玩看，結果還蠻滿意的。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/28490909197/" title="Monokai Pro Sublime by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg" width="1024" height="636" alt="Monokai Pro Sublime" srcset="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg 1024w, https://farm1.staticflickr.com/917/28490909197_a9739e01cc_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="636"/>
-                  </img>
-                </a>
-              </p>
-              <p>雖然我主力是 Vim，但是 Sublime 和 VSCode 都還是有用，後來又繼續研究了一下，原來 Monokai 是在 <a href="http://wiki.macromates.com/Themes/UserSubmittedThemes">Textmate 2</a> 的佈景主題，還蠻有名的，也很多人 port 到不同環境，Vim 那邊比較多人用的應該是 <a href="https://github.com/tomasr/molokai">molokai</a>，然後 Monokai Pro 是同個作者做的，如果有 Vim 版的我會支持一下吧～</p>
-              <p>然後弄一弄發現我用 jellybean 的配色用到 256 色的，結果把 True Color 支援打開之後發現有點難看，又開始我的探索之旅了，目前暫時是用 <a href="https://github.com/jacoborus/tender.vim">tender</a>：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/29489585588/" title="tender.vim by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg" width="1024" height="684" alt="tender.vim" srcset="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg 1024w, https://farm1.staticflickr.com/843/29489585588_bd4c88fe92_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="684"/>
-                  </img>
-                </a>
-              </p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/43359779851/" title="Monokai Pro VSCode by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg" width="1024" height="637" alt="Monokai Pro VSCode" srcset="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg 1024w, https://farm1.staticflickr.com/841/43359779851_8253ea1d98_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="637"/></img></a></p>
+<p>因為用 <a href="http://blog.othree.net/log/2018/05/02/dank-mono/">Dank Mono</a> 字體的關係，最近開始有想要讓 Vim 支援斜體的 syntax highlight，於是又花了不少時間測試，過程中想起在 Twitter 上看到有人說過有一款付費的 Sublime/VSCode 佈景主題（印象中是 <a href="https://twitter.com/yorkxin">@yorkxin</a>），叫 <a href="https://www.monokai.pro/">Monokai Pro</a>，因為可以免費評估，可能是用幾天後才會出現 popup 吧，就一時興起就裝來玩玩看，結果還蠻滿意的。</p>
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/28490909197/" title="Monokai Pro Sublime by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg" width="1024" height="636" alt="Monokai Pro Sublime" srcset="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg 1024w, https://farm1.staticflickr.com/917/28490909197_a9739e01cc_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="636"/></img></a></p>
+<p>雖然我主力是 Vim，但是 Sublime 和 VSCode 都還是有用，後來又繼續研究了一下，原來 Monokai 是在 <a href="http://wiki.macromates.com/Themes/UserSubmittedThemes">Textmate 2</a> 的佈景主題，還蠻有名的，也很多人 port 到不同環境，Vim 那邊比較多人用的應該是 <a href="https://github.com/tomasr/molokai">molokai</a>，然後 Monokai Pro 是同個作者做的，如果有 Vim 版的我會支持一下吧～</p>
+<p>然後弄一弄發現我用 jellybean 的配色用到 256 色的，結果把 True Color 支援打開之後發現有點難看，又開始我的探索之旅了，目前暫時是用 <a href="https://github.com/jacoborus/tender.vim">tender</a>：</p>
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/29489585588/" title="tender.vim by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg" width="1024" height="684" alt="tender.vim" srcset="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg 1024w, https://farm1.staticflickr.com/843/29489585588_bd4c88fe92_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -237,35 +222,26 @@
                 <a href="/log/2017/11/16/naming-cases/">Naming Cases</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="731"/>
-                  </img>
-                </a>
-              </p>
-              <p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
-              <h5>CamelCase</h5>
-              <p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
-              <p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
-              <h5>snake_case</h5>
-              <p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
-              <h5>MACRO_CASE</h5>
-              <p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
-              <p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
-              <h5>lisp-case</h5>
-              <p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
-              <h5>COBOL-CASE</h5>
-              <p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
-              <h5>Train-Case</h5>
-              <p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
-              <p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
-              <p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
-              <p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
-              <pre>
-                <code class="language-vim">let g:switch_custom_definitions =
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="731"/></img></a></p>
+<p>整理一下各種多單字 identifier <a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html">命名</a>慣例（規則）：</p>
+<h5>CamelCase</h5>
+<p>CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。</p>
+<p>CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。</p>
+<h5>snake_case</h5>
+<p>snake_case 是用底線符號 <code>_</code> 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那<a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ">邊出</a>來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 <a href="http://perldoc.perl.org/perlstyle.html">perlstyle</a> 是用 snake_case 來命名 function。</p>
+<h5>MACRO_CASE</h5>
+<p>snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。</p>
+<p>以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。</p>
+<h5>lisp-case</h5>
+<p>lisp-case 則是用連字號（hyphens） <code>-</code> 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 <code>-</code> 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。</p>
+<h5>COBOL-CASE</h5>
+<p>用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。</p>
+<h5>Train-Case</h5>
+<p>以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。</p>
+<p>我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。</p>
+<p>這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有<a href="https://github.com/ianstormtaylor/to-case">一整個系列的工具</a>，支援很多種規則的轉換，還包括了書寫用的 <a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"><strong>Title Case</strong></a>，講到這個就要提一下 CSS 裡面的 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"><code>text-transform</code></a> 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 <strong>TITLE</strong>，用 capitalize 轉換後，還是 <strong>TITLE</strong>，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 <code>::first-letter</code> 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 <strong>an</strong>，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的<a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html">主因</a>應該是因為 Title Case 幾乎只有英語用的上。</p>
+<p>在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 <a href="https://github.com/AndrewRadev/switch.vim">switch.vim</a> 然後加上一組自訂的轉換設定：</p>
+<pre><code class="language-vim">let g:switch_custom_definitions =
     \ [
     \   {
     \     '\&lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&gt;': '\=toupper(submatch(1)) . submatch(2)',
@@ -275,25 +251,16 @@
     \     '\&lt;\(\l\+\)\(-\l\+\)\+\&gt;': "\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')",
     \   }
     \ ]
-</code>
-              </pre>
-              <p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
-              <p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
-              <ul>
-                <li>
-                  <a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a>
-                </li>
-                <li>
-                  <a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a>
-                </li>
-                <li>
-                  <a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a>
-                </li>
-                <li>
-                  <a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a>
-                </li>
-              </ul>
-            </section>
+</code></pre>
+<p>這組設定是 <code>MACRO_CASE</code>、<code>lisp-case</code>、<code>camelCase</code>、<code>PascalCase</code>、<code>snake_case</code> 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 <code>-</code> 就好。</p>
+<p>其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers">Multiple-word identifiers</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)">Naming convention (programming)</a></li>
+<li><a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/">Where does the term kebab-case come from</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Letter_case">Letter case</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -309,24 +276,19 @@
                 <a href="/log/2017/05/02/vim-packages/">Vim Packages</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
-              <p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
-              <pre>
-                <code>~/.vim/bundle/html5.vim
+            <section itemprop="articleBody"><p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+<pre><code>~/.vim/bundle/html5.vim
 ~/.vim/bundle/yajs.vim
-</code>
-              </pre>
-              <p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
-              <pre>
-                <code>~/.vim/pack/my-js/start/yajs.vim
+</code></pre>
+<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+<pre><code>~/.vim/pack/my-js/start/yajs.vim
 ~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
 ~/.vim/pack/my-js/start/simple-javascript-indenter
-</code>
-              </pre>
-              <p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
-              <p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
-            </section>
+</code></pre>
+<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -342,24 +304,18 @@
                 <a href="/log/2016/10/29/vim-filename-complete/">Vim Filename Complete</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w">
-                    <meta itemprop="width" content="659"/>
-                    <meta itemprop="height" content="452"/>
-                  </img>
-                </a>
-              </p>
-              <p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
-              <p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
-              <pre>
-                <code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w"><meta itemprop="width" content="659"/><meta itemprop="height" content="452"/></img></a></p>
+
+<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
+
+<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
+
+<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
 :autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
-</code>
-              </pre>
-              <p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
-            </section>
+</code></pre>
+
+<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -375,10 +331,9 @@
                 <a href="/log/2016/10/03/native-true-color-vim/">Native True Color Vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
-              <pre>
-                <code>git clone https://github.com/vim/vim.git
+            <section itemprop="articleBody"><p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
 
 cd vim
 cd src &amp;&amp; make autoconf &amp;&amp; cd ..
@@ -397,158 +352,10 @@ cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
 make
 make install
-</code>
-              </pre>
-              <p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
-            </section>
-            <footer>
-              <a href="/log/vim/" rel="tag">VIM</a>
-            </footer>
-          </article>
-          <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-yajs-and-vim-syntax-highlight">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2016-07-01T17:05:37" id="date-2016-07-01">
-                <span class="mon">07月</span>
-                <span class="day">01日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2016/07/01/yajs-and-vim-syntax-highlight/">YAJS.vim and Vim Syntax Highlight</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody">
-              <p>上個週末在<a href="https://2016.opensource.hk/">香港 Open Source Conference</a> 分享的主題，第一次使用英文分享，結果表現不太好，不知道上場前喝點啤酒會不會比較好就是...</p>
-              <p>這個主題本來是想要投 COSCUP 的，主要是想介紹一下之前在做 <a href="https://github.com/othree/yajs.vim">yajs.vim</a> 時遇到的比較有印象的問題，在這之前先介紹一下 Vim Syntax Highlight 的機制，因為這些問題很多都和 Vim 的 Syntax Highlight 機制的設計關係很大，然後最後就是有一個還沒辦法解的問題，這個問題就是 yajs.vim 目前還沒辦法完美的 highlight 有 default parameter 的 arrow function。</p>
-              <script async="async" class="speakerdeck-embed" data-id="3294147a503d4079a6238296fc991a76" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-            </section>
-            <footer>
-              <a href="/log/vim/" rel="tag">VIM</a>
-            </footer>
-          </article>
-          <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-syntax-regexp-note">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2015-03-18T18:45:07" id="date-2015-03-18">
-                <span class="mon">03月</span>
-                <span class="day">18日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2015/03/18/vim-syntax-regexp-note/">Vim Syntax and Regexp Note</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody">
-              <p>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，<code>function</code> 關鍵字和後面 <code>()</code> 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 <code>skipwhite</code>、<code>skipempty</code> 然後加上 <code>nextgroup</code> 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說：</p>
-              <pre>
-                <code>function fn (a) {}
-</code>
-              </pre>
-              <p>這樣的程式碼我把他拆成四個部分，function keyword、function name、function parameter、function body，然後用 Vim syntax 語法設定：</p>
-              <pre>
-                <code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
-</code>
-              </pre>
-              <p>除了 function keyword 外都有 <code>contained</code>，用途是讓該 rule 不會在 TOP region 下生效，一個好處是減少 TOP region 下要檢查的 rule 數量，另一個好處是有些相同的 token pattern，但是其實語意上是不一樣的，可以盡量用這種機制拆分開來，到這裡都還很美好，但是加上 comment 後問題就變複雜了，先簡單寫一下 comment 的 syntax rule：</p>
-              <pre>
-                <code>syntax region  javascriptComment     start=/\/\*/ end=/\*\//
-</code>
-              </pre>
-              <p>然後 comment 可以放在哪些地方呢：</p>
-              <pre>
-                <code>function /*cc*/ fn (a) {}
-function fn /*cc*/ (a) {}
-function fn (a) /*cc*/ {}
-</code>
-              </pre>
-              <p>也就是本來 nextgroup 連接的地方都可以插入個 comment，可是只要插入了 comment，後面的 token 就不會被正確 highlight，因為 comment 的 rule 沒有 nextgroup，所以他的部分結束後就會回到用 TOP region 的情境，而後面應該符合的 rule 都有設上 <code>contained</code>，所以就沒機會對到。當然現在要解決這個問題也不是沒方法可以避開，但是非常不好看，就是如下的設計：</p>
-              <pre>
-                <code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName,comment1 skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody,comment3 skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
+</code></pre>
 
-syntax region  comment1     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncName,comment1 skipwhite
-syntax region  comment2     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax region  comment3     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncBody,comment3 skipwhite
-</code>
-              </pre>
-              <p>如此可以確保 comment 插入也不會讓後面的 token 沒 highlight，但是這樣的設計，實際寫起來會非常繁瑣，完全不想去研究 JavaScript 中會有多少類似的狀況。其實我是覺得 Vim syntax 應該是希望盡量都用前後獨立的 rule 來 highlight，盡量不要有前後相依的關係存在，就不會有上面的問題，也可以讓 highlight 過程比較單純，理想上是從頭開始，一個 token 一個 token 各自獨立的 highlight，不過是事情當然沒這麼簡單，第二個想記錄下來的事情也和這個有關係。</p>
-              <p>假設目前 highlight 處理中，parse 到一個 <code>=</code>，然後看到一組小括號 <code>(a)</code>，連起來如下：</p>
-              <pre>
-                <code>= (a)
-</code>
-              </pre>
-              <p>這時你會覺得 <code>(a)</code> 是什麼呢？是小括號，裡面是一個 expression 然後回傳變數 <code>a</code> 嗎？相信很多人會這樣認為，如果他後面是接分號的話：</p>
-              <pre>
-                <code>= (a);
-</code>
-              </pre>
-              <p>但是其實也可能是這樣子的：</p>
-              <pre>
-                <code>= (a) =&gt; {}
-</code>
-              </pre>
-              <p>ES6 的 arrow function，也就是說，如果一個 token 一個 token 解析，一定無法直接知道目前 token 代表的正確意義，所以 compiler 把程式碼轉成 AST 的時候，有時候會先往後面看一下來判斷現在的 token 到底是什麼意義。然而 Vim syntax 系統並沒有這種能力，嚴格來說，是可以用 match 來達成，不過還是很受限制。再來則是往前看的問題，我在設定運算子的 match rule 的時候，會希望嚴謹一點，本來想在兩邊加上 word boundary 的 pattern，在 Vim 裡面是 <code>\&lt;</code> 和 <code>\&gt;</code>，不過測試幾回發現，我的字元本身不是文字字元的話，這個 pattern 是沒有用的：</p>
-              <pre>
-                <code>/\&lt;word
-</code>
-              </pre>
-              <p>這樣是有效的，但是下面想要 match <code>==</code> 的會沒用：</p>
-              <pre>
-                <code>/\&lt;==
-</code>
-              </pre>
-              <p>所以變成要自己寫往前看的 regexp，在 Vim 裡面有兩種類似的東西可以用，分別是 <code>\zs</code> 和 <code>\@&lt;=</code>，通常，<code>\zs</code> 效能比較好，會推薦使用，他的用途是標註你的 regexp 的 match 的起點，當然同時也有一個 <code>\ze</code> 是終點：</p>
-              <pre>
-                <code>/abcd\zsefgh\zeijkl
-</code>
-              </pre>
-              <p>上面這串 regexp 的目標是 <code>efgh</code>，但是他的前後分別是 <code>abcd</code> 和 <code>ijkl</code>，實際執行時會去找 <code>abcdefghijkl</code> 這串字串，完整比對到之後，只會回中間的 <code>efgh</code> 作為 match 的範圍，這設計要做一些操作的時候就會有差，像是文字取代。本來我就想要用這個來做 syntax，可是就發現還是不生效，所以改成用 <code>\@&lt;=</code> 試試看：</p>
-              <pre>
-                <code>/\(abcd\)\@&lt;=efgh\@=\(ijkl\)
-</code>
-              </pre>
-              <p>就發現成功了，想了許久才理解其原因，然後才瞭解，真的往前看的是 <code>\@&lt;=</code>，<code>\zs</code> 並沒有往前看，兩者最大的差異在於 pattern match 操作的起點，一般的使用大概感覺不太到差異，不過像是 syntax highlight 這種一個 token 一個 token 逐步處理的就會有差，當目標是 <code>efgh</code> 時，通常處理進度到 <code>e</code> 這個位置時，前面的 <code>abcd</code> 已經被處理過了，所以這時候會和 regexp 比對的字串就變成 <code>efghijkl</code>，使用 <code>\zs</code> 的話，因為它還是要完整比對到 <code>abcdefghijkl</code>，起點是 <code>a</code>，就不會和 <code>efghijkl</code> 相符，但是用 <code>\@&lt;=</code> 的話，pattern 的起點是 <code>efgh</code> 的 <code>e</code>，這樣就可以 match 到目前剩餘的字串了。</p>
-              <p>前面說的個 token 一個 token 逐步處理的問題還有一個情形也讓我困擾很久，不過這次不是東西被用掉，問題是沒被用掉。這個狀況發生在巢狀結構的 region，像是 JavaScript 的 block：</p>
-              <pre>
-                <code>syntax region  javascriptBlock start=/{/ end=/}/
-</code>
-              </pre>
-              <p>然號要讓 block 裡面可已有 block 就要用 <code>contains</code>：</p>
-              <pre>
-                <code>syntax region  javascriptBlock start=/{/ end=/}/ contains=javascriptBlock
-</code>
-              </pre>
-              <p>這時候就會發生奇怪的現象了，因為外面的 region 包括了頭尾的括號，然後進入 block 內要做 syntax match 的時候，一開始的 <code>{</code> 又 match 到 block，結果 Vim 就直接覺得這已經是第二層的 block 了，雖然好像有其它機制讓他不會一直循環下去變成無限多層，不過這樣還是會造成後面的 code 有被判斷錯誤的機會，因為 block 的開關不 match，這裡的關鍵也是要讓 <code>{</code> 和 <code>}</code> 被處理掉，進入 region 內部就不會跑到上一層的起點，而這裡要用的就是 <code>matchgroup</code>：</p>
-              <pre>
-                <code>syntax region  javascriptBlock matchgroup=bracks start=/{/ end=/}/ contains=javascriptBlock
-</code>
-              </pre>
-              <p>如此就都會正常了，因為這樣的設定會讓 <code>{</code> 和 <code>}</code> 直接被當成 <code>bracks</code> 這個 group，然後就被當成已經被解析過的 token，從它的下一個 token 繼續 highlight 分析，但是千萬不要另外加上 <code>bracks</code> 的 syntax rule，剛好又 match 到 region 的起點和終點：</p>
-              <pre>
-                <code>syntax match   bracks  /[{}]/
-</code>
-              </pre>
-              <p>這樣的話也會發生其它的怪異現象，總之 nested region 的重點在於，要用 matchgroup，然後不要用和 matchgrouop 同樣名稱，同樣 pattern 另外又設定一組 rule。</p>
-              <p>最後一個要紀錄的則是 Vim syntax 裡面的優先度，基本上是 keyoword 優先度最高，也就是有 match 到 keyword 的話，你的 match pattern 就都無效了，所以像是 JavaScript 裡面，label 雖然不可以用關鍵字，像是 <code>continue:</code> 就不合法，但是因為會先 match 到 <code>continue</code> 關鍵字，所以就很難用 syntax highlight 來標出這種錯誤，而在 keyword 比對完之後，才輪的到 region 和 match，兩者是同樣權重，但是後定義的優先，而且不受 <code>contains</code> 和 <code>nextgroup</code> 裡面的順序影響，搞清楚優先順序在做細部的 syntax highlight 的時候還蠻重要的。另外要順便說說 region contains 和 nextgroup 的差異，nextgroup 其實還蠻不錯的，他不是限制下一個 token 一定是哪些東西，而是改變優先順序，先檢查完 nextgroup 裡面的東西，再檢查該 region 下的其它可能性，region contains 就不一樣了，該 region 裡面只有在 contains 裡面的東西會出現，另外還要特別注意一點，region 的處理並不管該 region 能不能正確的關閉，只要 match 到起點，就會把 region 打開，然後剛剛有提到，region 和 match 是同樣權重的所以就要非常注意：</p>
-              <pre>
-                <code>syntax match  javascriptLabel       /\k\+:/
-syntax region javascriptLabelblock  start=/\k\+: {/ end=/}/
-</code>
-              </pre>
-              <p>這樣兩條 syntax highlight rule 然後配上下面的程式碼：</p>
-              <pre>
-                <code>abcd: {
-  var ii = 1 + 1;
-
-var jj = 2 + 2;
-</code>
-              </pre>
-              <p>要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 <code>var jj</code> 那行也是被認為在 block 內。</p>
-              <p>最後的最後要推薦一下 <a href="https://github.com/gerw/vim-HiLinkTrace">gerw/vim-HiLinkTrace</a> 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。</p>
-            </section>
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -571,7 +378,7 @@ var jj = 2 + 2;
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -583,7 +390,7 @@ var jj = 2 + 2;
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

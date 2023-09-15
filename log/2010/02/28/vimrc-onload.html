@@ -85,16 +85,21 @@
                 <a itemprop="mainEntityOfPage" href="/log/2010/02/28/vimrc-onload/">vimrc 的 onload</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
-              <pre>
-                <code>if exists(":Align")
+            <section itemprop="articleBody"><p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
+
+
+
+<pre><code>if exists(":Align")
     com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif</code>
-              </pre>
-              <p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
-              <pre>
-                <code>function AfterStart ()
+endif</code></pre>
+
+
+
+<p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
+
+
+
+<pre><code>function AfterStart ()
 
 " plugin commands
 if exists(":Align")
@@ -103,9 +108,7 @@ endif
 
 endfunction
 autocmd VimEnter * :call AfterStart()
-</code>
-              </pre>
-            </section>
+</code></pre></section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -130,6 +133,15 @@ autocmd VimEnter * :call AfterStart()
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -150,19 +162,10 @@ autocmd VimEnter * :call AfterStart()
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -174,7 +177,7 @@ autocmd VimEnter * :call AfterStart()
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

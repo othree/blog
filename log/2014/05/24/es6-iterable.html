@@ -85,46 +85,48 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/05/24/es6-iterable/">ES6 的 Generator 與 Iterator</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>第一次看到 generator 時，我只有看到 <code>yield</code> 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。</p>
-              <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">Iterator</a> 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 <code>for of</code> 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 <code>next</code> method，每次執行會回傳一個物件，裡面兩個屬性：</p>
-              <pre>
-                <code>{
+            <section itemprop="articleBody"><p>第一次看到 generator 時，我只有看到 <code>yield</code> 這個關鍵字，以為只是流程控制的機制，後來才聽到 generator（產生器）這個名字，一直以為說的是 factory pattern 那種角色，困惑了起來去查了一些介紹才知道也是很早就有的機制，主要都是用在迴圈上，命名雖然是用 generator（生產器）和 yield（產出），但是不是 factory 那種，generator 其實是用來產生 iterator 的。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/The_Iterator_protocol">Iterator</a> 其實是一組定義好的介面，讓物件可以在迴圈裡面取得整個串列的資料，而在 ES6 裡，可以處理 iterator 的迴圈形式，就是上一篇文章介紹 Map 和 Set 時，有講到的 <code>for of</code> 這個新語法，在 ES6 裡面定義的 Iterator 介面其實很簡單，只有定義了一個 <code>next</code> method，每次執行會回傳一個物件，裡面兩個屬性：</p>
+
+<pre><code>{
     value: 100, // 下一個元素的值
     done: false // Iterator 是否跑完了
 }
-</code>
-              </pre>
-              <p><code>value</code> 就是迴圈要的值，<code>done</code> 則是用來判斷迴圈是否該結束了，<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator</a> 就是用 <code>yield</code> 這個語法來讓你簡單的可以產生 iterator，在 ES6 裡面的語法還算簡單，就是宣告 function 時加個 <code>*</code>：</p>
-              <pre>
-                <code>function* idMaker(){
+</code></pre>
+
+<p><code>value</code> 就是迴圈要的值，<code>done</code> 則是用來判斷迴圈是否該結束了，<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator</a> 就是用 <code>yield</code> 這個語法來讓你簡單的可以產生 iterator，在 ES6 裡面的語法還算簡單，就是宣告 function 時加個 <code>*</code>：</p>
+
+<pre><code>function* idMaker(){
     var index = 0;
     while(true)
         yield index++;
 }
-</code>
-              </pre>
-              <p>上面就是一個簡單的 generator，執行 <code>idMaker</code> 這個 generator function 才會回傳對應的 iterator：</p>
-              <pre>
-                <code>var gen = idMaker();
+</code></pre>
+
+<p>上面就是一個簡單的 generator，執行 <code>idMaker</code> 這個 generator function 才會回傳對應的 iterator：</p>
+
+<pre><code>var gen = idMaker();
 
 console.log(gen.next().value); // 0
 console.log(gen.next().value); // 1
 console.log(gen.next().value); // 2
-</code>
-              </pre>
-              <p>當然這是一個不會結束的 iterator 就是了，使用時要小心不要直接把這種東西丟到迴圈裡面。最後要來介紹的是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable ">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，要是有支援 iterable 介面的物件才可以，ES6 內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
-              <ul>
-                <li>字串</li>
-                <li>陣列</li>
-                <li>Generator</li>
-                <li>Map, WeakMap</li>
-                <li>Set, WeakSet</li>
-                <li>arguments</li>
-              </ul>
-              <p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子（Symbol 目前還在變動中，以後會在介紹）：</p>
-              <pre>
-                <code>var myIterable = {}
+</code></pre>
+
+<p>當然這是一個不會結束的 iterator 就是了，使用時要小心不要直接把這種東西丟到迴圈裡面。最後要來介紹的是 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable ">iterable</a> 介面，其實如果直接把 iterator 丟給 <code>for of</code> 是不能用的，要是有支援 iterable 介面的物件才可以，ES6 內建有 iterable 介面的<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/iterable#Builtin_iterables">物件型態</a>包括了：</p>
+
+<ul>
+<li>字串</li>
+<li>陣列</li>
+<li>Generator</li>
+<li>Map, WeakMap</li>
+<li>Set, WeakSet</li>
+<li>arguments</li>
+</ul>
+
+<p>這些形式的資料都可以直接用 <code>for of</code> 迴圈來跑，然後當然，介面都已經定義出來了，表示我們也可以自己寫一個物件來用，iterable 的定義也很簡單，就是把該物件 iterator 的 generator 放在 "@@iterator" 這個屬性下，由於 iterator 只能用一次，所以每次需要都要用 generator 產生一個新的 iterator。另外文件有提到說 "@@iterator" 就是 <code>Symbol.iterator</code> 這個環境變數，不過我目前測試還不支援的樣子（Symbol 目前還在變動中，以後會在介紹）：</p>
+
+<pre><code>var myIterable = {}
 myIterable["@@iterator"] = () =&gt; (function*(){
     yield 1;
     yield 2;
@@ -134,18 +136,19 @@ myIterable["@@iterator"] = () =&gt; (function*(){
 for (let value of myIterable) {
     console.log(value);
 } // 1, 2, 3
-</code>
-              </pre>
-              <p>通常會把 "@@iterator" 屬性放到 prototype 下比較保險。而有了自定義 iterable 物件的能力，就可以有很多東西可以玩啦，可以拿來跑二元樹、DOM tree、三維陣列或是特定應用領域的資料結構等等。</p>
-              <p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructuring 等等：</p>
-              <pre>
-                <code>[...myIterable]; // [1, 2, 3]
+</code></pre>
+
+<p>通常會把 "@@iterator" 屬性放到 prototype 下比較保險。而有了自定義 iterable 物件的能力，就可以有很多東西可以玩啦，可以拿來跑二元樹、DOM tree、三維陣列或是特定應用領域的資料結構等等。</p>
+
+<p>另外和 iterable 相關的東西還有一個，就是新的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">spread</a> 運算子 <code>...</code>，它可以把 iterable 物件展開，然後放到像是陣列或是參數、destructuring 等等：</p>
+
+<pre><code>[...myIterable]; // [1, 2, 3]
 
 myFunc(...myIterable); // myFunc(1, 2, 3)
-</code>
-              </pre>
-              <p>這個新的運算子也是一個非常好用的新功能。</p>
-            </section>
+</code></pre>
+
+<p>這個新的運算子也是一個非常好用的新功能。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -170,6 +173,15 @@ myFunc(...myIterable); // myFunc(1, 2, 3)
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -190,19 +202,10 @@ myFunc(...myIterable); // myFunc(1, 2, 3)
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -214,7 +217,7 @@ myFunc(...myIterable); // myFunc(1, 2, 3)
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -85,29 +85,30 @@
                 <a itemprop="mainEntityOfPage" href="/log/2017/03/27/github-flavored-markdown/">GitHub Flavored Markdown 標準規範</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a><a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
-              <ul>
-                <li>刪除線</li>
-                <li>表格</li>
-                <li>
-                  <a href="https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments">待辦清單</a>
-                </li>
-                <li>自動連結（包括網址和 email）</li>
-                <li>Raw HTML 黑名單：
-<ul><li><code>&lt;title&gt;</code></li><li><code>&lt;textarea&gt;</code></li><li><code>&lt;style&gt;</code></li><li><code>&lt;xmp&gt;</code></li><li><code>&lt;iframe&gt;</code></li><li><code>&lt;noembed&gt;</code></li><li><code>&lt;noframes&gt;</code></li><li><code>&lt;script&gt;</code></li><li><code>&lt;plaintext&gt;</code></li></ul></li>
-              </ul>
-              <p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
-              <p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15576500626/" title="Github Markdown Cheat Sheet by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg" width="1024" height="683" alt="Github Markdown Cheat Sheet" srcset="https://farm6.staticflickr.com/5599/15576500626_b56732d883_b.jpg 1024w, https://farm6.staticflickr.com/5599/15576500626_e0027ae0fb_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+<p>前陣子看到 DK <a href="https://blog.gslin.org/archives/2017/03/16/7187/">提到</a> GitHub 的 Markdown：<a href="https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown">GitHub Flavored Markdown</a> <a href="https://githubengineering.com/a-formal-spec-for-github-markdown/">發表正式的 spec</a> 了，當時有大概看了一下內容，不過昨天才有空寫出來（然後今天也看到碼天狗有提到這件事），基本上這份 <a href="https://github.github.com/gfm/">spec</a> 是基於 <a href="http://commonmark.org/">CommonMark</a> 的，只是多了一些語法，包括：</p>
+<ul>
+<li>刪除線</li>
+<li>表格</li>
+<li><a href="https://github.com/blog/1375-task-lists-in-gfm-issues-pulls-comments">待辦清單</a></li>
+<li>自動連結（包括網址和 email）</li>
+<li>Raw HTML 黑名單：
+<ul>
+<li><code>&lt;title&gt;</code></li>
+<li><code>&lt;textarea&gt;</code></li>
+<li><code>&lt;style&gt;</code></li>
+<li><code>&lt;xmp&gt;</code></li>
+<li><code>&lt;iframe&gt;</code></li>
+<li><code>&lt;noembed&gt;</code></li>
+<li><code>&lt;noframes&gt;</code></li>
+<li><code>&lt;script&gt;</code></li>
+<li><code>&lt;plaintext&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>新增的部分都有很顯眼的標註，其中 Raw HTML 黑名單的 HTML 標籤的 <code>&lt;</code> 都會被轉成 entity，基本上看起來是安全性考量，不過不太確定為何有些很老的標籤出現，感覺上和安全性比較沒關係。另外我還注意到 <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#using-emoji">emoji</a>和<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#referencing-issues-and-pull-requests">reference link</a>沒包含在這份 spec 內，emoji 或許是因為實做上的問題，轉成 unicode 字元相容性不好，要用 img 會有不少相依性問題，而 reference link 大概是因這是比較針對 GitHub 網站的特性。</p>
+<p>GitHub 轉換 Markdown 引擎的過程也有在文中說明，這次 Markdown 引擎是從 <a href="https://github.com/vmg/sundown">Sundown</a>（更早是 Ruby 實做的 <a href="https://github.com/vmg/redcarpet">redcarpet</a> 的樣子）改成 <a href="https://github.com/jgm/cmark">cmark</a>，當然為了這些新語法，他們 fork 了<a href="https://github.com/github/cmark">自己的版本出來</a>，然後在真的套上 GitHub 本站前，有先做過測試，結果發現有 1% 的文件（所有的 Markdown 文件，包括 user comment、issue...etc）會受到影響，而且判斷方法不是單純 diff 輸出結果，而是 diff 正規化過的 HTML 文件樹，不過即使只有 1% 的文件，那也是很大量，後來他們又更仔細分析，發現會受影響的幾乎都是 issue、user comment 之類的內容，是存放在 GitHub 資料庫內的，而不是 repository 內的文件，所以他們可以直接修改，如果是 repository 內的文件，因為要看 sha1 hash，所以是改不了的，後來他們魔改 Sundown，讓它吃舊文件然後吐出符合新 spec 的 Markdown 文件，接著跑了幾天把全部需要修改的舊文件（1%）都轉完，所以現在除了少數文件外，剩下的文件都是符合 GFM spec 的文件了。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -132,6 +133,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -152,19 +162,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -176,7 +177,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

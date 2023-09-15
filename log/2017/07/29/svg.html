@@ -85,43 +85,31 @@
                 <a itemprop="mainEntityOfPage" href="/log/2017/07/29/svg/">SVG</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/35882767130/" title="SVG by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4300/35882767130_abb5a7e7b3_b.jpg" width="1024" height="782" alt="SVG" srcset="https://farm5.staticflickr.com/4300/35882767130_2848f09cbc_k.jpg 2x">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="782"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 <a href="https://material.io/icons/">Material Icons</a>，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些<a href="http://voormedia.com/blog/2012/10/creating-svg-vector-graphics-for-maximum-browser-compatibility">問題</a>，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。</p>
-              <p>GitHub 的用法是 inline SVG 為主，我自己則是用 <code>&lt;picture&gt;</code> 比較多：</p>
-              <pre>
-                <code class="language-html">&lt;picture&gt;
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/35882767130/" title="SVG by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4300/35882767130_abb5a7e7b3_b.jpg" width="1024" height="782" alt="SVG" srcset="https://farm5.staticflickr.com/4300/35882767130_2848f09cbc_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="782"/></img></a></p>
+<p>最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 <a href="https://material.io/icons/">Material Icons</a>，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些<a href="http://voormedia.com/blog/2012/10/creating-svg-vector-graphics-for-maximum-browser-compatibility">問題</a>，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。</p>
+<p>GitHub 的用法是 inline SVG 為主，我自己則是用 <code>&lt;picture&gt;</code> 比較多：</p>
+<pre><code class="language-html">&lt;picture&gt;
   &lt;source srcset="/path/to/icon.svg" type="image/svg+xml"&gt;
   &lt;img src="/path/to/icon.png" alt="" width="32" height="32" /&gt;
 &lt;/picture&gt;
-</code>
-              </pre>
-              <p>CSS Trick 有一篇文章 <a href="https://css-tricks.com/a-complete-guide-to-svg-fallbacks/">A Complete Guide to SVG Fallbacks</a> 則介紹了各種在網頁內放入 SVG 圖檔的古老方法，用 <code>&lt;picture&gt;</code> 是比較新的，沒列在其中，而我是為了向下相容選擇用 <code>&lt;picture&gt;</code>，因為支援<code>&lt;picture&gt;</code>標籤的瀏覽器都很新了，對於 SVG 的支援度很夠，剩下少數（大概都是 IE）就讓他直接吃 png 之類的（PS: pngquant 處理過的 PNG 很多可以直接在 IE6 上顯示透明色），這樣用起來就像是一般 <code>&lt;img&gt;</code> 一樣，SVG 檔可以先用 <a href="https://github.com/svg/svgo">svgo</a> 工具處理過，除此之外，我通常會先用 Adobe Illustrator 把不必要的圖層階層刪除，圖層在 SVG 原始碼裡面通常是會 <code>&lt;g&gt;</code> 標籤，另外也記得要把圖層名稱（id）改成 ASCII only 的名稱，甚至直接編輯原始碼刪除 id，因為 svgo 不會處理這部分。</p>
-              <p>用外部 SVG 檔案好處是可以善用 browser cache 減少傳輸量，尤其是大量重複使用的圖片，不過也會犧牲一些 SVG 的特性，例如會因此不能直接用 CSS 來調整樣式，做 transition，做動畫等等，所以有時候也是會用 inline SVG，就可以搭配 CSS、JS 弄出很多不錯的效果（Safari 偶爾還有遇到無解 bug），不過要讓 inline SVG fallback 回一般圖片就比較麻煩些了，在做這件事之前可以先看一下是不是有需要<a href="http://caniuse.com/#feat=svg-html5">支援</a>，以前是 iOS 不支援，現在還有機會碰到的大概還是 IE（6-8）吧，總之，如果有需要的話，就是參考 CSS Trick 的 <a href="https://css-tricks.com/svg-fallbacks/">SVG Fallbacks</a> 這篇文章，使用</p>
-              <pre>
-                <code class="language-html">&lt;svg width="96" height="96"&gt;
+</code></pre>
+<p>CSS Trick 有一篇文章 <a href="https://css-tricks.com/a-complete-guide-to-svg-fallbacks/">A Complete Guide to SVG Fallbacks</a> 則介紹了各種在網頁內放入 SVG 圖檔的古老方法，用 <code>&lt;picture&gt;</code> 是比較新的，沒列在其中，而我是為了向下相容選擇用 <code>&lt;picture&gt;</code>，因為支援<code>&lt;picture&gt;</code>標籤的瀏覽器都很新了，對於 SVG 的支援度很夠，剩下少數（大概都是 IE）就讓他直接吃 png 之類的（PS: pngquant 處理過的 PNG 很多可以直接在 IE6 上顯示透明色），這樣用起來就像是一般 <code>&lt;img&gt;</code> 一樣，SVG 檔可以先用 <a href="https://github.com/svg/svgo">svgo</a> 工具處理過，除此之外，我通常會先用 Adobe Illustrator 把不必要的圖層階層刪除，圖層在 SVG 原始碼裡面通常是會 <code>&lt;g&gt;</code> 標籤，另外也記得要把圖層名稱（id）改成 ASCII only 的名稱，甚至直接編輯原始碼刪除 id，因為 svgo 不會處理這部分。</p>
+<p>用外部 SVG 檔案好處是可以善用 browser cache 減少傳輸量，尤其是大量重複使用的圖片，不過也會犧牲一些 SVG 的特性，例如會因此不能直接用 CSS 來調整樣式，做 transition，做動畫等等，所以有時候也是會用 inline SVG，就可以搭配 CSS、JS 弄出很多不錯的效果（Safari 偶爾還有遇到無解 bug），不過要讓 inline SVG fallback 回一般圖片就比較麻煩些了，在做這件事之前可以先看一下是不是有需要<a href="http://caniuse.com/#feat=svg-html5">支援</a>，以前是 iOS 不支援，現在還有機會碰到的大概還是 IE（6-8）吧，總之，如果有需要的話，就是參考 CSS Trick 的 <a href="https://css-tricks.com/svg-fallbacks/">SVG Fallbacks</a> 這篇文章，使用</p>
+<pre><code class="language-html">&lt;svg width="96" height="96"&gt;
   &lt;image xlink:href="svg.svg" src="svg.png" width="96" height="96" /&gt;
 &lt;/svg&gt;
-</code>
-              </pre>
-              <p>這是個很有趣的技巧，首先 <code>&lt;image&gt;</code> 標籤是<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image">合法的 SVG 元素</a>，所以放在 SVG 不成問題，但是不支援 SVG 的瀏覽器，照理說也不應該認得 <code>&lt;image&gt;</code> 標籤啊，其實，<code>&lt;image&gt;</code> 在很久以前就一直是 <code>&lt;img&gt;</code> 的別名了，甚至在 WHATWG 的 parse HTML 文件的<a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">流程</a>裡都還有提到處理的方式，而經過測試也都證實了以前的瀏覽器確實是這樣的行為，文裡也有各瀏覽器的行為和支援狀況，不支援 inline SVG 的就會顯示替代的 png 或 jpg 。</p>
-              <p>文章裡面還有提到背景圖使用 SVG 的處理方式，不過因為我沒這樣使用，所以沒什麼實做到，另外最近也有人用外部 SVG 加上 CSS filter 來改變 <a href="https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images">SVG icon 顏色</a>，不過這太技巧太新了，考慮到支援度我也是沒有用過。</p>
-              <p>親和力問題的部分，一樣 CSS Tricks 有篇文章 <a href="https://css-tricks.com/accessible-svgs/">Accessible SVG</a> 在講相關的作法，像是用 <code>&lt;title&gt;</code> 加替代文字，加上 <code>role="img"</code> 等；如果要自己編寫 SVG，W3C 還有份 <a href="http://w3c.github.io/svgwg/specs/svg-authoring/">Authering Guide</a> 可以參考，除了親和力相關的資訊外還有不少技巧可以參考。</p>
-              <p>最後整理一下，拿到 svg 檔案後我的處理過程：</p>
-              <ol>
-                <li>用 Adobe Illustrator 先開來整理一下，修改圖層名稱、刪去合併不必要的圖層</li>
-                <li>輸出成 SVG 和 1x 解析度的 PNG</li>
-                <li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
-              </ol>
-              <p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
-            </section>
+</code></pre>
+<p>這是個很有趣的技巧，首先 <code>&lt;image&gt;</code> 標籤是<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image">合法的 SVG 元素</a>，所以放在 SVG 不成問題，但是不支援 SVG 的瀏覽器，照理說也不應該認得 <code>&lt;image&gt;</code> 標籤啊，其實，<code>&lt;image&gt;</code> 在很久以前就一直是 <code>&lt;img&gt;</code> 的別名了，甚至在 WHATWG 的 parse HTML 文件的<a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">流程</a>裡都還有提到處理的方式，而經過測試也都證實了以前的瀏覽器確實是這樣的行為，文裡也有各瀏覽器的行為和支援狀況，不支援 inline SVG 的就會顯示替代的 png 或 jpg 。</p>
+<p>文章裡面還有提到背景圖使用 SVG 的處理方式，不過因為我沒這樣使用，所以沒什麼實做到，另外最近也有人用外部 SVG 加上 CSS filter 來改變 <a href="https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images">SVG icon 顏色</a>，不過這太技巧太新了，考慮到支援度我也是沒有用過。</p>
+<p>親和力問題的部分，一樣 CSS Tricks 有篇文章 <a href="https://css-tricks.com/accessible-svgs/">Accessible SVG</a> 在講相關的作法，像是用 <code>&lt;title&gt;</code> 加替代文字，加上 <code>role="img"</code> 等；如果要自己編寫 SVG，W3C 還有份 <a href="http://w3c.github.io/svgwg/specs/svg-authoring/">Authering Guide</a> 可以參考，除了親和力相關的資訊外還有不少技巧可以參考。</p>
+<p>最後整理一下，拿到 svg 檔案後我的處理過程：</p>
+<ol>
+<li>用 Adobe Illustrator 先開來整理一下，修改圖層名稱、刪去合併不必要的圖層</li>
+<li>輸出成 SVG 和 1x 解析度的 PNG</li>
+<li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
+</ol>
+<p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -146,6 +134,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -166,19 +163,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -190,7 +178,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

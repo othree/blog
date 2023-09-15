@@ -81,24 +81,16 @@
                 <a href="/log/2019/03/09/read-code-using-vscode/">使用 VSCode 讀程式碼</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="674"/>
-                  </img>
-                </a>
-              </p>
-              <p>偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 <a href="https://blog.othree.net/log/2018/04/19/immer/">immer</a>，或是最近還在看的 <a href="https://lit-html.polymer-project.org/">lit-html</a>，然後最近發現 <a href="https://code.visualstudio.com/">VSCode</a> 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。</p>
-              <p>閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 <code>F12</code> 移動到定義處和 <code>Ctrl</code>+<code>-</code> 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：</p>
-              <ol>
-                <li><code>Opt</code> + <code>F12</code> Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。</li>
-                <li><code>Cmd</code> + <code>K</code><code>F12</code> Open Definition to the Side，這是兩段式的指令，先按 <code>Cmd</code> + <code>K</code> 然後再按 <code>F12</code>，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。</li>
-                <li><code>Shift</code> + <code>F12</code> Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。</li>
-              </ol>
-              <p>大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="674"/></img></a></p>
+<p>偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 <a href="https://blog.othree.net/log/2018/04/19/immer/">immer</a>，或是最近還在看的 <a href="https://lit-html.polymer-project.org/">lit-html</a>，然後最近發現 <a href="https://code.visualstudio.com/">VSCode</a> 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。</p>
+<p>閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 <code>F12</code> 移動到定義處和 <code>Ctrl</code>+<code>-</code> 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：</p>
+<ol>
+<li><code>Opt</code> + <code>F12</code> Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。</li>
+<li><code>Cmd</code> + <code>K</code> <code>F12</code> Open Definition to the Side，這是兩段式的指令，先按 <code>Cmd</code> + <code>K</code> 然後再按 <code>F12</code>，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。</li>
+<li><code>Shift</code> + <code>F12</code> Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。</li>
+</ol>
+<p>大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -114,44 +106,15 @@
                 <a href="/log/2017/09/14/sublime-text-3/">Sublime Text 3</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="670"/>
-                  </img>
-                </a>
-              </p>
-              <p>今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個<a href="https://www.sublimetext.com">更新</a>了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 <a href="https://github.com/wincent/command-t">Command-T</a>（不過我推薦用 <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a>）、<a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">Command Palette</a>、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w">
-                    <meta itemprop="width" content="325"/>
-                    <meta itemprop="height" content="168"/>
-                  </img>
-                </a>
-              </p>
-              <p>其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 <a href="https://www.sublimetext.com/3">Changelog</a> ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="670"/>
-                  </img>
-                </a>
-              </p>
-              <p>似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w">
-                    <meta itemprop="width" content="256"/>
-                    <meta itemprop="height" content="256"/>
-                  </img>
-                </a>
-              </p>
-              <p>我今天也因此好幾次找不到就是了...</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="670"/></img></a></p>
+<p>今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個<a href="https://www.sublimetext.com">更新</a>了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 <a href="https://github.com/wincent/command-t">Command-T</a>（不過我推薦用 <a href="https://github.com/kien/ctrlp.vim">ctrlp.vim</a>）、<a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">Command Palette</a>、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。</p>
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w"><meta itemprop="width" content="325"/><meta itemprop="height" content="168"/></img></a></p>
+<p>其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 <a href="https://www.sublimetext.com/3">Changelog</a> ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：</p>
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="670"/></img></a></p>
+<p>似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：</p>
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w"><meta itemprop="width" content="256"/><meta itemprop="height" content="256"/></img></a></p>
+<p>我今天也因此好幾次找不到就是了...</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -167,18 +130,9 @@
                 <a href="/log/2017/03/25/gitdags-git/">Gitdags, Git 示意圖工具</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="384"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
-              <pre>
-                <code>\documentclass[preview]{standalone}
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="384"/></img></a></p>
+<p>最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 <a href="https://github.com/Jubobs/gitdags">gitdags</a> 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的<a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging">樣子</a>（v2 的樣版改的更<a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">簡潔</a>了），看起來還蠻 ok 的，它是基於 <a href="http://www.texample.net/tikz/">TikZ</a> 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：</p>
+<pre><code>\documentclass[preview]{standalone}
 \usepackage{gitdags}
 
 \begin{document}
@@ -204,12 +158,11 @@
         {for-rebase} 
       \end{tikzpicture}
 \end{document}
-</code>
-              </pre>
-              <p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
-              <p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
-              <p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/%7Eu91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
-            </section>
+</code></pre>
+<p>產生的圖片就像是最上面的圖，gitdags 是用 <a href="http://ethanschoonover.com/solarized">solarized</a> 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 <a href="https://github.com/othree/gitdags">GtiHub 上</a>。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分<a href="https://github.com/othree/git-graph">全部丟上 GitHub</a> 了，後來發現原作者也有<a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015">一些 sample</a> 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 <a href="http://www.tug.org/mactex/">MacTeX</a> 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。</p>
+<p>不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 <a href="https://inkscape.org/en/">inkscape</a> 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。</p>
+<p>最後，gitdags 這名字裡面的 dag 應該是<a href="http://www.csie.ntnu.edu.tw/%7Eu91029/DirectedAcyclicGraph.html">有向無環圖</a>（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -225,16 +178,14 @@
                 <a href="/log/2016/09/17/git-mrt/">MRT &amp; GIT</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-              <p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
-              <div class="embed_16_9">
-                <iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"/>
-              </div>
-              <em class="extended">
-                <a href="/log/2016/09/17/git-mrt/">閱讀「MRT &amp; GIT」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+
+<p>今年 COSCUP Lightening Talk 分享的主題是 GIT &amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"/>
+</div>
+<em class="extended"><a href="/log/2016/09/17/git-mrt/">閱讀「MRT &amp; GIT」全文</a></em></section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -250,96 +201,113 @@
                 <a href="/log/2016/02/06/how-to-reduce-pdf-size/">How to Reduce PDF Size and Keep Text</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <h4>Requirement</h4>
-              <p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
-              <h4>Expect</h4>
-              <p>Expect the PDF file size is a little bit larger than JPG file.</p>
-              <h4>Issue</h4>
-              <p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
-              <ul>
-                <li>Page Size: 210mm*297mm (A4)</li>
-                <li>Resolution: 1240px*1754px</li>
-                <li>Fonts: 2 English font</li>
-              </ul>
-              <p>Sizes:</p>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Format</th>
-                    <th>Option</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>PSD</td>
-                    <td/>
-                    <td>79.7MB</td>
-                  </tr>
-                  <tr>
-                    <td>PNG</td>
-                    <td/>
-                    <td> 1.2MB</td>
-                  </tr>
-                  <tr>
-                    <td>JPG</td>
-                    <td>q: 100</td>
-                    <td> 0.6MB</td>
-                  </tr>
-                  <tr>
-                    <td>PDF</td>
-                    <td>default</td>
-                    <td> 7.0MB</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p>File transformed on Adobe CC 2016 Jan </p>
-              <p>Tried several methods to reduce the file size includes:</p>
-              <ul>
-                <li>Remove unused layers</li>
-                <li>Merge and flatten all layers</li>
-                <li>Use lower jpeg compression quality</li>
-                <li>Not save meta data</li>
-                <li>Not preserve Photoshop editing capability</li>
-                <li>Use Photoshop autotool &gt; PDF presentation</li>
-                <li>Use Illustrator</li>
-                <li>Use Acrobat Pro to optimize PDF</li>
-              </ul>
-              <p>But none of them can really make the PDF file as small as expected.</p>
-              <h4>Solution</h4>
-              <p>Separate the text and image. Also create a clean PSD file. Steps:</p>
-              <ol>
-                <li>Hide all text layers</li>
-                <li>Save as PNG file</li>
-                <li>Open PNG file in Photoshop</li>
-                <li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
-                <li>Save as Photoshop PDF file</li>
-              </ol>
-              <h5>Result</h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Format</th>
-                    <th>Option</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>JPG</td>
-                    <td>q: 100</td>
-                    <td style="text-align: right">618.0KB</td>
-                  </tr>
-                  <tr>
-                    <td>PDF</td>
-                    <td>default</td>
-                    <td style="text-align: right">624.0KB</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
-            </section>
+            <section itemprop="articleBody"><h4>Requirement</h4>
+
+<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
+
+<h4>Expect</h4>
+
+<p>Expect the PDF file size is a little bit larger than JPG file.</p>
+
+<h4>Issue</h4>
+
+<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
+
+<ul>
+<li>Page Size: 210mm*297mm (A4)</li>
+<li>Resolution: 1240px*1754px</li>
+<li>Fonts: 2 English font</li>
+</ul>
+
+<p>Sizes:</p>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>PSD</td>
+    <td/>
+    <td>79.7MB</td>
+  </tr>
+  <tr>
+    <td>PNG</td>
+    <td/>
+    <td> 1.2MB</td>
+  </tr>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td> 0.6MB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td> 7.0MB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>File transformed on Adobe CC 2016 Jan </p>
+
+<p>Tried several methods to reduce the file size includes:</p>
+
+<ul>
+<li>Remove unused layers</li>
+<li>Merge and flatten all layers</li>
+<li>Use lower jpeg compression quality</li>
+<li>Not save meta data</li>
+<li>Not preserve Photoshop editing capability</li>
+<li>Use Photoshop autotool &gt; PDF presentation</li>
+<li>Use Illustrator</li>
+<li>Use Acrobat Pro to optimize PDF</li>
+</ul>
+
+<p>But none of them can really make the PDF file as small as expected.</p>
+
+<h4>Solution</h4>
+
+<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
+
+<ol>
+<li>Hide all text layers</li>
+<li>Save as PNG file</li>
+<li>Open PNG file in Photoshop</li>
+<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
+<li>Save as Photoshop PDF file</li>
+</ol>
+
+<h5>Result</h5>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td style="text-align: right">618.0KB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td style="text-align: right">624.0KB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -355,19 +323,14 @@
                 <a href="/log/2012/12/08/flickr-share-with-templat/">Flickr Share with Template </a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8233565165/" title="flickr share with template by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg" width="1022" height="766" alt="flickr share with template" srcset="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg 1024w">
-                    <meta itemprop="width" content="1022"/>
-                    <meta itemprop="height" content="766"/>
-                  </img>
-                </a>
-              </p>
-              <p>前幾天在做 <a href="https://blog.othree.net/log/2012/12/02/srcset/">srcset 支援</a> 支援時，遇到一個問題是，Flickr 雖然有提供到 2048px 和原始大小的檔案，可是這些高解析度檔案的檔名和 1024px 以下的檔案是不一樣的，所以不能用簡單的加 postfix 來找到位置，所以我每要貼一張圖，就要辛苦的去開 Flickr 的各種 size 來抓他的路徑，然後剪剪貼貼組合出原始碼，這實在太辛苦了，而且手工作業長期下來很容易會出錯，剛好我也對 Flickr 預設的分享用 HTML code 不支援 XHTML 不滿很久了，所以我就決定寫個 Chrome extension 來做這件事。</p>
-              <p>目前還沒正式公開，沒有上架，<a href="https://github.com/othree/flickr-share-template">專案</a>在 Github 上，現在因為還沒上架，要使用比較麻煩一點，把專案 clone 到本機後，先開啟 Chrome 擴充功能的開發人員模式，然後選 <strong>載入未封裝擴充功能</strong>，路徑指到專案下的 source 去。</p>
-              <p>目前樣版語法用 mustache 語法，大概看一下預設的樣版就能懂怎麼用了，不過不是很正式的 parser 來處理，以後可能會換成 <a href="http://twitter.github.com/hogan.js/">hogan.js</a> 引擎，東西現狀其實只是可以用，還沒有寫文件，寫 License...等，先貼上來其實主要目的是，徵求一組可用的 icon，沒有 icon 就上架好像怪怪，有興趣提供的麻煩跟我聯絡，專案本身會是 MIT License，之後還會弄 Firefox 版，大概就這樣，非常感謝。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8233565165/" title="flickr share with template by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg" width="1022" height="766" alt="flickr share with template" srcset="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg 1024w"><meta itemprop="width" content="1022"/><meta itemprop="height" content="766"/></img></a></p>
+
+<p>前幾天在做 <a href="https://blog.othree.net/log/2012/12/02/srcset/">srcset 支援</a> 支援時，遇到一個問題是，Flickr 雖然有提供到 2048px 和原始大小的檔案，可是這些高解析度檔案的檔名和 1024px 以下的檔案是不一樣的，所以不能用簡單的加 postfix 來找到位置，所以我每要貼一張圖，就要辛苦的去開 Flickr 的各種 size 來抓他的路徑，然後剪剪貼貼組合出原始碼，這實在太辛苦了，而且手工作業長期下來很容易會出錯，剛好我也對 Flickr 預設的分享用 HTML code 不支援 XHTML 不滿很久了，所以我就決定寫個 Chrome extension 來做這件事。</p>
+
+<p>目前還沒正式公開，沒有上架，<a href="https://github.com/othree/flickr-share-template">專案</a>在 Github 上，現在因為還沒上架，要使用比較麻煩一點，把專案 clone 到本機後，先開啟 Chrome 擴充功能的開發人員模式，然後選 <strong>載入未封裝擴充功能</strong>，路徑指到專案下的 source 去。</p>
+
+<p>目前樣版語法用 mustache 語法，大概看一下預設的樣版就能懂怎麼用了，不過不是很正式的 parser 來處理，以後可能會換成 <a href="http://twitter.github.com/hogan.js/">hogan.js</a> 引擎，東西現狀其實只是可以用，還沒有寫文件，寫 License...等，先貼上來其實主要目的是，徵求一組可用的 icon，沒有 icon 就上架好像怪怪，有興趣提供的麻煩跟我聯絡，專案本身會是 MIT License，之後還會弄 Firefox 版，大概就這樣，非常感謝。</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -401,12 +364,13 @@
                 <a href="/log/2009/04/30/opera-in-taiwan/">Opera in Taiwan</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近 Opera 台灣隨著15週年辦了一系列的活動，包括使用者聚會、校園講座與徵才，15週年記者會等，小弟我有幸參與了其中幾場，好像可以簡單介紹一下XD。</p>
-              <p>Opera 大約是去年年底在台灣成立分公司，雖然 Opera Desktop 在台灣幾乎是沒什麼能見度，可是在電腦以外的平台佔有率還是最高的，不過 Opera 台灣並沒有打算只專注在這些平台，除了推廣外，還要把台灣為數不少的 Opera 使用者集結起來，讓社群成形，現在不但有正式的<a href="http://my.opera.com/tradchinese/forums/">中文討論區</a>，還有官方的 <a href="http://twitter.com/operatw">Twitter帳號</a> 和 <a href="http://www.plurk.com/operatw">Plurk帳號</a>，另外還有 <a href="http://my.opera.com/ting0619/blog/">Opera 第一手消息</a>這個部落格。目前是可以預見他們會對台灣使用者開始投入些心力、資源，總之是好是一件。</p>
-              <p>在這次活動中，有人問到，為什麼 Opera 功能那麼強，但是使用者還是不多，那時候 <a href="http://my.opera.com/andreasbovens/about/">Andreas</a> 說他們也好奇原因，其實我一直以來也很納悶， Opera 本身除了效能好，還內建很多功能，其中不少還是 Opera 首先推出的，但是一直以來他們的佔有率就是不高，即使成為免費版後也沒有提昇多少。不過我想這會一直是個難解的問題，但是至少我自己選擇的原因我還有點印象，說來算是時間點不好，當我在決定要選哪個瀏覽器時，Opera 畫中文還畫的很難看，這應該是我當初選擇使用 Firefox 而不是 Opera 的主要原因（我對這種東西很外貿協會的XD），後來才知道 Firefox 很多擴充套件的功能是 Opera 直接就有內建的。</p>
-              <p>剛好大約一個月一次的摩茲連續聚，我下次還沒想到可以分享什麼東西，大概就介紹 Opera 吧XD，所以應該這兩天開始要強迫自己用 Opera 用一個月了XD，到時候從功能面來介紹它:P，雖然不能吸引到 IE 使用者跳槽就是~_~。</p>
-            </section>
+            <section itemprop="articleBody"><p>最近 Opera 台灣隨著15週年辦了一系列的活動，包括使用者聚會、校園講座與徵才，15週年記者會等，小弟我有幸參與了其中幾場，好像可以簡單介紹一下XD。</p>
+
+<p>Opera 大約是去年年底在台灣成立分公司，雖然 Opera Desktop 在台灣幾乎是沒什麼能見度，可是在電腦以外的平台佔有率還是最高的，不過 Opera 台灣並沒有打算只專注在這些平台，除了推廣外，還要把台灣為數不少的 Opera 使用者集結起來，讓社群成形，現在不但有正式的<a href="http://my.opera.com/tradchinese/forums/">中文討論區</a>，還有官方的 <a href="http://twitter.com/operatw">Twitter帳號</a> 和 <a href="http://www.plurk.com/operatw">Plurk帳號</a>，另外還有 <a href="http://my.opera.com/ting0619/blog/">Opera 第一手消息</a>這個部落格。目前是可以預見他們會對台灣使用者開始投入些心力、資源，總之是好是一件。</p>
+
+<p>在這次活動中，有人問到，為什麼 Opera 功能那麼強，但是使用者還是不多，那時候 <a href="http://my.opera.com/andreasbovens/about/">Andreas</a> 說他們也好奇原因，其實我一直以來也很納悶， Opera 本身除了效能好，還內建很多功能，其中不少還是 Opera 首先推出的，但是一直以來他們的佔有率就是不高，即使成為免費版後也沒有提昇多少。不過我想這會一直是個難解的問題，但是至少我自己選擇的原因我還有點印象，說來算是時間點不好，當我在決定要選哪個瀏覽器時，Opera 畫中文還畫的很難看，這應該是我當初選擇使用 Firefox 而不是 Opera 的主要原因（我對這種東西很外貿協會的XD），後來才知道 Firefox 很多擴充套件的功能是 Opera 直接就有內建的。</p>
+
+<p>剛好大約一個月一次的摩茲連續聚，我下次還沒想到可以分享什麼東西，大概就介紹 Opera 吧XD，所以應該這兩天開始要強迫自己用 Opera 用一個月了XD，到時候從功能面來介紹它:P，雖然不能吸引到 IE 使用者跳槽就是~_~。</p></section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -422,27 +386,28 @@
                 <a href="/log/2008/12/27/dont-abandon-docx/">禁用 docx ?</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>剛剛看到 <a target="_blank" href="http://blog.ofset.org/ckhung/index.php?post%2F08cf">來自立法院的好消息: 「隨身碟優先開機」 及 「禁用 docx」</a> 這篇文章時，還真是有點嚇到了，首先我要說一下我的立場，我是支持開放的，相較於 doc 和 docx 我比較支持 docx，而 <a target="_blank" href="http://en.wikipedia.org/wiki/OpenDocument">OpenDocument Format</a> 和 <a target="_blank" href="http://en.wikipedia.org/wiki/Office_Open_XML"><span><span class="caps">OOXML</span></span></a> 比較的話我則是比較支持ODF的，當然支持那個格式不是這篇的重點， <a target="_blank" href="http://www.zdnet.com.tw/news/software/0,2000085678,20128475,00.htm"><span><span class="caps">OOXML </span></span>成為 <span><span class="caps">ISO </span></span>的過程</a> 也不是重點，我要說的是關於決議內容的錯誤。</p>
-              <h4>積極宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式</h4>
-              <p><span><span class="caps">OOXML</span></span>格式並不是封閉格式，ECMA那有提供完整的 <a target="_blank" href="http://www.ecma-international.org/publications/standards/Ecma-376.htm">檔案格式說明文件</a> ，OpenOffice.org也已經 <a target="_blank" href="http://www.ithome.com.tw/itadm/article.php?c=48087">有辦法支援</a> ，實在看不出那裡是封閉。</p>
-              <p>順便一提，以前的二進位格式檔案的說明也有 <a target="_blank" href="http://www.microsoft.com/interop/docs/OfficeBinaryFormats.mspx">相關文件</a> 了。</p>
-              <h4>建請在電腦軟體已經升級 Office 2007的公務單位，應積極宣導宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式</h4>
-              <p>會有這條是因為其他單位可能還沒有 Office 2007 會沒辦法開啟 <span><span class="caps">OOXML </span></span>格式的檔案，而升級到 Office 2007 會有諸多問題，包括預算、訓練（其實我覺得 Office 2007 根本就比以前好用許多），但是事實上微軟為了推廣 <span><span class="caps">OOXML </span></span>，特別作了 <a target="_blank" href="http://www.microsoft.com/downloads/details.aspx?displaylang=zh-tw&amp;FamilyID=941b3470-3ae9-4aee-8f43-c6bb74cd1466">檔案格式相容性套件</a> ，而且往前支援到 Office 2000，這樣的往前支援其實是很罕見的，而且下載過程並沒有做 <span><span class="caps">WGA </span></span>檢查。</p>
-              <p>這樣的決議文我覺得不是政商妥協下的產物，就是主事者沒搞清楚狀況造成的，如果真的通過的話而且 <strong>實行確實的話</strong> ，政府機關只會回去用以前的，真的是封閉格式 doc, xls, ppt 檔，難道立法院能夠真的把這些格式也禁掉嘛？</p>
-              <p>其他參考文件：</p>
-              <ul>
-                <li>
-                  <a target="_blank" href="http://support.microsoft.com/?scid=kb%3Bzh-tw%3B923505&amp;x=20&amp;y=13">如何安裝 Microsoft Office 相容性套件，以便使用舊版 Excel、PowerPoint 及 Word 來開啟和儲存 2007 Office 程式的檔案</a>
-                </li>
-                <li>
-                  <a target="_blank" href="http://office.microsoft.com/zh-tw/products/HA102058151028.aspx">Ecma Office Open <span><span class="caps">XML </span></span>檔案格式概觀</a>
-                </li>
-                <li>
-                  <a target="_blank" href="http://local.joelonsoftware.com/mediawiki/index.php/%E7%82%BA%E4%BB%80%E9%BA%BC%E5%BE%AE%E8%BB%9F_Office_%E7%9A%84%E6%AA%94%E6%A1%88%E6%A0%BC%E5%BC%8F%E5%A6%82%E6%AD%A4%E8%A4%87%E9%9B%9C%EF%BC%9F%EF%BC%88%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%EF%BC%89">為什麼微軟 Office 的檔案格式如此複雜？（以及一些解決方案）</a>
-                </li>
-              </ul>
-            </section>
+            <section itemprop="articleBody"><p>剛剛看到 <a target="_blank" href="http://blog.ofset.org/ckhung/index.php?post%2F08cf">來自立法院的好消息: 「隨身碟優先開機」 及 「禁用 docx」</a> 這篇文章時，還真是有點嚇到了，首先我要說一下我的立場，我是支持開放的，相較於 doc 和 docx 我比較支持 docx，而 <a target="_blank" href="http://en.wikipedia.org/wiki/OpenDocument">OpenDocument Format</a> 和 <a target="_blank" href="http://en.wikipedia.org/wiki/Office_Open_XML"><span><span class="caps">OOXML</span></span></a> 比較的話我則是比較支持ODF的，當然支持那個格式不是這篇的重點， <a target="_blank" href="http://www.zdnet.com.tw/news/software/0,2000085678,20128475,00.htm"><span><span class="caps">OOXML </span></span>成為 <span><span class="caps">ISO </span></span>的過程</a> 也不是重點，我要說的是關於決議內容的錯誤。</p>
+
+<h4>積極宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式</h4>
+
+<p><span><span class="caps">OOXML</span></span>格式並不是封閉格式，ECMA那有提供完整的 <a target="_blank" href="http://www.ecma-international.org/publications/standards/Ecma-376.htm">檔案格式說明文件</a> ，OpenOffice.org也已經 <a target="_blank" href="http://www.ithome.com.tw/itadm/article.php?c=48087">有辦法支援</a> ，實在看不出那裡是封閉。</p>
+
+<p>順便一提，以前的二進位格式檔案的說明也有 <a target="_blank" href="http://www.microsoft.com/interop/docs/OfficeBinaryFormats.mspx">相關文件</a> 了。</p>
+
+<h4>建請在電腦軟體已經升級 Office 2007的公務單位，應積極宣導宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式</h4>
+
+<p>會有這條是因為其他單位可能還沒有 Office 2007 會沒辦法開啟 <span><span class="caps">OOXML </span></span>格式的檔案，而升級到 Office 2007 會有諸多問題，包括預算、訓練（其實我覺得 Office 2007 根本就比以前好用許多），但是事實上微軟為了推廣 <span><span class="caps">OOXML </span></span>，特別作了 <a target="_blank" href="http://www.microsoft.com/downloads/details.aspx?displaylang=zh-tw&amp;FamilyID=941b3470-3ae9-4aee-8f43-c6bb74cd1466">檔案格式相容性套件</a> ，而且往前支援到 Office 2000，這樣的往前支援其實是很罕見的，而且下載過程並沒有做 <span><span class="caps">WGA </span></span>檢查。</p>
+
+<p>這樣的決議文我覺得不是政商妥協下的產物，就是主事者沒搞清楚狀況造成的，如果真的通過的話而且 <strong>實行確實的話</strong> ，政府機關只會回去用以前的，真的是封閉格式 doc, xls, ppt 檔，難道立法院能夠真的把這些格式也禁掉嘛？</p>
+
+<p>其他參考文件：</p>
+
+
+<ul>
+<li><a target="_blank" href="http://support.microsoft.com/?scid=kb%3Bzh-tw%3B923505&amp;x=20&amp;y=13">如何安裝 Microsoft Office 相容性套件，以便使用舊版 Excel、PowerPoint 及 Word 來開啟和儲存 2007 Office 程式的檔案</a></li>
+<li><a target="_blank" href="http://office.microsoft.com/zh-tw/products/HA102058151028.aspx">Ecma Office Open <span><span class="caps">XML </span></span>檔案格式概觀</a></li>
+<li><a target="_blank" href="http://local.joelonsoftware.com/mediawiki/index.php/%E7%82%BA%E4%BB%80%E9%BA%BC%E5%BE%AE%E8%BB%9F_Office_%E7%9A%84%E6%AA%94%E6%A1%88%E6%A0%BC%E5%BC%8F%E5%A6%82%E6%AD%A4%E8%A4%87%E9%9B%9C%EF%BC%9F%EF%BC%88%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%EF%BC%89">為什麼微軟 Office 的檔案格式如此複雜？（以及一些解決方案）</a></li>
+</ul></section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -458,13 +423,9 @@
                 <a href="/log/2008/12/13/mockups/">Mockups</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p><a href="http://www.balsamiq.com/products/mockups/desktop">Balsamiq Mockups</a> 是一款用 <span class="caps">AIR </span>寫的設計使用者介面的 mockup 軟體，不知道 mockup 是什麼的可以參考前陣子 <a href="http://sites.google.com/a/happydesigner.org/happydesigner-meetup/happydesigner-meetup-no-4">HappyDesigner Meetup 4</a> hlb 的<a href="http://www.slideshare.net/hlb/wireframe-mockup-prototype-presentation">投影片</a>，也有<a href="http://vimeo.com/2286637">影片</a>在 vimeo 上，我蠻早就有知道有這款軟體，而且一直都很喜歡它的手繪風格，不過那時沒什麼需求，所以沒深入研究。</p>
-              <p>後來發現到它有免費提供的幾個方法（包括寫篇 blog 介紹），剛好當時準備 <span class="caps">HDM4 </span>時有需要畫個幾張常見網頁 layout 的圖示，本來還想像男子漢用 <span class="caps">HTML </span>+ <span class="caps">CSS </span>來寫，後來就決定申請一個授權來畫這幾張圖片，使用的心得還可以拿來發一篇 blog，實在是一舉兩得啊～～。</p>
-              <em class="extended">
-                <a href="/log/2008/12/13/mockups/">閱讀「Mockups」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a href="http://www.balsamiq.com/products/mockups/desktop">Balsamiq Mockups</a> 是一款用 <span class="caps">AIR </span>寫的設計使用者介面的 mockup 軟體，不知道 mockup 是什麼的可以參考前陣子 <a href="http://sites.google.com/a/happydesigner.org/happydesigner-meetup/happydesigner-meetup-no-4">HappyDesigner Meetup 4</a> hlb 的<a href="http://www.slideshare.net/hlb/wireframe-mockup-prototype-presentation">投影片</a>，也有<a href="http://vimeo.com/2286637">影片</a>在 vimeo 上，我蠻早就有知道有這款軟體，而且一直都很喜歡它的手繪風格，不過那時沒什麼需求，所以沒深入研究。</p>
+
+<p>後來發現到它有免費提供的幾個方法（包括寫篇 blog 介紹），剛好當時準備 <span class="caps">HDM4 </span>時有需要畫個幾張常見網頁 layout 的圖示，本來還想像男子漢用 <span class="caps">HTML </span>+ <span class="caps">CSS </span>來寫，後來就決定申請一個授權來畫這幾張圖片，使用的心得還可以拿來發一篇 blog，實在是一舉兩得啊～～。</p><em class="extended"><a href="/log/2008/12/13/mockups/">閱讀「Mockups」全文</a></em></section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -487,7 +448,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -499,7 +460,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

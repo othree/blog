@@ -81,12 +81,14 @@
                 <a href="/log/2014/10/24/ie-video/">IE video 標籤記憶體問題</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近遇到一個 IE 會 crash 的問題，找很久才發現是記憶體問題，然後因為那頁有用到大量的 <code>&lt;video&gt;</code> 標籤，所以就直接鎖定目標，結果發現果然 video 就是問題元兇，測試到 IE 11 還是同樣行為。</p>
-              <p>目前發現的問題有兩層，第一層問題是如果 IE 在遇到 video 沒有設定 poster 時，會自動初始化整個 video 元件，去把影片抓下來，只為了產生 poster 圖片，第二層問題，就是這個初始化 video 元件的動作，會吃掉很多的記憶體，即使我的影片只有五百多kb，IE 還是一個 video 就吃掉數十 mb 的記憶體，即使這些 video 都沒有播放，甚至還用 CSS 藏起來了，然後因為一個頁面上有很多的影片輪流播放，所以把記憶體吃光後就當掉了。</p>
-              <p>要解決這個問題，一開始是想說設定正確的 poster 圖片就好了，確實解決了第一層的問題，但是因為影片還是會輪撥，遲早會把記憶體吃光，所以試了幾個方法想要避免這種情形，像是把 dom node detach 甚至砍掉之類的，不過都沒有效果，吃掉的記憶體不會還回來，最後只好讓 IE 不做輪撥了。</p>
-              <p>這個問題我看 stackoverflow 好像也沒有，看來在單一頁面上放很多 video 的使用情形真是很少見啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>最近遇到一個 IE 會 crash 的問題，找很久才發現是記憶體問題，然後因為那頁有用到大量的 <code>&lt;video&gt;</code> 標籤，所以就直接鎖定目標，結果發現果然 video 就是問題元兇，測試到 IE 11 還是同樣行為。</p>
+
+<p>目前發現的問題有兩層，第一層問題是如果 IE 在遇到 video 沒有設定 poster 時，會自動初始化整個 video 元件，去把影片抓下來，只為了產生 poster 圖片，第二層問題，就是這個初始化 video 元件的動作，會吃掉很多的記憶體，即使我的影片只有五百多kb，IE 還是一個 video 就吃掉數十 mb 的記憶體，即使這些 video 都沒有播放，甚至還用 CSS 藏起來了，然後因為一個頁面上有很多的影片輪流播放，所以把記憶體吃光後就當掉了。</p>
+
+<p>要解決這個問題，一開始是想說設定正確的 poster 圖片就好了，確實解決了第一層的問題，但是因為影片還是會輪撥，遲早會把記憶體吃光，所以試了幾個方法想要避免這種情形，像是把 dom node detach 甚至砍掉之類的，不過都沒有效果，吃掉的記憶體不會還回來，最後只好讓 IE 不做輪撥了。</p>
+
+<p>這個問題我看 stackoverflow 好像也沒有，看來在單一頁面上放很多 video 的使用情形真是很少見啊。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -102,18 +104,18 @@
                 <a href="/log/2014/10/23/resource-hints/">Resource Hints</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，範例如下：</p>
-              <pre>
-                <code>&lt;link rel="preconnect" href="//example.com"&gt;
+            <section itemprop="articleBody"><p><a href="www.w3.org/TR/2014/WD-resource-hints-20141021/">Resource Hints</a> 是最近剛公開的一個 W3C Working Draft，目前看作者都是 Google 的人，Resource Hints 是依附在 <code>&lt;link&gt;</code> 標籤或是 header 下的，用來告訴瀏覽器有哪些資源可以先讀好的一個慣例語法，範例如下：</p>
+
+<pre><code>&lt;link rel="preconnect" href="//example.com"&gt;
 &lt;link rel="preconnect" href="//cdn.example.com"&gt;
 &lt;link rel="preload" href="/assets/font.woff" as="font" loadpolicy="next"&gt;
 &lt;link rel="preload" href="/assets/logo.webp" as="image" loadpolicy="next inert"&gt;
-</code>
-              </pre>
-              <p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
-              <p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
-            </section>
+</code></pre>
+
+<p>可以發現有兩種 hint，分別是 <code>preconnect</code> 和 <code>preload</code>，當然就照字面上的意思就可以理解了，<code>preconnect</code> 就是先建立好連線，像是 HTTPS 連線就需要先做 handshake 交換好加解密用的 key，影響比較直接，<code>preload</code> 當然就是先把特定的檔案拉下來，而且還可以指定要不要先做處理，像是 decode jpg 圖檔之類的動作可以推遲到真的需要圖片時才做。</p>
+
+<p>目前看起來是不適合大量的檔案，應該還是要用來指派較關鍵的一些檔案，像是主要背景、大圖、字形之類的，而且因為可以根據設定 block onload event，拿來讀字形似乎可以避免 FOUT 的狀況，感覺是個看似簡單，但是功能其實還蠻多的新東西。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -129,10 +131,10 @@
                 <a href="/log/2014/10/13/node-ffi/">node-ffi</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今年的 JSDC 分享的是 node-ffi，不過我覺得沒講很好，反而練習講得比較好...</p>
-              <script async="async" class="speakerdeck-embed" data-id="fcbffc9033fa013238ec56e996df704e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-            </section>
+            <section itemprop="articleBody"><p>今年的 JSDC 分享的是 node-ffi，不過我覺得沒講很好，反而練習講得比較好...</p>
+
+<script async="async" class="speakerdeck-embed" data-id="fcbffc9033fa013238ec56e996df704e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -148,18 +150,12 @@
                 <a href="/log/2014/10/01/bracket/">[</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近因為 <a href="http://www.pcworld.com/article/2687857/bigger-than-heartbleed-shellshock-flaw-leaves-os-x-linux-more-open-to-attack.html">shellshock</a> 的關係，跑去看了 <code>/bin/</code> 下面的東西，結果突然發現有個執行檔叫做 <code>[</code>。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15403240745/" title="ls /bin/ by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_c.jpg" width="400" height="300" alt="ls /bin/" srcset="https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_c.jpg 768w">
-                    <meta itemprop="width" content="400"/>
-                    <meta itemprop="height" content="300"/>
-                  </img>
-                </a>
-              </p>
-              <p>執行了也完全沒反應，結果和同事討論就上去 stack overflow 來問問看，然後馬上就被回說看看 <code>man [</code>。想不到，原來 shell script 裡面的 if else condition 的 <code>[ ]</code> ，其實就是這個執行檔啊，以前一直以為是個語法的 syntax...</p>
-            </section>
+            <section itemprop="articleBody"><p>最近因為 <a href="http://www.pcworld.com/article/2687857/bigger-than-heartbleed-shellshock-flaw-leaves-os-x-linux-more-open-to-attack.html">shellshock</a> 的關係，跑去看了 <code>/bin/</code> 下面的東西，結果突然發現有個執行檔叫做 <code>[</code>。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15403240745/" title="ls /bin/ by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_c.jpg" width="400" height="300" alt="ls /bin/" srcset="https://farm4.staticflickr.com/3908/15403240745_b6a14b8fd3_c.jpg 768w"><meta itemprop="width" content="400"/><meta itemprop="height" content="300"/></img></a></p>
+
+<p>執行了也完全沒反應，結果和同事討論就上去 stack overflow 來問問看，然後馬上就被回說看看 <code>man [</code>。想不到，原來 shell script 裡面的 if else condition 的 <code>[ ]</code> ，其實就是這個執行檔啊，以前一直以為是個語法的 syntax...</p>
+</section>
             <footer>
               <a href="/log/unix/" rel="tag">UNIX</a>
             </footer>
@@ -182,7 +178,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -194,7 +190,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

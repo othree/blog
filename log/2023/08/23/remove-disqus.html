@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Remove Disqus : O3noBLOG</title>
+    <meta name="description" content=" 前陣子有整理了一下部落格的東西，大致上作的事情是： 拿掉 Google Analytic 拿掉所有的 SNS 按鈕 拿掉 Disqus 換 web font 服務 首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 web log 分析軟體，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 goaccess 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有朋友推薦了 GoatCounter 和 umami，分別是 golang 和 js..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="Common Log Format" href="/log/2023/08/14/common-log-format/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2023/08/23/remove-disqus/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2023/08/23/remove-disqus/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="Remove Disqus"/>
+    <meta property="og:description" content=" 前陣子有整理了一下部落格的東西，大致上作的事情是： 拿掉 Google Analytic 拿掉所有的 SNS 按鈕 拿掉 Disqus 換 web font 服務 首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 web log 分析軟體，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 goaccess 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有朋友推薦了 GoatCounter 和 umami，分別是 golang 和 js..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2023/08/23/remove-disqus/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg"/>
+    <meta property="og:image:width" content="400"/>
+    <meta property="og:image:height" content="280"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-remove-disqus">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-08-23T23:03:25" id="date-2023-08-23">
+                <span class="mon">08月</span>
+                <span class="day">23日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2023/08/23/remove-disqus/">Remove Disqus</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger"><meta itemprop="width" content="400"/><meta itemprop="height" content="280"/></img></a></p>
+<p>前陣子有整理了一下部落格的東西，大致上作的事情是：</p>
+<ul>
+<li>拿掉 Google Analytic</li>
+<li>拿掉所有的 SNS 按鈕</li>
+<li>拿掉 Disqus</li>
+<li>換 web font 服務</li>
+</ul>
+<p>首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析軟體</a>，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 <a href="https://goaccess.io/">goaccess</a> 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有<a href="https://twitter.com/hsins_/status/1690038318732611584">朋友</a>推薦了 <a href="https://www.goatcounter.com/">GoatCounter</a> 和 <a href="https://umami.is/">umami</a>，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫。</p>
+<p>第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview">Web Intent</a> 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API">Web Share API</a> 的按鈕。</p>
+<p>然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。</p>
+<p>我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的<a href="https://twitter.com/hackmdio/status/1692158313704910982">消息</a>，跟著原推文下去找其實也有不少的替代方案，像是 <a href="https://cusdis.com/">cusdis</a>、用 GitHub 的 <a href="https://giscus.app/">giscus</a> 和 <a href="https://utteranc.es/">utterances</a> 等，其實 <a href="https://www.wappalyzer.com/technologies/comment-systems/">Wappalyzer</a> 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。</p>
+<p>其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 <a href="https://activitypub.rocks/">ActivityPub</a> 和 <a href="https://indieweb.org/Webmention">Webmention</a> ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少<a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/">手工</a>；另外一個選擇 Webmention，則可以參考 Jason 的「<a href="https://jason-memo.dev/posts/webmention/">透過 webmention 來搜集 blog 的社群迴響</a>」，基本上是可以透過第三方服務來弄成純前端的方案。</p>
+<p>最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 <a href="https://twitter.com/littlegoodjack/status/1691699453877682247">Laravel 因為 GDPR 的關係改用</a> <a href="https://fonts.bunny.net/">Bunny Fonts</a> 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。</p>
+<p>然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，<a href="https://www.eff.org/pages/privacy-badger">EFF Privacy Badger</a> 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。</p>
+</section>
+            <footer>
+              <a href="/log/about/" rel="tag">關於這裡</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Remove Disqus</strong>發表於 2023-08-23，文章類別為
+			  <a href="/log/about/">關於這裡</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2023/08/14/common-log-format/"><span class="prefix">上一篇：</span>Common Log Format<time>2023-08-14</time></a><a class="next pn" href="/log/2023/09/10/vim-license-1/"><span class="prefix">下一篇：</span>Vim License 的故事（上）<time>2023-09-10</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
+            </li>
+            <li>
+              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/site/happybusy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>

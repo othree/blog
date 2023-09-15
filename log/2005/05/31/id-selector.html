@@ -85,11 +85,11 @@
                 <a itemprop="mainEntityOfPage" href="/log/2005/05/31/id-selector/">id選擇器的問題</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>之前看過兩三篇關於如何寫更有效率的CSS的文章（例如：<a href="http://www.456bereastreet.com/archive/200503/css_tips_and_tricks_part_1/"><span class="caps">CSS </span>tips and tricks part 1</a>），講到<a href="http://www.w3.org/TR/CSS21/selector.html#id-selectors">id選擇器</a>的時候，都提到他前面可以不用加標籤名稱，因為id在一份HTML文件中應該是唯一的，不過我在實際使用時卻遇到一些怪現象，而且IE和Firefox都有這問題，基本上我也不確定這是不是不對的。</p>
-              <p>首先來看我們的<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.1.html">測試網頁一</a>，在這個網頁可以看到兩個方塊，一個是綠色的，另一個是紅色的。其中綠色的那個方塊他的id是<strong>l1</strong>，紅色那塊則是<strong>l2</strong>，這網頁的完整CSS code如下：</p>
-              <pre>
-                <code>div {
+            <section itemprop="articleBody"><p>之前看過兩三篇關於如何寫更有效率的CSS的文章（例如：<a href="http://www.456bereastreet.com/archive/200503/css_tips_and_tricks_part_1/"><span class="caps">CSS </span>tips and tricks part 1</a>），講到<a href="http://www.w3.org/TR/CSS21/selector.html#id-selectors">id選擇器</a>的時候，都提到他前面可以不用加標籤名稱，因為id在一份HTML文件中應該是唯一的，不過我在實際使用時卻遇到一些怪現象，而且IE和Firefox都有這問題，基本上我也不確定這是不是不對的。</p><p>首先來看我們的<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.1.html">測試網頁一</a>，在這個網頁可以看到兩個方塊，一個是綠色的，另一個是紅色的。其中綠色的那個方塊他的id是<strong>l1</strong>，紅色那塊則是<strong>l2</strong>，這網頁的完整CSS code如下：</p>
+
+
+
+<pre><code>div {
 	background-color: white;
 }
 
@@ -103,33 +103,46 @@
 	width: 100px;
 	height: 100px;
 	background-color: red;
-}</code>
-              </pre>
-              <p>看起來一切OK，我先讓所有的div標籤的預設背景色是白色，然後再用id選擇器對兩個物件指定顏色。接著問題來了，來看<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.2.html">測試網頁二</a>。在這個例子中，<code>id="l2"</code>的方塊變成白色了，事實上CSS code只有改了一行如下：</p>
-              <pre>
-                <code>#l1 div {
+}</code></pre>
+
+
+
+<p>看起來一切OK，我先讓所有的div標籤的預設背景色是白色，然後再用id選擇器對兩個物件指定顏色。接著問題來了，來看<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.2.html">測試網頁二</a>。在這個例子中，<code>id="l2"</code>的方塊變成白色了，事實上CSS code只有改了一行如下：</p>
+
+
+
+<pre><code>#l1 div {
 	background-color: white;
 }
-</code>
-              </pre>
-              <p>這行的意思是說在<code>id="l1"</code>之下的div標籤底色都是白的。照理說這樣的設定應該不會影響到顯示結果，因為<code>id="l2"</code>的設定在他的後面，後宣告的會覆蓋先宣告的，而且同為id選擇器，優先度應該一樣，但是結果卻是<code>#l1 div</code>勝過<code>#l2</code>。所以我試出了兩個可以處理這問題的寫法，分別是<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.3.html">方法一</a>和<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.4.html">方法二</a>，方法一修改的部分如下：</p>
-              <pre>
-                <code>div#l2 {
+</code></pre>
+
+
+
+<p>這行的意思是說在<code>id="l1"</code>之下的div標籤底色都是白的。照理說這樣的設定應該不會影響到顯示結果，因為<code>id="l2"</code>的設定在他的後面，後宣告的會覆蓋先宣告的，而且同為id選擇器，優先度應該一樣，但是結果卻是<code>#l1 div</code>勝過<code>#l2</code>。所以我試出了兩個可以處理這問題的寫法，分別是<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.3.html">方法一</a>和<a href="http://blog.othree.net/log/2005/05/31/id_selector/css_id_selector.4.html">方法二</a>，方法一修改的部分如下：</p>
+
+
+
+<pre><code>div#l2 {
 	width: 100px;
 	height: 100px;
 	background-color: red;
-}</code>
-              </pre>
-              <p>方法二修改的部分如下：</p>
-              <pre>
-                <code>#l1 #l2 {
+}</code></pre>
+
+
+
+<p>方法二修改的部分如下：</p>
+
+
+
+<pre><code>#l1 #l2 {
 	width: 100px;
 	height: 100px;
 	background-color: red;
-}</code>
-              </pre>
-              <p>其中方法二我覺得還蠻容易理解的，感覺上就是做一個優先度更高的選擇器（前後都是id選擇器）來覆蓋屬性值，方法一就讓我很困惑了，為什麼我把標籤名稱放到id選擇器前面就可以產生效果，我到現在還是沒個頭緒。</p>
-            </section>
+}</code></pre>
+
+
+
+<p>其中方法二我覺得還蠻容易理解的，感覺上就是做一個優先度更高的選擇器（前後都是id選擇器）來覆蓋屬性值，方法一就讓我很困惑了，為什麼我把標籤名稱放到id選擇器前面就可以產生效果，我到現在還是沒個頭緒。</p></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -154,6 +167,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -174,19 +196,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -198,7 +211,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

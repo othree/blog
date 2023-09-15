@@ -81,11 +81,12 @@
                 <a href="/log/2011/07/31/getelementbyid-not-on-element/">getElementById </a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 <a href="https://developer.mozilla.org/en/DOM/document.getElementById">getElementById</a> 這個函式其實只有 <a href="https://developer.mozilla.org/en/DOM/document#Methods">document 物件</a> 才有，<a href="https://developer.mozilla.org/en/DOM/element#Methods">element 物件</a> 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 <a href="http://mootools.net/">mootools</a> 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。</p>
-              <p>於是我改用 <a href="http://jquery.com/">jQuery</a> ，更精確的一點說我是用 <a href="http://sizzlejs.com/">Sizzle</a>，結果我發現用 find 狀況依舊，因為 Sizzle 引擎有對選擇器做一些最佳化，如果看到是 <code>"#id"</code> 這樣的形式，就會直接用 <code>document.getElementById()</code> ，然後就悲劇重演了～</p>
-              <p>結果目前這種狀況我是只能先用 <code>*#id</code> 這樣的寫法來給 Sizzle 處理，應該會去報 jQuery 和 mootools 的 bug。這問題我也有在 W3C <a href="http://www.w3.org/html/ig/zh/">中文興趣小組</a>的討論群組裡面 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Jul/0030.html">提出</a>，目前還沒空回文，有興趣的可以一起來參與討論啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>前陣子才注意到的問題，顯然都被 JavaScript library 慣壞了，就是 <a href="https://developer.mozilla.org/en/DOM/document.getElementById">getElementById</a> 這個函式其實只有 <a href="https://developer.mozilla.org/en/DOM/document#Methods">document 物件</a> 才有，<a href="https://developer.mozilla.org/en/DOM/element#Methods">element 物件</a> 是沒有的，因為一份文件中，每個 id 都必須要是唯一的。而如果是用 jQuery 想要找某個節點下面的某 id，直接用 find，根本也不太會注意這個問題，最近我比較常接觸的 <a href="http://mootools.net/">mootools</a> 還直接實作了 element 的 getElementById 函式，不過問題就來了，它的實作其實還是去用 document 的 getElementById （因為 id 唯一），但是我去給他找的目標 element ，其實是動態產生，還沒有放進 document 的節點，所以它的實作方法就會找不到我要的目標。</p>
+
+<p>於是我改用 <a href="http://jquery.com/">jQuery</a> ，更精確的一點說我是用 <a href="http://sizzlejs.com/">Sizzle</a>，結果我發現用 find 狀況依舊，因為 Sizzle 引擎有對選擇器做一些最佳化，如果看到是 <code>"#id"</code> 這樣的形式，就會直接用 <code>document.getElementById()</code> ，然後就悲劇重演了～</p>
+
+<p>結果目前這種狀況我是只能先用 <code>*#id</code> 這樣的寫法來給 Sizzle 處理，應該會去報 jQuery 和 mootools 的 bug。這問題我也有在 W3C <a href="http://www.w3.org/html/ig/zh/">中文興趣小組</a>的討論群組裡面 <a href="http://lists.w3.org/Archives/Public/public-html-ig-zh/2011Jul/0030.html">提出</a>，目前還沒空回文，有興趣的可以一起來參與討論啊。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -108,7 +109,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -120,7 +121,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

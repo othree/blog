@@ -81,16 +81,21 @@
                 <a href="/log/2010/02/28/vimrc-onload/">vimrc 的 onload</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
-              <pre>
-                <code>if exists(":Align")
+            <section itemprop="articleBody"><p>vimrc 會比任何 plugin 都還要先執行，所以如果有什麼工作是想要在 plugin 讀完後才做的，就不能直接寫在 vimrc 裡面，以我的例子，我想要在某些 plugin 有安裝，該 plugin 的命令確實存在的話，才去另外做這些命令的 mapping ，例如：</p>
+
+
+
+<pre><code>if exists(":Align")
     com! -bang -range -nargs=* A &lt;line1&gt;,&lt;line2&gt;call Align#Align(&lt;bang&gt;0,&lt;q-args&gt;)
-endif</code>
-              </pre>
-              <p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
-              <pre>
-                <code>function AfterStart ()
+endif</code></pre>
+
+
+
+<p>這段程式直接放在 vimrc 裡面的話， if 判斷都不會成立，所以我的作法是丟到 function 裡面，然後放到 <a href="http://vimdoc.sourceforge.net/htmldoc/autocmd.html#VimEnter">VimEnter</a> 這個 auto command 的事件執行：</p>
+
+
+
+<pre><code>function AfterStart ()
 
 " plugin commands
 if exists(":Align")
@@ -99,9 +104,7 @@ endif
 
 endfunction
 autocmd VimEnter * :call AfterStart()
-</code>
-              </pre>
-            </section>
+</code></pre></section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -117,13 +120,15 @@ autocmd VimEnter * :call AfterStart()
                 <a href="/log/2010/02/12/jquery-function-in-14/">jQuery() in 1.4 </a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p><a href="http://www.jquery.com">jQuery 1.4</a> 有個改變應該很少有人注意到，我也是最近剛好有需求才發現，就是直接執行 jQuery 不傳任何參數：</p>
-              <pre>
-                <code>jQuery();</code>
-              </pre>
-              <p>結果會傳回一個 <a href="http://api.jquery.com/jQuery/#returning-empty-set">空的 jQuery set</a> ，不過這在 1.4 以前的版本會傳回 <a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#i-Document">document</a> ，這樣的修改我覺得是比較好的，因為以前完全沒辦法產生空的 jQuery set，如果要自己做 jQuery set 會比較方便，除了把要的 <span class="caps">DOM </span>節點抓好放陣列丟給 jQuery 外還多了個建立空的 jQuery set 後一個一個把要的節點丟進去的方法，另一個優點是這樣確保 jQuery function 傳回來的物件是同樣的類型。</p>
-            </section>
+            <section itemprop="articleBody"><p><a href="http://www.jquery.com">jQuery 1.4</a> 有個改變應該很少有人注意到，我也是最近剛好有需求才發現，就是直接執行 jQuery 不傳任何參數：</p>
+
+
+
+<pre><code>jQuery();</code></pre>
+
+
+
+<p>結果會傳回一個 <a href="http://api.jquery.com/jQuery/#returning-empty-set">空的 jQuery set</a> ，不過這在 1.4 以前的版本會傳回 <a href="http://www.w3.org/TR/2000/WD-DOM-Level-1-20000929/level-one-core.html#i-Document">document</a> ，這樣的修改我覺得是比較好的，因為以前完全沒辦法產生空的 jQuery set，如果要自己做 jQuery set 會比較方便，除了把要的 <span class="caps">DOM </span>節點抓好放陣列丟給 jQuery 外還多了個建立空的 jQuery set 後一個一個把要的節點丟進去的方法，另一個優點是這樣確保 jQuery function 傳回來的物件是同樣的類型。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -139,11 +144,11 @@ autocmd VimEnter * :call AfterStart()
                 <a href="/log/2010/02/09/wai-aria/">WAI-ARIA</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p><a href="http://www.w3.org/WAI/intro/aria.php"><span class="caps">WAI</span>-ARIA</a> 全名是 Accessible Rich Internet Applications Suite，是 <a href="http://www.w3.org/WAI/"><span class="caps">WAI</span></a> 正在制定中的規範之一，對象是網路應用程式，像是 gmail、各種 <span class="caps">CMS </span>等，它在WAI 制定的各種規範中，是唯一縮寫名稱用 <span class="caps">WAI</span>- 開頭的，一直很好奇為什麼，前幾天寫信去問也得到了答覆：</p>
-              <blockquote>Short answer: Because the acronym <span class="caps">ARIA </span>is used for other things, we use <span class="caps">WAI</span>-ARIA.</blockquote>
-              <p>結果和 J長輩 猜的一樣是因為 <a href="http://www.ariacompany.net/index2.htm">A</a><a href="http://www.aria-soft.com/">R</a><a href="http://en.wikipedia.org/wiki/Aria">I</a><a href="http://www.google.com/search?q=aria">A</a>  太常見了，所以加上 <span class="caps">WAI</span>- 。</p>
-            </section>
+            <section itemprop="articleBody"><p><a href="http://www.w3.org/WAI/intro/aria.php"><span class="caps">WAI</span>-ARIA</a> 全名是 Accessible Rich Internet Applications Suite，是 <a href="http://www.w3.org/WAI/"><span class="caps">WAI</span></a> 正在制定中的規範之一，對象是網路應用程式，像是 gmail、各種 <span class="caps">CMS </span>等，它在WAI 制定的各種規範中，是唯一縮寫名稱用 <span class="caps">WAI</span>- 開頭的，一直很好奇為什麼，前幾天寫信去問也得到了答覆：</p>
+
+<blockquote>Short answer: Because the acronym <span class="caps">ARIA </span>is used for other things, we use <span class="caps">WAI</span>-ARIA.</blockquote>
+
+<p>結果和 J長輩 猜的一樣是因為 <a href="http://www.ariacompany.net/index2.htm">A</a> <a href="http://www.aria-soft.com/">R</a> <a href="http://en.wikipedia.org/wiki/Aria">I</a> <a href="http://www.google.com/search?q=aria">A</a>  太常見了，所以加上 <span class="caps">WAI</span>- 。</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -166,7 +171,7 @@ autocmd VimEnter * :call AfterStart()
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -178,7 +183,7 @@ autocmd VimEnter * :call AfterStart()
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

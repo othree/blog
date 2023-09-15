@@ -85,15 +85,12 @@
                 <a itemprop="mainEntityOfPage" href="/log/2018/09/21/intrinsic-size/">Intrinsic Size 媒體寬高比</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>HTML 文件在編寫插入 <code>&lt;img&gt;</code> 時，通常都會順便加上寬高的資訊，早期這樣做除了指定圖片呈現時的大小外，還有一個好處是提升頁面繪製的速度，不用在圖片讀取好、知道實際寬高時，又重新排版重畫版面，不過這個狀況在用 CSS 設定動態寬度時，就又回到原點了，像是設定 <code>width: 100%;</code> 這種，因為沒辦法設定相對於圖片寬度的高度值，所以瀏覽器只能自己先隨便決定一個高度，等圖片抓好再重排一次。</p>
-              <p>一直以來這問題都沒好的方案處理，在排版上比較多人採用的是外面多一層 block 元素然後用 <code>padding-top</code> 來把空間先佔好，不過這也只算是個替代方案，真的要處理應該還是要從 HTML 或是 CSS 下手，然後前兩天才終於看到有個不錯的方案 Chrome 要來實做了，叫做 <a href="https://github.com/ojanvafai/intrinsicsize-attribute">Intrinsic Size</a>：</p>
-              <pre>
-                <code class="language-html">&lt;img intrinsicsize="250 x 200" src="cat.jpg"&gt;
-</code>
-              </pre>
-              <p>就是一個長乘寬的概念，中間那個乘號其實是小寫的 <code>x</code>，然後提供的長寬資訊其實是等於預先給的 naturalWidth、naturalHeight，為什麼不用 aspect ratio 呢？在提案的文件裡面其實都有寫到，基本上就是這種設計提供的資訊更多，有更多好處，例如都沒設定寬高時，可以拿 <code>intrinsicsize</code> 來先用之類的，<code>intrinsicsize</code>目前設計只能用在圖片和影片上，Chrome <a href="https://www.chromestatus.com/feature/4704436815396864">預計</a>在 71 的時候推出這個功能，也已經做好<strong>有貓</strong>的<a href="https://googlechrome.github.io/samples/intrinsic-size/index.html">測試網頁</a>了，感覺一切都箭在弦上了，不過這新提案在 WICG 上幾乎沒<a href="https://discourse.wicg.io/t/layout-of-img-canvas-and-video-for-any-elements-suggestion/1595/2">討論</a>，提案者是 WICG 也是 Chromium 成員就是，另外就是另外三家的 web platform status 都還查不到，並且，其實也有一個 CSS 的 <code>aspect-ratio</code><a href="https://www.xanthir.com/blog/b4810">提案</a>，所以到底會怎樣還很難說啊（不過我覺得是會變標準啦）。</p>
-            </section>
+            <section itemprop="articleBody"><p>HTML 文件在編寫插入 <code>&lt;img&gt;</code> 時，通常都會順便加上寬高的資訊，早期這樣做除了指定圖片呈現時的大小外，還有一個好處是提升頁面繪製的速度，不用在圖片讀取好、知道實際寬高時，又重新排版重畫版面，不過這個狀況在用 CSS 設定動態寬度時，就又回到原點了，像是設定 <code>width: 100%;</code> 這種，因為沒辦法設定相對於圖片寬度的高度值，所以瀏覽器只能自己先隨便決定一個高度，等圖片抓好再重排一次。</p>
+<p>一直以來這問題都沒好的方案處理，在排版上比較多人採用的是外面多一層 block 元素然後用 <code>padding-top</code> 來把空間先佔好，不過這也只算是個替代方案，真的要處理應該還是要從 HTML 或是 CSS 下手，然後前兩天才終於看到有個不錯的方案 Chrome 要來實做了，叫做 <a href="https://github.com/ojanvafai/intrinsicsize-attribute">Intrinsic Size</a>：</p>
+<pre><code class="language-html">&lt;img intrinsicsize="250 x 200" src="cat.jpg"&gt;
+</code></pre>
+<p>就是一個長乘寬的概念，中間那個乘號其實是小寫的 <code>x</code>，然後提供的長寬資訊其實是等於預先給的 naturalWidth、naturalHeight，為什麼不用 aspect ratio 呢？在提案的文件裡面其實都有寫到，基本上就是這種設計提供的資訊更多，有更多好處，例如都沒設定寬高時，可以拿 <code>intrinsicsize</code> 來先用之類的，<code>intrinsicsize</code>目前設計只能用在圖片和影片上，Chrome <a href="https://www.chromestatus.com/feature/4704436815396864">預計</a>在 71 的時候推出這個功能，也已經做好<strong>有貓</strong>的<a href="https://googlechrome.github.io/samples/intrinsic-size/index.html">測試網頁</a>了，感覺一切都箭在弦上了，不過這新提案在 WICG 上幾乎沒<a href="https://discourse.wicg.io/t/layout-of-img-canvas-and-video-for-any-elements-suggestion/1595/2">討論</a>，提案者是 WICG 也是 Chromium 成員就是，另外就是另外三家的 web platform status 都還查不到，並且，其實也有一個 CSS 的 <code>aspect-ratio</code> <a href="https://www.xanthir.com/blog/b4810">提案</a>，所以到底會怎樣還很難說啊（不過我覺得是會變標準啦）。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -118,6 +115,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -138,19 +144,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -162,7 +159,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

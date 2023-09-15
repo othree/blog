@@ -85,95 +85,72 @@
                 <a itemprop="mainEntityOfPage" href="/log/2019/01/26/async-await-try-catch/">async, await and try catch</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/27075072839/" title="New Zeland by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="New Zeland" srcset="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg 1024w, https://farm5.staticflickr.com/4536/27075072839_ef2586e741_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>這篇想說一下 <code>async</code>﹑<code>await</code> 語法的一些小細節，首先從 <code>async</code> 來說吧，一般來說，async function 是在內部有需要用 <code>await</code> 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會<a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-async-functions-abstract-operations">自動被包成 Promise</a>，所以像下面的程式：</p>
-              <pre>
-                <code class="language-js">async function wow () {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/27075072839/" title="New Zeland by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="New Zeland" srcset="https://farm5.staticflickr.com/4536/27075072839_b123075b6f_b.jpg 1024w, https://farm5.staticflickr.com/4536/27075072839_ef2586e741_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+<p>這篇想說一下 <code>async</code>﹑<code>await</code> 語法的一些小細節，首先從 <code>async</code> 來說吧，一般來說，async function 是在內部有需要用 <code>await</code> 等 Promise 結果的時候才使用，也由於這個特性，async function 的回傳值都會是個 Promise，意思就是你回傳非 Promise 的值，會<a href="https://www.ecma-international.org/ecma-262/9.0/index.html#sec-async-functions-abstract-operations">自動被包成 Promise</a>，所以像下面的程式：</p>
+<pre><code class="language-js">async function wow () {
     return Promise.resolve(100);
 }
 
 wow().then(v =&gt; { console.log(v); });
-</code>
-              </pre>
-              <p>就等同於：</p>
-              <pre>
-                <code class="language-js">async function wow () {
+</code></pre>
+<p>就等同於：</p>
+<pre><code class="language-js">async function wow () {
     return 100;
 }
 
 wow().then(v =&gt; { console.log(v); });
-</code>
-              </pre>
-              <p>和直接回 Promise value 比起來，效能上不會有什麼顯著差異，從建議的實做方法來看就是多一個判斷。再來看看 <code>await</code> 吧，首先一樣，<code>await</code> 一般是用來接 Promise 的，不過其實也是可以接非 Promise value 的</p>
-              <pre>
-                <code class="language-js">async function wow () {
+</code></pre>
+<p>和直接回 Promise value 比起來，效能上不會有什麼顯著差異，從建議的實做方法來看就是多一個判斷。再來看看 <code>await</code> 吧，首先一樣，<code>await</code> 一般是用來接 Promise 的，不過其實也是可以接非 Promise value 的</p>
+<pre><code class="language-js">async function wow () {
   var r = await 1;
   console.log(1);
 }
 
 wow();
 console.log(2);
-</code>
-              </pre>
-              <p>所以這樣的程式碼也可以正確執行，不過 await 那邊的執行方式還是會維持非同步的（實際上應該是後面的東西都會用 Promise 包起來一次），所以這段程式碼的輸出會是先輸出 <code>2</code> 再輸出 <code>1</code>。</p>
-              <p>再來這點可能比較多人知道，就是連續的多個 <code>await</code> 不會讓這些非同步操作同時開始：</p>
-              <pre>
-                <code class="language-js">async function wow () {
+</code></pre>
+<p>所以這樣的程式碼也可以正確執行，不過 await 那邊的執行方式還是會維持非同步的（實際上應該是後面的東西都會用 Promise 包起來一次），所以這段程式碼的輸出會是先輸出 <code>2</code> 再輸出 <code>1</code>。</p>
+<p>再來這點可能比較多人知道，就是連續的多個 <code>await</code> 不會讓這些非同步操作同時開始：</p>
+<pre><code class="language-js">async function wow () {
   const a = await fetch('/a');
   const b = await fetch('/b');
   const c = await fetch('/c');
 
   return [a, b, c];
 }
-</code>
-              </pre>
-              <p>這樣其實三個請求會照順序執行，<code>a</code> 有結果了才去要 <code>b</code>，<code>b</code> 有結果了才去要 <code>c</code>，而不是同時處理，如果要同時發出請求則還是需要用 <code>Promise.all</code>，然後不用 <code>async</code> 了：</p>
-              <pre>
-                <code class="language-js">function wow () {
+</code></pre>
+<p>這樣其實三個請求會照順序執行，<code>a</code> 有結果了才去要 <code>b</code>，<code>b</code> 有結果了才去要 <code>c</code>，而不是同時處理，如果要同時發出請求則還是需要用 <code>Promise.all</code>，然後不用 <code>async</code> 了：</p>
+<pre><code class="language-js">function wow () {
   return Promise.all([
     fetch('/a'),
     fetch('/b'),
     fetch('/c')
   ]);
 }
-</code>
-              </pre>
-              <p>不要  <code>await</code> 的話，也是可以先 assign 給變數的：</p>
-              <pre>
-                <code class="language-js">function wow () {
+</code></pre>
+<p>不要  <code>await</code> 的話，也是可以先 assign 給變數的：</p>
+<pre><code class="language-js">function wow () {
   const a = fetch('/a');
   const b = fetch('/b');
   const c = fetch('/c');
 
   return Promise.all([a, b, c]);
 }
-</code>
-              </pre>
-              <p>然後其實 <code>Promise.all</code> 是要所有的 Promise 都 fulfilled 時才會 resolve，另外一個角度來看，就是其中只要一個 rejected 的話，就不會 resolve，實際上使用起來變化有點少，而且要做忽略錯誤的 <code>fetch</code> 也有點麻煩，所以現在 TC39 還有個新的草案叫 <a href="https://docs.google.com/presentation/d/1fWK9kMsvn2o66Lk6QUw3yITEfsE87yjZdTngoLTsUQ0/edit#slide=id.g41da6c5107_0_0">Promise.allSettled</a>，不管是 resolve 還是 reject，只要所有參數內的 Promise 都結束了，<code>allSettled</code> 就會 resolve，目前這草案還在 stage 1，過幾天的會議有望升到 stage 2，不過這是題外話。</p>
-              <p>最後一個想說的就是 <code>await</code> 處理 rejected Promise 的問題，如果是從 jQuery 時期就開始寫 Deferred/Promise 的人，可能會很習慣的把 Promise 的兩種狀態拿來當成值的一部份，事實上這也是 <code>jQuery.ajax</code> 的設計，如果用這種想法來寫 <code>await</code> 接值的時候，就會覺得很難處理 <code>rejected</code> 的狀態，因為要用 <code>try...catch</code>：</p>
-              <pre>
-                <code class="language-js">async function wow () {
+</code></pre>
+<p>然後其實 <code>Promise.all</code> 是要所有的 Promise 都 fulfilled 時才會 resolve，另外一個角度來看，就是其中只要一個 rejected 的話，就不會 resolve，實際上使用起來變化有點少，而且要做忽略錯誤的 <code>fetch</code> 也有點麻煩，所以現在 TC39 還有個新的草案叫 <a href="https://docs.google.com/presentation/d/1fWK9kMsvn2o66Lk6QUw3yITEfsE87yjZdTngoLTsUQ0/edit#slide=id.g41da6c5107_0_0">Promise.allSettled</a>，不管是 resolve 還是 reject，只要所有參數內的 Promise 都結束了，<code>allSettled</code> 就會 resolve，目前這草案還在 stage 1，過幾天的會議有望升到 stage 2，不過這是題外話。</p>
+<p>最後一個想說的就是 <code>await</code> 處理 rejected Promise 的問題，如果是從 jQuery 時期就開始寫 Deferred/Promise 的人，可能會很習慣的把 Promise 的兩種狀態拿來當成值的一部份，事實上這也是 <code>jQuery.ajax</code> 的設計，如果用這種想法來寫 <code>await</code> 接值的時候，就會覺得很難處理 <code>rejected</code> 的狀態，因為要用 <code>try...catch</code>：</p>
+<pre><code class="language-js">async function wow () {
   try {
     const a = await fetch('/a');     
   } catch (error) {
     // deal with non-ok fetch
   }
 }
-</code>
-              </pre>
-              <p>要這樣寫還不如用舊的 <code>.then</code> 來接看起來還漂亮一點。不過實際上，這是錯誤的理解 Promise，Promise 不是用來取得兩種狀態用的，而是用來非同步取得單一個數值用的機制，而所謂 <code>rejected</code> 的狀態，其實就是發生非預期狀況（unexpected exception）的情形，這也就是為什麼 ECMAScript 版的 Promise 是用 <code>throw Error</code> 的方式來 reject Promise。</p>
-              <p>我一直覺得用 HTTP 請求來比較這兩種設計蠻好理解的，使用 jQuery 的 <code>ajax</code>，server 端回非 200 的 status 的話，就會被當成是錯誤，然後回傳的 Promise 就會被 reject，但是在使用 ECMAScript Promise 的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 中，不管 server 端回應的 status code，fetch 都會 resolve，而會 reject 的情形，就只有網路有問題的時候，像是網路斷線、存取被拒絕（CORS）等完全碰不到遠端主機的情形，也就是對於一個 HTTP 請求來說，真正的非預期狀況，所以如果你有兩種狀況要處理，那應該是回傳值的一部份，後面再用 <code>if...else</code> 來做分支。</p>
-              <p>回來看 <code>await</code> 的使用，究竟應該什麼時候來用 <code>try...catch</code> 呢，我自己有一個很簡單的初步判斷條件，就是這個取值的程式碼，如果不是非同步，沒有使用 <code>await</code> 的話，你會不會用 <code>try...catch</code> 包起來，不會的話，那改成非同步操作的程式碼應該也不用 <code>try...catch</code>。不過現實世界當然還是比較難一點，非同步的取值風險和狀況還是比較多的，例如 <code>fetch</code> 遇到網路問題會 reject，但是還是需要處理這種狀況，不用 <code>try...catch</code> 的話，怎樣寫比較好呢？我的想法是，用 <code>.then/catch</code> 處理好需要處理的情形，然後把結果包起來傳回去，所以要處理 <code>fetch</code> 的非預期狀況的話，就可以改成：</p>
-              <pre>
-                <code class="language-js">async function wow () {
+</code></pre>
+<p>要這樣寫還不如用舊的 <code>.then</code> 來接看起來還漂亮一點。不過實際上，這是錯誤的理解 Promise，Promise 不是用來取得兩種狀態用的，而是用來非同步取得單一個數值用的機制，而所謂 <code>rejected</code> 的狀態，其實就是發生非預期狀況（unexpected exception）的情形，這也就是為什麼 ECMAScript 版的 Promise 是用 <code>throw Error</code> 的方式來 reject Promise。</p>
+<p>我一直覺得用 HTTP 請求來比較這兩種設計蠻好理解的，使用 jQuery 的 <code>ajax</code>，server 端回非 200 的 status 的話，就會被當成是錯誤，然後回傳的 Promise 就會被 reject，但是在使用 ECMAScript Promise 的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> 中，不管 server 端回應的 status code，fetch 都會 resolve，而會 reject 的情形，就只有網路有問題的時候，像是網路斷線、存取被拒絕（CORS）等完全碰不到遠端主機的情形，也就是對於一個 HTTP 請求來說，真正的非預期狀況，所以如果你有兩種狀況要處理，那應該是回傳值的一部份，後面再用 <code>if...else</code> 來做分支。</p>
+<p>回來看 <code>await</code> 的使用，究竟應該什麼時候來用 <code>try...catch</code> 呢，我自己有一個很簡單的初步判斷條件，就是這個取值的程式碼，如果不是非同步，沒有使用 <code>await</code> 的話，你會不會用 <code>try...catch</code> 包起來，不會的話，那改成非同步操作的程式碼應該也不用 <code>try...catch</code>。不過現實世界當然還是比較難一點，非同步的取值風險和狀況還是比較多的，例如 <code>fetch</code> 遇到網路問題會 reject，但是還是需要處理這種狀況，不用 <code>try...catch</code> 的話，怎樣寫比較好呢？我的想法是，用 <code>.then/catch</code> 處理好需要處理的情形，然後把結果包起來傳回去，所以要處理 <code>fetch</code> 的非預期狀況的話，就可以改成：</p>
+<pre><code class="language-js">async function wow () {
   const a = await fetch('/a').catch(error =&gt; {
     return {
       ok: false,
@@ -186,32 +163,27 @@ console.log(2);
     // exception error handling
   }
 }
-</code>
-              </pre>
-              <p>這邊我設計成有非預期狀況時，status code 為 <code>-1</code>，並且把 error 資訊也傳回去，然後後面就可以直接拿來判斷是不是非預期狀況，當然也可以把這個處理包成一個自己的 <code>myFetch</code>：</p>
-              <pre>
-                <code class="language-js">const myFetch = (url, options) =&gt;
+</code></pre>
+<p>這邊我設計成有非預期狀況時，status code 為 <code>-1</code>，並且把 error 資訊也傳回去，然後後面就可以直接拿來判斷是不是非預期狀況，當然也可以把這個處理包成一個自己的 <code>myFetch</code>：</p>
+<pre><code class="language-js">const myFetch = (url, options) =&gt;
   fetch(url, options)
     .catch(error =&gt; {
       ok: false,
       status: -1,
       error: error,  
     });
-</code>
-              </pre>
-              <p>然後原來的程式就可以直接拿 <code>myFetch</code> 取代 <code>fetch</code> 了。</p>
-              <p>如果要通用一點的，其實有一個叫 <a href="https://www.npmjs.com/package/await-to-js">await-to-js</a> 的套件我覺得蠻不錯的，直接拿官方的範例看吧：</p>
-              <pre>
-                <code class="language-js">import to from 'await-to-js';
+</code></pre>
+<p>然後原來的程式就可以直接拿 <code>myFetch</code> 取代 <code>fetch</code> 了。</p>
+<p>如果要通用一點的，其實有一個叫 <a href="https://www.npmjs.com/package/await-to-js">await-to-js</a> 的套件我覺得蠻不錯的，直接拿官方的範例看吧：</p>
+<pre><code class="language-js">import to from 'await-to-js';
 
 async function asyncTaskWithCb(cb) {
   let [err, user] = await to(UserModel.findById(1));
   if (!user) return cb('No user found');
 }
-</code>
-              </pre>
-              <p>它可以包裝 Promise 物件，然後不管那個 Promise 成功還是失敗，它自己都會 resolve，resolve 的值就是 <code>[error, value]</code> 這樣形式的陣列，一來符合 node 的 <a href="https://nodejs.org/api/errors.html#errors_error_first_callbacks">error-first callbacks</a>，再來就是配合 destructuring assignment 其實程式碼是蠻漂亮的。</p>
-            </section>
+</code></pre>
+<p>它可以包裝 Promise 物件，然後不管那個 Promise 成功還是失敗，它自己都會 resolve，resolve 的值就是 <code>[error, value]</code> 這樣形式的陣列，一來符合 node 的 <a href="https://nodejs.org/api/errors.html#errors_error_first_callbacks">error-first callbacks</a>，再來就是配合 destructuring assignment 其實程式碼是蠻漂亮的。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -236,6 +208,15 @@ async function asyncTaskWithCb(cb) {
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -256,19 +237,10 @@ async function asyncTaskWithCb(cb) {
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -280,7 +252,7 @@ async function asyncTaskWithCb(cb) {
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

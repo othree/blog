@@ -85,15 +85,20 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/12/21/string-and-string-object/">String and String Object</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例：</p>
-              <pre>
-                <code>var sv = "1234567890";
-var so = new String("1234567890");</code>
-              </pre>
-              <p>以前我一直以為兩種是等價的，不過在看 <a href="http://dev.opera.com/articles/view/efficient-javascript/">Efficient JavaScript</a> 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下：</p>
-              <pre>
-                <code>var s = "1234567890";
+            <section itemprop="articleBody"><p>JavaScript 中，基本的資料型態有數值、字串、布林三種，而這些資料的指派都有兩種方法，一種是直接指派值，另一種是用建構函式，以字串為例：</p>
+
+
+
+<pre><code>var sv = "1234567890";
+var so = new String("1234567890");</code></pre>
+
+
+
+<p>以前我一直以為兩種是等價的，不過在看 <a href="http://dev.opera.com/articles/view/efficient-javascript/">Efficient JavaScript</a> 這篇文章時才發現兩者不是完全相等，在使用字串的 method 如 .charAt() 時，第一種字串值要先轉換成第二字串物件，然後才執行 .charAt() ，當需要大量執行字串的 method 時，用第二個方法來宣告字串變數理論上會比較快，不過我實際測試之後才注意到文章該段最後有說到這是 Opera 才有特別做最佳化的，測試用的code如下：</p>
+
+
+
+<pre><code>var s = "1234567890";
 //var s = new String("1234567890");
 
 var start = (new Date()).getTime();
@@ -103,10 +108,13 @@ for( var j = 0; j &lt; 10000; j++ ) {
   }
 }
 var end = (new Date()).getTime();
-alert(end-start);</code>
-              </pre>
-              <p>結果如下：</p>
-              <style type="text/css">
+alert(end-start);</code></pre>
+
+
+
+<p>結果如下：</p>
+
+<style type="text/css">
 #content table {
   margin:1em 290px 1em 4em;
 }
@@ -115,31 +123,32 @@ alert(end-start);</code>
   margin: 1em;
 }
 </style>
-              <table>
-                <tr>
-                  <th/>
-                  <th>Opera</th>
-                  <th>Firefox</th>
-                  <th>IE</th>
-                </tr>
-                <tr>
-                  <th>"blah"</th>
-                  <td>234</td>
-                  <td>313</td>
-                  <td>344</td>
-                </tr>
-                <tr>
-                  <th>new String()</th>
-                  <td>156</td>
-                  <td>381</td>
-                  <td>266</td>
-                </tr>
-                <tr>
-                  <td colspan="4" style="text-align: right;">unit: micro seconds</td>
-                </tr>
-              </table>
-              <p>可以發現 Opera 用 new String() 時有比較快， IE 雖然也有，不過我在某些電腦上測試結果是和 Firefox 差不多，沒列出來的 safari 其實表現也和 Firefox 差不多，至於 Google Chrome 在編譯的時候有最佳化過，結果都是超快，無法作為參考。所以結論是，還是繼續用普通的方法就好了XD。</p>
-            </section>
+
+<table>
+        <tr>
+            <th/>
+            <th>Opera</th>
+            <th>Firefox</th>
+            <th>IE</th>
+        </tr>
+        <tr>
+            <th>"blah"</th>
+            <td>234</td>
+            <td>313</td>
+            <td>344</td>
+        </tr>
+        <tr>
+            <th>new String()</th>
+            <td>156</td>
+            <td>381</td>
+            <td>266</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;">unit: micro seconds</td>
+        </tr>
+</table>
+
+<p>可以發現 Opera 用 new String() 時有比較快， IE 雖然也有，不過我在某些電腦上測試結果是和 Firefox 差不多，沒列出來的 safari 其實表現也和 Firefox 差不多，至於 Google Chrome 在編譯的時候有最佳化過，結果都是超快，無法作為參考。所以結論是，還是繼續用普通的方法就好了XD。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -164,6 +173,15 @@ alert(end-start);</code>
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -184,19 +202,10 @@ alert(end-start);</code>
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -208,7 +217,7 @@ alert(end-start);</code>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

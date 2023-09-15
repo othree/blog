@@ -85,22 +85,20 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/05/16/disqus/">留言切換到 Disqus</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/14006265675/" title="奈良 東大寺 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg" width="1024" height="683" alt="奈良 東大寺" srcset="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg 1024w, https://farm8.staticflickr.com/7400/14006265675_c4f4d31e87_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>因為 MovableType 的反 spam 機制幾乎失靈了，最近廣告又太多，只好狠下心來換到 <a href="http://disqus.com/">Disqus</a>，其實是想換一陣子了，不過覺的話要花不少時間一直沒弄，結果果然弄了整個晚上，大概遇到三個問題。</p>
-              <p>其實 Disqus 對於轉移這件事做了不少工，不過我還是遇到匯出的檔案格式不支援的問題， Disqus 只支援 WordPress 的 wxr 格式，不過我的 MT 4 不能輸出這種格式，後來是使用 Disqus 的 MT plugin 來處理這個問題。</p>
-              <p>第二個問題是套用到頁面上的問題，因為這裡有使用 CSP，所以勢必要多開一些 domain，大概開了圖片和 script 的 <code>*.disqus.com</code> 和 <code>*.disquscdn.com</code>，不過還有一個我不太想開的 <em>unsafe-eval</em>，目前只能先暫時屈服，正在找管道回報這問題。</p>
-              <p>第三個問題就是留言對應的 url 不正確，因為我是用 plugin 處理匯出匯入的，他用的網址就是 MT 內部認為的網址，不過在這裡這不是正確的網址，本來我是在頁面讀入的 script 內做處理，手動指定留言的網址，不過後來發現 Disqus 有 URL mapping 的功能，可以上傳 csv 檔來改網址，而且還支援下載現有的網址清單，設想蠻齊全的。</p>
-              <p>總之我就這樣換過來了，自己測試留言看來是 ok，還不知道是不是都沒問題了，因為這邊也很少人來留言啊，至於切換過來有什麼優點呢，最主要還是我不想處理 spam 了，再來我可以把 comment 進入點關掉，對網站來說安全些，還有可以把一些流量丟到外面（Disqus 是賺什麼啊？），剩下就是我可以用 Disqus 的一些特殊功能啦，像是訂閱討論串之類的。</p>
-              <p>對了，照片是隨便挑的，和內文沒關係～</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/14006265675/" title="奈良 東大寺 by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg" width="1024" height="683" alt="奈良 東大寺" srcset="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg 1024w, https://farm8.staticflickr.com/7400/14006265675_c4f4d31e87_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>因為 MovableType 的反 spam 機制幾乎失靈了，最近廣告又太多，只好狠下心來換到 <a href="http://disqus.com/">Disqus</a>，其實是想換一陣子了，不過覺的話要花不少時間一直沒弄，結果果然弄了整個晚上，大概遇到三個問題。</p>
+
+<p>其實 Disqus 對於轉移這件事做了不少工，不過我還是遇到匯出的檔案格式不支援的問題， Disqus 只支援 WordPress 的 wxr 格式，不過我的 MT 4 不能輸出這種格式，後來是使用 Disqus 的 MT plugin 來處理這個問題。</p>
+
+<p>第二個問題是套用到頁面上的問題，因為這裡有使用 CSP，所以勢必要多開一些 domain，大概開了圖片和 script 的 <code>*.disqus.com</code> 和 <code>*.disquscdn.com</code>，不過還有一個我不太想開的 <em>unsafe-eval</em>，目前只能先暫時屈服，正在找管道回報這問題。</p>
+
+<p>第三個問題就是留言對應的 url 不正確，因為我是用 plugin 處理匯出匯入的，他用的網址就是 MT 內部認為的網址，不過在這裡這不是正確的網址，本來我是在頁面讀入的 script 內做處理，手動指定留言的網址，不過後來發現 Disqus 有 URL mapping 的功能，可以上傳 csv 檔來改網址，而且還支援下載現有的網址清單，設想蠻齊全的。</p>
+
+<p>總之我就這樣換過來了，自己測試留言看來是 ok，還不知道是不是都沒問題了，因為這邊也很少人來留言啊，至於切換過來有什麼優點呢，最主要還是我不想處理 spam 了，再來我可以把 comment 進入點關掉，對網站來說安全些，還有可以把一些流量丟到外面（Disqus 是賺什麼啊？），剩下就是我可以用 Disqus 的一些特殊功能啦，像是訂閱討論串之類的。</p>
+
+<p>對了，照片是隨便挑的，和內文沒關係～</p>
+</section>
             <footer>
               <a href="/log/about/" rel="tag">關於這裡</a>
             </footer>
@@ -125,6 +123,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -145,19 +152,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -169,7 +167,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

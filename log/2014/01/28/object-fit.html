@@ -85,12 +85,13 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/01/28/object-fit/">object-fit</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
-              <p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
-              <p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
-              <pre>
-                <code>$.fn.cover = (selector) -&gt;
+            <section itemprop="articleBody"><p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
+
+<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
+
+<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
+
+<pre><code>$.fn.cover = (selector) -&gt;
   $(@).each -&gt;
     $outer = $(@)
     ow = $outer.width()
@@ -113,30 +114,33 @@
         l = (ow - w) / 2
 
       $item.css(width: w, height: h, top: t, left: l)
-</code>
-              </pre>
-              <p>使用範例：</p>
-              <pre>
-                <code>$('.cell').cover('img')
-</code>
-              </pre>
-              <p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
-              <p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
-              <p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
-              <pre>
-                <code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
-</code>
-              </pre>
-              <p>配上 CSS：</p>
-              <pre>
-                <code>img.cover {
+</code></pre>
+
+<p>使用範例：</p>
+
+<pre><code>$('.cell').cover('img')
+</code></pre>
+
+<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
+
+<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
+
+<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
+
+<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
+</code></pre>
+
+<p>配上 CSS：</p>
+
+<pre><code>img.cover {
   object-fit: cover;
 }
-</code>
-              </pre>
-              <p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
-              <p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
-            </section>
+</code></pre>
+
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
+
+<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -161,6 +165,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -181,19 +194,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -205,7 +209,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

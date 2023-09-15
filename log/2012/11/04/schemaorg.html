@@ -85,13 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2012/11/04/schemaorg/">schema.org  </a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>語意網基本的組成可以分成描述框架和知識本體，框架就是如 <a href="http://www.w3.org/RDF/">RDF</a> 或是 <a href="http://www.w3.org/2000/10/swap/doc/">N3</a> 那樣的標準規範，我一開始看到 RDF 規範的時候其實就很納悶，說是語意網很重要的標準，怎麼一點語意的知識都沒有，後來才了解，它只是一個框架，知識是由其他地方來的，在語意網設計下的知識，可以把它分為語彙 (vocabulary) 和關係 (relation)，舉例來說：<em>相機有鏡頭</em>，這句話之中就包含了三個語彙，分別是 <em>相機</em> 、 <em>鏡頭</em> 和 <em>有</em>，相機和鏡頭都是屬於某個特定領域（相機、攝影這個領域）的語彙，會由該領域的人編撰它的相關知識，在這邊就先當他們代表某個物體，而 <em>有</em> 則是一個不同領域來的語彙，它同時也是代表一個關係，代表前者內包含後者，和相機有關的這種關係不勝枚舉，例如相機有關景窗、有快門、要裝底片、標價多少等等，W3C 有一套標準專門是用來制定這些詞彙的意義以及之間的關係，稱作 <a href="http://www.w3.org/TR/owl-features/">Web Ontology Language</a>，簡稱為 OWL，應該會有人注意到它的縮寫字母順序不太對，我猜是故意取貓頭鷹的名稱來用的，因為在很多國家貓頭鷹是智慧的象徵。</p>
-              <p>OWL 要編寫起來其實很辛苦，因為即使只是一個很小很專門的領域，要把特定領域的所有語彙和他們之間的關係整理出來就很不容易了，若不是由有公信力的機構或專家背書，甚至也會被質疑這些知識的可靠度，而且 OWL 語言本身也是很複雜的 XML 語言，是複雜到不會想用純文字編輯軟體寫的程度，另外還有一個我也不想用純文字編輯器編輯的 XML 文件，叫做 XML Schema Definition(XSD)，是用來定義 XML 文件格式的 XML 文件，兩者我都寧願用專門的編輯軟體來處理。</p>
-              <p>不過回來先只看語彙的部分，目前可以應用的語彙其來源上都不是 W3C，有名的像是 <a href="http://www.foaf-project.org/">FOAF</a>, <a href="http://dublincore.org/">Dublin Core</a>，前者是用來描述人際關係的，FOAF 是 Friend Of A Friend 的意思，後者則是 1995 年的第一屆 Metadata Workshop 所制訂的，一整套通用性很高，專門用來描述電子資源的後設資料 (metadata) 語彙，W3C 的網站也有<a href="http://semanticweb.org/wiki/Ontology">整理</a>了不少現存 ontology 資源出來，不過有很多時候，即使只有語彙的定義就很有幫助了，像是 microformats 就是用了很多其他地方已經先定義好的語彙來讓結構化的資料值可以對應到不同的屬性上，而且現在的搜尋引擎不止支援 microformats 你也可以用 <a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a> 來在網頁中加入結構化的語意資料，去年，三大搜尋引擎龍頭：Google, Yahoo, Bing 宣布了一個合作計畫叫 <a href="http://schema.org/">schema.org</a>，制訂了非常多的語彙建議，像是文章、書、電影、電視、活動、聽眾、工作機會、醫療相關等等的主題都有，並且建議使用 HTML5 的 microdata 機制來內嵌在網頁內提供給搜尋引擎。</p>
-              <p>舉一個例子，以前介紹 microformats 時的範例：</p>
-              <pre>
-                <code>&lt;div class="hreview"&gt;
+            <section itemprop="articleBody"><p>語意網基本的組成可以分成描述框架和知識本體，框架就是如 <a href="http://www.w3.org/RDF/">RDF</a> 或是 <a href="http://www.w3.org/2000/10/swap/doc/">N3</a> 那樣的標準規範，我一開始看到 RDF 規範的時候其實就很納悶，說是語意網很重要的標準，怎麼一點語意的知識都沒有，後來才了解，它只是一個框架，知識是由其他地方來的，在語意網設計下的知識，可以把它分為語彙 (vocabulary) 和關係 (relation)，舉例來說：<em>相機有鏡頭</em>，這句話之中就包含了三個語彙，分別是 <em>相機</em> 、 <em>鏡頭</em> 和 <em>有</em>，相機和鏡頭都是屬於某個特定領域（相機、攝影這個領域）的語彙，會由該領域的人編撰它的相關知識，在這邊就先當他們代表某個物體，而 <em>有</em> 則是一個不同領域來的語彙，它同時也是代表一個關係，代表前者內包含後者，和相機有關的這種關係不勝枚舉，例如相機有關景窗、有快門、要裝底片、標價多少等等，W3C 有一套標準專門是用來制定這些詞彙的意義以及之間的關係，稱作 <a href="http://www.w3.org/TR/owl-features/">Web Ontology Language</a>，簡稱為 OWL，應該會有人注意到它的縮寫字母順序不太對，我猜是故意取貓頭鷹的名稱來用的，因為在很多國家貓頭鷹是智慧的象徵。</p>
+
+<p>OWL 要編寫起來其實很辛苦，因為即使只是一個很小很專門的領域，要把特定領域的所有語彙和他們之間的關係整理出來就很不容易了，若不是由有公信力的機構或專家背書，甚至也會被質疑這些知識的可靠度，而且 OWL 語言本身也是很複雜的 XML 語言，是複雜到不會想用純文字編輯軟體寫的程度，另外還有一個我也不想用純文字編輯器編輯的 XML 文件，叫做 XML Schema Definition(XSD)，是用來定義 XML 文件格式的 XML 文件，兩者我都寧願用專門的編輯軟體來處理。</p>
+
+<p>不過回來先只看語彙的部分，目前可以應用的語彙其來源上都不是 W3C，有名的像是 <a href="http://www.foaf-project.org/">FOAF</a>, <a href="http://dublincore.org/">Dublin Core</a>，前者是用來描述人際關係的，FOAF 是 Friend Of A Friend 的意思，後者則是 1995 年的第一屆 Metadata Workshop 所制訂的，一整套通用性很高，專門用來描述電子資源的後設資料 (metadata) 語彙，W3C 的網站也有<a href="http://semanticweb.org/wiki/Ontology">整理</a>了不少現存 ontology 資源出來，不過有很多時候，即使只有語彙的定義就很有幫助了，像是 microformats 就是用了很多其他地方已經先定義好的語彙來讓結構化的資料值可以對應到不同的屬性上，而且現在的搜尋引擎不止支援 microformats 你也可以用 <a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDFa</a> 來在網頁中加入結構化的語意資料，去年，三大搜尋引擎龍頭：Google, Yahoo, Bing 宣布了一個合作計畫叫 <a href="http://schema.org/">schema.org</a>，制訂了非常多的語彙建議，像是文章、書、電影、電視、活動、聽眾、工作機會、醫療相關等等的主題都有，並且建議使用 HTML5 的 microdata 機制來內嵌在網頁內提供給搜尋引擎。</p>
+
+<p>舉一個例子，以前介紹 microformats 時的範例：</p>
+
+<pre><code>&lt;div class="hreview"&gt;
  &lt;span&gt;&lt;span class="rating"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
  &lt;h4 class="summary"&gt;&lt;span class="item fn"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
  &lt;span&gt;Reviewer: &lt;span class="reviewer fn"&gt;Tantek&lt;/span&gt; - 
@@ -107,11 +109,11 @@
  &lt;p&gt;Visit date: &lt;span&gt;April 2005&lt;/span&gt;&lt;/p&gt;
  &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-</code>
-              </pre>
-              <p>如果改成用 schema.org 建議的 microdata 寫法：</p>
-              <pre>
-                <code>&lt;div itempscope itemtype="http://schema.org/Review"&gt;
+</code></pre>
+
+<p>如果改成用 schema.org 建議的 microdata 寫法：</p>
+
+<pre><code>&lt;div itempscope itemtype="http://schema.org/Review"&gt;
  &lt;span&gt;&lt;span itemprop="ratingValue"&gt;5&lt;/span&gt; out of 5 stars&lt;/span&gt;
  &lt;h4 itemprop="itemReviewed" itemscope itemtype="http://schema.org/Book"&gt;&lt;span itemprop="name"&gt;Crepes on Cole&lt;/span&gt; is awesome&lt;/h4&gt;
  &lt;span itemprop="author" itemscope itemtype="http://schema.org/Person"&gt;Reviewer: &lt;span itemprop="name"&gt;Tantek&lt;/span&gt;&lt;/span&gt; - 
@@ -127,35 +129,28 @@
  &lt;p&gt;Visit date: &lt;time&gt;April 2005&lt;/span&gt;&lt;/p&gt;
  &lt;p&gt;Food eaten: &lt;span&gt;Florentine crepe&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
-</code>
-              </pre>
-              <p>用 microdata 的方法和 microformats 和 RDFa 兩種比起來，我覺得優點在：</p>
-              <ol>
-                <li>使用的是標準，設計語意上確實描述資料的屬性來用，這是 microformats 無法辦到的，我覺得 microformats 是屬於過渡時期的規範，所以多要求了最大的相容性</li>
-                <li>撰寫起來也不會太複雜，且不要求使用 XHTML，這點則是相較於 RDFa，因為規範上，要使用 RDFa 來加註 metadata，是透過 XHTML 的擴充性達到的，如果是單純的 HTML 文件，其實是不能加入其他文件的標籤或屬性的</li>
-                <li>使用了 URI 的概念作為資料類別的值，用 URI 取代普通單純的類別值有兩個好處，一是在網路上他是絕對唯一，二是未來如果要和其他的標準、後設資料等接軌，或是有人要補上這些資訊的 OWL 文件，都不會是問題</li>
-              </ol>
-              <p>基於這些優點，我現在也很推薦使用 schema.org 建議的格式化資料結構，然後我想說看看國內有沒有人用，發現清單上有個 <a href="http://schema.org/Recipe">食譜</a>，就上 <a href="http://icook.tw/">iCook</a> 看看，結果發現有耶！</p>
-              <p>以下面這道<a href="http://icook.tw/recipes/16641">食譜</a>為例</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="http://www.flickr.com/photos/othree/8153705385/" title="Flickr 上 othree 的 品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群">
-                  <img itemprop="url image" src="//farm8.staticflickr.com/7254/8153705385_cf5b849f07.jpg" width="500" height="343" alt="品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群">
-                    <meta itemprop="width" content="500"/>
-                    <meta itemprop="height" content="343"/>
-                  </img>
-                </a>
-              </p>
-              <p>丟進 Google 的<a href="http://www.google.com/webmasters/tools/richsnippets">結構化資料測試工具</a>，會產生如下的分析結果（可以自己 <a href="http://www.google.com/webmasters/tools/richsnippets?url=http%3A%2F%2Ficook.tw%2Frecipes%2F16641&amp;html=">試試看</a>，看圖要看原始大小也沒比較方便）：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="http://www.flickr.com/photos/othree/8153733486/" title="Flickr 上 othree 的 Google Structured Data Testing Tool">
-                  <img itemprop="url image" src="//farm9.staticflickr.com/8490/8153733486_c3527b34b5.jpg" width="207" height="500" alt="Google Structured Data Testing Tool">
-                    <meta itemprop="width" content="207"/>
-                    <meta itemprop="height" content="500"/>
-                  </img>
-                </a>
-              </p>
-              <p>這份結果可以很清楚的看到， Google 可以把 iCook 的食譜網頁的各項資訊包括菜名、作者、材料、步驟等都正確的抓出來。</p>
-            </section>
+</code></pre>
+
+<p>用 microdata 的方法和 microformats 和 RDFa 兩種比起來，我覺得優點在：</p>
+
+<ol>
+<li>使用的是標準，設計語意上確實描述資料的屬性來用，這是 microformats 無法辦到的，我覺得 microformats 是屬於過渡時期的規範，所以多要求了最大的相容性</li>
+<li>撰寫起來也不會太複雜，且不要求使用 XHTML，這點則是相較於 RDFa，因為規範上，要使用 RDFa 來加註 metadata，是透過 XHTML 的擴充性達到的，如果是單純的 HTML 文件，其實是不能加入其他文件的標籤或屬性的</li>
+<li>使用了 URI 的概念作為資料類別的值，用 URI 取代普通單純的類別值有兩個好處，一是在網路上他是絕對唯一，二是未來如果要和其他的標準、後設資料等接軌，或是有人要補上這些資訊的 OWL 文件，都不會是問題</li>
+</ol>
+
+<p>基於這些優點，我現在也很推薦使用 schema.org 建議的格式化資料結構，然後我想說看看國內有沒有人用，發現清單上有個 <a href="http://schema.org/Recipe">食譜</a>，就上 <a href="http://icook.tw/">iCook</a> 看看，結果發現有耶！</p>
+
+<p>以下面這道<a href="http://icook.tw/recipes/16641">食譜</a>為例</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="http://www.flickr.com/photos/othree/8153705385/" title="Flickr 上 othree 的 品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"><img itemprop="url image" src="//farm8.staticflickr.com/7254/8153705385_cf5b849f07.jpg" width="500" height="343" alt="品靚上菜-照燒雞排 - 食譜、食材與作法 - 《愛料理》食譜分享社群"><meta itemprop="width" content="500"/><meta itemprop="height" content="343"/></img></a></p>
+
+<p>丟進 Google 的<a href="http://www.google.com/webmasters/tools/richsnippets">結構化資料測試工具</a>，會產生如下的分析結果（可以自己 <a href="http://www.google.com/webmasters/tools/richsnippets?url=http%3A%2F%2Ficook.tw%2Frecipes%2F16641&amp;html=">試試看</a>，看圖要看原始大小也沒比較方便）：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="http://www.flickr.com/photos/othree/8153733486/" title="Flickr 上 othree 的 Google Structured Data Testing Tool"><img itemprop="url image" src="//farm9.staticflickr.com/8490/8153733486_c3527b34b5.jpg" width="207" height="500" alt="Google Structured Data Testing Tool"><meta itemprop="width" content="207"/><meta itemprop="height" content="500"/></img></a></p>
+
+<p>這份結果可以很清楚的看到， Google 可以把 iCook 的食譜網頁的各項資訊包括菜名、作者、材料、步驟等都正確的抓出來。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -180,6 +175,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -200,19 +204,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -224,7 +219,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

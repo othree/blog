@@ -85,17 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2022/08/18/shopify-app/">Shopify App</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>之前開發 Shopify App 時，為了搞定他的安裝搞了蠻久，所以決定來紀錄一下踩到的坑，這篇文章適合已經開始在開發 Shopify App 的人閱讀，有些 Shopify App 的基本知識就不會提到，以下內文幾個名詞先定義清楚一下：</p>
-              <ul>
-                <li>App 指的是我們開發的 Shopify 第三方 app</li>
-                <li>Merchant 指的是在 Shopify 上開店的商家</li>
-                <li>安裝 app 指的是 merchant 在他們的 Shopify 商店上安裝我們開發的第三方 app</li>
-              </ul>
-              <p>首先就是，我踩的很多坑有一部分原因是因為我用 NodeJS 作為 server 端的語言，選的是 Express，但是官方的 Express 架構的 app 範例已經停止維護了，取而代之的，是 Koa 版本的 <a href="https://github.com/Shopify/koa-shopify-auth">@shopify/koa-shopify-auth</a>，只有負責驗證相關的 middleware，不過其實我也就剛好是需要 auth 相關的部分，只是差在不是 Express 版，我也還可以研究看看要怎樣自己實作了。</p>
-              <p>大概看一下，發現其實還有另外一個 <a href="https://github.com/Shopify/shopify-api-node">@shopify/shopify-api</a> 是底層負責處理跟 Shopify 相關的邏輯，所以理論上我也可以使用它來搭配 Express，不過這裡首先就有一個坑了，初始化的範例是長這樣：</p>
-              <pre>
-                <code class="language-js">Shopify.Context.initialize({
+            <section itemprop="articleBody"><p>之前開發 Shopify App 時，為了搞定他的安裝搞了蠻久，所以決定來紀錄一下踩到的坑，這篇文章適合已經開始在開發 Shopify App 的人閱讀，有些 Shopify App 的基本知識就不會提到，以下內文幾個名詞先定義清楚一下：</p>
+<ul>
+<li>App 指的是我們開發的 Shopify 第三方 app</li>
+<li>Merchant 指的是在 Shopify 上開店的商家</li>
+<li>安裝 app 指的是 merchant 在他們的 Shopify 商店上安裝我們開發的第三方 app</li>
+</ul>
+<p>首先就是，我踩的很多坑有一部分原因是因為我用 NodeJS 作為 server 端的語言，選的是 Express，但是官方的 Express 架構的 app 範例已經停止維護了，取而代之的，是 Koa 版本的 <a href="https://github.com/Shopify/koa-shopify-auth">@shopify/koa-shopify-auth</a>，只有負責驗證相關的 middleware，不過其實我也就剛好是需要 auth 相關的部分，只是差在不是 Express 版，我也還可以研究看看要怎樣自己實作了。</p>
+<p>大概看一下，發現其實還有另外一個 <a href="https://github.com/Shopify/shopify-api-node">@shopify/shopify-api</a> 是底層負責處理跟 Shopify 相關的邏輯，所以理論上我也可以使用它來搭配 Express，不過這裡首先就有一個坑了，初始化的範例是長這樣：</p>
+<pre><code class="language-js">Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
   SCOPES: process.env.SHOPIFY_APP_SCOPES,
@@ -105,34 +103,36 @@
   // More information at https://github.com/Shopify/shopify-node-api/blob/main/docs/issues.md#notes-on-session-handling
   SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
 });
-</code>
-              </pre>
-              <p>可以看到，最後有一個 <code>SESSION_STORAGE</code>，這是個處理 merchant 在安裝 app 時，我們的 app 拿到的 access token 的儲存方式的 adapter，不過官方的範例是用 Memory Storage，這個 adpater 是只有存在記憶體內，其實只適用於開發用，只要你的 server 一重開，所有的 merchant 就都要重新安裝你的 app，不然你的 app 會沒有 access token 跟 Shopify 溝通，實際上你應該要參考 <a href="https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/customsessions.md">Custom Session Storage</a> 這份文件，挑選適用的 adapter，我則是參考範例寫了一個 GCP FireStore 的版本，當然另外沒特別提到的就是，因為是儲存 access token，最好要考慮一下 DB 的加密。</p>
-              <p>第二個坑，就是要怎樣做 Shopify 的 authentication 以及 identification，先來說如何驗證 request 是可信的，在 Shopify API 的設計，就是要靠 query string parameter 裡面的 hmac，他是根據你的 App 的 secret 來計算出來的，然後，這裡的坑就是官方套件 <code>@shopify/shopify-api</code> 內有個 <code>validateHmac</code> 可以用，但是它的計算其實是不正確的，它是用白名單只有取部分的 query string parameter 來計算，結果和 Shopify 給的就會有出入，所以我是參考 GitHub issue 討論串內 Muhammad Kamal 給的<a href="https://github.com/Shopify/shopify-node-api/issues/275#issuecomment-1059968699">範例</a>來使用。</p>
-              <p>第三個坑，則是安裝 App 用的 route 了，Shopify 的設計有點特別，所有的初始 request （不論是第一次安裝、還是從 Shopify 後台進入 App 的設定畫面），都長的很接近，所以你就要根據各種狀況來決定該做什麼事情，以下是所有可能的狀況：</p>
-              <ul>
-                <li>第一次來安裝</li>
-                <li>安裝後進到設定畫面</li>
-                <li>曾經安裝過，但是需要重新授權，可能的原因：
-<ul><li>App 需要的權限有變動</li><li>App 端的 access token 失效了</li></ul></li>
-                <li>Shopify 認為已經安裝了，但是 app 端沒資料</li>
-              </ul>
-              <p>扣除需要的權限有變動之外，其實就是排列組合，Shopify 端認為有沒有安裝過，和 App 端認為有沒有安裝過，二乘二共四種可能性，不過實際上只有三種處理方式：初次安裝、重新授權、安裝沒問題的快樂路線（happy path）整理成程式流程大概是：</p>
-              <ol>
-                <li>驗證 hmac，沒過可以直接回 400</li>
-                <li>判斷 shop 是否有在資料庫中</li>
-                <li>2 有的話驗證資料庫中的 access token</li>
-                <li>3 驗證通過的話，狀態就是 happy path，Shopify 認為 app 有裝，app 端檢查也沒問題，我把這狀態命名為 <code>valid</code></li>
-                <li>3 驗證沒通過的話，判斷有沒有 <code>session</code> 這個 query string 參數</li>
-                <li>5 有的話，狀態就是 app 端的 access token 不能用了，需要走重新授權的流程，我把這狀態命名為 <code>invalid</code></li>
-                <li>5 沒有的話，就是第一次安裝的流程，我把這狀態命名為 <code>not_found</code></li>
-                <li>最後就是 2 沒有的話也是走初次安裝的授權流程，同樣也可以叫 <code>not_found</code></li>
-              </ol>
-              <p>然後 app 需要的權限變動的話，理論上是每次進來，驗證 access token 的時候，可以去打 API 問目前 <a href="https://shopify.dev/api/usage/access-scopes#checking-granted-access-scopes">token 的 access scope</a>，不過這部份我沒實做，因為目前我還沒有相關需求。</p>
-              <p>網路上可能可以找到 <code>X-Shopify-API-Request-Failure-Reauthorize</code> 這個 header，不過這個其實不是 Shopify API 的回應，而是 Shopify 的 <a href="https://github.com/Shopify/shopify-app-template-node/blob/main/server/middleware/verify-request.js">app-template</a> 裡面設計的機制，它們的 app template 裡面，server 端在轉發 Ajax API request 時，如果收到 Shopify 端的錯誤後，就加上這個 header 回給 app 前端，app 前端收到這個 header 後就可以透過 Shopify app-bridge 進入重新授權的流程。</p>
-              <p>講到這邊，或許有人會好奇，為什麼需要把安裝 app 和重新授權兩個流程的處理方式分開？其實這可以算是第四個坑，也是和使用者體驗有關係，狀況就是，Shopify 認為是初次安裝時，是直接進入 OAuth 的流程，所以是瀏覽器的最上層視窗直接轉址到 auth 頁面，但是如果是需要重新授權的情形，則是 Shopify 端認為已經安裝好，但是 app 這邊認為需要重新跑一次 OAuth，而這時候，連到 app server 的瀏覽器視窗是在 Shopify 商店後台的 iframe 內，在 iframe 內也無法正確的完成 OAuth 授權，所以需要用 Shopify 現在一套叫 app-bridge 的工具幫忙，讓 OAuth 流程從最上層視窗開始，所以需要回一個 HTML 頁面，<a href="https://shopify.dev/apps/tools/app-bridge/getting-started/app-setup#set-up-shopify-app-bridge-in-your-app">引入 app-bridge 的 script</a>，然後執行以下的的 JS：</p>
-              <pre>
-                <code class="language-js">const AppBridge = window['app-bridge'];
+</code></pre>
+<p>可以看到，最後有一個 <code>SESSION_STORAGE</code>，這是個處理 merchant 在安裝 app 時，我們的 app 拿到的 access token 的儲存方式的 adapter，不過官方的範例是用 Memory Storage，這個 adpater 是只有存在記憶體內，其實只適用於開發用，只要你的 server 一重開，所有的 merchant 就都要重新安裝你的 app，不然你的 app 會沒有 access token 跟 Shopify 溝通，實際上你應該要參考 <a href="https://github.com/Shopify/shopify-api-node/blob/main/docs/usage/customsessions.md">Custom Session Storage</a> 這份文件，挑選適用的 adapter，我則是參考範例寫了一個 GCP FireStore 的版本，當然另外沒特別提到的就是，因為是儲存 access token，最好要考慮一下 DB 的加密。</p>
+<p>第二個坑，就是要怎樣做 Shopify 的 authentication 以及 identification，先來說如何驗證 request 是可信的，在 Shopify API 的設計，就是要靠 query string parameter 裡面的 hmac，他是根據你的 App 的 secret 來計算出來的，然後，這裡的坑就是官方套件 <code>@shopify/shopify-api</code> 內有個 <code>validateHmac</code> 可以用，但是它的計算其實是不正確的，它是用白名單只有取部分的 query string parameter 來計算，結果和 Shopify 給的就會有出入，所以我是參考 GitHub issue 討論串內 Muhammad Kamal 給的<a href="https://github.com/Shopify/shopify-node-api/issues/275#issuecomment-1059968699">範例</a>來使用。</p>
+<p>第三個坑，則是安裝 App 用的 route 了，Shopify 的設計有點特別，所有的初始 request （不論是第一次安裝、還是從 Shopify 後台進入 App 的設定畫面），都長的很接近，所以你就要根據各種狀況來決定該做什麼事情，以下是所有可能的狀況：</p>
+<ul>
+<li>第一次來安裝</li>
+<li>安裝後進到設定畫面</li>
+<li>曾經安裝過，但是需要重新授權，可能的原因：
+<ul>
+<li>App 需要的權限有變動</li>
+<li>App 端的 access token 失效了</li>
+</ul>
+</li>
+<li>Shopify 認為已經安裝了，但是 app 端沒資料</li>
+</ul>
+<p>扣除需要的權限有變動之外，其實就是排列組合，Shopify 端認為有沒有安裝過，和 App 端認為有沒有安裝過，二乘二共四種可能性，不過實際上只有三種處理方式：初次安裝、重新授權、安裝沒問題的快樂路線（happy path）整理成程式流程大概是：</p>
+<ol>
+<li>驗證 hmac，沒過可以直接回 400</li>
+<li>判斷 shop 是否有在資料庫中</li>
+<li>2 有的話驗證資料庫中的 access token</li>
+<li>3 驗證通過的話，狀態就是 happy path，Shopify 認為 app 有裝，app 端檢查也沒問題，我把這狀態命名為 <code>valid</code></li>
+<li>3 驗證沒通過的話，判斷有沒有 <code>session</code> 這個 query string 參數</li>
+<li>5 有的話，狀態就是 app 端的 access token 不能用了，需要走重新授權的流程，我把這狀態命名為 <code>invalid</code></li>
+<li>5 沒有的話，就是第一次安裝的流程，我把這狀態命名為 <code>not_found</code></li>
+<li>最後就是 2 沒有的話也是走初次安裝的授權流程，同樣也可以叫 <code>not_found</code></li>
+</ol>
+<p>然後 app 需要的權限變動的話，理論上是每次進來，驗證 access token 的時候，可以去打 API 問目前 <a href="https://shopify.dev/api/usage/access-scopes#checking-granted-access-scopes">token 的 access scope</a>，不過這部份我沒實做，因為目前我還沒有相關需求。</p>
+<p>網路上可能可以找到 <code>X-Shopify-API-Request-Failure-Reauthorize</code> 這個 header，不過這個其實不是 Shopify API 的回應，而是 Shopify 的 <a href="https://github.com/Shopify/shopify-app-template-node/blob/main/server/middleware/verify-request.js">app-template</a> 裡面設計的機制，它們的 app template 裡面，server 端在轉發 Ajax API request 時，如果收到 Shopify 端的錯誤後，就加上這個 header 回給 app 前端，app 前端收到這個 header 後就可以透過 Shopify app-bridge 進入重新授權的流程。</p>
+<p>講到這邊，或許有人會好奇，為什麼需要把安裝 app 和重新授權兩個流程的處理方式分開？其實這可以算是第四個坑，也是和使用者體驗有關係，狀況就是，Shopify 認為是初次安裝時，是直接進入 OAuth 的流程，所以是瀏覽器的最上層視窗直接轉址到 auth 頁面，但是如果是需要重新授權的情形，則是 Shopify 端認為已經安裝好，但是 app 這邊認為需要重新跑一次 OAuth，而這時候，連到 app server 的瀏覽器視窗是在 Shopify 商店後台的 iframe 內，在 iframe 內也無法正確的完成 OAuth 授權，所以需要用 Shopify 現在一套叫 app-bridge 的工具幫忙，讓 OAuth 流程從最上層視窗開始，所以需要回一個 HTML 頁面，<a href="https://shopify.dev/apps/tools/app-bridge/getting-started/app-setup#set-up-shopify-app-bridge-in-your-app">引入 app-bridge 的 script</a>，然後執行以下的的 JS：</p>
+<pre><code class="language-js">const AppBridge = window['app-bridge'];
 const createApp = AppBridge.default;
 const Redirect = AppBridge.actions.Redirect;
 const app = createApp({
@@ -146,18 +146,17 @@ redirect.dispatch(
 	'/url/to/your/auth?shop={{SHOP}}'
 );
 
-</code>
-              </pre>
-              <p>當然記得要把該替換的東西替換上去，然後就可以看到正確的從最上層視窗開始進入 OAuth 授權的流程了。</p>
-              <p>最後一個坑，其實就是 merchant 反安裝 app 後，Shopify 和 app 端的狀態就會不一致的問題，Shopify 端認為沒安裝，但是 app 端認為有安裝，雖然我上面設計的程式流程已經可以處理這種狀況（驗證 access token 會失敗，然後沒有 <code>session</code> 參數，所以會進入初次安裝），但是這種情形還是應該要能避免就避免，而解法就是要支援 webhook，要作的事情就是：</p>
-              <ol>
-                <li>安裝完成的 callback 去訂閱 <code>APP_UNINSTALLED</code> 這個 webhook event</li>
-                <li>然後在收到這個事件後，把資料庫中的對應資料刪除</li>
-              </ol>
-              <p>這邊我是用 <code>@shopify/shopify-api</code> 提供的工具像是
+</code></pre>
+<p>當然記得要把該替換的東西替換上去，然後就可以看到正確的從最上層視窗開始進入 OAuth 授權的流程了。</p>
+<p>最後一個坑，其實就是 merchant 反安裝 app 後，Shopify 和 app 端的狀態就會不一致的問題，Shopify 端認為沒安裝，但是 app 端認為有安裝，雖然我上面設計的程式流程已經可以處理這種狀況（驗證 access token 會失敗，然後沒有 <code>session</code> 參數，所以會進入初次安裝），但是這種情形還是應該要能避免就避免，而解法就是要支援 webhook，要作的事情就是：</p>
+<ol>
+<li>安裝完成的 callback 去訂閱 <code>APP_UNINSTALLED</code> 這個 webhook event</li>
+<li>然後在收到這個事件後，把資料庫中的對應資料刪除</li>
+</ol>
+<p>這邊我是用 <code>@shopify/shopify-api</code> 提供的工具像是
 <code>Shopify.Webhooks.Registry.register</code> 和 <code>Shopify.Utils.deleteOfflineSession</code>，真的想要自己作也不是辦不到，不過我記得 Shopify 的 webhook 處理起來有點麻煩。</p>
-              <p>這些細節就是官方文件沒有好好寫清楚，雖然官方文件內容已經很多，有努力整理了，但是實際上要自己接就還是遇到了不少問題，所以特別寫一篇文章紀錄，雖然不知道會不會有其他中文圈的人需要自己來做 Shopify app 就是了，可以直接用他們的 app template 還是比較簡單啦。</p>
-            </section>
+<p>這些細節就是官方文件沒有好好寫清楚，雖然官方文件內容已經很多，有努力整理了，但是實際上要自己接就還是遇到了不少問題，所以特別寫一篇文章紀錄，雖然不知道會不會有其他中文圈的人需要自己來做 Shopify app 就是了，可以直接用他們的 app template 還是比較簡單啦。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -182,6 +181,15 @@ redirect.dispatch(
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -202,19 +210,10 @@ redirect.dispatch(
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -226,7 +225,7 @@ redirect.dispatch(
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -85,46 +85,52 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/07/02/phantom-jasmine-and-aladdin/">phantom-jasmine 與阿拉丁</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子開始寫起 JavaScript 的 test，用的是 <a href="http://pivotal.github.io/jasmine/">Jasmine</a>，用瀏覽器跑都正常，只是用 npm 上的 <a href="https://npmjs.org/package/phantom-jasmine">phantom-jasmine</a> 來跑測試結果都不正常。因為想要把專案丟上 <a href="https://travis-ci.org/">Travis CI</a>，所以今天又花了不少時間下去找問題，結果還真是有些意外。</p>
-              <p>這個問題最大原因就是 npm phantom-jasmine 和原作者的 <a href="https://github.com/jcarver989/phantom-jasmine">phantom-jasmine</a> 的是不同 fork，npm module maintainer 是 <a href="https://npmjs.org/~rlayte">rlayte</a>，而 phantom-jasmine 作者是 <a href="https://github.com/jcarver989">Joshua Carver</a>，雖然 npm 網站上的使用說明和 Joshua 在 Github  上的幾乎都一樣，Joshua 也在 <a href="https://github.com/jcarver989/phantom-jasmine#installation">README</a> 說了可以用 npm 裝，但是實際上用 <code>npm install -g phantom-jasmine</code> 裝的卻是 rlayte 的 <a href="https://github.com/rlayte/phantom-jasmine">fork</a>，然而 rlayte 的那版，卻是他改很大的版本，整個行為都已經和說明上寫的不一樣了。</p>
-              <p>本來的 phantom-jasmine 是使用者丟 HTML 檔案進去，不過 rlayte 改到後來，變成是它會自己去特定的路徑找 js 檔案，丟進 tempalte 產生 html 然後跑測試的，而這個路徑好死不死預設是 <code>exmample/js/**/*.js</code>，雖然測試的 spec 還是預設在 <code>spec/</code> 下找，可是要測試的檔案會在 <code>example/js/</code> 下面找，如果沒有改設定，根本就不會測試到想要測的檔案，這個行為是和原來完全不一樣的，而且也沒寫在文件上。</p>
-              <p>還好我也有發現，rlayte 其實已經把他的 phantom-jasmine fork 改成 <a href="https://github.com/rlayte/aladdin">aladdin</a> 了，前面講的那些行為該怎樣用，其實都寫在 aladdin 那邊的 README 內。</p>
-              <p>aladdin 設計的其實蠻無腦的，spec 檔案放在 <code>spec/</code> 目錄下，然後在 spec 目錄下新增一個 config.json：</p>
-              <pre>
-                <code>[ 
+            <section itemprop="articleBody"><p>前陣子開始寫起 JavaScript 的 test，用的是 <a href="http://pivotal.github.io/jasmine/">Jasmine</a>，用瀏覽器跑都正常，只是用 npm 上的 <a href="https://npmjs.org/package/phantom-jasmine">phantom-jasmine</a> 來跑測試結果都不正常。因為想要把專案丟上 <a href="https://travis-ci.org/">Travis CI</a>，所以今天又花了不少時間下去找問題，結果還真是有些意外。</p>
+
+<p>這個問題最大原因就是 npm phantom-jasmine 和原作者的 <a href="https://github.com/jcarver989/phantom-jasmine">phantom-jasmine</a> 的是不同 fork，npm module maintainer 是 <a href="https://npmjs.org/~rlayte">rlayte</a>，而 phantom-jasmine 作者是 <a href="https://github.com/jcarver989">Joshua Carver</a>，雖然 npm 網站上的使用說明和 Joshua 在 Github  上的幾乎都一樣，Joshua 也在 <a href="https://github.com/jcarver989/phantom-jasmine#installation">README</a> 說了可以用 npm 裝，但是實際上用 <code>npm install -g phantom-jasmine</code> 裝的卻是 rlayte 的 <a href="https://github.com/rlayte/phantom-jasmine">fork</a>，然而 rlayte 的那版，卻是他改很大的版本，整個行為都已經和說明上寫的不一樣了。</p>
+
+<p>本來的 phantom-jasmine 是使用者丟 HTML 檔案進去，不過 rlayte 改到後來，變成是它會自己去特定的路徑找 js 檔案，丟進 tempalte 產生 html 然後跑測試的，而這個路徑好死不死預設是 <code>exmample/js/**/*.js</code>，雖然測試的 spec 還是預設在 <code>spec/</code> 下找，可是要測試的檔案會在 <code>example/js/</code> 下面找，如果沒有改設定，根本就不會測試到想要測的檔案，這個行為是和原來完全不一樣的，而且也沒寫在文件上。</p>
+
+<p>還好我也有發現，rlayte 其實已經把他的 phantom-jasmine fork 改成 <a href="https://github.com/rlayte/aladdin">aladdin</a> 了，前面講的那些行為該怎樣用，其實都寫在 aladdin 那邊的 README 內。</p>
+
+<p>aladdin 設計的其實蠻無腦的，spec 檔案放在 <code>spec/</code> 目錄下，然後在 spec 目錄下新增一個 config.json：</p>
+
+<pre><code>[ 
   'lib/jquery.js',
   'app/**/*.js'
 ]
-</code>
-              </pre>
-              <p>這個檔案把你要測試的 src 和 dependency 都照順序放好，然後在專案根目錄執行 <code>aladdin</code> 就會開始測試了，連 Jasmine 的檔案都不用自己抓。</p>
-              <p>要在 Travis CI 上跑測試，只要再加上兩個檔案就可以，一個是 <a href="http://about.travis-ci.org/docs/user/getting-started/#Step-three%3A-Add-.travis.yml-file-to-your-repository">.travis.yml</a>，另外一個是 <a href="https://npmjs.org/doc/json.html">package.json</a>，<code>.travis.yml</code> 只要設成 <a href="http://about.travis-ci.org/docs/user/getting-started/#Node.js">Node.js</a> 的就可以，可以直接拷貝範例，然後內容的 nodejs 版本只留一個。然後再加上 before_script 告訴 Travis CI 要安裝 aladdin：</p>
-              <pre>
-                <code>before_script:
+</code></pre>
+
+<p>這個檔案把你要測試的 src 和 dependency 都照順序放好，然後在專案根目錄執行 <code>aladdin</code> 就會開始測試了，連 Jasmine 的檔案都不用自己抓。</p>
+
+<p>要在 Travis CI 上跑測試，只要再加上兩個檔案就可以，一個是 <a href="http://about.travis-ci.org/docs/user/getting-started/#Step-three%3A-Add-.travis.yml-file-to-your-repository">.travis.yml</a>，另外一個是 <a href="https://npmjs.org/doc/json.html">package.json</a>，<code>.travis.yml</code> 只要設成 <a href="http://about.travis-ci.org/docs/user/getting-started/#Node.js">Node.js</a> 的就可以，可以直接拷貝範例，然後內容的 nodejs 版本只留一個。然後再加上 before_script 告訴 Travis CI 要安裝 aladdin：</p>
+
+<pre><code>before_script:
     - npm install -g aladdin
-</code>
-              </pre>
-              <p>至於 <code>package.json</code> 就稍微複雜一點，以下是範例：</p>
-              <pre>
-                <code>{
+</code></pre>
+
+<p>至於 <code>package.json</code> 就稍微複雜一點，以下是範例：</p>
+
+<pre><code>{
   "name": "robst-video",
   "author": "othree",
   "scripts": {
     "test": "aladdin"
   }
 }
-</code>
-              </pre>
-              <p>重點是 <strong>scripts</strong> 那一塊，要讓 <code>npm test</code> 執行時會跑 <code>aladdin</code> 來啟動測試。這樣 Travis CI 就可以幫你跑測試了。</p>
-              <p>回到 phantom-jasmine，現在的狀況是 npm 的 phantom-jasmine 被搞爛了，我必須說 rlayte 搞出這狀況還蠻不負責任的，所以也 report 了個 issue，還好 npm 可以從本地目錄安裝：</p>
-              <pre>
-                <code>sudo npm install -g /path/to/phantom-jasmine/
-</code>
-              </pre>
-              <p>只是裝起來後，目前我反而還沒辦法讓原版的 phantom-jasmine 跑起來，可能下次有動力在繼續看問題在哪了吧。 目前我是只有在 <a href="https://github.com/othree/robust-video">robust-video</a> 這個專案跑 Travis CI，有興趣的也可以直接去看看檔案怎樣放。</p>
-              <p>最後補充一下，不知道有沒有人注意到，迪士尼的阿拉丁電影裡面的公主，就叫做 Jasmine。</p>
-            </section>
+</code></pre>
+
+<p>重點是 <strong>scripts</strong> 那一塊，要讓 <code>npm test</code> 執行時會跑 <code>aladdin</code> 來啟動測試。這樣 Travis CI 就可以幫你跑測試了。</p>
+
+<p>回到 phantom-jasmine，現在的狀況是 npm 的 phantom-jasmine 被搞爛了，我必須說 rlayte 搞出這狀況還蠻不負責任的，所以也 report 了個 issue，還好 npm 可以從本地目錄安裝：</p>
+
+<pre><code>sudo npm install -g /path/to/phantom-jasmine/
+</code></pre>
+
+<p>只是裝起來後，目前我反而還沒辦法讓原版的 phantom-jasmine 跑起來，可能下次有動力在繼續看問題在哪了吧。 目前我是只有在 <a href="https://github.com/othree/robust-video">robust-video</a> 這個專案跑 Travis CI，有興趣的也可以直接去看看檔案怎樣放。</p>
+
+<p>最後補充一下，不知道有沒有人注意到，迪士尼的阿拉丁電影裡面的公主，就叫做 Jasmine。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -149,6 +155,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -169,19 +184,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -193,7 +199,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

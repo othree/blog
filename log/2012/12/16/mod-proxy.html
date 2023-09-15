@@ -85,35 +85,18 @@
                 <a itemprop="mainEntityOfPage" href="/log/2012/12/16/mod-proxy/">mod_proxy 的注意事項</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973312/" title="Network when open open propxy by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network when open open propxy" srcset="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 1024w">
-                    <meta itemprop="width" content="829"/>
-                    <meta itemprop="height" content="384"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近調整 HTTPS 支援的時候，啟用了 <a href="http://httpd.apache.org/">Apache</a> 的 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html">mod_proxy</a>，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8276915051/" title="CPU when open open propxy by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU when open open propxy" srcset="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 1024w">
-                    <meta itemprop="width" content="829"/>
-                    <meta itemprop="height" content="342"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973240/" title="Disk IO when open open propxy by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO when open open propxy" srcset="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 1024w">
-                    <meta itemprop="width" content="829"/>
-                    <meta itemprop="height" content="356"/>
-                  </img>
-                </a>
-              </p>
-              <p>到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。</p>
-              <p>在這邊奉勸大家要用 Apache 的 mod_proxy 的時候記得要把 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxyrequests">ProxyRequests</a> 設成 Off 啊，預設是 On 什麼的根本是蓄意謀殺啊！</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973312/" title="Network when open open propxy by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network when open open propxy" srcset="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 1024w"><meta itemprop="width" content="829"/><meta itemprop="height" content="384"/></img></a></p>
+
+<p>最近調整 HTTPS 支援的時候，啟用了 <a href="http://httpd.apache.org/">Apache</a> 的 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html">mod_proxy</a>，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8276915051/" title="CPU when open open propxy by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU when open open propxy" srcset="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 1024w"><meta itemprop="width" content="829"/><meta itemprop="height" content="342"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8277973240/" title="Disk IO when open open propxy by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO when open open propxy" srcset="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 1024w"><meta itemprop="width" content="829"/><meta itemprop="height" content="356"/></img></a></p>
+
+<p>到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。</p>
+
+<p>在這邊奉勸大家要用 Apache 的 mod_proxy 的時候記得要把 <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxyrequests">ProxyRequests</a> 設成 Off 啊，預設是 On 什麼的根本是蓄意謀殺啊！</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -138,6 +121,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -158,19 +150,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -182,7 +165,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

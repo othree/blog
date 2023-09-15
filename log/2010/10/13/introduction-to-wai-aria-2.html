@@ -85,24 +85,23 @@
                 <a itemprop="mainEntityOfPage" href="/log/2010/10/13/introduction-to-wai-aria-2/">WAI-ARIA 介紹之二</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
-              <ul>
-                <li>
-                  <a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a>
-                </li>
-                <li>WAI-ARIA 介紹之二 - 本篇文章</li>
-                <li>
-                  <a href="http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/">WAI-ARIA 介紹之三</a>
-                </li>
-              </ul>
-              <h4>我是誰？</h4>
-              <p>ARIA 導入了 role 屬性來幫助定義介面元件和頁面結構，介面元件像是滑動條控制器，頁面結構像是導覽區塊，網路應用程式的一個主要問題是任何 HTML 元素都可以用來製作介面元件，但是 HTML 元素都已經有其定義與角色了。 Role 屬性代表的是該元素是什麼東西，它在整個架構中是什麼角色，例如 heading 標題就是輔助科技所可以了解的角色。當使用既有的元素建置介面元件時，輔助科技會以元素的預設角色和定義來認知該元素，而不是它實際上在介面元件中的角色，例如滑動條控制器中的滑塊使用 img 標籤製作並標上適當的替代文字，螢幕閱讀器會讀出「圖形、滑塊」而不是更有意義的「滑動條控制器、值為百分之16。」</p>
-              <p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/5067918400/" title="Flickr 上 othree 的 thumb"><img itemprop="url image" src="http://farm5.static.flickr.com/4128/5067918400_56f38e1a6c_o.gif" width="166" height="81" alt=""><meta itemprop="width" content="166"/><meta itemprop="height" content="81"/></img></a><br/>
+            <section itemprop="articleBody"><p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
+
+<ul>
+<li><a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a></li>
+<li>WAI-ARIA 介紹之二 - 本篇文章</li>
+<li><a href="http://blog.othree.net/log/2010/10/17/introduction-to-wai-aria-3/">WAI-ARIA 介紹之三</a></li>
+</ul>
+
+<h4>我是誰？</h4>
+
+<p>ARIA 導入了 role 屬性來幫助定義介面元件和頁面結構，介面元件像是滑動條控制器，頁面結構像是導覽區塊，網路應用程式的一個主要問題是任何 HTML 元素都可以用來製作介面元件，但是 HTML 元素都已經有其定義與角色了。 Role 屬性代表的是該元素是什麼東西，它在整個架構中是什麼角色，例如 heading 標題就是輔助科技所可以了解的角色。當使用既有的元素建置介面元件時，輔助科技會以元素的預設角色和定義來認知該元素，而不是它實際上在介面元件中的角色，例如滑動條控制器中的滑塊使用 img 標籤製作並標上適當的替代文字，螢幕閱讀器會讀出「圖形、滑塊」而不是更有意義的「滑動條控制器、值為百分之16。」</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/5067918400/" title="Flickr 上 othree 的 thumb"><img itemprop="url image" src="http://farm5.static.flickr.com/4128/5067918400_56f38e1a6c_o.gif" width="166" height="81" alt=""><meta itemprop="width" content="166"/><meta itemprop="height" content="81"/></img></a> <br/>
 Figure 3 -- 滑動條控制器上的滑塊</p>
-              <p>role 所設定的元素角色會蓋過原本元素預設的角色，下面的例子中，有一個 role 屬性為 slider 的 input 元素（其他的屬性將會在後面介紹），因此輔助科技將會將它認為是滑動條控制器(slider) 而不是普通的文字輸入欄位 (input)。</p>
-              <pre>
-                <code>&lt;input type="image"
+<p>role 所設定的元素角色會蓋過原本元素預設的角色，下面的例子中，有一個 role 屬性為 slider 的 input 元素（其他的屬性將會在後面介紹），因此輔助科技將會將它認為是滑動條控制器(slider) 而不是普通的文字輸入欄位 (input)。</p>
+
+<pre><code>&lt;input type="image"
        src="thumb.gif"
        alt="Effectiveness"
        role="slider"
@@ -111,33 +110,39 @@ Figure 3 -- 滑動條控制器上的滑塊</p>
        aria-valuenow="42"
        aria-valuetext="42 percent" 
        aria-labelledby="leffective"&gt;
-</code>
-              </pre>
-              <p>當這個元素被取用時，螢幕閱讀器便可以正確的告訴使用者這個介面元件是什麼。ARIA規格也有維護一份 <a href="http://www.w3.org/TR/wai-aria/roles#role_definitions">role 屬性值的清單</a>。</p>
-              <h5>文件地標</h5>
-              <p>Role 屬性除了定義介面元件外，還可以幫助建立文件的結構，<a href="http://www.w3.org/TR/wai-aria/roles#landmark_roles">文件地標</a>是 role 屬性的一個子集，它可以幫助螢幕閱讀器的使用者了解不同 HTML 內部同文件區塊的用途，好快速的定位到想要去的位置。</p>
-              <p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/5067918418/" title="Flickr 上 othree 的 pagestructure"><img itemprop="url image" src="http://farm5.static.flickr.com/4153/5067918418_ae41f9b617_o.gif" width="179" height="256" alt=""><meta itemprop="width" content="179"/><meta itemprop="height" content="256"/></img></a><br/>
+</code></pre>
+
+<p>當這個元素被取用時，螢幕閱讀器便可以正確的告訴使用者這個介面元件是什麼。ARIA規格也有維護一份 <a href="http://www.w3.org/TR/wai-aria/roles#role_definitions">role 屬性值的清單</a>。</p>
+
+<h5>文件地標</h5>
+
+<p>Role 屬性除了定義介面元件外，還可以幫助建立文件的結構，<a href="http://www.w3.org/TR/wai-aria/roles#landmark_roles">文件地標</a>是 role 屬性的一個子集，它可以幫助螢幕閱讀器的使用者了解不同 HTML 內部同文件區塊的用途，好快速的定位到想要去的位置。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" href="http://www.flickr.com/photos/othree/5067918418/" title="Flickr 上 othree 的 pagestructure"><img itemprop="url image" src="http://farm5.static.flickr.com/4153/5067918418_ae41f9b617_o.gif" width="179" height="256" alt=""><meta itemprop="width" content="179"/><meta itemprop="height" content="256"/></img></a> <br/>
 Figure 4 -- 常見的文件結構，有標頭、側邊欄和主要內容</p>
-              <p>ARIA 規格定義了以下的文件地標。</p>
-              <dl>
-                <dt>article</dt>
-                <dd>完整的一段內容，像是完整的一篇部落格文章、一篇迴響或是討論區的亦篇文章等</dd>
-                <dt>banner</dt>
-                <dd>跨網頁，屬於網站全體層級的內容，像是網站標題或是標誌等</dd>
-                <dt>complementary</dt>
-                <dd>和 main 內容相關的東西，不過可以獨立於主要內容之外，像是在入口網站提供的天氣資訊</dd>
-                <dt>contentinfo</dt>
-                <dd>相關資訊，例如註腳、版權宣告、隱私聲明、設定連結等</dd>
-                <dt>main</dt>
-                <dd>文件主要內容</dd>
-                <dt>navigation</dt>
-                <dd>內含本身以及相關文件導覽連結的部份</dd>
-                <dt>search</dt>
-                <dd>站內搜尋的表單區塊</dd>
-              </dl>
-              <p>下面的例子使用了文件地標指定了圖四文件中的 banner, navigation 和 main 三個區塊。</p>
-              <pre>
-                <code>&lt;div role="banner"&gt;
+
+<p>ARIA 規格定義了以下的文件地標。</p>
+
+<dl>
+    <dt>article</dt>
+    <dd>完整的一段內容，像是完整的一篇部落格文章、一篇迴響或是討論區的亦篇文章等</dd>
+    <dt>banner</dt>
+    <dd>跨網頁，屬於網站全體層級的內容，像是網站標題或是標誌等</dd>
+    <dt>complementary</dt>
+    <dd>和 main 內容相關的東西，不過可以獨立於主要內容之外，像是在入口網站提供的天氣資訊</dd>
+    <dt>contentinfo</dt>
+    <dd>相關資訊，例如註腳、版權宣告、隱私聲明、設定連結等</dd>
+    <dt>main</dt>
+    <dd>文件主要內容</dd>
+    <dt>navigation</dt>
+    <dd>內含本身以及相關文件導覽連結的部份</dd>
+    <dt>search</dt>
+    <dd>站內搜尋的表單區塊</dd>
+</dl>
+
+<p>下面的例子使用了文件地標指定了圖四文件中的 banner, navigation 和 main 三個區塊。</p>
+
+<pre><code>&lt;div role="banner"&gt;
 ...
 &lt;/div&gt;
 &lt;div role="navigation"&gt;
@@ -146,88 +151,103 @@ Figure 4 -- 常見的文件結構，有標頭、側邊欄和主要內容</p>
 &lt;div role="main"&gt;
 ...
 &lt;/div&gt;
-</code>
-              </pre>
-              <h4>ARIA 狀態與屬性</h4>
-              <p>ARIA <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性</a> 讓輔助科技可以得到介面元件的更多資訊幫助使用者了解如何操作這些介面元件，狀態是用來指定物件的某個特定資訊，例如 aria-checked 有三種狀態值， true, false 和 mixed 。而前面介紹的滑動條控制器，也有數個 aria 屬性可以幫助輔助科技描述這個元件。</p>
-              <dl>
-                <dt>aria-valuemin</dt>
-                <dd>儲存可接受數值的最小值</dd>
-                <dt>aria-valuemax</dt>
-                <dd>儲存可接受數值的最大值</dd>
-                <dt>aria-valuenow</dt>
-                <dd>儲存現在介面元件的值</dd>
-                <dt>aria-valuetext</dt>
-                <dd>儲存方便使用者理解接現在數值的文字，例如：30塊錢</dd>
-                <dt>aria-labelledy</dt>
-                <dd>儲存描述此介面元件的元素的 id 值</dd>
-              </dl>
-              <p>部分屬性可能會被 script 程式改變，例如 aria-valuenow 和 aria-valuetext 就應該在滑塊移動時跟著改變。</p>
-              <pre>
-                <code>// Set the ARIA property values when the thumb is 
+</code></pre>
+
+<h4>ARIA 狀態與屬性</h4>
+
+<p>ARIA <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性</a> 讓輔助科技可以得到介面元件的更多資訊幫助使用者了解如何操作這些介面元件，狀態是用來指定物件的某個特定資訊，例如 aria-checked 有三種狀態值， true, false 和 mixed 。而前面介紹的滑動條控制器，也有數個 aria 屬性可以幫助輔助科技描述這個元件。</p>
+
+<dl>
+    <dt>aria-valuemin</dt>
+    <dd>儲存可接受數值的最小值</dd>
+    <dt>aria-valuemax</dt>
+    <dd>儲存可接受數值的最大值</dd>
+    <dt>aria-valuenow</dt>
+    <dd>儲存現在介面元件的值</dd>
+    <dt>aria-valuetext</dt>
+    <dd>儲存方便使用者理解接現在數值的文字，例如：30塊錢</dd>
+    <dt>aria-labelledy</dt>
+    <dd>儲存描述此介面元件的元素的 id 值</dd>
+</dl>
+
+<p>部分屬性可能會被 script 程式改變，例如 aria-valuenow 和 aria-valuetext 就應該在滑塊移動時跟著改變。</p>
+
+<pre><code>// Set the ARIA property values when the thumb is 
 // moved on the slider
 objThumb.setAttribute('aria-valuenow', iValue);
 objThumb.setAttribute('aria-valuetext', iValue + ' %');
-</code>
-              </pre>
-              <p>網頁加上 role 屬性和 ARIA 屬性會讓文件無法通過標準檢測，但沒關係，讓 ARIA 支援古老標準的相關的工作也正在進行，像是有一個可以讓 <a href="http://www.w3.org/WAI/PF/adaptable/StatesAndProperties-20051106.HTML">模組化 XML 使用的文件類型定義(DTD)</a>，XHTML 1.1 就是一種模組化 XML 文件格式，有一份完整的 <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性清單</a> ，可以幫助建立具親和力的介面元件。</p>
-              <h4>即時區塊</h4>
-              <p>即時區塊讓 HTML 元素在內容有更新時會通知使用者，而不會忽略掉最新的狀況，這意味著使用者可以不用離開他現在的游標位置也可以收到最新的更新內容，例如聊天室可以讓使用者接收到其他人的回覆，而不用離開文字輸入框，中斷正在輸入的訊息。</p>
-              <h5>aria-live</h5>
-              <p>無法發現網頁內容的更新是螢幕閱讀器使用者一直以來最大的障礙，ARIA 提供了 aria-live 這個屬性來設定網頁區塊更新時通知該如何通知使用者，下面是三種可以使用的設定。</p>
-              <dl>
-                <dt>off</dt>
-                <dd>預設值，區塊的更新不會通知輔助科技
+</code></pre>
+
+<p>網頁加上 role 屬性和 ARIA 屬性會讓文件無法通過標準檢測，但沒關係，讓 ARIA 支援古老標準的相關的工作也正在進行，像是有一個可以讓 <a href="http://www.w3.org/WAI/PF/adaptable/StatesAndProperties-20051106.HTML">模組化 XML 使用的文件類型定義(DTD)</a>，XHTML 1.1 就是一種模組化 XML 文件格式，有一份完整的 <a href="http://www.w3.org/TR/wai-aria/states_and_properties">狀態和屬性清單</a> ，可以幫助建立具親和力的介面元件。</p>
+
+<h4>即時區塊</h4>
+
+<p>即時區塊讓 HTML 元素在內容有更新時會通知使用者，而不會忽略掉最新的狀況，這意味著使用者可以不用離開他現在的游標位置也可以收到最新的更新內容，例如聊天室可以讓使用者接收到其他人的回覆，而不用離開文字輸入框，中斷正在輸入的訊息。</p>
+
+<h5>aria-live</h5>
+
+<p>無法發現網頁內容的更新是螢幕閱讀器使用者一直以來最大的障礙，ARIA 提供了 aria-live 這個屬性來設定網頁區塊更新時通知該如何通知使用者，下面是三種可以使用的設定。</p>
+
+<dl>
+    <dt>off</dt>
+    <dd>預設值，區塊的更新不會通知輔助科技
     <pre><code>
         &lt;ul aria-live="off"&gt;
     </code></pre></dd>
-                <dt>polite</dt>
-                <dd>這是適用於大部分 live 區塊的設定， polite 區塊將會在使用者完成正在進行的動作後才會通知輔助科技
+    <dt>polite</dt>
+    <dd>這是適用於大部分 live 區塊的設定， polite 區塊將會在使用者完成正在進行的動作後才會通知輔助科技
     <pre><code>
         &lt;ul aria-live="polite"&gt;
     </code></pre></dd>
-                <dt>assertive</dt>
-                <dd>這個值比一般的情形更為優先，但不會打斷使用者的動作。
+    <dt>assertive</dt>
+    <dd>這個值比一般的情形更為優先，但不會打斷使用者的動作。
     <pre><code>
         &lt;ul aria-live="assertive"&gt;
     </code></pre></dd>
-              </dl>
-              <p>其他還有一些重要的屬性可以幫助設定即時區塊，下面接著介紹。</p>
-              <h5>aria-atomic 屬性</h5>
-              <p>aria-atomic 是即時區塊的非必要的屬性，它的值可以是 true 或 false (預設是無指定)，當即時區塊更新時，aria-atomic 屬性是用來決定輔助科技是否要把整個區塊的內容都通報給使用者，如果設為 true，輔助科技就會把整個即時區塊的內容都通報出去，不然就只通報更改的部份。</p>
-              <p>下面的例子中，所有在此非排序清單中的元素都會被完整的念出，除非 aria-atomic 屬性被覆蓋。</p>
-              <pre>
-                <code>&lt;ul aria-atomic="true"
+</dl>
+
+<p>其他還有一些重要的屬性可以幫助設定即時區塊，下面接著介紹。</p>
+
+<h5>aria-atomic 屬性</h5>
+
+<p>aria-atomic 是即時區塊的非必要的屬性，它的值可以是 true 或 false (預設是無指定)，當即時區塊更新時，aria-atomic 屬性是用來決定輔助科技是否要把整個區塊的內容都通報給使用者，如果設為 true，輔助科技就會把整個即時區塊的內容都通報出去，不然就只通報更改的部份。</p>
+
+<p>下面的例子中，所有在此非排序清單中的元素都會被完整的念出，除非 aria-atomic 屬性被覆蓋。</p>
+
+<pre><code>&lt;ul aria-atomic="true"
     aria-live="polite"&gt;
-</code>
-              </pre>
-              <h5>aria-busy 屬性</h5>
-              <p>aria-busy 屬性也是非必要屬性，值可以為 true 或 false （預設為無指定），如果即時區塊內有多個地方都需要更改，之後才需要通知使用者的話，那就可以先將 aria-busy 設為 true 
+</code></pre>
+
+<h5>aria-busy 屬性</h5>
+
+<p>aria-busy 屬性也是非必要屬性，值可以為 true 或 false （預設為無指定），如果即時區塊內有多個地方都需要更改，之後才需要通知使用者的話，那就可以先將 aria-busy 設為 true 
 ，等到在內容都更新完後再把 aria-busy 設為 false，這個屬性可以避免輔助科技在即時區的內容更新完成之前就通知使用者。</p>
-              <pre>
-                <code>&lt;ul aria-atomic="true"
+
+<pre><code>&lt;ul aria-atomic="true"
     aria-busy="true"   aria-live="polite"&gt;
-</code>
-              </pre>
-              <h5>aria-relevant 屬性</h5>
-              <p>aria-relevant 屬性也是非必要屬性，是用來表示即時區塊的資訊更新要對哪些變化做出反應，此屬性接受以下的值，並可以用空白分開不同的值。</p>
-              <dl>
-                <dt>additions</dt>
-                <dd>即時區塊內有新增 DOM 節點</dd>
-                <dt>removals</dt>
-                <dd>即時區塊內有減少 DOM 節點</dd>
-                <dt>text</dt>
-                <dd>即時區塊內的文字有變化</dd>
-                <dt>all</dt>
-                <dd>上面所有的變化都有發生</dd>
-              </dl>
-              <p>如果沒有設定 aria-relevant 的話，預設會認為是文字變化與新增內容(aria-relevant="text additions")，下面的範例中的即時區塊，只會在區塊內有增加節點時，輔助科技才會告知使用者，如果是移除節點或是文字內容的變化，輔助科技都不會告知使用者。</p>
-              <pre>
-                <code>&lt;ul aria-relevant="additions" 
+</code></pre>
+
+<h5>aria-relevant 屬性</h5>
+
+<p>aria-relevant 屬性也是非必要屬性，是用來表示即時區塊的資訊更新要對哪些變化做出反應，此屬性接受以下的值，並可以用空白分開不同的值。</p>
+
+<dl>
+    <dt>additions</dt>
+    <dd>即時區塊內有新增 DOM 節點</dd>
+    <dt>removals</dt>
+    <dd>即時區塊內有減少 DOM 節點</dd>
+    <dt>text</dt>
+    <dd>即時區塊內的文字有變化</dd>
+    <dt>all</dt>
+    <dd>上面所有的變化都有發生</dd>
+</dl>
+
+<p>如果沒有設定 aria-relevant 的話，預設會認為是文字變化與新增內容(aria-relevant="text additions")，下面的範例中的即時區塊，只會在區塊內有增加節點時，輔助科技才會告知使用者，如果是移除節點或是文字內容的變化，輔助科技都不會告知使用者。</p>
+
+<pre><code>&lt;ul aria-relevant="additions" 
     aria-atomic="true"   aria-live="polite"&gt;
-</code>
-              </pre>
-            </section>
+</code></pre>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -252,6 +272,15 @@ objThumb.setAttribute('aria-valuetext', iValue + ' %');
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -272,19 +301,10 @@ objThumb.setAttribute('aria-valuetext', iValue + ' %');
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -296,7 +316,7 @@ objThumb.setAttribute('aria-valuetext', iValue + ' %');
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

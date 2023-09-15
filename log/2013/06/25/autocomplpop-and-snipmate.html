@@ -85,45 +85,30 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/06/25/autocomplpop-and-snipmate/">autocomplpop + snipmate</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w">
-                    <meta itemprop="width" content="1001"/>
-                    <meta itemprop="height" content="484"/>
-                  </img>
-                </a>
-              </p>
-              <p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
-              <p>其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。</p>
-              <p>這次不用改檔案，設定有<a href="https://github.com/othree/vim-autocomplpop/blob/master/doc/acp.txt#L82">設對</a>：</p>
-              <pre>
-                <code>let g:acp_behaviorSnipmateLength = 1
-</code>
-              </pre>
-              <p>輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。</p>
-              <p>最後要補充一下，我 fork 的 autocomplpop 是原作者 ns9tks 拆出一些 component 的版本，所以會需要安裝 <a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a>，新的 snipmate 也有相依的 plugin：<a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a> 和 <a href="https://github.com/tomtom/tlib_vim">tlib</a>，而且它也不含 snippets，東西在另外一個 <a href="https://github.com/honza/vim-snippets">vim-snippets</a>，其實有點多，蠻混亂的，所以整理一下總共要裝哪些 plugin：</p>
-              <ul>
-                <li>
-                  <a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a>
-                </li>
-                <li>
-                  <a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a>
-                </li>
-                <li>
-                  <a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a>
-                </li>
-                <li>
-                  <a href="https://github.com/tomtom/tlib_vim">tlib</a>
-                </li>
-                <li>
-                  <a href="https://github.com/garbas/vim-snipmate">vim-snipmate</a>
-                </li>
-                <li>
-                  <a href="https://github.com/honza/vim-snippets">vim-snippets</a>
-                </li>
-              </ul>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9125887997/" title="autocomplpop + snipmate by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg" width="1001" height="484" alt="autocomplpop + snipmate" srcset="https://farm6.staticflickr.com/5533/9125887997_27c6e863a0_b.jpg 1024w"><meta itemprop="width" content="1001"/><meta itemprop="height" content="484"/></img></a></p>
+
+<p>我用 vim-snipmate 和 vim-autocomplpop 已經蠻久了，不過運氣不好的是兩個 plugin 的原作者都已經不維護了，過了許久，有幾個人接手了 <a href="https://github.com/garbas/vim-snipmate">snipmate</a>，不過大改一陣子之後，原本兩者間可以合作的<a href="http://www.ptt.cc/bbs/Editor/M.1264437741.A.4ED.html">hack</a> 就失效了，考慮一陣子之後我開始在 github 上 fork 了一版 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 來維護，一來是我用 vundle 安裝方便，二來是希望有一天能重新把 autocomplpop 支援 snipmate 的功能再弄起來。</p>
+
+<p>其實幾個月前我有研究過一次，不過那時候幾乎看不懂新版 snipmate 的程式碼，沒想到今天又看一次竟然看懂了，不知道是不是之前那版本來就很難讀就是，總之研究了一下可行性，發現似乎可以不用像以前那樣用 hack 的方法就可以讓功能復活，花了大約兩三個小時下去弄，真的成功了，感動。</p>
+
+<p>這次不用改檔案，設定有<a href="https://github.com/othree/vim-autocomplpop/blob/master/doc/acp.txt#L82">設對</a>：</p>
+
+<pre><code>let g:acp_behaviorSnipmateLength = 1
+</code></pre>
+
+<p>輸入的時候輸入大寫就應該要看到 snippets 的候選項目了。</p>
+
+<p>最後要補充一下，我 fork 的 autocomplpop 是原作者 ns9tks 拆出一些 component 的版本，所以會需要安裝 <a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a>，新的 snipmate 也有相依的 plugin：<a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a> 和 <a href="https://github.com/tomtom/tlib_vim">tlib</a>，而且它也不含 snippets，東西在另外一個 <a href="https://github.com/honza/vim-snippets">vim-snippets</a>，其實有點多，蠻混亂的，所以整理一下總共要裝哪些 plugin：</p>
+
+<ul>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=3252">L9</a></li>
+<li><a href="https://github.com/othree/vim-autocomplpop">vim-autocomplpop</a></li>
+<li><a href="https://github.com/marcweber/vim-addon-mw-utils">vim-addon-mw-utils</a></li>
+<li><a href="https://github.com/tomtom/tlib_vim">tlib</a></li>
+<li><a href="https://github.com/garbas/vim-snipmate">vim-snipmate</a></li>
+<li><a href="https://github.com/honza/vim-snippets">vim-snippets</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -148,6 +133,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -168,19 +162,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -192,7 +177,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -81,21 +81,12 @@
                 <a href="/log/2018/04/21/eslint-plugin-intro/">ESLint Plugin 入門</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w">
-                    <meta itemprop="width" content="581"/>
-                    <meta itemprop="height" content="514"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
-              <p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
-              <p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
-              <p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
-              <pre>
-                <code class="language-javascript">const rule = require('../rule.js')
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w"><meta itemprop="width" content="581"/><meta itemprop="height" content="514"/></img></a></p>
+<p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
+<p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
+<p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
+<p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
+<pre><code class="language-javascript">const rule = require('../rule.js')
 const RuleTester = require('eslint').RuleTester
 
 const ruleTester = new RuleTester();
@@ -111,12 +102,11 @@ ruleTester.run('no-parameter-e', rule, {
     }
   ],
 });
-</code>
-              </pre>
-              <p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
-              <p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
-              <p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
-            </section>
+</code></pre>
+<p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
+<p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
+<p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -132,26 +122,21 @@ ruleTester.run('no-parameter-e', rule, {
                 <a href="/log/2018/04/19/immer/">Immer 原理</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子有個蠻有趣的 library 叫 <a href="https://github.com/mweststrate/immer">Immer</a>，是 MobX 的開發者 Michel Weststrate 做的，這個 library 做的事情很有趣，它整合了 immutable 資料和原生資料的特性，反過來從缺點來看，immutable 資料型態的問題就是操作比較不方便，所有的修改動作都要透過 method 來執行，不能直接用 assign 的，有時候要改比較深層一點的資料就很麻煩，像 Facebook 的 <a href="https://github.com/facebook/immutable-js">immutable.js</a> 就需要用 <code>getIn</code>、<code>updateIn</code> 來處理：</p>
-              <pre>
-                <code class="language-js">getIn({ x: { y: { z: 123 }}}, ['x', 'y', 'z']) // 123
+            <section itemprop="articleBody"><p>前陣子有個蠻有趣的 library 叫 <a href="https://github.com/mweststrate/immer">Immer</a>，是 MobX 的開發者 Michel Weststrate 做的，這個 library 做的事情很有趣，它整合了 immutable 資料和原生資料的特性，反過來從缺點來看，immutable 資料型態的問題就是操作比較不方便，所有的修改動作都要透過 method 來執行，不能直接用 assign 的，有時候要改比較深層一點的資料就很麻煩，像 Facebook 的 <a href="https://github.com/facebook/immutable-js">immutable.js</a> 就需要用 <code>getIn</code>、<code>updateIn</code> 來處理：</p>
+<pre><code class="language-js">getIn({ x: { y: { z: 123 }}}, ['x', 'y', 'z']) // 123
 
 const original = { x: { y: { z: 123 }}}
 setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
-</code>
-              </pre>
-              <p>用陣列丟每層的屬性名稱，也有一些是用 <code>.</code> 切分的 path 來處理這個問題（像是 <code>prop1.prop2.prop3</code> 這種結構），而原生資料的缺點，在這個場景來看當然就是不 immutable 了，Immer 就提出了一個新的構想，把這兩者的優點結合在一起，讓資料可以保持 immutable 特性，又可以直接修改，當然不能直接修改 JavaScript 行為，所以還是有些地方需要等價交換，就是修改資料的時候，要包進 produce function 內：</p>
-              <pre>
-                <code class="language-js">const nextState = produce(baseState, draftState =&gt; {
+</code></pre>
+<p>用陣列丟每層的屬性名稱，也有一些是用 <code>.</code> 切分的 path 來處理這個問題（像是 <code>prop1.prop2.prop3</code> 這種結構），而原生資料的缺點，在這個場景來看當然就是不 immutable 了，Immer 就提出了一個新的構想，把這兩者的優點結合在一起，讓資料可以保持 immutable 特性，又可以直接修改，當然不能直接修改 JavaScript 行為，所以還是有些地方需要等價交換，就是修改資料的時候，要包進 produce function 內：</p>
+<pre><code class="language-js">const nextState = produce(baseState, draftState =&gt; {
     draftState.push({ todo: "Tweet about it" })
     draftState[1].done = true
 })
-</code>
-              </pre>
-              <p>然後得到的 <code>nextState</code> 和 <code>baseState</code> 就會是不同物件，就像是 immutable 物件一樣行為，所以如果沒修改就還是同個物件，初看覺得有點黑魔法，不過思考過後覺得也不是不能做，有了些假想的實做方法後去研究了一下程式碼，不太意外的其實在 produce 裡面拿到的 draft 物件，是一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 包裝過的物件，然後 immutable 相關的邏輯都做在 Proxy 內，produce 跑完後再把新的值 finalize 取出用 plain object 傳回給 <code>nextState</code>，當然因為 Proxy 是比較新的東西，所以針對 ES5 也有另外的處理，我大致看一下就是比較土法煉鋼的下去比對，至於為什麼不全部都這樣做應該是效能考量吧。其實我覺得比起實做的原理，能想到這樣設計實在是很厲害，不像大部分人早就放棄了，還持續思考是不是有更好的作法可以整合兩種資料格式的優點才有機會找到這條路。</p>
-              <p>最後，Immer 這名字的由來，雖然在德文有這單字，不過我判斷應該還是從 immersive 來的吧。</p>
-            </section>
+</code></pre>
+<p>然後得到的 <code>nextState</code> 和 <code>baseState</code> 就會是不同物件，就像是 immutable 物件一樣行為，所以如果沒修改就還是同個物件，初看覺得有點黑魔法，不過思考過後覺得也不是不能做，有了些假想的實做方法後去研究了一下程式碼，不太意外的其實在 produce 裡面拿到的 draft 物件，是一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 包裝過的物件，然後 immutable 相關的邏輯都做在 Proxy 內，produce 跑完後再把新的值 finalize 取出用 plain object 傳回給 <code>nextState</code>，當然因為 Proxy 是比較新的東西，所以針對 ES5 也有另外的處理，我大致看一下就是比較土法煉鋼的下去比對，至於為什麼不全部都這樣做應該是效能考量吧。其實我覺得比起實做的原理，能想到這樣設計實在是很厲害，不像大部分人早就放棄了，還持續思考是不是有更好的作法可以整合兩種資料格式的優點才有機會找到這條路。</p>
+<p>最後，Immer 這名字的由來，雖然在德文有這單字，不過我判斷應該還是從 immersive 來的吧。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -167,20 +152,9 @@ setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
                 <a href="/log/2018/04/18/2017/">2017</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/32417917172/" title="神農老街 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg" width="1024" height="683" alt="神農老街" srcset="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg 1024w, https://farm1.staticflickr.com/395/32417917172_1d7322eea0_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>拖稿很久的 2017 回顧，今年比較沒時間，所以只挑了一輪就直接上陣了（然後還晚了好幾個月），一月是現在固定的台南春節，台南還看的到很多手寫春聯，而且都寫得很漂亮。</p>
-              <em class="extended">
-                <a href="/log/2018/04/18/2017/">閱讀「2017」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/32417917172/" title="神農老街 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg" width="1024" height="683" alt="神農老街" srcset="https://farm1.staticflickr.com/395/32417917172_5e0de7f00c_b.jpg 1024w, https://farm1.staticflickr.com/395/32417917172_1d7322eea0_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+<p>拖稿很久的 2017 回顧，今年比較沒時間，所以只挑了一輪就直接上陣了（然後還晚了好幾個月），一月是現在固定的台南春節，台南還看的到很多手寫春聯，而且都寫得很漂亮。</p>
+<em class="extended"><a href="/log/2018/04/18/2017/">閱讀「2017」全文</a></em></section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -196,19 +170,10 @@ setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
                 <a href="/log/2018/04/09/pegjs/">PEG.js</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="991"/>
-                  </img>
-                </a>
-              </p>
-              <p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
-              <p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
-              <pre>
-                <code>IdentifierName ::
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="991"/></img></a></p>
+<p>知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。</p>
+<p>總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 <a href="http://ternjs.net/">TernJS</a> 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 <a href="https://pegjs.org/">PEG.js</a> 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：</p>
+<pre><code>IdentifierName ::
     IdentifierStart
     IdentifierName IdentifierPart
 
@@ -231,19 +196,15 @@ UnicodeIDStart ::
 
 UnicodeIDContinue ::
     any Unicode code point with the Unicode property &amp;ldquo;ID_Continue&amp;rdquo;
-</code>
-              </pre>
-              <p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
-              <p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
-              <p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
-              <pre>
-                <code>keyword
+</code></pre>
+<p>這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。</p>
+<p>以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 <a href="https://www.elastic.co/products/kibana">Kibana</a> 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 <a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362">gist</a> 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 <code>&amp;</code> 、<code>|</code> 這些符號之類的，還有符號兩邊不用空格等等。</p>
+<p>還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 <code>/</code> 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（<a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md">backtracking</a>），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：</p>
+<pre><code>keyword
 keyword1 and keyword2
-</code>
-              </pre>
-              <p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
-              <pre>
-                <code class="language-pegjs">start
+</code></pre>
+<p>但是卻無法更進一步加上支援 <code>or</code>，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：</p>
+<pre><code class="language-pegjs">start
   = orQuery?
 
 orQuery
@@ -261,11 +222,10 @@ notQuery
 subQuery
   = '(' ws* query:orQuery ws* ')'
   / queryValue
-</code>
-              </pre>
-              <p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
-              <p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
-            </section>
+</code></pre>
+<p>如此，<code>or</code> 查詢支援兩種內容，第一種是 <code>and</code> 查詢語句，第二種才是真的 <code>or</code> 查詢，但是他的第一個元素是 <code>and</code> 查詢，也就是說雖然是 <code>or</code> 查詢的判斷，但是卻先去看有沒有 <code>and</code> 查詢，然後 <code>and</code> 查詢也是類似的定義，實際上先去找有沒有 <code>not</code>  的語句，然後 <code>not</code> 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 <a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8">left recursive</a>），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。</p>
+<p>最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 <a href="https://github.com/othree/simple-search-query">simple-search-query</a>，詳細用法可以參考 README，至於完整的語法定義就在 <code>query</code> 目錄內，還在補測試就是。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -288,7 +248,7 @@ subQuery
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -300,7 +260,7 @@ subQuery
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

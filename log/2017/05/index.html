@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <title>May 2017 : O3noBLOG</title>
-    <meta name="description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta name="description" content="本網站是 othree 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄"/>
     <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
@@ -19,7 +19,7 @@
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:creator" content="@othree"/>
     <meta property="og:title" content="O3noBLOG"/>
-    <meta property="og:description" content="本網站是othree的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄"/>
+    <meta property="og:description" content="本網站是 othree 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄"/>
     <meta property="og:url" content="https://blog.othree.net/log/2017/05/"/>
     <meta property="og:type" content="website"/>
     <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
@@ -81,43 +81,33 @@
                 <a href="/log/2017/05/24/graceful-degradation-background/">Graceful Degradation Background</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="1024"/>
-                  </img>
-                </a>
-              </p>
-              <p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
-              <p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
-              <ul>
-                <li>真的寫 Media Query</li>
-                <li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
-                <li>大家一起用標準解析度的圖</li>
-              </ul>
-              <p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
-              <ul>
-                <li>可以有兩張圖不同解析度的圖</li>
-                <li>不要用 Media Query</li>
-                <li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
-                <li>舊瀏覽器顯示正確</li>
-              </ul>
-              <p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
-              <pre>
-                <code class="language-css">background: #123456 url('the-bg.png') center center;
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/34733787991/" title="Rockman by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg" width="1024" height="1024" alt="Rockman" srcset="https://farm5.staticflickr.com/4224/34733787991_2076c3d7b5_b.jpg 1024w, https://farm5.staticflickr.com/4224/34733787991_0ee7b95f3b_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="1024"/></img></a></p>
+<p>昨天解了一個其實困擾蠻久的問題，就是在蘋果開始支援 Retina Display（HiDPI）之後，網站上使用的圖片也跟著要提升解析度，一般網頁會使用的圖片基本上就是 <code>&lt;img /&gt;</code> 標籤的圖片和用 CSS 設定的背景圖，對於 <code>&lt;img /&gt;</code> 標籤來說，提供高解析度的圖片並不會有向下相容的問題，當然瀏覽器和作業系統不支援的，抓了比較大的圖下來是比較浪費，也為此有 <code>&lt;picture&gt;</code> 標籤、<code>srcset</code> 屬性和 <a href="http://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/">Client Hints</a> 等標準來處理這個問題，不過我的需求只要圖片都能正常且正確的顯示。</p>
+<p><code>&lt;img /&gt;</code> 標籤只要有設定寬高，圖片顯示出來就會是預期的大小，但是 <code>background-image</code> 就不是了，在 <code>background-size</code> 出來前，背景圖多大，它在網頁上就會照那樣的尺寸下去畫，所以在不支援 <code>background-size</code> 的瀏覽器（IE6-8）上用 HiDPI 的背景圖就會很悲劇，雖然可以用 media query 來處理，不過解析度相關的 media query，如果要考慮到以前的瀏覽器，變化有點多，從早期的 device pixel ratio 到 dppx 到現在 resoulution 用的 dpi，還要加上 vendor prefix，自己寫起來有點痛苦，而且原始碼變醜很多，當然，如果有用 PostCSS 就可以用 autoprefixer 解決，不過其實我不太喜歡寫 Media Query，所以都是能少則少（針對 CSS 的 polyfill 也是不太喜歡用），並且有些舊的專案沒有 PostCSS，所以就一直有這個問題，以前的處理方法就是幾種：</p>
+<ul>
+<li>真的寫 Media Query</li>
+<li>用 <code>&lt;img /&gt;</code> 標籤模擬背景圖，也很麻煩（也可以用 polyfill，不過個人不想用）</li>
+<li>大家一起用標準解析度的圖</li>
+</ul>
+<p>這些方法對我來說都算是 workaround 的方式，一直想找個漂亮乾淨一點的解法，直到昨天終於想到了，首先整理一下我的需求：</p>
+<ul>
+<li>可以有兩張圖不同解析度的圖</li>
+<li>不要用 Media Query</li>
+<li>有機會支援 HiDPI 的環境就用 HiDPI 的圖</li>
+<li>舊瀏覽器顯示正確</li>
+</ul>
+<p>其實這些需求可以簡化成：**不支援 <code>background-size</code> 的就乖乖看低解析度的圖片吧**，其中隱含著一個現實狀況是，不支援 <code>background-size</code> 的瀏覽器都只能在不支援 HiDPI 的環境下跑，實做上基本的構想是先寫好一個基本背景的定義，然後再加上一個只有新瀏覽器看的懂得定義，這構想有了很久，卻到昨天才想到怎麼寫，結果如下：</p>
+<pre><code class="language-css">background: #123456 url('the-bg.png') center center;
 background: #123456 url('the-bg@2x.png') center center/32px 32px;
-</code>
-              </pre>
-              <p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
-              <ul>
-                <li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
-                <li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
-                <li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
-              </ul>
-              <p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
-            </section>
+</code></pre>
+<p>用了 <code>background</code> 可以把全部背景相關屬性寫在一起，而且如果解析失敗就整條失效的特性，以前因為我都會 <code>background-size</code> 單獨寫（有另外的原因），這種寫法就落入我的盲區，所以過了這麼久才想到，不過這方法不是萬能，還有些限制和使用時機：</p>
+<ul>
+<li>有需要支援 IE6-8 才需要，IE9 以上就有支援 <code>background-size</code></li>
+<li>不考慮 HiDPI 時其實不需要 <code>background-size</code>，例如固定大小區塊的背景、用背景的 icon、有重複排列的背景等</li>
+<li><code>background-size: cover;</code> 依然需要靠 polyfill 之類的來處理</li>
+</ul>
+<p>想出來之後，有開了 IE8 來測試，結果一如預期，這樣應該是 IE6-7 也會正確吧。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -133,18 +123,9 @@ background: #123456 url('the-bg@2x.png') center center/32px 32px;
                 <a href="/log/2017/05/21/telegram-instant-view/">Telegram Instant View</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/34366696420/" title="Telegram Instant View by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg" width="1024" height="592" alt="Telegram Instant View, " srcset="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg 1024w, https://farm5.staticflickr.com/4194/34366696420_83f48bbf29_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="592"/>
-                  </img>
-                </a>
-              </p>
-              <p>Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 <a href="https://telegram.org/blog/video-messages-and-telescope">Video Message</a>、<a href="https://telegram.org/blog/payments">Payment for Bots</a> 還有就是 <a href="https://telegram.org/blog/instant-view">Instant View</a> 準備要<a href="https://telegram.org/blog/instant-view-contest-200K">開放給所有網頁使用</a>了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page object），不完全算是程式語言，裡面比較像是一些定義，加上用 <a href="https://zh.wikipedia.org/zh-tw/XPath">XPath</a> 來做文件內容的選取，蠻意外會用 XPath 的，還好我對 XPath 有點經驗，就花了一點時間研究了一下，也把自己 blog 的 tempalte 基本版做出來了：</p>
-              <pre>
-                <code>?exists:  //article/div[@id="comments"]
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/34366696420/" title="Telegram Instant View by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg" width="1024" height="592" alt="Telegram Instant View, " srcset="https://farm5.staticflickr.com/4194/34366696420_ced4830286_b.jpg 1024w, https://farm5.staticflickr.com/4194/34366696420_83f48bbf29_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="592"/></img></a></p>
+<p>Telegram 前幾天發佈了 4.0，有幾個比較大的功能，包括了 <a href="https://telegram.org/blog/video-messages-and-telescope">Video Message</a>、<a href="https://telegram.org/blog/payments">Payment for Bots</a> 還有就是 <a href="https://telegram.org/blog/instant-view">Instant View</a> 準備要<a href="https://telegram.org/blog/instant-view-contest-200K">開放給所有網頁使用</a>了，Instant View 目的和 Facebook 的 Instant Article 以及 Google 的 AMP 一樣，都是為了提升使用者體驗，讓使用者能夠快的看到文章的內容，不過之前沒有開放，所以一直不知道背後的運作原理是怎樣，直到這次 4.0 發佈才得以一窺其原理，和 Instant Article 與 AMP 不一樣，不再是提供另一個新的版本，而是透過一種新的 template 語言來協助 Telegram service 把自己的網頁內容轉譯成 Instant Article 的內容（Instant View page object），不完全算是程式語言，裡面比較像是一些定義，加上用 <a href="https://zh.wikipedia.org/zh-tw/XPath">XPath</a> 來做文件內容的選取，蠻意外會用 XPath 的，還好我對 XPath 有點經驗，就花了一點時間研究了一下，也把自己 blog 的 tempalte 基本版做出來了：</p>
+<pre><code>?exists:  //article/div[@id="comments"]
 
 author:  "othree"
 channel: "@othree"
@@ -161,11 +142,10 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
 @remove: //article/div[@id="comments"]
 @remove: //noscript
 @remove: //a[has-class("dsq-brlink")]
-</code>
-              </pre>
-              <p>語法還算蠻好理解的，官方也提供了幾個有完整註解的<a href="https://instantview.telegram.org/samples/">範例</a>，仔細一看似乎之前其實也只有 medium 是非官方有支援的網站，也因為這個實做方式，對不同的網站就要有不同的 template 來處理，所以官方辦了個競賽，搶先替<a href="https://instantview.telegram.org/contest">清單上的網站</a>做出可用的 template 就會有獎金，目前個人網站雖然已經可以在官方的 editor 做 template、驗證並發測試連結，不過還要等 domain 被加進白名單後才會真的啟用，目前這個關卡還沒開放就是。</p>
-              <p>其實我是比較喜歡這種實做方式的，不用為了增加支援一個新的網路服務就多做一個版本，不會影響原本的網頁原始碼，不會讓  <code>&lt;head&gt;</code> 越來越肥大，當然缺點就是網站改版，HTML 結構有變化的話就要跟著修改 template，不過我是認為這個實做方法對於網路生態是比較好一些的。</p>
-            </section>
+</code></pre>
+<p>語法還算蠻好理解的，官方也提供了幾個有完整註解的<a href="https://instantview.telegram.org/samples/">範例</a>，仔細一看似乎之前其實也只有 medium 是非官方有支援的網站，也因為這個實做方式，對不同的網站就要有不同的 template 來處理，所以官方辦了個競賽，搶先替<a href="https://instantview.telegram.org/contest">清單上的網站</a>做出可用的 template 就會有獎金，目前個人網站雖然已經可以在官方的 editor 做 template、驗證並發測試連結，不過還要等 domain 被加進白名單後才會真的啟用，目前這個關卡還沒開放就是。</p>
+<p>其實我是比較喜歡這種實做方式的，不用為了增加支援一個新的網路服務就多做一個版本，不會影響原本的網頁原始碼，不會讓  <code>&lt;head&gt;</code> 越來越肥大，當然缺點就是網站改版，HTML 結構有變化的話就要跟著修改 template，不過我是認為這個實做方法對於網路生態是比較好一些的。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -181,36 +161,24 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
                 <a href="/log/2017/05/07/movabletype-and-commonmark/">MovableType and CommonMark</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33655820694/" title="Typora by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg" width="650" height="622" alt="Typora" srcset="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg 1024w">
-                    <meta itemprop="width" content="650"/>
-                    <meta itemprop="height" content="622"/>
-                  </img>
-                </a>
-              </p>
-              <p>我這邊用的 blog 系統是 <a href="https://www.movabletype.org/">MovableType</a> 不是新聞了，然後也因為用 MovableType 我一直都只能用最初版的 markdown 引擎，沒錯，就是 Daring Fireball 作者 John Gruber 的<a href="http://daringfireball.net/projects/markdown/">那一版</a>，這個版本其實已經可以滿足我大部分的需求了，不過當我想要用 <a href="https://typora.io/">Typora</a> 寫文章的時候，就遇到問題了，Typora 在輸出成 Markdown 文件時，code block 只支援三個 ``` 包起來的 <a href="http://spec.commonmark.org/0.27/#fenced-code-block">Fenced Code Block</a>，而不支援 <a href="http://spec.commonmark.org/0.27/#indented-code-block">Indented Code Block</a>，剛好初版的 Markdown 格式只有 Indented Code Block，兩者其實要比的話，我是比較喜歡 Indented Code Block 的，比較符合 Markdown 的 sense，不過用 Fenced Code Block 有個優點是可以指定程式碼的語言，也因此才能夠有 syntax highlight 的效果。</p>
-              <p>總之，因為這個原因，用 Typora 寫技術文章對我來說就很不方便，一直以來都有想解決這個問題，前兩天還去 Typora 發 issue 說希望他們可以支援 Indented Code Block，結果發完沒多久，躺在床上快要睡覺的時候突然想到，CommonMark 這麼多語言有實做，搞不好有 Perl 的啊，結果快速搜尋了一下，還真的有一個 <a href="https://github.com/nwellnhof/perl-commonmark">perl-commonmark</a>，橋接 Perl 和 <a href="https://github.com/jgm/cmark">cmark</a>，也有發佈到 CPAN 上，當下心裡就盤算著，隔天起來要來把它接到 MovableType 去看看。</p>
-              <p>結果隔天實做起來是沒花我太多時間，雖然對 Perl 不熟，但是可以直接拿初版 Markdown.pl 來修改，原本的 Markdown.pl 這個檔案裡面實際上自己是一個 Markdown 的 Perl Package，同時也可以作為 MovableType 的 plugin script，我只需要把 plugin script 的部分留下，然後把最後做轉換的 function 換掉就好了，當然系統要裝好 cmark 和 Perl 的 CommonMark，cmark 應該很多環境都有了，我在 archlinux 上是直接用 pacman 裝：</p>
-              <pre>
-                <code class="language-bash">pacman -S cmark
-</code>
-              </pre>
-              <p>然後 CommonMark 是用 CPAN 裝，本來要用 cpanminus 的不知道為何用它會抓不到 package：</p>
-              <pre>
-                <code class="language-bash">sudo CPAN CommonMark
-</code>
-              </pre>
-              <p>我的 nginx 跑 CGI 時用的 perl 不是系統預設位置的，所以 CPAN 執行檔的路徑我是特別指定給他的，這樣 MovableType 執行的時候才找的到 CommonMark Module，實際上沒花多少功夫，我就把 MovableType 和 CommonMark 串起來了，當下心情真的是非常難以言喻，一來是這個問題其實存在已經許久了，二是我竟然把第一個支援 Markdown 的部落格系統接上 2017 年最新的 CommonMark 實做，雖然現在應該是也幫不到什麼人了。不過沒高興多久，就發現在 UTF-8 字元似乎有些狀況，有中文的文章會爛掉，或是 Dashboard 那頁的文字會變亂碼，後來為了這個問題又弄了好幾個小時，推測問題應該是因為 cmark 那邊回來的字串已經失去編碼的 metadata，所以在做 summary 切文字的時候，就會出現切錯地方的狀況，花了很多時間交叉比對和測試，最後的結果只是用 Perl 的 Encoding 把 cmark 傳回來的字串重新 encode 過而已，其實很簡單。除此之外，我其實還有試著想接看看 <a href="https://github.com/github/cmark">cmark-gfm</a>，因為它還多支援了 Table，不過幾次測試都不太順利，就沒繼續嘗試下去了。</p>
-              <p>目前的成果放在 GitHub 上，取名叫 <a href="https://github.com/othree/MT-CommonMark">MT-CommonMark</a>，附上簡單的安裝說明，暫時是沒打算發去 movabletype.org 那邊。</p>
-              <p>做好之後 MT-CommonMark 之後，我就開始在部落格上測試程式碼的 syntax highlight了，研究一陣子之後選擇的是 <a href="http://prismjs.com/">prismjs</a>，選擇它的原因很多，不過有兩個是比較主要的：</p>
-              <ul>
-                <li>作者有 <a href="http://lea.verou.me/">Lea Verou</a></li>
-                <li>支援的 class name 格式剛好和 cmark 輸出的一樣</li>
-              </ul>
-              <p>結果兩者也很順利的搭配起來，中間就沒有再遇到什麼問題了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/33655820694/" title="Typora by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg" width="650" height="622" alt="Typora" srcset="https://farm5.staticflickr.com/4175/33655820694_e30f901655_b.jpg 1024w"><meta itemprop="width" content="650"/><meta itemprop="height" content="622"/></img></a></p>
+<p>我這邊用的 blog 系統是 <a href="https://www.movabletype.org/">MovableType</a> 不是新聞了，然後也因為用 MovableType 我一直都只能用最初版的 markdown 引擎，沒錯，就是 Daring Fireball 作者 John Gruber 的<a href="http://daringfireball.net/projects/markdown/">那一版</a>，這個版本其實已經可以滿足我大部分的需求了，不過當我想要用 <a href="https://typora.io/">Typora</a> 寫文章的時候，就遇到問題了，Typora 在輸出成 Markdown 文件時，code block 只支援三個 ``` 包起來的 <a href="http://spec.commonmark.org/0.27/#fenced-code-block">Fenced Code Block</a>，而不支援 <a href="http://spec.commonmark.org/0.27/#indented-code-block">Indented Code Block</a>，剛好初版的 Markdown 格式只有 Indented Code Block，兩者其實要比的話，我是比較喜歡 Indented Code Block 的，比較符合 Markdown 的 sense，不過用 Fenced Code Block 有個優點是可以指定程式碼的語言，也因此才能夠有 syntax highlight 的效果。</p>
+<p>總之，因為這個原因，用 Typora 寫技術文章對我來說就很不方便，一直以來都有想解決這個問題，前兩天還去 Typora 發 issue 說希望他們可以支援 Indented Code Block，結果發完沒多久，躺在床上快要睡覺的時候突然想到，CommonMark 這麼多語言有實做，搞不好有 Perl 的啊，結果快速搜尋了一下，還真的有一個 <a href="https://github.com/nwellnhof/perl-commonmark">perl-commonmark</a>，橋接 Perl 和 <a href="https://github.com/jgm/cmark">cmark</a>，也有發佈到 CPAN 上，當下心裡就盤算著，隔天起來要來把它接到 MovableType 去看看。</p>
+<p>結果隔天實做起來是沒花我太多時間，雖然對 Perl 不熟，但是可以直接拿初版 Markdown.pl 來修改，原本的 Markdown.pl 這個檔案裡面實際上自己是一個 Markdown 的 Perl Package，同時也可以作為 MovableType 的 plugin script，我只需要把 plugin script 的部分留下，然後把最後做轉換的 function 換掉就好了，當然系統要裝好 cmark 和 Perl 的 CommonMark，cmark 應該很多環境都有了，我在 archlinux 上是直接用 pacman 裝：</p>
+<pre><code class="language-bash">pacman -S cmark
+</code></pre>
+<p>然後 CommonMark 是用 CPAN 裝，本來要用 cpanminus 的不知道為何用它會抓不到 package：</p>
+<pre><code class="language-bash">sudo CPAN CommonMark
+</code></pre>
+<p>我的 nginx 跑 CGI 時用的 perl 不是系統預設位置的，所以 CPAN 執行檔的路徑我是特別指定給他的，這樣 MovableType 執行的時候才找的到 CommonMark Module，實際上沒花多少功夫，我就把 MovableType 和 CommonMark 串起來了，當下心情真的是非常難以言喻，一來是這個問題其實存在已經許久了，二是我竟然把第一個支援 Markdown 的部落格系統接上 2017 年最新的 CommonMark 實做，雖然現在應該是也幫不到什麼人了。不過沒高興多久，就發現在 UTF-8 字元似乎有些狀況，有中文的文章會爛掉，或是 Dashboard 那頁的文字會變亂碼，後來為了這個問題又弄了好幾個小時，推測問題應該是因為 cmark 那邊回來的字串已經失去編碼的 metadata，所以在做 summary 切文字的時候，就會出現切錯地方的狀況，花了很多時間交叉比對和測試，最後的結果只是用 Perl 的 Encoding 把 cmark 傳回來的字串重新 encode 過而已，其實很簡單。除此之外，我其實還有試著想接看看 <a href="https://github.com/github/cmark">cmark-gfm</a>，因為它還多支援了 Table，不過幾次測試都不太順利，就沒繼續嘗試下去了。</p>
+<p>目前的成果放在 GitHub 上，取名叫 <a href="https://github.com/othree/MT-CommonMark">MT-CommonMark</a>，附上簡單的安裝說明，暫時是沒打算發去 movabletype.org 那邊。</p>
+<p>做好之後 MT-CommonMark 之後，我就開始在部落格上測試程式碼的 syntax highlight了，研究一陣子之後選擇的是 <a href="http://prismjs.com/">prismjs</a>，選擇它的原因很多，不過有兩個是比較主要的：</p>
+<ul>
+<li>作者有 <a href="http://lea.verou.me/">Lea Verou</a></li>
+<li>支援的 class name 格式剛好和 cmark 輸出的一樣</li>
+</ul>
+<p>結果兩者也很順利的搭配起來，中間就沒有再遇到什麼問題了。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -226,13 +194,10 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
                 <a href="/log/2017/05/05/test-commonmark/">Test CommonMark syntax</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Fenced code block</p>
-              <pre>
-                <code class="language-javascript">var a = 1;
-</code>
-              </pre>
-            </section>
+            <section itemprop="articleBody"><p>Fenced code block</p>
+<pre><code class="language-javascript">var a = 1;
+</code></pre>
+</section>
             <footer>
               <a href="/log/about/" rel="tag">關於這裡</a>
             </footer>
@@ -248,24 +213,19 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
                 <a href="/log/2017/05/02/vim-packages/">Vim Packages</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
-              <p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
-              <pre>
-                <code>~/.vim/bundle/html5.vim
+            <section itemprop="articleBody"><p>Vim 8 有兩個我覺得比較大的<a href="http://vimhelp.appspot.com/version8.txt.html">新功能</a>，一是開始有 <a href="http://vimhelp.appspot.com/channel.txt.html">Asynchronous I/O</a>，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 <a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27">runtime 目錄</a>下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 <a href="https://github.com/tpope/vim-pathogen">pathogen.vim</a> 後才被解決，pathogen 是藉由修改 <code>runtimepath</code> 變數（有點像是系統的 <code>PATH</code> 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a>、<a href="https://github.com/Shougo/neobundle.vim">neobundle</a>、<a href="https://github.com/junegunn/vim-plug">vim-plug</a> 等，基礎原理應該都是一樣的。</p>
+<p>Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 <code>~/.vim/bundle</code> 這，例如：</p>
+<pre><code>~/.vim/bundle/html5.vim
 ~/.vim/bundle/yajs.vim
-</code>
-              </pre>
-              <p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
-              <pre>
-                <code>~/.vim/pack/my-js/start/yajs.vim
+</code></pre>
+<p>然後會去把這些路徑加到 <code>runtimepath</code> 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 <code>~/.vim/bundle/*</code>，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 <code>~/.vim</code> 下面，預設在 <code>~/.vim/pack</code>，也可以修改 <code>packpath</code> 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 <code>~/.vim/pack/*/start/*</code>，在這個 glob 表示式中，第一個 <code>*</code> 是 package 層，第二個 <code>*</code> 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 <strong>my-js</strong> 好了，我就把東西都丟到 <code>~/.vim/pack/my-js/start/*</code> ，大概像是：</p>
+<pre><code>~/.vim/pack/my-js/start/yajs.vim
 ~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
 ~/.vim/pack/my-js/start/simple-javascript-indenter
-</code>
-              </pre>
-              <p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
-              <p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
-            </section>
+</code></pre>
+<p>至於中間的 <code>start</code> 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 <code>start</code>之外，還有一個路徑是 <code>opt</code>，是 optional 的意思，放在 <code>opt</code> 下面的 package 不會在啟動時就讀進來，而是要下 <code>packadd</code> 指令，例如 <code>packadd foo</code> 就會去找 <code>~/.vim/pack/*/opt/foo/</code> 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。</p>
+<p>當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的<a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package">安裝方式</a>，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -284,11 +244,11 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
           <div role="contentinfo"> </div>
           <h3>關於本網誌</h3>
           <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -296,11 +256,11 @@ published_date: $body/header/time[@itemprop="datePublished dateModified"]/@datet
             <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
             <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
             <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

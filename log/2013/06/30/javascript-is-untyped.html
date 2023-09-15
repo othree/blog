@@ -85,31 +85,28 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/06/30/javascript-is-untyped/">JavaScript is Untyped</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9167965602/" title="untyped by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg" width="674" height="382" alt="untyped" srcset="https://farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg 1024w">
-                    <meta itemprop="width" content="674"/>
-                    <meta itemprop="height" content="382"/>
-                  </img>
-                </a>
-              </p>
-              <p>上週去聽 <a href="https://twitter.com/gsklee">Gias Kay Lee</a> 講 <a href="http://slid.es/gsklee/animation-in-angularjs">Animation in AngularJS</a>，說到 JavaScript 其實是 <a href="http://en.wikipedia.org/wiki/Talk%3ATyped_and_untyped_languages#.22Untyped_Language.22">untyped language</a>，因為我沒受過 Computer Science 的正統教育，這名詞對我來說是新的，所以回來花了些時間看網路上的文件。</p>
-              <p>Wikipedia 上的文章不少，不過看起來比較吃力，Stack Overflow 上也有幾則不錯的<a href="http://stackoverflow.com/questions/964910/is-javascript-an-untyped-language">問答</a>，對我來說幫助很大，這個問題其實也沒很複雜，在 Computer Science 上來說，是不使用 strong type 和 weak type 來形容程式語言的，因為沒有明確的定義，取而代之的，是數個有明確定義的相關特性：type safety、memory safety、static/dynamic type checking、type conversions。</p>
-              <p>所以我之前 <a href="https://blog.othree.net/log/2013/06/01/dependency-injection-of-angularjs/">文章</a> 說到 JavaScript 是 weak type 那段其實應該要說是 untyped 會比較好。其實講到 type 的問題，就會想到 JavaScript 的效能問題，Brendan Eich 說過 JavaScript 引擎很難跑得快的原因就是因為它是 untyped 的。在 <a href="http://www.html5rocks.com/en/tutorials/speed/v8/">Performance Tips for JavaScript in V8</a> 這篇文章有提到，V8 引擎其中有一個提升速度的設計是給變數 hidden class，這個 hidden class 其實就是隱藏的變數型別，如果你的變數從頭到尾都維持同樣的型別，例如整數永遠是整數、字串永遠是字串，而不會有中間換型別的情形，那 V8 引擎就可以利用 hidden class 的資訊來提升運算速度，我覺得這個 tip 很不錯，不只是 V8 可以跑比較快，即使其他引擎沒有受益，作為寫程式時的 good practice 也很受用，減少了程式內的不可預期性。</p>
-              <p>另外一個我覺得很相似的例子是這兩年新的 <a href="http://asmjs.org/spec/latest/">asm.js</a>，asm.js 是一個 JavaScript 的子集，設計上可以直接做一些比較低階的操作，像是直接 allocate 記憶體還有 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays">Typed Array</a> 等，而其中還定義了一組相容於普通 JavaScript 的寫法來宣告變數的型別：</p>
-              <pre>
-                <code>function f(x, y) {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9167965602/" title="untyped by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg" width="674" height="382" alt="untyped" srcset="https://farm6.staticflickr.com/5328/9167965602_d9be012d23_b.jpg 1024w"><meta itemprop="width" content="674"/><meta itemprop="height" content="382"/></img></a></p>
+
+<p>上週去聽 <a href="https://twitter.com/gsklee">Gias Kay Lee</a> 講 <a href="http://slid.es/gsklee/animation-in-angularjs">Animation in AngularJS</a>，說到 JavaScript 其實是 <a href="http://en.wikipedia.org/wiki/Talk%3ATyped_and_untyped_languages#.22Untyped_Language.22">untyped language</a>，因為我沒受過 Computer Science 的正統教育，這名詞對我來說是新的，所以回來花了些時間看網路上的文件。</p>
+
+<p>Wikipedia 上的文章不少，不過看起來比較吃力，Stack Overflow 上也有幾則不錯的<a href="http://stackoverflow.com/questions/964910/is-javascript-an-untyped-language">問答</a>，對我來說幫助很大，這個問題其實也沒很複雜，在 Computer Science 上來說，是不使用 strong type 和 weak type 來形容程式語言的，因為沒有明確的定義，取而代之的，是數個有明確定義的相關特性：type safety、memory safety、static/dynamic type checking、type conversions。</p>
+
+<p>所以我之前 <a href="https://blog.othree.net/log/2013/06/01/dependency-injection-of-angularjs/">文章</a> 說到 JavaScript 是 weak type 那段其實應該要說是 untyped 會比較好。其實講到 type 的問題，就會想到 JavaScript 的效能問題，Brendan Eich 說過 JavaScript 引擎很難跑得快的原因就是因為它是 untyped 的。在 <a href="http://www.html5rocks.com/en/tutorials/speed/v8/">Performance Tips for JavaScript in V8</a> 這篇文章有提到，V8 引擎其中有一個提升速度的設計是給變數 hidden class，這個 hidden class 其實就是隱藏的變數型別，如果你的變數從頭到尾都維持同樣的型別，例如整數永遠是整數、字串永遠是字串，而不會有中間換型別的情形，那 V8 引擎就可以利用 hidden class 的資訊來提升運算速度，我覺得這個 tip 很不錯，不只是 V8 可以跑比較快，即使其他引擎沒有受益，作為寫程式時的 good practice 也很受用，減少了程式內的不可預期性。</p>
+
+<p>另外一個我覺得很相似的例子是這兩年新的 <a href="http://asmjs.org/spec/latest/">asm.js</a>，asm.js 是一個 JavaScript 的子集，設計上可以直接做一些比較低階的操作，像是直接 allocate 記憶體還有 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays">Typed Array</a> 等，而其中還定義了一組相容於普通 JavaScript 的寫法來宣告變數的型別：</p>
+
+<pre><code>function f(x, y) {
     x = x|0;      // int parameter
     y = +y;       // double parameter
 
     return;
 }
-</code>
-              </pre>
-              <p>只是 asm.js 會直接手寫的應該很少，像 asm.js 有名的例子： Unreal Engine 就是用工具 compile 過去的。</p>
-              <p>PS: 我還找不到上面那張圖片的投影片出處，有人知道的話麻煩告訴我，感謝。</p>
-            </section>
+</code></pre>
+
+<p>只是 asm.js 會直接手寫的應該很少，像 asm.js 有名的例子： Unreal Engine 就是用工具 compile 過去的。</p>
+
+<p>PS: 我還找不到上面那張圖片的投影片出處，有人知道的話麻煩告訴我，感謝。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -134,6 +131,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -154,19 +160,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -178,7 +175,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

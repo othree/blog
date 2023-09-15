@@ -85,22 +85,29 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/09/01/tinymce-compressor-bug/">TinyMCE Compressor 的 bug</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>有在 Twitter follow 我的人大概上週五會看到 <a href="http://twitter.com/othree/status/3599802673">這篇</a> ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 <span class="caps">HTTP</span> Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 <span class="caps">HTTP</span> Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 <strong>幹，split 完要 trim 一下啊！！</strong> 」這句肺腑之言啊。</p>
-              <p>狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：</p>
-              <pre>
-                <code>tinyMCE_GZ.init({
+            <section itemprop="articleBody"><p>有在 Twitter follow 我的人大概上週五會看到 <a href="http://twitter.com/othree/status/3599802673">這篇</a> ，會發出這樣的叫喊其實要回朔到五個月前，那時無知的我還在快樂的試著玩 TinyMCE Compressor，這東西可以減少 TinyMCE 的 <span class="caps">HTTP</span> Request 數，減少 loading 時間、頻寬，還可以讓使用者體驗更好，不過那時的我怎樣弄就是弄不成功，沒有錯誤訊息，但是用 FireBug 之類的開發工具檢查 <span class="caps">HTTP</span> Request 就是會看到多餘的那些 Request ，百思不得其解，直到上週五經過更嚴密的交叉比對後，終於茅塞頓開，發現問題的癥結，也跟著從內心喊叫出：「 <strong>幹，split 完要 trim 一下啊！！</strong> 」這句肺腑之言啊。</p>
+
+<p>狀況是這樣的， TinyMCE 裡面有個地方用來記錄哪些 plugin 已經呼叫過，如果還沒呼叫過，那需要用到時就會建立 Request 來跟 server 要檔案，TinyMCE Compressor 自然也會需要對這個地方作些處理，它會把已經包在檔案內的 plugin 都標註為已經呼叫過的狀態，問題就出在這，我本來用下面的設定：</p>
+
+
+
+<pre><code>tinyMCE_GZ.init({
 	plugins : 'style, layer, table, save'
-});</code>
-              </pre>
-              <p>每個逗點後面都有個空白，我覺得這樣的 coding style 也比較好，結果 TinyMCE Compressor 在做 plugin 呼叫註記的時候，沒把空白去掉（不過 php 端可以正確把 plugin 包進來），接著到了正式初始 TinyMCE 時用一樣的 pluing 設定：</p>
-              <pre>
-                <code>tinyMCE.init({
+});</code></pre>
+
+
+
+<p>每個逗點後面都有個空白，我覺得這樣的 coding style 也比較好，結果 TinyMCE Compressor 在做 plugin 呼叫註記的時候，沒把空白去掉（不過 php 端可以正確把 plugin 包進來），接著到了正式初始 TinyMCE 時用一樣的 pluing 設定：</p>
+
+
+
+<pre><code>tinyMCE.init({
 	plugins : 'style, layer, table, save'
-});</code>
-              </pre>
-              <p>這裡卻有把空白去掉，結果它自己認為這些 plugin 沒呼叫過，就重新呼叫了一次...orz，目前是有去回報 bug ，不過不知道會不會受理，總之有要用 TinyMCE 的就小心逗點後面不要加空白吧。</p>
-            </section>
+});</code></pre>
+
+
+
+<p>這裡卻有把空白去掉，結果它自己認為這些 plugin 沒呼叫過，就重新呼叫了一次...orz，目前是有去回報 bug ，不過不知道會不會受理，總之有要用 TinyMCE 的就小心逗點後面不要加空白吧。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -125,6 +132,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -145,19 +161,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -169,7 +176,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

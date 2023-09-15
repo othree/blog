@@ -85,31 +85,32 @@
                 <a itemprop="mainEntityOfPage" href="/log/2004/11/08/checked-example/">:checked應用</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <img itemprop="url image" src="http://blog.othree.net/log/2004/11/08/checked_example/checked.png" alt="效果抓圖" height="30" width="230" class="right">
-                  <meta itemprop="width" content="230"/>
-                  <meta itemprop="height" content="30"/>
-                </img>
-              </p>
-              <p>長久以來，我一直有的問題，就是表單裡面的<strong>radio</strong>和<strong>checkbox</strong>在樣式上難道就只能那樣嗎？在<abbr title="Internet Explorer">IE</abbr>裡雖然可以給他加上border、background-color這一些性質，但是出來的效果卻是...，唉，不說也罷，有興趣的人可以自己試試看，沒看過的可能會嚇一跳吧。不過這個問題，終於在這兩天有了初步的解決的，雖然和我最初的希望不一樣，不過事實上自由度更大了，而且我很滿意這個效果，效果就像是現在本站發表迴響那，「記錄個人資訊?」那裡一樣。這都要歸功於強大的CSS和<strong>&lt;label /&gt;</strong>標籤，CSS3的<strong>:checked</strong>擬類別（Pseudo-Classes）配合<strong>+</strong>這個CSS2就有的氏族選擇器（Asjacent Sibling Selector）和&lt;label /&gt;標籤就可以達到我要的效果了，如果要效果更完整，還可以加上<strong>opacity</strong>（透明度）這個性質（property）。當然，因為是歸功於CSS3，所以IE使用者就無緣看到這有趣的效果了。</p>
-              <p>接下來，就來一步一步的設計吧，如果想用在checkbox上面也可以如法泡製。首先先做出一個form物件和裡面的radio物件，以及配合radio的label，當然為了能讓label指向，每個radio都要有獨立的id，詳見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-01.html">範例一</a>，如果沒用過<strong>&lt;label /&gt;</strong>標籤的人，可以趁這機會測試一下<strong>&lt;label /&gt;</strong>的功用，你只要在<strong>First Selection</strong>、<strong>Second Selection</strong>、<strong>Third Selection</strong>三個文字上用滑鼠點選，對應的選項就會直接被選取了，當然，你要確定radio的id和label的for一樣，事實上&lt;label /&gt;並沒有限定它能指向的元素型態，基本上是任意物件都可以，只要你有給它指定獨立的id，只是有些物件你指定了也沒什麼用，HTML的部分在這裡就已經確定成型了，接下來我們只會針對CSS的部份作修改。</p>
-              <p>再下來一步，我們要來替label標籤加上樣式，不過為了和其他非指向radio的label做區別，我們在這裡要上用<strong>+</strong>這個選擇器還有CSS 2已經有的屬性選擇器，CSS碼長的像下面這樣。</p>
-              <pre>
-                <code>input[type="radio"]+label
+            <section itemprop="articleBody"><p><img itemprop="url image" src="http://blog.othree.net/log/2004/11/08/checked_example/checked.png" alt="效果抓圖" height="30" width="230" class="right"><meta itemprop="width" content="230"/><meta itemprop="height" content="30"/></img></p>
+
+<p>長久以來，我一直有的問題，就是表單裡面的<strong>radio</strong>和<strong>checkbox</strong>在樣式上難道就只能那樣嗎？在<abbr title="Internet Explorer">IE</abbr>裡雖然可以給他加上border、background-color這一些性質，但是出來的效果卻是...，唉，不說也罷，有興趣的人可以自己試試看，沒看過的可能會嚇一跳吧。不過這個問題，終於在這兩天有了初步的解決的，雖然和我最初的希望不一樣，不過事實上自由度更大了，而且我很滿意這個效果，效果就像是現在本站發表迴響那，「記錄個人資訊?」那裡一樣。這都要歸功於強大的CSS和<strong>&lt;label /&gt;</strong>標籤，CSS3的<strong>:checked</strong>擬類別（Pseudo-Classes）配合<strong>+</strong>這個CSS2就有的氏族選擇器（Asjacent Sibling Selector）和&lt;label /&gt;標籤就可以達到我要的效果了，如果要效果更完整，還可以加上<strong>opacity</strong>（透明度）這個性質（property）。當然，因為是歸功於CSS3，所以IE使用者就無緣看到這有趣的效果了。</p><p>接下來，就來一步一步的設計吧，如果想用在checkbox上面也可以如法泡製。首先先做出一個form物件和裡面的radio物件，以及配合radio的label，當然為了能讓label指向，每個radio都要有獨立的id，詳見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-01.html">範例一</a>，如果沒用過<strong>&lt;label /&gt;</strong>標籤的人，可以趁這機會測試一下<strong>&lt;label /&gt;</strong>的功用，你只要在<strong>First Selection</strong>、<strong>Second Selection</strong>、<strong>Third Selection</strong>三個文字上用滑鼠點選，對應的選項就會直接被選取了，當然，你要確定radio的id和label的for一樣，事實上&lt;label /&gt;並沒有限定它能指向的元素型態，基本上是任意物件都可以，只要你有給它指定獨立的id，只是有些物件你指定了也沒什麼用，HTML的部分在這裡就已經確定成型了，接下來我們只會針對CSS的部份作修改。</p>
+
+<p>再下來一步，我們要來替label標籤加上樣式，不過為了和其他非指向radio的label做區別，我們在這裡要上用<strong>+</strong>這個選擇器還有CSS 2已經有的屬性選擇器，CSS碼長的像下面這樣。</p>
+
+
+
+<pre><code>input[type="radio"]+label
 {
    border: 2px solid #66f;
    padding: 1px 3px;
 
    background-color: #ffe;
 }
-</code>
-              </pre>
-              <p>我們把第一行的部分單獨抓出來解釋，<code>input[type="radio"]+label</code>，這行的意思是：「<strong>選擇接在input物件後面的label物件，其中，input物件的type屬性值要等於<q>radio</q>。</strong>」，如果能瞭解是最好，不能瞭解的話也沒關係，以後慢慢弄清楚<a href="http://www.w3.org/DOM/" title="Document Object Model"><span class="caps">DOM</span></a>就可以了，現在照著用就沒問題。再來一樣是為label上style，不過這次我們要讓被選取的選項能辨識出來，這裡我們用到了checked這個擬類別，只看選擇物件的部份，<code>input[type="radio"]:checked+label</code>，這就表示只選擇被選取的radio後面的label物件。詳細請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-02.html">範例二</a>，你可以任意選取選項看看，選取的選項的&lt;label /&gt;馬上就會變色了。</p>
-              <p>接下來是重點了，我們要把radio物件給隱藏起來，用的方法很簡單，只是margin性質，只不過是比較少用的負margin值，順便也為了讓使用者知道&lt;label /&gt;是可以選取的，所以加上:hover的效果，要特別注意的是設定hover的地方有兩個，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-03.html">範例三</a>。為什麼input的長度是3em，它的margin-right卻是-3.3em，為什麼多了0.3em，我也不知道 orz，我測試的結果是設剛剛好3em會無法把radio蓋住，所以加到3.3em。</p>
-              <p>光是以上的設計還會有些問題，要是label的背景色是透明怎麼辦，被蓋在後面的radio不是就會冒出來了嗎？請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-04.html">範例四</a>。所以我們還要把radio給隱藏起來，可以用的方法有三種，<code>display: none;</code>、<code>visibility: hidden;</code>、<code>opacity: 0;</code>，在這裡我選擇了第三種，因為親合力的問題，如果我選擇了前兩種，即使我設定tabindex給他，我都無法用Tab鍵把focus移到該選項上，要是又沒有設定accesskey，那狀況就會變的不太好，使用者只要無法控制滑鼠，就沒辦法對你的radio和checkbox做選擇，因此我把它隱藏起來的方法選擇讓他完全透明。而為了讓使用者能知道他的游標移到哪個選項，所以我們利用<code>:focus</code>這個擬類別來對label作樣式的變化，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-05.html">範例五</a>，在這個範例裡你會發現即使底色都是透明的，input物件也都看不到了，不過你仍然可以用Tab來切換選項。</p>
-              <p>作到這邊，我們就完成了，你可以看到<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-final.html">最後的結果</a>，下面列出了完整的HTML和全部的CSS碼，最後要提醒的就是&lt;label /&gt;裡面可以放的不只是文字，只是你必須要注意到一件事，就是使用者能夠一眼看到就知道它可以選，我的方法是先勾選一個預設值，讓他能和其他選項明顯不同，使用者能一眼就注意到，不過這方法比較適用於radio，如果是checkbox我就沒還沒有想到簡單的方法了，不過也是可以配合background-image之類的性質。如果有誤還請指正，或是有更好的方案也歡迎討論。</p>
-            </section>
+</code></pre>
+
+
+
+<p>我們把第一行的部分單獨抓出來解釋，<code>input[type="radio"]+label</code>，這行的意思是：「<strong>選擇接在input物件後面的label物件，其中，input物件的type屬性值要等於<q>radio</q>。</strong>」，如果能瞭解是最好，不能瞭解的話也沒關係，以後慢慢弄清楚<a href="http://www.w3.org/DOM/" title="Document Object Model"><span class="caps">DOM</span></a>就可以了，現在照著用就沒問題。再來一樣是為label上style，不過這次我們要讓被選取的選項能辨識出來，這裡我們用到了checked這個擬類別，只看選擇物件的部份，<code>input[type="radio"]:checked+label</code>，這就表示只選擇被選取的radio後面的label物件。詳細請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-02.html">範例二</a>，你可以任意選取選項看看，選取的選項的&lt;label /&gt;馬上就會變色了。</p>
+
+<p>接下來是重點了，我們要把radio物件給隱藏起來，用的方法很簡單，只是margin性質，只不過是比較少用的負margin值，順便也為了讓使用者知道&lt;label /&gt;是可以選取的，所以加上:hover的效果，要特別注意的是設定hover的地方有兩個，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-03.html">範例三</a>。為什麼input的長度是3em，它的margin-right卻是-3.3em，為什麼多了0.3em，我也不知道 orz，我測試的結果是設剛剛好3em會無法把radio蓋住，所以加到3.3em。</p>
+
+<p>光是以上的設計還會有些問題，要是label的背景色是透明怎麼辦，被蓋在後面的radio不是就會冒出來了嗎？請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-04.html">範例四</a>。所以我們還要把radio給隱藏起來，可以用的方法有三種，<code>display: none;</code>、<code>visibility: hidden;</code>、<code>opacity: 0;</code>，在這裡我選擇了第三種，因為親合力的問題，如果我選擇了前兩種，即使我設定tabindex給他，我都無法用Tab鍵把focus移到該選項上，要是又沒有設定accesskey，那狀況就會變的不太好，使用者只要無法控制滑鼠，就沒辦法對你的radio和checkbox做選擇，因此我把它隱藏起來的方法選擇讓他完全透明。而為了讓使用者能知道他的游標移到哪個選項，所以我們利用<code>:focus</code>這個擬類別來對label作樣式的變化，結果請見<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-05.html">範例五</a>，在這個範例裡你會發現即使底色都是透明的，input物件也都看不到了，不過你仍然可以用Tab來切換選項。</p>
+
+<p>作到這邊，我們就完成了，你可以看到<a href="http://blog.othree.net/log/2004/11/08/checked_example/AdvancedRadio-final.html">最後的結果</a>，下面列出了完整的HTML和全部的CSS碼，最後要提醒的就是&lt;label /&gt;裡面可以放的不只是文字，只是你必須要注意到一件事，就是使用者能夠一眼看到就知道它可以選，我的方法是先勾選一個預設值，讓他能和其他選項明顯不同，使用者能一眼就注意到，不過這方法比較適用於radio，如果是checkbox我就沒還沒有想到簡單的方法了，不過也是可以配合background-image之類的性質。如果有誤還請指正，或是有更好的方案也歡迎討論。</p></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -134,6 +135,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -154,19 +164,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -178,7 +179,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

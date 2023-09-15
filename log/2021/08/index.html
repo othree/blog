@@ -81,40 +81,27 @@
                 <a href="/log/2021/08/12/csp-for-lambdaedge/">CSP for Lambda@Edge</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset="">
-                    <meta itemprop="width" content="710"/>
-                    <meta itemprop="height" content="305"/>
-                  </img>
-                </a>
-              </p>
-              <p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
-              <p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
-              <p>這個專案內容就只是一個簡單的 function：</p>
-              <pre>
-                <code class="language-javascript">const CSP = (directives) =&gt; {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/51371732481/" title="CSP by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/51371732481_5335b8d3f0_b.jpg" width="710" height="305" alt="CSP" srcset=""><meta itemprop="width" content="710"/><meta itemprop="height" content="305"/></img></a></p>
+<p>之前工作上主要是用 AWS，AWS 放靜態網站有過 CloudFront CDN 時，如果需要調整 header 的話，官方的解決方案是用 Lambda@Edge，寫 AWS Lambda function 的時候，其實我個人有一個偏好，就是能不用第三方 module 就不用，主要原因有兩個，第一個原因是，如果程式碼太大包，會無法在 AWS console 上直接看（或修改）程式碼；第二個原因是發佈流程會比較麻煩，因為還要去安裝 module，然後再全部打包起來上傳。</p>
+<p>要調整 header 的一個主要原因就是為了 security headers，大部分的 security header 都還算單純，但是 CSP（Content Security Policy）就複雜很多了，如果沒有用結構化的資料，其實很難維護，但是針對 Lambda function 我又不想要用第三方 module，最後我想到的解決方案，就是設計一個很簡短的工具函式來把結構化的資料轉成 CSP header 的值，這就是我最近趁 COSCUP 2021 會議期間整理好的新的 open source 專案：<a href="https://github.com/othree/csp">CSP</a>。</p>
+<p>這個專案內容就只是一個簡單的 function：</p>
+<pre><code class="language-javascript">const CSP = (directives) =&gt; {
   return directives
     .map((directive) =&gt; {
       return `${directive.name} ${directive.value.join(' ')};`;
     })
     .join(' ');
 };
-</code>
-              </pre>
-              <p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
-              <pre>
-                <code class="language-json">{
+</code></pre>
+<p>不過為了好好設計這個 function 其實我也是花不少功夫，首先就是輸入參數的結構要長怎樣，其實一般比較常見的是用物件 property 直接就作為 directive name 的形式，像是 Google 的 <a href="https://github.com/google/csp-evaluator">CSP Evaluator</a>：</p>
+<pre><code class="language-json">{
   "default-src": ["'none'"],
   "script-src": ["'self'"],
   "connect-src": ["blah", "blah"]
 }
-</code>
-              </pre>
-              <p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
-              <pre>
-                <code class="language-json">[
+</code></pre>
+<p>這種結構比較精簡，但是問題就是無法保證順序，考慮再三之後，決定還是用陣列的形式：</p>
+<pre><code class="language-json">[
   {
     "name": "default-src",
     "value": ["'none'"]
@@ -124,11 +111,9 @@
     "value": ["'self'"]
   }
 ]
-</code>
-              </pre>
-              <p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
-              <pre>
-                <code class="language-typescript">type Source = string;
+</code></pre>
+<p>這樣就可以讓開發人員確保輸出的順序，其實大部分時候我也不會那麼在意順序，不過要是 <code>default-src</code> 如果不是第一個感覺就很不舒服。確定主要的資料結構後，再來就是屬性名稱要用什麼好的問題了，為了找到正確的名稱，我去翻了 <a href="https://w3c.github.io/webappsec-csp/#framework-policy">CSP spec</a> 找到關於 parsing 相關的說明，確定了 spec 定義的結構是這樣的（使用 TypeScript 語法）：</p>
+<pre><code class="language-typescript">type Source = string;
 
 type Directive = {
   name: string;
@@ -142,17 +127,14 @@ type Policy = {
 };
 
 type Policies = Policy[];
-</code>
-              </pre>
-              <p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
-              <pre>
-                <code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
-</code>
-              </pre>
-              <p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
-              <p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
-              <p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
-            </section>
+</code></pre>
+<p>在輸入資料的陣列中，每個元素都是 <code>Directive</code>，<code>Directive</code> 的兩個屬性分別是 <code>name</code> 和 <code>value</code>，<code>value</code>  則是 <code>Source</code> 的陣列集合，當然 <code>Source</code> 還有更嚴謹的定義，不過這邊就簡化成字串就好。確定完輸入資料的結構後，就是要想盡辦法簡化 function 的內容了，但是也不希望太難讀懂，調整了幾次變成現在的樣子，我還提供了精簡的版本：</p>
+<pre><code class="language-javascript">const CSP = p =&gt; p.map(d =&gt; `${d.name} ${d.value.join(' ')};`).join(' ');
+</code></pre>
+<p>其實我對於那個 <code>map</code> 接 <code>join</code> 一直耿耿於懷，很想要用 <code>reduce</code> 解決，但是要避免頭尾多空白，會需要多判斷式，就算不予理會，程式碼長度其實還是比現在這個版本長，結果還是 <code>map</code> 接 <code>join</code> 看起來比較漂亮，所以最後的版本就維持這樣了。</p>
+<p>然後我還寫了測試和提供了兩個 <a href="https://github.com/othree/csp/tree/master/examples">example</a>，分別是 Lambda@Edge 和 Cloudflare Workers 的，不確定還有沒有類似的服務，如果有發現會再加上。最後就是，因為這個 function 設計就是要給人複製貼上的，所以並沒有發布到 npm 上，然後使用 MIT-0 license 所以也不用 attribution，覺得有興趣使用的就請直接複製貼上吧～</p>
+<p>PS. 如果有其他需求，可以看看 <a href="https://www.npmjs.com/package/csp-header">csp-header</a>，例如 Express 使用，我覺得介面設計得很不錯。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -168,34 +150,33 @@ type Policies = Policy[];
                 <a href="/log/2021/08/02/static-site-hosting/">Static Site Hosting 服務需求</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
-              <h4>支援 CDN</h4>
-              <p>這個需求沒什麼好說了吧。</p>
-              <h4>支援 HTTP/2</h4>
-              <p>主要的服務應該都支援了，不過還是列一下。</p>
-              <h4>支援加上 Security Headers</h4>
-              <p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
-              <h4>支援 HTTP 轉成 HTTPS</h4>
-              <p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
-              <p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
-              <h4>支援全站轉址</h4>
-              <p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
-              <p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
-              <p>以下算是非必備的需求</p>
-              <h4>支援把 404 改寫成 200</h4>
-              <p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
-              <h4>支援 CORS</h4>
-              <p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
-              <h4>支援 Basic Auth</h4>
-              <p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
-              <h4>支援根據 Header 切換 origin</h4>
-              <p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
-              <h4>支援根據路徑切換 origin</h4>
-              <p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
-              <h4>支援 brotli</h4>
-              <p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
-            </section>
+            <section itemprop="articleBody"><p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
+<h4>支援 CDN</h4>
+<p>這個需求沒什麼好說了吧。</p>
+<h4>支援 HTTP/2</h4>
+<p>主要的服務應該都支援了，不過還是列一下。</p>
+<h4>支援加上 Security Headers</h4>
+<p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
+<h4>支援 HTTP 轉成 HTTPS</h4>
+<p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
+<p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
+<h4>支援全站轉址</h4>
+<p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
+<p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
+<p>以下算是非必備的需求</p>
+<h4>支援把 404 改寫成 200</h4>
+<p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
+<h4>支援 CORS</h4>
+<p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
+<h4>支援 Basic Auth</h4>
+<p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
+<h4>支援根據 Header 切換 origin</h4>
+<p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
+<h4>支援根據路徑切換 origin</h4>
+<p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
+<h4>支援 brotli</h4>
+<p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -218,7 +199,7 @@ type Policies = Policy[];
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -230,7 +211,7 @@ type Policies = Policy[];
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

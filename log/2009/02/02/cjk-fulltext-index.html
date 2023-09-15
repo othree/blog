@@ -85,15 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/02/02/cjk-fulltext-index/">日文全文搜尋</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。</p>
-              <p>MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。</p>
-              <p>轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上：</p>
-              <pre>
-                <code>ft_min_word_len=1</code>
-              </pre>
-              <p>這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 <span>MATCH, AGAINST </span>的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 <span>LIKE </span>時要忽略平假名片假名可是很辛苦的～＿～。</p>
-            </section>
+            <section itemprop="articleBody"><p>這篇要講的是很基本的東西，不過我是最近有需要才搞清楚的，雖然標題是日文，不過其實中文也是一樣的狀況。</p>
+
+<p>MySQL資料庫內的全文索引還只支援用空白斷詞，不過這種方法在中文、日文的語言結構下完全無法產生作用，而且事實上也很難讓程式能根據語意正確的斷詞，像是有名的句子：「すもももももももものうち」，程式語言很難判斷該在哪斷出すもも、もも兩個主詞，因此有了 N-Grams 斷詞的演算法，使用 N-Grams 來對上面的例句做處理，會變成：「す すも　もも　もも　もも　もも　もも　もも　もも　もの　のう　うち　ち」。</p>
+
+<p>轉成這樣的詞句來讓資料庫系統做索引，要搜尋時也先把關鍵字做 N-Grams 斷詞，分成多個關鍵字，這樣按照分數來排就可以得到還不錯的搜尋結果了，不過有兩個問題，首先是可能會因為斷詞方式而有不正確的搜尋結果，這問題目前只能加長斷詞的長度，例如把兩個字的長度改為三個字的長度。另一個問題是 MySQL 其實要到 5.1 才支援，5.0還沒有，所以一直以來要做全文搜尋，都是把目標欄位做 N-Grams 斷詞，存到另一個欄位裡面，然後對該欄位做全文索引（Fulltext Index），另外還要在 my.cnf 的 mysqld 區塊內加上：</p>
+
+<pre><code>ft_min_word_len=1</code></pre>
+
+<p>這樣 MySQL 做全文索引時，才會把字串長度在 1 以上的詞都納入範圍，如此一般就可以用 <span>MATCH, AGAINST </span>的語法來進行全文檢索了，這裡 MySQL 還會自動的忽略大小寫、平假名片假名，用 <span>LIKE </span>時要忽略平假名片假名可是很辛苦的～＿～。</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -118,6 +118,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -138,19 +147,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -162,7 +162,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

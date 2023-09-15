@@ -9,6 +9,172 @@
 			<b:listData listID="vim">vim</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="000996" baseName="vim-license-2">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-11</b:date>
+				<b:time>17:27:11</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim License 的故事（下）</b:title>
+			<b:content>
+				<b:summary> 接續前一篇。 Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 Tagbar；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x" /></a></p>
+<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
+<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
+</b:mainContent>
+				<b:extendContent><p>解決了上游問題，回到 Licensee 偵測的問題，我本來的 PR 沒被合併，而是 Mike 另外弄了一個比較通用的解法，是根據條款文本內的替換字串來動態調整差異的容許範圍，然後接著 2020/03/13，Licensee 9.13.1 作為第一版支援 Vim License 的 Licensee 發佈了，接下來，我理論上就只要等 GitHub 更新 Licensee 的版本就好了，這我倒是不太擔心，我是有種感覺 GitHub 是有在認真更新這些東西的，然後，時間快轉到三個月後，這段期間其實我都有偶爾上去 GitHub 看一下 Vim License 有沒有被偵測出來，想著要是終於完成的話就可以投個稿了，當時的時間大概是搞了三年這樣，總之因為過有點久了，我又去拉了最新版 Licensee 來測試，結果讓我嚇了一跳，竟然偵測不出來了！</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177845605/" title="Licensee 9.13.1 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177845605_dbd6f40e06_b.jpg" width="1024" height="684" alt="Licensee 9.13.1" srcset="https://live.staticflickr.com/65535/53177845605_169f7db9ba_k.jpg 2x" /></a></p>
+<p>所以我又花時間下去查原因，結果是 2020/05/12 的 9.14 開始爛掉的，Mike 在 9.14 有修改一部分的演算法，在比對兩份文件時，因為有替換字串的關係，不可能用完全比對的方式，所以在有替換字串時，文件的長度差異會影響相似度，有個動態的 <code>max_delta</code>，如果替換字串後長度差異太大超過 <code>max_delta</code> 的話，就會被判定為不同的文件，在 9.14 則是把這個機制拿掉，直接把替換字串的影響弄進相似度之中，不過其中長度差異的懲罰太大，結果造成 Vim 專案本身的判斷失準，發現原因之後，我就發了 PR 調整懲罰的參數，讓 Vim 剛好可以過關這樣，結果我發 PR 時 Mike 早已經發現這個問題，也已經修改好開了 PR 只是還在 review，而該 PR 的方法是則是動態的根據替換字串的數量來調整文件長度差異的值，除此之外，Vim License 還被加到測試之中，所以以後應該不會再發生這種問題了。</p>
+<p>然後，我就等這個 PR merge 等了三個月，不過還好 merge 後馬上就發佈 9.14.1 了，接著又回到等 GitHub 更新的時間了，我就一直等，一直等，偶爾上去 GitHub 的 Vim repo 確認一下，2021 年初我還寫信去 GitHub Support 問他們當時使用的版本是哪一版，Support 還有認真去幫我確認是沒更新，然後就這樣一直等一直等到 2022 年初，有天在用 GitHub 的搜尋功能時，突然發現到，可以用條件設定搜尋特定授權條款的專案，然後我就想說可以來試試看 Vim License：<code>license:vim</code>，結果竟然有<a href="https://github.com/search?q=license%3Avim&amp;type=repositories">符合條件的專案</a>出現！讓我大吃一驚！原來不知何時 GitHub 已經偵測的到 Vim License 了，可是 Vim 那個 repo 結果卻還是不正確，深入了解一下，推測應該是 GitHub 有 cache 機制，找了一下文件發現到有提到說如果有發現專案的授權條款標示不正確，可以聯絡 support，於是我就發了 support request，這次很快就收到回應，然後在 2022/01/12 這天，確認了 GitHub 上的 Vim 專案有正確的顯示為 Vim License 了，歷時將近五年，那天我還發推慶祝了一下。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177410816/" title="Search result of Vim Licensed repo by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177410816_564bde201f_b.jpg" width="1024" height="684" alt="Search result of Vim Licensed repo" srcset="https://live.staticflickr.com/65535/53177410816_1f295d5269_k.jpg 2x" /></a></p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">自己挖了將近五年的坑今天終於填平了，今年終於可以投個稿</p>-- othree (@othree) <a href="https://twitter.com/othree/status/1481290722368458757?ref_src=twsrc%5Etfw">January 12, 2022</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>之後，終於可以準備投稿，然後順利投上 2022 年的 COSCUP，題目是「<a href="https://coscup.org/2022/zh-TW/session/ESQUUF">歷時五年的開源貢獻，GitHub 支援 Vim License 的故事</a>」（<a href="https://www.youtube.com/watch?v=YM7RHRwIrKU">影片</a>、<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>），在準備分享的過程也是遭受很多的<del>電玩干擾</del>阻力，分享過程還算順利，自己有點小不滿意不過還算可以接受，不滿意的地方是有些我一開始有想要分享的點忘了說，不過也是在這篇文章有補齊了。</p>
+<p>其實在初期那段等待的時間之間，我還開了一個小專案 <a href="https://vim-license.dev/">Vim License Gen</a>，用來幫人產生自己的專案/軟體用的 Vim License 文件，為什麼要有這個工具是因為以前的純文字文件，每行的寬度大概都在 80 個字元以內，但是每個專案的名稱都不一樣，如果直接做替換，有可能會破版，所以這個工具一是會保持版面，二是它可以正確的只替換需要替換的部分，然後這個專案就是用 Vim License 開源，並且是用自己產生 Vim License 文件，然後我也把他列為使用 Vim License 的三個專案之一（另外兩個分別是 Vim 和 vim-pathogen），這也是個 self-hosting 的實現。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177408966/" title="Vim License Gen by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177408966_62bd21b8ab_b.jpg" width="1024" height="684" alt="Vim License Gen" srcset="https://live.staticflickr.com/65535/53177408966_c7baf853ea_k.jpg 2x" /></a></p>
+<p>故事並沒有到這邊就結束，COSCUP 分享之後的目標就是把這篇文章寫下來了，不過一拖再拖，其中一個主因是以前我是先把文章寫好順便作整理，但是這次因為準備時間不夠，無法在分享前先把文章寫好，變成後寫，沒了趕稿壓力，加上又有像是王國之淚等讓人分心的東西，就一直無限期拖搞，直到今年 2023/08/05 傳出了 Vim 的作者 Bram Moolenaar 於八月三日因病過世的消息了。</p>
+<p>Bram 過世之後，除了緬懷之外，大家也會擔心起 Vim 的後續誰維護的問題，還好 Vim GitHub 組織內還有另外兩位成員，其中 Christian Brabandt 算是接起主持人的角色，他同時也是我用很久的 vim-airline 的作者，然後很快的也發了 PR 做了一些相關的修改，像是在 doc 裡面緬懷 Bram、更新檔案內的維護者資訊等，只不過其中一項修改，改到了 LICENSE 檔案！改的地方當然就是那個高度耦合的 Vim Maintainer 的部分：</p>
+<blockquote>
+<p>The current maintainer is Bram Moolenaar <a href="mailto:Bram@vim.org">Bram@vim.org</a>.</p>
+</blockquote>
+<p>改成</p>
+<blockquote>
+<p>The current maintainers are listed here: https://github.com/orgs/vim/people.</p>
+</blockquote>
+<p>然後我還是被 ping 了才知道這 PR 已經合併，這下我可緊張了，其實我本來也是有在想 Vim License 的問題，只不過想說 Bram 才剛過世，可以晚點再提出，當時有想了幾個方案，理想上要能同時繼續支援現有的使用 Vim License 的專案、然後也要能讓授權條款內的文字正確的更新，不過當時不管哪個方案，都無法保證兩全齊美，當時想的方案為：</p>
+<ul>
+<li>方案一：更改條款內文並且發布新版，可能是叫 Vim License 1.1 之類的，缺點是可能需要重新提交提交新版的條款到 choosealicense，但是現況來看幾乎不可能符合提交的一千個專案的條件；</li>
+<li>方案二：更改條款內文，繼續用一樣的條款名，不推修改到 choosealicense，缺點是 Licensee 可能辨認不出來，結果就是 Vim 專案自己無法被辨識為使用 Vim License；</li>
+<li>方案三：同二，但是該推送修改的地方如 SPDX License List 和 choosealicense 都送，缺點是使用舊版授權條款文字的可能都再也辨認不出來，另一個問題是這樣的變化 Mike 是否會接受？</li>
+</ul>
+<p>就之前的紀錄，當時版本偵測出來的相似度也只有 98.45%，這樣一改下去，會不會就爆炸又偵測不出來了呢，於是我趕快找了個時間拉最新版的 Vim 和 Licnesee 下來測試，結果，竟然還是 98.45%，這結果又讓我驚呆了，直覺是因為 Licensee 的演算法改的更好了，一查下去，原來剛好在今年初的 Licensee 9.16.0 其中的一項修改就是針對替換字串提供更高的差異容許範圍，所以舊版 Vim License 下去比對會有 99.12% 的相似度，剛好足夠新版修改後的差異，而這結果就剛好克服了方案三的缺點，所以接下來應該就是會朝這個方向進行，先提交新版的文字給 SPDX License List，然後再更新 choosealicense 內的範本吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53176812027/" title="Vim License detection by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53176812027_c95d17b663_b.jpg" width="1024" height="666" alt="Vim License detection" srcset="" /></a></p>
+<p>以上，就是到目前為主的故事了，最後想來作一個總結，也就是談談當初為什麼想在 COSCUP 分享這個呢？其實我當初假想的聽眾是開源的新手，我想分享的其中一點是，對於開源專案的貢獻，我完全是照自己的步調，也不給任何一邊壓力，所有的等待過程我都沒去催促過任何人，不過標題的「五年」或許造成反效果也說不定，投稿時 Rock 有建議過我可以調整一下標題，不過我實在是想不到什麼其他好標題，結果就都沒改，後來，當天在我的前一場是 Max 的「<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>」（<a href="https://www.youtube.com/watch?v=OxuQ1sdLhks">影片</a>），就有提到這點，可以選擇你最舒服的方式參與，不用害怕參與；第二點想分享的東西則是關於在這個過程中學到的東西，像是 Licensee 的判斷原理，SPDX 相關的東西，和各個群體溝通的過程，很多東西都是我之前並不清楚的，像是我以前知道有個 SPDX License Indentifier，但是並不清楚 SPDX 是搞什麼用的，然後它們有維護 License List，甚至授權條款文本裡面可以有替換字串等，我覺得這些都是蠻有趣的知識；最後一點則是分享這一整個過程，中間一波三折，坑坑相連到天邊的轉折，我自己都覺得很有趣。</p>
+<p>以下列出我一路以來開過的 PR、Issue 和討論:</p>
+<ul>
+<li><a href="https://github.com/github/choosealicense.com/issues/498">choosealicense.com/issues/498</a> 最初的 issue</li>
+<li><a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">vim_dev: A Questions about Vim License</a> 跟 Bram 詢問　Vim License 的細節</li>
+<li><a href="https://github.com/licensee/licensee/issues/385">licensee/issues/385</a> 提出 Vim License 偵測的問題</li>
+<li><a href="https://github.com/spdx/license-list-XML/pull/901">license-list-XML/pull/901</a> 幫 SPDX License List 裡面的 Vim License 加上替換字串</li>
+<li><a href="https://github.com/vim/vim/pull/5458">vim/pull/5458</a> 幫 Vim 加入　LICENSE 檔案</li>
+<li><a href="https://github.com/tpope/vim-pathogen/pull/210">vim-pathogen/pull/210</a> 幫 vim-pathogen 加入 LICENSE 檔案</li>
+<li><a href="https://github.com/github/choosealicense.com/pull/717">choosealicense.com/pull/717</a> 最重要的那個 PR，加 vim.txt 到 choosealicense</li>
+<li><a href="https://github.com/licensee/licensee/pull/445">licensee/pull/445</a> 修改新版 Licensee 的問題</li>
+<li><a href="https://github.com/othree/vim-license/issues/2">vim-license/issues/2</a> Vim License Gen 紀錄各個連結用的 issue</li>
+</ul>
+<p>最後的最後就來個簡單的 timeline 吧：</p>
+<pre><code>- 2013/07/15 Choose a license released
+- 2016/09/21 Display/detect the license
+- 2017/03/26 Open issue to choosealicense
+- 2018/06/15 First issue closed
+- 2019/06/23 Discuss the License text with Bram
+- 2019/06/27 Issue about Vim License detection
+- 2019/07/11 SPDX PR
+- 2019/09/25 Last comment of the SPDX PR
+- 2019/10/19 SPDX PR merged
+- 2020/01/08 PR add License to Vim
+- 2020/01/18 PR add License to vim-pathogen
+- 2020/01/21 PR add vim.txt to choosealicense
+- 2020/03/13 Licensee 9.13.1 released, Vim added
+- 2020/05/12 Licensee 9.14 release, Vim detection failed
+- 2020/07/04 PR to fix detection issue
+- 2020/10/14 Issue fix merged v9.14.1
+- 2021/02/05 Contact GitHub support 1st time
+- 2022/01/12 Contact GitHub support 2nd time, 確認上線
+- 2022/05/22 投稿、開始寫文章
+- 2022/07/29 COSCUP 2022
+- 2023/08/03 Bram Passed away
+- 2023/08/13 Vim License file updated
+- 2023/09/04 再次開始寫文章
+- 2023/09/12 發表文章
+</code></pre>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="000995" baseName="vim-license-1">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-09-10</b:date>
+				<b:time>23:32:05</b:time>
+			</b:datetime>
+			<b:category>vim</b:category>
+			<b:title>Vim License 的故事（上）</b:title>
+			<b:content>
+				<b:summary> 這篇是我去年 COSCUP 分享的文字版，拖稿許久終於寫出來了，以下正文開始。 Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub 發佈了一個小網站 叫 choosealicense.com，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。 而到了 2016 年，GitHub 更進一步提供了授權條款的偵測功能，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。 在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
+<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
+<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
+</b:mainContent>
+				<b:extendContent><p>我一直把這念頭放在心裡，後來終於有一天有時間有衝動，認真去研究要怎樣新增支援的授權條款，簡單來說，GitHub 用來偵測專案所使用的授權條款的工具，是一套用 Ruby 寫的，叫做 <a href="https://licensee.github.io/licensee/">Licensee</a>（我都當成 license + see）的工具，而這個工具所使用來參考比對的條款文本，則是從 choosealicense 專案來的（使用 git submodule 引入），如果要加新的授權條款到 choosealicense 裡面，有些<a href="https://github.com/github/choosealicense.com/blob/gh-pages/CONTRIBUTING.md#adding-a-license">條件</a>要先達到：</p>
+<ul>
+<li>要有 SPDX License Identifier</li>
+<li>要名列在幾個主要的開源授權清單中</li>
+<li>至少要有一千個專案使用它</li>
+<li>要列舉三個使用該授權條款的有名的專案（作為網站上的範例）</li>
+</ul>
+<p>我研究了一會兒，大部分條件沒問題，就是那個一千個專案的需求我也不是很確定，根據搜尋結果可以保證有數百個，但是有沒有一千個實在無法保證，不過我還是去開了個 <a href="https://github.com/github/choosealicense.com/issues/498">issue</a> 建議說要加入 Vim License，其中一千個專案那個條件的部分則是提供我的所知（各種搜尋結果和 Vim 生態的狀態，推論應該會有達標），時間是 2017/03/26，當時我想的是 Vim 這麼有名，應該開個需求就會有人處理了吧，然後 choosealicense 的主要貢獻者之一 Mike Linksvayer，跟我來往幾次討論之後，我就放置在那幾乎忘了他，結果過了一年後，那個 issue 就因沒有動靜被關掉了！</p>
+<p>我開的第一張 issue 被關掉的當下當然是有點震驚的，直白一點的說我心中的想法大概是：「原來 Vim 這麼有名也是沒有特權的啊！」總之之後我還是繼續放著，直到大概又過了一年，到了 2019 年六月，我才又開始重新投入到這件事情，既然開 issue 沒人做，那就只好改開 PR 了，於是我才開始認真的研究，目標當然就是把 Vim License 推進 choosealicense 裡面，所以就是先認真的要提供的文本檔案的格式，首先我發現的是，授權條款的文本裡面，除了那些 metadata 之外，文本本身是可以有替換字串（substitution）的，像是常見的年份、名稱等：</p>
+<pre><code>MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+...
+</code></pre>
+<p>其中，用 <code>[]</code> 包起來的像是 <code>[year]</code>、<code>[fullname]</code> 就是要替換掉的字串，發現這點之後，我也覺得需要重新檢視 Vim License 的文字是不是也有這種地方，然而一旦認真看待這點，便發現問題不小，而這個問題就是 Vim License 不是 context free 的，而是高度和 Vim 耦合在一起的，一般而言，開源授權都是 context free 的，怎樣算是 context free 的授權條款呢？就是那個條款文字要拿去哪個專案，都可以直接用，不需要去修改文字內容，頂多是修改頭尾的名稱、年份和所有權人的資訊，但是 Vim License 不是，光是 <strong>Vim</strong> 這個單字，就在文本內出現了 29 次，而這些 Vim 單字，大部分時候代表的是使用這個授權的軟體的名稱，所以假設我今天是 vim-pathogen 要使用 Vim License，那就應該要在 LICENSE 文件內把 Vim 單字都換成 pathogen.vim 才對，不過在這堆 Vim 之中，還有一些地方是代表不一樣的意義，這些地方就是在作為 <strong>Vim Maintainer</strong> 的時候，所以到底，這麼多的 Vim 都應該要改為替換的字串嗎？為此我就去問了 Vim 的作者，當然同時也是 Vim License 的作者 Bram Moolenaar，其實我蠻快就<a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">得到答案</a>了，結論就是，Vim Maintainer 需要保留原樣，但是其他時候在作為代表使用該授權的軟體時，<strong>Vim</strong> 應該要改為該軟體的名稱。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177608139/" title="Discuss Vim License with Bram by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177608139_7e1d12cf42_b.jpg" width="1024" height="684" alt="Discuss Vim License with Bram" srcset="https://live.staticflickr.com/65535/53177608139_fd6999e91a_k.jpg 2x" /></a></p>
+<p>那麼為什麼會出現 Vim Maintainer 呢？這邊就要來介紹一下 Vim License 的內容了，條款內容簡單翻譯（非正式翻譯，請勿用於法律用途）如下：</p>
+<ol>
+<li>可以自由任意的散佈未修改過的 Vim；</li>
+<li>如果要散佈修改過的 Vim，需要符合以下條件之一；
+<ol>
+<li>發佈時同時提供聯絡方式，當 Vim Maintainer 向你索取你的修改，你必須無償提供，並且 Vim Maintainer 保留把你的修改加進官方版本 Vim 的權力；</li>
+<li>如果你取得經由前一條所述方式散佈的 Vim，你可以不受限制的散佈該版本，如果有新的修改，則需依照相同的方式散佈；</li>
+<li>發佈時同時提供和原始版本的原始碼差異；</li>
+<li>使用前一條的方式發佈時，符合以下所有條件時可以不用提供原始碼；
+<ul>
+<li>你所使用的授權條款不會讓 Vim Maintainer 無法免費取得你修改的內容；</li>
+<li>你必須保留你修改的內容（原始碼的差異）至少三年，如果使用者或是 Vim Maintainer 在這段時間內跟你索取修改的內容，你必須要提供；</li>
+<li>你必須確保你所提供的聯絡方式在三年內是有效的。</li>
+</ul>
+</li>
+<li>如果你的修改使用 GPL，你可以使用 GPLv2 發佈你修改過的版本。</li>
+</ol>
+</li>
+<li>如果你發佈修改過的 Vim，強烈建議你使用 Vim License 並把修改的原始碼提供給 Vim Maintainer；</li>
+<li>不可把授權條款移除。</li>
+</ol>
+<p>仔細看下來，其實這份文件，主要目標就是在確保 Vim Maintainer 能取得其他人的修改，如果不是 Vim 使用這份授權條款的話，不管你使用這份條款的軟體是什麼，有修改再發佈的話，你都必須要讓 Vim Maintainer 可以無償取得你的軟體原始碼，並且 Vim Maintainer 可以決定是否要給原軟體使用，而這也造成了 Vim License 成為了少見的，不是 context free 的開源授權，而這個細節我相信是在我跟 Bram 的討論後才是第一次闡明，當時討論時我有舉了一個極端的例子來確認：假設我有一個軟體 X，使用 Vim License 授權，後來有人修改我的 X 後改為 Y 發佈但是沒有開源，有權力去取得 Y 的修改內容並決定要不要給 X 的，其實是 Vim Maintainer，而不是我（X 的作者）。</p>
+<p>知道哪些地方才是可以替換掉之後就簡單了，我快速的準備好要用來發 PR 的 vim.txt 檔案，然後想說先來測試一下，結果，偵測竟然失敗了！研究再三，發現偵測出來的相似度只有 97.x%，而 Licensee 設定的閾值是 98%，至於會造成相似度這麼低的原因，其實是因為文本內有太多的替換字串了，當時的 Licensee 對於替換字串的比對處理的不太好，替換前後文字的長短差異也會有影響，知道原因後我就在想要來怎麼處理，當然最簡單的方法就是用特例處理，我當時的作法就是如果是在偵測 Vim License 的話，就會降低判斷用的閾值，本地測試沒問題後，就準備提交回去給 Licensee 了，不過因為我還不確定這樣的作法好不好，所以我先開了個 issue，解釋了前因後果然後附上我目前的修改，想說問問看負責的人的想法，如果他們覺得可以接受我再發 PR，結果，Mike Linksvayer 又出現了！我才發現 choosealicense 和 Licensee 他都是主要貢獻者！至於知道他的經歷則是在 COSCUP 分享後才聽 Bobchao 說的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177406736/" title="vim.txt in Licensee by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177406736_71659e1fd6_b.jpg" width="1024" height="684" alt="vim.txt in Licensee" srcset="https://live.staticflickr.com/65535/53177406736_7ce7bb487f_k.jpg 2x" /></a></p>
+<p><a href="https://en.wikipedia.org/wiki/Mike_Linksvayer">Mike Linksvayer</a> 當時是 GitHub 的 Policy Director 專門負責公共相關的事務，而在之前則是當過 CC 的 CTO 和 VP，也曾擔任過數個不同組織的董事會成員，像是 OpenHatch、Software Freedom Conservancy 和 Open Definition Advisory Council，所以可以說是已經在自由開源領域活躍已久，甚至是特長於授權條款相關的領域。不過其實當時我不知道，也沒想說要去了解，主要對他的印象是頭像看起來有點嚴肅，一直給我 T1000 的感覺，加上我後來就是幾乎都是跟他往來為主（應該說我提交的貢獻就是他在把關的），所以某些層面上來看我其實是對他有點心生畏懼的。</p>
+<p>Mike 在 Licensee 這邊提出的問題是，我在 Vim License 裡面定的那些替換字串，並沒有出現在 <a href="https://spdx.org/licenses/Vim.html">SPDX License List</a> 那邊，SPDX 全名是 Software Package Data Exchange，其實這是屬於一般開發者比較少接觸的到的東西，目前最常看到的應用扣除 License List 之外，應該是軟體供應鍊相關的東西，不過其實他們所維護的 <a href="https://spdx.org/licenses/">SPDX License List</a> 幾乎已經成為業界標準，尤其是那個 license 的 identifier 更是到處都看得到，像是 npm 的 <a href="https://docs.npmjs.com/cli/v6/configuring-npm/package-json#license">package.json</a> 裡面就是使用它。然後其實 SPDX License List 這邊的檔案格式（自訂的 XML）和 Licensee 用的檔案格式（自訂的純文字）不一樣，不過由於 SPDX License List 已經是一個大家都會當作參考索引的資料源頭，所以也自然的成為 choosealicense 的上游（upstream），這次經驗我也讓我了解到開源的圈子真的是蠻重視 upstream 的，之前我也在 neovim 遇過類似的情形，總之也因此我應該要先去提交 PR 修改 SPDX License List，然後才發 PR 給 choosealicense，所以我就整理整理後去那邊發了 PR 加上這些替換字串，然後，<strong>Mike Linksvayer</strong> 又出現了！他也是 SPDX License List 的貢獻者之一！</p>
+<p>接<a href="https://blog.othree.net/log/2023/09/11/vim-license-2/">下一篇</a>。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000992" baseName="vim-boss-passed-away">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -293,170 +459,6 @@ make install
 </code></pre>
 
 <p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000868" baseName="yajs-and-vim-syntax-highlight">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2016-07-01</b:date>
-				<b:time>17:05:37</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>YAJS.vim and Vim Syntax Highlight</b:title>
-			<b:content>
-				<b:summary>上個週末在香港 Open Source Conference 分享的主題，第一次使用英文分享，結果表現不太好，不知道上場前喝點啤酒會不會比較好就是... 這個主題本來是想要投 COSCUP 的，主要是想介紹一下之前在做 yajs.vim 時遇到的比較有印象的問題，在這之前先介紹一下 Vim Syntax Highlight 的機制，因為這些問題很多都和 Vim 的 Syntax Highlight 機制的設計關係很大，然後最後就是有一個還沒辦法解的問題，這個問題就是 yajs.vim 目前還沒辦法完美的 highlight 有 default parameter 的 arrow function。 /* A_A */...</b:summary>
-				<b:mainContent><p>上個週末在<a href="https://2016.opensource.hk/">香港 Open Source Conference</a> 分享的主題，第一次使用英文分享，結果表現不太好，不知道上場前喝點啤酒會不會比較好就是...</p>
-
-<p>這個主題本來是想要投 COSCUP 的，主要是想介紹一下之前在做 <a href="https://github.com/othree/yajs.vim">yajs.vim</a> 時遇到的比較有印象的問題，在這之前先介紹一下 Vim Syntax Highlight 的機制，因為這些問題很多都和 Vim 的 Syntax Highlight 機制的設計關係很大，然後最後就是有一個還沒辦法解的問題，這個問題就是 yajs.vim 目前還沒辦法完美的 highlight 有 default parameter 的 arrow function。</p>
-
-<script async="async" class="speakerdeck-embed" data-id="3294147a503d4079a6238296fc991a76" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js">/* A_A */</script>
-</b:mainContent>
-				<b:extendContent>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000836" baseName="vim-syntax-regexp-note">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2015-03-18</b:date>
-				<b:time>18:45:07</b:time>
-			</b:datetime>
-			<b:category>vim</b:category>
-			<b:title>Vim Syntax and Regexp Note</b:title>
-			<b:content>
-				<b:summary>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，function 關鍵字和後面 () 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 skipwhite、skipempty 然後加上 nextgroup 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說： function fn (a)...</b:summary>
-				<b:mainContent><p>前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，<code>function</code> 關鍵字和後面 <code>()</code> 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 <code>skipwhite</code>、<code>skipempty</code> 然後加上 <code>nextgroup</code> 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說：</p>
-
-<pre><code>function fn (a) {}
-</code></pre>
-
-<p>這樣的程式碼我把他拆成四個部分，function keyword、function name、function parameter、function body，然後用 Vim syntax 語法設定：</p>
-
-<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
-</code></pre>
-
-<p>除了 function keyword 外都有 <code>contained</code>，用途是讓該 rule 不會在 TOP region 下生效，一個好處是減少 TOP region 下要檢查的 rule 數量，另一個好處是有些相同的 token pattern，但是其實語意上是不一樣的，可以盡量用這種機制拆分開來，到這裡都還很美好，但是加上 comment 後問題就變複雜了，先簡單寫一下 comment 的 syntax rule：</p>
-
-<pre><code>syntax region  javascriptComment     start=/\/\*/ end=/\*\//
-</code></pre>
-
-<p>然後 comment 可以放在哪些地方呢：</p>
-
-<pre><code>function /*cc*/ fn (a) {}
-function fn /*cc*/ (a) {}
-function fn (a) /*cc*/ {}
-</code></pre>
-
-<p>也就是本來 nextgroup 連接的地方都可以插入個 comment，可是只要插入了 comment，後面的 token 就不會被正確 highlight，因為 comment 的 rule 沒有 nextgroup，所以他的部分結束後就會回到用 TOP region 的情境，而後面應該符合的 rule 都有設上 <code>contained</code>，所以就沒機會對到。當然現在要解決這個問題也不是沒方法可以避開，但是非常不好看，就是如下的設計：</p>
-
-<pre><code>syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName,comment1 skipwhite
-syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody,comment3 skipwhite
-syntax region  javascriptFuncBody    contained start=/{/ end=/}/
-
-syntax region  comment1     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncName,comment1 skipwhite
-syntax region  comment2     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncParam,comment2 skipwhite
-syntax region  comment3     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncBody,comment3 skipwhite
-</code></pre>
-
-<p>如此可以確保 comment 插入也不會讓後面的 token 沒 highlight，但是這樣的設計，實際寫起來會非常繁瑣，完全不想去研究 JavaScript 中會有多少類似的狀況。其實我是覺得 Vim syntax 應該是希望盡量都用前後獨立的 rule 來 highlight，盡量不要有前後相依的關係存在，就不會有上面的問題，也可以讓 highlight 過程比較單純，理想上是從頭開始，一個 token 一個 token 各自獨立的 highlight，不過是事情當然沒這麼簡單，第二個想記錄下來的事情也和這個有關係。</p>
-
-<p>假設目前 highlight 處理中，parse 到一個 <code>=</code>，然後看到一組小括號 <code>(a)</code>，連起來如下：</p>
-
-<pre><code>= (a)
-</code></pre>
-
-<p>這時你會覺得 <code>(a)</code> 是什麼呢？是小括號，裡面是一個 expression 然後回傳變數 <code>a</code> 嗎？相信很多人會這樣認為，如果他後面是接分號的話：</p>
-
-<pre><code>= (a);
-</code></pre>
-
-<p>但是其實也可能是這樣子的：</p>
-
-<pre><code>= (a) =&gt; {}
-</code></pre>
-
-<p>ES6 的 arrow function，也就是說，如果一個 token 一個 token 解析，一定無法直接知道目前 token 代表的正確意義，所以 compiler 把程式碼轉成 AST 的時候，有時候會先往後面看一下來判斷現在的 token 到底是什麼意義。然而 Vim syntax 系統並沒有這種能力，嚴格來說，是可以用 match 來達成，不過還是很受限制。再來則是往前看的問題，我在設定運算子的 match rule 的時候，會希望嚴謹一點，本來想在兩邊加上 word boundary 的 pattern，在 Vim 裡面是 <code>\&lt;</code> 和 <code>\&gt;</code>，不過測試幾回發現，我的字元本身不是文字字元的話，這個 pattern 是沒有用的：</p>
-
-<pre><code>/\&lt;word
-</code></pre>
-
-<p>這樣是有效的，但是下面想要 match <code>==</code> 的會沒用：</p>
-
-<pre><code>/\&lt;==
-</code></pre>
-
-<p>所以變成要自己寫往前看的 regexp，在 Vim 裡面有兩種類似的東西可以用，分別是 <code>\zs</code> 和 <code>\@&lt;=</code>，通常，<code>\zs</code> 效能比較好，會推薦使用，他的用途是標註你的 regexp 的 match 的起點，當然同時也有一個 <code>\ze</code> 是終點：</p>
-
-<pre><code>/abcd\zsefgh\zeijkl
-</code></pre>
-
-<p>上面這串 regexp 的目標是 <code>efgh</code>，但是他的前後分別是 <code>abcd</code> 和 <code>ijkl</code>，實際執行時會去找 <code>abcdefghijkl</code> 這串字串，完整比對到之後，只會回中間的 <code>efgh</code> 作為 match 的範圍，這設計要做一些操作的時候就會有差，像是文字取代。本來我就想要用這個來做 syntax，可是就發現還是不生效，所以改成用 <code>\@&lt;=</code> 試試看：</p>
-
-<pre><code>/\(abcd\)\@&lt;=efgh\@=\(ijkl\)
-</code></pre>
-
-<p>就發現成功了，想了許久才理解其原因，然後才瞭解，真的往前看的是 <code>\@&lt;=</code>，<code>\zs</code> 並沒有往前看，兩者最大的差異在於 pattern match 操作的起點，一般的使用大概感覺不太到差異，不過像是 syntax highlight 這種一個 token 一個 token 逐步處理的就會有差，當目標是 <code>efgh</code> 時，通常處理進度到 <code>e</code> 這個位置時，前面的 <code>abcd</code> 已經被處理過了，所以這時候會和 regexp 比對的字串就變成 <code>efghijkl</code>，使用 <code>\zs</code> 的話，因為它還是要完整比對到 <code>abcdefghijkl</code>，起點是 <code>a</code>，就不會和 <code>efghijkl</code> 相符，但是用 <code>\@&lt;=</code> 的話，pattern 的起點是 <code>efgh</code> 的 <code>e</code>，這樣就可以 match 到目前剩餘的字串了。</p>
-
-<p>前面說的個 token 一個 token 逐步處理的問題還有一個情形也讓我困擾很久，不過這次不是東西被用掉，問題是沒被用掉。這個狀況發生在巢狀結構的 region，像是 JavaScript 的 block：</p>
-
-<pre><code>syntax region  javascriptBlock start=/{/ end=/}/
-</code></pre>
-
-<p>然號要讓 block 裡面可已有 block 就要用 <code>contains</code>：</p>
-
-<pre><code>syntax region  javascriptBlock start=/{/ end=/}/ contains=javascriptBlock
-</code></pre>
-
-<p>這時候就會發生奇怪的現象了，因為外面的 region 包括了頭尾的括號，然後進入 block 內要做 syntax match 的時候，一開始的 <code>{</code> 又 match 到 block，結果 Vim 就直接覺得這已經是第二層的 block 了，雖然好像有其它機制讓他不會一直循環下去變成無限多層，不過這樣還是會造成後面的 code 有被判斷錯誤的機會，因為 block 的開關不 match，這裡的關鍵也是要讓 <code>{</code> 和 <code>}</code> 被處理掉，進入 region 內部就不會跑到上一層的起點，而這裡要用的就是 <code>matchgroup</code>：</p>
-
-<pre><code>syntax region  javascriptBlock matchgroup=bracks start=/{/ end=/}/ contains=javascriptBlock
-</code></pre>
-
-<p>如此就都會正常了，因為這樣的設定會讓 <code>{</code> 和 <code>}</code> 直接被當成 <code>bracks</code> 這個 group，然後就被當成已經被解析過的 token，從它的下一個 token 繼續 highlight 分析，但是千萬不要另外加上 <code>bracks</code> 的 syntax rule，剛好又 match 到 region 的起點和終點：</p>
-
-<pre><code>syntax match   bracks  /[{}]/
-</code></pre>
-
-<p>這樣的話也會發生其它的怪異現象，總之 nested region 的重點在於，要用 matchgroup，然後不要用和 matchgrouop 同樣名稱，同樣 pattern 另外又設定一組 rule。</p>
-
-<p>最後一個要紀錄的則是 Vim syntax 裡面的優先度，基本上是 keyoword 優先度最高，也就是有 match 到 keyword 的話，你的 match pattern 就都無效了，所以像是 JavaScript 裡面，label 雖然不可以用關鍵字，像是 <code>continue:</code> 就不合法，但是因為會先 match 到 <code>continue</code> 關鍵字，所以就很難用 syntax highlight 來標出這種錯誤，而在 keyword 比對完之後，才輪的到 region 和 match，兩者是同樣權重，但是後定義的優先，而且不受 <code>contains</code> 和 <code>nextgroup</code> 裡面的順序影響，搞清楚優先順序在做細部的 syntax highlight 的時候還蠻重要的。另外要順便說說 region contains 和 nextgroup 的差異，nextgroup 其實還蠻不錯的，他不是限制下一個 token 一定是哪些東西，而是改變優先順序，先檢查完 nextgroup 裡面的東西，再檢查該 region 下的其它可能性，region contains 就不一樣了，該 region 裡面只有在 contains 裡面的東西會出現，另外還要特別注意一點，region 的處理並不管該 region 能不能正確的關閉，只要 match 到起點，就會把 region 打開，然後剛剛有提到，region 和 match 是同樣權重的所以就要非常注意：</p>
-
-<pre><code>syntax match  javascriptLabel       /\k\+:/
-syntax region javascriptLabelblock  start=/\k\+: {/ end=/}/
-</code></pre>
-
-<p>這樣兩條 syntax highlight rule 然後配上下面的程式碼：</p>
-
-<pre><code>abcd: {
-  var ii = 1 + 1;
-
-var jj = 2 + 2;
-</code></pre>
-
-<p>要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 <code>var jj</code> 那行也是被認為在 block 內。</p>
-
-<p>最後的最後要推薦一下 <a href="https://github.com/gerw/vim-HiLinkTrace">gerw/vim-HiLinkTrace</a> 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。</p>
 </b:mainContent>
 				<b:extendContent>
 </b:extendContent>

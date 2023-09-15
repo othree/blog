@@ -85,53 +85,47 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/06/19/options-object/">Options Object</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9074497361/" title="Options Object by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg" width="1024" height="683" alt="Options Object" srcset="https://farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg 1024w, https://farm4.staticflickr.com/3829/9074497361_47ca7b681a_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>上一篇文章 <a href="https://blog.othree.net/log/2013/06/18/dom-event-module/">DOM Event Module</a> 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 <a href="http://effectivejs.com/">Effective JavaScript</a> 也有說到這個 pattern，所以就拿他當參考文獻了~~</p>
-              <p>這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的：</p>
-              <pre>
-                <code>var alert = new Alert(100, 75, 300, 200, 
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/9074497361/" title="Options Object by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg" width="1024" height="683" alt="Options Object" srcset="https://farm4.staticflickr.com/3829/9074497361_5298d2643e_b.jpg 1024w, https://farm4.staticflickr.com/3829/9074497361_47ca7b681a_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>上一篇文章 <a href="https://blog.othree.net/log/2013/06/18/dom-event-module/">DOM Event Module</a> 有講到 function API 設計收 option 物件比不同設定的值分開接收還好，這篇就要介紹一下這個 pattern，其實這個 pattern 我看過好幾篇文章講了，想不到等我現在要寫文章時卻找不太到，因為關鍵字有點太通用，不過剛好最近看完的 <a href="http://effectivejs.com/">Effective JavaScript</a> 也有說到這個 pattern，所以就拿他當參考文獻了~~</p>
+
+<p>這種設計的優點第一個當然就是前一篇有說到的，使用時的程式碼，用看的就知道不同的參數是什麼意義，直接偷 Effective JavaScript 的範例來，先看看不是 options object 的：</p>
+
+<pre><code>var alert = new Alert(100, 75, 300, 200, 
                       "Error", messaage,
                       "blue", "white", "black",
                       "error", true);
-</code>
-              </pre>
-              <p>這個例子比我前一篇的例子還要複雜許多，相信更能夠感覺到這些參數分別的意義很難判斷吧，所以改成用 options object 的：</p>
-              <pre>
-                <code>var alert = new Alert({
+</code></pre>
+
+<p>這個例子比我前一篇的例子還要複雜許多，相信更能夠感覺到這些參數分別的意義很難判斷吧，所以改成用 options object 的：</p>
+
+<pre><code>var alert = new Alert({
     x: 100, y: 75,
     width: 300, height: 200,
     title: "Error", message: message,
     titleColor: "blue", bgColor: "white", textColor: "black",
     icon: "error", modal: "true"
 });
-</code>
-              </pre>
-              <p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
-              <p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 <a href="http://api.jquery.com/jQuery.extend/">jQuery.extend</a> 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
-              <pre>
-                <code>_.defaults(options, defaultOptions);
-</code>
-              </pre>
-              <p>但是如果用 options 要達成一樣的效果，你要寫成：</p>
-              <pre>
-                <code>options = _.extend({}, defaultOptions, options);
-</code>
-              </pre>
-              <p>因為 extend 會讓後者的屬性覆蓋掉前者的，所以 defaultOptions 要放在 options 前面，但是 extend 回傳的是前面那個物件，所以要取代原本的 options 還要多一個 assign，至於 defaults 則是會改原來的 options 物件，所以不需要多那個 assign，也不需要先丟一個空物件給它，如果要讓 options 是可省略的參數，用 CoffeeScript 還可以在定義 function 時給它預設值，整個程式碼就漂亮很多：</p>
-              <pre>
-                <code>mylib.ajax = (url, options = {}) -&gt;
+</code></pre>
+
+<p>雖然其實我覺得全部的參數都塞到 options object 也不好，不過這問題不是這篇文章的重點，接下來要說的是另外一個優點，就是 API 介面可以和參數的數量脫勾（decouple），在未來更新改版增加新選項時也不用改參數的設計，這個優點要舉的例子是 <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a>，他的第二個參數就是 options object，可以看文件有詳細的介紹所有的可以用選項，然後有一些選項，像是 headers、converts 就是後來才新增的，而 jQuery.ajax 本身收的參數則是從 1.0 之後就沒有變化了。</p>
+
+<p>收了參數之後，通常第一步要做的是填預設值，很多的 JavaScript Library 都有提供 extend 可以利用，以 jQuery.ajax 為例，它用的是特製的 <a href="https://github.com/jquery/jquery/blob/2.0.2/src/ajax.js#L117">ajaxExtend</a>，當然 jQuery 也有提供 <a href="http://api.jquery.com/jQuery.extend/">jQuery.extend</a> 給一般的 case 使用，undersocre 也有 <a href="http://underscorejs.org/#extend">extend</a>，不過它還有一個填預設值專用的 <a href="http://underscorejs.org/#defaults">defaults</a>，兩者的差別在當初 propose 的 <a href="https://github.com/documentcloud/underscore/issues/106">issue</a> 上介紹的蠻清楚，基本上就是用 defaults 你可以這樣寫：</p>
+
+<pre><code>_.defaults(options, defaultOptions);
+</code></pre>
+
+<p>但是如果用 options 要達成一樣的效果，你要寫成：</p>
+
+<pre><code>options = _.extend({}, defaultOptions, options);
+</code></pre>
+
+<p>因為 extend 會讓後者的屬性覆蓋掉前者的，所以 defaultOptions 要放在 options 前面，但是 extend 回傳的是前面那個物件，所以要取代原本的 options 還要多一個 assign，至於 defaults 則是會改原來的 options 物件，所以不需要多那個 assign，也不需要先丟一個空物件給它，如果要讓 options 是可省略的參數，用 CoffeeScript 還可以在定義 function 時給它預設值，整個程式碼就漂亮很多：</p>
+
+<pre><code>mylib.ajax = (url, options = {}) -&gt;
     _.default(options, defaultOptions)
-</code>
-              </pre>
-            </section>
+</code></pre>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -156,6 +150,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -176,19 +179,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -200,7 +194,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

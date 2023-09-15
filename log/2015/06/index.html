@@ -81,50 +81,51 @@
                 <a href="/log/2015/06/18/ghcjs/">GHCJS</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上已經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
-              <p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
-              <pre>
-                <code>./cofigure
+            <section itemprop="articleBody"><p>最近幾天把 GHCJS 研究了一遍，一開始的需求是因為開始用 <a href="http://pandoc.org/">pandoc</a>，然後想要用 JS 提供即時的預覽，因為 Pandoc 是 Haskell 寫的，所以看下來自然是看到 <a href="https://github.com/ghcjs/ghcjs">GHCJS</a> 了，其實網路上已經有人成功的把 Pandoc 轉成 JS 了，叫做 <a href="http://markup.rocks/">markup.rocks</a>，我後來也是基於他在 github 上公開的這些程式碼來研究。</p>
+
+<p>要安裝 GHCJS 有點麻煩，以 OSX 為例，要先去<a href="https://www.haskell.org/ghc/download_ghc_7_8_3#macosx_x86_64">下載</a> GHC 的 binary distribution 壓縮檔（ghc-7.8.3-x86_64-apple-darwin.tar.xz），解壓縮後，進目錄執行：</p>
+
+<pre><code>./cofigure
 make install
-</code>
-              </pre>
-              <p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
-              <pre>
-                <code>cabal install cabal-install
-</code>
-              </pre>
-              <p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
-              <pre>
-                <code>PATH=$HOME/Library/Haskell/bin:$PATH
-</code>
-              </pre>
-              <p>接下來才是安裝 GHCJS：</p>
-              <pre>
-                <code>git clone https://github.com/ghcjs/ghcjs-prim.git
+</code></pre>
+
+<p>安裝完 GHC 後要更新 <code>cabal</code> 這個套件管理工具：</p>
+
+<pre><code>cabal install cabal-install
+</code></pre>
+
+<p>然後這樣會把 cabal 裝到自己 home 目錄下面，所以還要更新一下 $PATH：</p>
+
+<pre><code>PATH=$HOME/Library/Haskell/bin:$PATH
+</code></pre>
+
+<p>接下來才是安裝 GHCJS：</p>
+
+<pre><code>git clone https://github.com/ghcjs/ghcjs-prim.git
 git clone https://github.com/ghcjs/ghcjs.git
 cabal install ./ghcjs ./ghcjs-prim
-</code>
-              </pre>
-              <p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
-              <pre>
-                <code>ghcjs-boot --dev
-</code>
-              </pre>
-              <p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
-              <pre>
-                <code>cabal install --ghcjs pandoc
-</code>
-              </pre>
-              <p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
-              <pre>
-                <code>git clone git@github.com:osener/pandoc.git
+</code></pre>
+
+<p>要用 GHCJS 之前，還要安裝一下環境的基本套件：</p>
+
+<pre><code>ghcjs-boot --dev
+</code></pre>
+
+<p>如果一切順利的話就可以開始把 Haskell 程式轉成 JS 了，不過事情當然沒這麼簡單，首先 GHCJS 的套件和 GHC 的套件在本地是分開的，要裝給 GHCJS 環境的話，要加上 <code>--ghcjs</code> 的選項，例如：</p>
+
+<pre><code>cabal install --ghcjs pandoc
+</code></pre>
+
+<p>這樣裝的套件才能夠讓 GHCJS 轉譯時使用，然後第二個問題就是上面這個指令其實裝不起來，因為 Pandoc 和 GHCJS 不相容，markup.rocks 的作者 Ozan Sener 其實有 fork 一份 Pandoc 針對這個問題作 <a href="https://github.com/osener/pandoc">patch</a>，所以安裝改成下面的指令：</p>
+
+<pre><code>git clone git@github.com:osener/pandoc.git
 cabal install --ghcjs ./pandoc
-</code>
-              </pre>
-              <p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
-              <p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
-            </section>
+</code></pre>
+
+<p>不過還是會有些問題，基本上就看缺什麼用 cabal 裝一下，然後有些錯誤要簡單修改一下程式碼，詳情不是很重要，因為接下來馬上有第三個問題，就是這樣裝起來後，會發現要成功的轉 markup.rocks 還是有問題，其中 reflex-dom 一直裝不起來，這個套件主要是拿來做網頁介面的，所以我把 <a href="https://github.com/osener/markup.rocks/blob/master/src/Main.hs">Main.hs</a> 內只和 pandoc 相關的抽出來，想建立一個只有 pandoc 單純一點的 Haskell 程式，然後一番努力後，終於成功了，這時同時出現兩個問題，第一個是產出的檔案超大，有 20MB 左右，markup.rocks 線上 demo 放的是有過 closure-compiler 的也還有 2.2MB，而另外一個問題，是我找不到程式可以讓我抓到輸出入的位置（嚴格來說有找到但是無法用），後來又查了些資料才發現，GHCJS 目前還沒辦法把 Haskell library 單獨轉譯然後開 API 出來，一定是一個完整的 Haskell 應用程式，然後編譯出來的 JS 就是執行這個程式，沒有外面插手的餘地，換句話說，就是所有事情都要用 Haskell 完成，然後用 GHCJS 編譯成一個獨立的 JavaScript 應用程式，GHCJS 的 <a href="https://github.com/ghcjs/ghcjs/issues/194">Issue 194</a> 就是在講這個問題，看起來離有結果還有些距離。</p>
+
+<p>總之結論是，目前 GHCJS 還不到真的可拿來做應用的程度，最後遇到的兩個問題算是比較大的，就是輸出檔案太大和只能把整個應用程式轉譯成 JS 這兩個問題，不過事情總是要有開始，希望未來有一天這兩個問題能解決，就能夠把 Haskell 的一些工具轉到 JS 上了。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -147,7 +148,7 @@ cabal install --ghcjs ./pandoc
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -159,7 +160,7 @@ cabal install --ghcjs ./pandoc
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

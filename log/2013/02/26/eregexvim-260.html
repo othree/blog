@@ -85,12 +85,14 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/02/26/eregexvim-260/">eregex.vim 2.60</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
-              <p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
-              <p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
-              <p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
-            </section>
+            <section itemprop="articleBody"><p>我這幾天釋出了 <a href="https://github.com/othree/eregex.vim">eregex.vim</a> 2.6，因為離上次更新有點久了，所以重新來介紹一下這個 Vim plugin。</p>
+
+<p>Vim 裡面搜尋和取代的 Regular Expression 有自己的一套<a href="http://vimdoc.sourceforge.net/htmldoc/pattern.html">語法</a>，不過對於平常習慣使用 Perl style 語法的人來說實在是很不方便，大部分人解決這個問題使用的是 <a href="https://github.com/mileszs/ack.vim">ack.vim</a>，不過 ack.vim 使用的是系統安裝好的 ack，而且命令比較麻煩，所以我一直用另外一套日本人寫的 eregex.vim，它的作法是把你輸入的 Perl style 語法用對照表轉成 Vim style 的語法，然後用 Vim 的搜尋指令來搜尋，原來的開發者 安久津 幾乎是失聯，於是我大概一年半前就自己開維護起來，不過當時就有兩個 issue 處理不了，沒想到最近終於成功解掉了。</p>
+
+<p>原來的 eregex.vim 只能單向搜尋，也就是只有支援 <code>/</code> 而不支援 <code>?</code>，之前我加上了 <code>?</code> 反向搜尋的支援，不過問題是反向搜尋後，按 <code>n</code> 找下一個的方向還是正向的，當時就是找半天不知道問題在哪，最近才發現問題在搜尋的相關參數，包括搜尋方向以及是不是要 highlight 的設定，都會在離開 function call 之後被重設，於是我的作法就是讓我的自動指令變的複雜一點，相對的，本來很簡單的 keymapping 也複雜了許多，所以我一不做二不休，改成自動 mapping 的機制，使用者可以自己切換，設定 mapping key，終於可以讓搜尋指令的行為和原生的完全一樣，詳細可以上 github 看 README 的使用說明。</p>
+
+<p>拖了將近兩年才解開的 issue，其實感覺還蠻特別的。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -115,6 +117,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -135,19 +146,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -159,7 +161,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

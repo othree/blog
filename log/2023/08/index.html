@@ -13,6 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
     <link rel="made" href="mailto:othree@gmail.com"/>
     <link rel="prev" title="May 2023" href="/log/2023/05/"/>
+    <link rel="next" title="September 2023" href="/log/2023/09/"/>
     <link rel="up" title="上一層" href="../"/>
     <link rel="top" title="首頁" href="/"/>
     <meta name="twitter:card" content="summary"/>
@@ -65,10 +66,41 @@
             <div class="span6">
               <h2>August 2023</h2>
             </div>
-            <div id="page-nav" class="span2"><a title="May 2023" href="/log/2023/05/">« May 2023</a> | <a href="../">上一層</a><!--fix for ie--></div>
+            <div id="page-nav" class="span2"><a title="May 2023" href="/log/2023/05/">« May 2023</a> | <a href="../">上一層</a> | <a title="September 2023" href="/log/2023/09/">September 2023 »</a><!--fix for ie--></div>
           </div>
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-remove-disqus">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2023-08-23T23:03:25" id="date-2023-08-23">
+                <span class="mon">08月</span>
+                <span class="day">23日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2023/08/23/remove-disqus/">Remove Disqus</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger"><meta itemprop="width" content="400"/><meta itemprop="height" content="280"/></img></a></p>
+<p>前陣子有整理了一下部落格的東西，大致上作的事情是：</p>
+<ul>
+<li>拿掉 Google Analytic</li>
+<li>拿掉所有的 SNS 按鈕</li>
+<li>拿掉 Disqus</li>
+<li>換 web font 服務</li>
+</ul>
+<p>首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析軟體</a>，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 <a href="https://goaccess.io/">goaccess</a> 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有<a href="https://twitter.com/hsins_/status/1690038318732611584">朋友</a>推薦了 <a href="https://www.goatcounter.com/">GoatCounter</a> 和 <a href="https://umami.is/">umami</a>，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫。</p>
+<p>第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview">Web Intent</a> 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API">Web Share API</a> 的按鈕。</p>
+<p>然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。</p>
+<p>我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的<a href="https://twitter.com/hackmdio/status/1692158313704910982">消息</a>，跟著原推文下去找其實也有不少的替代方案，像是 <a href="https://cusdis.com/">cusdis</a>、用 GitHub 的 <a href="https://giscus.app/">giscus</a> 和 <a href="https://utteranc.es/">utterances</a> 等，其實 <a href="https://www.wappalyzer.com/technologies/comment-systems/">Wappalyzer</a> 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。</p>
+<p>其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 <a href="https://activitypub.rocks/">ActivityPub</a> 和 <a href="https://indieweb.org/Webmention">Webmention</a> ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少<a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/">手工</a>；另外一個選擇 Webmention，則可以參考 Jason 的「<a href="https://jason-memo.dev/posts/webmention/">透過 webmention 來搜集 blog 的社群迴響</a>」，基本上是可以透過第三方服務來弄成純前端的方案。</p>
+<p>最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 <a href="https://twitter.com/littlegoodjack/status/1691699453877682247">Laravel 因為 GDPR 的關係改用</a> <a href="https://fonts.bunny.net/">Bunny Fonts</a> 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。</p>
+<p>然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，<a href="https://www.eff.org/pages/privacy-badger">EFF Privacy Badger</a> 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。</p>
+</section>
+            <footer>
+              <a href="/log/about/" rel="tag">關於這裡</a>
+            </footer>
+          </article>
           <hr/>
           <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-common-log-format">
             <header>
@@ -80,32 +112,17 @@
                 <a href="/log/2023/08/14/common-log-format/">Common Log Format</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format">
-                    <meta itemprop="width" content="512"/>
-                    <meta itemprop="height" content="380"/>
-                  </img>
-                </a>
-              </p>
-              <p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
-              <p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
-              <p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
-              <ul>
-                <li>
-                  <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a>
-                </li>
-                <li>
-                  <a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a>
-                </li>
-                <li>
-                  <a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a>
-                </li>
-              </ul>
-              <p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
-              <pre>
-                <code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format"><meta itemprop="width" content="512"/><meta itemprop="height" content="380"/></img></a></p>
+<p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
+<p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
+<p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
+<ul>
+<li><a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a></li>
+<li><a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a></li>
+</ul>
+<p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
+<pre><code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] "request" ddd bbbb
 
 - host: Either the DNS name or the IP number of the remote client
 - rfc931: Any information returned by identd for this person, - otherwise.
@@ -119,35 +136,28 @@
 - request: The first line of the HTTP request as sent by the client.
 - ddd: the status code returned by the server, - if not available.
 - bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
-</code>
-              </pre>
-              <p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
-              <p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
-              <pre>
-                <code>time remotehost request 
-</code>
-              </pre>
-              <p>實作是：</p>
-              <pre>
-                <code>fprintf(log, "%24.24s %s %s\n",
+</code></pre>
+<p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
+<p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
+<pre><code>time remotehost request 
+</code></pre>
+<p>實作是：</p>
+<pre><code>fprintf(log, "%24.24s %s %s\n",
 		asctime(gorl), HTClientHost, n_noth(HTReqLine));
-</code>
-              </pre>
-              <p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
-              <pre>
-                <code>Www Mmm dd hh:mm:ss yyyy
-</code>
-              </pre>
-              <p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
-              <p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
-              <p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
-              <ul>
-                <li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
-                <li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
-                <li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種　log。</li>
-              </ul>
-              <p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
-            </section>
+</code></pre>
+<p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
+<pre><code>Www Mmm dd hh:mm:ss yyyy
+</code></pre>
+<p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
+<p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
+<p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
+<ul>
+<li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
+<li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
+<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種 log。</li>
+</ul>
+<p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
+</section>
             <footer>
               <a href="/log/unix/" rel="tag">UNIX</a>
             </footer>
@@ -163,20 +173,12 @@
                 <a href="/log/2023/08/11/vim-boss-passed-away/">Vim Boss Passed Away</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="684"/>
-                  </img>
-                </a>
-              </p>
-              <p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
-              <p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
-              <p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
-              <p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
+<p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
+<p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
+<p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
+<p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -192,23 +194,12 @@
                 <a href="/log/2023/08/02/yorimoi/">比宇宙更遠的地方</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53088711466/" title="宇宙よりも遠い場所 by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/53088711466_b346a743d6_b.jpg" width="600" height="787" alt="宇宙よりも遠い場所" srcset="">
-                    <meta itemprop="width" content="600"/>
-                    <meta itemprop="height" content="787"/>
-                  </img>
-                </a>
-              </p>
-              <p>在剛進入串流時代之時，我想著以後不太需要買什麼 DVD/BD 之類的了，因為想看的東西應該以後網路上都可以看的到，不過過了幾年下來，我的想法又慢慢的改變了，因為這些作品的授權都有個期限，過期之後不一定會重新上架，甚至連自家的原創作品都可能會下架，所以我慢慢的心中開始有了幾部作品，是覺得應該收藏一份實體版下來，其中的評斷標準算是我個人主觀，不過有一個條件倒是比較明確，就是希望讓我兒子長大後能看的，其實在這清單之中也沒幾個作品，而且很少有新增，不過就在最近新增了一部：「<a href="https://ani.gamer.com.tw/animeVideo.php?sn=16507">比宇宙更遠的地方</a>」，簡稱為<strong>よりもい</strong>（yorimoi）。</p>
-              <p>這部我一直都有聽到不錯的評價，第一印象是屬於那種「一群女孩去完成一件事」的日常系作品，其實我在看之前也沒有深入了解，本來以為就是一群女高中生因為對南極的憧憬，想方設法去南極旅遊的過程吧，畢竟這種類型作品很多是流水帳般將主角們有趣的生活演出來，這樣的日常系作品雖然也是會很有趣，但是就比較會變成打發時間用的，可能看過一陣子就會慢慢淡忘。</p>
-              <p>結果，看完よりもい之後我第一個感想就是：「真是太好我有看到這部作品了。」我也實在是非常幸運能在作品出來將近五年後還能在沒被捏他到的情況下看完這部作品。其實這陣子因為小孩去過暑假，所以我多了很多時間可以補看之前沒空看的東西，看了很多不錯的作品，也在推特上紀錄了一些心得，不過よりもい是第一部我特別想寫一篇文章紀錄的，因為他帶給我的不是風景多漂亮、劇情多有趣，而是更深刻的，故事中幾位角色的成長與自我突破。</p>
-              <p>以下有劇情，沒看過的話建議迴避，或是可以轉去看看 YouTube，匯雨有一個比較沒劇透的<a href="https://www.youtube.com/watch?v=O8qowhGwjyc">推坑影片</a>。</p>
-              <em class="extended">
-                <a href="/log/2023/08/02/yorimoi/">閱讀「比宇宙更遠的地方」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53088711466/" title="宇宙よりも遠い場所 by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53088711466_b346a743d6_b.jpg" width="600" height="787" alt="宇宙よりも遠い場所" srcset=""><meta itemprop="width" content="600"/><meta itemprop="height" content="787"/></img></a></p>
+<p>在剛進入串流時代之時，我想著以後不太需要買什麼 DVD/BD 之類的了，因為想看的東西應該以後網路上都可以看的到，不過過了幾年下來，我的想法又慢慢的改變了，因為這些作品的授權都有個期限，過期之後不一定會重新上架，甚至連自家的原創作品都可能會下架，所以我慢慢的心中開始有了幾部作品，是覺得應該收藏一份實體版下來，其中的評斷標準算是我個人主觀，不過有一個條件倒是比較明確，就是希望讓我兒子長大後能看的，其實在這清單之中也沒幾個作品，而且很少有新增，不過就在最近新增了一部：「<a href="https://ani.gamer.com.tw/animeVideo.php?sn=16507">比宇宙更遠的地方</a>」，簡稱為<strong>よりもい</strong>（yorimoi）。</p>
+<p>這部我一直都有聽到不錯的評價，第一印象是屬於那種「一群女孩去完成一件事」的日常系作品，其實我在看之前也沒有深入了解，本來以為就是一群女高中生因為對南極的憧憬，想方設法去南極旅遊的過程吧，畢竟這種類型作品很多是流水帳般將主角們有趣的生活演出來，這樣的日常系作品雖然也是會很有趣，但是就比較會變成打發時間用的，可能看過一陣子就會慢慢淡忘。</p>
+<p>結果，看完よりもい之後我第一個感想就是：「真是太好我有看到這部作品了。」我也實在是非常幸運能在作品出來將近五年後還能在沒被捏他到的情況下看完這部作品。其實這陣子因為小孩去過暑假，所以我多了很多時間可以補看之前沒空看的東西，看了很多不錯的作品，也在推特上紀錄了一些心得，不過よりもい是第一部我特別想寫一篇文章紀錄的，因為他帶給我的不是風景多漂亮、劇情多有趣，而是更深刻的，故事中幾位角色的成長與自我突破。</p>
+<p>以下有劇情，沒看過的話建議迴避，或是可以轉去看看 YouTube，匯雨有一個比較沒劇透的<a href="https://www.youtube.com/watch?v=O8qowhGwjyc">推坑影片</a>。</p>
+<em class="extended"><a href="/log/2023/08/02/yorimoi/">閱讀「比宇宙更遠的地方」全文</a></em></section>
             <footer>
               <a href="/log/acg/" rel="tag">動畫、漫畫、遊戲</a>
             </footer>
@@ -231,7 +222,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -243,7 +234,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

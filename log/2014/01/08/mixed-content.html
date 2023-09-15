@@ -85,76 +85,37 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/01/08/mixed-content/">Mixed Content</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" srcset="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" srcset="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>IE 在開發工具內還會有紅字嚇人：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 1024w">
-                    <meta itemprop="width" content="930"/>
-                    <meta itemprop="height" content="520"/>
-                  </img>
-                </a>
-              </p>
-              <p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" srcset="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>Chrome 則是會把 https 劃掉：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" srcset="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
-              <p>最後附上瀏覽器的說明：</p>
-              <ul>
-                <li>
-                  <a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a>
-                </li>
-                <li>
-                  <a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a>
-                </li>
-                <li>
-                  <a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a>
-                </li>
-                <li>
-                  <a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a>
-                </li>
-              </ul>
-            </section>
+            <section itemprop="articleBody"><p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" srcset="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" srcset="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p>IE 在開發工具內還會有紅字嚇人：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 1024w"><meta itemprop="width" content="930"/><meta itemprop="height" content="520"/></img></a></p>
+
+<p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" srcset="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p>Chrome 則是會把 https 劃掉：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" srcset="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
+
+<p>最後附上瀏覽器的說明：</p>
+
+<ul>
+<li><a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a></li>
+<li><a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a></li>
+<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a></li>
+<li><a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -179,6 +140,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -199,19 +169,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -223,7 +184,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

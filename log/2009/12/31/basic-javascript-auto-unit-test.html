@@ -85,11 +85,11 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/12/31/basic-javascript-auto-unit-test/">簡單的 JavaScript 自動單元測試</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前幾天弄完 <a href="http://github.com/hallettj/jslint.vim"><span class="caps">JSL</span>int.vim</a> 後，就對 server side JavaScript 產生了一些興趣，還抓了 <a href="http://code.google.com/p/v8/">v8 引擎</a> 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 <a href="http://docs.jquery.com/QUnit">QUnit</a> ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 <span class="caps">DOM </span>和 <span class="caps">BOM</span>，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 <a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">env.js</a> 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 <a href="http://www.mozilla.org/rhino/">Rhino</a> 下，因為他是 java based ，可以在 JavaScript 裡面寫 Java ，所以可以做很多壞事，但是其他的 js shell 沒辦法這樣跑， John Resig 好像有想要 port 成 python + v8 的版本，不過不知道有沒有成功，因為也 <a href="http://groups.google.com/group/envjs/browse_thread/thread/132617236878676b#">沒放出</a> 。</p>
-              <p>剛好最近有點紅的 <a href="http://nodejs.org/">node.js</a> ，似乎可以拿來做一樣的事情（要做 http request、開檔案、DOM），於是也調查了一下，結果缺少了重要的 <span class="caps">DOM </span>，這樣也跑不起 Qunit，傷心難過之餘只好把方向改成尋找簡單的 JavaScript Unit Test Framework，希望能找到不會存取到 <span class="caps">BOM </span>和 <span class="caps">DOM </span>的版本，結果找到 <a href="http://github.com/jeresig/env-js/blob/master/test/testrunner.js">這個</a> ，雖然沒完全符合需求，不過裡面要改的地方很少，所以改了一下就拿來用了（還不知道授權所以不敢丟出來），把幾個要用到 jQuery, <span class="caps">DOM </span>的地方註解掉，還有 log 改成有錯誤才輸出，然後 ~/.vimrc 加上：</p>
-              <pre>
-                <code>function Jsunit ()
+            <section itemprop="articleBody"><p>前幾天弄完 <a href="http://github.com/hallettj/jslint.vim"><span class="caps">JSL</span>int.vim</a> 後，就對 server side JavaScript 產生了一些興趣，還抓了 <a href="http://code.google.com/p/v8/">v8 引擎</a> 來用，於是就想到之前想弄很久的自動單元測試，想說要跑 <a href="http://docs.jquery.com/QUnit">QUnit</a> ，不過 QUnit 雖然獨立於 jQuery 了，但還是要在瀏覽器環境下才能執行，純 JavaScript engine 還少了 <span class="caps">DOM </span>和 <span class="caps">BOM</span>，就是說它需要 document, window 這些物件，找了一下發現 John Resig 有弄 <a href="http://ejohn.org/blog/bringing-the-browser-to-the-server/">env.js</a> 這個專案，就是要在 js shell 裡面做出瀏覽器的環境，不過問題是目前只能跑在 <a href="http://www.mozilla.org/rhino/">Rhino</a> 下，因為他是 java based ，可以在 JavaScript 裡面寫 Java ，所以可以做很多壞事，但是其他的 js shell 沒辦法這樣跑， John Resig 好像有想要 port 成 python + v8 的版本，不過不知道有沒有成功，因為也 <a href="http://groups.google.com/group/envjs/browse_thread/thread/132617236878676b#">沒放出</a> 。</p><p>剛好最近有點紅的 <a href="http://nodejs.org/">node.js</a> ，似乎可以拿來做一樣的事情（要做 http request、開檔案、DOM），於是也調查了一下，結果缺少了重要的 <span class="caps">DOM </span>，這樣也跑不起 Qunit，傷心難過之餘只好把方向改成尋找簡單的 JavaScript Unit Test Framework，希望能找到不會存取到 <span class="caps">BOM </span>和 <span class="caps">DOM </span>的版本，結果找到 <a href="http://github.com/jeresig/env-js/blob/master/test/testrunner.js">這個</a> ，雖然沒完全符合需求，不過裡面要改的地方很少，所以改了一下就拿來用了（還不知道授權所以不敢丟出來），把幾個要用到 jQuery, <span class="caps">DOM </span>的地方註解掉，還有 log 改成有錯誤才輸出，然後 ~/.vimrc 加上：</p>
+
+
+
+<pre><code>function Jsunit ()
     let ut = 'unit.test.js'
     let fn = expand('&lt;afile&gt;:t')
     if fn != ut
@@ -112,21 +112,26 @@
 endfunction
 
 autocmd FileWritePost,BufWritePost *.js :call Jsunit()
-</code>
-              </pre>
-              <p>存檔的時候會自動找 unit.test.js ，如果存在的話就會執行它，unit.test.js 裡面長得像這樣：</p>
-              <pre>
-                <code>load('testrunner.js');
+</code></pre>
+
+
+
+<p>存檔的時候會自動找 unit.test.js ，如果存在的話就會執行它，unit.test.js 裡面長得像這樣：</p>
+
+
+
+<pre><code>load('testrunner.js');
 load('lib.js');
 
 test('all', function () {
     ok(libFunc(true) == 530, 'send true');
     isObj(libFunc(false), {a:'1'}, 'send false');
 });
-</code>
-              </pre>
-              <p>不過這個 testrunner 不能做任何和 html 文件、瀏覽器有關的測試，只能做很核心部份的測試。</p>
-            </section>
+</code></pre>
+
+
+
+<p>不過這個 testrunner 不能做任何和 html 文件、瀏覽器有關的測試，只能做很核心部份的測試。</p></section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -151,6 +156,15 @@ test('all', function () {
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -171,19 +185,10 @@ test('all', function () {
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -195,7 +200,7 @@ test('all', function () {
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

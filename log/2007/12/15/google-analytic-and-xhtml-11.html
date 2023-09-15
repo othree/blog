@@ -85,19 +85,16 @@
                 <a itemprop="mainEntityOfPage" href="/log/2007/12/15/google-analytic-and-xhtml-11/">Google Analytic更新、XHTML 1.1對應方法</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今天一早就看到消息，<a href="http://blog.gslin.org/archives/2007/12/14/1385/">gslin</a>那也提供了兩個比較重要的連結，一個官方新聞稿，另一個是<a href="http://blogoscoped.com/archive/2007-12-13-n83.html">Google Blogscoped</a>直接介紹如何修改頁面中的script，我看了一下發現到在第一個script標籤內使用了<strong>document.write</strong>這個方法來修改頁面，不過我這用的是嚴謹到不知所謂的XHTML 1.1，只能使用DOM來做文件樹的修改，所以我研究了一下，了解到他其實只是在判斷網站是不是用ssl連線的，如果是用ssl連線的網站，就使用ssl連線來取得遠端的analytic程式碼，這樣可以避免瀏覽器跑出訊息問訪客是不是要存取非ssl連線的物件。當然我這沒有用到ssl連線，所以我可以直接把他指定成一般連線的位置，變成下面這樣：</p>
-              <pre>
-                <code>&lt;script src="http://www.google-analytics.com/ga.js" type="text/javascript"&gt;&lt;/script&gt;
+            <section itemprop="articleBody"><p>今天一早就看到消息，<a href="http://blog.gslin.org/archives/2007/12/14/1385/">gslin</a>那也提供了兩個比較重要的連結，一個官方新聞稿，另一個是<a href="http://blogoscoped.com/archive/2007-12-13-n83.html">Google Blogscoped</a>直接介紹如何修改頁面中的script，我看了一下發現到在第一個script標籤內使用了<strong>document.write</strong>這個方法來修改頁面，不過我這用的是嚴謹到不知所謂的XHTML 1.1，只能使用DOM來做文件樹的修改，所以我研究了一下，了解到他其實只是在判斷網站是不是用ssl連線的，如果是用ssl連線的網站，就使用ssl連線來取得遠端的analytic程式碼，這樣可以避免瀏覽器跑出訊息問訪客是不是要存取非ssl連線的物件。當然我這沒有用到ssl連線，所以我可以直接把他指定成一般連線的位置，變成下面這樣：</p>
+
+<pre><code>&lt;script src="http://www.google-analytics.com/ga.js" type="text/javascript"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
 &lt;![CDATA[
 var pageTracker = _gat._getTracker("UA-YOURNUMBER-1");
 pageTracker._initData();
 pageTracker._trackPageview();
 ]]&gt;
-&lt;/script&gt;</code>
-              </pre>
-            </section>
+&lt;/script&gt;</code></pre></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -122,6 +119,15 @@ pageTracker._trackPageview();
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -142,19 +148,10 @@ pageTracker._trackPageview();
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -166,7 +163,7 @@ pageTracker._trackPageview();
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

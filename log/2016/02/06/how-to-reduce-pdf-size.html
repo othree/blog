@@ -85,96 +85,113 @@
                 <a itemprop="mainEntityOfPage" href="/log/2016/02/06/how-to-reduce-pdf-size/">How to Reduce PDF Size and Keep Text</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <h4>Requirement</h4>
-              <p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
-              <h4>Expect</h4>
-              <p>Expect the PDF file size is a little bit larger than JPG file.</p>
-              <h4>Issue</h4>
-              <p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
-              <ul>
-                <li>Page Size: 210mm*297mm (A4)</li>
-                <li>Resolution: 1240px*1754px</li>
-                <li>Fonts: 2 English font</li>
-              </ul>
-              <p>Sizes:</p>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Format</th>
-                    <th>Option</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>PSD</td>
-                    <td/>
-                    <td>79.7MB</td>
-                  </tr>
-                  <tr>
-                    <td>PNG</td>
-                    <td/>
-                    <td> 1.2MB</td>
-                  </tr>
-                  <tr>
-                    <td>JPG</td>
-                    <td>q: 100</td>
-                    <td> 0.6MB</td>
-                  </tr>
-                  <tr>
-                    <td>PDF</td>
-                    <td>default</td>
-                    <td> 7.0MB</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p>File transformed on Adobe CC 2016 Jan </p>
-              <p>Tried several methods to reduce the file size includes:</p>
-              <ul>
-                <li>Remove unused layers</li>
-                <li>Merge and flatten all layers</li>
-                <li>Use lower jpeg compression quality</li>
-                <li>Not save meta data</li>
-                <li>Not preserve Photoshop editing capability</li>
-                <li>Use Photoshop autotool &gt; PDF presentation</li>
-                <li>Use Illustrator</li>
-                <li>Use Acrobat Pro to optimize PDF</li>
-              </ul>
-              <p>But none of them can really make the PDF file as small as expected.</p>
-              <h4>Solution</h4>
-              <p>Separate the text and image. Also create a clean PSD file. Steps:</p>
-              <ol>
-                <li>Hide all text layers</li>
-                <li>Save as PNG file</li>
-                <li>Open PNG file in Photoshop</li>
-                <li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
-                <li>Save as Photoshop PDF file</li>
-              </ol>
-              <h5>Result</h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Format</th>
-                    <th>Option</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>JPG</td>
-                    <td>q: 100</td>
-                    <td style="text-align: right">618.0KB</td>
-                  </tr>
-                  <tr>
-                    <td>PDF</td>
-                    <td>default</td>
-                    <td style="text-align: right">624.0KB</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
-            </section>
+            <section itemprop="articleBody"><h4>Requirement</h4>
+
+<p>Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.</p>
+
+<h4>Expect</h4>
+
+<p>Expect the PDF file size is a little bit larger than JPG file.</p>
+
+<h4>Issue</h4>
+
+<p>Use <strong>save as</strong> and choose <strong>Photoshop PDF</strong> will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:</p>
+
+<ul>
+<li>Page Size: 210mm*297mm (A4)</li>
+<li>Resolution: 1240px*1754px</li>
+<li>Fonts: 2 English font</li>
+</ul>
+
+<p>Sizes:</p>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>PSD</td>
+    <td/>
+    <td>79.7MB</td>
+  </tr>
+  <tr>
+    <td>PNG</td>
+    <td/>
+    <td> 1.2MB</td>
+  </tr>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td> 0.6MB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td> 7.0MB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>File transformed on Adobe CC 2016 Jan </p>
+
+<p>Tried several methods to reduce the file size includes:</p>
+
+<ul>
+<li>Remove unused layers</li>
+<li>Merge and flatten all layers</li>
+<li>Use lower jpeg compression quality</li>
+<li>Not save meta data</li>
+<li>Not preserve Photoshop editing capability</li>
+<li>Use Photoshop autotool &gt; PDF presentation</li>
+<li>Use Illustrator</li>
+<li>Use Acrobat Pro to optimize PDF</li>
+</ul>
+
+<p>But none of them can really make the PDF file as small as expected.</p>
+
+<h4>Solution</h4>
+
+<p>Separate the text and image. Also create a clean PSD file. Steps:</p>
+
+<ol>
+<li>Hide all text layers</li>
+<li>Save as PNG file</li>
+<li>Open PNG file in Photoshop</li>
+<li>Unhide text layers and copy text layers to PNG file (should place at right place)</li>
+<li>Save as Photoshop PDF file</li>
+</ol>
+
+<h5>Result</h5>
+
+<table>
+<thead>
+  <tr>
+    <th>Format</th>
+    <th>Option</th>
+    <th>Size</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>JPG</td>
+    <td>q: 100</td>
+    <td style="text-align: right">618.0KB</td>
+  </tr>
+  <tr>
+    <td>PDF</td>
+    <td>default</td>
+    <td style="text-align: right">624.0KB</td>
+  </tr>
+</tbody>
+</table>
+
+<p>PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -199,6 +216,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -219,19 +245,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -243,7 +260,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

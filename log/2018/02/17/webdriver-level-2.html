@@ -85,20 +85,12 @@
                 <a itemprop="mainEntityOfPage" href="/log/2018/02/17/webdriver-level-2/">WebDriver Level 2</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="483"/>
-                  </img>
-                </a>
-              </p>
-              <p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
-              <p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
-              <p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
-              <p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26429223408/" title="Chrome DevTool Protocol by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg" width="1024" height="483" alt="Chrome DevTool Protocol, " srcset="https://farm5.staticflickr.com/4632/26429223408_e0beb83830_b.jpg 1024w, https://farm5.staticflickr.com/4632/26429223408_a4b04c9af7_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="483"/></img></a></p>
+<p>這超新的，新到其實什麼都還沒有，不過總之記錄一下，有兩條路線匯流：</p>
+<p>第一條是 E2E 測試，E2E 測試比較早期是 Selenium 一家獨大，以前不知道是用什麼方法控制瀏覽器，就我瞭解應該不是太正規的方式，後來到 Selenium 2 開始發展 WebDriver，而且各家 browser vendor 都還蠻支持的，也朝向標準化的方向前進，標準文件現在也已經是 <a href="https://www.w3.org/TR/webdriver/">CR</a> 了，由 <a href="https://www.w3.org/testing/browser/">Browser Testing and Tools 工作小組</a>在維護，不過看了看 mailing list，該工作小組目前活躍度好像不高。標準化的好處就是大家都可以照著做，除了 Selenium WebDriver 之外的實做，現在還有 <a href="http://webdriver.io/">WebDriverIO</a> 這個 nodejs 環境的實做，理論上可以只用 WebDriverIO 加上瀏覽器各自的 driver 而不用透過 Selenium 來做自動化測試</p>
+<p>另外一條路線是 remote debugging，這個一開始是為了 debug 手機上的瀏覽器，後，讓手機上的 browser 傳送訊息到桌機上，用桌機瀏覽器的開發工具來顯示資訊，方便除錯，發展到後來，變成開發工具和瀏覽器之間的溝通協定都走同一套，也就是說現在桌機瀏覽器也是用 remote debugging 同樣的溝通方式在跟自己的開發工具溝通，兩者耦合就這樣拉開了，我最早知道可以這樣拆開的是 Opera 以前的 <a href="http://www.opera.com/dragonfly/">Dragonfly</a>，然後可以想見每家瀏覽器的協定內容不一樣，然後就有一位 <a href="https://kenneth.io/">Kenneth Auchenberg</a> 的人出來說這應該要有個標準！然後弄了個 <a href="https://remotedebug.org/">remotedebug.org</a>，初期計畫是希望大家都有個 adapter 可以轉譯自家的協定到公用的協定，像是 Mozilla 的 <a href="https://github.com/mozilla/valence">Valence</a>，然後接著就開始有一些利用這些協定的各種發展，像是幫 Node 程式除錯、或是 iOS App、Electron 應用程式的除錯，甚至是除錯工具的開發也是用除錯工具自己 remote debug 自己，同時 Kenneth Auchenberg 也在推動 W3C 的標準化，一開始（約三年前）就是找上 Browser Testing and Tools 工作小組，不過一開始不太順利，因為那邊的都是自動化測試專門的人，和除錯工具關係其實不大。</p>
+<p>Remote debug protocol 的資訊種類和訊息量其實都很大，目前看起來也只有 Google Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/">DevTool Protocol</a> 整理的比較完整，而 Firefox 的 Valence 其實已經沒維護了，他們的 README 上說要盡量相容 Chrome 的 protocol，這點讓我有點失望也不太意外，一來是擴充套件的 <a href="https://developer.chrome.com/extensions/devguide">API</a> 已經被 Google <a href="https://blog.mozilla.org/addons/2015/08/21/the-future-of-developing-firefox-add-ons/">帶著走</a>了，二來是 debug 用的資訊太多太雜，不好維護，而且這樣似乎也是比較快可以統一的方式。而標準化的工作其實在去年有點進展，也就是 Browser Testing and Tools 工作小組 終於接納，要把他放進 WebDriver Level 2 裡面了，這其實是去年十月底的消息，在 remotedebug 的 <a href="https://twitter.com/auchenberg/status/925079235173138432">twitter</a> 上有發消息，也有工作小組章程修改的 <a href="https://github.com/AutomatedTester/charter-drafts/commit/0d924010aa1c87c7e39ad7a0737e8b7854eb9428">commit</a> 連結證實，接下來就看他們要怎麼標準化了，畢竟複雜度比 WebDriver Level 1 複雜許多，還有些部分是不穩定可能隨時會變動的。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -123,6 +115,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -143,19 +144,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -167,7 +159,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

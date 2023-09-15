@@ -81,34 +81,33 @@
                 <a href="/log/2021/08/02/static-site-hosting/">Static Site Hosting 服務需求</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
-              <h4>支援 CDN</h4>
-              <p>這個需求沒什麼好說了吧。</p>
-              <h4>支援 HTTP/2</h4>
-              <p>主要的服務應該都支援了，不過還是列一下。</p>
-              <h4>支援加上 Security Headers</h4>
-              <p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
-              <h4>支援 HTTP 轉成 HTTPS</h4>
-              <p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
-              <p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
-              <h4>支援全站轉址</h4>
-              <p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
-              <p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
-              <p>以下算是非必備的需求</p>
-              <h4>支援把 404 改寫成 200</h4>
-              <p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
-              <h4>支援 CORS</h4>
-              <p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
-              <h4>支援 Basic Auth</h4>
-              <p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
-              <h4>支援根據 Header 切換 origin</h4>
-              <p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
-              <h4>支援根據路徑切換 origin</h4>
-              <p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
-              <h4>支援 brotli</h4>
-              <p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
-            </section>
+            <section itemprop="articleBody"><p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
+<h4>支援 CDN</h4>
+<p>這個需求沒什麼好說了吧。</p>
+<h4>支援 HTTP/2</h4>
+<p>主要的服務應該都支援了，不過還是列一下。</p>
+<h4>支援加上 Security Headers</h4>
+<p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
+<h4>支援 HTTP 轉成 HTTPS</h4>
+<p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
+<p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
+<h4>支援全站轉址</h4>
+<p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
+<p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
+<p>以下算是非必備的需求</p>
+<h4>支援把 404 改寫成 200</h4>
+<p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
+<h4>支援 CORS</h4>
+<p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
+<h4>支援 Basic Auth</h4>
+<p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
+<h4>支援根據 Header 切換 origin</h4>
+<p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
+<h4>支援根據路徑切換 origin</h4>
+<p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
+<h4>支援 brotli</h4>
+<p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -124,152 +123,150 @@
                 <a href="/log/2016/08/13/json-web-token/">JSON Web Token</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
-              <ul>
-                <li>
-                  <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a>
-                </li>
-                <li>
-                  <a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a>
-                </li>
-                <li>
-                  <a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a>
-                </li>
-                <li>
-                  <a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a>
-                </li>
-                <li>
-                  <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>
-                </li>
-              </ul>
-              <p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
-              <pre>
-                <code>{
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
+
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a></li>
+</ul>
+
+<p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
+
+<pre><code>{
   "kty":"EC",
   "crv":"P-256",
   "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
   "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
   "kid":"Public key used in JWS spec Appendix A.3 example"
 }
-</code>
-              </pre>
-              <p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
-              <p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
-              <pre>
-                <code>{
+</code></pre>
+
+<p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
+
+<p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
+
+<pre><code>{
   "typ":"JWT",
   "alg":"HS256"
 }
-</code>
-              </pre>
-              <p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
-              <pre>
-                <code>YWI/YmE=
-</code>
-              </pre>
-              <p>用 base64url 的話就變成：</p>
-              <pre>
-                <code>YWI_YmE
-</code>
-              </pre>
-              <p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
-              <pre>
-                <code>BASE64URL(UTF8(JOSE Header)) || '.' || 
+</code></pre>
+
+<p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
+
+<pre><code>YWI/YmE=
+</code></pre>
+
+<p>用 base64url 的話就變成：</p>
+
+<pre><code>YWI_YmE
+</code></pre>
+
+<p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
+
+<pre><code>BASE64URL(UTF8(JOSE Header)) || '.' || 
 BASE64URL(JWS Payload))
-</code>
-              </pre>
-              <p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
-              <ul>
-                <li>JOSE Header</li>
-                <li>Payload</li>
-                <li>Signature</li>
-              </ul>
-              <p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
-              <pre>
-                <code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+</code></pre>
+
+<p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
+
+<ul>
+<li>JOSE Header</li>
+<li>Payload</li>
+<li>Signature</li>
+</ul>
+
+<p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
+
+<pre><code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
 BASE64URL(JWS Payload) || '.' ||
 BASE64URL(JWS Signature)
-</code>
-              </pre>
-              <p>長的會看起來像是：</p>
-              <pre>
-                <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
-</code>
-              </pre>
-              <p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
-              <pre>
-                <code>{
+</code></pre>
+
+<p>長的會看起來像是：</p>
+
+<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code></pre>
+
+<p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
+
+<pre><code>{
   "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
   "signatures":[
      {"protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
       "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"}]
 }
-</code>
-              </pre>
-              <p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
-              <pre>
-                <code>{
+</code></pre>
+
+<p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
+
+<pre><code>{
   "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
   "protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
   "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
 }
-</code>
-              </pre>
-              <p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
-              <p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
-              <pre>
-                <code>{"alg":"none"}
-</code>
-              </pre>
-              <p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
-              <pre>
-                <code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code>
-              </pre>
-              <p>最後是 <code>.</code> 結尾。</p>
-              <p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
-              <ul>
-                <li>JOSE Header</li>
-                <li>Encrypted Key</li>
-                <li>Initialization Vector</li>
-                <li>Ciphertext</li>
-                <li>Authentication Tag</li>
-              </ul>
-              <p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
-              <p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
-              <pre>
-                <code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
-</code>
-              </pre>
-              <p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
-              <p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
-              <ul>
-                <li><code>iss</code>, Issuer</li>
-                <li><code>sub</code>, Subject</li>
-                <li><code>aud</code>, Audience</li>
-                <li><code>exp</code>, Expiration Time</li>
-                <li><code>nbf</code>, Not Before</li>
-                <li><code>iat</code>, Issued At</li>
-                <li><code>jti</code>, JWT ID</li>
-              </ul>
-              <p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
-              <pre>
-                <code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code>
-              </pre>
-              <p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
-              <p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
-              <p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
-            </section>
+</code></pre>
+
+<p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
+
+<p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
+
+<pre><code>{"alg":"none"}
+</code></pre>
+
+<p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
+
+<pre><code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code></pre>
+
+<p>最後是 <code>.</code> 結尾。</p>
+
+<p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
+
+<ul>
+<li>JOSE Header</li>
+<li>Encrypted Key</li>
+<li>Initialization Vector</li>
+<li>Ciphertext</li>
+<li>Authentication Tag</li>
+</ul>
+
+<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
+
+<p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
+
+<pre><code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
+</code></pre>
+
+<p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
+
+<p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
+
+<ul>
+<li><code>iss</code>, Issuer</li>
+<li><code>sub</code>, Subject</li>
+<li><code>aud</code>, Audience</li>
+<li><code>exp</code>, Expiration Time</li>
+<li><code>nbf</code>, Not Before</li>
+<li><code>iat</code>, Issued At</li>
+<li><code>jti</code>, JWT ID</li>
+</ul>
+
+<p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
+
+<pre><code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code></pre>
+
+<p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
+
+<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+
+<p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -285,19 +282,13 @@ BASE64URL(JWS Signature)
                 <a href="/log/2016/04/22/nginx-fcgiwrap/">nginx &amp; fcgiwrap</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
-              <p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
-              <pre>
-                <code>location ~ ^/path/to/mt/mt.*\.cgi {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
+
+<p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
+
+<pre><code>location ~ ^/path/to/mt/mt.*\.cgi {
     gzip off;
     fastcgi_index index.cgi;
     fastcgi_split_path_info ^(.+?\.cgi)(/.*)$;
@@ -315,17 +306,18 @@ BASE64URL(JWS Signature)
     fastcgi_param PATH_TRANSLATED $fastcgi_path_info;
     fastcgi_pass unix:/var/run/fcgiwrap.sock;
 }
-</code>
-              </pre>
-              <p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
-              <p>最後要說一下 conf 裡的這行：</p>
-              <pre>
-                <code>    include fastcgi.conf;
-</code>
-              </pre>
-              <p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
-              <pre>
-                <code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+</code></pre>
+
+<p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
+
+<p>最後要說一下 conf 裡的這行：</p>
+
+<pre><code>    include fastcgi.conf;
+</code></pre>
+
+<p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
+
+<pre><code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;
@@ -350,10 +342,10 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
-</code>
-              </pre>
-              <p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
-            </section>
+</code></pre>
+
+<p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -369,20 +361,10 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/04/05/ssh-agent-forward/">SSH Agent Forward</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="576"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
-              <em class="extended">
-                <a href="/log/2016/04/05/ssh-agent-forward/">閱讀「SSH Agent Forward」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="576"/></img></a></p>
+
+<p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
+<em class="extended"><a href="/log/2016/04/05/ssh-agent-forward/">閱讀「SSH Agent Forward」全文</a></em></section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -398,20 +380,10 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/03/21/brotli-gzip-alt/">brotli, gzip 的替代格式</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
-              <em class="extended">
-                <a href="/log/2016/03/21/brotli-gzip-alt/">閱讀「brotli, gzip 的替代格式」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 <a href="https://github.com/google/brotli">brotli</a> 了，brotli 是 Google 繼 <a href="https://github.com/google/zopfli">Zopfli</a> 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 <a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html">2013 年 2 月發佈</a>，Brotli 是在 <a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html">2015 年 9 月發佈</a>的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份<a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf">測試數據</a>了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。</p>
+<em class="extended"><a href="/log/2016/03/21/brotli-gzip-alt/">閱讀「brotli, gzip 的替代格式」全文</a></em></section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -427,26 +399,20 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2015/10/19/apache2-http2/">Apache2 and HTTP/2</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w">
-                    <meta itemprop="width" content="570"/>
-                    <meta itemprop="height" content="427"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
-              <pre>
-                <code>./config
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w"><meta itemprop="width" content="570"/><meta itemprop="height" content="427"/></img></a></p>
+
+<p>最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 <a href="https://www.openssl.org/">OpenSSL</a> 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 <a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation">ALPN</a> ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：</p>
+
+<pre><code>./config
 make
 sudo make install
-</code>
-              </pre>
-              <p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
-              <p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
-              <pre>
-                <code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
+</code></pre>
+
+<p>會把檔案裝到 <code>/usr/local/ssl</code> 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 <code>/usr/local</code> 下面，不過也因此造就後續比較麻煩的地方。</p>
+
+<p>Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 <a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720">あすのかぜ</a> 上的指令：</p>
+
+<pre><code>wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
 tar zxvf ./httpd-2.4.17.tar.gz
 
 wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
@@ -456,109 +422,90 @@ mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
 wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
 ar zxvf ./apr-util-1.5.4.tar.gz 
 mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
-</code>
-              </pre>
-              <p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
-              <pre>
-                <code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
+</code></pre>
+
+<p>然後進去 <code>httpd-2.4.17</code> 目錄下指令編譯安裝：</p>
+
+<pre><code>env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
 make
 sudo make install
-</code>
-              </pre>
-              <p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
-              <pre>
-                <code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
-</code>
-              </pre>
-              <p>或是：</p>
-              <pre>
-                <code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
-</code>
-              </pre>
-              <p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
-              <pre>
-                <code>&lt;VirtualHost *:80&gt;
+</code></pre>
+
+<p>執行的時候也需要注意，需要帶個環境變數，不然他找不到 <code>/usr/local/ssl/</code> 下的 Library：</p>
+
+<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
+</code></pre>
+
+<p>或是：</p>
+
+<pre><code>env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
+</code></pre>
+
+<p>不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
     Protocols h2c http/1.1
     ServerName blog.othree.net
     ServerAdmin othree@gmail.com
-</code>
-              </pre>
-              <p>還有</p>
-              <pre>
-                <code>&lt;VirtualHost *:443&gt;
+</code></pre>
+
+<p>還有</p>
+
+<pre><code>&lt;VirtualHost *:443&gt;
     Protocols h2 http/1.1
     ServerName blog.othree.net
     ServerAdmin othree@gmail.com
-</code>
-              </pre>
-              <p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
-              <pre>
-                <code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+</code></pre>
+
+<p>重點是 <code>Protocols</code> 那行，<code>h2</code> 指的是 HTTPS(TLS) 下的 HTTP/2 連線，<code>h2c</code> 則是 HTTP 下的，在其他地方還會看到 <code>h-15</code>、<code>h-17</code> 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 <a href="https://icing.github.io/mod_h2/howto.html#https">How to h2 in apache</a> 提供的設定：</p>
+
+<pre><code>SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
 SSLProtocol All -SSLv2 -SSLv3
-</code>
-              </pre>
-              <p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
-              <ul>
-                <li>Firefox 27</li>
-                <li>Chrome 22</li>
-                <li>IE 11</li>
-                <li>Opera 14</li>
-                <li>Safari 7</li>
-                <li>Android 4.4</li>
-                <li>Java 8 </li>
-              </ul>
-              <p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
-              <p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
-              <pre>
-                <code>brew install curl --with-nghttp2
+</code></pre>
+
+<p>不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Modern</a> 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：</p>
+
+<ul>
+<li>Firefox 27</li>
+<li>Chrome 22</li>
+<li>IE 11</li>
+<li>Opera 14</li>
+<li>Safari 7</li>
+<li>Android 4.4</li>
+<li>Java 8 </li>
+</ul>
+
+<p>都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。</p>
+
+<p>驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：</p>
+
+<pre><code>brew install curl --with-nghttp2
 brew link curl
 
 /usr/local/bin/curl -v --http2 https://othree.net
-</code>
-              </pre>
-              <p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
-              <pre>
-                <code>brew install nghttp2
+</code></pre>
+
+<p>然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：</p>
+
+<pre><code>brew install nghttp2
 
 nghttp -uv https://othree.net
-</code>
-              </pre>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w">
-                    <meta itemprop="width" content="570"/>
-                    <meta itemprop="height" content="427"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w">
-                    <meta itemprop="width" content="570"/>
-                    <meta itemprop="height" content="427"/>
-                  </img>
-                </a>
-              </p>
-              <p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="531"/>
-                  </img>
-                </a>
-              </p>
-              <p>然後是 2.0：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="531"/>
-                  </img>
-                </a>
-              </p>
-              <p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
-            </section>
+</code></pre>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w"><meta itemprop="width" content="570"/><meta itemprop="height" content="427"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w"><meta itemprop="width" content="570"/><meta itemprop="height" content="427"/></img></a></p>
+
+<p>可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="531"/></img></a></p>
+
+<p>然後是 2.0：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="531"/></img></a></p>
+
+<p>最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -574,14 +521,12 @@ nghttp -uv https://othree.net
                 <a href="/log/2014/12/03/hide-apache-version/">隱藏 Apache 版本號</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>之前有想過是不是能隱藏 HTTP Server 的資訊，不過 <strong>Server</strong> 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：</p>
-              <pre>
-                <code>ServerSignature Off
+            <section itemprop="articleBody"><p>之前有想過是不是能隱藏 HTTP Server 的資訊，不過 <strong>Server</strong> 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：</p>
+
+<pre><code>ServerSignature Off
 ServerTokens Prod
-</code>
-              </pre>
-            </section>
+</code></pre>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -597,47 +542,44 @@ ServerTokens Prod
                 <a href="/log/2014/11/01/ssl-config/">SSL 設定更新</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="670"/>
-                  </img>
-                </a>
-              </p>
-              <p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
-              <pre>
-                <code>SSLProtocol all -SSLv2 -SSLv3
-</code>
-              </pre>
-              <p>然後限制 Cipher Suite：</p>
-              <pre>
-                <code>SSLCipherSuite AES256+EECDH:AES256+EDH
-</code>
-              </pre>
-              <p>這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。</p>
-              <p>光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。</p>
-              <p>另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：</p>
-              <pre>
-                <code>http://www.startssl.com/certs/sub.class1.server.ca.pem
-</code>
-              </pre>
-              <p>在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：</p>
-              <pre>
-                <code>http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
-</code>
-              </pre>
-              <p>改成這個後看來就沒警告了，我想應該沒搞錯才是 :P</p>
-              <p>到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">Strict Transport Security(HSTS)</a>，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。</p>
-              <p>設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 <a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/">OCSP Stapling</a>，可以提昇效能，因為把 <a href="http://gca.nat.gov.tw/ocsp/index.html">OCSP</a> 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：</p>
-              <pre>
-                <code>SSLUseStapling on
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="670"/></img></a></p>
+
+<p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
+
+<pre><code>SSLProtocol all -SSLv2 -SSLv3
+</code></pre>
+
+<p>然後限制 Cipher Suite：</p>
+
+<pre><code>SSLCipherSuite AES256+EECDH:AES256+EDH
+</code></pre>
+
+<p>這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。</p>
+
+<p>光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。</p>
+
+<p>另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：</p>
+
+<pre><code>http://www.startssl.com/certs/sub.class1.server.ca.pem
+</code></pre>
+
+<p>在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：</p>
+
+<pre><code>http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
+</code></pre>
+
+<p>改成這個後看來就沒警告了，我想應該沒搞錯才是 :P</p>
+
+<p>到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">Strict Transport Security(HSTS)</a>，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。</p>
+
+<p>設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 <a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/">OCSP Stapling</a>，可以提昇效能，因為把 <a href="http://gca.nat.gov.tw/ocsp/index.html">OCSP</a> 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：</p>
+
+<pre><code>SSLUseStapling on
 SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
-</code>
-              </pre>
-              <p>好像放這兩行就可以了。</p>
-            </section>
+</code></pre>
+
+<p>好像放這兩行就可以了。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -653,27 +595,16 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
                 <a href="/log/2014/04/08/cve-2014-0160/">OpenSSL 安全性問題 CVE-2014-0160</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今天資安的大新聞就是這個了，OpenSSL 的 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160">新弱點</a>，嚴重程度高到還有一個專站 <a href="http://heartbleed.com/">heartbleed.com</a> （心在流血）。也有人幫忙做了<a href="http://filippo.io/Heartbleed/">檢測工具</a>可以看看你的網站有沒有在影響範圍內，不過因為弱點是在 OpenSSL 上，所以其實不是只有網站會受影響，總之有問題的看到會像是這樣：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637293/" title="CVE-2014-016 Vulnerable by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg" width="1024" height="853" alt="CVE-2014-016 Vulnerable" srcset="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="853"/>
-                  </img>
-                </a>
-              </p>
-              <p>沒問題的話會是：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637123/" title="CVE-2014-0160 pass by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg" width="1024" height="555" alt="CVE-2014-0160 pass" srcset="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="555"/>
-                  </img>
-                </a>
-              </p>
-              <p>第一時間有很多大站都中鏢了，像是 github 之類的，不過我剛剛看已經修好了，我的 server 用的是 Ubuntu 12 LTS 就是 apt 更新過後重開就好了，建議是連 key 也重新生就是，更詳細的資訊可以看看 Server Fault 的<a href="http://serverfault.com/questions/587329/heartbleed-what-is-it-and-what-are-options-to-mitigate-it">問答</a></p>
-            </section>
+            <section itemprop="articleBody"><p>今天資安的大新聞就是這個了，OpenSSL 的 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160">新弱點</a>，嚴重程度高到還有一個專站 <a href="http://heartbleed.com/">heartbleed.com</a> （心在流血）。也有人幫忙做了<a href="http://filippo.io/Heartbleed/">檢測工具</a>可以看看你的網站有沒有在影響範圍內，不過因為弱點是在 OpenSSL 上，所以其實不是只有網站會受影響，總之有問題的看到會像是這樣：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637293/" title="CVE-2014-016 Vulnerable by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg" width="1024" height="853" alt="CVE-2014-016 Vulnerable" srcset="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="853"/></img></a></p>
+
+<p>沒問題的話會是：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/13717637123/" title="CVE-2014-0160 pass by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg" width="1024" height="555" alt="CVE-2014-0160 pass" srcset="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="555"/></img></a></p>
+
+<p>第一時間有很多大站都中鏢了，像是 github 之類的，不過我剛剛看已經修好了，我的 server 用的是 Ubuntu 12 LTS 就是 apt 更新過後重開就好了，建議是連 key 也重新生就是，更詳細的資訊可以看看 Server Fault 的<a href="http://serverfault.com/questions/587329/heartbleed-what-is-it-and-what-are-options-to-mitigate-it">問答</a></p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -689,18 +620,12 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
                 <a href="/log/2013/11/13/start-ssl-ocsp/">Start SSL 的 OCSP 錯誤</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="794"/>
-                  </img>
-                </a>
-              </p>
-              <p>在 StartSSL 上有看到相關 <a href="https://forum.startcom.org/viewtopic.php?f=15&amp;t=2654">討論</a>，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。</p>
-            </section>
+            <section itemprop="articleBody"><p>今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="794"/></img></a></p>
+
+<p>在 StartSSL 上有看到相關 <a href="https://forum.startcom.org/viewtopic.php?f=15&amp;t=2654">討論</a>，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -723,7 +648,7 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -735,7 +660,7 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

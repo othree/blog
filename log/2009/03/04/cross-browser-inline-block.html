@@ -85,12 +85,11 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/03/04/cross-browser-inline-block/">Cross-Browser Inline Block</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>大約兩週前在 Mozilla Webdev Blog 上有一篇 <a target="_blank" href="http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/">Cross-Browser Inline-Block</a> ，介紹如何用 inline block 代替 float 排列，好解決方塊高度不同時，float 排列會造成的問題，當然，這麼新(?)的 display 屬性，必定會有<span title="IE">瀏覽器</span>不支援，加上其實目前各家瀏覽器的行為表現都還不是很一致，所以整篇文章大部分的篇幅是在處理 cross browser 的問題。那時候 DK 長輩說我要是有什麼想法的話可以發一篇，那時候雖然覺得好像有什麼可以講的，不過直到昨天看了 flickr 的原始碼時才知道我想講的是什麼。</p>
-              <p>首先，其實這篇文章介紹的方法我覺得做的很好了，CSS hack的部份也還算乾淨，不過我很龜毛，覺得用到 inline 來做這種像是 block 的東西就是覺得怪怪的，昨天在看 flickr 時突然就在想：「他們是用什麼方法來排照片的？」打開原始碼一看，是 table，flickr 是用 table 來排照片的，我才回憶起之前買的 <a target="_blank" href="http://blog.othree.net/log/2008/12/18/csswrong/">Everything You Know About <span>CSS </span>is Wrong</a> 這本書，裡面主要介紹到的東西是 table-cell, table-row, ... 等表格元件的 display 屬性，又稱為 css-table，簡單說就是可以拿其他標籤來做 table，這些 display 屬性值可以讓 <span>HTML </span>文件保持它比較適合的語意，但是顯示上又能夠和 table 一樣排列，雖然我在 Everything You Know About <span>CSS </span>is Wrong 的書評中寫到我覺得拿 css-table 來排版還是怪怪的，但是如果是拿來排照片、商品目錄這種，我就突然覺得還不錯，不過 css-table 很理所當然的和 table 一樣，一列要幾個 cell 在寫 <span>HTML </span>markup 階段時就要決定了，不像 float 或是 inline-block 可以透過控制長度來調整，真的達到文件結構和顯示分開的理想。</p>
-              <p>用 css-table 來排還是有它的好處，最明顯的就是同一列的 cell 高度都會一樣。想要元件高度會自動調整，然後同排的還會一樣高，目前只有用 table 的解法，不論是真的用 table 還是用 css-table，當然，盡量避免非表格資料的東西使用 table 標籤，所以比較好的處理方法還是 css-table。</p>
-              <p>兩種方法各有他的優缺點，還很難說哪種方法比較好，先不考慮 css-table 方法在舊瀏覽器的支援度問題的話，我是覺得可以用整個版面的 layout 是固定寬度還是自動寬度來決定用那個方法比較好，如果版面是固定寬度的話比較適合用 css-table，反之則是用 inline block。</p>
-            </section>
+            <section itemprop="articleBody"><p>大約兩週前在 Mozilla Webdev Blog 上有一篇 <a target="_blank" href="http://blog.mozilla.com/webdev/2009/02/20/cross-browser-inline-block/">Cross-Browser Inline-Block</a> ，介紹如何用 inline block 代替 float 排列，好解決方塊高度不同時，float 排列會造成的問題，當然，這麼新(?)的 display 屬性，必定會有<span title="IE">瀏覽器</span>不支援，加上其實目前各家瀏覽器的行為表現都還不是很一致，所以整篇文章大部分的篇幅是在處理 cross browser 的問題。那時候 DK 長輩說我要是有什麼想法的話可以發一篇，那時候雖然覺得好像有什麼可以講的，不過直到昨天看了 flickr 的原始碼時才知道我想講的是什麼。</p><p>首先，其實這篇文章介紹的方法我覺得做的很好了，CSS hack的部份也還算乾淨，不過我很龜毛，覺得用到 inline 來做這種像是 block 的東西就是覺得怪怪的，昨天在看 flickr 時突然就在想：「他們是用什麼方法來排照片的？」打開原始碼一看，是 table，flickr 是用 table 來排照片的，我才回憶起之前買的 <a target="_blank" href="http://blog.othree.net/log/2008/12/18/csswrong/">Everything You Know About <span>CSS </span>is Wrong</a> 這本書，裡面主要介紹到的東西是 table-cell, table-row, ... 等表格元件的 display 屬性，又稱為 css-table，簡單說就是可以拿其他標籤來做 table，這些 display 屬性值可以讓 <span>HTML </span>文件保持它比較適合的語意，但是顯示上又能夠和 table 一樣排列，雖然我在 Everything You Know About <span>CSS </span>is Wrong 的書評中寫到我覺得拿 css-table 來排版還是怪怪的，但是如果是拿來排照片、商品目錄這種，我就突然覺得還不錯，不過 css-table 很理所當然的和 table 一樣，一列要幾個 cell 在寫 <span>HTML </span>markup 階段時就要決定了，不像 float 或是 inline-block 可以透過控制長度來調整，真的達到文件結構和顯示分開的理想。</p>
+
+<p>用 css-table 來排還是有它的好處，最明顯的就是同一列的 cell 高度都會一樣。想要元件高度會自動調整，然後同排的還會一樣高，目前只有用 table 的解法，不論是真的用 table 還是用 css-table，當然，盡量避免非表格資料的東西使用 table 標籤，所以比較好的處理方法還是 css-table。</p>
+
+<p>兩種方法各有他的優缺點，還很難說哪種方法比較好，先不考慮 css-table 方法在舊瀏覽器的支援度問題的話，我是覺得可以用整個版面的 layout 是固定寬度還是自動寬度來決定用那個方法比較好，如果版面是固定寬度的話比較適合用 css-table，反之則是用 inline block。</p></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -115,6 +114,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -135,19 +143,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -159,7 +158,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

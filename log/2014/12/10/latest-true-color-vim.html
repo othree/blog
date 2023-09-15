@@ -85,10 +85,9 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/12/10/latest-true-color-vim/">Latest True Color Vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
-              <pre>
-                <code>hg clone https://bitbucket.org/ZyX_I/vim
+            <section itemprop="articleBody"><p>上次<a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/">文章</a>的安裝方法已經過時了，更新一下：</p>
+
+<pre><code>hg clone https://bitbucket.org/ZyX_I/vim
 cd vim
 cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
@@ -107,17 +106,18 @@ cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
 make
 make install
-</code>
-              </pre>
-              <p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
-              <pre>
-                <code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
+</code></pre>
+
+<p>其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 <code>xterm</code> 的時候才有。如果不是 <code>xterm</code> 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：</p>
+
+<pre><code>let &amp;t_8f="^[[38;2;%lu;%lu;%lum"
 let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
-</code>
-              </pre>
-              <p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
-              <p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
-            </section>
+</code></pre>
+
+<p>其中的 <code>^[</code> 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 <code>:help xterm-true-color</code> 看看比較詳細的說明。</p>
+
+<p>最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -142,6 +142,15 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -162,19 +171,10 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -186,7 +186,7 @@ let &amp;t_8b="^[[48;2;%lu;%lu;%lum"
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

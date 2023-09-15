@@ -85,39 +85,45 @@
                 <a itemprop="mainEntityOfPage" href="/log/2005/12/16/stay-on-bbs-setting/">掛站系統設定篇</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p><a href="http://blog.othree.net/log/2005/12/12/stay_on_bbs/">上一篇掛站系統</a>所講的相關設定我貼在這篇文章裡面，用途當然是掛站（BBS和irc），目前我的設定還沒辦法開機自動啟動，正在研究問題在哪，另外對expect不熟，還沒厲害到可以被踢下站自動重登入。需求：</p>
-              <ul>
-                <li>Linux主機一台。</li>
-                <li><a href="http://www.irssi.org/">irssi</a>，irc客戶端程式，推薦剛出的0.8.10版。</li>
-                <li><a href="http://www.michael-prokop.at/screen/index.php3"><span class="caps">SCREEN</span></a>，達成掛站目標的主要程式之一，需要手動作<a href="http://sbt.idv.tw/tBoard/index.py?m=pl&amp;f=25&amp;t=564">patch</a>並編譯。</li>
-                <li><a href="http://expect.nist.gov/">Expect</a>，達成掛站目標的主要程式之二。</li>
-              </ul>
-              <p>首先是irssi，用0.8.10版主要原因是他可以針對不同頻道作不同的語系設定（recode），如果沒有這個需求用0.8.9也可以，不過我還是建議用0.8.10，直接從官網抓就可以，看是要手動編譯或是抓rpm安裝皆可。</p>
-              <p><span class="caps">SCREEN</span>雖然大部分的linux系統都預設安裝，不過為了修正一些字碼上的錯誤，我們一定要手動編譯才行，不修正的話會造成BBS的排版錯誤。就照著Tiberius大大的<a href="http://sbt.idv.tw/tBoard/index.py?m=pl&amp;f=25&amp;t=564">步驟</a>patch好原始碼後編譯即可：</p>
-              <pre>
-                <code>./configure
+            <section itemprop="articleBody"><p><a href="http://blog.othree.net/log/2005/12/12/stay_on_bbs/">上一篇掛站系統</a>所講的相關設定我貼在這篇文章裡面，用途當然是掛站（BBS和irc），目前我的設定還沒辦法開機自動啟動，正在研究問題在哪，另外對expect不熟，還沒厲害到可以被踢下站自動重登入。需求：</p>
+
+
+<ul>
+<li>Linux主機一台。</li>
+<li><a href="http://www.irssi.org/">irssi</a>，irc客戶端程式，推薦剛出的0.8.10版。</li>
+<li><a href="http://www.michael-prokop.at/screen/index.php3"><span class="caps">SCREEN</span></a>，達成掛站目標的主要程式之一，需要手動作<a href="http://sbt.idv.tw/tBoard/index.py?m=pl&amp;f=25&amp;t=564">patch</a>並編譯。</li>
+<li><a href="http://expect.nist.gov/">Expect</a>，達成掛站目標的主要程式之二。</li>
+</ul>
+
+<p>首先是irssi，用0.8.10版主要原因是他可以針對不同頻道作不同的語系設定（recode），如果沒有這個需求用0.8.9也可以，不過我還是建議用0.8.10，直接從官網抓就可以，看是要手動編譯或是抓rpm安裝皆可。</p>
+
+<p><span class="caps">SCREEN</span>雖然大部分的linux系統都預設安裝，不過為了修正一些字碼上的錯誤，我們一定要手動編譯才行，不修正的話會造成BBS的排版錯誤。就照著Tiberius大大的<a href="http://sbt.idv.tw/tBoard/index.py?m=pl&amp;f=25&amp;t=564">步驟</a>patch好原始碼後編譯即可：</p>
+
+<pre><code>./configure
 make
 make clean
-make install</code>
-              </pre>
-              <p>Expect在大部分的linux系統應該也都有安裝，沒有的話就想辦法裝上去吧，和irssi一樣不限安裝方法。</p>
-              <p>需要的軟體都裝好後，就開始設定吧，因為我的需求比較多一點，所以整個環境是以UTF-8編碼為基本編碼（如果只是要掛Big5編碼的BBS而已，那其實連SCREEN都不用patch），首先是irssi的部份，我需要開啟時自動連上IRCNet，並且連上我指定的三個頻道，我需要做的設定是指定自動連線的irc網路和要連線的頻道，首先是自動連線的部份，進入irssi後輸入：</p>
-              <pre>
-                <code>/NETWORK ADD -kicks 4 -msgs 1 -modes 4 -whois 1 seednet
-/SERVER ADD -auto -network seednet irc.seed.net.tw</code>
-              </pre>
-              <p>接下來是自動加入頻道：</p>
-              <pre>
-                <code>/CHANNEL ADD -auto #elixus seednet</code>
-              </pre>
-              <p>這樣每次啟動irssi都會自動連到irc.seed.net.tw這個irc伺服器，並且自動加入elixus這個頻道，如果想要自動加入更多頻道就是<code>/CHANNEL ADD</code>的部份多輸入幾次即可，也可以用<code>/CHANNEL LIST</code>和<code>/CHANNEL REMOVE</code>，來檢視現在有哪些頻道和移除已經設定好的頻道。設定好自動加入後就是設定recode了：</p>
-              <pre>
-                <code>/RECODE ADD #elixus Big5</code>
-              </pre>
-              <p>一樣有多個頻道就設定多次，這樣就完成irssi部份的設定了，接下來是Expect和BBS了，現在假設要自動掛kkcity，我要建立一個exp設定檔，內容如下：</p>
-              <pre>
-                <code>#!/usr/bin/expect
+make install</code></pre>
+
+<p>Expect在大部分的linux系統應該也都有安裝，沒有的話就想辦法裝上去吧，和irssi一樣不限安裝方法。</p>
+
+<p>需要的軟體都裝好後，就開始設定吧，因為我的需求比較多一點，所以整個環境是以UTF-8編碼為基本編碼（如果只是要掛Big5編碼的BBS而已，那其實連SCREEN都不用patch），首先是irssi的部份，我需要開啟時自動連上IRCNet，並且連上我指定的三個頻道，我需要做的設定是指定自動連線的irc網路和要連線的頻道，首先是自動連線的部份，進入irssi後輸入：</p>
+
+<pre><code>/NETWORK ADD -kicks 4 -msgs 1 -modes 4 -whois 1 seednet
+/SERVER ADD -auto -network seednet irc.seed.net.tw</code></pre>
+
+<p>接下來是自動加入頻道：</p>
+
+<pre><code>/CHANNEL ADD -auto #elixus seednet</code></pre>
+
+<p>這樣每次啟動irssi都會自動連到irc.seed.net.tw這個irc伺服器，並且自動加入elixus這個頻道，如果想要自動加入更多頻道就是<code>/CHANNEL ADD</code>的部份多輸入幾次即可，也可以用<code>/CHANNEL LIST</code>和<code>/CHANNEL REMOVE</code>，來檢視現在有哪些頻道和移除已經設定好的頻道。設定好自動加入後就是設定recode了：</p>
+
+<pre><code>/RECODE ADD #elixus Big5</code></pre>
+
+<p>一樣有多個頻道就設定多次，這樣就完成irssi部份的設定了，接下來是Expect和BBS了，現在假設要自動掛kkcity，我要建立一個exp設定檔，內容如下：</p>
+
+
+
+<pre><code>#!/usr/bin/expect
 
 # 設定 timeout 時間，以秒為單位。
 set timeout 20
@@ -135,53 +141,60 @@ expect  "guest" { send "$ID\r$PASSWD\r" } timeout { exit }
 #把畫面轉交給使用者控制，並每隔三百秒送出 " "
 interact timeout 300 { send " " }
 exit
-</code>
-              </pre>
-              <p>另外還要一個shell script內容如下：</p>
-              <pre>
-                <code>#!/bin/bash
+</code></pre>
+
+
+
+<p>另外還要一個shell script內容如下：</p>
+
+<pre><code>#!/bin/bash
 export LC_CTYPE=C
 export LANG=zh_TW.big5
-expect /home/othree/bbs/4.kkcity.exp</code>
-              </pre>
-              <p>檔名和路徑請自訂，我是在home目錄裡開一個bbs的子目錄，把相關設定檔都放在裡面，另外記得要開啟shell script的執行權限。就像上面的範例，一個bbs站需要兩個檔案，不過其實可以把Expect的設定寫到shell script裡面，不過我還不熟悉所以先這樣比較保險。</p>
-              <p>依照上面的範例把bbs相關的設定檔都建好後，就來建立SCREEN的rc檔，不過我不用<strong>.screenrc</strong>，以確保我需要用SCREEN作其他工作時不會被掛站系統干擾，一樣我是把這個獨立的screenrc放在bbs的子目錄裡面，檔名為screenrc-ej84，內容如下：</p>
-              <pre>
-                <code>vbell off
+expect /home/othree/bbs/4.kkcity.exp</code></pre>
+
+<p>檔名和路徑請自訂，我是在home目錄裡開一個bbs的子目錄，把相關設定檔都放在裡面，另外記得要開啟shell script的執行權限。就像上面的範例，一個bbs站需要兩個檔案，不過其實可以把Expect的設定寫到shell script裡面，不過我還不熟悉所以先這樣比較保險。</p>
+
+<p>依照上面的範例把bbs相關的設定檔都建好後，就來建立SCREEN的rc檔，不過我不用<strong>.screenrc</strong>，以確保我需要用SCREEN作其他工作時不會被掛站系統干擾，一樣我是把這個獨立的screenrc放在bbs的子目錄裡面，檔名為screenrc-ej84，內容如下：</p>
+
+<pre><code>vbell off
 defencoding big5
 screen -t 'PTT' 3 /home/othree/bbs/3.ptt.sh
 screen -t 'KKCITY' 4 /home/othree/bbs/4.kkcity.sh
 defencoding utf-8
-screen -t 'IRC' 0 irssi</code>
-              </pre>
-              <p>內容蠻簡單的，就是先用big5的encoding開啟bbs的screen，最後再用utf-8開irssi，這樣基本上就完成設定的工作了，只要執行</p>
-              <pre>
-                <code>LANG="zh_TW.UTF-8" screen -c /home/othree/bbs/screenrc-ej84</code>
-              </pre>
-              <p>就會開啟掛站系統了，需要注意的是<strong><code>LANG="zh_TW.UTF-8"</code></strong>是必要的，不然bbs排版還是會不正常，當然每次都要打這串指令實在很麻煩，所以我就把他在寫進一個shell script，我取名叫initial，並加入檢查是否已經有啟動了，內容如下：</p>
-              <pre>
-                <code>#!/bin/bash
+screen -t 'IRC' 0 irssi</code></pre>
+
+<p>內容蠻簡單的，就是先用big5的encoding開啟bbs的screen，最後再用utf-8開irssi，這樣基本上就完成設定的工作了，只要執行</p>
+
+<pre><code>LANG="zh_TW.UTF-8" screen -c /home/othree/bbs/screenrc-ej84</code></pre>
+
+<p>就會開啟掛站系統了，需要注意的是<strong><code>LANG="zh_TW.UTF-8"</code></strong>是必要的，不然bbs排版還是會不正常，當然每次都要打這串指令實在很麻煩，所以我就把他在寫進一個shell script，我取名叫initial，並加入檢查是否已經有啟動了，內容如下：</p>
+
+<pre><code>#!/bin/bash
 if ! screen -r BBS &gt;&amp; /dev/null ;then
         LANG="zh_TW.UTF-8" screen -S BBS -c /home/othree/bbs/screenrc-ej84
-fi</code>
-              </pre>
-              <p>這樣每次需要啟動就只要執行<code>/home/othree/bbs/initial</code>即可，好記多了吧:P，當然要放到path的目錄或把path指到這也可以，如果能開機自動執行起不更好，不過我還設定不起來，目前是在crontab裡加上：</p>
-              <pre>
-                <code>@reboot /home/othree/bbs/initial</code>
-              </pre>
-              <p>不過一直沒反應，讓我很難過。再來簡單介紹一下基本指令，在SCREEN中，想要下命令或是輸入設定都是以Ctrl+A為開始，例如我要切換到視窗三的ptt，我就需要Ctrl+A後再按3，要列出所有視窗則是Ctrl+W，至於在irssi中要切換視窗則有Ctrl+P(Previous)或是Ctrl+N(Next)兩個快速鍵可以用，當然也可以用輸入命列的方式<code>/window goto 2</code>，不過反而比較累。如果不小心離開某個bbs站或把irssi關掉，一樣事先輸入Ctrl+A後輸入<strong><code>:</code></strong>然後看你是關掉哪一個站，把該站的screen指令貼上然後輸入即可，例如ptt的就會變成<code>:screen -t 'PTT' 3 /home/othree/bbs/3.ptt.sh</code>，輸入的指令會在右下角顯示。要小心的是defencoding可能和你想要的不一樣，如果要改變單一視窗的encoding的話就是<code>Ctrl+A :encoding big5</code>。知道這些應該就可以應付平常使用所需了:P。</p>
-              <p>最後是參考網址：</p>
-              <ul>
-                <li><a href="http://f0rked.com/public/irssi-docs/help-full.html">Irssi Help</a>，irssi的使用說明，不過有點舊了，最新的可以上<a href="http://www.irssi.org/">irssi.org</a>查詢。</li>
-                <li><a href="http://blog.seety.org/everydaywork//253">irssi <span class="caps">UTF</span>-8 Big5 中文轉換與設定</a>，irssi的相關部份，還有log的設定可以參考。</li>
-                <li><a href="http://blog.23corner.com/2005/03/16/185/">如何開機時自動執行某程式，而不用修改 /etc/rc.local ?</a>，我接下來會照著個測試看看。</li>
-                <li><a href="http://wiki.gentoo.tw/mediawiki/index.php/Rxvt_BBS#screenrc-bbs">Rxvt <span class="caps">BBS</span></a>，SCREEN的rc檔和Expect的exp檔都是參考這的。</li>
-                <li><a href="http://tavi.debian.org.tw/index.php?page=screen">screen</a>，中文的SCREEN指令介紹</li>
-                <li><a href="http://sky.csie.org/sky/archives/000065.html">使用screen &amp; expect來掛站</a>，簡單的掛站設定，原理和程式都一樣。</li>
-                <li><a href="http://bbs2.openfind.com.tw/cgi-bin/bbs_find?l=wDv4Cw%40%40+AgAAAA%40%40+IA%40%40">請教 expect in Debian &lt;Linux&gt;</a>，解決用screen上BBS會有一些字元變亂碼的問題。</li>
-                <li><a href="http://jedi.org/blog/archives/003191.html">會響的 PuTTY + screen + irssi</a>，我不確定我成功了沒。</li>
-              </ul>
-            </section>
+fi</code></pre>
+
+<p>這樣每次需要啟動就只要執行<code>/home/othree/bbs/initial</code>即可，好記多了吧:P，當然要放到path的目錄或把path指到這也可以，如果能開機自動執行起不更好，不過我還設定不起來，目前是在crontab裡加上：</p>
+
+<pre><code>@reboot /home/othree/bbs/initial</code></pre>
+
+<p>不過一直沒反應，讓我很難過。再來簡單介紹一下基本指令，在SCREEN中，想要下命令或是輸入設定都是以Ctrl+A為開始，例如我要切換到視窗三的ptt，我就需要Ctrl+A後再按3，要列出所有視窗則是Ctrl+W，至於在irssi中要切換視窗則有Ctrl+P(Previous)或是Ctrl+N(Next)兩個快速鍵可以用，當然也可以用輸入命列的方式<code>/window goto 2</code>，不過反而比較累。如果不小心離開某個bbs站或把irssi關掉，一樣事先輸入Ctrl+A後輸入<strong><code>:</code></strong>然後看你是關掉哪一個站，把該站的screen指令貼上然後輸入即可，例如ptt的就會變成<code>:screen -t 'PTT' 3 /home/othree/bbs/3.ptt.sh</code>，輸入的指令會在右下角顯示。要小心的是defencoding可能和你想要的不一樣，如果要改變單一視窗的encoding的話就是<code>Ctrl+A :encoding big5</code>。知道這些應該就可以應付平常使用所需了:P。</p>
+
+<p>最後是參考網址：</p>
+
+
+<ul>
+<li><a href="http://f0rked.com/public/irssi-docs/help-full.html">Irssi Help</a>，irssi的使用說明，不過有點舊了，最新的可以上<a href="http://www.irssi.org/">irssi.org</a>查詢。</li>
+<li><a href="http://blog.seety.org/everydaywork//253">irssi <span class="caps">UTF</span>-8 Big5 中文轉換與設定</a>，irssi的相關部份，還有log的設定可以參考。</li>
+<li><a href="http://blog.23corner.com/2005/03/16/185/">如何開機時自動執行某程式，而不用修改 /etc/rc.local ?</a>，我接下來會照著個測試看看。</li>
+<li><a href="http://wiki.gentoo.tw/mediawiki/index.php/Rxvt_BBS#screenrc-bbs">Rxvt <span class="caps">BBS</span></a>，SCREEN的rc檔和Expect的exp檔都是參考這的。</li>
+<li><a href="http://tavi.debian.org.tw/index.php?page=screen">screen</a>，中文的SCREEN指令介紹</li>
+<li><a href="http://sky.csie.org/sky/archives/000065.html">使用screen &amp; expect來掛站</a>，簡單的掛站設定，原理和程式都一樣。</li>
+<li><a href="http://bbs2.openfind.com.tw/cgi-bin/bbs_find?l=wDv4Cw%40%40+AgAAAA%40%40+IA%40%40">請教 expect in Debian &lt;Linux&gt;</a>，解決用screen上BBS會有一些字元變亂碼的問題。</li>
+<li><a href="http://jedi.org/blog/archives/003191.html">會響的 PuTTY + screen + irssi</a>，我不確定我成功了沒。</li>
+</ul>
+
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -206,6 +219,15 @@ fi</code>
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -226,19 +248,10 @@ fi</code>
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -250,7 +263,7 @@ fi</code>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

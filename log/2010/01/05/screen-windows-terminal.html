@@ -85,13 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2010/01/05/screen-windows-terminal/">在 screen windows 裡開一個比較小的 terminal</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
-              <pre>
-                <code>width -d 80 24</code>
-              </pre>
-              <p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p>
-            </section>
+            <section itemprop="articleBody"><p>這真是超特殊的需求，不過今天還是弄出來了，花不少間走錯方向就是，會有這樣的需求是因為我同時要掛 <span class="caps">BBS </span>和 <span class="caps">IRC</span>，BBS 的標準視窗大小是 80*24，但是這個大小對於 <span class="caps">IRC </span>來說又太小了，好在現在很多 <span class="caps">BBS </span>系統已經已經支援大於 80*24 的終端機了，但是有一個 <a href="http://www.gamer.com.tw/">bahamut</a> 自從商業化後 <span class="caps">BBS </span>系統就完全沒改進，不支援就算了，終端機大小只要不對，看文章往下卷頁時就會有錯誤排版產生，最常見就是按 <strong>下</strong> ，本來應該是整個畫面移動一行，結果會變成只有最後一行被取代，而我現在是使用 100*35 的大小，本來是一直把這問題放著，不過今天總算解決了，其實解法很簡單，就是 screen 裡面再開一個 screen，用不同的設定檔案，裡面要拿來上 bahamut 那個的設定檔加上：</p>
+
+
+
+<pre><code>width -d 80 24</code></pre>
+
+
+
+<p>重點在那個 <a href="http://www.gnu.org/software/screen/manual/screen.html#Window-Size">-d</a> 參數，本來一直在終端機的設定上跑來跑去，不是說沒辦法改大小，就是內部的終端機改大小會影響到外面的，版面就整個亂掉，不過 -d 是只改 display 的大小，不是終端機大小，本來的話是會所有的 screen 一起改，但是因為用兩層的關係，所以外面的不會受到影響。</p></section>
             <footer>
               <a href="/log/unix/" rel="tag">UNIX</a>
             </footer>
@@ -116,6 +118,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -136,19 +147,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -160,7 +162,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -85,26 +85,28 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/06/18/dom-event-module/">Native DOM Event Module</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>我是在看 <a href="http://alxgbsn.co.uk/2012/03/12/tap-js-a-lightweight-tap-event-javascript-plugin/">tap.js</a> 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.dispatchEvent">dispatchEvent</a>  這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的<a href="https://blog.othree.net/log/2010/05/20/jquery-events/">文章</a>。</p>
-              <p>dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他：</p>
-              <pre>
-                <code>var event = document.createEvent('Event');
+            <section itemprop="articleBody"><p>我是在看 <a href="http://alxgbsn.co.uk/2012/03/12/tap-js-a-lightweight-tap-event-javascript-plugin/">tap.js</a> 的程式碼時，才真的注意到 DOM 的 event module （事件模組）其實我們已經可以拿來用了，關鍵在於比較少人注意到的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.dispatchEvent">dispatchEvent</a>  這個 method，這個 method 可以讓你對任意的 DOM Node 觸發任意事件，不管是 click 事件、mousemove 事件，還是 keydown 事件都可以，所以理論上你可以用 JS 模擬所有使用者做的操作，要做 integration 測試也沒問題，不過像是滑鼠拖拉要模擬就有點辛苦了。而除了原生有的事件外，其實 dispatchEvent 還支援自訂事件，對於自訂事件用途還不清楚的可以先看看以前的<a href="https://blog.othree.net/log/2010/05/20/jquery-events/">文章</a>。</p>
+
+<p>dispatchEvent 的用法和一般 JavaScript Library 的 trigger event 不太一樣，要先建立一個 event 物件給他：</p>
+
+<pre><code>var event = document.createEvent('Event');
 event.initEvent(type, true, true);
 
 domnode.dispatchEvent(event);
-</code>
-              </pre>
-              <p>其中的 type 才是你想要觸發的事件名稱，而第一個 createEvent 收的參數，除了 "Event" 這個最通用的之外，還有很多種<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent">原生事件</a>，如果是要自訂事件的話，可以用最通用的 "Event"。不過其實，還有一個比較新的 API：</p>
-              <pre>
-                <code>var event = new CustomEvent(type, {bubbles: true, cancelable: true});
-</code>
-              </pre>
-              <p>這是 DOM Level 4 裡面提出來的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">Custom Event Constructor</a>，在這之前的 Level 3 就可以用第一個範例的方法產生 custom event，要先 create 再 init。這邊岔題一下，應該有人會注意到，createEvent 後 initEvent 那邊的 API 設計和 CustomEvent 不一樣，initEvent 收三個值，後面兩個都傳了 true，可是這樣的 API 設計近年來都被認為是不好的，因為你看程式碼，你完全不知道這兩個 true 是什麼意思，所以都是建議用第二種 API 的設計，收一個 options 物件，其實，initEvent 那兩個 true 分別就是 CustomEvent 後面的 bubbles 和 cancelable，但是後者的設計就可以讓程式碼看一眼就知道那兩個 true 是什麼用途的，看到這種不止開發者的程式在進化，連標準也跟著一起演進的現象還蠻有趣的~</p>
-              <p>Custom Event Constructor 目前 IE 的支援還比較差，所以還不能直接使用，還是要做一下 feature detection。至於哪些物件可以使用這些 method，除了 DOM Node，外，其實一般瀏覽器都還有一些物件可以聽事件，像是 window、document、 XMLHttpRequest instance 等，很可惜不是任意物件都可以，事實上，這些可以使用 DOM Event Module 的物件都是實作了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget">EventTarget</a> 這個介面，不過又要再說一次很可惜的，目前沒辦法把瀏覽器內的這些實作偷出來給其它物件使用，幸好 Andrea Giammarchi 有做了 <a href="https://github.com/WebReflection/event-target">一個</a> 放在 Github 上，可以給一般物件繼承去用。</p>
-              <p>我曾經寫過一篇文章介紹 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，這篇文章的最後我要來介紹第二個參數，第二個參數一般都是丟 function 進去，不過他其實也可以丟 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventListener">EventListener</a> 進去，基本上就是一個物件有 handleEvent 來當事件的 callback 而已，不過像 tap.js 就有很有趣的用法，它不管是什麼事件，在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L35">加上 addEventListener 時</a>丟進去的都是 this 物件，實際上則是統一在 handleEvent 裡面在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L97">根據事件的不同去作不同的事情</a>：</p>
-              <pre>
-                <code>Tap.prototype.handleEvent = function (e) {
+</code></pre>
+
+<p>其中的 type 才是你想要觸發的事件名稱，而第一個 createEvent 收的參數，除了 "Event" 這個最通用的之外，還有很多種<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent">原生事件</a>，如果是要自訂事件的話，可以用最通用的 "Event"。不過其實，還有一個比較新的 API：</p>
+
+<pre><code>var event = new CustomEvent(type, {bubbles: true, cancelable: true});
+</code></pre>
+
+<p>這是 DOM Level 4 裡面提出來的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">Custom Event Constructor</a>，在這之前的 Level 3 就可以用第一個範例的方法產生 custom event，要先 create 再 init。這邊岔題一下，應該有人會注意到，createEvent 後 initEvent 那邊的 API 設計和 CustomEvent 不一樣，initEvent 收三個值，後面兩個都傳了 true，可是這樣的 API 設計近年來都被認為是不好的，因為你看程式碼，你完全不知道這兩個 true 是什麼意思，所以都是建議用第二種 API 的設計，收一個 options 物件，其實，initEvent 那兩個 true 分別就是 CustomEvent 後面的 bubbles 和 cancelable，但是後者的設計就可以讓程式碼看一眼就知道那兩個 true 是什麼用途的，看到這種不止開發者的程式在進化，連標準也跟著一起演進的現象還蠻有趣的~</p>
+
+<p>Custom Event Constructor 目前 IE 的支援還比較差，所以還不能直接使用，還是要做一下 feature detection。至於哪些物件可以使用這些 method，除了 DOM Node，外，其實一般瀏覽器都還有一些物件可以聽事件，像是 window、document、 XMLHttpRequest instance 等，很可惜不是任意物件都可以，事實上，這些可以使用 DOM Event Module 的物件都是實作了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget">EventTarget</a> 這個介面，不過又要再說一次很可惜的，目前沒辦法把瀏覽器內的這些實作偷出來給其它物件使用，幸好 Andrea Giammarchi 有做了 <a href="https://github.com/WebReflection/event-target">一個</a> 放在 Github 上，可以給一般物件繼承去用。</p>
+
+<p>我曾經寫過一篇文章介紹 <a href="https://blog.othree.net/log/2007/02/06/third-argument-of-addeventlistener/">addEventListener 的第三個參數</a>，這篇文章的最後我要來介紹第二個參數，第二個參數一般都是丟 function 進去，不過他其實也可以丟 <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventListener">EventListener</a> 進去，基本上就是一個物件有 handleEvent 來當事件的 callback 而已，不過像 tap.js 就有很有趣的用法，它不管是什麼事件，在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L35">加上 addEventListener 時</a>丟進去的都是 this 物件，實際上則是統一在 handleEvent 裡面在<a href="https://github.com/alexgibson/tap.js/blob/f6a3eef75e448de5ce2a659570cfd4511570f672/tap.js#L97">根據事件的不同去作不同的事情</a>：</p>
+
+<pre><code>Tap.prototype.handleEvent = function (e) {
     switch (e.type) {
         case 'touchstart': this.start(e); break;
         case 'touchmove': this.move(e); break;
@@ -115,9 +117,8 @@ domnode.dispatchEvent(event);
         case 'mouseup': this.end(e); break;
     }
 };
-</code>
-              </pre>
-            </section>
+</code></pre>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -142,6 +143,15 @@ domnode.dispatchEvent(event);
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -162,19 +172,10 @@ domnode.dispatchEvent(event);
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -186,7 +187,7 @@ domnode.dispatchEvent(event);
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

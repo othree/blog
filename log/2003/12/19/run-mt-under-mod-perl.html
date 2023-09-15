@@ -85,27 +85,27 @@
                 <a itemprop="mainEntityOfPage" href="/log/2003/12/19/run-mt-under-mod-perl/">mod_perl 跑 MT</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P</p>
-              <p>我安裝的環境是Windows XP Pro，用的軟體是Apache 1.3.24、ActivePerl 5.8.2.808（請一定要用5.8.x版，原因後述）、mod_perl 1.29_01-dev、libapreq 1.2，其中Apache和ActivePerl的安撞方法就不在多說了，這應該很多地方都找的到相關資訊，因此接下來是從mod_perl的安裝說起，另外還有一點要先說的是我的Apache是裝在<strong>D:/Apache/</strong>裡，ActivePerl是裝在<strong>D:/usr/</strong>裡，後面就不會再特別講了。</p>
-              <p>首先是mod_perl，因為我用的是Apache 1.3x，所以mod_perl也只能裝1.x版，依照mod_perl官方網頁的<a href="http://perl.apache.org/docs/1.0/os/win32/install.html#PPM_Packages" title="mod_perl官方網站－mod_perl 1.0在win32下以PPM Package安裝的說明">安裝說明</a>，我用的是ActivePerl 5.8.2.808，所以不能簡單的直接用ppm一個指令就裝好，要先set repository alias location（我不會翻，不過大概就是給一個server，好讓ppm用他根據package名稱搜尋ppd）。我直接把從DOS到進入PPM shell到安裝完的mod_perl的指令列出來：</p>
-              <pre>
-                <code>D:\&gt;ppm
+            <section itemprop="articleBody"><p>今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P</p><p>我安裝的環境是Windows XP Pro，用的軟體是Apache 1.3.24、ActivePerl 5.8.2.808（請一定要用5.8.x版，原因後述）、mod_perl 1.29_01-dev、libapreq 1.2，其中Apache和ActivePerl的安撞方法就不在多說了，這應該很多地方都找的到相關資訊，因此接下來是從mod_perl的安裝說起，另外還有一點要先說的是我的Apache是裝在<strong>D:/Apache/</strong>裡，ActivePerl是裝在<strong>D:/usr/</strong>裡，後面就不會再特別講了。</p>
+
+<p>首先是mod_perl，因為我用的是Apache 1.3x，所以mod_perl也只能裝1.x版，依照mod_perl官方網頁的<a href="http://perl.apache.org/docs/1.0/os/win32/install.html#PPM_Packages" title="mod_perl官方網站－mod_perl 1.0在win32下以PPM Package安裝的說明">安裝說明</a>，我用的是ActivePerl 5.8.2.808，所以不能簡單的直接用ppm一個指令就裝好，要先set repository alias location（我不會翻，不過大概就是給一個server，好讓ppm用他根據package名稱搜尋ppd）。我直接把從DOS到進入PPM shell到安裝完的mod_perl的指令列出來：</p>
+
+<pre><code>D:\&gt;ppm
 ppm&gt; rep add http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58
-ppm&gt; install mod_perl-1</code>
-              </pre>
-              <p>其中要注意的是最後一行的「ppm&gt;install mod_perl-1」最後的那個「-1」是一定要有的，沒有他的話會裝到mod_perl 1.99-dev，是給Apache 2用的。當輸入最後一行指令後一會兒，他會要求你輸入mod_perl.so這個檔案要放的位置，我的例子是「<strong>D:/Apache/modules/</strong>」，連磁碟代碼都要輸入以確保不會出問題喔。</p>
-              <p>第一歩安裝mod_perl完成後，再來就要安裝libapreq了，這是MT要求的，詳細資料可以在[MT官方使用手冊 (Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl)":http://mtbook.org/mtmanual_alternate.html#mod_perl"]中找到，這份文件很重要，最後一步的設定也要靠它。總之，要MT在mod_perl下跑就會需要libapreq，然而libapreq一定要ActivePerl 5.8以後的版本才能裝，這也就是為什麽我們需要ActivePerl 5.8.x了。如果你的動作沒有太快的話，你應該還在PPM shell裡，輸入下面的指令</p>
-              <pre>
-                <code>ppm&gt; install libapreq-1</code>
-              </pre>
-              <p>同上，後面的「-1」不要砍掉，不然好像是會裝到mod_perl 2用的版本。接著等一會兒應該就會裝完了，這時你可以輸入已下指令離開PPM shell，亦或是直接把命令提示字元的視窗關掉。</p>
-              <pre>
-                <code>ppm&gt; exit</code>
-              </pre>
-              <p>如果以上動作都完成的話，那就只剩下最後的設定了，首先是Apache的設定，我是直接用官方使用手冊上的第二種設定，假設你的httpd.conf都還沒做過關於mod_perl相關的變動的話，那直接在檔案最後貼上下面的設定值，並修改其中的幾個路徑，應該就OK了。</p>
-              <pre>
-                <code>LoadFile /usr/bin/perl58.dll
+ppm&gt; install mod_perl-1</code></pre>
+
+<p>其中要注意的是最後一行的「ppm&gt;install mod_perl-1」最後的那個「-1」是一定要有的，沒有他的話會裝到mod_perl 1.99-dev，是給Apache 2用的。當輸入最後一行指令後一會兒，他會要求你輸入mod_perl.so這個檔案要放的位置，我的例子是「<strong>D:/Apache/modules/</strong>」，連磁碟代碼都要輸入以確保不會出問題喔。</p>
+
+<p>第一歩安裝mod_perl完成後，再來就要安裝libapreq了，這是MT要求的，詳細資料可以在[MT官方使用手冊 (Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl)":http://mtbook.org/mtmanual_alternate.html#mod_perl"]中找到，這份文件很重要，最後一步的設定也要靠它。總之，要MT在mod_perl下跑就會需要libapreq，然而libapreq一定要ActivePerl 5.8以後的版本才能裝，這也就是為什麽我們需要ActivePerl 5.8.x了。如果你的動作沒有太快的話，你應該還在PPM shell裡，輸入下面的指令</p>
+
+<pre><code>ppm&gt; install libapreq-1</code></pre>
+
+<p>同上，後面的「-1」不要砍掉，不然好像是會裝到mod_perl 2用的版本。接著等一會兒應該就會裝完了，這時你可以輸入已下指令離開PPM shell，亦或是直接把命令提示字元的視窗關掉。</p>
+
+<pre><code>ppm&gt; exit</code></pre>
+
+<p>如果以上動作都完成的話，那就只剩下最後的設定了，首先是Apache的設定，我是直接用官方使用手冊上的第二種設定，假設你的httpd.conf都還沒做過關於mod_perl相關的變動的話，那直接在檔案最後貼上下面的設定值，並修改其中的幾個路徑，應該就OK了。</p>
+
+<pre><code>LoadFile /usr/bin/perl58.dll
 LoadModule perl_module modules/mod_perl.so
 &lt;IfModule mod_perl.c&gt;
 &lt;Perl&gt;
@@ -144,27 +144,28 @@ PerlHandler Apache::XMLRPC::Lite
 PerlSetVar dispatch_to "blogger, metaWeblog, mt"
 PerlSetVar MTConfig D:/Apache/MT/mt.cfg
 &lt;/Location&gt;
-&lt;/IfModule&gt;</code>
-              </pre>
-              <p>有些人應該會注意到我的MT程式並不是放在htdocs裡面，事實上，放在裡面會出些奇怪的問題，後來移出來後就沒這個問題了（很神秘，而且IE不會出問題），這點也是我剛剛漏掉忘記講的一點。<strong>請把MT資料夾移出htdocs，並用ScriptAlias指向</strong>，這邊也提供我的設定做範例。</p>
-              <pre>
-                <code>ScriptAlias /MT/ "D:/Apache/MT/"</code>
-              </pre>
-              <p>Apache的設定就只有上面那樣而已，假設這部份沒錯的話，Apache應該可以正常的跑起來，不過要完成全部的安裝程序，我們還需要要調整MT裡的設定檔，mt.cfg，在<a href="http://mtbook.org/mtmanual_alternate.html#mod_perl" title="Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl">MT官方使用手冊</a>中最後面有講到需要修改的幾項數值，如果你的mt.cfg檔案都沒動過的話，那你只需要改前三項，剩下四項就是他原來的預設值。</p>
-              <pre>
-                <code>CGIPath http://我的.伺服器.com/mt/
+&lt;/IfModule&gt;</code></pre>
+
+<p>有些人應該會注意到我的MT程式並不是放在htdocs裡面，事實上，放在裡面會出些奇怪的問題，後來移出來後就沒這個問題了（很神秘，而且IE不會出問題），這點也是我剛剛漏掉忘記講的一點。<strong>請把MT資料夾移出htdocs，並用ScriptAlias指向</strong>，這邊也提供我的設定做範例。</p>
+
+<pre><code>ScriptAlias /MT/ "D:/Apache/MT/"</code></pre>
+
+<p>Apache的設定就只有上面那樣而已，假設這部份沒錯的話，Apache應該可以正常的跑起來，不過要完成全部的安裝程序，我們還需要要調整MT裡的設定檔，mt.cfg，在<a href="http://mtbook.org/mtmanual_alternate.html#mod_perl" title="Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl">MT官方使用手冊</a>中最後面有講到需要修改的幾項數值，如果你的mt.cfg檔案都沒動過的話，那你只需要改前三項，剩下四項就是他原來的預設值。</p>
+
+<pre><code>CGIPath http://我的.伺服器.com/mt/
 DataSource /路徑/指到/db
-StaticWebPath /mt-靜態-網頁/</code>
-              </pre>
-              <p>我的例子是</p>
-              <pre>
-                <code>CGIPath http://localhost/MT/
+StaticWebPath /mt-靜態-網頁/</code></pre>
+
+<p>我的例子是</p>
+
+<pre><code>CGIPath http://localhost/MT/
 DataSource D:/apache/MT/db
-StaticWebPath /mt-static</code>
-              </pre>
-              <p>localhost是因為我只在本地端作測試的關係。DataSource需要是絕對路徑（也就是從磁碟機代號開始寫），以避免出問題。然後StaticWebPath我的設定值是「/mt-static」，這代表的是「<strong>D:/Apache/htdocs/mt-static/</strong>」，這個如果搞錯地方的話，那管理介面的樣式表、圖和說明文件的連結就都出不來了，事實上是不影響MT的運作啦。</p>
-              <p>上面的步驟都弄好了的話，就可以開啟你的mt.cgi，享受更低的主機負擔了-o-y～（寫成這樣不知有多少人看的懂~_~）</p>
-            </section>
+StaticWebPath /mt-static</code></pre>
+
+
+<p>localhost是因為我只在本地端作測試的關係。DataSource需要是絕對路徑（也就是從磁碟機代號開始寫），以避免出問題。然後StaticWebPath我的設定值是「/mt-static」，這代表的是「<strong>D:/Apache/htdocs/mt-static/</strong>」，這個如果搞錯地方的話，那管理介面的樣式表、圖和說明文件的連結就都出不來了，事實上是不影響MT的運作啦。</p>
+
+<p>上面的步驟都弄好了的話，就可以開啟你的mt.cgi，享受更低的主機負擔了-o-y～（寫成這樣不知有多少人看的懂~_~）</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -189,6 +190,15 @@ StaticWebPath /mt-static</code>
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -209,19 +219,10 @@ StaticWebPath /mt-static</code>
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -233,7 +234,7 @@ StaticWebPath /mt-static</code>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

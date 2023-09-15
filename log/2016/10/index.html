@@ -81,24 +81,18 @@
                 <a href="/log/2016/10/29/vim-filename-complete/">Vim Filename Complete</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w">
-                    <meta itemprop="width" content="659"/>
-                    <meta itemprop="height" content="452"/>
-                  </img>
-                </a>
-              </p>
-              <p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
-              <p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
-              <pre>
-                <code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w"><meta itemprop="width" content="659"/><meta itemprop="height" content="452"/></img></a></p>
+
+<p>Vim 有一個內建的自動補完功能是針對<a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename">檔案名稱</a>的，使用的方法是 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，我目前在維護的 <a href="https://github.com/othree/vim-autocomplpop">autocomplpop</a> 也有支援這種補完模式，只要輸入 <code>./</code> 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(<code>$PWD</code>)，加上我會使用 <a href="https://github.com/kien/ctrlp.vim">ctrlp</a> 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"><code>path</code></a> 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 <code>path</code> 值包括了 <code>.</code>，不過目前還沒有相關時程，就只能自救了。</p>
+
+<p>最簡單的方法，其實就是開啟 <a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"><code>autochdir</code></a>，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到<a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file">一篇</a>，裡面有兩個人提供了解法，第一個是用 <code>autocmd</code>，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 <code>autochdir</code>，離開時自動關閉 <code>autochdir</code>，不過這樣的方式（感覺上）還是不太安全，因為還是用到 <code>autochdir</code>，所以下面有另外一個方法改用 <a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"><code>lcd</code></a>，作法是改成修改 Key Mapping 的方式，改的 mapping 是 <code>./&lt;C-X&gt;&lt;C-F&gt;</code>，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 <code>&lt;C-X&gt;&lt;C-F&gt;</code>，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 <code>autocmd</code> 加上 <code>lcd</code>：</p>
+
+<pre><code>:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
 :autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
-</code>
-              </pre>
-              <p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
-            </section>
+</code></pre>
+
+<p>進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 <code>lcd</code> 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 <code>path</code> 的支援吧（或是有人送 patch）。</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -114,20 +108,10 @@
                 <a href="/log/2016/10/17/sbb-mobile/">SBB Mobile</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w">
-                    <meta itemprop="width" content="360"/>
-                    <meta itemprop="height" content="640"/>
-                  </img>
-                </a>
-              </p>
-              <p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
-              <em class="extended">
-                <a href="/log/2016/10/17/sbb-mobile/">閱讀「SBB Mobile」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/30359519555/" title="SBB Mobile by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg" width="360" height="640" alt="SBB Mobile, " srcset="https://farm6.staticflickr.com/5656/30359519555_a5d6568752_b.jpg 576w, https://farm6.staticflickr.com/5656/30359519555_cca63b01fe_h.jpg 900w"><meta itemprop="width" content="360"/><meta itemprop="height" content="640"/></img></a></p>
+
+<p>之前去瑞士的時候，主要的交通工具是靠火車，所以就下載了瑞士國鐵的 Android App：<a href="https://www.sbb.ch/en/timetable/mobile-timetables/sbb-mobile.html?WT.ac=sbb-mobile-weitere-en.html">SBB Mobile</a>，用過後覺得真是很棒，首先上面的畫面就是一開始進去看到的，很直接了當的就是最重要的功能，查詢路線和時間，畫面很乾淨，就是起點、目的地、出發或到達時間，還可以加上中間站，而且時間會自動更新到現在時間，然後隨便查一下就可以看到下面的畫面：</p>
+<em class="extended"><a href="/log/2016/10/17/sbb-mobile/">閱讀「SBB Mobile」全文</a></em></section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -143,20 +127,10 @@
                 <a href="/log/2016/10/14/acclerated-mobile-pages/">Acclerated Mobile Pages</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
-              <em class="extended">
-                <a href="/log/2016/10/14/acclerated-mobile-pages/">閱讀「Acclerated Mobile Pages」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
+<em class="extended"><a href="/log/2016/10/14/acclerated-mobile-pages/">閱讀「Acclerated Mobile Pages」全文</a></em></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -172,10 +146,9 @@
                 <a href="/log/2016/10/03/native-true-color-vim/">Native True Color Vim</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
-              <pre>
-                <code>git clone https://github.com/vim/vim.git
+            <section itemprop="articleBody"><p>因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 <a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a">7.4.1784</a> 開始，也不用加特別參數來編譯，只要 <code>--with-features</code> 的值是 <code>big</code> 或是更大的 <code>huge</code> 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：</p>
+
+<pre><code>git clone https://github.com/vim/vim.git
 
 cd vim
 cd src &amp;&amp; make autoconf &amp;&amp; cd ..
@@ -194,10 +167,10 @@ cd src &amp;&amp; make autoconf &amp;&amp; cd ..
 
 make
 make install
-</code>
-              </pre>
-              <p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
-            </section>
+</code></pre>
+
+<p>然後現在也不需要 <code>guicolors</code> 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...</p>
+</section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -220,7 +193,7 @@ make install
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -232,7 +205,7 @@ make install
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

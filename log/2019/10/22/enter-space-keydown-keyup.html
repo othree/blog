@@ -85,23 +85,17 @@
                 <a itemprop="mainEntityOfPage" href="/log/2019/10/22/enter-space-keydown-keyup/">ENTER or SPACE, KEYDOWN or KEYUP</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前一篇文章<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/">作動行為 Activation Behavior</a> 發佈之後，卡西又做了一些測試，發現到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 的觸發時機其實不一樣：</p>
-              <blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 <a href="https://t.co/ec1rMlFVvO">https://t.co/ec1rMlFVvO</a></p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1186268152184766464?ref_src=twsrc%5Etfw">October 21, 2019</a></blockquote>
-              <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
-              <p>然後我仔細測試過發現真的是這樣，而且 <kbd>SPACE</kbd> 有 <code>keypress</code> 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 <a href="https://github.com/w3c/aria-practices/issues/610">WAI-ARIA Authoring Practices Issue 610</a>，於是我就覺得這應該和 Web 標準定義沒關係，應該是更古老的預設行為，於是改變方向改找 Windows 預設行為相關的文件，搜尋一陣子其實也找不太到東西，大概是因為 GUI 和 Windows 剛出的時候其實 www 還不知道在哪裡吧，不過後來還是找到兩篇 stackoverflow 的問答看起來是相關的：</p>
-              <ul>
-                <li>
-                  <a href="https://stackoverflow.com/questions/16090578/why-do-enter-and-space-keys-behave-differently-for-buttons">Why do Enter and Space keys behave differently for buttons?</a>
-                </li>
-                <li>
-                  <a href="https://stackoverflow.com/questions/6706689/keyboard-control-of-gui-dialogs-should-default-button-change-with-focus">Keyboard control of GUI dialogs - Should default button change with focus?</a>
-                </li>
-              </ul>
-              <p>總和這兩篇的內容，大概整理一下：</p>
-              <p>這個行為應該是 Windows 一開始的時候就如此設計的了（看起來是很難找到相關設計的文件），然後實際上和 <kbd>ENTER</kbd> 相關（相對）的操作其實是 <kbd>ESC</kbd> 鍵，<kbd>ENTER</kbd> 鍵代表的是直接點 default button（例如 form 的 submit、dialog 的 ok 之類的），或是可以說是執行元件預設的行為，至於 <kbd>ESC</kbd> 鍵則是取消，不過取消在網頁的控制元件中幾乎是不存在的，過去有的大概只有 <code>&lt;select&gt;</code> 展開下拉選單後又決定不選時可以取消，到 HTML5 則又多了 <code>&lt;dialog&gt;</code> 有取消的行為（關閉 dialog），大概也是因為這個原因讓人忽略了 <kbd>ENTER</kbd> 和 <kbd>ESC</kbd> 的關係，變成注意到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 都可以操作元件；至於 <kbd>SPACE</kbd> 鍵其實就像是滑鼠點擊，<code>keyDown</code> 如同 <code>mouseDown</code>，<code>keyUp</code> 如同 <code>mouseUp</code>，要到 <code>keyUp</code> 才算一個點擊的動作，也就是到這時候才會去觸發 <code>click</code> 事件。</p>
-              <p>搞清楚這現象的原理之後，其實也就更容易理解 <a href="https://github.com/w3c/aria-practices">WAI-ARIA Authoring Practices</a> 的範例那些 <kbd>ENTER</kbd>、<kbd>ESC</kbd>、<kbd>SPACE</kbd> 幾個按鍵行為為什麼是那樣了，當然，以後需要客製 widget 時也不用再對這幾個按鍵的行為該怎樣定義苦惱了。</p>
-            </section>
+            <section itemprop="articleBody"><p>前一篇文章<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/">作動行為 Activation Behavior</a> 發佈之後，卡西又做了一些測試，發現到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 的觸發時機其實不一樣：</p>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="zh" dir="ltr">終於可以登入 codesandbox 了，在目前的 Chrome, Firefox, Safari 試了一下，結果 enter 會在 keydown 觸發 activation behavior ，但是 space 會在 keyup 觸發 <a href="https://t.co/ec1rMlFVvO">https://t.co/ec1rMlFVvO</a></p>-- 卡西 (@caasih) <a href="https://twitter.com/caasih/status/1186268152184766464?ref_src=twsrc%5Etfw">October 21, 2019</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/> 
+<p>然後我仔細測試過發現真的是這樣，而且 <kbd>SPACE</kbd> 有 <code>keypress</code> 的狀態，就像是滑鼠按鍵按下去但是還沒放開時的樣子，然後這又讓我有點好奇起來了，仔細搜尋一番，發現 web 標準都沒有提到這個細節的定義，唯一有一點關係的是卡西也有找到的 <a href="https://github.com/w3c/aria-practices/issues/610">WAI-ARIA Authoring Practices Issue 610</a>，於是我就覺得這應該和 Web 標準定義沒關係，應該是更古老的預設行為，於是改變方向改找 Windows 預設行為相關的文件，搜尋一陣子其實也找不太到東西，大概是因為 GUI 和 Windows 剛出的時候其實 www 還不知道在哪裡吧，不過後來還是找到兩篇 stackoverflow 的問答看起來是相關的：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/16090578/why-do-enter-and-space-keys-behave-differently-for-buttons">Why do Enter and Space keys behave differently for buttons?</a></li>
+<li><a href="https://stackoverflow.com/questions/6706689/keyboard-control-of-gui-dialogs-should-default-button-change-with-focus">Keyboard control of GUI dialogs - Should default button change with focus?</a></li>
+</ul>
+<p>總和這兩篇的內容，大概整理一下：</p>
+<p>這個行為應該是 Windows 一開始的時候就如此設計的了（看起來是很難找到相關設計的文件），然後實際上和 <kbd>ENTER</kbd> 相關（相對）的操作其實是 <kbd>ESC</kbd> 鍵，<kbd>ENTER</kbd> 鍵代表的是直接點 default button（例如 form 的 submit、dialog 的 ok 之類的），或是可以說是執行元件預設的行為，至於 <kbd>ESC</kbd> 鍵則是取消，不過取消在網頁的控制元件中幾乎是不存在的，過去有的大概只有 <code>&lt;select&gt;</code> 展開下拉選單後又決定不選時可以取消，到 HTML5 則又多了 <code>&lt;dialog&gt;</code> 有取消的行為（關閉 dialog），大概也是因為這個原因讓人忽略了 <kbd>ENTER</kbd> 和 <kbd>ESC</kbd> 的關係，變成注意到 <kbd>ENTER</kbd> 和 <kbd>SPACE</kbd> 都可以操作元件；至於 <kbd>SPACE</kbd> 鍵其實就像是滑鼠點擊，<code>keyDown</code> 如同 <code>mouseDown</code>，<code>keyUp</code> 如同 <code>mouseUp</code>，要到 <code>keyUp</code> 才算一個點擊的動作，也就是到這時候才會去觸發 <code>click</code> 事件。</p>
+<p>搞清楚這現象的原理之後，其實也就更容易理解 <a href="https://github.com/w3c/aria-practices">WAI-ARIA Authoring Practices</a> 的範例那些 <kbd>ENTER</kbd>、<kbd>ESC</kbd>、<kbd>SPACE</kbd> 幾個按鍵行為為什麼是那樣了，當然，以後需要客製 widget 時也不用再對這幾個按鍵的行為該怎樣定義苦惱了。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -126,6 +120,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -146,19 +149,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -170,7 +164,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -85,23 +85,23 @@
                 <a itemprop="mainEntityOfPage" href="/log/2008/03/23/auto-complete-on-vim/">vim的自動完成</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>我食言了，<a href="http://blog.othree.net/log/2008/02/29/vim-1/">上一篇文章</a>發完後，我還是一直在搞vim的設定，基本上都是在弄自動完成的部份，我是很希望弄到像Visual Studio新版那樣，邊打字選項就會邊過濾，物件的結構程式也都會知道，要拿物件的屬性時，自動完成也能正確顯示選擇，就這樣弄了好一陣子，昨天晚上我終於成功了，不過又遇到syntax complete在windows會出錯的奇怪現象，一直搞到凌晨四點，連CLANNAD都忘了看還是沒有解決，一直到今天才成功迴避這個錯誤。</p>
-              <p>現在我vim關於自動完成相關的plugin有四個：<a href="http://www.vim.org/scripts/script.php?script_id=182">supertab</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1318">snippetsEmu</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1520">OmniCppCompletion</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a>。supertab是用Tab鍵觸發自動完成功能用的，本來要使用Omni Auto Completion要先按Ctrl+X再按Ctrl+O，很不方便。snippetsEmu則是用關鍵字完成一段預先設定的內容，舉例來說，我只要輸入"doc4s"，再按Tab就可以插入完整的HTML 4 Strict文件宣告，這功能可以減少很多重複的工作，像是if迴圈、for迴圈都可以用這個功能來快速完成。這兩個我之前都有介紹過，而剩下的兩個剛好就一個完成我的一個需求，OmniCppCompletion讓我可以在編寫物件導向程式時有更完整的自動完成功能，autocomplpop讓自動完成的選項在你輸入時就自動出現，並且隨著你輸入的內容不斷過濾選項。</p>
-              <p>OmniCppCompletion雖然功能強大，不過還沒辦法做到和Visual Studio那樣即時反應，必須要藉由<a href="http://ctags.sourceforge.net/">ctags</a>來建立tags檔案紀錄資訊才可以用，說明文件有提到透過keybinding來建立tags檔案的方法，是讓方便性提昇不少，每寫完一個class的介面按一下就可以了，不過我還是希望能做到更即時的效果，之後還會繼續找相關的文件。OmniCppCompletion在安裝和使用上比較沒什麼問題，只是檔案多了點，又沒有用vimball封裝，在linux上要用命令列裝比較麻煩。</p>
-              <p>至於autocomplpop這個套件在安裝和使用上我就遇到比較多問題了，原本我除了特定幾個檔案類型有設定對應的omnifunc外，其他的都是設定用syntax complete，要使用syntax檔案的定義來做自動完成，不過這個function在windows不知道為什麼一直會出錯，加上這功能是自動觸發的，所以我在安裝測試的時後就不斷的看到錯誤訊息，如果我不設定omnifunc的話，也會一直看到omnifunc不存在的訊息，最後我只好自己寫一個nullcomplete.vim放在autoload目錄裡面。</p>
-              <pre>
-                <code>function! nullcomplete#Complete(findstart, base)
+            <section itemprop="articleBody"><p>我食言了，<a href="http://blog.othree.net/log/2008/02/29/vim-1/">上一篇文章</a>發完後，我還是一直在搞vim的設定，基本上都是在弄自動完成的部份，我是很希望弄到像Visual Studio新版那樣，邊打字選項就會邊過濾，物件的結構程式也都會知道，要拿物件的屬性時，自動完成也能正確顯示選擇，就這樣弄了好一陣子，昨天晚上我終於成功了，不過又遇到syntax complete在windows會出錯的奇怪現象，一直搞到凌晨四點，連CLANNAD都忘了看還是沒有解決，一直到今天才成功迴避這個錯誤。</p>
+
+<p>現在我vim關於自動完成相關的plugin有四個：<a href="http://www.vim.org/scripts/script.php?script_id=182">supertab</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1318">snippetsEmu</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1520">OmniCppCompletion</a>、<a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a>。supertab是用Tab鍵觸發自動完成功能用的，本來要使用Omni Auto Completion要先按Ctrl+X再按Ctrl+O，很不方便。snippetsEmu則是用關鍵字完成一段預先設定的內容，舉例來說，我只要輸入"doc4s"，再按Tab就可以插入完整的HTML 4 Strict文件宣告，這功能可以減少很多重複的工作，像是if迴圈、for迴圈都可以用這個功能來快速完成。這兩個我之前都有介紹過，而剩下的兩個剛好就一個完成我的一個需求，OmniCppCompletion讓我可以在編寫物件導向程式時有更完整的自動完成功能，autocomplpop讓自動完成的選項在你輸入時就自動出現，並且隨著你輸入的內容不斷過濾選項。</p><p>OmniCppCompletion雖然功能強大，不過還沒辦法做到和Visual Studio那樣即時反應，必須要藉由<a href="http://ctags.sourceforge.net/">ctags</a>來建立tags檔案紀錄資訊才可以用，說明文件有提到透過keybinding來建立tags檔案的方法，是讓方便性提昇不少，每寫完一個class的介面按一下就可以了，不過我還是希望能做到更即時的效果，之後還會繼續找相關的文件。OmniCppCompletion在安裝和使用上比較沒什麼問題，只是檔案多了點，又沒有用vimball封裝，在linux上要用命令列裝比較麻煩。</p>
+
+<p>至於autocomplpop這個套件在安裝和使用上我就遇到比較多問題了，原本我除了特定幾個檔案類型有設定對應的omnifunc外，其他的都是設定用syntax complete，要使用syntax檔案的定義來做自動完成，不過這個function在windows不知道為什麼一直會出錯，加上這功能是自動觸發的，所以我在安裝測試的時後就不斷的看到錯誤訊息，如果我不設定omnifunc的話，也會一直看到omnifunc不存在的訊息，最後我只好自己寫一個nullcomplete.vim放在autoload目錄裡面。</p>
+
+<pre><code>function! nullcomplete#Complete(findstart, base)
     if a:findstart
         return -1
     else
         return []
     endif
-endfunc</code>
-              </pre>
-              <p>這個nullcomplete是直接回傳沒有相符的資料，接著把沒有檔案類型的omnifunc設成它，vimrc裡看起來像這樣：</p>
-              <pre>
-                <code>setl omnifunc=nullcomplete#Complete
+endfunc</code></pre>
+
+<p>這個nullcomplete是直接回傳沒有相符的資料，接著把沒有檔案類型的omnifunc設成它，vimrc裡看起來像這樣：</p>
+
+<pre><code>setl omnifunc=nullcomplete#Complete
 autocmd FileType * setl omnifunc=nullcomplete#Complete
 autocmd FileType python setl omnifunc=pythoncomplete#Complete
 autocmd FileType javascript setl omnifunc=javascriptcomplete#CompleteJS
@@ -109,11 +109,11 @@ autocmd FileType html setl omnifunc=htmlcomplete#CompleteTags noci
 autocmd FileType css setl omnifunc=csscomplete#CompleteCSS noci
 autocmd FileType xml setl omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php setl omnifunc=phpcomplete#CompletePHP
-autocmd FileType c setl omnifunc=ccomplete#Complete</code>
-              </pre>
-              <p>除了這個問題之外，autocomplpop其實也是有看你輸入的東西來決定要不要執行自動完成，不過預設支援的只有ruby、scheme、(x)html這幾種檔案格式，其他的只會做檔案內的關鍵字自動完成（自動完成出現過的字），於是我做了一分給CSS用的設定，一樣放在vimrc裡就可以了：</p>
-              <pre>
-                <code>let g:AutoComplPop_Behavior = {
+autocmd FileType c setl omnifunc=ccomplete#Complete</code></pre>
+
+<p>除了這個問題之外，autocomplpop其實也是有看你輸入的東西來決定要不要執行自動完成，不過預設支援的只有ruby、scheme、(x)html這幾種檔案格式，其他的只會做檔案內的關鍵字自動完成（自動完成出現過的字），於是我做了一分給CSS用的設定，一樣放在vimrc裡就可以了：</p>
+
+<pre><code>let g:AutoComplPop_Behavior = {
       \   'css' : [
       \     {
       \       'command'  : "\&amp;lt;C-n&amp;gt;",
@@ -140,12 +140,13 @@ autocmd FileType c setl omnifunc=ccomplete#Complete</code>
       \       'repeat'   : 1,
       \     },
       \   ],
-      \ }</code>
-              </pre>
-              <p>這樣是處理完我遇到的幾個問題，不過我要給遠端的linux主機套用時卻又遇到不一樣的問題，沒想到autocomplpop要vim 7.1才支援，7.0還不行，結果為了這個問題折騰一下午，最後晚上用ssh遠端把ubuntu從7.04升級，說實在的還蠻刺激的，只不過我不知道現在是變7.10還是8.04就是XD。</p>
-              <p>現在雖然可以用，不過其實系統還有點神秘，首先是根據autocomplpop.vim檔案內的預設，其實除了上面四種檔案以外，應該只有實體檔案名稱自動完成和關鍵字自動完成，但是我每次測試它都會執行omni auto completion，不然就是我搞錯ctrl+n的功能設定了。另外就是syntax completion在windows上搞不定的錯誤訊息，實在非常惱人，它錯就算了，最讓人搞不懂的是，有時候它丟出一堆錯誤後就正常運作了。另外我的nullcomplete雖然是回傳沒符合的，但實際上總是會跑出一個。</p>
-              <p class="update">補充：autocomplpop新版已經對CSS和HTML檔案的行為有新的預設了。</p>
-            </section>
+      \ }</code></pre>
+
+<p>這樣是處理完我遇到的幾個問題，不過我要給遠端的linux主機套用時卻又遇到不一樣的問題，沒想到autocomplpop要vim 7.1才支援，7.0還不行，結果為了這個問題折騰一下午，最後晚上用ssh遠端把ubuntu從7.04升級，說實在的還蠻刺激的，只不過我不知道現在是變7.10還是8.04就是XD。</p>
+
+<p>現在雖然可以用，不過其實系統還有點神秘，首先是根據autocomplpop.vim檔案內的預設，其實除了上面四種檔案以外，應該只有實體檔案名稱自動完成和關鍵字自動完成，但是我每次測試它都會執行omni auto completion，不然就是我搞錯ctrl+n的功能設定了。另外就是syntax completion在windows上搞不定的錯誤訊息，實在非常惱人，它錯就算了，最讓人搞不懂的是，有時候它丟出一堆錯誤後就正常運作了。另外我的nullcomplete雖然是回傳沒符合的，但實際上總是會跑出一個。</p>
+
+<p class="update">補充：autocomplpop新版已經對CSS和HTML檔案的行為有新的預設了。</p></section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -170,6 +171,15 @@ autocmd FileType c setl omnifunc=ccomplete#Complete</code>
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -190,19 +200,10 @@ autocmd FileType c setl omnifunc=ccomplete#Complete</code>
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -214,7 +215,7 @@ autocmd FileType c setl omnifunc=ccomplete#Complete</code>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

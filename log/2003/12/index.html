@@ -170,10 +170,9 @@
                 <a href="/log/2003/12/23/whitespace-pre-ie/">white-space: pre;之IE不支援</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前幾天用上這CSS語法的時候，忘了測試IE的效果，結果今天才發現IE竟然不支援，這真是太大的打擊了，目前還沒想到對策，暫時決定不理它(汗)，最後補句：「SUCK IE!」</p>
-              <p>上了MSDN查，結果要用IE6以上，並且有DOCTYPE的才會顯示&gt;&lt;。</p>
-            </section>
+            <section itemprop="articleBody"><p>前幾天用上這CSS語法的時候，忘了測試IE的效果，結果今天才發現IE竟然不支援，這真是太大的打擊了，目前還沒想到對策，暫時決定不理它(汗)，最後補句：「SUCK IE!」</p>
+
+<p>上了MSDN查，結果要用IE6以上，並且有DOCTYPE的才會顯示&gt;&lt;。</p></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -189,23 +188,21 @@
                 <a href="/log/2003/12/23/first-time-fix-mt/">第一次修改MT</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>因為上一篇文章再內文用到了&lt;dl&gt;標籤，結果發現即使在這標籤前後加上兩個斷行，還會被當成一般段落處理，所以不得已只好修改點程式碼了，還好沒找多就就找到要改的檔案了「lib\MT\Util.pm」，要改的地方在182行，長成這樣：</p>
-              <pre>
-                <code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|pre|select|form|blockquote|div|q)/) {
+            <section itemprop="articleBody"><p>因為上一篇文章再內文用到了&lt;dl&gt;標籤，結果發現即使在這標籤前後加上兩個斷行，還會被當成一般段落處理，所以不得已只好修改點程式碼了，還好沒找多就就找到要改的檔案了「lib\MT\Util.pm」，要改的地方在182行，長成這樣：</p>
+
+<pre><code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|pre|select|form|blockquote|div|q)/) {
             $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g;
             $p = "&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;";
-        }</code>
-              </pre>
-              <p>我把他修改成下面這樣：</p>
-              <pre>
-                <code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|dl|pre|select|form|blockquote|div|q)/) {
+        }</code></pre>
+
+<p>我把他修改成下面這樣：</p>
+
+<pre><code>        if ($p !~ m/^&amp;lt;(?:table|ol|ul|dl|pre|select|form|blockquote|div|q)/) {
             $p =~ s!\r?\n!&amp;lt;br /&amp;gt;\n!g;
             $p = "&amp;lt;p&amp;gt;$p&amp;lt;/p&amp;gt;";
-        }&gt;</code>
-              </pre>
-              <p>修改的地方只有第一行那串標籤中多加了「<strong>dl|</strong>」，這樣就達到我的目標了。事實上原始的狀況下，兩個斷行後開始&lt;table&gt;、&lt;ol&gt;、&lt;ul&gt;、&lt;pre&gt;、&lt;select&gt;、&lt;form&gt;、&lt;blockquote&gt;、&lt;div&gt;、&lt;q&gt;這幾個標籤，MT都不會針對其內容作修改的。</p>
-            </section>
+        }&gt;</code></pre>
+
+<p>修改的地方只有第一行那串標籤中多加了「<strong>dl|</strong>」，這樣就達到我的目標了。事實上原始的狀況下，兩個斷行後開始&lt;table&gt;、&lt;ol&gt;、&lt;ul&gt;、&lt;pre&gt;、&lt;select&gt;、&lt;form&gt;、&lt;blockquote&gt;、&lt;div&gt;、&lt;q&gt;這幾個標籤，MT都不會針對其內容作修改的。</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -320,10 +317,9 @@
                 <a href="/log/2003/12/21/blog-award-03/">2003 癸未部落格隨便獎</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>「<strong>2003 癸未部落格隨便獎</strong>」開辦了，一共分為最佳視覺效果、最佳介面設計、最佳技術實做、最佳內容呈現、最佳詮釋網誌、最佳人氣互動、最佳相關著作、最佳系統撰寫、最佳推廣宣揚、最佳傑出成就等十個獎項，每個獎項會分別選出兩位獲獎人，詳情請參考<a href="http://imtt.elixus.org/" title="2003 癸未部落格隨便獎-官方網站">官方網站</a>，不過現在官方網站的主機掛點中，所以還請先移駕到主辦人的網站一看究竟，<a href="http://jedi.z6i.org/blog/archives/003329.html" title="Jedi's BLOG - 2003 癸未部落格隨便獎">Jedi's BLOG - 2003 癸未部落格隨便獎</a>。</p>
-              <p>今天參加部落格隨便祭第四場時要幫忙宣傳的^^</p>
-            </section>
+            <section itemprop="articleBody"><p>「<strong>2003 癸未部落格隨便獎</strong>」開辦了，一共分為最佳視覺效果、最佳介面設計、最佳技術實做、最佳內容呈現、最佳詮釋網誌、最佳人氣互動、最佳相關著作、最佳系統撰寫、最佳推廣宣揚、最佳傑出成就等十個獎項，每個獎項會分別選出兩位獲獎人，詳情請參考<a href="http://imtt.elixus.org/" title="2003 癸未部落格隨便獎-官方網站">官方網站</a>，不過現在官方網站的主機掛點中，所以還請先移駕到主辦人的網站一看究竟，<a href="http://jedi.z6i.org/blog/archives/003329.html" title="Jedi's BLOG - 2003 癸未部落格隨便獎">Jedi's BLOG - 2003 癸未部落格隨便獎</a>。</p>
+
+<p>今天參加部落格隨便祭第四場時要幫忙宣傳的^^</p></section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -357,10 +353,9 @@
                 <a href="/log/2003/12/20/run-robo/">走れ！ロボ！</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>SONY最新發表的<a href="http://www.sony.co.jp/SonyInfo/QRIO/">QRIO</a>是世界上第一台可以跑的機器人，要機器人跑很難嗎？事實上是真的很難，如果會一點程式語言的話，可以想像一下要怎麼用程式控制一個跑步的全身動作^^。</p>
-              <p>不過不知道QRIO跑到一半時被推一下有沒有辦法保持平衡啊^^b</p>
-            </section>
+            <section itemprop="articleBody"><p>SONY最新發表的<a href="http://www.sony.co.jp/SonyInfo/QRIO/">QRIO</a>是世界上第一台可以跑的機器人，要機器人跑很難嗎？事實上是真的很難，如果會一點程式語言的話，可以想像一下要怎麼用程式控制一個跑步的全身動作^^。</p>
+
+<p>不過不知道QRIO跑到一半時被推一下有沒有辦法保持平衡啊^^b</p></section>
             <footer>
               <a href="/log/others/" rel="tag">其他</a>
             </footer>
@@ -433,10 +428,9 @@
                 <a href="/log/2003/12/18/catch-cold-day-4/">感冒第四天</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>等下總算能去看醫生了。第一天只是喉嚨痛，第二天開始咳嗽，加上扁條線好像發炎腫起來，第三天，也就是昨天，大概是這次感冒最辛苦的一天了，喉嚨雖然不痛了，咳嗽狀況也好多了，不過因為前一天咳太多，腹肌已經受傷，只要一咳就會很痛，接著頭也漸漸開始不舒服，果然晚上好像發燒了，關節也怪怪的。還好今天早上起來狀況好很多，不過腹肌...，現在連擤鼻涕都會痛Q_Q！</p>
-              <p>題外話，昨天去補習班時，門口有人在量體溫，我很成功的沒發燒進去了，結果好像上課上一上開始發燒^^b，後來回家才看到新聞說又有人感染SARS了。</p>
-            </section>
+            <section itemprop="articleBody"><p>等下總算能去看醫生了。第一天只是喉嚨痛，第二天開始咳嗽，加上扁條線好像發炎腫起來，第三天，也就是昨天，大概是這次感冒最辛苦的一天了，喉嚨雖然不痛了，咳嗽狀況也好多了，不過因為前一天咳太多，腹肌已經受傷，只要一咳就會很痛，接著頭也漸漸開始不舒服，果然晚上好像發燒了，關節也怪怪的。還好今天早上起來狀況好很多，不過腹肌...，現在連擤鼻涕都會痛Q_Q！</p>
+
+<p>題外話，昨天去補習班時，門口有人在量體溫，我很成功的沒發燒進去了，結果好像上課上一上開始發燒^^b，後來回家才看到新聞說又有人感染SARS了。</p></section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -473,12 +467,9 @@
                 <a href="/log/2003/12/17/qoo/">麥當勞的Qoo</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <object data="/log/2003/12/17/Qoo/Qoo.jpg" style="width:410px;height:307px;" type="image/jpeg">麥當勞快樂兒童餐送的Qoo扮麋鹿</object>
-              </p>
-              <p>麥當勞快樂兒童餐送的，單買39元，前兩天才發現，結果已經錯過第一批了，還好，第一批我比較不喜歡，就先弄了隻麋鹿，過幾天再去買聖誕老人。</p>
-            </section>
+            <section itemprop="articleBody"><p><object data="/log/2003/12/17/Qoo/Qoo.jpg" style="width:410px;height:307px;" type="image/jpeg">麥當勞快樂兒童餐送的Qoo扮麋鹿</object></p>
+
+<p>麥當勞快樂兒童餐送的，單買39元，前兩天才發現，結果已經錯過第一批了，還好，第一批我比較不喜歡，就先弄了隻麋鹿，過幾天再去買聖誕老人。</p></section>
             <footer>
               <a href="/log/others/" rel="tag">其他</a>
             </footer>
@@ -626,12 +617,9 @@
                 <a href="/log/2003/12/06/appleseed-movie/">APPLESEED映畫化決定</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a href="http://www.nikkansports.com/ns/entertainment/f-et-tp0-031204-0012.html">アニメ映画「アップルシード」製作発表</a>
-              </p>
-              <p>原作士郎正宗，中文名稱「蘋果核戰記」，決定要改編成電影版動畫了，原作的漫畫我已經忘記有沒有看過了，年代久遠的作品啊。</p>
-            </section>
+            <section itemprop="articleBody"><p><a href="http://www.nikkansports.com/ns/entertainment/f-et-tp0-031204-0012.html">アニメ映画「アップルシード」製作発表</a></p>
+
+<p>原作士郎正宗，中文名稱「蘋果核戰記」，決定要改編成電影版動畫了，原作的漫畫我已經忘記有沒有看過了，年代久遠的作品啊。</p></section>
             <footer>
               <a href="/log/acg/" rel="tag">動畫、漫畫、遊戲</a>
             </footer>
@@ -686,10 +674,9 @@
                 <a href="/log/2003/12/04/finally/">終於...</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>總算是開站了，這篇也是我發的第一篇日記類文章，雖然說是日記，我想不會真的能每天都一篇日記吧。</p>
-              <p>在我寫這篇的同時，知道這個站開張的人還只有一個(汗)，不過這篇寫完就會到常去的BBS站宣傳一下了。今天，基本上會想記錄的事不能到處說，所以就只好說明天啦，明天要去資訊月展場逛逛，不知道會有什麼收穫，希望不要亂買東西啊，不過要是看到便宜的MS新版滑鼠可能還是會買下來吧，現在這版平均兩個月要換一次電池實在有點麻煩。</p>
-            </section>
+            <section itemprop="articleBody"><p>總算是開站了，這篇也是我發的第一篇日記類文章，雖然說是日記，我想不會真的能每天都一篇日記吧。</p>
+
+<p>在我寫這篇的同時，知道這個站開張的人還只有一個(汗)，不過這篇寫完就會到常去的BBS站宣傳一下了。今天，基本上會想記錄的事不能到處說，所以就只好說明天啦，明天要去資訊月展場逛逛，不知道會有什麼收穫，希望不要亂買東西啊，不過要是看到便宜的MS新版滑鼠可能還是會買下來吧，現在這版平均兩個月要換一次電池實在有點麻煩。</p></section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -726,12 +713,8 @@
                 <a href="/log/2003/12/04/site-open/">開站</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>經過長久的修改和環境熟析，今天總算決定正式開始寫blog了，事實上還有很多地方還未達到自己的目標，其中最重要的是搜尋的樣板還沒弄好(汗)，不過剛開始應該還沒什麼機會搜尋吧:P。除此之外，最近有些事情佔去我不少時間，所以還不會到處宣傳這裡，看的到的人也不會太多^^b</p>
-              <em class="extended">
-                <a href="/log/2003/12/04/site-open/">閱讀「開站」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p>經過長久的修改和環境熟析，今天總算決定正式開始寫blog了，事實上還有很多地方還未達到自己的目標，其中最重要的是搜尋的樣板還沒弄好(汗)，不過剛開始應該還沒什麼機會搜尋吧:P。除此之外，最近有些事情佔去我不少時間，所以還不會到處宣傳這裡，看的到的人也不會太多^^b</p>
+<em class="extended"><a href="/log/2003/12/04/site-open/">閱讀「開站」全文</a></em></section>
             <footer>
               <a href="/log/about/" rel="tag">關於這裡</a>
             </footer>
@@ -753,7 +736,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -765,7 +748,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

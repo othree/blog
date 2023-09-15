@@ -85,17 +85,22 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/12/05/angularjs-data-binding/">AngularJS Data Binding 機制</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。</p>
-              <p>結果又是在 StackOverflow 找到重要的<a href="http://stackoverflow.com/questions/9682092/databinding-in-angularjs">參考資料</a>，說到 <code>$digest</code> 和 <code>$apply</code> 這兩個 method，<code>$apply</code> 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 <code>$apply()</code> ，然後 <code>$apply</code> 會去執行 <a href="http://docs.angularjs.org/guide/expression">angular expression</a>，然後接著執行 <code>$digest</code> 檢查資料變化並讓對應的變化發生。所以 AngularJS 的 data binding 作法實際上是，AngularJS Framework 內的 controller function 有經手過的 scope，它會自己接在 function 的後面執行 <code>$apply()</code> 來套用變動，算是一種 dirty check，不過是檢查的很乾淨。</p>
-              <p>另外還剛好看到今年 <a href="2013.jsconf.eu/">JSConf EU</a> 有一場 <a href="http://2013.jsconf.eu/speakers/marius-gundersen-a-comparison-of-the-twoway-binding-in-angularjs-emberjs-and-knockoutjs.html">A comparison of the two-way binding in AngularJS, EmberJS and KnockoutJS</a> 的演講，不長，二十分而已內容也很不錯，推薦花點時間看看：</p>
-              <div class="embed_16_9">
-                <iframe width="853" height="480" src="https://www.youtube.com/embed/mVjpwia1YN4" frameborder="0" allowfullscreen="allowfullscreen"/>
-              </div>
-              <p>講者 Marius Gundersen 比較了 AngularJS、EmberJS 和 KnockoutJS 三套 framework 的 data binding 機制，結果是各有優缺點，在最後的問與答也說到現在制定中的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">Object.observer</a> 的 JavaScript 未來新功能，等到這功能正式可以用時，就可以解決現在這些實作大部分的問題。</p>
-              <p>還有一篇文章 <a href="http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks">Accessors vs Dirty-checking in Javascript Frameworks</a> 有蠻深入的比較現在不同 data binding 實作的特性，就如標題是 Dirty-checking 和 Accessor 兩類實作為主，Accessor 的實作其實就是像 Backbone 那樣，要修改 model 的屬性要用他的 <code>set()</code> 方法來作，才能順便觸發後面的動作。</p>
-              <p>最後文章寫完才看到 AngularJS 社群第四次聚會 Ticore 已經講過這個主題了，<a href="http://www.slideshare.net/ticore/angularjs-data-binding">投影片</a>內容也還蠻深入的。</p>
-            </section>
+            <section itemprop="articleBody"><p>一開始沒特別注意，前陣子看 PolymerJS 的時候才發現 AngularJS 的 data binding 是只要改 POJSO(Plain Old JavaScript Object) 的值，然後魔法就發生了，如果有寫 JS 應該都了解，目前其實沒辦法偵測某個物件的屬性是否被更改，所以 AngularJS 到底怎麼辦到的就引起我的興趣了，以下內容如有錯誤還請告知，畢竟我還沒有 AngularJS 開發經驗，可能有誤解。</p>
+
+<p>結果又是在 StackOverflow 找到重要的<a href="http://stackoverflow.com/questions/9682092/databinding-in-angularjs">參考資料</a>，說到 <code>$digest</code> 和 <code>$apply</code> 這兩個 method，<code>$apply</code> 最主要是給外部的程式來用（還有 AngularJS 內部），如果是外部的程式改動你 scope 內的值，那還要順便執行 <code>$apply()</code> ，然後 <code>$apply</code> 會去執行 <a href="http://docs.angularjs.org/guide/expression">angular expression</a>，然後接著執行 <code>$digest</code> 檢查資料變化並讓對應的變化發生。所以 AngularJS 的 data binding 作法實際上是，AngularJS Framework 內的 controller function 有經手過的 scope，它會自己接在 function 的後面執行 <code>$apply()</code> 來套用變動，算是一種 dirty check，不過是檢查的很乾淨。</p>
+
+<p>另外還剛好看到今年 <a href="2013.jsconf.eu/">JSConf EU</a> 有一場 <a href="http://2013.jsconf.eu/speakers/marius-gundersen-a-comparison-of-the-twoway-binding-in-angularjs-emberjs-and-knockoutjs.html">A comparison of the two-way binding in AngularJS, EmberJS and KnockoutJS</a> 的演講，不長，二十分而已內容也很不錯，推薦花點時間看看：</p>
+
+<div class="embed_16_9">
+<iframe width="853" height="480" src="https://www.youtube.com/embed/mVjpwia1YN4" frameborder="0" allowfullscreen="allowfullscreen"/>
+</div>
+
+<p>講者 Marius Gundersen 比較了 AngularJS、EmberJS 和 KnockoutJS 三套 framework 的 data binding 機制，結果是各有優缺點，在最後的問與答也說到現在制定中的 <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe">Object.observer</a> 的 JavaScript 未來新功能，等到這功能正式可以用時，就可以解決現在這些實作大部分的問題。</p>
+
+<p>還有一篇文章 <a href="http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks">Accessors vs Dirty-checking in Javascript Frameworks</a> 有蠻深入的比較現在不同 data binding 實作的特性，就如標題是 Dirty-checking 和 Accessor 兩類實作為主，Accessor 的實作其實就是像 Backbone 那樣，要修改 model 的屬性要用他的 <code>set()</code> 方法來作，才能順便觸發後面的動作。</p>
+
+<p>最後文章寫完才看到 AngularJS 社群第四次聚會 Ticore 已經講過這個主題了，<a href="http://www.slideshare.net/ticore/angularjs-data-binding">投影片</a>內容也還蠻深入的。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -120,6 +125,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -140,19 +154,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -164,7 +169,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

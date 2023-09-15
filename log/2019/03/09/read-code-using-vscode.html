@@ -85,24 +85,16 @@
                 <a itemprop="mainEntityOfPage" href="/log/2019/03/09/read-code-using-vscode/">使用 VSCode 讀程式碼</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="674"/>
-                  </img>
-                </a>
-              </p>
-              <p>偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 <a href="https://blog.othree.net/log/2018/04/19/immer/">immer</a>，或是最近還在看的 <a href="https://lit-html.polymer-project.org/">lit-html</a>，然後最近發現 <a href="https://code.visualstudio.com/">VSCode</a> 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。</p>
-              <p>閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 <code>F12</code> 移動到定義處和 <code>Ctrl</code>+<code>-</code> 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：</p>
-              <ol>
-                <li><code>Opt</code> + <code>F12</code> Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。</li>
-                <li><code>Cmd</code> + <code>K</code><code>F12</code> Open Definition to the Side，這是兩段式的指令，先按 <code>Cmd</code> + <code>K</code> 然後再按 <code>F12</code>，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。</li>
-                <li><code>Shift</code> + <code>F12</code> Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。</li>
-              </ol>
-              <p>大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="674"/></img></a></p>
+<p>偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 <a href="https://blog.othree.net/log/2018/04/19/immer/">immer</a>，或是最近還在看的 <a href="https://lit-html.polymer-project.org/">lit-html</a>，然後最近發現 <a href="https://code.visualstudio.com/">VSCode</a> 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。</p>
+<p>閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 <code>F12</code> 移動到定義處和 <code>Ctrl</code>+<code>-</code> 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：</p>
+<ol>
+<li><code>Opt</code> + <code>F12</code> Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。</li>
+<li><code>Cmd</code> + <code>K</code> <code>F12</code> Open Definition to the Side，這是兩段式的指令，先按 <code>Cmd</code> + <code>K</code> 然後再按 <code>F12</code>，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。</li>
+<li><code>Shift</code> + <code>F12</code> Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。</li>
+</ol>
+<p>大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。</p>
+</section>
             <footer>
               <a href="/log/software/" rel="tag">軟體推薦、TIP</a>
             </footer>
@@ -127,6 +119,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -147,19 +148,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -171,7 +163,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

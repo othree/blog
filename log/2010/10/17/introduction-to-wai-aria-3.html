@@ -85,25 +85,26 @@
                 <a itemprop="mainEntityOfPage" href="/log/2010/10/17/introduction-to-wai-aria-3/">WAI-ARIA 介紹之三</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
-              <ul>
-                <li>
-                  <a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a>
-                </li>
-                <li>
-                  <a href="http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/">WAI-ARIA 介紹之二</a>
-                </li>
-                <li>WAI-ARIA 介紹之三 - 本篇文章</li>
-              </ul>
-              <h4>ARIA 可以做什麼用？</h4>
-              <p>使用 ARIA 並不會有不好的副作用，所以你可以馬上開始使用他，而且主流的四個瀏覽器都已經支援或已經有計劃支援了，Opera 9.5 和 Firefox 1.5 已經有支援 ARIA ， IE8b 也有支援， Safari 所使用的 WebKit 框架也發表說他們將會開始支援 ARIA ， 輔助科技也廣泛的支援 ARIA ，JAWS 7.1、Window-Eyes 5.5+、NVDA、Zoomtext 9+ 和其他輔助科技都有基本的支援，而且還會越來越好。</p>
-              <h4>現在就參與使用</h4>
-              <p>由於使用 ARIA 並沒有任何不好的副作用，而且相關的支援都已經到位，現在就參與使用百利而無一害，即使你的網站非常簡單，你也可以使用文件地標讓使用者有更好的導覽系統可以使用。</p>
-              <h5>使用文件地標</h5>
-              <p>在我的個人網站，我就使用了 main、navigation、search、secondary 這幾個文件地標，以下面的文件結構為例：</p>
-              <pre>
-                <code>&lt;div id="ads"&gt;
+            <section itemprop="articleBody"><p>這篇文章是翻譯 Dev.Operv 的 <a href="http://dev.opera.com/articles/view/introduction-to-wai-aria/">Introduction to WAI ARIA</a> 這篇文章，分成三篇刊載。由於原文為 <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/deed.zh_TW">CC-BY-NC-SA-2.5</a> 授權，故此篇文章也採用同樣授權方式。系列文章：</p>
+
+<ul>
+<li><a href="http://blog.othree.net/log/2010/10/10/introduction-to-wai-aria-1/">WAI-ARIA 介紹之一</a></li>
+<li><a href="http://blog.othree.net/log/2010/10/13/introduction-to-wai-aria-2/">WAI-ARIA 介紹之二</a></li>
+<li>WAI-ARIA 介紹之三 - 本篇文章</li>
+</ul>
+
+<h4>ARIA 可以做什麼用？</h4>
+
+<p>使用 ARIA 並不會有不好的副作用，所以你可以馬上開始使用他，而且主流的四個瀏覽器都已經支援或已經有計劃支援了，Opera 9.5 和 Firefox 1.5 已經有支援 ARIA ， IE8b 也有支援， Safari 所使用的 WebKit 框架也發表說他們將會開始支援 ARIA ， 輔助科技也廣泛的支援 ARIA ，JAWS 7.1、Window-Eyes 5.5+、NVDA、Zoomtext 9+ 和其他輔助科技都有基本的支援，而且還會越來越好。</p>
+
+<h4>現在就參與使用</h4>
+
+<p>由於使用 ARIA 並沒有任何不好的副作用，而且相關的支援都已經到位，現在就參與使用百利而無一害，即使你的網站非常簡單，你也可以使用文件地標讓使用者有更好的導覽系統可以使用。</p>
+<h5>使用文件地標</h5>
+
+<p>在我的個人網站，我就使用了 main、navigation、search、secondary 這幾個文件地標，以下面的文件結構為例：</p>
+
+<pre><code>&lt;div id="ads"&gt;
 ...
 &lt;/div&gt;
 &lt;div id="nav"&gt;
@@ -115,11 +116,11 @@
 &lt;div id="content"&gt;
 ...
 &lt;/div&gt;
-</code>
-              </pre>
-              <p>我們可以把 role 屬性寫進標記內以加上地標資訊。</p>
-              <pre>
-                <code>&lt;div id="ads" role="banner"&gt;
+</code></pre>
+
+<p>我們可以把 role 屬性寫進標記內以加上地標資訊。</p>
+
+<pre><code>&lt;div id="ads" role="banner"&gt;
 ...
 &lt;/div&gt;
 &lt;div id="nav" role="navigation"&gt;
@@ -131,11 +132,11 @@
 &lt;div id="content" role="main"&gt;
 ...
 &lt;/div&gt;
-</code>
-              </pre>
-              <p>大部分的網頁都會有設計好的結構，好方便使用 CSS 做版面配置，而此範例頁就使用到 id，id 還可以簡單的傳給 JavaScript 函數，下面的範例是一個簡單的 JavaScript 函數，它接收的參數是元素的 id 和 role 角色值，會將指定 id 元素的 role 設為指定的值。</p>
-              <pre>
-                <code>function addARIARole(strID, strRole)
+</code></pre>
+
+<p>大部分的網頁都會有設計好的結構，好方便使用 CSS 做版面配置，而此範例頁就使用到 id，id 還可以簡單的傳給 JavaScript 函數，下面的範例是一個簡單的 JavaScript 函數，它接收的參數是元素的 id 和 role 角色值，會將指定 id 元素的 role 設為指定的值。</p>
+
+<pre><code>function addARIARole(strID, strRole)
 {
     // Find the element to add a role property to
     var objElement = document.getElementById(strID);
@@ -146,11 +147,11 @@
         objElement.setAttribute('role', strRole);
     }
 }
-</code>
-              </pre>
-              <p>接著就可以使用這個函數，傳入文件內元素的 id 和對應的文件地標，而已前面的文件結構來說，我們可以用下面的 JavaScript 來加上地標資訊，而不必直接寫入標籤。</p>
-              <pre>
-                <code>function setupARIA()
+</code></pre>
+
+<p>接著就可以使用這個函數，傳入文件內元素的 id 和對應的文件地標，而已前面的文件結構來說，我們可以用下面的 JavaScript 來加上地標資訊，而不必直接寫入標籤。</p>
+
+<pre><code>function setupARIA()
 {
     // Add ARIA roles to the document
     addARIARole('content', 'main');
@@ -159,24 +160,27 @@
     addARIARole('ads', 'banner');
 }
 window.onload = setupARIA;
-</code>
-              </pre>
-              <h5>標出必填欄位</h5>
-              <p>如果你的表單內有必填欄位，你可以使用 aria-required 屬性，此屬性告訴使用者此欄位在送出前必須要有填值，下面的範例就是有使用 aria-required 的 input 元素。</p>
-              <pre>
-                <code>&lt;label for="contactname"&gt;Name&lt;/label&gt;
+</code></pre>
+
+<h5>標出必填欄位</h5>
+
+<p>如果你的表單內有必填欄位，你可以使用 aria-required 屬性，此屬性告訴使用者此欄位在送出前必須要有填值，下面的範例就是有使用 aria-required 的 input 元素。</p>
+
+<pre><code>&lt;label for="contactname"&gt;Name&lt;/label&gt;
 &lt;input type="text"
        id="contactname" 
        name="contactname"
        size="30"
        aria-required="true"&gt;
-</code>
-              </pre>
-              <p>Wordpress 已經有在迴響表單的必填欄位內加上 aria-required 屬性了。</p>
-              <h5>加上其他相關屬性</h5>
-              <p>還有許多 ARIA 屬性可以使用在簡單的網站上，像是 aria-labeledby 和 aria-describerdby，aria-labeledby 是用來定位該元素的標題是哪個或哪些元素裡，aria-describedby 則是用來定位敘述該元素的資訊放在哪。</p>
-              <pre>
-                <code>&lt;h2 id="limg"&gt;Paragliding&lt;/h2&gt;
+</code></pre>
+
+<p>Wordpress 已經有在迴響表單的必填欄位內加上 aria-required 屬性了。</p>
+
+<h5>加上其他相關屬性</h5>
+
+<p>還有許多 ARIA 屬性可以使用在簡單的網站上，像是 aria-labeledby 和 aria-describerdby，aria-labeledby 是用來定位該元素的標題是哪個或哪些元素裡，aria-describedby 則是用來定位敘述該元素的資訊放在哪。</p>
+
+<pre><code>&lt;h2 id="limg"&gt;Paragliding&lt;/h2&gt;
 &lt;p id="dimg"&gt;
 A long description of our paragliding trip ...
 &lt;/p&gt;
@@ -186,45 +190,39 @@ A long description of our paragliding trip ...
      aria-labelledby="limg"
      aria-describedby="dimg"&gt;
 &lt;/div&gt;
-</code>
-              </pre>
-              <h5>更高的優先權</h5>
-              <p>ARIA 的屬性比 HTML 原本的屬性優先權還要高，意思是說 aria-labeledby 和 label 元素的 for一起出現時， aria-labeledby 優先度會較高，不過 label 元素還是可以讓不支援 ARIA 的舊瀏覽器能正確的找出元素間的關係，有個簡單的技巧可以避免衝突，就是用 aria-labeledby 連回 label 元素，不管 ARIA 支援如何，都可以確保 input 元素的標題存在。</p>
-              <pre>
-                <code>&lt;label id="lblef" for="effectiveness"&gt;Effectiveness&lt;/label&gt;
+</code></pre>
+
+<h5>更高的優先權</h5>
+
+<p>ARIA 的屬性比 HTML 原本的屬性優先權還要高，意思是說 aria-labeledby 和 label 元素的 for一起出現時， aria-labeledby 優先度會較高，不過 label 元素還是可以讓不支援 ARIA 的舊瀏覽器能正確的找出元素間的關係，有個簡單的技巧可以避免衝突，就是用 aria-labeledby 連回 label 元素，不管 ARIA 支援如何，都可以確保 input 元素的標題存在。</p>
+
+<pre><code>&lt;label id="lblef" for="effectiveness"&gt;Effectiveness&lt;/label&gt;
 &lt;input type="image"
        role="slider"
        id="effectiveness"
        aria-labelledby="lblef"
        ...&gt;
-</code>
-              </pre>
-              <p>看看完整的 ARIA [屬性清單][8] 可以幫助你讓你把網頁內容弄的更具有親和力。</p>
-              <h4>總結</h4>
-              <p>HTML 最初不是設計來製作網路應用程式的，但是設計師們還是藉著製作自定的介面元件，並使用 JavaScript 給予它們可以操作互動的能力而拼湊出網路應用程式，而問題是這些元件的角色、狀態和屬性以及網頁內容的更新情形並不會讓輔助科技正確的知道，因此 ARIA 規範藉由讓設計師可以詳細的描述這些介面元件、定義文件結構和即時更新的區域來解決這個問題。</p>
-              <p>不論你是要開發最新潮複雜的網路應用程式還是你有的只是簡單的 HTML 文件，你都可以使用 ARIA 讓身心障礙人士獲益。</p>
-              <h4>進階閱讀</h4>
-              <ul>
-                <li>
-                  <a href="http://www.w3.org/TR/wai-aria-practices/">WAI-ARIA Best Practices</a>
-                </li>
-                <li>
-                  <a href="http://www.marcozehe.de/2008/02/29/easy-aria-tip-1-using-aria-required/">Using aria-required</a>
-                </li>
-                <li>
-                  <a href="http://www.marcozehe.de/2008/03/23/easy-aria-tip-2-aria-labelledby-and-aria-describedby/">Using aria-labelledby and aria-describedby</a>
-                </li>
-                <li>
-                  <a href="http://www.marcozehe.de/2008/07/16/easy-aria-tip-3-aria-invalid-and-role-alert/">Using aria-invalid and role alert</a>
-                </li>
-                <li>
-                  <a href="http://www.paciellogroup.com/blog/?p=53">Tri-State Checkbox Example</a>
-                </li>
-                <li>
-                  <a href="http://www.paciellogroup.com/blog/?p=68">ARIA Slider Example</a>
-                </li>
-              </ul>
-            </section>
+</code></pre>
+
+<p>看看完整的 ARIA [屬性清單][8] 可以幫助你讓你把網頁內容弄的更具有親和力。</p>
+
+<h4>總結</h4>
+
+<p>HTML 最初不是設計來製作網路應用程式的，但是設計師們還是藉著製作自定的介面元件，並使用 JavaScript 給予它們可以操作互動的能力而拼湊出網路應用程式，而問題是這些元件的角色、狀態和屬性以及網頁內容的更新情形並不會讓輔助科技正確的知道，因此 ARIA 規範藉由讓設計師可以詳細的描述這些介面元件、定義文件結構和即時更新的區域來解決這個問題。</p>
+
+<p>不論你是要開發最新潮複雜的網路應用程式還是你有的只是簡單的 HTML 文件，你都可以使用 ARIA 讓身心障礙人士獲益。</p>
+
+<h4>進階閱讀</h4>
+
+<ul>
+<li><a href="http://www.w3.org/TR/wai-aria-practices/">WAI-ARIA Best Practices</a></li>
+<li><a href="http://www.marcozehe.de/2008/02/29/easy-aria-tip-1-using-aria-required/">Using aria-required</a></li>
+<li><a href="http://www.marcozehe.de/2008/03/23/easy-aria-tip-2-aria-labelledby-and-aria-describedby/">Using aria-labelledby and aria-describedby</a></li>
+<li><a href="http://www.marcozehe.de/2008/07/16/easy-aria-tip-3-aria-invalid-and-role-alert/">Using aria-invalid and role alert</a></li>
+<li><a href="http://www.paciellogroup.com/blog/?p=53">Tri-State Checkbox Example</a></li>
+<li><a href="http://www.paciellogroup.com/blog/?p=68">ARIA Slider Example</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -249,6 +247,15 @@ A long description of our paragliding trip ...
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -269,19 +276,10 @@ A long description of our paragliding trip ...
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -293,7 +291,7 @@ A long description of our paragliding trip ...
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

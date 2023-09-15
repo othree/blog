@@ -85,20 +85,15 @@
                 <a itemprop="mainEntityOfPage" href="/log/2013/05/02/dnssec/">DNSSEC</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前幾天我的網域名稱 <strong>othree.net</strong> 突然無法從 Google 的 Public DNS 8.8.8.8 查到，經過一些交叉比對後，發現 Google Public DNS 和 Linode 內部用的 DNS 查不到，其他大部分的 DNS 都查的到，一時也不知道到底是什麼問題，就和 namecheap 聯絡，結果對方客服還蠻鬼打牆的，聯繫兩次都說設定沒問題，他們連的到，有問題也是 Google 的，還好 DK 有跟我說可能和 DNSSEC 有關係，讓我比較好找問題，其實我也有跟 namecheap 的人說到 DNSSEC，但是他們好像沒聽到一樣，讓我有些訝異的是， namecheap 的人對於 Google Public DNS 查不到他們客戶的 domain 覺得好像沒什麼，沒有很積極找問題。</p>
-              <p>還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 <a href="http://dnsviz.net/">DNSViz</a> 結果給我。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w">
-                    <meta itemprop="width" content="552"/>
-                    <meta itemprop="height" content="947"/>
-                  </img>
-                </a>
-              </p>
-              <p>其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：</p>
-              <pre>
-                <code>[/root] -root- &gt;&gt;&gt; dig @192.55.83.30 othree.net. DS
+            <section itemprop="articleBody"><p>前幾天我的網域名稱 <strong>othree.net</strong> 突然無法從 Google 的 Public DNS 8.8.8.8 查到，經過一些交叉比對後，發現 Google Public DNS 和 Linode 內部用的 DNS 查不到，其他大部分的 DNS 都查的到，一時也不知道到底是什麼問題，就和 namecheap 聯絡，結果對方客服還蠻鬼打牆的，聯繫兩次都說設定沒問題，他們連的到，有問題也是 Google 的，還好 DK 有跟我說可能和 DNSSEC 有關係，讓我比較好找問題，其實我也有跟 namecheap 的人說到 DNSSEC，但是他們好像沒聽到一樣，讓我有些訝異的是， namecheap 的人對於 Google Public DNS 查不到他們客戶的 domain 覺得好像沒什麼，沒有很積極找問題。</p>
+
+<p>還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 <a href="http://dnsviz.net/">DNSViz</a> 結果給我。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w"><meta itemprop="width" content="552"/><meta itemprop="height" content="947"/></img></a></p>
+
+<p>其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：</p>
+
+<pre><code>[/root] -root- &gt;&gt;&gt; dig @192.55.83.30 othree.net. DS
 
 ; &lt;&lt;&gt;&gt; DiG 9.7.0-P1 &lt;&lt;&gt;&gt; @192.55.83.30 othree.net. DS
 ; (1 server found)
@@ -113,11 +108,11 @@
 
 ;; ANSWER SECTION:
 othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
-</code>
-              </pre>
-              <p>其實看到這邊有點傻眼，因為用來驗證我的 DNSKEY 的 hash 竟然是 '1234567890123456789012345678901234657890' ，怎麼想都是有人亂打的，不過我也不想追究了，總之上層有 DS record，但是去問下層 DNSKEY 時確沒有：</p>
-              <pre>
-                <code>[/root] -root- &gt;&gt;&gt; dig @208.64.122.242 +multiline othree.net. DNSKEY
+</code></pre>
+
+<p>其實看到這邊有點傻眼，因為用來驗證我的 DNSKEY 的 hash 竟然是 '1234567890123456789012345678901234657890' ，怎麼想都是有人亂打的，不過我也不想追究了，總之上層有 DS record，但是去問下層 DNSKEY 時確沒有：</p>
+
+<pre><code>[/root] -root- &gt;&gt;&gt; dig @208.64.122.242 +multiline othree.net. DNSKEY
 
 ; &lt;&lt;&gt;&gt; DiG 9.7.0-P1 &lt;&lt;&gt;&gt; @208.64.122.242 +multiline othree.net. DNSKEY
 ; (1 server found)
@@ -129,18 +124,12 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
 
 ;; QUESTION SECTION:
 ;othree.net. IN DNSKEY
-</code>
-              </pre>
-              <p>這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w">
-                    <meta itemprop="width" content="555"/>
-                    <meta itemprop="height" content="910"/>
-                  </img>
-                </a>
-              </p>
-            </section>
+</code></pre>
+
+<p>這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w"><meta itemprop="width" content="555"/><meta itemprop="height" content="910"/></img></a></p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -165,6 +154,15 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -185,19 +183,10 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -209,7 +198,7 @@ othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

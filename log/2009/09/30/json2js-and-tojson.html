@@ -85,11 +85,12 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/09/30/json2js-and-tojson/">json2.js 和 toJSON()</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>對 <a href="http://www.json.org/">JSON</a> 有認識加上有寫過 JavaScript 來處理 JSON 的人或許都知道 "json2.js":http://www.json.org/js.html 這個 <a href="http://www.crockford.com/">Douglas Crockford</a> 寫的 JSON 處理器，他可以安全的轉換 JSON 和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 <code>{"a":3}</code> 會被轉成 <code>{"a":3}</code> ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 <del><a href="http://orz.othree.net/lib/tojson/tojson.js">一個 function</a></del> 來包 json2.js，用法可以參考 <a href="http://orz.othree.net/lib/tojson/test.html">test</a> 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function 就會得到 JSON 格式字串，當然子物件有 <code>toJSON</code> 的話就會先用它，沒的話才會用 <code>JSON.stringify</code>。</p>
-              <p>不過使用上有個小小的安全性問題要注意，我是假設 toJSON 傳回的字串是安全的，當然這樣假設很危險，所以我自己的物件實作 toJSON 時也是把想要傳回的物件先建立起來，然後丟給 JSON.stringify ，如果考慮到自己的子物件也有實作 toJSON 的話，那丟給我寫的 toJSON 也是可以的。</p>
-              <p>查了一下  <a href="http://developer.yahoo.com/yui/json/#toJSON">YUI 的文件</a> ，發現原來 JSON2.js 的設計裡，物件自己作 toJSON 的方法是傳新的物件，而不是傳已經轉成 string 的。</p>
-            </section>
+            <section itemprop="articleBody"><p>對 <a href="http://www.json.org/">JSON</a> 有認識加上有寫過 JavaScript 來處理 JSON 的人或許都知道 "json2.js":http://www.json.org/js.html 這個 <a href="http://www.crockford.com/">Douglas Crockford</a> 寫的 JSON 處理器，他可以安全的轉換 JSON 和 JavaScript 的物件，不過我因為資料封裝的問題，希望能自己實作子物件的 toJSON function，本來看了一下 json2.js 的原始碼以為他可以支援，不過實際測試後才發現直接用 json2.js 會造成 toJSON 函式產生的字串會多過一次 quote 的動作，舉例來說 <code>{"a":3}</code> 會被轉成 <code>{"a":3}</code> ，結果就是造成轉回物件的時候得到錯誤的結果，為了處理這個問題，我寫了 <del><a href="http://orz.othree.net/lib/tojson/tojson.js">一個 function</a></del> 來包 json2.js，用法可以參考 <a href="http://orz.othree.net/lib/tojson/test.html">test</a> 頁的原始碼，不過簡單說，就是把物件丟給他，他會傳回一個 function，執行這個 function 就會得到 JSON 格式字串，當然子物件有 <code>toJSON</code> 的話就會先用它，沒的話才會用 <code>JSON.stringify</code>。</p>
+
+<p>不過使用上有個小小的安全性問題要注意，我是假設 toJSON 傳回的字串是安全的，當然這樣假設很危險，所以我自己的物件實作 toJSON 時也是把想要傳回的物件先建立起來，然後丟給 JSON.stringify ，如果考慮到自己的子物件也有實作 toJSON 的話，那丟給我寫的 toJSON 也是可以的。</p>
+
+<p>查了一下  <a href="http://developer.yahoo.com/yui/json/#toJSON">YUI 的文件</a> ，發現原來 JSON2.js 的設計裡，物件自己作 toJSON 的方法是傳新的物件，而不是傳已經轉成 string 的。</p>
+</section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -114,6 +115,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -134,19 +144,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -158,7 +159,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

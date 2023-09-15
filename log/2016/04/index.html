@@ -81,19 +81,13 @@
                 <a href="/log/2016/04/22/nginx-fcgiwrap/">nginx &amp; fcgiwrap</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
-              <p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
-              <pre>
-                <code>location ~ ^/path/to/mt/mt.*\.cgi {
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr"><img itemprop="url image" src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。</p>
+
+<p>不過認真研究了一下，終於發現其實可以透過 <a href="https://github.com/gnosek/fcgiwrap">FCGI Wrap</a> 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：</p>
+
+<pre><code>location ~ ^/path/to/mt/mt.*\.cgi {
     gzip off;
     fastcgi_index index.cgi;
     fastcgi_split_path_info ^(.+?\.cgi)(/.*)$;
@@ -111,17 +105,18 @@
     fastcgi_param PATH_TRANSLATED $fastcgi_path_info;
     fastcgi_pass unix:/var/run/fcgiwrap.sock;
 }
-</code>
-              </pre>
-              <p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
-              <p>最後要說一下 conf 裡的這行：</p>
-              <pre>
-                <code>    include fastcgi.conf;
-</code>
-              </pre>
-              <p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
-              <pre>
-                <code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+</code></pre>
+
+<p>然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考<a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap">官方文件</a>，有寫說設定檔位置 <code>/usr/lib/systemd/system/fcgiwrap.socket</code> ，cat 出來就可以看到 UNIX Socket 檔案位置 <code>ListenStream=/run/fcgiwrap.sock</code> ，這個路徑的位置其實就指到上面設定最後一行的 <code>/var/run/fcgiwrap.sock</code>，<code>/run</code> 和 <code>/var/run</code> 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。</p>
+
+<p>最後要說一下 conf 裡的這行：</p>
+
+<pre><code>    include fastcgi.conf;
+</code></pre>
+
+<p>這個 <code>fastcgi.conf</code> 檔案其實是 nginx 內建好方便大家使用的，內容如下：</p>
+
+<pre><code>fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;
@@ -146,10 +141,10 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
-</code>
-              </pre>
-              <p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
-            </section>
+</code></pre>
+
+<p>可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類<a href="https://github.com/nginx/nginx/tree/master/conf">檔案</a>，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -165,16 +160,8 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/04/10/360-test/">360 Test</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" data-flickr-embed="true" data-vr="true" href="https://www.flickr.com/photos/othree/25933704672/in/dateposted-public/" title="摩茲工寮">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1478/25933704672_4e4641723f_b.jpg" width="1024" height="512" alt="摩茲工寮">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="512"/>
-                  </img>
-                </a>
-              </p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" data-flickr-embed="true" data-vr="true" href="https://www.flickr.com/photos/othree/25933704672/in/dateposted-public/" title="摩茲工寮"><img itemprop="url image" src="https://farm2.staticflickr.com/1478/25933704672_4e4641723f_b.jpg" width="1024" height="512" alt="摩茲工寮"><meta itemprop="width" content="1024"/><meta itemprop="height" content="512"/></img></a></p>
+</section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -190,11 +177,12 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/04/08/purecss/">Pure.css</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
-              <p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
-              <p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>最近做的修改還有一個就是把 <a href="http://getbootstrap.com/">Bootstrap</a> 換掉，因為我覺得它實在是太大了，包進很多我沒用到的東西，即使是壓縮過的版本也要上百 KB，其實我只需要一部份的元件，像是圖片、引言、程式碼和 grid layout 等，但是這些部分的 CSS 所佔的比例其實超級少，所以我決定找一個新的 framework 把它換掉，結果我挑的是 Yahoo 已經沒有繼續更新的專案 <a href="http://purecss.io/">Pure.css</a>。</p>
+
+<p>Pure.css 檔案大小比起 Bootstrap 實在小很多，最小化過的版本只有約 17KB，不過 responsive grid layout 的部分是獨立的，該模組的大小約是 9.57KB，和原來使用 Bootstrap 相比，總共大概是只有原來的四分之一（當然 gzip 後沒差這麼多），不過檔案小這麼多一定有所犧牲，Pure.css 提供的元件比起 Bootstrap 來少很多，而且提供的我幾乎都沒用到，最後我只用到 menu 和 grid layout 兩個部分而已，所以又從 Bootstrap 那邊把我要的元件手工複製出來使用，最後整理出來的 CSS 是 36.15KB，gzip 後是 7.3KB，brotli 壓縮過後是 6.34KB，傳輸前的資料量和原來相比大約是三分之一至四分之一，使用 gzip 壓縮傳輸的資料量則是三分之一左右（相較於原本的 18.97KB），整體來說成效不錯，其實 Framework 的部分還是佔了很大的比例，所以下一步就是把整個 CSS Framework 拿掉了，我推估實際上我需要的這些 CSS 大概 3KB 的資料量就夠了。</p>
+
+<p>不過 Pure.css 是個已經沒在維護的專案了，Github 上已經超過一年沒有動靜，再加它其實沒 Bootstrap 那樣簡單用，有很多細節都還是要自己處理，就連它們首頁應該都是加工不少才出來的，所以要用這套 CSS Framework 的人還是要三思啊。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -210,20 +198,10 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/04/05/ssh-agent-forward/">SSH Agent Forward</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="576"/>
-                  </img>
-                </a>
-              </p>
-              <p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
-              <em class="extended">
-                <a href="/log/2016/04/05/ssh-agent-forward/">閱讀「SSH Agent Forward」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="576"/></img></a></p>
+
+<p>最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 <strong>http</strong>，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。</p>
+<em class="extended"><a href="/log/2016/04/05/ssh-agent-forward/">閱讀「SSH Agent Forward」全文</a></em></section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -239,20 +217,10 @@ fastcgi_param  REDIRECT_STATUS    200;
                 <a href="/log/2016/04/05/kyushu-rail/">九州鐵道</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23906413032/" title="九洲JR by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg" width="1024" height="683" alt="九洲JR" srcset="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg 1024w, https://farm2.staticflickr.com/1631/23906413032_280443efa8_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>之前去了一趟九州，順便觀察了一下聽說很厲害的九州鐵道（不只是 JR），覺得果然名不虛傳，整個就是設計的比較有質感，不論是普通車還是特急列車都感覺的出來比其他地區的還要搶眼些，這次搭到比較特別的列車是特急KAMOME（特急かもめ），從博多到長崎，還有由布院之森（ゆふいんの森），從久留米到由步院，首先就來看一下特急KAMOME（以下圖多）。</p>
-              <em class="extended">
-                <a href="/log/2016/04/05/kyushu-rail/">閱讀「九州鐵道」全文</a>
-              </em>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23906413032/" title="九洲JR by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg" width="1024" height="683" alt="九洲JR" srcset="https://farm2.staticflickr.com/1631/23906413032_de2b68a752_b.jpg 1024w, https://farm2.staticflickr.com/1631/23906413032_280443efa8_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p>之前去了一趟九州，順便觀察了一下聽說很厲害的九州鐵道（不只是 JR），覺得果然名不虛傳，整個就是設計的比較有質感，不論是普通車還是特急列車都感覺的出來比其他地區的還要搶眼些，這次搭到比較特別的列車是特急KAMOME（特急かもめ），從博多到長崎，還有由布院之森（ゆふいんの森），從久留米到由步院，首先就來看一下特急KAMOME（以下圖多）。</p>
+<em class="extended"><a href="/log/2016/04/05/kyushu-rail/">閱讀「九州鐵道」全文</a></em></section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -275,7 +243,7 @@ fastcgi_param  REDIRECT_STATUS    200;
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -287,7 +255,7 @@ fastcgi_param  REDIRECT_STATUS    200;
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

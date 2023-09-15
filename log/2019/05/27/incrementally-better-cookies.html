@@ -85,25 +85,17 @@
                 <a itemprop="mainEntityOfPage" href="/log/2019/05/27/incrementally-better-cookies/">SameSite Cookie</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/47943015586/" title="Cookie Time by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Cookie Time" srcset="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg 1024w, https://live.staticflickr.com/65535/47943015586_2368c831dc_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p>Cookie 的規格是 RFC 文件所定義的，其實一直以來都有在演化，目前為止已經有三個版本，照順序分別是 <a href="https://tools.ietf.org/html/rfc2109">RFC2109</a>、<a href="https://tools.ietf.org/html/rfc2965">RFC2965</a> 和最新的 <a href="https://tools.ietf.org/html/rfc6265">RFC6265</a>，像是 <code>HttpOnly</code> 就是 RFC6265 才出現的，而最近最新的屬性，就是 <code>SameStie</code> 了，其實它和 <code>HttpOnly</code> 的起源很接近，都是近年來比較被人重視的安全性和隱私的原因，Google 的 web.dev 有一篇圖文並茂的文章介紹的很詳細－ <a href="https://web.dev/samesite-cookies-explained/">SameSite cookies explained</a>，建議還不清楚什麼是 SameSite cookie 的可以先去看一下。</p>
-              <p>SameSite Cookie 的標準文件其實還未正式定稿，目前還算是草稿 <a href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-5.3.7">RFC6265bis</a>（bis 在 <a href="https://www6.ietf.org/tao#rfc.section.6.3">The Tao of IETF</a> 有解釋），不過主流瀏覽器都已經支援了，然後其實這篇文章我想說的是最近在 W3C TAG 看到的 Issue 373：<a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，是由 Google 的 Mike West 提案要把 SameSite 的預設值改為 Lax，現在 Google Chrome 已經有這個實驗選項了，而且除了 SameSite 預設值的改變之外，其實還有一個修改目標是 <code>SameSite</code> 要在 <code>Secure</code> 的時候才能設為 <code>None</code>，這項改變相對而言是影響比較大的，所以提案的<a href="https://mikew%C3%AF%C2%BC%C2%8Cest.github.io/cookie-incrementalism/draft-west-cookie-incrementalism.html">文件</a>（Incrementally Better Cookies）也有提到可以分步進行，另外就是 Firefox 也表示<a href="https://groups.google.com/forum/#!msg/mozilla.dev.platform/nx2uP0CzA9k/BNVPWDHsAQAJ">有意願來實做</a>，看起來至少 SameSite 預設改為 Lax 這件事應該是不會太久之後就會發生了。</p>
-              <p>在花時間看一些文件內的參考資料後，發現 Mike West 還有其它幾份相關的草案：</p>
-              <ul>
-                <li><del><a href="https://mikewest.github.io/first-party-sets/">first-party-sets</a></del><a href="https://github.com/WICG/first-party-sets">WICG/first-party-sets</a> 是用 <code>/.well-known/</code> URL 來跟客戶端溝通，可以提供 first party 的域名清單；</li>
-                <li><a href="https://tools.ietf.org/html/draft-west-cookie-samesite-firstparty-00">First-Party Sets and SameSite Cookies</a> 利用上面的 first-party-set 資訊，然後提供兩種新的 SameSite 值：<code>FirstPartyLax</code> 和 <code>FirstPartyStrict</code>；</li>
-                <li><a href="https://tools.ietf.org/html/draft-west-http-state-tokens-00">HTTP State Tokens</a> 定義了個標準化的 session token，是由瀏覽器端產生的 token，而不是 Web API，至於怎麼傳遞到 server 端，怎樣溝通有效期等都有寫在規範內，Incrementally Better Cookies 的想法也是從這份草案中的特性而來。</li>
-              </ul>
-              <p>這些草案都還蠻有趣的，至於會不會定稿成為規範甚至大家都開始實做，目前就還很難斷定了。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/47943015586/" title="Cookie Time by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg" intrinsicsize="1024x683" width="1024" height="683" alt="Cookie Time" srcset="https://live.staticflickr.com/65535/47943015586_16cebae79f_b.jpg 1024w, https://live.staticflickr.com/65535/47943015586_2368c831dc_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+<p>Cookie 的規格是 RFC 文件所定義的，其實一直以來都有在演化，目前為止已經有三個版本，照順序分別是 <a href="https://tools.ietf.org/html/rfc2109">RFC2109</a>、<a href="https://tools.ietf.org/html/rfc2965">RFC2965</a> 和最新的 <a href="https://tools.ietf.org/html/rfc6265">RFC6265</a>，像是 <code>HttpOnly</code> 就是 RFC6265 才出現的，而最近最新的屬性，就是 <code>SameStie</code> 了，其實它和 <code>HttpOnly</code> 的起源很接近，都是近年來比較被人重視的安全性和隱私的原因，Google 的 web.dev 有一篇圖文並茂的文章介紹的很詳細－ <a href="https://web.dev/samesite-cookies-explained/">SameSite cookies explained</a>，建議還不清楚什麼是 SameSite cookie 的可以先去看一下。</p>
+<p>SameSite Cookie 的標準文件其實還未正式定稿，目前還算是草稿 <a href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-5.3.7">RFC6265bis</a>（bis 在 <a href="https://www6.ietf.org/tao#rfc.section.6.3">The Tao of IETF</a> 有解釋），不過主流瀏覽器都已經支援了，然後其實這篇文章我想說的是最近在 W3C TAG 看到的 Issue 373：<a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，是由 Google 的 Mike West 提案要把 SameSite 的預設值改為 Lax，現在 Google Chrome 已經有這個實驗選項了，而且除了 SameSite 預設值的改變之外，其實還有一個修改目標是 <code>SameSite</code> 要在 <code>Secure</code> 的時候才能設為 <code>None</code>，這項改變相對而言是影響比較大的，所以提案的<a href="https://mikew%C3%AF%C2%BC%C2%8Cest.github.io/cookie-incrementalism/draft-west-cookie-incrementalism.html">文件</a>（Incrementally Better Cookies）也有提到可以分步進行，另外就是 Firefox 也表示<a href="https://groups.google.com/forum/#!msg/mozilla.dev.platform/nx2uP0CzA9k/BNVPWDHsAQAJ">有意願來實做</a>，看起來至少 SameSite 預設改為 Lax 這件事應該是不會太久之後就會發生了。</p>
+<p>在花時間看一些文件內的參考資料後，發現 Mike West 還有其它幾份相關的草案：</p>
+<ul>
+<li><del><a href="https://mikewest.github.io/first-party-sets/">first-party-sets</a></del> <a href="https://github.com/WICG/first-party-sets">WICG/first-party-sets</a> 是用 <code>/.well-known/</code> URL 來跟客戶端溝通，可以提供 first party 的域名清單；</li>
+<li><a href="https://tools.ietf.org/html/draft-west-cookie-samesite-firstparty-00">First-Party Sets and SameSite Cookies</a> 利用上面的 first-party-set 資訊，然後提供兩種新的 SameSite 值：<code>FirstPartyLax</code> 和 <code>FirstPartyStrict</code>；</li>
+<li><a href="https://tools.ietf.org/html/draft-west-http-state-tokens-00">HTTP State Tokens</a> 定義了個標準化的 session token，是由瀏覽器端產生的 token，而不是 Web API，至於怎麼傳遞到 server 端，怎樣溝通有效期等都有寫在規範內，Incrementally Better Cookies 的想法也是從這份草案中的特性而來。</li>
+</ul>
+<p>這些草案都還蠻有趣的，至於會不會定稿成為規範甚至大家都開始實做，目前就還很難斷定了。</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -128,6 +120,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -148,19 +149,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -172,7 +164,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

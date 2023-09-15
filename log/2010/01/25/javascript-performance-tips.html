@@ -85,11 +85,11 @@
                 <a itemprop="mainEntityOfPage" href="/log/2010/01/25/javascript-performance-tips/">JavaScript 的一些效率問題</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前幾天在測試 <a href="http://api.jquery.com/each/">each</a> 和 for 迴圈的效率時，意外的一直得到 each 效率比較好的奇怪現象，搞了兩天才找到原因。</p>
-              <p>each 這種方法效率會比 for 迴圈還要低主要是因為它是把要做的事情用 function 傳進去，多了一個 function call 和一層 function scope，要對變數作存取時會多了到不同層 scope 尋找的差，所以理論上它會比 for 迴圈還要慢。除此之外，DOM 本身就很慢了，當然 <a href="http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177"><span class="caps">DOM</span> NodeList</a> 的操作和存取也不會快到哪去，所以像 <a href="http://sizzlejs.com/">Sizzle</a> 引擎就會把 <span class="caps">DOM</span> NodeList 轉成陣列再傳回來，而我測試 each 和 for 兩者的效率時，也就是這個部分產生了非預想的結果，根據測試結果 Google V8 和 Firefox 3.6 的 Tracemonkey 這兩個會編譯 JS 的引擎，第二次對同樣內容的 <span class="caps">DOM </span>collection 轉陣列的動作時會比第一次還要快，而且大約是兩倍快，測試的基準是第一次用 <a href="http://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#method-getElementsByTagName">getElementsByTagName</a> 抓 &lt;span&gt; ，第二次用 jQuery，內部也是一樣用 getElementsByTagName ，並且小修改過 <span class="caps">DOM </span>結構後再做一樣的事情也是會比第一次還快，並且，不管是用 <a href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/Slice">slice</a> 還是 for 迴圈一個元素一個元素推到陣列裡面都沒差很多，一開始因為測試都是對同樣的標籤作處理，結果先測的方法就佔了劣勢，就像是美食漫畫一樣，先上菜的都會輸一樣，不過我對編譯器的怎樣做最佳化的方法不熟，所以這兩個引擎是怎麼辦到的就不清楚了。</p>
-              <p>除了這點之外，還有一些不算小發現的小發現，第一個就是 Firefox 3.6 還是好慢，詳細數據我忘了，不過和 V8、Safari 比起來差距還是不小，然後就是 IE 超．級．慢！！第二是 each 真的比較慢，不過在現在 JS 引擎普遍暴力的情況下差距其實不明顯（不過 NodeList 和陣列的差距還是有）。第三是前面已經講過的 Sizzle 回傳的是陣列而不是 NodeList ，雖然實際上想要自己組合 NodeList 似乎也是不可能的。最後是 jQeury 可以用 <code>$("span")[0]</code> 這種寫法來直接存取 <span class="caps">DOM </span>節點，不過它並不是陣列，要轉成純陣列可以用 <code>$("span").get()</code> ，只是測試過後發現沒有比較快，因為還要重新轉一次陣列，這裡損失的時間也不會比直接存取來的少。</p>
-            </section>
+            <section itemprop="articleBody"><p>前幾天在測試 <a href="http://api.jquery.com/each/">each</a> 和 for 迴圈的效率時，意外的一直得到 each 效率比較好的奇怪現象，搞了兩天才找到原因。</p>
+
+<p>each 這種方法效率會比 for 迴圈還要低主要是因為它是把要做的事情用 function 傳進去，多了一個 function call 和一層 function scope，要對變數作存取時會多了到不同層 scope 尋找的差，所以理論上它會比 for 迴圈還要慢。除此之外，DOM 本身就很慢了，當然 <a href="http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-536297177"><span class="caps">DOM</span> NodeList</a> 的操作和存取也不會快到哪去，所以像 <a href="http://sizzlejs.com/">Sizzle</a> 引擎就會把 <span class="caps">DOM</span> NodeList 轉成陣列再傳回來，而我測試 each 和 for 兩者的效率時，也就是這個部分產生了非預想的結果，根據測試結果 Google V8 和 Firefox 3.6 的 Tracemonkey 這兩個會編譯 JS 的引擎，第二次對同樣內容的 <span class="caps">DOM </span>collection 轉陣列的動作時會比第一次還要快，而且大約是兩倍快，測試的基準是第一次用 <a href="http://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#method-getElementsByTagName">getElementsByTagName</a> 抓 &lt;span&gt; ，第二次用 jQuery，內部也是一樣用 getElementsByTagName ，並且小修改過 <span class="caps">DOM </span>結構後再做一樣的事情也是會比第一次還快，並且，不管是用 <a href="https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/Slice">slice</a> 還是 for 迴圈一個元素一個元素推到陣列裡面都沒差很多，一開始因為測試都是對同樣的標籤作處理，結果先測的方法就佔了劣勢，就像是美食漫畫一樣，先上菜的都會輸一樣，不過我對編譯器的怎樣做最佳化的方法不熟，所以這兩個引擎是怎麼辦到的就不清楚了。</p>
+
+<p>除了這點之外，還有一些不算小發現的小發現，第一個就是 Firefox 3.6 還是好慢，詳細數據我忘了，不過和 V8、Safari 比起來差距還是不小，然後就是 IE 超．級．慢！！第二是 each 真的比較慢，不過在現在 JS 引擎普遍暴力的情況下差距其實不明顯（不過 NodeList 和陣列的差距還是有）。第三是前面已經講過的 Sizzle 回傳的是陣列而不是 NodeList ，雖然實際上想要自己組合 NodeList 似乎也是不可能的。最後是 jQeury 可以用 <code>$("span")[0]</code> 這種寫法來直接存取 <span class="caps">DOM </span>節點，不過它並不是陣列，要轉成純陣列可以用 <code>$("span").get()</code> ，只是測試過後發現沒有比較快，因為還要重新轉一次陣列，這裡損失的時間也不會比直接存取來的少。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -114,6 +114,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -134,19 +143,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -158,7 +158,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -81,12 +81,13 @@
                 <a href="/log/2014/01/28/object-fit/">object-fit</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
-              <p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
-              <p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
-              <pre>
-                <code>$.fn.cover = (selector) -&gt;
+            <section itemprop="articleBody"><p>在一些情境下，網站的圖片來源可能無法和版面很契合，例如新聞網站，新聞的照片可能有直的橫的，甚至有不同的寬高比，但是網站的版面配置不可能配合所有的可能性，如果想要有個封面故事，又要個滿版的照片，又或者是提供給 Facebook 的照片，它的縮圖都是正方形的，但是大部分的時候，文章的照片都不會是這種比例，最理想是有個 server 端的程式可以幫忙把圖片轉成想要的大小，例如 Facebook 其實是有個程式來作這件事，包括調整大小、重新壓縮、快取，大概連雲端分散式儲存的部份等等問題都一口氣處理掉了。</p>
+
+<p>如果要純前端處理，其實目前最好用的作法是用 <a href="http://www.w3.org/TR/css3-background/#the-background-size">CSS3 Background</a> 的 <code>background-size: cover;</code>，這個樣式會讓標籤的背景圖調整成剛好可以填滿元素大小的程度，當然也考慮好寬高比了，這個方法最主要的缺點在於把圖片從 HTML 文件中抽掉了，在語意上不太好，像是搜尋引擎之類的，對於 <code>&lt;img&gt;</code> 和 CSS 背景的處理應該還是會有差異的，例如 Google 圖片搜尋我就沒印象有找到 CSS 的背景圖過。</p>
+
+<p>要維持 <code>&lt;img&gt;</code> 標籤的存在，又要不管大小和寬高比都可以滿版，在現在是只能用 JavaScript 來輔助，實際上的邏輯也不會太複雜，其實就是比較一下版面的寬高比和圖片的寬高比，然後決定用外框的寬還是高當基準，接著維持圖片的寬高比縮放到計算的大小，定位到讓圖片置中，寫成 jQuery plugin 大概像是下面這樣：</p>
+
+<pre><code>$.fn.cover = (selector) -&gt;
   $(@).each -&gt;
     $outer = $(@)
     ow = $outer.width()
@@ -109,30 +110,33 @@
         l = (ow - w) / 2
 
       $item.css(width: w, height: h, top: t, left: l)
-</code>
-              </pre>
-              <p>使用範例：</p>
-              <pre>
-                <code>$('.cell').cover('img')
-</code>
-              </pre>
-              <p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
-              <p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
-              <p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
-              <pre>
-                <code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
-</code>
-              </pre>
-              <p>配上 CSS：</p>
-              <pre>
-                <code>img.cover {
+</code></pre>
+
+<p>使用範例：</p>
+
+<pre><code>$('.cell').cover('img')
+</code></pre>
+
+<p>不過實際上還要考慮的問題不少，像是執行的時間點，上面這個範例可以運作的時間不只要圖片讀好，有正確的寬高之外，<code>.cell</code> 或是說 <code>$outer</code> 也要在頁面上顯示，有 render 過，才能夠取得它的寬高，整個函式才能夠正確的運作，結果就是訪客其實會看到一瞬間圖片調整好大小位置前的樣子。</p>
+
+<p>用 JavaScript 加上 <code>&lt;img&gt;</code> 這個方案的缺點除了上面說的之外，還有一個是會需要多一層的標籤，不過目前還是很多人會使用這個方案，也有不少 Library 在處理這個問題，像是 <a href="http://soulwire.github.io/fit.js/">fit.js</a>。</p>
+
+<p>這個問題，其實在未來就不存在了，CSS3 Image 裡面有個新的樣式定義就是為了處理這個問題，叫做 <a href="http://dev.w3.org/csswg/css-images-3/#object-fit">object-fit</a>，可以想像成讓 <code>&lt;img&gt;</code> 標籤可以用 background-image 的方式來操控裡面的圖面了，而對應 <code>background-size</code> 的，就是 <code>object-fit</code> 了，未來可以這樣寫 HTML：</p>
+
+<pre><code>&lt;img src="http://blah.com/blah.png" class="cover" width="300" height="300" /&gt;
+</code></pre>
+
+<p>配上 CSS：</p>
+
+<pre><code>img.cover {
   object-fit: cover;
 }
-</code>
-              </pre>
-              <p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
-              <p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
-            </section>
+</code></pre>
+
+<p>就可以同時達到不用多一層標籤，又有實際的 <code>&lt;img&gt;</code>，加上不用 JavaScript，不用考慮 resize 圖片的時機，非常的完美，不過這個新標準目前實作的瀏覽器不多，只有 Chrome 和換成 WebKit 前的 Opera，Opera 的 blog 也有發表過一篇文章介紹這個新屬性：<a href="http://dev.opera.com/articles/view/css3-object-fit-object-position/">CSS3 Object Fit Object Position</a>，裡面也有不少範例可以用 Chrome 開來試試看。</p>
+
+<p>要說有什麼缺點的話，其實還是有的，就是這個 object-fit 不是排版用的，只能用在圖片上，不像 JavaScript library 基本上是什麼元素都可以調整，沒有受限。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -148,17 +152,10 @@
                 <a href="/log/2014/01/15/mozilla-monument/">Mozilla Monument</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11966368896/" title="othree at Mozilla SF Monument by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg" width="1024" height="864" alt="othree at Mozilla SF Monument" srcset="https://farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="864"/>
-                  </img>
-                </a>
-              </p>
-              <p>參加 Mozilla Summit 時說的紀念碑已經做好了，最近有社群朋友去把每面都拍下來，於是就出現了找名字的風潮，我也找到我的名字所以紀念一下，希望有機會去親眼看看。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11966368896/" title="othree at Mozilla SF Monument by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg" width="1024" height="864" alt="othree at Mozilla SF Monument" srcset="https://farm6.staticflickr.com/5508/11966368896_b7bfcb2c90_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="864"/></img></a></p>
+
+<p>參加 Mozilla Summit 時說的紀念碑已經做好了，最近有社群朋友去把每面都拍下來，於是就出現了找名字的風潮，我也找到我的名字所以紀念一下，希望有機會去親眼看看。</p>
+</section>
             <footer>
               <a href="/log/diary/" rel="tag">日記</a>
             </footer>
@@ -174,76 +171,37 @@
                 <a href="/log/2014/01/08/mixed-content/">Mixed Content</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" srcset="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" srcset="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="768"/>
-                  </img>
-                </a>
-              </p>
-              <p>IE 在開發工具內還會有紅字嚇人：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 1024w">
-                    <meta itemprop="width" content="930"/>
-                    <meta itemprop="height" content="520"/>
-                  </img>
-                </a>
-              </p>
-              <p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" srcset="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>Chrome 則是會把 https 劃掉：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" srcset="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="783"/>
-                  </img>
-                </a>
-              </p>
-              <p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
-              <p>最後附上瀏覽器的說明：</p>
-              <ul>
-                <li>
-                  <a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a>
-                </li>
-                <li>
-                  <a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a>
-                </li>
-                <li>
-                  <a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a>
-                </li>
-                <li>
-                  <a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a>
-                </li>
-              </ul>
-            </section>
+            <section itemprop="articleBody"><p>最近在翻舊文章，檢查連結圖片時，看到幾篇文章有引用 <a href="http://www.ted.com/">ted.com</a> 的影片，不過現在卻看不到影片了，研究一陣子發現是因為 ted.com 還沒有支援 https，但是我這邊已經是用 https 連線了，這種情況在現在主流瀏覽器包括 Firefox、Chrome、IE ，http 的內容都是會被擋下來的，而且即使站長在 CSP 裡面有加到白名單也沒用（後來想想還算合理，兩邊設計的角度不一樣），被擋下來時其實瀏覽器都會有通知訪客：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834406594/" title="Firefox block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg" width="1024" height="783" alt="Firefox block mixed content" srcset="https://farm6.staticflickr.com/5511/11834406594_683ec5e488_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272353/" title="Chrome block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg" width="1024" height="783" alt="Chrome block mixed content" srcset="https://farm8.staticflickr.com/7415/11834272353_88d18f35c4_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942545/" title="IE block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg" width="1024" height="768" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3696/11820942545_45a9948590_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="768"/></img></a></p>
+
+<p>IE 在開發工具內還會有紅字嚇人：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11820942315/" title="IE block mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg" width="930" height="520" alt="IE block mixed content" srcset="https://farm4.staticflickr.com/3742/11820942315_803c340984_b.jpg 1024w"><meta itemprop="width" content="930"/><meta itemprop="height" content="520"/></img></a></p>
+
+<p>訪客是可以自己去打開這個限制的，不過這樣做之後，畫面上都還會有警示，像是 Firefox 在網址前面會有個黃色三角形：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834407574/" title="Firefox allow mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg" width="1024" height="783" alt="Firefox allow mixed content" srcset="https://farm8.staticflickr.com/7290/11834407574_99c84f38d3_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p>Chrome 則是會把 https 劃掉：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11834272603/" title="Chrome allow mixed content by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg" width="1024" height="783" alt="Chrome allow mixed content" srcset="https://farm4.staticflickr.com/3771/11834272603_5bf07439ea_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="783"/></img></a></p>
+
+<p>一度想要用 proxy 方式來處理，不過後來放棄了，ted.com 那邊的 html 內的連結寫法還真是多采多姿啊（遠目）。這問題其實正解就是要 ted.com 去支援安全連線，所以我寫信去跟他們建議了，不過一時半刻也不會解決，所以還是需要個暫時解決的方法，目前想法是寫個說明，就像是這篇文章，然後有引用 ted.com 影片的文章都加上連結到這篇文章，除此之外，除了 embed iframe 外，也加上普通的超連結，這樣訪客也可以不要開例外允許非安全連線內容，而是直接連去 ted.com 看影片，像是 <a href="https://blog.othree.net/log/2010/07/24/tossug-html5-talk/">TOSSUG HTML5 分享補充</a> 這篇文章。</p>
+
+<p>最後附上瀏覽器的說明：</p>
+
+<ul>
+<li><a href="https://blog.mozilla.org/tanvi/2013/04/10/mixed-content-blocking-enabled-in-firefox-23/">Firefox Announce</a></li>
+<li><a href="https://support.mozilla.org/zh-TW/kb/how-does-content-isnt-secure-affect-my-safety?as=u&amp;utm_source=inproduct">Firefox Help</a></li>
+<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/-fOQXnJqtWU">Chromium Announce</a></li>
+<li><a href="https://support.google.com/chrome/answer/1342714?hl=zh-Hant">Chrome Help</a></li>
+</ul>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -259,38 +217,28 @@
                 <a href="/log/2014/01/05/more-twitter-cards/">More Twitter Cards</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>進入本題前，先岔題到 open graph 一下，就是前兩天才注意到要用 <a href="http://opengraphprotocol.org/">Open Graph protocol</a> 的話，其實在 html 裡面要加上 <code>prefix="og: http://ogp.me/ns#"</code> 的屬性和值：</p>
-              <pre>
-                <code>&lt;!DOCTYPE html&gt;
+            <section itemprop="articleBody"><p>進入本題前，先岔題到 open graph 一下，就是前兩天才注意到要用 <a href="http://opengraphprotocol.org/">Open Graph protocol</a> 的話，其實在 html 裡面要加上 <code>prefix="og: http://ogp.me/ns#"</code> 的屬性和值：</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
 &lt;html
     xmlns="http://www.w3.org/1999/xhtml"
     lang="zh-tw"
     prefix="og: http://ogp.me/ns#"
 &gt;
-</code>
-              </pre>
-              <p>這個 prefix 屬性其實是 <a href="http://www.w3.org/TR/rdfa-syntax/#s_syntax">RDFa</a> 來的，所以其實 Open Graph Protocol 也是走 RDFa 系統，Twitter Card 就比較沒走的這麼語意網了。</p>
-              <p>這篇其實是要說 Twitter Card 的更新，首先是卡片的種類變多了，在一開始只有 Photo、Summary 和 Player 三種，現在則又多了 App、Product、Gallery 和 Summary Large Image 四種。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11754350766/" title="Twitter Card by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg" width="666" height="800" alt="Twitter Card" srcset="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg 768w">
-                    <meta itemprop="width" content="666"/>
-                    <meta itemprop="height" content="800"/>
-                  </img>
-                </a>
-              </p>
-              <p>其中 App 還蠻早就有了，以前如果貼 iTunes Store 連結的話就可以看到，只是一開始沒開放申請的樣子，新的幾種卡片我最想要的其實是 Summary Large Image，這個其實就是最早的 Photo 卡片的樣子，和 Photo 其實只差 description，我一開始會偷用 Photo 卡片來讓文章的圖片比較大，只是他們後來改成不會顯示我提供的文章摘要，直到前幾天才發現有新的 Summary Large Image，完全就是當初的 Photo 卡啊，所以看到就立馬申請下去。</p>
-              <p>申請的過程和以前也不一樣了，現在是在卡片<a href="https://dev.twitter.com/docs/cards/validation/validator">測試工具</a>那邊先測試，如果驗證格式沒問題就會出現黃色的通知和申請鈕可以按下去，如果是已經申請通過的話就會是綠色的。還有就是測試工具也多了組出 sample code 的功能，還算蠻不錯的，有些比較複雜的卡片格式就可以利用這個工具來搞清楚。</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11754351616/" title="Twitter Card by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg" width="1024" height="694" alt="Twitter Card" srcset="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg 1024w, https://farm3.staticflickr.com/2806/11754351616_8849f50858_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="694"/>
-                  </img>
-                </a>
-              </p>
-            </section>
+</code></pre>
+
+<p>這個 prefix 屬性其實是 <a href="http://www.w3.org/TR/rdfa-syntax/#s_syntax">RDFa</a> 來的，所以其實 Open Graph Protocol 也是走 RDFa 系統，Twitter Card 就比較沒走的這麼語意網了。</p>
+
+<p>這篇其實是要說 Twitter Card 的更新，首先是卡片的種類變多了，在一開始只有 Photo、Summary 和 Player 三種，現在則又多了 App、Product、Gallery 和 Summary Large Image 四種。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11754350766/" title="Twitter Card by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg" width="666" height="800" alt="Twitter Card" srcset="https://farm4.staticflickr.com/3755/11754350766_84fd72a647_c.jpg 768w"><meta itemprop="width" content="666"/><meta itemprop="height" content="800"/></img></a></p>
+
+<p>其中 App 還蠻早就有了，以前如果貼 iTunes Store 連結的話就可以看到，只是一開始沒開放申請的樣子，新的幾種卡片我最想要的其實是 Summary Large Image，這個其實就是最早的 Photo 卡片的樣子，和 Photo 其實只差 description，我一開始會偷用 Photo 卡片來讓文章的圖片比較大，只是他們後來改成不會顯示我提供的文章摘要，直到前幾天才發現有新的 Summary Large Image，完全就是當初的 Photo 卡啊，所以看到就立馬申請下去。</p>
+
+<p>申請的過程和以前也不一樣了，現在是在卡片<a href="https://dev.twitter.com/docs/cards/validation/validator">測試工具</a>那邊先測試，如果驗證格式沒問題就會出現黃色的通知和申請鈕可以按下去，如果是已經申請通過的話就會是綠色的。還有就是測試工具也多了組出 sample code 的功能，還算蠻不錯的，有些比較複雜的卡片格式就可以利用這個工具來搞清楚。</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11754351616/" title="Twitter Card by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg" width="1024" height="694" alt="Twitter Card" srcset="https://farm3.staticflickr.com/2806/11754351616_f76fa313e2_b.jpg 1024w, https://farm3.staticflickr.com/2806/11754351616_8849f50858_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="694"/></img></a></p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -306,35 +254,36 @@
                 <a href="/log/2014/01/01/scrolling-performance/">Scrolling Performance</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>元旦就是要來發篇技術文章的啦。</p>
-              <p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
-              <ol>
-                <li>Resize、scroll 事件不要在迴圈內綁</li>
-                <li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
-                <li>避免 resize 大張圖片</li>
-                <li>避免 background-size</li>
-              </ol>
-              <p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
-              <p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" srcset="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 1024w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="750"/>
-                  </img>
-                </a>
-              </p>
-              <p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
-              <p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
-              <ul>
-                <li><code>&lt;img&gt;</code> width/height 屬性</li>
-                <li>CSS 相對長度定義（百分比、em）</li>
-                <li>CSS 絕對長對定義（px）</li>
-                <li>CSS 背景圖 + background-size</li>
-              </ul>
-              <p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
-            </section>
+            <section itemprop="articleBody"><p>元旦就是要來發篇技術文章的啦。</p>
+
+<p>一直覺得我的 blog 在 scroll 的時候好像不是很順暢，把之前亂加的 parallax 特效拿掉也沒什麼改善，於是週末花了些時間研究了一下，其實要改進捲動時效能可以作的事情大概就是那些，<a href="http://kristerkari.github.io/adventures-in-webkit-land/blog/2013/08/30/fixing-a-parallax-scrolling-website-to-run-in-60-fps/">Fixing a parallax scrolling website to run in 60 FPS</a> 這篇文章有整理成條目：</p>
+
+<ol>
+<li>Resize、scroll 事件不要在迴圈內綁</li>
+<li>Resize、scroll 事件的 handler 用 requestAnimationFrame 來執行</li>
+<li>避免 resize 大張圖片</li>
+<li>避免 background-size</li>
+</ol>
+
+<p>HTML5 Rocks 的 <a href="http://www.html5rocks.com/en/tutorials/speed/scrolling/">Scrolling Performance</a> 這篇文章則是介紹如何分析網站捲動的效能，也有提到一些上面那篇文章沒講到的項目，像是避免 repaint，避免一些計算比較昂貴的 style 等。另外最近還有一個很有名的 <a href="http://www.thecssninja.com/javascript/pointer-events-60fps">hack</a>，是在捲動時，使用 <code>pointer-events: none;</code> 來避免元件產生 hover 的特效結果增加畫面 painting 的運算。</p>
+
+<p>在講我遇到的問題前想先來說一下下面這張圖怎麼看：</p>
+
+<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/11624929755/" title="Scroll cause image resize by othree, on Flickr"><img itemprop="url image" src="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg" width="1024" height="750" alt="Scroll cause image resize" srcset="https://farm4.staticflickr.com/3780/11624929755_c33c8aa3f0_b.jpg 1024w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="750"/></img></a></p>
+
+<p>這張圖是 Chrome 的內建開發工具，目前要作 performance tuning 最好的工具還是 Chrome 開發工具的這個 Timeline 和 Profile，網路上找的到的相關資源也是以 Chrome 為主。這張圖的上半是 framerate 的狀態表示，上面的綠色 bar 代表的是生成畫面前運算執行的時間，所以是越短越好，可以看到那個區塊有兩條橫線，右邊寫了 30fps 和 60fps，意思是執行時間只要能壓在那條線下面，就可以讓頁面有該 frame rate 的表現。下半部就可以拉近去細看不同時間點做了哪些事情，像是圖片 decode、resize、事件的 callback 執行等等都可以分辨。</p>
+
+<p>使用這個開發工具來看到底是那邊計算很花時間，結果發現一直有 image resize 的運算在發生，即使我的圖片都已經全部讀好，頁面從頭卷到尾過，只要從新捲動就會發現 Chrome 又重新把 resize 過的 image 再 resize 一次，後來同事 <a href="http://blog.linmic.net/">Linmic</a> 寫了 test case 來測試各種定義圖片寬高的方法：</p>
+
+<ul>
+<li><code>&lt;img&gt;</code> width/height 屬性</li>
+<li>CSS 相對長度定義（百分比、em）</li>
+<li>CSS 絕對長對定義（px）</li>
+<li>CSS 背景圖 + background-size</li>
+</ul>
+
+<p>等等，結果發現只有第一個方法圖片不會因為頁面捲動而需要重新 resize，簡單說就是，如果圖片的寬高是用到 CSS 的定義來決定的話，那在 Chrome 下就會有個 bug 是，頁面捲動時，即使圖片尺寸沒有變過，Chrome 還是會重新去 resize。根據目測，這問題在 Firefox 和 Safari 上是沒有的樣子，Chrome 的差距比較大，而且現在因為 responsive design 的關係，文章內的插圖很多寬高都是相對的寬高，像是很多人用的 <a href="http://getbootstrap.com/">Bootstrap</a> 就是這樣，其實影響的範圍蠻廣的，而且找不到方法可以避開，搜尋一下看起來是有一張 <a href="https://code.google.com/p/chromium/issues/detail?id=162514">issue</a>，希望能夠早點修復啊。</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -357,7 +306,7 @@
           </address>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -369,7 +318,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

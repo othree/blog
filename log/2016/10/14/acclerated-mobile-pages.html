@@ -85,84 +85,91 @@
                 <a itemprop="mainEntityOfPage" href="/log/2016/10/14/acclerated-mobile-pages/">Acclerated Mobile Pages</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="683"/>
-                  </img>
-                </a>
-              </p>
-              <p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
-              <p>AMP 的目標是讓行動版網頁速度更快，照 Google 員工在 Google IO 的說法，假設認真的手工調校可以達到 95 分，那 AMP 的目標就是讓大家都有 90 分，它的做法說穿了其實也不複雜，就是把現有的各種調整 mobile web performance 的技巧做起來，基本上分成三個部分：</p>
-              <ol>
-                <li>CDN cache</li>
-                <li>AMP HTML</li>
-                <li>AMP runtime</li>
-              </ol>
-              <p>首先要提的就是 CDN 了，一般而言，都是網站所有人去花錢找 CDN 服務來使用，不過做成 AMP 的網頁，Google 會使用他們自家的 CDN 服務把你的 AMP 網頁都 cache 好，考慮到 Google CDN 的等級，應該可以不用擔心速度，這樣就先解決了網路速度的問題，而且這個部屬在 CDN 的方式還有幾個優點：</p>
-              <ol>
-                <li>全部的檔案都是同個 CDN domain，減少了 domain resolve 和 TCP 連線 warmup 的時間</li>
-                <li>支援 HTTP/2.0，已經可以不用建立多次連線了，不過目前還不支援 brotli</li>
-                <li>所有的 AMP 網頁都用相同的 JavaScript 檔案，大幅減少 runtime library 部分初次訪問的下載量</li>
-              </ol>
-              <p>事實上這個 CDN 服務沒有一定要由 Google 提供，照 AMP 的設計，這部分其實是獨立的，只是目前主力的推廣單位就是 Google，他們又控制著大量的 Android 手機和 Chrome 瀏覽器，所以由他們提供 AMP CDN 服務似乎再合理不過了，而 Google 提供的 AMP CDN 服務稱為 <a href="https://developers.google.com/amp/cache/">Google AMP Cache</a>，現在也可以透過 API 來查詢你的 AMP 網頁有沒有在 Google AMP Cache 上有快取，也可以實際查到 CDN 上的 URL，並且直接用那個 URL 來預覽也沒問題，當然這個 CDN 快取的 URL 是有一定<a href="https://developers.google.com/amp/cache/overview">格式</a>的，所以其實不透過 API 查也可以知道不同 AMP 網頁對應的 CDN 快取位置，例如：</p>
-              <pre>
-                <code>https://example.com/amp_document.html
-</code>
-              </pre>
-              <p>對應的就是：</p>
-              <pre>
-                <code>https://cdn.ampproject.org/c/s/example.com/amp_document.html
-</code>
-              </pre>
-              <p>CDN 之外，其它的最佳化就都和 code 相關了，像是圖片做延遲讀取、全部用 async 引入 JavaScript、internal style 減少取得 CSS 的時間，AMP 控制這些機制的方法，第一個就是限制的 coding 型式，沒有符合規範的頁面基本上就不會進到 CDN 上，所以你不能引用外部 CSS 檔案，要增加一些必要的標籤，不能自己寫 script 等等；另一個部分，就是大量的 Web Component 了，例如 <code>&lt;amp-img&gt;</code> 來取代 <code>&lt;img&gt;</code>，不能寫 script 但是還是可以加上 <code>&lt;amp-analytic&gt;</code> 來做數據統計、 <code>&lt;amp-social-share&gt;</code> 來放 Facebook 的分享按鈕等。因為都是新的自訂的標籤，整個元件的行為都是可以自訂的，所以像是圖片就可以從中做到延遲讀取，甚至更進一步，會算好 srcset 中最適合的圖片直接使用，而這層設計都是架構在 Web Component 和相關的標準之上，事實上，AMP 計畫當中，我目前看到不合網路標準的部分，其實只有一些自訂屬性，像是宣告是 AMP 網頁的：</p>
-              <pre>
-                <code>&lt;html ⚡&gt;
-</code>
-              </pre>
-              <p>考量到 <code>⚡</code> 可能在舊環境造成一些問題，所以也支援：</p>
-              <pre>
-                <code>&lt;html amp&gt;
-</code>
-              </pre>
-              <p>另外還有像是 <code>amp-boilerplate</code>、<code>amp-custom</code>、<code>custom-element</code> 等，其實沒很多，不過我深入看過目前的 HTML 5.2 草稿，搜尋看完所有的 <a href="https://tools.ietf.org/html/rfc2119#section-2"><strong>MUST NOT</strong></a> 後，其實找不到文字直接說 HTML 禁止自訂屬性，而對於 <strong>Content attributes</strong> 的<a href="http://w3c.github.io/html/single-page.html#content-attribute">說明</a>則是用 <a href="https://tools.ietf.org/html/rfc2119#section-5">MAY</a>：</p>
-              <blockquote>
-                <p>A normative list of attributes that may be specified on the element (except where otherwise disallowed), along with non-normative descriptions of those attributes. (The content to the left of the dash is normative, the content to the right of the dash is not.)</p>
-              </blockquote>
-              <p>以前都以為自訂屬性是不合規範的，不過這次仔細研究過，實際上應該是，規範中定義到的，都是有意義的，例如 <code>aria-*</code> 是親和力相關的資訊和狀態，給輔具使用，<code>data-*</code> 的意義則是資料，所以有一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/HTMLElement/dataset">dataset</a> 屬性方便存取這些資料，而沒有規範到的屬性，其實也沒禁止，只是就是沒任何意義存在，不過規範文字敘述上雖然沒禁止，但是一般的 HTML validator 都會把沒定義的屬性當成錯誤來處理就是了。另外一個可以呼應這點的就是 <a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance">custom element</a> 的 spec 中說到 attribute 的部分了，custom element 對於沒有 namespace 的屬性限制是：</p>
-              <blockquote>
-                <p>Any namespace-less attribute that is relevant to the element's functioning, as determined by the element's author, may be specified on an autonomous custom element, so long as the attribute name is XML-compatible and contains no uppercase ASCII letters. The exception is the is attribute, which must not be specified on an autonomous custom element (and which will have no effect if it is).</p>
-              </blockquote>
-              <p>大意就是，符合 XML 規範的全小寫字母屬性名稱，唯一不能用的只有 <code>is</code>，因為 <code>is</code> 在 custom element 中有特殊意義。如果照這樣來看的話，事實上 AMP 網頁是完全符合標準的，這點和我一開始的印象實在差很大（包括那個 <code>⚡</code> 也是 UTF-8 字元，所以也沒問題）；而能夠在完全符合網路標準的狀態下架構出像是 AMP 這樣的專案，依靠的就是之前幾年間發展的 Web Component 的標準，而 AMP 專案應用的規模也足以讓我將他視為 Extensible Web 的第一個重要里程碑。</p>
-              <p>目前 AMP 的狀況是 Google 才<a href="https://blog.google/products/search/search-results-are-officially-ampd/">剛預設開啟</a>搜尋結果會導引到 AMP Page，而目前大部分支援的網站都是採用 paired 的方式來提供到 AMP 頁面的連結，也就是用一個 <code>&lt;link&gt;</code> 標籤來連結到 AMP 網頁，因為有兩個網頁在網路上成對，所以稱為 paired，除了 paired 之外，還有一個方法稱為 standalone，AMP 接下來也會開始推廣 standalone 的方式，Paul Bakaus 的文章 <a href="https://paulbakaus.com/2016/07/01/about-that-mobile-in-accelerated-mobile-pages/">About that 'mobile' in Accelerated Mobile Pages</a> 就有提到這件事情，standalone 版的 AMP 網頁，其實就是只提供 AMP 版本的頁面，因為 AMP 本身是架構在網路標準上的，所以一般 modern browser 都可以完整支援，<a href="https://www.ampproject.org/">AMP Project</a> 自己的網站就是最好的範例了。</p>
-              <p>AMP 目前還在不斷的發展，有興趣的可以看看他們的 <a href="https://www.ampproject.org/roadmap/">roadmap</a>，每季會更新兩次，目前看到比較有趣的是在發展登入和購買的功能，而由於 AMP 不允許網站內放上非 AMP runtime 的 script，所以所有要用到 script 的功能都需要 AMP 提供 custom element，可以預期各式各樣的 element 會非常多種，像是 <code>&lt;amp-accordion&gt;</code>、<code>&lt;amp-carousel&gt;</code> 之類的 UI 元件，或是引用 tweet 的 <code>&lt;amp-twitter&gt;</code>，放 analytic code 的 <code>&lt;amp-analytics&gt;</code> 等，目前已經有 <a href="https://www.ampproject.org/docs/reference/components">49 個</a> custom element 可以用了，相信未來應該還是會繼續增加，當然因為整個 AMP runtime 的部分是 open source 的，所以其實也是開放貢獻，也有一些相關的文件，其中最讓人好奇的大概就是<a href="https://docs.google.com/document/d/19o7eDta6oqPGF4RQ17LvZ9CHVQN53whN-mCIeIMM8Qk/edit#">如何自己做一個 AMP custom element</a> 了吧，不過這份文件比較難找些，在官網和 Github 上的幾乎都是如何使用的文件，我猜是因為目前還沒正式開放外部提供 custom element，不過對於 AMP runtime 架構有興趣的還是可以參考看看，AMP 目前這種依靠 custom element 的方式還是會有些問題，最主要就是不斷成長的 custom element 會造成後續維護越來越困難，例如要升級修改架構的話，就會變的很麻煩，所以我在文章一開始說這其實是個暫時的解法，那正確的解法應該是怎樣呢？</p>
-              <p>其實在 AMP 剛推出時，Tim Kadlec 就有提了一個不錯的方法，叫做 <a href="http://wicg.github.io/ContentPerformancePolicy/">Content Performance Policy</a>，目前也有簡單的草稿，Content Performancy Policy 的想法是，這些針對網路行動體驗最佳化的特殊模式，應該是由瀏覽器端來實做，然後網站可以透過 HTTP Header 來開關這些最佳化設定，使用的 synatx 基本上是借用 CSP 的格式來使用，我個人覺得這個想法其實蠻不錯的，可以減少許多問題，不過目前草稿還很不完整，瀏覽器廠商實做的意願也還不知道如何，前途未卜，其實 Tim Kadlec 本人是對 AMP 抱持一些負面的態度的，畢竟 AMP 還是有些問題在，最直接的問題大概就是，AMP 其實就是比較開放一點的 Facebook Instant Article 而已，如果不是 standalone 模式的話，目前就只有 Google 的服務會導引到 AMP 網頁，就和 Facebook 的 Instant Article 其實一樣，這點也是 Tim Kadlec 覺得最不好的點，可能 AMP 出來到消失之後都沒真的實質對網路標準有所改善，這也讓我想到很久之前 Dart 的<a href="https://blog.othree.net/log/2015/03/28/for-the-entire-web/">事情</a>（PS. 我都快想不起來 Dart 這名字了 and ES 的大數現在還是沒有影子），好像有點巧，都是同一間公司。</p>
-              <p>還有另外一個很明顯的問題就是向下相容性的問題，例如為了控制圖片可以延遲讀取，所以 AMP 網頁要用 <code>&lt;amp-img&gt;</code> 來放圖片：</p>
-              <pre>
-                <code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23867356862/" title="O2 DAC + AMP by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg" width="1024" height="683" alt="O2 DAC + AMP, " srcset="https://farm2.staticflickr.com/1704/23867356862_071e6b9bb2_b.jpg 1024w, https://farm2.staticflickr.com/1704/23867356862_a16568cdac_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
+
+<p><a href="https://www.ampproject.org/">Acclerated Mobile Pages</a> 簡稱 AMP，是 Google 所推出，為了提升行動網路體驗的一個專案，我一開始對於這種（看似）偏離網路標準的方案其實不太有興趣，不過在瞭解其技術原理後，覺得相當有趣，而且其實沒有想像中的偏離標準，整個架構也比 Facebook 的 Instant Article 還要來的開放，雖然我覺得這個解決方案（只說是 Framework 或是 Library 都不夠完整），其實只算是個暫時的解法，但是 AMP 本身的實做方式，其實是架構在一堆網路標準的發展之上的，相當出人意料，可以說是 <a href="https://extensiblewebmanifesto.org/">Extensible Web 宣言</a>以來，第一個重要的里程碑。</p>
+<p>AMP 的目標是讓行動版網頁速度更快，照 Google 員工在 Google IO 的說法，假設認真的手工調校可以達到 95 分，那 AMP 的目標就是讓大家都有 90 分，它的做法說穿了其實也不複雜，就是把現有的各種調整 mobile web performance 的技巧做起來，基本上分成三個部分：</p>
+
+<ol>
+<li>CDN cache</li>
+<li>AMP HTML</li>
+<li>AMP runtime</li>
+</ol>
+
+<p>首先要提的就是 CDN 了，一般而言，都是網站所有人去花錢找 CDN 服務來使用，不過做成 AMP 的網頁，Google 會使用他們自家的 CDN 服務把你的 AMP 網頁都 cache 好，考慮到 Google CDN 的等級，應該可以不用擔心速度，這樣就先解決了網路速度的問題，而且這個部屬在 CDN 的方式還有幾個優點：</p>
+
+<ol>
+<li>全部的檔案都是同個 CDN domain，減少了 domain resolve 和 TCP 連線 warmup 的時間</li>
+<li>支援 HTTP/2.0，已經可以不用建立多次連線了，不過目前還不支援 brotli</li>
+<li>所有的 AMP 網頁都用相同的 JavaScript 檔案，大幅減少 runtime library 部分初次訪問的下載量</li>
+</ol>
+
+<p>事實上這個 CDN 服務沒有一定要由 Google 提供，照 AMP 的設計，這部分其實是獨立的，只是目前主力的推廣單位就是 Google，他們又控制著大量的 Android 手機和 Chrome 瀏覽器，所以由他們提供 AMP CDN 服務似乎再合理不過了，而 Google 提供的 AMP CDN 服務稱為 <a href="https://developers.google.com/amp/cache/">Google AMP Cache</a>，現在也可以透過 API 來查詢你的 AMP 網頁有沒有在 Google AMP Cache 上有快取，也可以實際查到 CDN 上的 URL，並且直接用那個 URL 來預覽也沒問題，當然這個 CDN 快取的 URL 是有一定<a href="https://developers.google.com/amp/cache/overview">格式</a>的，所以其實不透過 API 查也可以知道不同 AMP 網頁對應的 CDN 快取位置，例如：</p>
+
+<pre><code>https://example.com/amp_document.html
+</code></pre>
+
+<p>對應的就是：</p>
+
+<pre><code>https://cdn.ampproject.org/c/s/example.com/amp_document.html
+</code></pre>
+
+<p>CDN 之外，其它的最佳化就都和 code 相關了，像是圖片做延遲讀取、全部用 async 引入 JavaScript、internal style 減少取得 CSS 的時間，AMP 控制這些機制的方法，第一個就是限制的 coding 型式，沒有符合規範的頁面基本上就不會進到 CDN 上，所以你不能引用外部 CSS 檔案，要增加一些必要的標籤，不能自己寫 script 等等；另一個部分，就是大量的 Web Component 了，例如 <code>&lt;amp-img&gt;</code> 來取代 <code>&lt;img&gt;</code>，不能寫 script 但是還是可以加上 <code>&lt;amp-analytic&gt;</code> 來做數據統計、 <code>&lt;amp-social-share&gt;</code> 來放 Facebook 的分享按鈕等。因為都是新的自訂的標籤，整個元件的行為都是可以自訂的，所以像是圖片就可以從中做到延遲讀取，甚至更進一步，會算好 srcset 中最適合的圖片直接使用，而這層設計都是架構在 Web Component 和相關的標準之上，事實上，AMP 計畫當中，我目前看到不合網路標準的部分，其實只有一些自訂屬性，像是宣告是 AMP 網頁的：</p>
+
+<pre><code>&lt;html ⚡&gt;
+</code></pre>
+
+<p>考量到 <code>⚡</code> 可能在舊環境造成一些問題，所以也支援：</p>
+
+<pre><code>&lt;html amp&gt;
+</code></pre>
+
+<p>另外還有像是 <code>amp-boilerplate</code>、<code>amp-custom</code>、<code>custom-element</code> 等，其實沒很多，不過我深入看過目前的 HTML 5.2 草稿，搜尋看完所有的 <a href="https://tools.ietf.org/html/rfc2119#section-2"><strong>MUST NOT</strong></a> 後，其實找不到文字直接說 HTML 禁止自訂屬性，而對於 <strong>Content attributes</strong> 的<a href="http://w3c.github.io/html/single-page.html#content-attribute">說明</a>則是用 <a href="https://tools.ietf.org/html/rfc2119#section-5">MAY</a>：</p>
+
+<blockquote>
+  <p>A normative list of attributes that may be specified on the element (except where otherwise disallowed), along with non-normative descriptions of those attributes. (The content to the left of the dash is normative, the content to the right of the dash is not.)</p>
+</blockquote>
+
+<p>以前都以為自訂屬性是不合規範的，不過這次仔細研究過，實際上應該是，規範中定義到的，都是有意義的，例如 <code>aria-*</code> 是親和力相關的資訊和狀態，給輔具使用，<code>data-*</code> 的意義則是資料，所以有一個 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/HTMLElement/dataset">dataset</a> 屬性方便存取這些資料，而沒有規範到的屬性，其實也沒禁止，只是就是沒任何意義存在，不過規範文字敘述上雖然沒禁止，但是一般的 HTML validator 都會把沒定義的屬性當成錯誤來處理就是了。另外一個可以呼應這點的就是 <a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance">custom element</a> 的 spec 中說到 attribute 的部分了，custom element 對於沒有 namespace 的屬性限制是：</p>
+
+<blockquote>
+  <p>Any namespace-less attribute that is relevant to the element's functioning, as determined by the element's author, may be specified on an autonomous custom element, so long as the attribute name is XML-compatible and contains no uppercase ASCII letters. The exception is the is attribute, which must not be specified on an autonomous custom element (and which will have no effect if it is).</p>
+</blockquote>
+
+<p>大意就是，符合 XML 規範的全小寫字母屬性名稱，唯一不能用的只有 <code>is</code>，因為 <code>is</code> 在 custom element 中有特殊意義。如果照這樣來看的話，事實上 AMP 網頁是完全符合標準的，這點和我一開始的印象實在差很大（包括那個 <code>⚡</code> 也是 UTF-8 字元，所以也沒問題）；而能夠在完全符合網路標準的狀態下架構出像是 AMP 這樣的專案，依靠的就是之前幾年間發展的 Web Component 的標準，而 AMP 專案應用的規模也足以讓我將他視為 Extensible Web 的第一個重要里程碑。</p>
+
+<p>目前 AMP 的狀況是 Google 才<a href="https://blog.google/products/search/search-results-are-officially-ampd/">剛預設開啟</a>搜尋結果會導引到 AMP Page，而目前大部分支援的網站都是採用 paired 的方式來提供到 AMP 頁面的連結，也就是用一個 <code>&lt;link&gt;</code> 標籤來連結到 AMP 網頁，因為有兩個網頁在網路上成對，所以稱為 paired，除了 paired 之外，還有一個方法稱為 standalone，AMP 接下來也會開始推廣 standalone 的方式，Paul Bakaus 的文章 <a href="https://paulbakaus.com/2016/07/01/about-that-mobile-in-accelerated-mobile-pages/">About that 'mobile' in Accelerated Mobile Pages</a> 就有提到這件事情，standalone 版的 AMP 網頁，其實就是只提供 AMP 版本的頁面，因為 AMP 本身是架構在網路標準上的，所以一般 modern browser 都可以完整支援，<a href="https://www.ampproject.org/">AMP Project</a> 自己的網站就是最好的範例了。</p>
+
+<p>AMP 目前還在不斷的發展，有興趣的可以看看他們的 <a href="https://www.ampproject.org/roadmap/">roadmap</a>，每季會更新兩次，目前看到比較有趣的是在發展登入和購買的功能，而由於 AMP 不允許網站內放上非 AMP runtime 的 script，所以所有要用到 script 的功能都需要 AMP 提供 custom element，可以預期各式各樣的 element 會非常多種，像是 <code>&lt;amp-accordion&gt;</code>、<code>&lt;amp-carousel&gt;</code> 之類的 UI 元件，或是引用 tweet 的 <code>&lt;amp-twitter&gt;</code>，放 analytic code 的 <code>&lt;amp-analytics&gt;</code> 等，目前已經有 <a href="https://www.ampproject.org/docs/reference/components">49 個</a> custom element 可以用了，相信未來應該還是會繼續增加，當然因為整個 AMP runtime 的部分是 open source 的，所以其實也是開放貢獻，也有一些相關的文件，其中最讓人好奇的大概就是<a href="https://docs.google.com/document/d/19o7eDta6oqPGF4RQ17LvZ9CHVQN53whN-mCIeIMM8Qk/edit#">如何自己做一個 AMP custom element</a> 了吧，不過這份文件比較難找些，在官網和 Github 上的幾乎都是如何使用的文件，我猜是因為目前還沒正式開放外部提供 custom element，不過對於 AMP runtime 架構有興趣的還是可以參考看看，AMP 目前這種依靠 custom element 的方式還是會有些問題，最主要就是不斷成長的 custom element 會造成後續維護越來越困難，例如要升級修改架構的話，就會變的很麻煩，所以我在文章一開始說這其實是個暫時的解法，那正確的解法應該是怎樣呢？</p>
+
+<p>其實在 AMP 剛推出時，Tim Kadlec 就有提了一個不錯的方法，叫做 <a href="http://wicg.github.io/ContentPerformancePolicy/">Content Performance Policy</a>，目前也有簡單的草稿，Content Performancy Policy 的想法是，這些針對網路行動體驗最佳化的特殊模式，應該是由瀏覽器端來實做，然後網站可以透過 HTTP Header 來開關這些最佳化設定，使用的 synatx 基本上是借用 CSP 的格式來使用，我個人覺得這個想法其實蠻不錯的，可以減少許多問題，不過目前草稿還很不完整，瀏覽器廠商實做的意願也還不知道如何，前途未卜，其實 Tim Kadlec 本人是對 AMP 抱持一些負面的態度的，畢竟 AMP 還是有些問題在，最直接的問題大概就是，AMP 其實就是比較開放一點的 Facebook Instant Article 而已，如果不是 standalone 模式的話，目前就只有 Google 的服務會導引到 AMP 網頁，就和 Facebook 的 Instant Article 其實一樣，這點也是 Tim Kadlec 覺得最不好的點，可能 AMP 出來到消失之後都沒真的實質對網路標準有所改善，這也讓我想到很久之前 Dart 的<a href="https://blog.othree.net/log/2015/03/28/for-the-entire-web/">事情</a>（PS. 我都快想不起來 Dart 這名字了 and ES 的大數現在還是沒有影子），好像有點巧，都是同一間公司。</p>
+
+<p>還有另外一個很明顯的問題就是向下相容性的問題，例如為了控制圖片可以延遲讀取，所以 AMP 網頁要用 <code>&lt;amp-img&gt;</code> 來放圖片：</p>
+
+<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
 &lt;/amp-img&gt;
-</code>
-              </pre>
-              <p>不過這很明顯的，不支援 JavaScript 或是關掉的時候，圖片自然就出不來，如果想要做 standalone 版的 AMP 網頁，這應該是不太行的，所以要加個 fallback，但是 AMP 又不允許直接放 <code>&lt;img&gt;</code> 標籤，結果就會變成：</p>
-              <pre>
-                <code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
+</code></pre>
+
+<p>不過這很明顯的，不支援 JavaScript 或是關掉的時候，圖片自然就出不來，如果想要做 standalone 版的 AMP 網頁，這應該是不太行的，所以要加個 fallback，但是 AMP 又不允許直接放 <code>&lt;img&gt;</code> 標籤，結果就會變成：</p>
+
+<pre><code>&lt;amp-img layout="responsive" width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""&gt;
   &lt;noscript&gt;
     &lt;img width="1024" height="683" src="https://c2.staticflickr.com/6/5719/29605110434_bbd9f049a0_b.jpg" alt=""/&gt;
   &lt;/noscript&gt;
 &lt;/amp-img&gt;
-</code>
-              </pre>
-              <p>一是多了一層 <code>&lt;noscript&gt;</code>，二是所有圖片的資訊都會重複一份，如果還有 <code>srcset</code> 和 <code>sizes</code> 的話又會更可怕，而目前也因為向下相容比較麻煩的關係，所以我還不會考慮使用 standalone 模式的 AMP 網頁。並且如果用 paired 模式的話，則是讓網頁內容重複出現在網路上，可能就會造成一些不統一的情形，例如訪客看到 AMP 網頁直接分享，那就會和看到普通版網頁分享的結果不太一樣，雖然有指定 canonical URL，不過這部分資訊其實不會在這種地方產生效用，總之是個有點尷尬的情形。</p>
-              <p>最後要說的是，AMP 因為現在是 Google 提供應用，所以很合理的，在中國境內無法使用，也很順便的就有了 Baidu 的 clone，叫做 <a href="https://www.mipengine.org/">Mobile Instant Pages</a>，簡稱 MIP，從官方網站上看起來基本上就是和 AMP 大同小異，只是用命名裡面的 <code>amp</code> 換成 <code>mip</code>，大概比較了一下目前最小化過的 MIP JavaScript 和 AMP 的 JavaScript，看起來是重新寫過的，官網上也有說過會公開原始碼，目前 Baidu 似乎是還沒大量啟用，大概還在很初期的推廣期吧，先不說 MIP 網站沒有任何地方提到 AMP，我對 MIP 還有一點不太滿意，就是他 paired 模式的 AMP 頁面指回一般頁面時用的標籤是：</p>
-              <pre>
-                <code>&lt;link rel="standardhtml" href="xxx" &gt;
-</code>
-              </pre>
-              <p>而不是使用已經語意很清楚且通用的 <code>canonical</code>，實在是非常可惜。</p>
-              <p>AMP 的出現，對於一個前端工程師來說，最大的意義，大概就是又要產生一個版本的頁面出來，所以現在一份文字內容，就要產生標準的 HTML 文件，假設不特別讓 mobile 單獨一版，然後還有 RSS Feed、AMP HTML，如果要支援 <a href="https://developers.facebook.com/docs/instant-articles/guides/format-overview">Facebook Instant Article</a> 的話還要輸出一版 Instant Article 的 HTML，當然也可能是 RSS Feed 型式，然後然後如果要跑中國市場，就還要輸出一個 MIP 的版本，這樣算下來，一共是五個版本了，什麼，你說還有 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html#//apple_ref/doc/uid/TP40015408-CH110-SW1">Apple News</a>...</p>
-            </section>
+</code></pre>
+
+<p>一是多了一層 <code>&lt;noscript&gt;</code>，二是所有圖片的資訊都會重複一份，如果還有 <code>srcset</code> 和 <code>sizes</code> 的話又會更可怕，而目前也因為向下相容比較麻煩的關係，所以我還不會考慮使用 standalone 模式的 AMP 網頁。並且如果用 paired 模式的話，則是讓網頁內容重複出現在網路上，可能就會造成一些不統一的情形，例如訪客看到 AMP 網頁直接分享，那就會和看到普通版網頁分享的結果不太一樣，雖然有指定 canonical URL，不過這部分資訊其實不會在這種地方產生效用，總之是個有點尷尬的情形。</p>
+
+<p>最後要說的是，AMP 因為現在是 Google 提供應用，所以很合理的，在中國境內無法使用，也很順便的就有了 Baidu 的 clone，叫做 <a href="https://www.mipengine.org/">Mobile Instant Pages</a>，簡稱 MIP，從官方網站上看起來基本上就是和 AMP 大同小異，只是用命名裡面的 <code>amp</code> 換成 <code>mip</code>，大概比較了一下目前最小化過的 MIP JavaScript 和 AMP 的 JavaScript，看起來是重新寫過的，官網上也有說過會公開原始碼，目前 Baidu 似乎是還沒大量啟用，大概還在很初期的推廣期吧，先不說 MIP 網站沒有任何地方提到 AMP，我對 MIP 還有一點不太滿意，就是他 paired 模式的 AMP 頁面指回一般頁面時用的標籤是：</p>
+
+<pre><code>&lt;link rel="standardhtml" href="xxx" &gt;
+</code></pre>
+
+<p>而不是使用已經語意很清楚且通用的 <code>canonical</code>，實在是非常可惜。</p>
+
+<p>AMP 的出現，對於一個前端工程師來說，最大的意義，大概就是又要產生一個版本的頁面出來，所以現在一份文字內容，就要產生標準的 HTML 文件，假設不特別讓 mobile 單獨一版，然後還有 RSS Feed、AMP HTML，如果要支援 <a href="https://developers.facebook.com/docs/instant-articles/guides/format-overview">Facebook Instant Article</a> 的話還要輸出一版 Instant Article 的 HTML，當然也可能是 RSS Feed 型式，然後然後如果要跑中國市場，就還要輸出一個 MIP 的版本，這樣算下來，一共是五個版本了，什麼，你說還有 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html#//apple_ref/doc/uid/TP40015408-CH110-SW1">Apple News</a>...</p>
+</section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -187,6 +194,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -207,19 +223,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -231,7 +238,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

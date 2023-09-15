@@ -85,47 +85,44 @@
                 <a itemprop="mainEntityOfPage" href="/log/2014/11/01/ssl-config/">SSL 設定更新</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr">
-                  <img itemprop="url image" src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="670"/>
-                  </img>
-                </a>
-              </p>
-              <p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
-              <pre>
-                <code>SSLProtocol all -SSLv2 -SSLv3
-</code>
-              </pre>
-              <p>然後限制 Cipher Suite：</p>
-              <pre>
-                <code>SSLCipherSuite AES256+EECDH:AES256+EDH
-</code>
-              </pre>
-              <p>這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。</p>
-              <p>光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。</p>
-              <p>另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：</p>
-              <pre>
-                <code>http://www.startssl.com/certs/sub.class1.server.ca.pem
-</code>
-              </pre>
-              <p>在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：</p>
-              <pre>
-                <code>http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
-</code>
-              </pre>
-              <p>改成這個後看來就沒警告了，我想應該沒搞錯才是 :P</p>
-              <p>到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">Strict Transport Security(HSTS)</a>，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。</p>
-              <p>設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 <a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/">OCSP Stapling</a>，可以提昇效能，因為把 <a href="http://gca.nat.gov.tw/ocsp/index.html">OCSP</a> 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：</p>
-              <pre>
-                <code>SSLUseStapling on
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"><img itemprop="url image" src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="670"/></img></a></p>
+
+<p>因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：</p>
+
+<pre><code>SSLProtocol all -SSLv2 -SSLv3
+</code></pre>
+
+<p>然後限制 Cipher Suite：</p>
+
+<pre><code>SSLCipherSuite AES256+EECDH:AES256+EDH
+</code></pre>
+
+<p>這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。</p>
+
+<p>光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。</p>
+
+<p>另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：</p>
+
+<pre><code>http://www.startssl.com/certs/sub.class1.server.ca.pem
+</code></pre>
+
+<p>在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：</p>
+
+<pre><code>http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
+</code></pre>
+
+<p>改成這個後看來就沒警告了，我想應該沒搞錯才是 :P</p>
+
+<p>到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">Strict Transport Security(HSTS)</a>，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。</p>
+
+<p>設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 <a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/">OCSP Stapling</a>，可以提昇效能，因為把 <a href="http://gca.nat.gov.tw/ocsp/index.html">OCSP</a> 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：</p>
+
+<pre><code>SSLUseStapling on
 SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
-</code>
-              </pre>
-              <p>好像放這兩行就可以了。</p>
-            </section>
+</code></pre>
+
+<p>好像放這兩行就可以了。</p>
+</section>
             <footer>
               <a href="/log/server/" rel="tag">Server Side</a>
             </footer>
@@ -150,6 +147,15 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -170,19 +176,10 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -194,7 +191,7 @@ SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

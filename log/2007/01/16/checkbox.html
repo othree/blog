@@ -85,40 +85,37 @@
                 <a itemprop="mainEntityOfPage" href="/log/2007/01/16/checkbox/">checkbox</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>昨天發表了一篇很沒誠意的<a href="http://blog.othree.net/log/2007/01/15/jquery-11/">jQuery 1.1發佈的文章</a>，是因為在研究checkbox的行為，因為想要用jQuery來抓checkbox和radio的值，radio還算簡單：</p>
-              <pre>
-                <code>$("input[@name=fieldname][@checked]").val();</code>
-              </pre>
-              <p>這樣一行就可以了，checkbox基本上也可以如法炮製，不過會遇到問題，可能有複數個checkbox的name屬性一樣，像是：</p>
-              <pre>
-                <code>&lt;input type="checkbox" name="pet" value="1"/&gt;
+            <section itemprop="articleBody"><p>昨天發表了一篇很沒誠意的<a href="http://blog.othree.net/log/2007/01/15/jquery-11/">jQuery 1.1發佈的文章</a>，是因為在研究checkbox的行為，因為想要用jQuery來抓checkbox和radio的值，radio還算簡單：</p>
+
+<pre><code>$("input[@name=fieldname][@checked]").val();</code></pre>
+
+<p>這樣一行就可以了，checkbox基本上也可以如法炮製，不過會遇到問題，可能有複數個checkbox的name屬性一樣，像是：</p><pre><code>&lt;input type="checkbox" name="pet" value="1"/&gt;
 &lt;input type="checkbox" name="pet" value="2"/&gt;
-&lt;input type="checkbox" name="pet" value="4"/&gt;</code>
-              </pre>
-              <p>這段HTML裡面有三個checkbox，他們的欄位名稱都是pet，但是值不一樣。假設全部都勾選，送出之後在HTTP header裡面會像是：</p>
-              <pre>
-                <code>pet: 1
+&lt;input type="checkbox" name="pet" value="4"/&gt;</code></pre>
+
+<p>這段HTML裡面有三個checkbox，他們的欄位名稱都是pet，但是值不一樣。假設全部都勾選，送出之後在HTTP header裡面會像是：</p>
+
+<pre><code>pet: 1
 pet: 2
-pet: 3</code>
-              </pre>
-              <p>眼尖的人就會發現，在大部分的程式語言中，這樣會變成是重複宣告變數，後宣告的值會取代先宣告的值，以PHP為例，在後端程式收到的事實上等於只有<code>$_POST['pet'] = 4;</code>這個值，所以通常PHP程式設計師都會把checkbox的欄位名稱改成<code>pet[]</code>，變成：</p>
-              <pre>
-                <code>&lt;input type="checkbox" name="pet[]" value="1"/&gt;
+pet: 3</code></pre>
+
+<p>眼尖的人就會發現，在大部分的程式語言中，這樣會變成是重複宣告變數，後宣告的值會取代先宣告的值，以PHP為例，在後端程式收到的事實上等於只有<code>$_POST['pet'] = 4;</code>這個值，所以通常PHP程式設計師都會把checkbox的欄位名稱改成<code>pet[]</code>，變成：</p>
+
+<pre><code>&lt;input type="checkbox" name="pet[]" value="1"/&gt;
 &lt;input type="checkbox" name="pet[]" value="2"/&gt;
-&lt;input type="checkbox" name="pet[]" value="4"/&gt;</code>
-              </pre>
-              <p>這樣後端程式會變成收到一個陣列<code>$_POST['pet'] = array(1,2,4);</code>，其他後端程式語言會變成怎樣我比較不清楚，不過別忘了我是想用jQuery來取值，我努力了一個晚上，結果還是只能用一個function來處理，還沒辦法縮成一行直接在程式碼裡使用：</p>
-              <pre>
-                <code>function getCheckbox (name) {
+&lt;input type="checkbox" name="pet[]" value="4"/&gt;</code></pre>
+
+<p>這樣後端程式會變成收到一個陣列<code>$_POST['pet'] = array(1,2,4);</code>，其他後端程式語言會變成怎樣我比較不清楚，不過別忘了我是想用jQuery來取值，我努力了一個晚上，結果還是只能用一個function來處理，還沒辦法縮成一行直接在程式碼裡使用：</p>
+
+<pre><code>function getCheckbox (name) {
 	var val = [];
 	$("input[@name="+name+"][@checked]").each(function(){val.push($(this).val());});
 	return val;
-}</code>
-              </pre>
-              <p>至於這樣做的原因？是要用來作ajax的資料傳輸用，透過jQuery來傳送表單可以使用<a href="http://www.json.org/"><span class="caps">JSON</span></a>作為參數的格式，並不影響後端程式。ajax的form serialize和deserialize加PHP的<a href="http://www.aurore.net/projects/php-json/">php-json</a>加上<a href="http://adodb.sourceforge.net/"><span class="caps">ADO</span>db</a>的<a href="http://phplens.com/lens/adodb/docs-adodb.htm#autoexecute">AutoExcute</a>，整個合起來超方便的:P。</p>
-              <p>最後補充，據說jQuery 1.1的選擇器（selector）的速度有大幅度的進步，快了10～20倍。</p>
-            </section>
+}</code></pre>
+
+<p>至於這樣做的原因？是要用來作ajax的資料傳輸用，透過jQuery來傳送表單可以使用<a href="http://www.json.org/"><span class="caps">JSON</span></a>作為參數的格式，並不影響後端程式。ajax的form serialize和deserialize加PHP的<a href="http://www.aurore.net/projects/php-json/">php-json</a>加上<a href="http://adodb.sourceforge.net/"><span class="caps">ADO</span>db</a>的<a href="http://phplens.com/lens/adodb/docs-adodb.htm#autoexecute">AutoExcute</a>，整個合起來超方便的:P。</p>
+
+<p>最後補充，據說jQuery 1.1的選擇器（selector）的速度有大幅度的進步，快了10～20倍。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -143,6 +140,15 @@ pet: 3</code>
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -163,19 +169,10 @@ pet: 3</code>
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -187,7 +184,7 @@ pet: 3</code>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

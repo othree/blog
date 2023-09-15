@@ -85,28 +85,35 @@
                 <a itemprop="mainEntityOfPage" href="/log/2009/12/25/bug-of-html-complete/">htmlcomplete#CompleteTags 的 bug</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p>
-              <p>這個錯誤訊息的發生條件其實很特別，首先 html 的 omnifunc 要設成 htmlcomplete#CompleteTags，就是說你的 vimrc 裡面應該會有一行長成</p>
-              <pre>
-                <code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code>
-              </pre>
-              <p>再來你正在編輯的 html 文件裡面要有 &lt;link rel="stylesheet" /&gt; 這種外連 <span class="caps">CSS </span>檔案的標籤，而關鍵是 href 指到的位置沒有一個可以用的檔案（不存在、無權限讀取都可），然後接下來你在 class=" 或是 id=" 的位置裡面執行了 omni complete (&lt;C-x&gt;, &lt;C-o&gt;) ，當然如果有裝 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 的話，這時就會自動幫你跑（2.7 版以後），錯誤訊息也就會自動冒出。</p>
-              <p>問題發生的原因是，這個 html 自動完成函式會去檢查你的 <span class="caps">CSS </span>，包括外連的檔案，去裡面把 class name, id name 抽出送回作自動完成的選項，不過他有一個動作應該是要檔案可讀才要跑的，卻放到 if 的外面，所以只要把它移過去就好了，錯誤那行 code 是 310 行：</p>
-              <pre>
-                <code>308        endif
+            <section itemprop="articleBody"><p>今天又在玩 vim 自動完成時發現的，網路上也有找到一點點情報，不過資料實在很少，我花了不少時間測試找出會發生問題的狀況，這個 bug 是在使用 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 時，游標放到 class="  or id="  這兩個字串後會有錯誤訊息 （line 304, <span class="caps">E121</span>: Undefined variable :classlines）。網路上找到有人 <a href="http://74.125.153.132/search?q=cache%3Ahttp%3A%2F%2Fblog.mvp.org.cn%2F">回報給 acp.vim 作者</a> ，日本那邊也有人 <a href="http://likealunatic.jp/2009/09/29_acpvim.php">hack acp.vim 來避開這個問題</a>  ，不過其實問題不在 autocomplpop，而是 vim 內的 htmlcomplete 的問題，這個 function 位置在 $VIMRUNTIME/autoload/htmlcomplete.vim ，上次更新是 2006 年了，之後回報 bug 會不會有人修還不知道XD。</p><p>這個錯誤訊息的發生條件其實很特別，首先 html 的 omnifunc 要設成 htmlcomplete#CompleteTags，就是說你的 vimrc 裡面應該會有一行長成</p>
+
+
+
+<pre><code>autocmd FileType html set omnifunc=htmlcomplete#CompleteTags</code></pre>
+
+
+
+<p>再來你正在編輯的 html 文件裡面要有 &lt;link rel="stylesheet" /&gt; 這種外連 <span class="caps">CSS </span>檔案的標籤，而關鍵是 href 指到的位置沒有一個可以用的檔案（不存在、無權限讀取都可），然後接下來你在 class=" 或是 id=" 的位置裡面執行了 omni complete (&lt;C-x&gt;, &lt;C-o&gt;) ，當然如果有裝 <a href="http://www.vim.org/scripts/script.php?script_id=1879">autocomplpop</a> 的話，這時就會自動幫你跑（2.7 版以後），錯誤訊息也就會自動冒出。</p>
+
+<p>問題發生的原因是，這個 html 自動完成函式會去檢查你的 <span class="caps">CSS </span>，包括外連的檔案，去裡面把 class name, id name 抽出送回作自動完成的選項，不過他有一個動作應該是要檔案可讀才要跑的，卻放到 if 的外面，所以只要把它移過去就好了，錯誤那行 code 是 310 行：</p>
+
+
+
+<pre><code>308        endif
 309    " We gathered classes definitions from all external files
 310    let classes += classlines
-</code>
-              </pre>
-              <p>把它移到 308 行的 endif 前面就好了：</p>
-              <pre>
-                <code>308        " We gathered classes definitions from all external files
+</code></pre>
+
+
+
+<p>把它移到 308 行的 endif 前面就好了：</p>
+
+
+
+<pre><code>308        " We gathered classes definitions from all external files
 309        let classes += classlines
 310    endif
-</code>
-              </pre>
-            </section>
+</code></pre></section>
             <footer>
               <a href="/log/vim/" rel="tag">VIM</a>
             </footer>
@@ -131,6 +138,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -151,19 +167,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -175,7 +182,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

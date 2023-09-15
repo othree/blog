@@ -85,21 +85,19 @@
                 <a itemprop="mainEntityOfPage" href="/log/2005/05/09/css-zoom-in/">利用CSS製造放大效果</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <img itemprop="url image" src="http://blog.othree.net/log/2005/05/09/css_zoom_in/css_zoom_in.png" alt="CSS zoom in" height="108" width="223" class="right">
-                  <meta itemprop="width" content="223"/>
-                  <meta itemprop="height" content="108"/>
-                </img>
-              </p>
-              <p>這篇已經說好久，今天總算生出來了，不過沒弄的很詳盡就是。基本上我這次的範例是比較適合用在固定的東西，例如導覽列，或是選單目錄之類的東西，我的範例本身是套在導覽列上很方便啦^^，如果是行內物件的話（可以用在連結之類的），我還要做些測試。</p>
-              <p>廢話不多說，要製造一個mouseover的放大效果，基本的作法很簡單，就是利用<strong>:hover</strong>這個選擇子來把元素放大，讓我們來看看光這樣子會是怎樣，<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-1.html">範例一</a>。</p>
-              <p>我製造了四個常寬都是50px的元素（我用標準的算法，是加上paddin值的長寬），雖然是span標籤，但是因為我用了<strong>display: block;</strong>這個屬性，所以他們現在都是block物件了，也因此我需要用<strong>float: left;</strong>才能讓他們並排，並且我設定他們在滑鼠移過去時會讓長寬都變成100px。這樣就完成最基本的設定了，不過還有幾個問題，第一是下面的內容會隨著放大的效果上下移動，第二是元素之間的左右位置也會因為放大而跑來跑去，第三則是框線的問題，中間三條線特別粗。</p>
-              <p>我們先來解決第一個問題，要處理這個問題很間單，只要指定<strong>margin-bottom: -50px;</strong>就可以了，結果見<a href="http://blog.othree.net/log/2006/05/11//log/2005/05/09/css_zoom_in/CSSzoomIn-2.html">範例二</a>。同樣的原理，我們也可以讓放大的效果變成往上放大，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-3.html">範例三</a>。不過我想最多人會希望置中放大，所以就見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-4.html">範例四</a>。在範例四裡面，我是設定span的<strong>margin: -25px 0 -25px;</strong>，只有三個值的狀況下，依順序分別是top、left and right、bottom，事實上我也可以改成，<strong>margin: -25px 0;</strong>，這樣就變成top and bottom、left and right了。</p>
-              <p>如果第一個問題的處理方法了解的話，事實上第二個問題也是一樣的方法處理，我們直接拿範例四的置中放大來做修改，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-5.html">範例五</a>，在這裡我做了些改變，就是本來放大成100*100的方塊，我改成75*75了，這樣改的原因是如果放太大的話，會造成移到旁邊的方塊變的不容易，想像個極端的例子，你滑鼠移到的方塊如果大到蓋住旁邊的物件，不就選不到了嗎XD。講那麼多，都沒講到重點，在這個範例中我把<strong>margin</strong>改成左右都是<strong>-12.5px</strong>。</p>
-              <p>接下來要處理第三個問題了，中間的幾條線會比較粗的原因是因為左右物件都有左右框線，雖然設定是1px，但是兩條放在一起就變兩倍粗了。為了處理這個問題，我用了<strong>:last-child</strong>這個選擇器，然後除了最後一個物件以外，右邊的框線都設成0，結果就是<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-6.html">範例六</a>，事實上這個範例還不只修改框線的設定而已，因為用上:last-child這個選擇子，我必須要一物件把這四個span包起來，不然在:last-child的使用上會有困難（他會認為後面的<strong>p</strong>才是最後一個物件）。基於這點，我乾脆改成list，不過實際上用div標籤包一下就可以了。另外就是margin我改成了<strong>-13px</strong>，因為本來沒放大的物件少了一邊的框線，但是放大後又復原了，所以必須要增加margin的負值，把多出來的框線的空間補回來。就這樣，完成了這次的目標了，我想我沒漏掉什麼沒修改到才是。</p>
-              <p>最後附上一個突然想到的<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-7.html">東西</a>，本來是想用<strong>:nth-child()</strong>來做的，不過Firefox都還不支援，所以用了其他方法，也造成CSS比較難看，而且比較難擴充@_@。我是覺得這可能可以配合圖片玩些東西啦:P。</p>
-            </section>
+            <section itemprop="articleBody"><p><img itemprop="url image" src="http://blog.othree.net/log/2005/05/09/css_zoom_in/css_zoom_in.png" alt="CSS zoom in" height="108" width="223" class="right"><meta itemprop="width" content="223"/><meta itemprop="height" content="108"/></img></p>
+
+<p>這篇已經說好久，今天總算生出來了，不過沒弄的很詳盡就是。基本上我這次的範例是比較適合用在固定的東西，例如導覽列，或是選單目錄之類的東西，我的範例本身是套在導覽列上很方便啦^^，如果是行內物件的話（可以用在連結之類的），我還要做些測試。</p>
+
+<p>廢話不多說，要製造一個mouseover的放大效果，基本的作法很簡單，就是利用<strong>:hover</strong>這個選擇子來把元素放大，讓我們來看看光這樣子會是怎樣，<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-1.html">範例一</a>。</p><p>我製造了四個常寬都是50px的元素（我用標準的算法，是加上paddin值的長寬），雖然是span標籤，但是因為我用了<strong>display: block;</strong>這個屬性，所以他們現在都是block物件了，也因此我需要用<strong>float: left;</strong>才能讓他們並排，並且我設定他們在滑鼠移過去時會讓長寬都變成100px。這樣就完成最基本的設定了，不過還有幾個問題，第一是下面的內容會隨著放大的效果上下移動，第二是元素之間的左右位置也會因為放大而跑來跑去，第三則是框線的問題，中間三條線特別粗。</p>
+
+<p>我們先來解決第一個問題，要處理這個問題很間單，只要指定<strong>margin-bottom: -50px;</strong>就可以了，結果見<a href="http://blog.othree.net/log/2006/05/11//log/2005/05/09/css_zoom_in/CSSzoomIn-2.html">範例二</a>。同樣的原理，我們也可以讓放大的效果變成往上放大，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-3.html">範例三</a>。不過我想最多人會希望置中放大，所以就見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-4.html">範例四</a>。在範例四裡面，我是設定span的<strong>margin: -25px 0 -25px;</strong>，只有三個值的狀況下，依順序分別是top、left and right、bottom，事實上我也可以改成，<strong>margin: -25px 0;</strong>，這樣就變成top and bottom、left and right了。</p>
+
+<p>如果第一個問題的處理方法了解的話，事實上第二個問題也是一樣的方法處理，我們直接拿範例四的置中放大來做修改，見<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-5.html">範例五</a>，在這裡我做了些改變，就是本來放大成100*100的方塊，我改成75*75了，這樣改的原因是如果放太大的話，會造成移到旁邊的方塊變的不容易，想像個極端的例子，你滑鼠移到的方塊如果大到蓋住旁邊的物件，不就選不到了嗎XD。講那麼多，都沒講到重點，在這個範例中我把<strong>margin</strong>改成左右都是<strong>-12.5px</strong>。</p>
+
+<p>接下來要處理第三個問題了，中間的幾條線會比較粗的原因是因為左右物件都有左右框線，雖然設定是1px，但是兩條放在一起就變兩倍粗了。為了處理這個問題，我用了<strong>:last-child</strong>這個選擇器，然後除了最後一個物件以外，右邊的框線都設成0，結果就是<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-6.html">範例六</a>，事實上這個範例還不只修改框線的設定而已，因為用上:last-child這個選擇子，我必須要一物件把這四個span包起來，不然在:last-child的使用上會有困難（他會認為後面的<strong>p</strong>才是最後一個物件）。基於這點，我乾脆改成list，不過實際上用div標籤包一下就可以了。另外就是margin我改成了<strong>-13px</strong>，因為本來沒放大的物件少了一邊的框線，但是放大後又復原了，所以必須要增加margin的負值，把多出來的框線的空間補回來。就這樣，完成了這次的目標了，我想我沒漏掉什麼沒修改到才是。</p>
+
+<p>最後附上一個突然想到的<a href="http://blog.othree.net/log/2005/05/09/css_zoom_in/CSSzoomIn-7.html">東西</a>，本來是想用<strong>:nth-child()</strong>來做的，不過Firefox都還不支援，所以用了其他方法，也造成CSS比較難看，而且比較難擴充@_@。我是覺得這可能可以配合圖片玩些東西啦:P。</p></section>
             <footer>
               <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
             </footer>
@@ -124,6 +122,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -144,19 +151,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -168,7 +166,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -85,27 +85,36 @@
                 <a itemprop="mainEntityOfPage" href="/log/2005/09/26/move-smoothly/">讓你的特效更平順</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>前幾天在改<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hidden links</a>時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用<strong>時間</strong>來決定要移動到哪。</p>
-              <p>我以前的方法有兩個缺點，一就是移動可能很不順，二則是可能會因為重複的觸發起動條件而造成速度倍增，但是改用時間來作判斷的話就沒有這個問題。在javascript中要取得時間很簡單，應該是每個瀏覽器的方法都一樣（Safari、IE、Opera、Firefox這幾個我測試過都OK）：</p>
-              <pre>
-                <code>timestamp = new Date().getTime();</code>
-              </pre>
-              <p>這樣就可以取得unix time stamp了（從1970年1月1日開始計算的時間戳記），只不過比較特別的是單位是1/1000秒，而要使用這個時間戳記，你還需要另外一個時間戳記記錄你的特效開始的時間。有了這兩個時間戳記後，要讓效果能跑，還需要幾個東西，一是物件的起迄點，二是特效要花多久時間（週期），三是移動的方式（ex: 要減速效果。也可以說是位置的時間函數）。</p>
-              <p>以上幾樣東西都設定好了之後，我們就可以寫主要的script了，假設我的時間戳記變數名稱是<code>ts</code>、開始的時間戳記是<code>st</code>、物件要從<code>sp</code>處移動到<code>ep</code>處、移動要花一秒鐘，用等速度移動，那我可以寫成下面這樣：</p>
-              <pre>
-                <code>ts = new Date().getTime();
+            <section itemprop="articleBody"><p>前幾天在改<a href="http://blog.othree.net/log/2005/09/19/hiddenlinks-2/">hidden links</a>時，因為物件的移動效果不太順暢，和網路上一些大大作的明顯差很多，就花了些時間看看到底問題出在哪， 才發現，我以前都是用function被呼叫的次數來決定移動的距離（其實也只是function跑一次移動多少而已），而其他人的code則是用<strong>時間</strong>來決定要移動到哪。</p><p>我以前的方法有兩個缺點，一就是移動可能很不順，二則是可能會因為重複的觸發起動條件而造成速度倍增，但是改用時間來作判斷的話就沒有這個問題。在javascript中要取得時間很簡單，應該是每個瀏覽器的方法都一樣（Safari、IE、Opera、Firefox這幾個我測試過都OK）：</p>
+
+
+
+<pre><code>timestamp = new Date().getTime();</code></pre>
+
+
+
+<p>這樣就可以取得unix time stamp了（從1970年1月1日開始計算的時間戳記），只不過比較特別的是單位是1/1000秒，而要使用這個時間戳記，你還需要另外一個時間戳記記錄你的特效開始的時間。有了這兩個時間戳記後，要讓效果能跑，還需要幾個東西，一是物件的起迄點，二是特效要花多久時間（週期），三是移動的方式（ex: 要減速效果。也可以說是位置的時間函數）。</p>
+
+<p>以上幾樣東西都設定好了之後，我們就可以寫主要的script了，假設我的時間戳記變數名稱是<code>ts</code>、開始的時間戳記是<code>st</code>、物件要從<code>sp</code>處移動到<code>ep</code>處、移動要花一秒鐘，用等速度移動，那我可以寫成下面這樣：</p>
+
+
+
+<pre><code>ts = new Date().getTime();
 p = (ts - ss) / 1000;
 p = (p&gt;1)1:p;
 target.style.top = sp + (ep - sp) * p + "px";
 if (p == 1)
 {
 	clearInterval(Interval);
-}</code>
-              </pre>
-              <p>第一行在取得現在的時間，第二行則是算現在是進行到整個動作的那個部分（幾個週期），第三行則是避免移動過頭，第四行才是指定新的位置給物件，接下來的if回圈則是動作結束的處理，大概的流程就是這樣，我把我的hidden links的這部份的code貼在下面，可以看的更完整：</p>
-              <pre>
-                <code>function hlGo (type)
+}</code></pre>
+
+
+
+<p>第一行在取得現在的時間，第二行則是算現在是進行到整個動作的那個部分（幾個週期），第三行則是避免移動過頭，第四行才是指定新的位置給物件，接下來的if回圈則是動作結束的處理，大概的流程就是這樣，我把我的hidden links的這部份的code貼在下面，可以看的更完整：</p>
+
+
+
+<pre><code>function hlGo (type)
 {
 	if (!ts &amp;&amp; !(type ^ hlFlag))
 	{
@@ -130,10 +139,11 @@ function hlMove (type)
 		clearInterval(this.Interval);
 		(type)?addEvent(body, "mousemove", hlMouseMove):(tS.display = "none",addEvent(tA, "mouseover", hlMouseIn));
 	}
-}</code>
-              </pre>
-              <p>要觸發事件只要呼叫<code>hlGo</code>這個function就好了，有多的判斷都是針對hidden links的需要放上的，除了<code>hlGo</code>裡面會先判斷<code>ts</code>受否不存在才繼續，這是為了避免重複觸發動作，當然事件結束就要把<code>ts</code>給清除掉（設為0）。</p>
-            </section>
+}</code></pre>
+
+
+
+<p>要觸發事件只要呼叫<code>hlGo</code>這個function就好了，有多的判斷都是針對hidden links的需要放上的，除了<code>hlGo</code>裡面會先判斷<code>ts</code>受否不存在才繼續，這是為了避免重複觸發動作，當然事件結束就要把<code>ts</code>給清除掉（設為0）。</p></section>
             <footer>
               <a href="/log/script/" rel="tag">SCRIPT</a>
             </footer>
@@ -158,6 +168,15 @@ function hlMove (type)
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -178,19 +197,10 @@ function hlMove (type)
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -202,7 +212,7 @@ function hlMove (type)
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>

@@ -4,11 +4,37 @@
 <title>O3noBLOG - script</title>
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
-<copyright>Copyright 2022</copyright>
-<lastBuildDate>2021-08-12 11:59</lastBuildDate>
+<copyright>Copyright 2023</copyright>
+<lastBuildDate>2023-09-15 11:41</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>digital envelope routines::unsupported</title>
+<description><![CDATA[<p>Node.js 16 LTS 已經結束維護，所以手上的東西就開始需要升級升級，然後就必須要來正面面對這個我逃避已久的錯誤訊息：</p>
+<pre><code>digital envelope routines::unsupported
+</code></pre>
+<p>這錯誤基本上就是發生在幾個網站的專案，尤其是 build 專案時特別會容易看到，而且這個錯誤其實和一般看到的 JS 錯誤長得不太一樣，全貌其實是這樣：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53186660279/" title="digital envelope routines::unsupported by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53186660279_4f2b82bbbc_b.jpg" width="1024" height="738" alt="digital envelope routines::unsupported" srcset="https://live.staticflickr.com/65535/53186660279_a5cd706923_k.jpg 2x" /></a></p>
+<pre><code>Error: error:0308010C:digital envelope routines::unsupported
+</code></pre>
+<p>首先是錯誤訊息，前面有一些 hex 值，不知道是什麼，然後下面 trace 的地方，可以看到幾乎都是 node_module 內的東西，不是因為我們自己的 code 造成的，所以就很讓人困惑，想說是不是什麼系統問題、還是有什麼偷用非公開 API 造成不相容的狀況。總之以前就是遇到這個問題就是又降版回來，沒有仔細深究，這次終於要來認真處理，不過搜尋結果，幾乎都是說加一個 <code>--openssl-legacy-provider</code> flag，都沒人說到底是什麼問題，尋找許久，終於在 StackOverflow 找到一則<a href="https://stackoverflow.com/a/73027407/443051">最正確的答案</a>，沒想到和 OpenSSL 1.x 的生命已經到盡頭有關。</p>
+<p>結果這個錯誤，其實是因為 Node.js 17 開始，從 OpenSSL 1.x 換到 3.x，然後 OpenSSL 3.x 不是向下相容的，所以有些東西有機會出錯，這邊爛掉的，其實是一些 legacy 的 hash method 預設是拿掉的，而 Webpack 在建立 bundle 檔案時，如果檔名有用到 hash 的話，預設的 hash method 用的就是已經被淘汰的 <a href="https://www.openssl.org/docs/man3.1/man3/MD4.html">md4</a>，然後 md4 是用 Node.js 的 <a href="https://nodejs.org/docs/latest-v20.x/api/crypto.html#cryptocreatehashalgorithm-options">crypto</a> 來呼叫 OpenSSL 做事，Node.js 的文件也有提到支援的演算法是依據你的 OpenSSL 版本和系統而定，所以其實並沒有保證 <strong>md4</strong> 一定可以用，而如果使用了 OpenSSL 不支援的演算法，跑出來的錯誤訊息就是像上面截圖一樣特別了，然後我還特別去用 OpenSSL 3 cli 跑跑看，結果出來的錯誤訊息真的就是差不多：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53188641438/" title="OpenSSL 3 error by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53188641438_3493041848_b.jpg" width="512" height="341" alt="OpenSSL 3 error" srcset="" /></a></p>
+<p>使用 flag 開啟舊演算法的支援其實我覺得還算可以接受，畢竟是 build 而已，不是拿來跑服務，不過這個 flag 似乎有點特殊，似乎不能直接放在 <code>NODE_OPTIONS</code> 裡面，而且同個程式庫要是拿到舊版 Node.js 環境去跑，加這個 flag 反而跑不起來，所以最理想還是把問題解決掉。</p>
+<p>那這個問題應該怎麼處理呢？其實簡單說就是把套件升級升級就好了，因為現在的套件新版本都有處理這個問題，不過走上升級這條路之前可以先試試看 StackOverflow 上的解法（有可能讓你專案爛掉，請先備份）：</p>
+<pre><code class="language-bash">npm audit fix --force 
+</code></pre>
+<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的我升級到 4.x 就沒事了。</p>
+<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案複概過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
+<p>PS. 還要小心其他升級的後遺症，如果是 app 最好要測試過各種行為，像我遇到 Webpack 5 不支援 polyfill Buffer 的問題，剛好那個錯誤又被 catch 掉，所以我 build 是沒問題的，就是測試跑不過，後來參考網路上的<a href="https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5">文章</a>處理。</p>
+]]></description>
+<link>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</link>
+<guid>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</guid>
+<category>script</category>
+<pubDate>2023-09-15 11:41</pubDate>
+</item>
 
 <item>
 <title>CSP for Lambda@Edge</title>
@@ -322,7 +348,7 @@ async function asyncTaskWithCb(cb) {
 </code></pre>
 <p>ES6 的這個語法，其實底層是透過 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">iteration protocols</a> 這些內部協定來運作的，包括了 iterable protocol 和 iterator protocol，<code>for...of</code> 其實就是透過 iterable protocol 去拿物件的 iterator，利用 iterator 來遍歷元素，所以自己寫的物件也可以實做 iterable protocol，然後就可以讓該物件支援 <code>for...of</code> 語法了；除此之外，iterator 是不能重複使用的，所以其實每次 <code>for..of</code>，都是拿一個該物件的新的 iterator，而為了可以簡單產生這個 iterator，又有了 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator function</a>，generator function 每次執行都會回傳一個新的 iterator（精確一點說是 generator object，同時是 iterator 也是 iterable），正好適合這個情境。</p>
 <p>Iterable protocol 的定義其實很簡單，就是定義怎樣把 generator function 放在物件裡的方式，實際上是利用 ES6 另一個新的資料型態： <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a> 來達成的，為什麼不直接定個屬性名稱給它呢？最主要就是不要讓這些內部 protocol 的東西在 <code>for...in</code> 操作的時候被遍歷到，所以定義了新的 Symbol 型別，利用它的特性來把內部 protocol 做了一定程度的保護，iterable protocol 就是把 generator function 用一個預先定義好的 Symbol 來儲存，這個 Symbol 又稱為 <code>Symbol.iterator</code>，這種預先定義好的 Symbol 則統稱為 Well-Known Symbols，ES6 其實定義了<a href="http://exploringjs.com/es6/ch_symbols.html#_well-known-symbols">好幾個</a>，不是只有 iterable 用的到，透過定義這些 Well-Known Symobls，可以介入改變一些 JavaScript 比較基礎的運作。</p>
-<p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill [harmony-reflect][] 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
+<p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill harmony-reflect 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
 <p>最後總結一下，這串從 Map/Set 開始，接著連到 <code>for...of</code> 語法、Iterator、Generator、Symbol、Well-Known Symobls 最後到 meta programming 的 Proxy 和 Reflect，其實也差不多佔了 1/4 的 ES6 新功能。</p>
 ]]></description>
 <link>https://blog.othree.net/log/2018/09/17/ecmascript-2015-rel-of-features/</link>
@@ -531,29 +557,6 @@ subQuery
 <guid>https://blog.othree.net/log/2018/04/09/pegjs/</guid>
 <category>script</category>
 <pubDate>2018-04-09 21:15</pubDate>
-</item>
-
-<item>
-<title>CodeceptJS + puppeteer</title>
-<description><![CDATA[<p>看起來一切似乎都很美好，直到真的下去用。</p>
-<p>這幾天就在這組合裡面打滾，昨天還花了幾乎半天在查一個問題，總之先條列一下目前覺得幾個重點：</p>
-<ul>
-<li><a href="https://codecept.io/">CodeceptJS</a> 文件裡面有 code sample 用 generator function 的非同步取值，現在支援用 async await 了，不過 code sample 還沒改。</li>
-<li>每種 helper 可以用的 method 不完全相同，大部分一樣，不過也沒列出基本組合，所以好像也不是很好一組 test 測所有 helper。</li>
-<li>Puppeteer helper 裡面其實有很多地方是直接跟 CDP（Chrome DevTools Protocol） 溝通的，這部分也可以印 debug log：  <code>env DEBUG=&quot;puppeteer:protocol&quot; codeceptjs run --steps --verbose</code></li>
-<li>開 CDP 的 log 的話資訊量會超多，訊息內容還算好理解，細節網路上也有<a href="https://chromedevtools.github.io/devtools-protocol/">文件</a>，左邊 sidebar 有很多不同領域的，上面的 DEBUG 參數也可以自己修改只顯示想要的，詳見 <a href="https://github.com/GoogleChrome/puppeteer#debugging-tips">puppeteer 文件</a>。</li>
-<li>puppeteer 的 <code>page.goto</code> 有個選項是 waitUntil，預設是 load 事件，不過我發現這個事件有時候會觸發不到，雖然我看開發工具的 network 圖是有線出來，不過總之我後來會這樣的案例就先都改成 <code>networkidle2</code> 了。</li>
-</ul>
-<p>然後昨天花很多時間查的問題已經上去發了 <a href="https://github.com/Codeception/CodeceptJS/issues/914">issue</a>，總之就是發點擊事件點連結後，要檢查新頁面的內容會出現錯誤：</p>
-<pre><code>     Protocol error (Runtime.callFunctionOn): Cannot find context with specified id undefined
-</code></pre>
-<p>目前探究下來狀況應該是：puppeteer 的點擊回傳的 promise，在點擊完成就 resolve 了，這時候瀏覽器去開新網頁，才要開始發出請求，新的網頁還沒準備好，所以要做檢查的時候就會沒有 context。然後我有用 Nightwatch helper 測試過，是沒這問題的，總之就是個實做問題，puppeteer 目前這樣邏輯上也不算是錯誤的設計，不知道最後會怎麼修改，當然簡單一點就是 click 觸發 browser navigate 到別的網頁時就要等新網頁回來。目前的 work around 是自己多 wait 一下。</p>
-<p>最後就是，我終於可以順暢的把 puppeteer 這個單字打出來了QQ</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</link>
-<guid>https://blog.othree.net/log/2018/02/07/codeceptjs-puppeteer/</guid>
-<category>script</category>
-<pubDate>2018-02-07 12:29</pubDate>
 </item>
 
 

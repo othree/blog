@@ -85,40 +85,24 @@
                 <a itemprop="mainEntityOfPage" href="/log/2020/02/21/scroll-to-text/">Scroll to Text</a>
               </h3>
             </header>
-            <section itemprop="articleBody">
-              <p>
-                <a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/49561392806/" title="Scroll To Text by othree, on Flickr">
-                  <img itemprop="url image" src="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg" intrinsicsize="1024x869" width="1024" height="869" alt="Scroll To Text" srcset="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg 1024w, https://live.staticflickr.com/65535/49561392806_a7ec190efb_h.jpg 1600w">
-                    <meta itemprop="width" content="1024"/>
-                    <meta itemprop="height" content="869"/>
-                  </img>
-                </a>
-              </p>
-              <p>Chrome 最近有個新功能叫做 <a href="https://chromestatus.com/feature/4733392803332096">Scroll to Text Fragment</a>，雖然在 Chrome Platform Status 網站那邊寫 M80 會可以用，不過我實際上測試正式版的 Chrome 80 還沒有，但是 Chrome Canary 已經是預設啟用了。這個功能讓你可以在網址內的 Fragment 段（<code>#</code> 後面那段），用新定義的語法來讓瀏覽器直接捲動到指定的文字位置，語法如下：</p>
-              <pre>
-                <code>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/49561392806/" title="Scroll To Text by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg" intrinsicsize="1024x869" width="1024" height="869" alt="Scroll To Text" srcset="https://live.staticflickr.com/65535/49561392806_362f83d4cd_b.jpg 1024w, https://live.staticflickr.com/65535/49561392806_a7ec190efb_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="869"/></img></a></p>
+<p>Chrome 最近有個新功能叫做 <a href="https://chromestatus.com/feature/4733392803332096">Scroll to Text Fragment</a>，雖然在 Chrome Platform Status 網站那邊寫 M80 會可以用，不過我實際上測試正式版的 Chrome 80 還沒有，但是 Chrome Canary 已經是預設啟用了。這個功能讓你可以在網址內的 Fragment 段（<code>#</code> 後面那段），用新定義的語法來讓瀏覽器直接捲動到指定的文字位置，語法如下：</p>
+<pre><code>#:~:text=[prefix-,]textStart[,textEnd][,-suffix]
           context  |-------match-----|  context
-</code>
-              </pre>
-              <p>如果有在用 Chrome Canary 的可以直接試試看<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/#:%7E:text=%E6%AD%A3%E5%A4%A7%E5%85%89%E6%98%8E">這個連結</a>。這個語法其實還蠻靈活的，可以和以前 id identifier 並用：</p>
-              <pre>
-                <code>#targetID:~:text=theText
-</code>
-              </pre>
-              <p>這樣如果找不到文字，瀏覽器還可以改用 targetID 定位；如果網頁內有多個一樣的文字，可以用 <code>prefix-</code> 和 <code>-suffix</code> 給出前後文來讓瀏覽器找到正確的目標；再來就是如果要標註的文字很長，也可以用 <code>textStart,textEnd</code> 來標註，這樣就不用在網址內放一大串文字了；然後也可以標註多段文字，用 <code>&amp;</code> 切開，和給參數的格式一樣：</p>
-              <pre>
-                <code>#:~:text=firstText&amp;text=secondText
-</code>
-              </pre>
-              <p><a href="https://wicg.github.io/ScrollToTextFragment/">正式的文件</a>現在是放在 WICG 那邊，GitHub 那邊的 <a href="https://github.com/WICG/ScrollToTextFragment/">Proposal repo</a> 則是有一段解釋<a href="https://github.com/WICG/ScrollToTextFragment/#enter-">為什麼選擇用 <code>:~:</code></a> 當分割符號的段落，我覺得這種脈絡的紀錄是很重要的，這邊簡單說一下，一開始有考慮過 <code>##</code> 這種比較容易想到形式，但是有些 URL parser 是由右到左的可能會有錯誤，再來他們列出一堆不太會有人去用的組合來當候選，然後去看 Google 那邊過去五年的紀錄，結果就是 <code>:~:</code> 最沒人用，只有 0.0000039% 的比例，所以目前是選擇這個分割符號。</p>
-              <p>我是蠻喜歡這新功能（標準？）的，<a href="https://github.com/mozilla/standards-positions/issues/194">Mozilla 也覺得還可以考慮看看</a>，不過目前這個功能似乎還沒在 stable channel 啟用，應該是因為<a href="https://www.theregister.co.uk/2020/02/20/chrome_deploys_deeplinking/">隱私問題</a>，Chrome 負責的團隊也有整理相關的<a href="https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.uoiwg23pt0tx">資訊</a>，大概簡單說就是有可能透過頁面的讀取時間或是 <code>scrollTop</code> 的值來判斷你開啟的頁面內有沒有特定字串，然後就會有外洩的疑慮。另外還有一個讓人擔心的問題是這個功能可能會讓那些本來用 fragment 當成 route 的 SPA 壞掉，<a href="https://github.com/w3ctag/design-reviews/issues/392">W3C TAG design review</a> 那邊他們自己也有提到。</p>
-              <p>其實這個 scroll to text 的功能在之前還有一套提案，不過不是由瀏覽器開發商所提，而是 indieweb 提的，叫做 <a href="https://indieweb.org/fragmention">Fragmention</a>，這組提案功能就比較陽春而且不成熟了：</p>
-              <pre>
-                <code>#some%20text
-</code>
-              </pre>
-              <p>重點在裡面那個 <code>%20</code>，也就是空白字元，Freagmention 的提案是你的目標文字要有空白，因為 HTML 的 id 不能包含空白字元，所以如果有空白字元就表示不是要找 id，這個提案由我來看就是很明顯沒搞過 i18n 的啊～</p>
-            </section>
+</code></pre>
+<p>如果有在用 Chrome Canary 的可以直接試試看<a href="https://blog.othree.net/log/2019/10/20/activation-behavior/#:%7E:text=%E6%AD%A3%E5%A4%A7%E5%85%89%E6%98%8E">這個連結</a>。這個語法其實還蠻靈活的，可以和以前 id identifier 並用：</p>
+<pre><code>#targetID:~:text=theText
+</code></pre>
+<p>這樣如果找不到文字，瀏覽器還可以改用 targetID 定位；如果網頁內有多個一樣的文字，可以用 <code>prefix-</code> 和 <code>-suffix</code> 給出前後文來讓瀏覽器找到正確的目標；再來就是如果要標註的文字很長，也可以用 <code>textStart,textEnd</code> 來標註，這樣就不用在網址內放一大串文字了；然後也可以標註多段文字，用 <code>&amp;</code> 切開，和給參數的格式一樣：</p>
+<pre><code>#:~:text=firstText&amp;text=secondText
+</code></pre>
+<p><a href="https://wicg.github.io/ScrollToTextFragment/">正式的文件</a>現在是放在 WICG 那邊，GitHub 那邊的 <a href="https://github.com/WICG/ScrollToTextFragment/">Proposal repo</a> 則是有一段解釋<a href="https://github.com/WICG/ScrollToTextFragment/#enter-">為什麼選擇用 <code>:~:</code></a> 當分割符號的段落，我覺得這種脈絡的紀錄是很重要的，這邊簡單說一下，一開始有考慮過 <code>##</code> 這種比較容易想到形式，但是有些 URL parser 是由右到左的可能會有錯誤，再來他們列出一堆不太會有人去用的組合來當候選，然後去看 Google 那邊過去五年的紀錄，結果就是 <code>:~:</code> 最沒人用，只有 0.0000039% 的比例，所以目前是選擇這個分割符號。</p>
+<p>我是蠻喜歡這新功能（標準？）的，<a href="https://github.com/mozilla/standards-positions/issues/194">Mozilla 也覺得還可以考慮看看</a>，不過目前這個功能似乎還沒在 stable channel 啟用，應該是因為<a href="https://www.theregister.co.uk/2020/02/20/chrome_deploys_deeplinking/">隱私問題</a>，Chrome 負責的團隊也有整理相關的<a href="https://docs.google.com/document/d/1YHcl1-vE_ZnZ0kL2almeikAj2gkwCq8_5xwIae7PVik/edit#heading=h.uoiwg23pt0tx">資訊</a>，大概簡單說就是有可能透過頁面的讀取時間或是 <code>scrollTop</code> 的值來判斷你開啟的頁面內有沒有特定字串，然後就會有外洩的疑慮。另外還有一個讓人擔心的問題是這個功能可能會讓那些本來用 fragment 當成 route 的 SPA 壞掉，<a href="https://github.com/w3ctag/design-reviews/issues/392">W3C TAG design review</a> 那邊他們自己也有提到。</p>
+<p>其實這個 scroll to text 的功能在之前還有一套提案，不過不是由瀏覽器開發商所提，而是 indieweb 提的，叫做 <a href="https://indieweb.org/fragmention">Fragmention</a>，這組提案功能就比較陽春而且不成熟了：</p>
+<pre><code>#some%20text
+</code></pre>
+<p>重點在裡面那個 <code>%20</code>，也就是空白字元，Freagmention 的提案是你的目標文字要有空白，因為 HTML 的 id 不能包含空白字元，所以如果有空白字元就表示不是要找 id，這個提案由我來看就是很明顯沒搞過 i18n 的啊～</p>
+</section>
             <footer>
               <a href="/log/web/" rel="tag">Web</a>
             </footer>
@@ -143,6 +127,15 @@
           <h3>近期文章</h3>
           <ul>
             <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
               <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
             </li>
             <li>
@@ -163,19 +156,10 @@
             <li>
               <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
             </li>
-            <li>
-              <a href="/log/2023/01/13/wbr-and-nobr/" title="2023-01-13">wbr 的這些那些</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/23/japan-postal-code/" title="2022-12-23">日本郵便番号</a>
-            </li>
-            <li>
-              <a href="/log/2022/12/03/fix-my-archlinux/" title="2022-12-03">Archlinux 修復紀錄</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(42)</span></li>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
@@ -187,7 +171,7 @@
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(44)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
             <li><a href="/log/web/">Web</a> <span>(201)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>
