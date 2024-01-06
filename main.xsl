@@ -178,7 +178,7 @@
               <a href="{$mainPath}{$ext}" accesskey="1" title="O3noBLOG">O3noBLOG</a>
             </h1>
           </header>
-          <div class="pure-g">
+          <div class="pure-g layout">
             <xsl:apply-templates select="b:entries/b:entriesMeta"/>
             <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
               <hr/>
@@ -297,7 +297,8 @@
               </ul>
               <h3>貼紙</h3>
               <p id="stickers">
-                <a href="https://sites.google.com/site/happybusy/">
+                <!--a href="https://sites.google.com/site/happybusy/"-->
+                <a href="https://sites.google.com/view/happy-busy/">
                   <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
                 </a>
                 <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
@@ -419,6 +420,7 @@
             </xsl:call-template>
           </xsl:for-each>
           <a id="prev-link" href="/log/{translate(substring(b:entry[last()]/b:datetime/b:date, 0, 8), '-', '/')}/{$ext}#entry-{b:entry[last()]/@baseName}">➡ 看看其它文章</a>
+	  <hr />
         </xsl:when>
         <xsl:otherwise>
           <xsl:for-each select="b:entry">
@@ -433,7 +435,7 @@
             <a id="prev-link" href="/log/{//b:entriesMeta/b:listData}/all/{$ext}" class="center">此類別所有文章</a>
           </xsl:if>
           <xsl:if test="$listType = 'm' and //b:entries/b:entriesMeta/b:previous">
-            <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">➡ 前一個月的文章</a>
+            <a id="prev-link" href="/log/{translate(substring(//b:entries/b:entriesMeta/b:previous/b:mDate, 0, 8), '-', '/')}/{$ext}">更之前的文章</a>
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
@@ -793,7 +795,7 @@ google_color_url = "008000";
     <xsl:for-each select="$mArchive/b:archiveItem">
       <xsl:sort select="." order="descending"/>
       <xsl:if test="substring(preceding-sibling::b:archiveItem[1],1,4) != substring(.,1,4) or not(preceding-sibling::b:archiveItem[1])">
-        <li><a href="/log/{substring(.,1,4)}/{$ext}"><xsl:value-of select="substring(.,1,4)"/></a><xsl:text> </xsl:text>:<xsl:text> </xsl:text><ol><xsl:call-template name="loop"><xsl:with-param name="y" select="substring(.,1,4)"/><xsl:with-param name="cm" select="1"/></xsl:call-template></ol></li>
+        <li><a href="/log/{substring(.,1,4)}/{$ext}"><xsl:value-of select="substring(.,1,4)"/></a><xsl:text></xsl:text>:<xsl:text> </xsl:text><ol><xsl:call-template name="loop"><xsl:with-param name="y" select="substring(.,1,4)"/><xsl:with-param name="cm" select="1"/></xsl:call-template></ol></li>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
@@ -855,7 +857,7 @@ google_color_url = "008000";
           </xsl:choose>
         </a>
         <xsl:text> </xsl:text>
-        <span>(<xsl:value-of select="@archiveCount"/><xsl:if test="$type = 'full'">,<a href="{$logPath}{.}/all/{$ext}">索引</a></xsl:if>)</span>
+        <span>(<xsl:value-of select="@archiveCount"/><xsl:if test="$type = 'full'">, <a href="{$logPath}{.}/all/{$ext}">索引</a></xsl:if>)</span>
       </li>
     </xsl:for-each>
   </xsl:template>

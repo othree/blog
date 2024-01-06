@@ -1,0 +1,215 @@
+
+
+O3noBLOG - about
+https://blog.othree.net//log/ about/
+
+Copyright 2023
+2023-08-23 23:03
+http://www.movabletype.org/?v=4.381
+http://blogs.law.harvard.edu/tech/rss 
+
+
+
+Remove Disqus
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;前陣子有整理了一下部落格的東西，大致上作的事情是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;拿掉 Google Analytic&lt;/li&gt;
+&lt;li&gt;拿掉所有的 SNS 按鈕&lt;/li&gt;
+&lt;li&gt;拿掉 Disqus&lt;/li&gt;
+&lt;li&gt;換 web font 服務&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 &lt;a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software"&gt;web log 分析軟體&lt;/a&gt;，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 &lt;a href="https://goaccess.io/"&gt;goaccess&lt;/a&gt; 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有&lt;a href="https://twitter.com/hsins_/status/1690038318732611584"&gt;朋友&lt;/a&gt;推薦了 &lt;a href="https://www.goatcounter.com/"&gt;GoatCounter&lt;/a&gt; 和 &lt;a href="https://umami.is/"&gt;umami&lt;/a&gt;，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫。&lt;/p&gt;
+&lt;p&gt;第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 &lt;a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview"&gt;Web Intent&lt;/a&gt; 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API"&gt;Web Share API&lt;/a&gt; 的按鈕。&lt;/p&gt;
+&lt;p&gt;然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。&lt;/p&gt;
+&lt;p&gt;我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的&lt;a href="https://twitter.com/hackmdio/status/1692158313704910982"&gt;消息&lt;/a&gt;，跟著原推文下去找其實也有不少的替代方案，像是 &lt;a href="https://cusdis.com/"&gt;cusdis&lt;/a&gt;、用 GitHub 的 &lt;a href="https://giscus.app/"&gt;giscus&lt;/a&gt; 和 &lt;a href="https://utteranc.es/"&gt;utterances&lt;/a&gt; 等，其實 &lt;a href="https://www.wappalyzer.com/technologies/comment-systems/"&gt;Wappalyzer&lt;/a&gt; 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。&lt;/p&gt;
+&lt;p&gt;其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 &lt;a href="https://activitypub.rocks/"&gt;ActivityPub&lt;/a&gt; 和 &lt;a href="https://indieweb.org/Webmention"&gt;Webmention&lt;/a&gt; ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少&lt;a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/"&gt;手工&lt;/a&gt;；另外一個選擇 Webmention，則可以參考 Jason 的「&lt;a href="https://jason-memo.dev/posts/webmention/"&gt;透過 webmention 來搜集 blog 的社群迴響&lt;/a&gt;」，基本上是可以透過第三方服務來弄成純前端的方案。&lt;/p&gt;
+&lt;p&gt;最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 &lt;a href="https://twitter.com/littlegoodjack/status/1691699453877682247"&gt;Laravel 因為 GDPR 的關係改用&lt;/a&gt; &lt;a href="https://fonts.bunny.net/"&gt;Bunny Fonts&lt;/a&gt; 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。&lt;/p&gt;
+&lt;p&gt;然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，&lt;a href="https://www.eff.org/pages/privacy-badger"&gt;EFF Privacy Badger&lt;/a&gt; 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。&lt;/p&gt;
+
+https://blog.othree.net/log/2023/08/23/remove-disqus/
+https://blog.othree.net/log/2023/08/23/remove-disqus/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2023-08-23 23:03
+
+
+
+Test CommonMark syntax
+&lt;p&gt;Fenced code block&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;var a = 1;
+&lt;/code&gt;&lt;/pre&gt;
+
+https://blog.othree.net/log/2017/05/05/test-commonmark/
+https://blog.othree.net/log/2017/05/05/test-commonmark/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2017-05-05 11:17
+
+
+
+留言切換到 Disqus
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/14006265675/" title="奈良 東大寺 by othree, on Flickr"&gt;&lt;img src="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg" width="1024" height="683" alt="奈良 東大寺" srcset="https://farm8.staticflickr.com/7400/14006265675_5fe812acae_b.jpg 1024w, https://farm8.staticflickr.com/7400/14006265675_c4f4d31e87_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;因為 MovableType 的反 spam 機制幾乎失靈了，最近廣告又太多，只好狠下心來換到 &lt;a href="http://disqus.com/"&gt;Disqus&lt;/a&gt;，其實是想換一陣子了，不過覺的話要花不少時間一直沒弄，結果果然弄了整個晚上，大概遇到三個問題。&lt;/p&gt;
+
+&lt;p&gt;其實 Disqus 對於轉移這件事做了不少工，不過我還是遇到匯出的檔案格式不支援的問題， Disqus 只支援 WordPress 的 wxr 格式，不過我的 MT 4 不能輸出這種格式，後來是使用 Disqus 的 MT plugin 來處理這個問題。&lt;/p&gt;
+
+&lt;p&gt;第二個問題是套用到頁面上的問題，因為這裡有使用 CSP，所以勢必要多開一些 domain，大概開了圖片和 script 的 &lt;code&gt;*.disqus.com&lt;/code&gt; 和 &lt;code&gt;*.disquscdn.com&lt;/code&gt;，不過還有一個我不太想開的 &lt;em&gt;unsafe-eval&lt;/em&gt;，目前只能先暫時屈服，正在找管道回報這問題。&lt;/p&gt;
+
+&lt;p&gt;第三個問題就是留言對應的 url 不正確，因為我是用 plugin 處理匯出匯入的，他用的網址就是 MT 內部認為的網址，不過在這裡這不是正確的網址，本來我是在頁面讀入的 script 內做處理，手動指定留言的網址，不過後來發現 Disqus 有 URL mapping 的功能，可以上傳 csv 檔來改網址，而且還支援下載現有的網址清單，設想蠻齊全的。&lt;/p&gt;
+
+&lt;p&gt;總之我就這樣換過來了，自己測試留言看來是 ok，還不知道是不是都沒問題了，因為這邊也很少人來留言啊，至於切換過來有什麼優點呢，最主要還是我不想處理 spam 了，再來我可以把 comment 進入點關掉，對網站來說安全些，還有可以把一些流量丟到外面（Disqus 是賺什麼啊？），剩下就是我可以用 Disqus 的一些特殊功能啦，像是訂閱討論串之類的。&lt;/p&gt;
+
+&lt;p&gt;對了，照片是隨便挑的，和內文沒關係～&lt;/p&gt;
+
+
+https://blog.othree.net/log/2014/05/16/disqus/
+https://blog.othree.net/log/2014/05/16/disqus/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2014-05-16 23:32
+
+
+
+大圖測試-1
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/11132117486/" title="信義路 by othree, on Flickr"&gt;&lt;img src="https://farm3.staticflickr.com/2878/11132117486_6fe1302a4f_b.jpg" width="1024" height="683" alt="信義路" srcset="https://farm3.staticflickr.com/2878/11132117486_6fe1302a4f_b.jpg 1024w, https://farm3.staticflickr.com/2878/11132117486_93e2440626_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+
+https://blog.othree.net/log/2013/12/02/big-image-test-1/
+https://blog.othree.net/log/2013/12/02/big-image-test-1/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2013-12-02 17:09
+
+
+
+大圖測試
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/7877215448/" title="花蓮 by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg" width="1024" height="683" alt="花蓮" srcset="https://farm9.staticflickr.com/8431/7877215448_1d8dcf278c_b.jpg 1024w, https://farm9.staticflickr.com/8431/7877215448_31c7ad9ec1_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+
+https://blog.othree.net/log/2012/11/29/large-photo-test/
+https://blog.othree.net/log/2012/11/29/large-photo-test/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2012-11-29 19:02
+
+
+
+改版
+&lt;p&gt;&lt;a data-flickr-embed="true" class="thumbnail" href="https://www.flickr.com/photos/othree/7698344300/" title="Responsive by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8285/7698344300_c5d4593157_b.jpg" width="530" height="1024" alt="Responsive" srcset="https://farm9.staticflickr.com/8285/7698344300_c5d4593157_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;改版算是一個段落了吧，這次主要是套用 &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter Bootstrap&lt;/a&gt; ，然後直接用它來排版，同時也支援 responsive design ，所以用手機、平板電腦看這邊的效果也比以前好很多，同時拿掉很多畫面上的元件，一些 JavaScript 不是那麼必要的也都拿掉了，搜尋也改成用 Google 搜尋，越來越單純化了吧～&lt;/p&gt;
+
+
+https://blog.othree.net/log/2012/08/02/new-theme/
+https://blog.othree.net/log/2012/08/02/new-theme/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2012-08-02 23:59
+
+
+
+狀況更新
+&lt;p&gt;來更新一下近況，我之前有說過要寫一篇文章講一下我的 ID 由來，本來的計畫是想把前年的東京行的文章完成後在寫的，不過那篇文章一直寫不出來，因為那次行程對我蠻有意義的，結果就是一直寫不出來，所以最打算先寫 ID 來源那篇，不過來源沒什麼有趣的故事，只是多種東西的合成而已，不用太期待:P。&lt;/p&gt;
+
+&lt;p&gt;另外就是部落格這邊有些更新，本來是想要整個樣式大改，原來的目標是以可讀性為主，然後黑白主色，單欄的排版（比較不會有雜訊干擾讀者），不過實在是沒有個起頭，所以暫時還沒有進度，最近幾天發的文章比較多，想說短時間還是不會改版，所以就順便改了一些之前覺得不是很好的地方，CSS 也有微幅的修改，希望能夠讓訪客體驗更好點，其它就是還拿掉了引用和 OpenID 的支援，前者幾乎沒人用，後者實在是因為支援做的不太好，不然我自己還會用的說，大概就是這樣，最近預計要寫的文章還有三篇左右（隨時可能增加），應該也會維持一兩天發一篇的速度吧。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2011/03/07/update/
+https://blog.othree.net/log/2011/03/07/update/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2011-03-07 00:41
+
+
+
+My blog is back
+&lt;p&gt;掛了將近一個月有餘，昨天終於先弄回來，中間一度少掉的文章在 Google Reader 裡都還看的到，所以復原文章也沒花上什麼心力，不過苦工少不了就是，另外在 &lt;a href="http://othree.github.com"&gt;暫時站&lt;/a&gt; 寫的文章也搬過來了，這幾篇同時有用 &lt;span class="caps"&gt;WTFPL &lt;/span&gt;授權，還順便把 MT 升級到最新的4.25版，本來很想順便改版的，不過一直沒好好設計，這部份就先繼續放著了，反正目前版面我其實還蠻滿意的（除了XHTML實在有夠麻煩）。&lt;/p&gt;
+https://blog.othree.net/log/2009/05/12/my-blog-is-back/
+https://blog.othree.net/log/2009/05/12/my-blog-is-back/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2009-05-12 11:14
+
+
+
+MT OpenID 支援
+&lt;p&gt;剛剛研究的結果先紀錄一下，基本上是先連到mt目錄下的comment cgi檔案，加上一些參數會跑出登入畫面，這邊可以選擇想要用的第三方認證機制，透過第三方認證服務確定登入後，系統會產生一個cookie叫做commenter_name，有這個cookie的話就表是有透過第三方認證機制登入了，這時透過javascript把name和email兩個欄位藏起來，直接送出訊息，系統就可以正確的把該篇迴響歸到該帳號之下。&lt;/p&gt;
+
+&lt;p&gt;如果mt的安裝位置和部落格位置在不同網域名稱下，也可以使用cgi檔產生一段js碼，直接把commenter_name這變數指定好。另外有在第三方認證服務登入的情況下，送出的資料如果包含name，那會變成以表單送出的name為主，而忽略第三方認證的帳號，因此需要把該欄位藏起來。&lt;/p&gt;
+https://blog.othree.net/log/2008/02/01/mt-openid/
+https://blog.othree.net/log/2008/02/01/mt-openid/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2008-02-01 02:10
+
+
+
+回復完工
+&lt;p&gt;花了不少時間總算弄完，中途主機root不知原因掛掉還重灌一次，最後有兩篇文章的附檔沒辦法找回來，都是HemiDemi的Firefox擴充套件，不過反正都是測試版的，所以就放著不理了，以後要是有新版在直接加註吧。&lt;/p&gt;
+
+&lt;p&gt;另外昨天看到hlb提到W3C的working group是開放給所有人加入的，還有一篇文章教人怎樣加入「&lt;a href="http://ln.hixie.ch/?start=1173385976&amp;amp;count=1"&gt; How &lt;span class="caps"&gt;YOU &lt;/span&gt;can join the &lt;span class="caps"&gt;W3C HTML5&lt;/span&gt; Working Group in six easy steps&lt;/a&gt;」，我目前有在考慮加入，實際參與規格的制定好像還蠻有趣的，畢竟以前都只能跟著別人的腳步走。&lt;/p&gt;
+https://blog.othree.net/log/2007/08/21/repaired/
+https://blog.othree.net/log/2007/08/21/repaired/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2007-08-21 21:56
+
+
+
+慘事發生
+&lt;p&gt;本站實體檔案回溯到2006/03，所以包括樣板和哪之後的文章的圖片都掛掉了，所幸本文是都有備份到，會發生這樣的事故主要是我的備份設定似乎沒做好，結果每天備份都是作假的，於是我一不做二不休，先升級到MT4，接著再來設計新的樣板，不過應該只會拿之前的再做些修改，畢竟那個樣板我還蠻滿意的，而且還有半成品的備份。版面和設定弄好之後再來慢慢把以前的附檔補上，不過也只能補有辦法補的。看來看書進度會delay好一陣子。&lt;/p&gt;
+
+&lt;p class="update"&gt;現在開始每天會固定回復舊文章的連結和圖片，會造成feed內不斷有舊文跑出，還請見諒。&lt;/p&gt;
+https://blog.othree.net/log/2007/08/16/bad-bad-bad/
+https://blog.othree.net/log/2007/08/16/bad-bad-bad/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2007-08-16 20:23
+
+
+
+開始使用hReview
+&lt;p&gt;從&lt;a href="http://blog.othree.net/log/2007/08/04/html_mastery/"&gt;&lt;span class="caps"&gt;HTML&lt;/span&gt; Mastery這本書的書評&lt;/a&gt;開始，我大概都會改成先在&lt;a href="http://www.anobii.com/"&gt;aNobii&lt;/a&gt;發表評論後在用&lt;a href="http://microformats.org/wiki/hreview"&gt;hReview&lt;/a&gt;的格式在這裡發表吧，這樣我寫評論的時候比較不需要去想版面呈現的東西，感覺寫起來輕鬆不少，順便正式使用hReview這個microformats，實際上在決定格式的時候還蠻難抉擇的，我想盡量保持標籤簡潔，又不能省掉太都東西，結果花了兩個小時以上才弄成現在的樣子，我想以後還是有可能修改啦，沒想到hReview比其他幾種格式複雜不少啊，要考慮的東西多很多。&lt;/p&gt;
+https://blog.othree.net/log/2007/08/04/hreview/
+https://blog.othree.net/log/2007/08/04/hreview/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2007-08-04 01:26
+
+
+
+FeedBurner使用中
+&lt;p&gt;&lt;img alt="" src="https://blog.othree.net/log/2007/05/25/using-feedburner/flamocon_190h.gif" width="179" height="190" /&gt;&lt;/p&gt;
+
+&lt;p&gt;這裡終於改用FeedBurner燒了，新的feed位置在：&lt;a href="http://feeds.feedburner.com/othree"&gt;http://feeds.feedburner.com/othree&lt;/a&gt;，雖然有設定好redirect，不過還是建議有訂閱我的feed的人手動改一下位置，另外現在只有主要的RSS 2全文版本有燒，訂閱其他版本的則不需要更改。&lt;/p&gt;
+
+&lt;p&gt;我絕對不是因為FeedBurner被Google收購才開使用的喔^^。&lt;/p&gt;
+https://blog.othree.net/log/2007/05/25/using-feedburner/
+https://blog.othree.net/log/2007/05/25/using-feedburner/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2007-05-25 11:13
+
+
+
+新版面上線
+&lt;p&gt;今天更新了，因為不是只有改到樣式表，而是連HTML結構都有作改變，所以舊的兩個樣式就都先下線了，等修改到新結構也可以正常套用時會在重新放上來給大家選用的:P。&lt;/p&gt;&lt;p&gt;這次更新有幾點主要的不同，首先是我放棄了自由頁寬的設計，改成固定頁寬的設計，因為我發現用寬螢幕看網頁的時候自由頁寬的版面會因為左右拉長，造成文章閱讀不易，我目前寬度是固定在900px，其實是給1024以上的解析度用的，如果使用者只有800px寬的解析度，那至少看主要內容的部份不會受影響。再來是側邊欄的內容，相較於以往，現在的側邊欄內容我覺得可用性高很多，以前幾乎每頁的都差不多～～，不過這部份我還要慢慢調整，看看不同的頁面要放上什麼樣的資訊會比較有用。最後就是網站基本框架又改變了，雖然還是header+2 column+footer，不過這次參考&lt;a href="http://www.satzansatz.de/cssd/columnswapping.html"&gt;Column-swapping: an attempt for two columns with equal height&lt;/a&gt;這篇文章做了修改，所以現在更接近我理想的等高雙欄版面了。&lt;/p&gt;
+
+&lt;p&gt;主要改變的大方向就是以上三點，其實三點都還有進步空間，不過像第一點會卡在IE對CSS支援度的問題，另外現在的雙欄寬度都是定死的，如果要改成可變動的可能還要改不少地方吧。講到這我就不得不說，其實這次設計新版面時我很想不管IE 6（含以下）的死活，然後在網頁內註明一下如果你用IE6看會發生什麼事我也不知道之類的警告語，結果全部設計好後，打開IE6檢查，發現幾乎沒問題（冏），只有幾個小地方有問題，我就很不情願的把他修正了XD，現在連IE 5.5都沒什麼問題，不過IE5就比較不行了 飄～～。&lt;/p&gt;
+
+&lt;p&gt;最後，其實我正式上線後發現某個神秘的bug，就是如果我現在HTML結構中的某個element內沒有東西的話，在IE下會整個亂掉，而且亂到不可思議XD。&lt;/p&gt;
+
+&lt;p&gt;補充：本來文章寫完後當機，嚇到死，還好有&lt;a href="http://moztw.org/firefox/"&gt;Firefox&lt;/a&gt;的還原功能O_O。&lt;/p&gt;
+https://blog.othree.net/log/2006/12/22/new-theme/
+https://blog.othree.net/log/2006/12/22/new-theme/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2006-12-22 22:53
+
+
+
+慶祝300篇，開始使用半透明PNG
+&lt;p&gt;&lt;img src="http://blog.othree.net/log/2006/01/20/using_half_transparent_png/half_trans.png" alt="半透明PNG的效果蠻漂亮的" height="146" width="160" /&gt;&lt;/p&gt;
+
+&lt;p&gt;因為一些狀況我開始使用半透明的PNG在sidebar上，出來的效果還不錯，Firefox、Opera和Safari都可以正常顯示，Internet Explorer 7 beta 1也OK，6就不正常了，不過我是不太在意啦:P，另外我本來是用一張1px乘1px的半透明圖當底圖，沒想到Safari會出問題，後來發現圖片大小大一點就不會這樣了，真怪。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;順便慶祝300篇！&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;最後附上Safari上的錯誤圖：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://blog.othree.net/log/2006/01/20/using_half_transparent_png/half_trans_safari.png" alt="Safari上1*1的圖會有錯誤" height="145" width="159" /&gt;&lt;/p&gt;
+https://blog.othree.net/log/2006/01/20/using-half-transparent-png/
+https://blog.othree.net/log/2006/01/20/using-half-transparent-png/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="about at del.icio.us">about</a>
+2006-01-20 21:55
+
+
+
+
+

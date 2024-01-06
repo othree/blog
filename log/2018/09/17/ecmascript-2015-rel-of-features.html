@@ -61,7 +61,7 @@
           <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
         </h1>
       </header>
-      <div class="pure-g">
+      <div class="pure-g layout">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -102,7 +102,7 @@
 </code></pre>
 <p>ES6 的這個語法，其實底層是透過 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols">iteration protocols</a> 這些內部協定來運作的，包括了 iterable protocol 和 iterator protocol，<code>for...of</code> 其實就是透過 iterable protocol 去拿物件的 iterator，利用 iterator 來遍歷元素，所以自己寫的物件也可以實做 iterable protocol，然後就可以讓該物件支援 <code>for...of</code> 語法了；除此之外，iterator 是不能重複使用的，所以其實每次 <code>for..of</code>，都是拿一個該物件的新的 iterator，而為了可以簡單產生這個 iterator，又有了 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator function</a>，generator function 每次執行都會回傳一個新的 iterator（精確一點說是 generator object，同時是 iterator 也是 iterable），正好適合這個情境。</p>
 <p>Iterable protocol 的定義其實很簡單，就是定義怎樣把 generator function 放在物件裡的方式，實際上是利用 ES6 另一個新的資料型態： <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a> 來達成的，為什麼不直接定個屬性名稱給它呢？最主要就是不要讓這些內部 protocol 的東西在 <code>for...in</code> 操作的時候被遍歷到，所以定義了新的 Symbol 型別，利用它的特性來把內部 protocol 做了一定程度的保護，iterable protocol 就是把 generator function 用一個預先定義好的 Symbol 來儲存，這個 Symbol 又稱為 <code>Symbol.iterator</code>，這種預先定義好的 Symbol 則統稱為 Well-Known Symbols，ES6 其實定義了<a href="http://exploringjs.com/es6/ch_symbols.html#_well-known-symbols">好幾個</a>，不是只有 iterable 用的到，透過定義這些 Well-Known Symobls，可以介入改變一些 JavaScript 比較基礎的運作。</p>
-<p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill [harmony-reflect][] 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
+<p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill harmony-reflect 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
 <p>最後總結一下，這串從 Map/Set 開始，接著連到 <code>for...of</code> 語法、Iterator、Generator、Symbol、Well-Known Symobls 最後到 meta programming 的 Proxy 和 Reflect，其實也差不多佔了 1/4 的 ES6 新功能。</p>
 </section>
             <footer>
@@ -124,10 +124,22 @@
                   </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2018/09/16/web-platform/"><span class="prefix">上一篇：</span>Web Platform<time>2018-09-16</time></a><a class="next pn" href="/log/2018/09/18/extensible-web-2018/"><span class="prefix">下一篇：</span>Extensible Web at 2018<time>2018-09-18</time></a></p></div>
           <h3>關於本網誌</h3>
           <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
           </address>
           <h3>近期文章</h3>
           <ul>
+            <li>
+              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
+            </li>
+            <li>
+              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
+            </li>
+            <li>
+              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
+            </li>
             <li>
               <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
             </li>
@@ -146,35 +158,23 @@
             <li>
               <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
             </li>
-            <li>
-              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
             <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
             <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(133)</span></li>
             <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
             <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
             <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
           </ul>
           <h3>訂閱本網誌</h3>
           <ul id="feeds">

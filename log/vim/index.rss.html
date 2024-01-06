@@ -1,0 +1,582 @@
+
+
+O3noBLOG - vim
+https://blog.othree.net//log/ vim/
+
+Copyright 2023
+2023-09-11 17:27
+http://www.movabletype.org/?v=4.381
+http://blogs.law.harvard.edu/tech/rss 
+
+
+
+Vim License 的故事（下）
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;接續&lt;a href="https://blog.othree.net/log/2023/09/10/vim-license-1/"&gt;前一篇&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 &lt;a href="https://github.com/preservim/tagbar/blob/master/LICENSE"&gt;Tagbar&lt;/a&gt;；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。&lt;/p&gt;
+&lt;p&gt;解決了上游問題，回到 Licensee 偵測的問題，我本來的 PR 沒被合併，而是 Mike 另外弄了一個比較通用的解法，是根據條款文本內的替換字串來動態調整差異的容許範圍，然後接著 2020/03/13，Licensee 9.13.1 作為第一版支援 Vim License 的 Licensee 發佈了，接下來，我理論上就只要等 GitHub 更新 Licensee 的版本就好了，這我倒是不太擔心，我是有種感覺 GitHub 是有在認真更新這些東西的，然後，時間快轉到三個月後，這段期間其實我都有偶爾上去 GitHub 看一下 Vim License 有沒有被偵測出來，想著要是終於完成的話就可以投個稿了，當時的時間大概是搞了三年這樣，總之因為過有點久了，我又去拉了最新版 Licensee 來測試，結果讓我嚇了一跳，竟然偵測不出來了！&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177845605/" title="Licensee 9.13.1 by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177845605_dbd6f40e06_b.jpg" width="1024" height="684" alt="Licensee 9.13.1" srcset="https://live.staticflickr.com/65535/53177845605_169f7db9ba_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;所以我又花時間下去查原因，結果是 2020/05/12 的 9.14 開始爛掉的，Mike 在 9.14 有修改一部分的演算法，在比對兩份文件時，因為有替換字串的關係，不可能用完全比對的方式，所以在有替換字串時，文件的長度差異會影響相似度，有個動態的 &lt;code&gt;max_delta&lt;/code&gt;，如果替換字串後長度差異太大超過 &lt;code&gt;max_delta&lt;/code&gt; 的話，就會被判定為不同的文件，在 9.14 則是把這個機制拿掉，直接把替換字串的影響弄進相似度之中，不過其中長度差異的懲罰太大，結果造成 Vim 專案本身的判斷失準，發現原因之後，我就發了 PR 調整懲罰的參數，讓 Vim 剛好可以過關這樣，結果我發 PR 時 Mike 早已經發現這個問題，也已經修改好開了 PR 只是還在 review，而該 PR 的方法是則是動態的根據替換字串的數量來調整文件長度差異的值，除此之外，Vim License 還被加到測試之中，所以以後應該不會再發生這種問題了。&lt;/p&gt;
+&lt;p&gt;然後，我就等這個 PR merge 等了三個月，不過還好 merge 後馬上就發佈 9.14.1 了，接著又回到等 GitHub 更新的時間了，我就一直等，一直等，偶爾上去 GitHub 的 Vim repo 確認一下，2021 年初我還寫信去 GitHub Support 問他們當時使用的版本是哪一版，Support 還有認真去幫我確認是沒更新，然後就這樣一直等一直等到 2022 年初，有天在用 GitHub 的搜尋功能時，突然發現到，可以用條件設定搜尋特定授權條款的專案，然後我就想說可以來試試看 Vim License：&lt;code&gt;license:vim&lt;/code&gt;，結果竟然有&lt;a href="https://github.com/search?q=license%3Avim&amp;amp;type=repositories"&gt;符合條件的專案&lt;/a&gt;出現！讓我大吃一驚！原來不知何時 GitHub 已經偵測的到 Vim License 了，可是 Vim 那個 repo 結果卻還是不正確，深入了解一下，推測應該是 GitHub 有 cache 機制，找了一下文件發現到有提到說如果有發現專案的授權條款標示不正確，可以聯絡 support，於是我就發了 support request，這次很快就收到回應，然後在 2022/01/12 這天，確認了 GitHub 上的 Vim 專案有正確的顯示為 Vim License 了，歷時將近五年，那天我還發推慶祝了一下。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177410816/" title="Search result of Vim Licensed repo by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177410816_564bde201f_b.jpg" width="1024" height="684" alt="Search result of Vim Licensed repo" srcset="https://live.staticflickr.com/65535/53177410816_1f295d5269_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="zh" dir="ltr"&gt;自己挖了將近五年的坑今天終於填平了，今年終於可以投個稿&lt;/p&gt;-- othree (@othree) &lt;a href="https://twitter.com/othree/status/1481290722368458757?ref_src=twsrc%5Etfw"&gt;January 12, 2022&lt;/a&gt;&lt;/blockquote&gt; &lt;script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+&lt;p&gt;之後，終於可以準備投稿，然後順利投上 2022 年的 COSCUP，題目是「&lt;a href="https://coscup.org/2022/zh-TW/session/ESQUUF"&gt;歷時五年的開源貢獻，GitHub 支援 Vim License 的故事&lt;/a&gt;」（&lt;a href="https://www.youtube.com/watch?v=YM7RHRwIrKU"&gt;影片&lt;/a&gt;、&lt;a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey"&gt;投影片&lt;/a&gt;），在準備分享的過程也是遭受很多的&lt;del&gt;電玩干擾&lt;/del&gt;阻力，分享過程還算順利，自己有點小不滿意不過還算可以接受，不滿意的地方是有些我一開始有想要分享的點忘了說，不過也是在這篇文章有補齊了。&lt;/p&gt;
+&lt;p&gt;其實在初期那段等待的時間之間，我還開了一個小專案 &lt;a href="https://vim-license.dev/"&gt;Vim License Gen&lt;/a&gt;，用來幫人產生自己的專案/軟體用的 Vim License 文件，為什麼要有這個工具是因為以前的純文字文件，每行的寬度大概都在 80 個字元以內，但是每個專案的名稱都不一樣，如果直接做替換，有可能會破版，所以這個工具一是會保持版面，二是它可以正確的只替換需要替換的部分，然後這個專案就是用 Vim License 開源，並且是用自己產生 Vim License 文件，然後我也把他列為使用 Vim License 的三個專案之一（另外兩個分別是 Vim 和 vim-pathogen），這也是個 self-hosting 的實現。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177408966/" title="Vim License Gen by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177408966_62bd21b8ab_b.jpg" width="1024" height="684" alt="Vim License Gen" srcset="https://live.staticflickr.com/65535/53177408966_c7baf853ea_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;故事並沒有到這邊就結束，COSCUP 分享之後的目標就是把這篇文章寫下來了，不過一拖再拖，其中一個主因是以前我是先把文章寫好順便作整理，但是這次因為準備時間不夠，無法在分享前先把文章寫好，變成後寫，沒了趕稿壓力，加上又有像是王國之淚等讓人分心的東西，就一直無限期拖搞，直到今年 2023/08/05 傳出了 Vim 的作者 Bram Moolenaar 於八月三日因病過世的消息了。&lt;/p&gt;
+&lt;p&gt;Bram 過世之後，除了緬懷之外，大家也會擔心起 Vim 的後續誰維護的問題，還好 Vim GitHub 組織內還有另外兩位成員，其中 Christian Brabandt 算是接起主持人的角色，他同時也是我用很久的 vim-airline 的作者，然後很快的也發了 PR 做了一些相關的修改，像是在 doc 裡面緬懷 Bram、更新檔案內的維護者資訊等，只不過其中一項修改，改到了 LICENSE 檔案！改的地方當然就是那個高度耦合的 Vim Maintainer 的部分：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The current maintainer is Bram Moolenaar &lt;a href="mailto:Bram@vim.org"&gt;Bram@vim.org&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;改成&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The current maintainers are listed here: https://github.com/orgs/vim/people.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後我還是被 ping 了才知道這 PR 已經合併，這下我可緊張了，其實我本來也是有在想 Vim License 的問題，只不過想說 Bram 才剛過世，可以晚點再提出，當時有想了幾個方案，理想上要能同時繼續支援現有的使用 Vim License 的專案、然後也要能讓授權條款內的文字正確的更新，不過當時不管哪個方案，都無法保證兩全齊美，當時想的方案為：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;方案一：更改條款內文並且發布新版，可能是叫 Vim License 1.1 之類的，缺點是可能需要重新提交提交新版的條款到 choosealicense，但是現況來看幾乎不可能符合提交的一千個專案的條件；&lt;/li&gt;
+&lt;li&gt;方案二：更改條款內文，繼續用一樣的條款名，不推修改到 choosealicense，缺點是 Licensee 可能辨認不出來，結果就是 Vim 專案自己無法被辨識為使用 Vim License；&lt;/li&gt;
+&lt;li&gt;方案三：同二，但是該推送修改的地方如 SPDX License List 和 choosealicense 都送，缺點是使用舊版授權條款文字的可能都再也辨認不出來，另一個問題是這樣的變化 Mike 是否會接受？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;就之前的紀錄，當時版本偵測出來的相似度也只有 98.45%，這樣一改下去，會不會就爆炸又偵測不出來了呢，於是我趕快找了個時間拉最新版的 Vim 和 Licnesee 下來測試，結果，竟然還是 98.45%，這結果又讓我驚呆了，直覺是因為 Licensee 的演算法改的更好了，一查下去，原來剛好在今年初的 Licensee 9.16.0 其中的一項修改就是針對替換字串提供更高的差異容許範圍，所以舊版 Vim License 下去比對會有 99.12% 的相似度，剛好足夠新版修改後的差異，而這結果就剛好克服了方案三的缺點，所以接下來應該就是會朝這個方向進行，先提交新版的文字給 SPDX License List，然後再更新 choosealicense 內的範本吧。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53176812027/" title="Vim License detection by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53176812027_c95d17b663_b.jpg" width="1024" height="666" alt="Vim License detection" srcset="" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;以上，就是到目前為主的故事了，最後想來作一個總結，也就是談談當初為什麼想在 COSCUP 分享這個呢？其實我當初假想的聽眾是開源的新手，我想分享的其中一點是，對於開源專案的貢獻，我完全是照自己的步調，也不給任何一邊壓力，所有的等待過程我都沒去催促過任何人，不過標題的「五年」或許造成反效果也說不定，投稿時 Rock 有建議過我可以調整一下標題，不過我實在是想不到什麼其他好標題，結果就都沒改，後來，當天在我的前一場是 Max 的「&lt;a href="https://coscup.org/2022/zh-TW/session/99GBZC"&gt;開源軟體與社群 - 參與國際社群經驗談&lt;/a&gt;」（&lt;a href="https://www.youtube.com/watch?v=OxuQ1sdLhks"&gt;影片&lt;/a&gt;），就有提到這點，可以選擇你最舒服的方式參與，不用害怕參與；第二點想分享的東西則是關於在這個過程中學到的東西，像是 Licensee 的判斷原理，SPDX 相關的東西，和各個群體溝通的過程，很多東西都是我之前並不清楚的，像是我以前知道有個 SPDX License Indentifier，但是並不清楚 SPDX 是搞什麼用的，然後它們有維護 License List，甚至授權條款文本裡面可以有替換字串等，我覺得這些都是蠻有趣的知識；最後一點則是分享這一整個過程，中間一波三折，坑坑相連到天邊的轉折，我自己都覺得很有趣。&lt;/p&gt;
+&lt;p&gt;以下列出我一路以來開過的 PR、Issue 和討論:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/github/choosealicense.com/issues/498"&gt;choosealicense.com/issues/498&lt;/a&gt; 最初的 issue&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ"&gt;vim_dev: A Questions about Vim License&lt;/a&gt; 跟 Bram 詢問　Vim License 的細節&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/licensee/licensee/issues/385"&gt;licensee/issues/385&lt;/a&gt; 提出 Vim License 偵測的問題&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/spdx/license-list-XML/pull/901"&gt;license-list-XML/pull/901&lt;/a&gt; 幫 SPDX License List 裡面的 Vim License 加上替換字串&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/vim/vim/pull/5458"&gt;vim/pull/5458&lt;/a&gt; 幫 Vim 加入　LICENSE 檔案&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/tpope/vim-pathogen/pull/210"&gt;vim-pathogen/pull/210&lt;/a&gt; 幫 vim-pathogen 加入 LICENSE 檔案&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/github/choosealicense.com/pull/717"&gt;choosealicense.com/pull/717&lt;/a&gt; 最重要的那個 PR，加 vim.txt 到 choosealicense&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/licensee/licensee/pull/445"&gt;licensee/pull/445&lt;/a&gt; 修改新版 Licensee 的問題&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/othree/vim-license/issues/2"&gt;vim-license/issues/2&lt;/a&gt; Vim License Gen 紀錄各個連結用的 issue&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最後的最後就來個簡單的 timeline 吧：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- 2013/07/15 Choose a license released
+- 2016/09/21 Display/detect the license
+- 2017/03/26 Open issue to choosealicense
+- 2018/06/15 First issue closed
+- 2019/06/23 Discuss the License text with Bram
+- 2019/06/27 Issue about Vim License detection
+- 2019/07/11 SPDX PR
+- 2019/09/25 Last comment of the SPDX PR
+- 2019/10/19 SPDX PR merged
+- 2020/01/08 PR add License to Vim
+- 2020/01/18 PR add License to vim-pathogen
+- 2020/01/21 PR add vim.txt to choosealicense
+- 2020/03/13 Licensee 9.13.1 released, Vim added
+- 2020/05/12 Licensee 9.14 release, Vim detection failed
+- 2020/07/04 PR to fix detection issue
+- 2020/10/14 Issue fix merged v9.14.1
+- 2021/02/05 Contact GitHub support 1st time
+- 2022/01/12 Contact GitHub support 2nd time, 確認上線
+- 2022/05/22 投稿、開始寫文章
+- 2022/07/29 COSCUP 2022
+- 2023/08/03 Bram Passed away
+- 2023/08/13 Vim License file updated
+- 2023/09/04 再次開始寫文章
+- 2023/09/12 發表文章
+&lt;/code&gt;&lt;/pre&gt;
+
+https://blog.othree.net/log/2023/09/11/vim-license-2/
+https://blog.othree.net/log/2023/09/11/vim-license-2/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2023-09-11 17:27
+
+
+
+Vim License 的故事（上）
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;這篇是我&lt;a href="https://blog.othree.net/log/2022/07/31/coscup-2022/"&gt;去年 COSCUP&lt;/a&gt; 分享的文字版，拖稿許久終於寫出來了，以下正文開始。&lt;/p&gt;
+&lt;p&gt;Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub &lt;a href="https://github.blog/2013-07-15-choosing-an-open-source-license/"&gt;發佈了一個小網站&lt;/a&gt; 叫 &lt;a href="https://choosealicense.com/"&gt;choosealicense.com&lt;/a&gt;，用簡單的條列介紹各開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。&lt;/p&gt;
+&lt;p&gt;而到了 2016 年，GitHub 更進一步提供了&lt;a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/"&gt;授權條款的偵測功能&lt;/a&gt;，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。&lt;/p&gt;
+&lt;p&gt;在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &amp;quot;Same as Vim&amp;quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？&lt;/p&gt;
+&lt;p&gt;我一直把這念頭放在心裡，後來終於有一天有時間有衝動，認真去研究要怎樣新增支援的授權條款，簡單來說，GitHub 用來偵測專案所使用的授權條款的工具，是一套用 Ruby 寫的，叫做 &lt;a href="https://licensee.github.io/licensee/"&gt;Licensee&lt;/a&gt;（我都當成 license + see）的工具，而這個工具所使用來參考比對的條款文本，則是從 choosealicense 專案來的（使用 git submodule 引入），如果要加新的授權條款到 choosealicense 裡面，有些&lt;a href="https://github.com/github/choosealicense.com/blob/gh-pages/CONTRIBUTING.md#adding-a-license"&gt;條件&lt;/a&gt;要先達到：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要有 SPDX License Identifier&lt;/li&gt;
+&lt;li&gt;要名列在幾個主要的開源授權清單中&lt;/li&gt;
+&lt;li&gt;至少要有一千個專案使用它&lt;/li&gt;
+&lt;li&gt;要列舉三個使用該授權條款的有名的專案（作為網站上的範例）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我研究了一會兒，大部分條件沒問題，就是那個一千個專案的需求我也不是很確定，根據搜尋結果可以保證有數百個，但是有沒有一千個實在無法保證，不過我還是去開了個 &lt;a href="https://github.com/github/choosealicense.com/issues/498"&gt;issue&lt;/a&gt; 建議說要加入 Vim License，其中一千個專案那個條件的部分則是提供我的所知（各種搜尋結果和 Vim 生態的狀態，推論應該會有達標），時間是 2017/03/26，當時我想的是 Vim 這麼有名，應該開個需求就會有人處理了吧，然後 choosealicense 的主要貢獻者之一 Mike Linksvayer，跟我來往幾次討論之後，我就放置在那幾乎忘了他，結果過了一年後，那個 issue 就因沒有動靜被關掉了！&lt;/p&gt;
+&lt;p&gt;我開的第一張 issue 被關掉的當下當然是有點震驚的，直白一點的說我心中的想法大概是：「原來 Vim 這麼有名也是沒有特權的啊！」總之之後我還是繼續放著，直到大概又過了一年，到了 2019 年六月，我才又開始重新投入到這件事情，既然開 issue 沒人做，那就只好改開 PR 了，於是我才開始認真的研究，目標當然就是把 Vim License 推進 choosealicense 裡面，所以就是先認真的要提供的文本檔案的格式，首先我發現的是，授權條款的文本裡面，除了那些 metadata 之外，文本本身是可以有替換字串（substitution）的，像是常見的年份、名稱等：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &amp;quot;Software&amp;quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中，用 &lt;code&gt;[]&lt;/code&gt; 包起來的像是 &lt;code&gt;[year]&lt;/code&gt;、&lt;code&gt;[fullname]&lt;/code&gt; 就是要替換掉的字串，發現這點之後，我也覺得需要重新檢視 Vim License 的文字是不是也有這種地方，然而一旦認真看待這點，便發現問題不小，而這個問題就是 Vim License 不是 context free 的，而是高度和 Vim 耦合在一起的，一般而言，開源授權都是 context free 的，怎樣算是 context free 的授權條款呢？就是那個條款文字要拿去哪個專案，都可以直接用，不需要去修改文字內容，頂多是修改頭尾的名稱、年份和所有權人的資訊，但是 Vim License 不是，光是 &lt;strong&gt;Vim&lt;/strong&gt; 這個單字，就在文本內出現了 29 次，而這些 Vim 單字，大部分時候代表的是使用這個授權的軟體的名稱，所以假設我今天是 vim-pathogen 要使用 Vim License，那就應該要在 LICENSE 文件內把 Vim 單字都換成 pathogen.vim 才對，不過在這堆 Vim 之中，還有一些地方是代表不一樣的意義，這些地方就是在作為 &lt;strong&gt;Vim Maintainer&lt;/strong&gt; 的時候，所以到底，這麼多的 Vim 都應該要改為替換的字串嗎？為此我就去問了 Vim 的作者，當然同時也是 Vim License 的作者 Bram Moolenaar，其實我蠻快就&lt;a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ"&gt;得到答案&lt;/a&gt;了，結論就是，Vim Maintainer 需要保留原樣，但是其他時候在作為代表使用該授權的軟體時，&lt;strong&gt;Vim&lt;/strong&gt; 應該要改為該軟體的名稱。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177608139/" title="Discuss Vim License with Bram by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177608139_7e1d12cf42_b.jpg" width="1024" height="684" alt="Discuss Vim License with Bram" srcset="https://live.staticflickr.com/65535/53177608139_fd6999e91a_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;那麼為什麼會出現 Vim Maintainer 呢？這邊就要來介紹一下 Vim License 的內容了，條款內容簡單翻譯（非正式翻譯，請勿用於法律用途）如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以自由任意的散佈未修改過的 Vim；&lt;/li&gt;
+&lt;li&gt;如果要散佈修改過的 Vim，需要符合以下條件之一；
+&lt;ol&gt;
+&lt;li&gt;發佈時同時提供聯絡方式，當 Vim Maintainer 向你索取你的修改，你必須無償提供，並且 Vim Maintainer 保留把你的修改加進官方版本 Vim 的權力；&lt;/li&gt;
+&lt;li&gt;如果你取得經由前一條所述方式散佈的 Vim，你可以不受限制的散佈該版本，如果有新的修改，則需依照相同的方式散佈；&lt;/li&gt;
+&lt;li&gt;發佈時同時提供和原始版本的原始碼差異；&lt;/li&gt;
+&lt;li&gt;使用前一條的方式發佈時，符合以下所有條件時可以不用提供原始碼；
+&lt;ul&gt;
+&lt;li&gt;你所使用的授權條款不會讓 Vim Maintainer 無法免費取得你修改的內容；&lt;/li&gt;
+&lt;li&gt;你必須保留你修改的內容（原始碼的差異）至少三年，如果使用者或是 Vim Maintainer 在這段時間內跟你索取修改的內容，你必須要提供；&lt;/li&gt;
+&lt;li&gt;你必須確保你所提供的聯絡方式在三年內是有效的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;如果你的修改使用 GPL，你可以使用 GPLv2 發佈你修改過的版本。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;如果你發佈修改過的 Vim，強烈建議你使用 Vim License 並把修改的原始碼提供給 Vim Maintainer；&lt;/li&gt;
+&lt;li&gt;不可把授權條款移除。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;仔細看下來，其實這份文件，主要目標就是在確保 Vim Maintainer 能取得其他人的修改，如果不是 Vim 使用這份授權條款的話，不管你使用這份條款的軟體是什麼，有修改再發佈的話，你都必須要讓 Vim Maintainer 可以無償取得你的軟體原始碼，並且 Vim Maintainer 可以決定是否要給原軟體使用，而這也造成了 Vim License 成為了少見的，不是 context free 的開源授權，而這個細節我相信是在我跟 Bram 的討論後才是第一次闡明，當時討論時我有舉了一個極端的例子來確認：假設我有一個軟體 X，使用 Vim License 授權，後來有人修改我的 X 後改為 Y 發佈但是沒有開源，有權力去取得 Y 的修改內容並決定要不要給 X 的，其實是 Vim Maintainer，而不是我（X 的作者）。&lt;/p&gt;
+&lt;p&gt;知道哪些地方才是可以替換掉之後就簡單了，我快速的準備好要用來發 PR 的 vim.txt 檔案，然後想說先來測試一下，結果，偵測竟然失敗了！研究再三，發現偵測出來的相似度只有 97.x%，而 Licensee 設定的閾值是 98%，至於會造成相似度這麼低的原因，其實是因為文本內有太多的替換字串了，當時的 Licensee 對於替換字串的比對處理的不太好，替換前後文字的長短差異也會有影響，知道原因後我就在想要來怎麼處理，當然最簡單的方法就是用特例處理，我當時的作法就是如果是在偵測 Vim License 的話，就會降低判斷用的閾值，本地測試沒問題後，就準備提交回去給 Licensee 了，不過因為我還不確定這樣的作法好不好，所以我先開了個 issue，解釋了前因後果然後附上我目前的修改，想說問問看負責的人的想法，如果他們覺得可以接受我再發 PR，結果，Mike Linksvayer 又出現了！我才發現 choosealicense 和 Licensee 他都是主要貢獻者！至於知道他的經歷則是在 COSCUP 分享後才聽 Bobchao 說的。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53177406736/" title="vim.txt in Licensee by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53177406736_71659e1fd6_b.jpg" width="1024" height="684" alt="vim.txt in Licensee" srcset="https://live.staticflickr.com/65535/53177406736_7ce7bb487f_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Mike_Linksvayer"&gt;Mike Linksvayer&lt;/a&gt; 當時是 GitHub 的 Policy Director 專門負責公共相關的事務，而在之前則是當過 CC 的 CTO 和 VP，也曾擔任過數個不同組織的董事會成員，像是 OpenHatch、Software Freedom Conservancy 和 Open Definition Advisory Council，所以可以說是已經在自由開源領域活躍已久，甚至是特長於授權條款相關的領域。不過其實當時我不知道，也沒想說要去了解，主要對他的印象是頭像看起來有點嚴肅，一直給我 T1000 的感覺，加上我後來就是幾乎都是跟他往來為主（應該說我提交的貢獻就是他在把關的），所以某些層面上來看我其實是對他有點心生畏懼的。&lt;/p&gt;
+&lt;p&gt;Mike 在 Licensee 這邊提出的問題是，我在 Vim License 裡面定的那些替換字串，並沒有出現在 &lt;a href="https://spdx.org/licenses/Vim.html"&gt;SPDX License List&lt;/a&gt; 那邊，SPDX 全名是 Software Package Data Exchange，其實這是屬於一般開發者比較少接觸的到的東西，目前最常看到的應用扣除 License List 之外，應該是軟體供應鍊相關的東西，不過其實他們所維護的 &lt;a href="https://spdx.org/licenses/"&gt;SPDX License List&lt;/a&gt; 幾乎已經成為業界標準，尤其是那個 license 的 identifier 更是到處都看得到，像是 npm 的 &lt;a href="https://docs.npmjs.com/cli/v6/configuring-npm/package-json#license"&gt;package.json&lt;/a&gt; 裡面就是使用它。然後其實 SPDX License List 這邊的檔案格式（自訂的 XML）和 Licensee 用的檔案格式（自訂的純文字）不一樣，不過由於 SPDX License List 已經是一個大家都會當作參考索引的資料源頭，所以也自然的成為 choosealicense 的上游（upstream），這次經驗我也讓我了解到開源的圈子真的是蠻重視 upstream 的，之前我也在 neovim 遇過類似的情形，總之也因此我應該要先去提交 PR 修改 SPDX License List，然後才發 PR 給 choosealicense，所以我就整理整理後去那邊發了 PR 加上這些替換字串，然後，&lt;strong&gt;Mike Linksvayer&lt;/strong&gt; 又出現了！他也是 SPDX License List 的貢獻者之一！&lt;/p&gt;
+&lt;p&gt;接&lt;a href="https://blog.othree.net/log/2023/09/11/vim-license-2/"&gt;下一篇&lt;/a&gt;。&lt;/p&gt;
+
+https://blog.othree.net/log/2023/09/10/vim-license-1/
+https://blog.othree.net/log/2023/09/10/vim-license-1/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2023-09-10 23:32
+
+
+
+Vim Boss Passed Away
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Vim 的作者 Bram Moolenaar 在&lt;a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4"&gt;月初過世&lt;/a&gt;，消息出來至今大約已經過了一週，&lt;a href="https://www.vim.org/"&gt;Vim 官網&lt;/a&gt;也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些&lt;a href="https://github.com/vim/vim/discussions/12736"&gt;方向&lt;/a&gt;了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。&lt;/p&gt;
+&lt;p&gt;Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 &lt;a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/"&gt;The Register 的報導&lt;/a&gt;中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有&lt;a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM"&gt;健康問題&lt;/a&gt;，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。&lt;/p&gt;
+&lt;p&gt;回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 &lt;code&gt;csscomplete.vim&lt;/code&gt; 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 &lt;a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;amp;themeRefresh=1"&gt;Vim License 的事情&lt;/a&gt;了，在 &lt;a href="https://github.com/vim/vim/blob/master/LICENSE"&gt;Vim License&lt;/a&gt; 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。&lt;/p&gt;
+&lt;p&gt;最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。&lt;/p&gt;
+
+https://blog.othree.net/log/2023/08/11/vim-boss-passed-away/
+https://blog.othree.net/log/2023/08/11/vim-boss-passed-away/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2023-08-11 20:16
+
+
+
+VimConf 2018
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Next Vim version is decided in Tokyo: Vim 2000! &lt;a href="https://twitter.com/hashtag/vimconf?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#vimconf&lt;/a&gt; &lt;a href="https://t.co/lt83pgnxkH"&gt;pic.twitter.com/lt83pgnxkH&lt;/a&gt;&lt;/p&gt;-- Ruslan Osipov (@antistatuquo) &lt;a href="https://twitter.com/antistatuquo/status/1066541845407137793?ref_src=twsrc%5Etfw"&gt;November 25, 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+&lt;p&gt;11/24 不但是台灣的大日子，日本還舉辦了 2018 年度的 VimConf，這次比較特別的是 Vim 的作者 Bram Moolenaar 也有去講 Keynote，我雖然今年依然無法去參與，但是 Twitter 上已經可以挖到不少東西了，其中有官方的&lt;a href="https://vimconf.wordpress.com/2018/11/25/vimconf-2018/"&gt;投影片收集&lt;/a&gt;，我想在這介紹其中三個分享，第一個是 &lt;a href="https://docs.google.com/presentation/d/e/2PACX-1vQKaWJY8w6QJpebvuzg334RfLDbQHv4-J_06yFxdTzLrrjhE_y5iuzA-JxCCuFdUAZQB2QQsidF_mys/pub?start=false&amp;amp;loop=false&amp;amp;delayms=3000#slide=id.p"&gt;Effective Modern Vim scripting&lt;/a&gt;，這篇主要是做一點 Vim script 入門，另外還介紹了 Vim 8 開始的 synchronous/asynchronous process 機制的程式要怎麼寫，有興趣寫 Vim8 asynchronous script 的人可以參考一下，要找整理好的範例其實不是很好找。&lt;/p&gt;
+&lt;p&gt;第二個想介紹的是 mattn 的 &lt;a href="https://docs.google.com/presentation/d/e/2PACX-1vTj2uCbuCffhaLVBZE6biI538GG6jMi1INbku-T9q5hu5W0zGLwuibN3m5xbEuqdUFTDnhdhtikPyTi/pub?start=false&amp;amp;loop=false&amp;amp;delayms=3000&amp;amp;slide=id.p"&gt;What is the next feature?&lt;/a&gt; 這段分享主要是在介紹 &lt;a href="https://vim-jp.org/"&gt;vim-jp&lt;/a&gt; 社群，也是 VimConf 的主辦社群，這個社群還蠻活躍的，而和一般的社群比較不一樣的地方是他不只是使用者社群，也是個開發者社群，有在協助幫忙日本想貢獻 Vim 的人，包括像是資源整合、避免重工、協助轉發 bug report 和 patch，還有翻譯文件和一些文件撰寫等，接著就介紹了一些 vim-jp 貢獻的東西，像是 color emoji、lambda 之類的&lt;/p&gt;
+&lt;p&gt;最後一個就是 Bram 的 &lt;a href="https://vimconf.org/2018/slides/Vim_From-hjkl-to-a-platform-for-plugins.pdf"&gt;From hjkl To a plaform of plugins&lt;/a&gt;，介紹了 Vim 的一些發展史，主要是 plugin 相關的，也提到 Vim scripts performance 的問題（有個建議是換台更快的電腦），最後一段還提到一些未來可能的新功能，其中兩個我很有興趣，第一個是 Bram 打算處理 Plugin dependency 的問題了，投影片中有一些目前可能的解決方法，當然看起來都是走 Vim8 的 package 機制。另外一個則是 text properties，就是可以給一段文字 meta data，這個功能我非常的感興趣，因為這可以用來改善現在的 syntax highlight 機制，理想上，我可以非同步的把程式碼丟給外部的 JS parser tokenize，然後利用結果來加上 text properties，syntax highlight 再根據這個資訊來決定用那個 Highlight Group，這可以解決我的 &lt;a href="https://github.com/othree/yajs.vim"&gt;yajs&lt;/a&gt; 一直無法解決的 arrow function 的判斷難題，不過還沒預計何時會出來，只能慢慢等了。&lt;/p&gt;
+
+https://blog.othree.net/log/2018/11/29/vimconf-2018/
+https://blog.othree.net/log/2018/11/29/vimconf-2018/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2018-11-29 11:23
+
+
+
+Language Server Protocol
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/43311328182/" title="Language Server Protocol by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg" width="1024" height="640" alt="Language Server Protocol, " srcset="https://farm1.staticflickr.com/838/43311328182_e7663f40dc_b.jpg 1024w, https://farm1.staticflickr.com/838/43311328182_b3478fb066_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最近才注意到 &lt;a href="https://microsoft.github.io/language-server-protocol/"&gt;Language Server Protocol&lt;/a&gt; （&lt;a href="https://docs.microsoft.com/zh-tw/visualstudio/extensibility/language-server-protocol"&gt;官方中文介紹&lt;/a&gt;）這東西，微軟為了 Visual Studio Code 所定的一個協定，專門用來輔助程式開發用的，像是 VSCode 的 IntelliSense 提供的自動補完就可以基於這個協定支援更多語言，這協定其實在 2016 就發表了，感覺我 lag 很久，不過其實我也好奇 VSCode 怎麼處理這問題一陣子了，最近在 TernJS 的 issue 裡面看到 LSP 這個詞，好奇之下才去看到底是什麼東西。&lt;/p&gt;
+&lt;p&gt;LSP 的設計理念是開發 Editor 的不可能每種程式語言都花時間心力去把它們的編輯輔助功能做起來（還不一定做的好），所以不如就把這塊拆出來，讓分析程式碼、提供輔助功能的部分（Language Server）拆出去給各自領域的人開發，然後透過一個公定的介面來做溝通，這個介面就是 &lt;a href="https://microsoft.github.io/language-server-protocol/"&gt;Language Server Protocol&lt;/a&gt; 了。&lt;/p&gt;
+&lt;p&gt;LSP 是架構在 JSON-RPC 這個 protocol 上，只要你的 Editor 可以透過 JSON-RPC 發送請求並接收結果，就可以利用 LSP 來提供功能，現在支援 LSP 的編輯器也不少，不是只有 VSCode 有支援，其它還有 Eclipse、Vim、NeoVim、Sublime Text 3 都已經有方案可以支援了，在社群維護的網站  &lt;a href="http://langserver.org/"&gt;langserver.org&lt;/a&gt; 上有一份&lt;a href="http://langserver.org/#implementations-server#implementations-client"&gt;清單&lt;/a&gt;介紹各個 client 的支援狀況。&lt;/p&gt;
+&lt;p&gt;送到 Language Server 的指令，目前 Protocol 可以提供以下功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_completion"&gt;Completion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_hover"&gt;Hover Information&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp"&gt;Signature Help&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_definition"&gt;Goto Definition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition"&gt;Goto Type Definition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation"&gt;Goto Implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_references"&gt;Find References&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction"&gt;Action&lt;/a&gt;, fix code&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens"&gt;Code Lens&lt;/a&gt;, information for specific position&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting"&gt;Formatting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics"&gt;Diagnostic&lt;/a&gt;, 像是 code lint&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其它還有一些是檔案、工作區相關的操作指令，另外由於現在 Language Server 實做和 LSP 是分開的，也沒有限制一定要所有功能都有支援，所以有些 Language Server 可能是沒有支援特定功能的，目前可以找到兩份 Language Server 的列表，一份是 LSP &lt;a href="https://microsoft.github.io/language-server-protocol/implementors/servers/"&gt;官網的&lt;/a&gt;，另一份則是 &lt;a href="http://langserver.org#implementations-server"&gt;langserver.org&lt;/a&gt; 上的，社群維護的版本才有標示不同的 Language Server 對應支援的功能，不過說是社群維護，其實 langserver.org 是另外一間公司 &lt;a href="https://about.sourcegraph.com/"&gt;Sourcegraph&lt;/a&gt; 在維護的，該公司做的東西和 LSP 相關性看起來還蠻大的，也提供了很多 Language Server。&lt;/p&gt;
+&lt;p&gt;然後我就很感興趣，VSCode 現在內建的 JavaScript 用的 Language Server 是哪一套呢？畢竟仔細一看，兩個列表裡面，都沒有列出內建由微軟維護的 JavaScript 的 Language Server，只有 Sourcegraph 的版本，不止 JavaScript 沒有，TypeScript 也沒，只有 &lt;a href="http://typefox.io"&gt;TypeFox&lt;/a&gt; 的版本（TypeFox 也是做程式碼相關工具的公司，我有找到一些研討會演講介紹 LSP 的講者就是這間公司的人）。總之兩個語言都沒列這真是太不尋常了，實在引起了我的好奇心，後來到處尋找總算在 &lt;a href="https://code.visualstudio.com/docs/languages/javascript"&gt;JavaScript in VS Code&lt;/a&gt; 這頁找到蛛絲馬跡，這頁內文第二句話就有個連結連去 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/JavaScript-Language-Service-in-Visual-Studio"&gt;JavaScript Language Service&lt;/a&gt; 在 GitHub 的介紹，位置是 TypeScript 專案下的 Wiki 頁面，也有找到 TypeScript 專案內的相關&lt;a href="https://github.com/Microsoft/TypeScript/tree/master/src/services"&gt;程式碼&lt;/a&gt;，實際上 VSCode 對於 JavaScript 和 TypeScript 的編輯輔助功能都是依靠這個 TypeScript Language Service 提供的，或是也可以叫它 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29"&gt;tsserver&lt;/a&gt;，TypeScript 的大架構可以參考 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/Architectural-Overview"&gt;Architectural Overview&lt;/a&gt; 這篇文章；由於 tsserver 比較早推出，所以用的不是 LSP 用的 JSON-RPC，而是 STDIO 然後傳輸 JSON 加上 header，指令也有些落差，不過其實整體而言沒差距很大，因為 VSCode 那些輔助功能幾乎都是從 Visual Studio 來的，TypeScript 的支援也早就都透過 tsserver 來實現了，事實上，Sourcegraph 的 &lt;a href="https://github.com/sourcegraph/javascript-typescript-langserver"&gt;TypeScript Language Service&lt;/a&gt; 就是個 tsserver 的 proxy，底層還是 tsserver，不過實際上要用的話應該是 &lt;a href="https://github.com/theia-ide/typescript-language-server"&gt;TypeFox 的&lt;/a&gt;比較好；然後當然也有人提出來說 TypeScript 是不是應該直接提供 LSP 版本的開發工具支援，在 GitHub 上的 &lt;a href="https://github.com/Microsoft/TypeScript/issues/11274"&gt;Issue 11274&lt;/a&gt;，不過目前看來是沒打算樣子，這點我也是蠻意外的，畢竟 LSP 和 TypeScript 同公司的，沒打算支援自家公司定的標準，也是十足的霸氣，也看的出來各開源專案自治度其實蠻高的。&lt;/p&gt;
+&lt;p&gt;補充：另外有個 debugger 用的 &lt;a href="https://microsoft.github.io/debug-adapter-protocol/"&gt;Debug Adapter Protocol&lt;/a&gt;&lt;/p&gt;
+
+https://blog.othree.net/log/2018/07/28/language-server-protocol/
+https://blog.othree.net/log/2018/07/28/language-server-protocol/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2018-07-28 23:59
+
+
+
+Monokai Pro
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/43359779851/" title="Monokai Pro VSCode by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg" width="1024" height="637" alt="Monokai Pro VSCode" srcset="https://farm1.staticflickr.com/841/43359779851_2b149c66d6_b.jpg 1024w, https://farm1.staticflickr.com/841/43359779851_8253ea1d98_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;因為用 &lt;a href="http://blog.othree.net/log/2018/05/02/dank-mono/"&gt;Dank Mono&lt;/a&gt; 字體的關係，最近開始有想要讓 Vim 支援斜體的 syntax highlight，於是又花了不少時間測試，過程中想起在 Twitter 上看到有人說過有一款付費的 Sublime/VSCode 佈景主題（印象中是 &lt;a href="https://twitter.com/yorkxin"&gt;@yorkxin&lt;/a&gt;），叫 &lt;a href="https://www.monokai.pro/"&gt;Monokai Pro&lt;/a&gt;，因為可以免費評估，可能是用幾天後才會出現 popup 吧，就一時興起就裝來玩玩看，結果還蠻滿意的。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/28490909197/" title="Monokai Pro Sublime by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg" width="1024" height="636" alt="Monokai Pro Sublime" srcset="https://farm1.staticflickr.com/917/28490909197_7621988d47_b.jpg 1024w, https://farm1.staticflickr.com/917/28490909197_a9739e01cc_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;雖然我主力是 Vim，但是 Sublime 和 VSCode 都還是有用，後來又繼續研究了一下，原來 Monokai 是在 &lt;a href="http://wiki.macromates.com/Themes/UserSubmittedThemes"&gt;Textmate 2&lt;/a&gt; 的佈景主題，還蠻有名的，也很多人 port 到不同環境，Vim 那邊比較多人用的應該是 &lt;a href="https://github.com/tomasr/molokai"&gt;molokai&lt;/a&gt;，然後 Monokai Pro 是同個作者做的，如果有 Vim 版的我會支持一下吧～&lt;/p&gt;
+&lt;p&gt;然後弄一弄發現我用 jellybean 的配色用到 256 色的，結果把 True Color 支援打開之後發現有點難看，又開始我的探索之旅了，目前暫時是用 &lt;a href="https://github.com/jacoborus/tender.vim"&gt;tender&lt;/a&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/29489585588/" title="tender.vim by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg" width="1024" height="684" alt="tender.vim" srcset="https://farm1.staticflickr.com/843/29489585588_48aa296746_b.jpg 1024w, https://farm1.staticflickr.com/843/29489585588_bd4c88fe92_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+https://blog.othree.net/log/2018/07/15/monokai-pro/
+https://blog.othree.net/log/2018/07/15/monokai-pro/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2018-07-15 10:45
+
+
+
+Naming Cases
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/renaud44/5286648292/" title="Camel by Réno, on Flickr"&gt;&lt;img src="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg" width="1024" height="731" alt="Camel, " srcset="https://farm6.staticflickr.com/5009/5286648292_f03dd7c973_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;整理一下各種多單字 identifier &lt;a href="https://www.itworld.com/article/2833265/cloud-computing/don-t-go-into-programming-if-you-don-t-have-a-good-thesaurus.html"&gt;命名&lt;/a&gt;慣例（規則）：&lt;/p&gt;
+&lt;h5&gt;CamelCase&lt;/h5&gt;
+&lt;p&gt;CamelCase 應該是最有名的了，單字的首字母大寫，其它字母小寫，然後其實還分為 UpperCamelCase 和 lowerCamelCase，UpperCamelCase 是指第一個單字的首字母大寫；lowerCamelCase 則相反，其中 UpperCamelCase 又稱為 Pascal Case，因為是 Pascal 語言當中常用的命名慣例，而因為有 PascalCase 這名稱代表 UpperCamelCase，所以也很多人直接用 camelCase 代表 lowerCamelCase；此外，也有 Dromedary Case 的講法，不過現在應該只要只剩下 Pascal Case 和 Camel Case 的說法比較有人用吧，Lower Camel Case 在 JavaScript Standard 裡面是命名變數用、Upper Camel Case 則是大部分語言推薦的建構函示和 Class 的命名慣例。&lt;/p&gt;
+&lt;p&gt;CamelCase 應該也是最早有名稱的，而且其實還有很多的別名，而除了 CamelCase 外，其它命名慣例都是有用個符號分隔單字，其中最常見到的就是 snake_case 了。&lt;/p&gt;
+&lt;h5&gt;snake_case&lt;/h5&gt;
+&lt;p&gt;snake_case 是用底線符號 &lt;code&gt;_&lt;/code&gt; 做分隔，通常是全小寫，名稱應該由其外觀而來，是 Ruby 社群那&lt;a href="https://groups.google.com/forum/#!msg/comp.lang.ruby/ra5WDzNGwGU/oe_mnvRVclUJ"&gt;邊出&lt;/a&gt;來的，應該可以算是象形文字的一個分支。在 Python 的 PEP 8 和 &lt;a href="http://perldoc.perl.org/perlstyle.html"&gt;perlstyle&lt;/a&gt; 是用 snake_case 來命名 function。&lt;/p&gt;
+&lt;h5&gt;MACRO_CASE&lt;/h5&gt;
+&lt;p&gt;snake_case 的另一種形式是全大寫字母，因為 C 語言的 MACRO 使用，所以稱為 MACRO_CASE，偶爾有人稱之為 ALL_CAPS（不過其實全部大寫就可以稱為 ALL CAPS 了），也有一種說法叫 SCREAMING_SNAKE_CASE，通常是常數使用的命名慣例，另外像是 Bash 的環境變數、C 語言的 MACRO 等也是這個形式。&lt;/p&gt;
+&lt;p&gt;以底線為分隔的，在 perlstyle 裡面還有定義一種不常見的形式，首字母大寫加上底線分隔的 Some_Caps_Snake_Case，作為模組內的 global/static 變數，另外在 wikipedia 上有看到 Ada 語言也是用這種命名慣例，這種形式目前似乎沒有慣用的稱呼方式。&lt;/p&gt;
+&lt;h5&gt;lisp-case&lt;/h5&gt;
+&lt;p&gt;lisp-case 則是用連字號（hyphens） &lt;code&gt;-&lt;/code&gt; 做分隔，也一樣通常是全小寫，和 PascalCase 一樣因為程式語言 lisp 而得名，其實大部分語言都不支援 lisp-case，因為 &lt;code&gt;-&lt;/code&gt; 同時是運算符號， parse 起來會蠻有問題的，除了 lisp 外我看過支援的還有 livescript，好像都還蠻偏 functional language 的，除了程式語言外，其實 URL 的路徑很常用，雖然主要是為了 SEO 效果，另外就是 HTML、XML 裡面的 attribute、id、class 也蠻容易見到用 lisp-case 的，而除了 lisp-case 這個名字外外，還有一個也很知名的稱呼是 kebab-case，和 snake_case 一樣是外觀而來的名稱。&lt;/p&gt;
+&lt;h5&gt;COBOL-CASE&lt;/h5&gt;
+&lt;p&gt;用連字號做分隔，但是全大寫的則是叫 COBOL-CASE，一樣是從 COBOL 語言而來。&lt;/p&gt;
+&lt;h5&gt;Train-Case&lt;/h5&gt;
+&lt;p&gt;以 hyphens 為分隔的，在 wikipedia 上還有看到首字母大寫的形式叫 Train-Case，不過沒有標註名稱出處，不多人用這個名稱，不過也沒其它名稱，以後應該也只有這個名稱吧，不常在程式語言內見到，Windows Power Shell 的指令是用這種規則命名的，另外一個比較常見的地方就是 HTTP Header 的 field name 了。&lt;/p&gt;
+&lt;p&gt;我自己其實是最喜歡 lisp-case，編寫 HTML 的時候 id、class 我都是用 lisp-case，次之是 snake_case，偏偏 JavaScript Standard 是用 camelCase 的，其實掙扎了一陣子，不過現在已經比較習慣一點了。&lt;/p&gt;
+&lt;p&gt;這些不同命名規則間的轉換其實有不少工具可以協助，Ian Storm Taylor 在 NPM 上有&lt;a href="https://github.com/ianstormtaylor/to-case"&gt;一整個系列的工具&lt;/a&gt;，支援很多種規則的轉換，還包括了書寫用的 &lt;a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"&gt;&lt;strong&gt;Title Case&lt;/strong&gt;&lt;/a&gt;，講到這個就要提一下 CSS 裡面的 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform"&gt;&lt;code&gt;text-transform&lt;/code&gt;&lt;/a&gt; 的 capitalize，其實這個屬性只處理每個單字的第一個字母，也就是說，如果你本來是全大寫的 &lt;strong&gt;TITLE&lt;/strong&gt;，用 capitalize 轉換後，還是 &lt;strong&gt;TITLE&lt;/strong&gt;，如果要純 CSS 方案的，其它字母轉小寫，一個單字的話勉強可以配合 &lt;code&gt;::first-letter&lt;/code&gt; 來辦到，不然就是輸出到 HTML 之前要先處理過，而且，capitalize 不是 Title Case，精確的 Title Case 是不會把一些介係詞、冠詞轉大寫的，例如「I Have an Apple」裡面的 &lt;strong&gt;an&lt;/strong&gt;，這問題目前就是沒有 CSS 解法，有搜尋過一下發現，沒做的&lt;a href="https://lists.w3.org/Archives/Public/www-style/2011Feb/0634.html"&gt;主因&lt;/a&gt;應該是因為 Title Case 幾乎只有英語用的上。&lt;/p&gt;
+&lt;p&gt;在 Vim 上如果要轉換一個變數名稱的命名規則，我是用 &lt;a href="https://github.com/AndrewRadev/switch.vim"&gt;switch.vim&lt;/a&gt; 然後加上一組自訂的轉換設定：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-vim"&gt;let g:switch_custom_definitions =
+    \ [
+    \   {
+    \     '\&amp;lt;\(\l\)\(\l\+\(\u\l\+\)\+\)\&amp;gt;': '\=toupper(submatch(1)) . submatch(2)',
+    \     '\&amp;lt;\(\u\l\+\)\(\u\l\+\)\+\&amp;gt;': &amp;quot;\\=tolower(substitute(submatch(0), '\\(\\l\\)\\(\\u\\)', '\\1_\\2', 'g'))&amp;quot;,
+    \     '\&amp;lt;\(\l\+\)\(_\l\+\)\+\&amp;gt;': '\U\0',
+    \     '\&amp;lt;\(\u\+\)\(_\u\+\)\+\&amp;gt;': &amp;quot;\\=tolower(substitute(submatch(0), '_', '-', 'g'))&amp;quot;,
+    \     '\&amp;lt;\(\l\+\)\(-\l\+\)\+\&amp;gt;': &amp;quot;\\=substitute(submatch(0), '-\\(\\l\\)', '\\u\\1', 'g')&amp;quot;,
+    \   }
+    \ ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;這組設定是 &lt;code&gt;MACRO_CASE&lt;/code&gt;、&lt;code&gt;lisp-case&lt;/code&gt;、&lt;code&gt;camelCase&lt;/code&gt;、&lt;code&gt;PascalCase&lt;/code&gt;、&lt;code&gt;snake_case&lt;/code&gt; 這樣的順序循環切換，還蠻方便的，不用花大腦思考要轉成哪種規則然後下不同指令，就一直連打 &lt;code&gt;-&lt;/code&gt; 就好。&lt;/p&gt;
+&lt;p&gt;其實一開始只是在想有多少種組合才開始查的，結果幾乎一般組合都有地方使用，只差符號分隔單字加 camelCase 的兩種形式吧，最後放一些參考連結：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers"&gt;Multiple-word identifiers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/Naming_convention_(programming)"&gt;Naming convention (programming)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.reddit.com/r/learnprogramming/comments/3wcne1/where_does_the_term_kebabcase_come_from/"&gt;Where does the term kebab-case come from&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/Letter_case"&gt;Letter case&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+https://blog.othree.net/log/2017/11/16/naming-cases/
+https://blog.othree.net/log/2017/11/16/naming-cases/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2017-11-16 12:31
+
+
+
+Vim Packages
+&lt;p&gt;Vim 8 有兩個我覺得比較大的&lt;a href="http://vimhelp.appspot.com/version8.txt.html"&gt;新功能&lt;/a&gt;，一是開始有 &lt;a href="http://vimhelp.appspot.com/channel.txt.html"&gt;Asynchronous I/O&lt;/a&gt;，二是開始有官方的 package 機制了，這篇主要想介紹這官方的 package 機制，眾所周知，以前 Vim 實在很難管理自己裝的 Vim script 和 plugin（後文以 plugin 為主），因為原始的設計是自己把檔案丟到 &lt;a href="http://vimhelp.appspot.com/options.txt.html#%27runtimepath%27"&gt;runtime 目錄&lt;/a&gt;下的對應位置，裝的東西一多，就會開始混亂起來，最常發生的就是越來越多垃圾，不知道還需不需要用，再來就是可能會有檔名重複的情形，所以升級某個 plugin 遇到有檔名重複時，直接覆蓋過去可能也會出錯，這個問題直到 Tim Pope 推出 &lt;a href="https://github.com/tpope/vim-pathogen"&gt;pathogen.vim&lt;/a&gt; 後才被解決，pathogen 是藉由修改 &lt;code&gt;runtimepath&lt;/code&gt; 變數（有點像是系統的 &lt;code&gt;PATH&lt;/code&gt; 環境變數，可以有多個路徑）來讓不同的 Vim plugin 可以放在各自的子目錄內，從此一舉解決了 Vim plugin 的管理問題，當然現在很多人用的 &lt;a href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt;、&lt;a href="https://github.com/Shougo/neobundle.vim"&gt;neobundle&lt;/a&gt;、&lt;a href="https://github.com/junegunn/vim-plug"&gt;vim-plug&lt;/a&gt; 等，基礎原理應該都是一樣的。&lt;/p&gt;
+&lt;p&gt;Vim 8 推出的 package 機制，雖然其基本原理也是增加 runtimepath，不過它其實定位和 pathogen 不一樣，設計上是再高一個階層，不過也因此和 pathogen 的路徑設計不相容，pathogen 之類的都是把 plugin 分目錄放到 &lt;code&gt;~/.vim/bundle&lt;/code&gt; 這，例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;~/.vim/bundle/html5.vim
+~/.vim/bundle/yajs.vim
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然後會去把這些路徑加到 &lt;code&gt;runtimepath&lt;/code&gt; 內（有些 plugin 是全自動、有些要設定、有些可以加條件），寫成 glob 型式大概是 &lt;code&gt;~/.vim/bundle/*&lt;/code&gt;，不過新的 package 定義上是數個 plugin 的組合，所以一個 package 下是可能有多個 plugin 的，放 package 的路徑一樣在 &lt;code&gt;~/.vim&lt;/code&gt; 下面，預設在 &lt;code&gt;~/.vim/pack&lt;/code&gt;，也可以修改 &lt;code&gt;packpath&lt;/code&gt; 來換位置，不過東西不是直接放進去就好了，一開始會被加進去 runtimepath 的路徑實際上是 &lt;code&gt;~/.vim/pack/*/start/*&lt;/code&gt;，在這個 glob 表示式中，第一個 &lt;code&gt;*&lt;/code&gt; 是 package 層，第二個 &lt;code&gt;*&lt;/code&gt; 則是 package 裡面的 plugins，例如我可以建立一個自己在編輯 JavaScript 時用的 plugin 組合，就先叫 &lt;strong&gt;my-js&lt;/strong&gt; 好了，我就把東西都丟到 &lt;code&gt;~/.vim/pack/my-js/start/*&lt;/code&gt; ，大概像是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;~/.vim/pack/my-js/start/yajs.vim
+~/.vim/pack/my-js/start/javascript-libraries-syntax.vim
+~/.vim/pack/my-js/start/simple-javascript-indenter
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;至於中間的 &lt;code&gt;start&lt;/code&gt; 則是表示啟動就會去讀進來的意思，類似於以前 pathogen 的流程，而除了 &lt;code&gt;start&lt;/code&gt;之外，還有一個路徑是 &lt;code&gt;opt&lt;/code&gt;，是 optional 的意思，放在 &lt;code&gt;opt&lt;/code&gt; 下面的 package 不會在啟動時就讀進來，而是要下 &lt;code&gt;packadd&lt;/code&gt; 指令，例如 &lt;code&gt;packadd foo&lt;/code&gt; 就會去找 &lt;code&gt;~/.vim/pack/*/opt/foo/&lt;/code&gt; 這些位置有沒有東西可以用，文件上提供的一個使用情境是根據 Vim 版本決定要讀入哪一個 optional plugin，可以用 Vim script 做一些判斷來決定要讀那些，或是使用者自己執行 packadd，不過我思考一下是覺得後者的情境似乎不太有用，所以這個設計主要的目標應該還是做一些自動化判斷並讀入 plugin 為主吧。&lt;/p&gt;
+&lt;p&gt;當然，package 也可以只包一個 plugin，理論上可以直接這樣發佈 Vim plugin，不過現在這樣發佈，就會不相容於目前使用量最大的 pathogen 架構，所以我也還沒看過有人這樣直接發佈的，像 vim-css3-syntax 就還是用舊的資料匣架構，但是在 README 內加上對應 Vim package 的&lt;a href="https://github.com/hail2u/vim-css3-syntax/blob/master/README.md#vim-package"&gt;安裝方式&lt;/a&gt;，這是我目前覺的對於 Vim package 普及化的最大阻力；另外還有一個缺點是，如果完全用 Vim package 機制來裝 plugin，那其實也沒有地方紀錄你安裝了那些東西，和最早的時候，或是單純只有 pathogen 時一樣，要裝新機器什麼的就有點麻煩。目前我是覺得 Vim package 還不會很快普及，它比較像是出來取代 pathogen 的功能，應該接著要等有基於 Vim package 的 package manager 出來才會開始有普及的機會吧。&lt;/p&gt;
+
+https://blog.othree.net/log/2017/05/02/vim-packages/
+https://blog.othree.net/log/2017/05/02/vim-packages/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2017-05-02 23:05
+
+
+
+Vim Filename Complete
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/30545367351/" title="Vim Filename Complete by othree, on Flickr"&gt;&lt;img src="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg" width="659" height="452" alt="Vim Filename Complete, " srcset="https://farm6.staticflickr.com/5750/30545367351_b09ec693f5_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Vim 有一個內建的自動補完功能是針對&lt;a href="http://vimdoc.sourceforge.net/htmldoc/insert.html#compl-filename"&gt;檔案名稱&lt;/a&gt;的，使用的方法是 &lt;code&gt;&amp;lt;C-X&amp;gt;&amp;lt;C-F&amp;gt;&lt;/code&gt;，我目前在維護的 &lt;a href="https://github.com/othree/vim-autocomplpop"&gt;autocomplpop&lt;/a&gt; 也有支援這種補完模式，只要輸入 &lt;code&gt;./&lt;/code&gt; 後就會自動幫忙觸發，不過我比較有機會觸發到是在使用 ECMAScript 6 的 import 和 CSS 的 import 時，不過常常就是發現他查看的路徑不太對，不是拿目前編輯檔案的位置做為起點的，研究過後發現是因為 Vim 找檔案的起點是看他的工作目錄(&lt;code&gt;$PWD&lt;/code&gt;)，加上我會使用 &lt;a href="https://github.com/kien/ctrlp.vim"&gt;ctrlp&lt;/a&gt; 這種工具，所以實際上在編輯的檔案通常是不在工作目錄下，對於這個問題，其實我覺得最理想的解決方式是 Vim 應該要提供兩種模式來決定要從那邊開始找，不過目前似乎沒這個計畫，唯一在文件是有提到的是未來可能會支援 &lt;a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27path%27"&gt;&lt;code&gt;path&lt;/code&gt;&lt;/a&gt; 的設定，理論上，如果有支援的話，應該就可以解決問題了，因為預設的 &lt;code&gt;path&lt;/code&gt; 值包括了 &lt;code&gt;.&lt;/code&gt;，不過目前還沒有相關時程，就只能自救了。&lt;/p&gt;
+
+&lt;p&gt;最簡單的方法，其實就是開啟 &lt;a href="http://vimdoc.sourceforge.net/htmldoc/options.html#%27autochdir%27"&gt;&lt;code&gt;autochdir&lt;/code&gt;&lt;/a&gt;，這個選項打開後就會自動在切換 window 時也更改工作目錄，不過這個選項是為了相容早期系統才提供的，文件也有說可能會和部分 Vim Script 不相容，實際上我也有找到一些不相容的 Vim Script，所以想避免，就搜尋了一下其它可能的解決方法，在 StackOverflow 上有看到&lt;a href="http://superuser.com/questions/604122/vim-file-name-completion-relative-to-current-file"&gt;一篇&lt;/a&gt;，裡面有兩個人提供了解法，第一個是用 &lt;code&gt;autocmd&lt;/code&gt;，然後在進入 insert mode (在這時候才有機會用到檔名補完的功能)時自動開啟 &lt;code&gt;autochdir&lt;/code&gt;，離開時自動關閉 &lt;code&gt;autochdir&lt;/code&gt;，不過這樣的方式（感覺上）還是不太安全，因為還是用到 &lt;code&gt;autochdir&lt;/code&gt;，所以下面有另外一個方法改用 &lt;a href="http://vimdoc.sourceforge.net/htmldoc/editing.html#:lcd"&gt;&lt;code&gt;lcd&lt;/code&gt;&lt;/a&gt;，作法是改成修改 Key Mapping 的方式，改的 mapping 是 &lt;code&gt;./&amp;lt;C-X&amp;gt;&amp;lt;C-F&amp;gt;&lt;/code&gt;，不過這樣對我來說又不合用，因為我用 autocomplpop 的話，不會真的打 &lt;code&gt;&amp;lt;C-X&amp;gt;&amp;lt;C-F&amp;gt;&lt;/code&gt;，所以基本上觸發不到這事件，所以我就決定把這兩種解法合併起來，改成用 &lt;code&gt;autocmd&lt;/code&gt; 加上 &lt;code&gt;lcd&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:autocmd InsertEnter * let save_cwd = getcwd() | execute 'lcd %:p:h'
+:autocmd InsertLeave * execute 'lcd' fnameescape(save_cwd)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;進入 insert mode 時改變該 window 的工作目錄，離開 insert mode 時把工作目錄還原。這是我目前認為影響最小的調整方式，不過其實可能執行一次 &lt;code&gt;lcd&lt;/code&gt; 換工作目錄就夠了，沒深入研究 autochdir 所產生的問題，不過我推測是影響到 Vim Script 建立的 window 的工作目錄，像是 NERD Tree 之類的側邊欄那種，總之目前這樣運作還算正常，接下來就是等 Vim 加上 &lt;code&gt;path&lt;/code&gt; 的支援吧（或是有人送 patch）。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2016/10/29/vim-filename-complete/
+https://blog.othree.net/log/2016/10/29/vim-filename-complete/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2016-10-29 15:36
+
+
+
+Native True Color Vim
+&lt;p&gt;因為最近 Vim 8 發佈了，所以就又研究一下現在最新的 True Color Vim 安裝方法，結果發現已經併進 master branch 許久了，然後從 &lt;a href="https://github.com/vim/vim/commit/8e9eb3a6a1e589949f1c878c839528d917fdfc4a"&gt;7.4.1784&lt;/a&gt; 開始，也不用加特別參數來編譯，只要 &lt;code&gt;--with-features&lt;/code&gt; 的值是 &lt;code&gt;big&lt;/code&gt; 或是更大的 &lt;code&gt;huge&lt;/code&gt; 就會把這功能編譯進去，所以現在就不用 ZyX 維護的版本了，目前用的編譯指令為：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/vim/vim.git
+
+cd vim
+cd src &amp;amp;&amp;amp; make autoconf &amp;amp;&amp;amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp
+
+make
+make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後現在也不需要 &lt;code&gt;guicolors&lt;/code&gt; 的設定，好像直接就生效了，顏色畫出來和之前的 ZyX 的版本似乎有一點差異，我想應該現在新的版本是比較正確才是。追蹤這功能追了這麼久，總算也是告一段落了，感覺...好像也沒什麼特別的感覺...&lt;/p&gt;
+
+
+https://blog.othree.net/log/2016/10/03/native-true-color-vim/
+https://blog.othree.net/log/2016/10/03/native-true-color-vim/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2016-10-03 23:44
+
+
+
+YAJS.vim and Vim Syntax Highlight
+&lt;p&gt;上個週末在&lt;a href="https://2016.opensource.hk/"&gt;香港 Open Source Conference&lt;/a&gt; 分享的主題，第一次使用英文分享，結果表現不太好，不知道上場前喝點啤酒會不會比較好就是...&lt;/p&gt;
+
+&lt;p&gt;這個主題本來是想要投 COSCUP 的，主要是想介紹一下之前在做 &lt;a href="https://github.com/othree/yajs.vim"&gt;yajs.vim&lt;/a&gt; 時遇到的比較有印象的問題，在這之前先介紹一下 Vim Syntax Highlight 的機制，因為這些問題很多都和 Vim 的 Syntax Highlight 機制的設計關係很大，然後最後就是有一個還沒辦法解的問題，這個問題就是 yajs.vim 目前還沒辦法完美的 highlight 有 default parameter 的 arrow function。&lt;/p&gt;
+
+&lt;script async="async" class="speakerdeck-embed" data-id="3294147a503d4079a6238296fc991a76" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"&gt;/* A_A */&lt;/script&gt;
+
+
+https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/
+https://blog.othree.net/log/2016/07/01/yajs-and-vim-syntax-highlight/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2016-07-01 17:05
+
+
+
+Vim Syntax and Regexp Note
+&lt;p&gt;前陣子為了寫更好的 Vim syntax 還去學了 compiler 的課程，雖然沒上完不過也對怎麼解析語法理解不少，不過其實 Vim syntax highlight 系統為了效能問題，有不少限制，沒辦法真的和 compiler 的 parse 原理完全互通，其中兩個限制影響比較大，第一個是沒辦法有完整的 AST 並解析其語意，因此除非寫得非常繁複，一定會有無法正確 highlight 的地方，例如 comment，不是說 comment 不能正確標示，問題是 comment 可以插入在很多地方，像是參數序列的中間，&lt;code&gt;function&lt;/code&gt; 關鍵字和後面 &lt;code&gt;()&lt;/code&gt; 的中間等等，幾乎是可以放空白字元的地方就可以放 comment，然後不會影響程式語意，本來，不考慮註解時，我可以用 &lt;code&gt;skipwhite&lt;/code&gt;、&lt;code&gt;skipempty&lt;/code&gt; 然後加上 &lt;code&gt;nextgroup&lt;/code&gt; 就可以指定下一個 token 是什麼，以 JavaScript function declaration 來說：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function fn (a) {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這樣的程式碼我把他拆成四個部分，function keyword、function name、function parameter、function body，然後用 Vim syntax 語法設定：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName skipwhite
+syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam skipwhite
+syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody skipwhite
+syntax region  javascriptFuncBody    contained start=/{/ end=/}/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;除了 function keyword 外都有 &lt;code&gt;contained&lt;/code&gt;，用途是讓該 rule 不會在 TOP region 下生效，一個好處是減少 TOP region 下要檢查的 rule 數量，另一個好處是有些相同的 token pattern，但是其實語意上是不一樣的，可以盡量用這種機制拆分開來，到這裡都還很美好，但是加上 comment 後問題就變複雜了，先簡單寫一下 comment 的 syntax rule：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax region  javascriptComment     start=/\/\*/ end=/\*\//
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後 comment 可以放在哪些地方呢：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function /*cc*/ fn (a) {}
+function fn /*cc*/ (a) {}
+function fn (a) /*cc*/ {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也就是本來 nextgroup 連接的地方都可以插入個 comment，可是只要插入了 comment，後面的 token 就不會被正確 highlight，因為 comment 的 rule 沒有 nextgroup，所以他的部分結束後就會回到用 TOP region 的情境，而後面應該符合的 rule 都有設上 &lt;code&gt;contained&lt;/code&gt;，所以就沒機會對到。當然現在要解決這個問題也不是沒方法可以避開，但是非常不好看，就是如下的設計：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax keyword javascriptFuncKeyword function nextgroup=javascriptFuncName,comment1 skipwhite
+syntax match   javascriptFuncName    contained /\k\+/ nextgroup=javascriptFuncParam,comment2 skipwhite
+syntax match   javascriptFuncParam   contained /([^()]*)/ nextgroup=javascriptFuncBody,comment3 skipwhite
+syntax region  javascriptFuncBody    contained start=/{/ end=/}/
+
+syntax region  comment1     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncName,comment1 skipwhite
+syntax region  comment2     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncParam,comment2 skipwhite
+syntax region  comment3     start=/\/\*/ end=/\*\// nextgroup=javascriptFuncBody,comment3 skipwhite
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如此可以確保 comment 插入也不會讓後面的 token 沒 highlight，但是這樣的設計，實際寫起來會非常繁瑣，完全不想去研究 JavaScript 中會有多少類似的狀況。其實我是覺得 Vim syntax 應該是希望盡量都用前後獨立的 rule 來 highlight，盡量不要有前後相依的關係存在，就不會有上面的問題，也可以讓 highlight 過程比較單純，理想上是從頭開始，一個 token 一個 token 各自獨立的 highlight，不過是事情當然沒這麼簡單，第二個想記錄下來的事情也和這個有關係。&lt;/p&gt;
+
+&lt;p&gt;假設目前 highlight 處理中，parse 到一個 &lt;code&gt;=&lt;/code&gt;，然後看到一組小括號 &lt;code&gt;(a)&lt;/code&gt;，連起來如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;= (a)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這時你會覺得 &lt;code&gt;(a)&lt;/code&gt; 是什麼呢？是小括號，裡面是一個 expression 然後回傳變數 &lt;code&gt;a&lt;/code&gt; 嗎？相信很多人會這樣認為，如果他後面是接分號的話：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;= (a);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是其實也可能是這樣子的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;= (a) =&amp;gt; {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ES6 的 arrow function，也就是說，如果一個 token 一個 token 解析，一定無法直接知道目前 token 代表的正確意義，所以 compiler 把程式碼轉成 AST 的時候，有時候會先往後面看一下來判斷現在的 token 到底是什麼意義。然而 Vim syntax 系統並沒有這種能力，嚴格來說，是可以用 match 來達成，不過還是很受限制。再來則是往前看的問題，我在設定運算子的 match rule 的時候，會希望嚴謹一點，本來想在兩邊加上 word boundary 的 pattern，在 Vim 裡面是 &lt;code&gt;\&amp;lt;&lt;/code&gt; 和 &lt;code&gt;\&amp;gt;&lt;/code&gt;，不過測試幾回發現，我的字元本身不是文字字元的話，這個 pattern 是沒有用的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/\&amp;lt;word
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這樣是有效的，但是下面想要 match &lt;code&gt;==&lt;/code&gt; 的會沒用：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/\&amp;lt;==
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以變成要自己寫往前看的 regexp，在 Vim 裡面有兩種類似的東西可以用，分別是 &lt;code&gt;\zs&lt;/code&gt; 和 &lt;code&gt;\@&amp;lt;=&lt;/code&gt;，通常，&lt;code&gt;\zs&lt;/code&gt; 效能比較好，會推薦使用，他的用途是標註你的 regexp 的 match 的起點，當然同時也有一個 &lt;code&gt;\ze&lt;/code&gt; 是終點：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/abcd\zsefgh\zeijkl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面這串 regexp 的目標是 &lt;code&gt;efgh&lt;/code&gt;，但是他的前後分別是 &lt;code&gt;abcd&lt;/code&gt; 和 &lt;code&gt;ijkl&lt;/code&gt;，實際執行時會去找 &lt;code&gt;abcdefghijkl&lt;/code&gt; 這串字串，完整比對到之後，只會回中間的 &lt;code&gt;efgh&lt;/code&gt; 作為 match 的範圍，這設計要做一些操作的時候就會有差，像是文字取代。本來我就想要用這個來做 syntax，可是就發現還是不生效，所以改成用 &lt;code&gt;\@&amp;lt;=&lt;/code&gt; 試試看：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/\(abcd\)\@&amp;lt;=efgh\@=\(ijkl\)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;就發現成功了，想了許久才理解其原因，然後才瞭解，真的往前看的是 &lt;code&gt;\@&amp;lt;=&lt;/code&gt;，&lt;code&gt;\zs&lt;/code&gt; 並沒有往前看，兩者最大的差異在於 pattern match 操作的起點，一般的使用大概感覺不太到差異，不過像是 syntax highlight 這種一個 token 一個 token 逐步處理的就會有差，當目標是 &lt;code&gt;efgh&lt;/code&gt; 時，通常處理進度到 &lt;code&gt;e&lt;/code&gt; 這個位置時，前面的 &lt;code&gt;abcd&lt;/code&gt; 已經被處理過了，所以這時候會和 regexp 比對的字串就變成 &lt;code&gt;efghijkl&lt;/code&gt;，使用 &lt;code&gt;\zs&lt;/code&gt; 的話，因為它還是要完整比對到 &lt;code&gt;abcdefghijkl&lt;/code&gt;，起點是 &lt;code&gt;a&lt;/code&gt;，就不會和 &lt;code&gt;efghijkl&lt;/code&gt; 相符，但是用 &lt;code&gt;\@&amp;lt;=&lt;/code&gt; 的話，pattern 的起點是 &lt;code&gt;efgh&lt;/code&gt; 的 &lt;code&gt;e&lt;/code&gt;，這樣就可以 match 到目前剩餘的字串了。&lt;/p&gt;
+
+&lt;p&gt;前面說的個 token 一個 token 逐步處理的問題還有一個情形也讓我困擾很久，不過這次不是東西被用掉，問題是沒被用掉。這個狀況發生在巢狀結構的 region，像是 JavaScript 的 block：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax region  javascriptBlock start=/{/ end=/}/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然號要讓 block 裡面可已有 block 就要用 &lt;code&gt;contains&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax region  javascriptBlock start=/{/ end=/}/ contains=javascriptBlock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這時候就會發生奇怪的現象了，因為外面的 region 包括了頭尾的括號，然後進入 block 內要做 syntax match 的時候，一開始的 &lt;code&gt;{&lt;/code&gt; 又 match 到 block，結果 Vim 就直接覺得這已經是第二層的 block 了，雖然好像有其它機制讓他不會一直循環下去變成無限多層，不過這樣還是會造成後面的 code 有被判斷錯誤的機會，因為 block 的開關不 match，這裡的關鍵也是要讓 &lt;code&gt;{&lt;/code&gt; 和 &lt;code&gt;}&lt;/code&gt; 被處理掉，進入 region 內部就不會跑到上一層的起點，而這裡要用的就是 &lt;code&gt;matchgroup&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax region  javascriptBlock matchgroup=bracks start=/{/ end=/}/ contains=javascriptBlock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如此就都會正常了，因為這樣的設定會讓 &lt;code&gt;{&lt;/code&gt; 和 &lt;code&gt;}&lt;/code&gt; 直接被當成 &lt;code&gt;bracks&lt;/code&gt; 這個 group，然後就被當成已經被解析過的 token，從它的下一個 token 繼續 highlight 分析，但是千萬不要另外加上 &lt;code&gt;bracks&lt;/code&gt; 的 syntax rule，剛好又 match 到 region 的起點和終點：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax match   bracks  /[{}]/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這樣的話也會發生其它的怪異現象，總之 nested region 的重點在於，要用 matchgroup，然後不要用和 matchgrouop 同樣名稱，同樣 pattern 另外又設定一組 rule。&lt;/p&gt;
+
+&lt;p&gt;最後一個要紀錄的則是 Vim syntax 裡面的優先度，基本上是 keyoword 優先度最高，也就是有 match 到 keyword 的話，你的 match pattern 就都無效了，所以像是 JavaScript 裡面，label 雖然不可以用關鍵字，像是 &lt;code&gt;continue:&lt;/code&gt; 就不合法，但是因為會先 match 到 &lt;code&gt;continue&lt;/code&gt; 關鍵字，所以就很難用 syntax highlight 來標出這種錯誤，而在 keyword 比對完之後，才輪的到 region 和 match，兩者是同樣權重，但是後定義的優先，而且不受 &lt;code&gt;contains&lt;/code&gt; 和 &lt;code&gt;nextgroup&lt;/code&gt; 裡面的順序影響，搞清楚優先順序在做細部的 syntax highlight 的時候還蠻重要的。另外要順便說說 region contains 和 nextgroup 的差異，nextgroup 其實還蠻不錯的，他不是限制下一個 token 一定是哪些東西，而是改變優先順序，先檢查完 nextgroup 裡面的東西，再檢查該 region 下的其它可能性，region contains 就不一樣了，該 region 裡面只有在 contains 裡面的東西會出現，另外還要特別注意一點，region 的處理並不管該 region 能不能正確的關閉，只要 match 到起點，就會把 region 打開，然後剛剛有提到，region 和 match 是同樣權重的所以就要非常注意：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;syntax match  javascriptLabel       /\k\+:/
+syntax region javascriptLabelblock  start=/\k\+: {/ end=/}/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這樣兩條 syntax highlight rule 然後配上下面的程式碼：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;abcd: {
+  var ii = 1 + 1;
+
+var jj = 2 + 2;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要注意我的 block 其實沒有結束，但是結果 Vim 只會 match 到 label block 那條規則，而且由於一直找不到 region 的結束點，所以下面的 &lt;code&gt;var jj&lt;/code&gt; 那行也是被認為在 block 內。&lt;/p&gt;
+
+&lt;p&gt;最後的最後要推薦一下 &lt;a href="https://github.com/gerw/vim-HiLinkTrace"&gt;gerw/vim-HiLinkTrace&lt;/a&gt; 這個 Vim plugin，可以很完整的 trace syntax highlight 的狀況。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2015/03/18/vim-syntax-regexp-note/
+https://blog.othree.net/log/2015/03/18/vim-syntax-regexp-note/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2015-03-18 18:45
+
+
+
+Latest True Color Vim
+&lt;p&gt;上次&lt;a href="https://blog.othree.net/log/2013/07/27/true-color-terminal-vim-osx/"&gt;文章&lt;/a&gt;的安裝方法已經過時了，更新一下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg clone https://bitbucket.org/ZyX_I/vim
+cd vim
+cd src &amp;amp;&amp;amp; make autoconf &amp;amp;&amp;amp; cd ..
+
+./configure \
+  --enable-gui=no \
+  --without-x \
+  --enable-multibyte \
+  --with-tlib=ncurses \
+  --enable-cscope \
+  --with-features=huge \
+  --disable-nls \
+  --enable-perlinterp \
+  --enable-pythoninterp \
+  --enable-rubyinterp \
+  --enable-termtruecolor
+
+make
+make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其實就是現在 ZyX 自己維護的 git repo 已經是有把 True Color 支援的 code merge 進來的版本，只是現在的最新版設定上有些修改，差異在不一定會直接輸出 true color 的色碼 sequence 了，要 Terminal Type 是 &lt;code&gt;xterm&lt;/code&gt; 的時候才有。如果不是 &lt;code&gt;xterm&lt;/code&gt; 的時候則需要加上設定檔，告訴 Vim 要怎樣輸出色碼的 sequence：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;let &amp;amp;t_8f="^[[38;2;%lu;%lu;%lum"
+let &amp;amp;t_8b="^[[48;2;%lu;%lu;%lum"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中的 &lt;code&gt;^[&lt;/code&gt; 是控制碼，就像是 BBS 著色一樣，不能直接打，Vim 的話要用 Ctrl + v + [ 三個按鍵同時按來輸入。這兩個設定項目因為是 ZyX 版才有，所以如果是跑普通的 Vim 的話，啟動時會跑出警告，可以用 &lt;code&gt;:help xterm-true-color&lt;/code&gt; 看看比較詳細的說明。&lt;/p&gt;
+
+&lt;p&gt;最後 iTerm2 雖然已經出 2.0 了，不過 True Color 的正式支援是放在 3.0，所以目前要在 Mac 上用 True Color Terminal 還是需要抓 nightly 版的 iTerm2。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2014/12/10/latest-true-color-vim/
+https://blog.othree.net/log/2014/12/10/latest-true-color-vim/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2014-12-10 01:46
+
+
+
+JavaScript Parameter Complete
+&lt;p&gt;前陣子在 FB 上說過突然有想做的 Vim Plugin 已經開發的差不多，所以把 1.0 放上了，這個又是自動補完的 plugin，架構設計上是沒針對 JavaScript，不過目前我只有針對 JavaScript 做好補完選項，這個 Plugin 一開始是為了處理 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.crypto"&gt;Web Crypto API&lt;/a&gt;，這組 API 在做加解密的時候是需要指定演算法，不過演算法的名稱裡面，有一些有 &lt;code&gt;-&lt;/code&gt; 在裡面，像是 &lt;code&gt;SHA-256&lt;/code&gt; 之類的，以前這種字串的關鍵字，還可以加到 syntax 裡面，然後用 syntax complete 來處理，不過 &lt;code&gt;-&lt;/code&gt; 不是 JavaScript 的關鍵字，會被忽略掉，為了處理這個問題，就開發了這個 complete function，簡稱 &lt;a href="https://github.com/othree/jspc.vim"&gt;jspc.vim&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;這個 complete function 的功能自動補完各種函數內的字串參數，像是剛剛提到的 crypto algorithm，還有各種事件名稱，Media Type 等，其實越做發現越多這類的選項，目前支援的東西包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Web Crypto Algorithm Name&lt;/li&gt;
+&lt;li&gt;Event Name for DOM, jQuery, Backbone&lt;/li&gt;
+&lt;li&gt;HTTP Methods for XHR, fetch&lt;/li&gt;
+&lt;li&gt;HTTP Headers, some values&lt;/li&gt;
+&lt;li&gt;Locales for Intl&lt;/li&gt;
+&lt;li&gt;HTML Tag Name for DOM API&lt;/li&gt;
+&lt;li&gt;Image Type for canvas.toBlob, canvas.toDataURL&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;這個 function 的原理還蠻簡單的，如果抓到游標位置看起來在字串內（以下用底線代表游標位置）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;n.addEventListener('cl_
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後就會往前找看看這是不是一個 function call 的內部，是的話去看看 function name，像是上面的範例就會找 &lt;code&gt;addEventListener&lt;/code&gt;，然後就去內部先定義好的表單找看有沒有候選的項目，有的話就會根據字串內容去做過濾後然後給回來。&lt;/p&gt;
+
+&lt;p&gt;如果前面有其他參數是不會受影響的，不過 function name 和字串要在同一行，然後除了 JavaScript 的語法用 &lt;code&gt;(&lt;/code&gt; 做為判斷是不是 function call 之外，其實還有支援 CoffeeScript 那種只用空白接餐處的寫法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;n.addEventListener 'cl_
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其實判斷方法很簡單，就是找空白前面不是 &lt;code&gt;,&lt;/code&gt; 的話就是了，一時還想不到是不是有其他種語言的 function call 的語法跳脫這兩種寫法的，我想應該可以支援大部分的程式語言了，不過裡面的候選資料還需要人來做苦工，所以我只弄了 JavaScript 的 Web 相關的東西，然後同時給 CoffeeScript、LiveScript、TypeScript 用，安裝方法就照用 Pathogen 那套裝法就可以了裝起來直接用，因為實做上是把原本的 omni complete function 包起來，所以不用特別做什麼設定，就可以和其它自動補完的輔助工具合作，像是 &lt;a href="https://github.com/othree/vim-autocomplpop"&gt;vim-autocomplpop&lt;/a&gt; 和 &lt;a href="https://github.com/Shougo/neocomplcache.vim"&gt;neocomplcache.vim&lt;/a&gt;，其實本來是獨立一個 function 的，但是這樣要和 Neo Complete Cache 整合太難了，乾脆就走 Vim 的 omnicomplete 路線，結果意外的方便，最後就是有什麼問題歡迎提出摟～&lt;/p&gt;
+
+
+https://blog.othree.net/log/2014/11/30/jspcvim/
+https://blog.othree.net/log/2014/11/30/jspcvim/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2014-11-30 18:37
+
+
+
+Vroom
+&lt;p&gt;這次 COSCUP 因為講的是 Vim 的主題，就想說要用 Vim 來做投影片，第一個想到的是 OSDC 常客 Ingy 做的 &lt;a href="https://github.com/ingydotnet/vroom-pm"&gt;Vroom&lt;/a&gt;，這個套件也是他幾年前在 OSDC 用的，因為當年有聽他的 Talk 所以有印象，還算蠻簡單學的，安裝可以用 cpan 或是 cpanminus，然後看他的文件格式就可以開始寫投影片了，我還做了一個 &lt;a href="https://github.com/othree/vroom-syntax.vim"&gt;Vroom syntax&lt;/a&gt;，因為看著單色的文件看久了還蠻煩躁的，我想未來也有人會想要用 Vim 來做簡報，所以就花了些時間把它弄的比較完美，以後應該就會有其他人用的上了吧。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2013/08/12/vroom/
+https://blog.othree.net/log/2013/08/12/vroom/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="vim at del.icio.us">vim</a>
+2013-08-12 22:25
+
+
+
+
+

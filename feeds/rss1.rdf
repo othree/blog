@@ -13,7 +13,7 @@ xmlns="http://purl.org/rss/1.0/">
 <link>https://blog.othree.net/</link>
 <description></description>
 <dc:creator></dc:creator>
-<dc:date>2023-09-15T11:41:56+08:00</dc:date>
+<dc:date>2023-12-09T15:41:08+08:00</dc:date>
 <admin:generatorAgent rdf:resource="http://www.movabletype.org/?v=4.381" />
 
 <cc:license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/1.0/" />
@@ -21,6 +21,12 @@ xmlns="http://purl.org/rss/1.0/">
 
 <items>
 <rdf:Seq>
+<rdf:li rdf:resource="https://blog.othree.net/log/2023/12/09/genji-koh/" />
+
+<rdf:li rdf:resource="https://blog.othree.net/log/2023/11/08/sign-in-with-/" />
+
+<rdf:li rdf:resource="https://blog.othree.net/log/2023/10/22/celeste/" />
+
 <rdf:li rdf:resource="https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2023/09/11/vim-license-2/" />
@@ -44,17 +50,62 @@ xmlns="http://purl.org/rss/1.0/">
 <rdf:li rdf:resource="https://blog.othree.net/log/2023/05/01/2023-tokyo/" />
 
 <rdf:li rdf:resource="https://blog.othree.net/log/2023/01/13/wbr-and-nobr/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2022/12/23/japan-postal-code/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2022/12/03/fix-my-archlinux/" />
-
-<rdf:li rdf:resource="https://blog.othree.net/log/2022/08/23/http-103-early-hints/" />
 </rdf:Seq>
 </items>
 
 </channel>
 
+
+<item rdf:about="https://blog.othree.net/log/2023/12/09/genji-koh/">
+<title>源氏香 南知多</title>
+<link>https://blog.othree.net/log/2023/12/09/genji-koh/</link>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377566549/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377566549_d4c2cc3812_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377566549_2332169903_k.jpg 2x" /></a></p>
+<p>前陣子去了一趟名古屋，一開始其實只是想說帶小孩去樂高樂園，結果行程規劃從一開始的名古屋市區和周邊為主，弄到後來變成市區五天租車五天的，然後打算最後一天住在機場旁邊，就想說那前一天就在附近玩玩好了，要去的地方就因此多了一個一開始完全沒考慮過的「知多半島」了，當然也有研究住宿，當時也有找到「<a href="https://genji-koh.kaiei-ryokans.com/">源氏香</a>」這間旅館，不過那時候已經有安排了下呂溫泉的溫泉旅館，所以就沒考慮這個價位的住宿了，就在一切都安排好後沒幾天，突然就看到 FB 上有人分享到他們有特別的，針對台灣人的免費體驗方案，就是入住後要在 SNS 上分享。</p>
+]]></description>
+<dc:subject>diary</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2023-12-09T15:41:08+08:00</dc:date>
+</item>
+
+<item rdf:about="https://blog.othree.net/log/2023/11/08/sign-in-with-/">
+<title>Sign-in with OOO ID</title>
+<link>https://blog.othree.net/log/2023/11/08/sign-in-with-/</link>
+<description><![CDATA[<p>最近工作上在研究 Sign-in with Apple/Google ID，其實這件事情也作過很多次了，不過距離上次也有點久了，不知道那些 SDK 有沒有什麼改變，所以還是要重頭來，而且這次多研究了一個 Apple，有搞懂些以前沒釐清的細節，想說紀錄一下。</p>
+<p>首先就是，我發現到 Google 和 Apple 現在都會回一個 <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token</a>，內容則是 JWT，而且是認真的 JWT，真的會有帶一點使用者資料（像是 email）的，可以用來作 user authentication（認證）用的，這在以前只有 OAuth 2.0 的時候是沒有的，查一陣子資料才發現這其實是 <a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect</a>（簡稱 OIDC） 規範的，該規範是是 2014 年發布的，其實還比 JWT 早定稿。</p>
+<p>相較於 OAuth 2.0 做的是 authorization（授權），OIDC 做的則是 authentication（認證），只不過 OIDC 是整個依附在 OAuth 2.0 的架構上，利用的就是 OAuth 2.0 的 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.1">response_type</a>，本來只有 <code>code</code> 和 <code>token</code> 兩種，在 OIDC 多提供了 <a href="https://openid.net/specs/openid-connect-core-1_0.html#Authentication"><code>id_token</code></a>，ID Token 是用 JWT，而且也有明確定義有裡面的 user profile 相關的<a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims">欄位</a>（不是定義哪些是必須提供，而是定義好語意和對應的欄位名稱）。</p>
+<p>第二個則是我一直存疑已久的問題，就是 OAuth 2.0 的設計上基本是用 redirection flow，而且 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.2"><code>redirect_uri</code></a> 也是必要的，但是 Google 其實一直都支援純 JS 的方案，也就是說 Relying Party(應用程式端)不需要實作一個 redirection endpoint 來接資料，前端的 JS 就可以直接拿到 authorization code 和 access token，這次也認真的研究了這個問題，結果發現，Apple 的 OAuth 流程中，<a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes">response_mode</a> 給的值是目前不在標準內的 <code>web_message</code>，而 Google 則是 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.2"><code>redirect_uri</code></a> 給的是一個沒見過的 scheme：<code>storagerelay://</code> 的 URI。</p>
+<p>其實我一開始以為這些設計，是各個公司自己想一想然後就自己做下去的，結果沒想到其實不是，首先是 Apple 的實作，用的是 <a href="https://datatracker.ietf.org/doc/html/draft-sakimura-oauth-wmrm-00">OAuth 2.0 Web Message Response Mode</a> 這份草稿的設計，這份草稿其中一位作者 Nat Sakimura 現在是 OpenID 的 chairman，而且他也是其他很多相關規範的作者（像是 <a href="https://www.rfc-editor.org/rfc/rfc7519">JWT</a>)，不過這份草稿只有一版且沒人更新，有很多細節沒有寫定，大部分都是提供範例程式碼而已，所以 Apple 有些東西不是照範例做，例如 message 的 payload；Google 實作的則是 <a href="https://lists.openid.net/pipermail/openid-specs-ab/2015-November/005865.html">OAuth 2.0 IDP-IFrame-based Implicit Flow</a>，這份文件其實是我最後才找到的，因為這份只有出現在 OpenID 的 mailing-list，而且也完全沒有討論和更新，不像前一份還有發到 IETF，回到文件內容，這份的作者，就全部都是 Google 的人了，內容完整許多，也有定義好 message 的 payload 結構，不過還是有些細節有缺，像是認證完成後的回傳事件，現在 Google 用的事件名稱在這份文件中就找不到。</p>
+<p>除了這兩份草稿外，其實還有一份是 <a href="https://curity.io/">Curity</a> 提出的 <a href="https://datatracker.ietf.org/doc/html/draft-ideskog-assisted-token-05">OAuth 2.0 Assisted Token</a>，一樣有發到 IETF，而且還比較有在更新，最新一版是 2021 的，Assisted Token 的設計是多給了一個流程叫做 Assisted Token Flow，用不一樣的 URL 來使用這個 flow，這個流程的最後一步就是 postMessage 回到 opener/parent，規範寫的比較完整，包括各種新屬性的 registry、message 的 payload，還有安全性相關的考量都有，不過我看一看有些地方覺得有些疑惑，第一個是 message payload 的結構似乎辨識度沒很高，第二個則是完全沒提到 refresh token 和 authorization code，不確定是目前還沒考慮到那邊，還是因為安全性考量把它們先排除。</p>
+<p>第三個是 Apple 的實作，雖然基本上還是照著 OAuth，但是其實限制更多，首先就是，<code>scope</code> 就只有 email 和 name 可以拿，而且 Apple 做成，只有第一次 authorization 時，會把 user profile 傳給 RP，之後是拿不到的（不過 email 有在 id token 內），然後，雖然可以拿到 access token，但是其實完全沒有可以使用它的 API endpoint，所以什麼事情都不能作，真的只能用來做 authentication，最後一個，就是用 code 換 token 時，要給的 <code>client_secret</code> 參數還特別麻煩，要<a href="https://developer.apple.com/documentation/accountorganizationaldatasharing/creating-a-client-secret">自己組一個 JWT</a>（但是也因此會 expire 比較安全），然後用之前從 Apple Developer 後台生好的 secret key 去算 signature。</p>
+<p>最後一個想紀錄的就是，這幾份標準和文件裡面幾乎都有一個章節是 Security Consideration，內容雖然不全面但是還蠻值得一看的，也有提到一些攻擊手法，而除此之外，其實還有一份文件：<a href="https://www.rfc-editor.org/rfc/rfc6819">RFC6819: OAuth 2.0 Threat Model and Security Considerations</a>，內容就是有說明 OAuth 2.0 各種設計在安全性上的考量（像是為什麼有 <a href="https://www.rfc-editor.org/rfc/rfc6819#section-3.3">Refresh Token</a>，什麼情境下它有助於安全性的提升），以及各種可能的攻擊手法。</p>
+]]></description>
+<dc:subject>web</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2023-11-08T21:52:51+08:00</dc:date>
+</item>
+
+<item rdf:about="https://blog.othree.net/log/2023/10/22/celeste/">
+<title>Celeste</title>
+<link>https://blog.othree.net/log/2023/10/22/celeste/</link>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53276279101/" title="Celeste by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53276279101_c264a1ba25_b.jpg" width="768" height="1024" alt="Celeste" srcset="https://live.staticflickr.com/65535/53276279101_77a78ba47f_k.jpg 2x" /></a></p>
+<p>一直想寫一篇關於 <a href="https://www.celestegame.com/">Celeste</a>（蔚藍山脈）的文章，不過拖了很久一直寫不出來，其實我當初也是拖了很久才玩的。我因為原本就很喜歡 2D 的平台遊戲，然後看到 Celeste 的介紹覺得很特別，以登山為目標，沒有戰鬥但是有挑戰性的平台遊戲，多麼特別啊！所以 2019 年我就把它買下來了，還是 <a href="https://limitedrungames.com/products/switch-limited-run-23-celeste-preorder">Limited Run Games 的版本</a>，結果買回來後，稍微玩一下覺得怎麼難到爆炸，就放置了。</p>
+<p>後來到了 2021 年底，在 FB 看到橘子說<a href="https://www.facebook.com/Orange.8361/posts/pfbid0MZgonb2aBDzEfp1JwzrRALTZGtjf384afpWZXYFo9Pt3Pk78rDaJAwxyXyPwtHoNl">他登頂了</a>，我才一點手癢一點不服輸的又重拾了起來，結果這次就順利了突破一開始的障礙，漸漸的上手了起來，後來橘子更是把<a href="https://www.facebook.com/Orange.8361/posts/pfbid02hRCPB4QydeQnBcUygewfZh7akZ2nWr9i9XTQmvB2sVpLjsheCCjWtiuuZmWpfJwal">全部的關卡包括第九章都過完</a>了，本來想說我 B 面 C 面不勉強（有多難可以參考机核的文章：<a href="https://www.gcores.com/articles/96249">《蔚蓝：Celeste》：每个人心中都有一座山，但并非每个人都能登上山顶</a>），結果還是不服輸的就慢慢的也都過完了，必須說這關卡難度的曲線設計的真的是非常棒，最後花了一個月左右，遊戲時間 50 多小時，成績是把全部關卡通過，收集到所有除了黃金草莓以外的草莓，認真的說，這遊戲真的很難，我相信一定很多人無法達到這樣的成績，當然我也不是要說我多厲害，因為我這樣的成績還不是全要素收集，更上一層還有無死通關的金草莓，不過這樣的挑戰歷程已經讓我想寫文章記錄下來了。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53281633529/" title="Celeste by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53281633529_58b4cc2bc0_b.jpg" width="1024" height="576" alt="Celeste" srcset="" /></a></p>
+<p>我覺得這款遊戲最讓我感到厲害的，就是它遊戲的內外呼應，遊戲內的故事主軸是登山，而在了遊戲故事之外，這款遊戲也設計成了一個讓人攀登的高山，關卡和整體的難度就是設計的非常精巧，大家都可以在山腳出發，但是可能只有一半人能到五成高度，到了八成高度的地方就只剩下兩成，而真正能到達山頂，達成全要素，收集到所有的草莓，真正見到最後那個山頂風景的，就只有少數的那些玩家，那 26 個黃金草莓，全世界登記有案能拿到的大約只有<a href="https://celeste.ink/wiki/List_of_Celeste_players_with_the_Farewell_Golden_Berry">三百多人</a>（<a href="https://forum.gamer.com.tw/C.php?bsn=32436&amp;snA=17">台灣也有至少一位</a>），Celeste 也有賣出一百萬套左右，也就說只有萬分之三的人，能夠到達這款遊戲的真正的山頂（要素的山頂、還有另一批人在拼 speed run）。</p>
+<p>本來還想要介紹更多的東西，但是寫了兩三次都不盡如意，最後決定，留下這篇文章作為自己參與了這段挑戰的紀錄，我到現在偶爾，都還會拉出當時登山時的一些影片紀錄，有些關卡真的是非常困難，難到讓人過關時都忍不住會按下 Switch 的錄影按鍵紀錄下來，甚至也不少是功虧一簣的紀錄，當然，我拿到最後一顆 moon berry 的紀錄也有，當時也有<a href="https://www.facebook.com/othree/posts/pfbid0RtymcvfzMXR2QfdD1X756CNoCzuZBe4WYj9dCsCEu4zpEVorNweWqBjbrTMtUnJZl">貼在 FB</a> 上。</p>
+<p>附上幾篇開發相關的延伸閱讀：</p>
+<ul>
+<li><a href="https://indie-guider.games/post/DevStudy-Celestegame/">開發經驗分享】專題系列－《Celeste》</a></li>
+<li><a href="https://qwe321qwe321qwe321.github.io/posts/61013/">從移動和跳躍開始，做好 2D 平台跳躍遊戲的角色控制 _BB001</a></li>
+<li><a href="https://www.rockpapershotgun.com/celeste-dash">Why Celeste's dash feels great</a></li>
+<li><a href="https://www.youtube.com/watch?v=4RlpMhBKNr0">Level Design Workshop: Designing Celeste</a> Celeste 開發者 Maddy Thorson 在 GDC 2017 的分享</li>
+</ul>
+<p>其他延伸閱讀可以參考橘子的第二篇 FB 貼文。</p>
+]]></description>
+<dc:subject>acg</dc:subject>
+<dc:creator>othree</dc:creator>
+<dc:date>2023-10-22T20:56:37+08:00</dc:date>
+</item>
 
 <item rdf:about="https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/">
 <title>digital envelope routines::unsupported</title>
@@ -73,8 +124,8 @@ xmlns="http://purl.org/rss/1.0/">
 <p>那這個問題應該怎麼處理呢？其實簡單說就是把套件升級升級就好了，因為現在的套件新版本都有處理這個問題，不過走上升級這條路之前可以先試試看 StackOverflow 上的解法（有可能讓你專案爛掉，請先備份）：</p>
 <pre><code class="language-bash">npm audit fix --force 
 </code></pre>
-<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的我升級到 4.x 就沒事了。</p>
-<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案複概過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
+<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的，升級到 4.x 就沒事了。</p>
+<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案覆蓋過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
 <p>PS. 還要小心其他升級的後遺症，如果是 app 最好要測試過各種行為，像我遇到 Webpack 5 不支援 polyfill Buffer 的問題，剛好那個錯誤又被 catch 掉，所以我 build 是沒問題的，就是測試跑不過，後來參考網路上的<a href="https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5">文章</a>處理。</p>
 ]]></description>
 <dc:subject>script</dc:subject>
@@ -99,7 +150,7 @@ xmlns="http://purl.org/rss/1.0/">
 <link>https://blog.othree.net/log/2023/09/10/vim-license-1/</link>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
 <p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
-<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹不開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
+<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹各開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
 <p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
 <p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
 ]]></description>
@@ -219,37 +270,6 @@ xmlns="http://purl.org/rss/1.0/">
 <link>https://blog.othree.net/log/2023/05/12/singapore-2022/</link>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582537844/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582537844_f258048019_b.jpg" width="1024" height="768" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582537844_ff3392033d_k.jpg 2x" /></a></p>
 <p>去年因緣際會去了一趟新加坡，是我第一次去新加坡，看到不少建築覺得實在很厲害，想說紀錄一下。</p>
-<p>這趟行程中，我看到覺得很厲害特別想介紹的建築有三個，首先第一個是聖陶沙上的 Resort World，規模超大，有飯店商場賭場等等，環球影城也是其中的一部分，不過只是這樣還不會到讓我覺得超厲害，最讓我驚艷的其實是它的地下車道，我不確定他是往下挖還是往上蓋（應該是往上蓋比較簡單），不過整個 Resort World 人行的地方，那些商店廣場的下面其實都是空的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582514829/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582514829_83d43f970d_b.jpg" width="1024" height="350" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582514829_89c9ed9983_k.jpg 2x" /></a></p>
-<p>我只有拍這張照片，不過就是你仔細看你會發現對面深不見底，是不可思議的大的地下空間，裡面有錯綜複雜的車道、接送區、巴士站、停車場、甚至還有卡丁車賽車場，這個是屬於理論上做的出這種東西，技術上應該也沒太大困難，只是我沒想到會有人做出這麼大規模的地下車道系統。</p>
-<p>第二個是彰宜機場的 JEWEL 的中間的那一區，就是有很多植物和中間一個瀑布（不知道該不該稱為瀑布，其實它叫 Rain Vortex）的那一區，那一區其實叫 Forest Valley。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52581818242/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52581818242_688d196a1f_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52581818242_5829768040_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582796203/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582796203_5607541fbc_b.jpg" width="1024" height="768" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582796203_bcea3340df_k.jpg 2x" /></a></p>
-<p>這區我覺得讓我感到覺得驚豔的地方有兩個，第一個是那個瀑布，要怎樣能讓他不漏水。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582719915/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582719915_136a013e3c_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582719915_c9f07b8487_k.jpg 2x" /></a></p>
-<p>這個瀑布水流到 B2 那層時，是一整圈透明的牆（我不確定材質）圍起來，不知道要怎樣能確保水不會滲漏，我有直接摸摸看，也找不到接縫，該不會是整塊玻璃一體成形吧。</p>
-<p>PS. 我後來找到 News Asia 的<a href="https://infographics.channelnewsasia.com/jewel-changi-airport/index.html">專題</a>，那塊是壓克力的，不過我還是不知道是怎樣可以弄成無縫的這麼大一塊，然後這個專題對於那個瀑布的介紹是聚焦在水流怎樣下來又上去的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52870391415/" title="Changi Jewel B2 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52870391415_9e06be9147_b.jpg" width="1024" height="684" alt="Changi Jewel B2" srcset="https://live.staticflickr.com/65535/52870391415_7cc90e6f6c_k.jpg 2x" /></a></p>
-<p>當時很趕時間沒拍照，還好 Google 街景有。</p>
-<p>除了瀑布的漏水問題外，這區還有非常多的植物，而且不是小顆的花花草草，也有比較高大的樹木，置身在其中會覺得非常難以想像有人會放這麼多的植物在室內空間（請見<a href="https://flickr.com/photos/othree/52871953754/">影片</a>），然後我就又想到他們的樹根會一直成長變長，不知道要如何確保數十年後，這些樹木的下面，通常是商店的地方，不會有漏水的問題出現...</p>
-<p>最後一個要介紹的，是金沙酒店（Marina Bay Sands）的 Apple Store：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582539949/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582539949_df324fb346_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582539949_1e3709311d_k.jpg 2x" /></a></p>
-<p>其實本來也沒特別有安排要去金沙酒店，後來也是最後一晚了不知道要幹嘛就跑去看水舞光雕表演，然後才發現這個 Apple Store，遠遠看到的時候就覺得：「不可能吧！」真的走到旁邊看的時候就覺得非常誇張，怎麼這麼有錢有閒弄一個浮在水中間的球。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582713440/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582713440_3590a10a6e_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582713440_95c1473d95_k.jpg 2x" /></a></p>
-<p>裡面往上看圓頂。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582717675/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582717675_9d8da122ac_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582717675_3f955709d9_k.jpg 2x" /></a></p>
-<p>圓弧形自動門，等很久都等不到全關，一直有人進出。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582276986/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582276986_abd01e3106_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582276986_25de161fc6_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582711635/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582711635_e4f494b6d6_b.jpg" width="768" height="1024" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582711635_5d7eb3dd6f_k.jpg 2x" /></a></p>
-<p>不意外的對得很齊，甚至對齊到地板的金屬飾板（請見<a href="https://www.flickr.com/photos/othree/52871206437/in/dateposted-public/">影片</a>）。</p>
-<p>逛一逛意外的發現有電扶梯通往樓下，覺得不是獨立在水上的一顆球嗎，怎麼還有地下室，然後又想到，那行動不便的怎麼辦，蘋果不可能沒考慮到吧，尋找一陣子之後，發現了一個鏡面的圓柱體（請見<a href="https://www.flickr.com/photos/othree/52872219398/in/dateposted-public/">影片</a>），裡面就藏著電梯，然後下到樓下走一走，才發現是有通道金沙酒店商場內的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52582719930/" title="新加坡 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52582719930_a96637b686_b.jpg" width="1024" height="457" alt="新加坡" srcset="https://live.staticflickr.com/65535/52582719930_5b235277c7_k.jpg 2x" /></a></p>
-<p>我只能說這個建築設計真的是讓我當場覺得驚呆了，當時我以為這個 Apple Store 是一開始在蓋金沙酒店時就一起設計進去的，結果回來研究一下資料發現不是，這個 Apple Store 是後蓋的，努力搜尋一番有找到篇文章有些施工當時的照片。</p>
-<ul>
-<li><a href="https://www.archigardener.com/2020/01/is-this-apples-coolest-new-store.html">Is this Apple's Coolest new Store?</a></li>
-</ul>
-<p>基本上就是圍了一塊範圍把水排掉後把它蓋起來，是可以想像得到的工法，只是想不到會有人這樣設計（<a href="https://www.fosterandpartners.com/projects/apple-marina-bay-sands">Foster + Partners</a> 設計的），而且真的願意這樣施工，然後不免俗的，我又擔心起會不會漏水的問題了，不過後來想一想如果認真要處理防水應該不是問題吧，實在是被台灣的房子會漏水的觀念荼毒太久了。</p>
-<p>新加坡整體而言，城市的魅力還是蠻高的，尤其是這些建築的設計更是讓我驚艷，光是來看看這些建築我就覺得蠻不錯的，不過物價實在是很高，然後天氣也是蠻熱的，有機會的話我是會願意再來一次去看看這次沒見到的地方，像是植物園那邊，金沙酒店這次也沒仔細逛（金沙酒店本身也是很厲害，商場裡面還有人工河和瀑布）。</p>
 ]]></description>
 <dc:subject>diary</dc:subject>
 <dc:creator>othree</dc:creator>
@@ -413,162 +433,6 @@ wbr::before { all: unset !important; content: &quot;\200B&quot; !important; }
 <dc:subject>css-html</dc:subject>
 <dc:creator>othree</dc:creator>
 <dc:date>2023-01-13T22:52:00+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2022/12/23/japan-postal-code/">
-<title>日本郵便番号</title>
-<link>https://blog.othree.net/log/2022/12/23/japan-postal-code/</link>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/7979542259/" title="北海道 by othree, on Flickr"><img src="https://live.staticflickr.com/8042/7979542259_86954d3eb8_b.jpg" width="1024" height="683" alt="北海道" srcset="https://live.staticflickr.com/8042/7979542259_9ff2dab54b_k.jpg 2x" /></a></p>
-<p>因為工作的關係，要做日本郵遞區號和地址間的自動補完，還因此開始維護 <a href="https://www.npmjs.com/package/japan-postal-code-oasis">japan-postal-code-oasis</a> 這個套件，它的前身其實是另外一套叫 <a href="https://www.npmjs.com/package/japan-postal-code">japan-postal-code</a> 的，但是它很久沒更新了，所以我就簡單修改一些設計，在研究套件設計的同時就有機會比較深入了解日本的郵遞區號（郵便番号）系統，發現不少有趣的細節，這篇文章特別來紀錄一下。</p>
-<p>首先，第一點就是，日本郵遞區號的資料是有整理好並<a href="https://www.post.japanpost.jp/zipcode/dl/readme.html">開放下載</a>的，而且下載路徑、檔案格式都是固定的沒什麼變動過，也因此可以找到不少使用這些資料的程式語言套件（包含下載腳本），<a href="https://www.npmjs.com/package/japan-postal-code">japan-postal-code</a> 就是透過這份資料來實作從郵遞區號抓地址資訊的功能，雖然不是很想和台灣比，但是這點台灣真的是輸很多，台灣其實到 3+2 郵遞區號都還可以在郵局網站下載的到，但是那個下載連結不是固定的，然後也看不出來是不是固定更新，所以你不會知道你下載的資料是不是最新的，至於最新的 3+3 郵遞區號，就沒有開放大眾下載，取而代之的是提供 Web Service、Windows 應用程式，如果真的要下載資料檔，要特別申請（參照：<a href="https://www.post.gov.tw/post/download/%E6%9C%AC%E5%85%AC%E5%8F%B83%2B3%E9%83%B5%E9%81%9E%E5%8D%80%E8%99%9F%E7%B3%BB%E7%B5%B1%E4%BD%BF%E7%94%A8%E8%A6%8F%E7%AF%84%E8%AA%AA%E6%98%8E%E4%BA%8B%E9%A0%85.odt">本公司3+3郵遞區號系統使用規範說明事項</a>），另外就是台灣是一季更新一次，日本則是一個月更新一次。</p>
-<p>其實我會注意到日本每個月都更新郵遞區號，是從另外一件事情發現的，在繼續之前，先來介紹一下日本郵遞區號內不同數字的意義，這在日本郵局網站有很詳細的<a href="https://www.post.japanpost.jp/zipcode/zipmanual/p04.html">說明</a>，前三碼稱為郵便區番号，後四碼是町域番号，其中的前兩碼是大 block 番号，第三碼則是小 block 番号，基本上都是這樣規劃，理論上不會需要到每個月更新，直到有一天我發現到六本木森大樓，每一層樓都有自己的郵遞區號，例如用 Google Map 搜尋 <code>Google Japan (Roppongi Hills)</code> ，然後查看地址就會發現他的郵遞區號是 106-6126，其中的後兩碼就是 26 樓的意思，然後搜尋 <code>Apple Japan合同会社</code>，就會發現郵遞區號是 106-6140，就是 40 樓的意思。後來我才知道，這是屬於 <strong>個別番号</strong> 之中的超高層大樓番号，除了大樓之外，還有其他種個別番号，像是大型機構（醫院、電視台、公家單位等）也可以申請，而這種個別番号也就是資料內最常會變動的地方，所以他們才有這麼頻繁的資料更新。</p>
-<p>其實我還有在一些<a href="https://www.msr.co.jp/mapinfo/dl/pdf/PEPOS-201411_1015.pdf">第三方資料</a>，看到說前三碼的郵便區番号，還可以再更細分成兩組：前兩碼是地域番号，第三碼則是地域調整番号，町域番号的最後一碼則是町域調整番号，另外就是第一版的日本郵遞區號是三碼為主，然後有部分地區有 3+2 碼的設計，網路上還找的到當時（1968、昭和43年）<a href="http://sasukekyon.web.fc2.com/postal/postal_code.txt">第一版的郵遞區號的清單</a>。</p>
-<p>再來印在信封上的，手寫郵遞區號的格子，其實在日本郵局網站上也有仔細的定義它的尺寸，甚至連手寫的字體也有提供範例（基本上就是要你不要寫的太潦草），台灣郵局網站我找到的最接近的就是只有<a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=21001">信封書寫範例</a>了，其實日本的規範這麼仔細，有一個原因是為了自動化作業。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52579607481/" title="郵便番号枠 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52579607481_fa8277f6c9_b.jpg" width="1024" height="534" alt="郵便番号枠" srcset="" /></a></p>
-<p>這個自動化作業，其實遠超我的預期，不只是根據郵遞區號分類而已，日本郵局其實定義了一套地址的數位化編碼系統，轉換邏輯也不困難，也就是說，日本國內的任意地址，都可以用一串數字（看情況加上英文字母）來表示，日本地址可以簡單的轉為英數編碼，有一個很大的原因是他們的地址是從大範圍（ex: X丁目X番X号）到小範圍這樣，而不像是其他地方用路加上號碼（ex: XX路X號）的方式，所以其實編碼機制也很簡單，大部分的地址，就是郵遞區號加上後面的三碼，然後再加上可能樓層、房號就可以組成，例如東京鳩居堂 銀座本店，地址是：</p>
-<blockquote>
-<p>〒104-0061 東京都中央区銀座５丁目７−4</p>
-</blockquote>
-<p>轉成編碼就是：</p>
-<blockquote>
-<p>10400615-7-4</p>
-</blockquote>
-<p>前七碼固定式郵便番号，所以不用處理分隔符號的問題。</p>
-<p>另外日本地址有個天字第一號（我取名的），大家可以猜猜看是哪個地方的地址，沒錯，就是皇居，郵遞區號是 100-0001，地址是 1 丁目 1 番（沒有号），編碼就是：</p>
-<blockquote>
-<p>10000011-1</p>
-</blockquote>
-<p>而且這套編碼系統還有一組專用的 <a href="https://www.post.japanpost.jp/zipcode/zipmanual/p11.html">barcode 系統</a>，可以用掃描的方式輸入，非常方便，barcode 的<a href="https://www.post.japanpost.jp/zipcode/zipmanual/p11.html">定義</a>也蠻有趣的，不是用粗細，而是用長短和位置來表達不同意義，一條 bar 有四種（4-state）可能的變化（1-4），所以是 2bit，然後一個字元是三條 bar，所以是 6bit，可以有單一字元或是雙字元，理論上單字元有 64 種組合，雙字元是 12bit 共 4096 種組合，不過其實雙字元的第一個字元固定是控制碼，所以實際上變化沒這麼多，目前也只有定義英數、hyphen 和一些控制字元而已，日本郵局內部似乎還有其他用途，而不是只有標記收件人地址而已，不過細節沒有網站上沒有公開，這部份有分為局內 barcode 和 ID barcode，而自己用這組 barcode 系統標注地址的部分，則是稱為 custom barcode。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52580048500/" title="郵便番号 カスタマバーコード by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52580048500_587f5ae388_b.jpg" width="605" height="1024" alt="郵便番号 カスタマバーコード" srcset="" /></a></p>
-<p>至於要如何產生住址的 custom barcode 呢，日本郵局網站是有蠻詳細的說明，包括怎樣拆解地址、怎樣編碼、檢查碼怎樣算等等都有說明。而也還有提供一個 custom barcode 產生程式可以下載，抓下來解開後可以發現是網頁應用程式，上一個世代的，編碼也不是 UTF-8 的，現在還可以正常運作，其實還蠻厲害。</p>
-<p>PS. 後來<a href="https://ja.wikipedia.org/wiki/%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%83%90%E3%83%BC%E3%82%B3%E3%83%BC%E3%83%89">發現</a>其實有蠻多國家的郵務系統是使用類似的 4-state barcode 的。</p>
-<p>接下來算是不相關的資訊了，其實我在查資料時，有想研究看看郵便番號有沒有和其他標準相似或是共通的地方，首先是有注意到 ISO 3166-2 這個標準，是每個國家自己有一個子集，定義了各自國家的行政區，例如日本的是 ISO 3166-2:JP，裡面就是用 01-47 從北到南把日本的都道府縣編碼了一遍，而且直接對應到 JIS X 0401，最初是在好奇 JIS 的編碼和郵便番号前兩碼的地域番号有沒有相通，結果當然是沒有。其實我還蠻羨慕日本有 JIS 標準統整各種規範的單位，台灣也是有相關的編碼，只是就是像是 <a href="https://zh.wikipedia.org/wiki/ISO_3166-2:TW">ISO 3166-2:TW Wikipedia 條目</a>裡面列出的，就是各單位各自為政這樣。</p>
-<p>另外一套標準(?)則是日本導航系統幾乎都會有支援的 <a href="https://www.denso-solution.com/mapcode/whats.html">MAPCODE</a>，這個編碼系統就不是官方標準了，而是民間企業 <a href="https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%B3%E3%82%BD%E3%83%BC" title="デンソー">日本電装</a> （前身是 Toyota 自動車的一個部門）開發的定位系統，是針對日本境內的，用類似 quadtree 的方式，把地圖分割成一小塊一小塊，然後每一塊下去編碼，不過和 quadtree 不一樣的是，不是統一分成四塊，而是分成三個層級，第一級是 Zone 全日本被分為 1203 個 Zone，然後每個 Zone 再細分成 30x30 個 Block，每個 Block 一樣再細分成 30x30 個 Unit，如果還要更細，還可以再細分成 Core 和 S Core，大約可以到 3 公尺的精細度，最後就是當然，這套系統的大分區也和郵遞區號完全不相通。</p>
-]]></description>
-<dc:subject>others</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2022-12-23T09:59:16+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2022/12/03/fix-my-archlinux/">
-<title>Archlinux 修復紀錄</title>
-<link>https://blog.othree.net/log/2022/12/03/fix-my-archlinux/</link>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/52538205764/" title="Universal Studio Singapore by othree, on Flickr"><img src="https://live.staticflickr.com/65535/52538205764_932f161e34_b.jpg" width="1024" height="768" alt="Universal Studio Singapore" srcset="https://live.staticflickr.com/65535/52538205764_0282fbb78d_k.jpg 2x" /></a></p>
-<p>之前我在推特上有說過我不小心把我放 blog 的主機搞壞，當時就是用 pacman 更新過後，出現一些錯誤，我快速的重跑 <code>pacman -Syu</code> 然後就開始一直出現錯誤了，當時想說是因為我太久沒更新，然後有相依性錯誤造成系統幾乎爛掉，一度要放棄，不過因為網站相關的 instance 都還跑著，所以我就想說暫時放著，等有空把資料弄出來再重建系統，然後十一月中去了一趟新加坡，這趟行程要邊顧小孩其實很累，然後就在回來當天晚上就收到 Linode 的緊急維護，已經把我的 Linode 主機重開了，網站當然也死了，真的是晴天霹靂，不過實在太累了我也只能先放著不管。</p>
-<p>過了幾天終於比較有力氣來看看看問題，我當時的狀況是，無法使用 pacman，然後更進一步發現是 curl 就死掉，curl 死掉會造成很多東西一起掛掉，像是 git、wget 也都掛了，結果我能使用的工具和手段就變的很少，總之先來看看錯誤訊息吧：</p>
-<pre><code>/usr/lib/libcurl.so.4: undefined symbol: BrotliDecoderCreateInstance
-</code></pre>
-<p>由此可知基本上問題就是動態連結 Brotli 的 library 時出錯，我還記得我當初裝機器時，Archlinux 還沒有正式 Brotli 的套件，所以我還自己編譯了一版給 nginx 用，而我的 nginx 也是自己編譯的，沒想到不知不覺 Archlinux 已經有正式的 Brotli 套件，而且 curl 還相依於它。</p>
-<p>接著我就開始各種嘗試，想辦法重新裝 Brotli 套件，curl 雖然不能動，但是我還可以用 scp 傳檔案上去，不過就算傳上去 pacman 也還是完全無法跑起來，即使我只是想要他安裝本地的檔案，而不是要連網路，然後我也去看了 <code>/use/local/</code> 裡面 brotli 套件的 header 檔案，查看內容，發現真的沒有 <code>BrotliDecoderCreateInstance</code>，不過這個 symbol 在 Brotli 的 repo 內是有的，而且已經存在了有四年之久，所以顯然，我系統內安裝的版本很有問題，雖然確定問題在哪，但是還是一直沒有解決方法，重裝套件需要 pacman，但是 pacman 需要修好 brotli 才能動，陷入死結當中，更糟的是，我在網路上搜尋就是找不到有一樣問題的人。</p>
-<p>然後我就開始研究 pacman 掛掉要怎麼辦，找了許久終於找到有一個 <a href="https://github.com/chaitanyarahalkar/Pacman-Static">pacman-static</a> 的工具，是預先編譯好，並且是靜態連結的 pacman 執行檔，抓下來後發現真的可以用，真的是感動的痛哭流涕，然後我立馬執行 <code>pacman -Syu</code>，一切執行順利，感動QQ，然後我執行了 <code>curl</code> 想確認有沒有修好，結果我再次看到了那個一樣的，熟悉的錯誤訊息...</p>
-<p>這時我百思不得其解，我用 pacman 看安裝的套件版本確實是新的，我去解開套件來看也是新的，但是我去系統的 <code>/usr/local/</code> 下看裡面的檔案卻是舊的，重新裝了很多次也都是一樣狀況，就這樣鬼打牆很久之後，我突然察覺，<code>/usr/local/</code> 下的東西，其實是我們手動編譯安裝的，也是路徑中優先權較高的，然後我在前面有提過，我很久以前有手動編譯安裝 Brotli 套件，終於，一切真相大白，我手動裝的時間點是五年前，所以該版本沒有 <code>BrotliDecoderCreateInstance</code>，然後 Archlinux 用的是四年前版本，所以系統中其他需要 Brotli 的東西都會因此而掛掉，解決方法就是把手動裝的全部砍光光就好了。</p>
-<p>不過砍掉我手動編譯的 Brotli，也同時造成我的 nginx 再起不能，因為在設定檔內它是需要我手動編譯安裝的那那個套件，解決方法是很簡單，就把需要的 module 路徑改到 pacman 安裝的套件那邊，然後我的 nginx 就可以起來了，不過我的 blog 還是死的，非 blog 的部分倒是活著，我一開始想說是 php-fpm 的問題，看錯誤訊息發現有 permission 問題，就去改 socket file permisson 成 666，然後網站還是起不來，我研究了很久，想要看看 PHP 的錯誤訊息，但是一直看不到東西，也去看 nginx error log，journalctl 也是看沒錯誤，還以為 php-fpm 是死的，還用了</p>
-<pre><code>&lt;? echo phpinfo(); ?&gt;
-</code></pre>
-<p>然後開瀏覽器看到原始碼直接回回來，搞了一陣子想起要改用 <code>&lt;?php</code>，改下去結果又發現一切正常，最後才發現，問題是因為我在用 pacman 更新整個系統時，把 PHP 7 升級到 8，然後我的程式碼裡面有個地方寫死大版號不對的話會回錯誤訊息，但是我沒有把錯誤訊息寫到 log 中，結果就造成我一直找不到問題點。</p>
-<p>PHP 的問題解決後，我的 blog 就回到線上了，不過其實，這時候我的 mariadb 還是死的，透過 journalctl 看 log</p>
-<pre><code>sudo journalctl -xeu mariadb.service
-</code></pre>
-<p>有一行寫著：</p>
-<pre><code>Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
-</code></pre>
-<p>一開始想說是安裝失敗，後來往上找發現還有另外一行：</p>
-<pre><code>InnoDB: Upgrade after a crash is not supported. The redo log was created with MariaDB 10.4.8
-</code></pre>
-<p>意思就是如果你的 DB crash 後，沒有正常關閉的狀態下，去更新 mariadb，就會有這個錯誤，不過一開始我不以為意，因為我認為我只有 upgrade，但是不知道是何時 crash 過，後來回想，應該是 brotli 爛掉時，mariadb 就跟著起不來了，總之，這個問題的解決方法，就是退回舊的 10.4.8 然後重新啟動 DB，所以就研究了一下 Archlinux 怎樣安裝舊版的套件，基本上 pacman 是不能指定版本的，有兩個方法可以裝舊版，一個是透過系統內的 pacman cache，不過我之前在修理的時候已經清掉了，所以就只能從 <a href="https://archive.archlinux.org/packages/">Arch Linux Package Archive</a> 那邊下載特定版本的 package tar 檔案，下來用 <code>pacman -U</code> 安裝，然後因為有相依性問題，所以要把幾個需要的套件都抓下來，一起安裝：</p>
-<pre><code>pacman -U mariadb-10.4.8-2-x86_64.pkg.tar.xz \
-  mariadb-clients-10.4.8-2-x86_64.pkg.tar.xz \
-  mariadb-libs-10.4.8-2-x86_64.pkg.tar.xz
-</code></pre>
-<p>反正如果啟動失敗，也會有訊息提示你要看 log，結果把 mariadb 三個都裝下去後還真的有問題，說找不到 openssl 1.1 的檔案，所以也去抓下來手動安裝：</p>
-<pre><code>pacman -S openssl-1.1
-</code></pre>
-<p>至此，總算是修好了，接下來就是有時間要把我的 blog 系統容器化吧，有太多不是很好安裝的東西了。</p>
-<p>PS. 這篇發的出去表示真的修好了。</p>
-]]></description>
-<dc:subject>unix</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2022-12-03T00:38:10+08:00</dc:date>
-</item>
-
-<item rdf:about="https://blog.othree.net/log/2022/08/23/http-103-early-hints/">
-<title>HTTP 103 Early Hints</title>
-<link>https://blog.othree.net/log/2022/08/23/http-103-early-hints/</link>
-<description><![CDATA[<p>前幾天晚上前同事陶百貼了個 Tweet，說到 Chrome 要移除 HTTP/2 Server Push 了：</p>
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">HTTP/2 PUSH is finally going away in Chrome 106: <a href="https://t.co/FFL8hmkRyf">https://t.co/FFL8hmkRyf</a><br /><br />HTTP 103 is the best way to early-hint out-of-band.<br /><br />Thanks to the community and teams that made this possible (standards teams for 103, CDNs for implementing, Net team, huge effort)</p>-- Patrick Meenan (@patmeenan) <a href="https://twitter.com/patmeenan/status/1559943970481913856?ref_src=twsrc%5Etfw">August 17, 2022</a></blockquote>
-<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>仔細看一下，發現原來大家用 Server Push 都還是為了提升網頁第一屏的速度，但是 Server Push 一直有<a href="https://www.fastly.com/blog/faster-websites-early-priority-hints#but-what-about-http/2-server-push">一些難解的問題</a>，像是不知道 client 端有沒有 cache，實作和支援比較麻煩，而 Chrome 要移除 Server Push 前，其實先實作了 <a href="https://datatracker.ietf.org/doc/html/rfc8297">RFC-8279 的
-HTTP 103: Early Hints</a>，為的就要讓 Server Push 現在作的事情先有替代方案。</p>
-<p>Early Hints 應該算是 Fastly 提出的，RFC 文件作者是 <a href="https://twitter.com/kazuho/">Kazuho Oku</a>，實際上應該也有其他 Fastly 的人參與構思和試驗，支援 Early Hints 的環境下，一個 HTTP request 看起來就像是下面這樣：</p>
-<pre><code>Client request:
-
-  GET / HTTP/1.1
-  Host: example.com
-
-
-Server response:
-
-  HTTP/1.1 103 Early Hints
-  Link: &lt;/style.css&gt;; rel=preload; as=style
-  Link: &lt;/script.js&gt;; rel=preload; as=script
-
-  HTTP/1.1 200 OK
-  Date: Fri, 26 May 2017 10:02:11 GMT
-  Content-Length: 1234
-  Content-Type: text/html; charset=utf-8
-  Link: &lt;/style.css&gt;; rel=preload; as=style
-  Link: &lt;/script.js&gt;; rel=preload; as=script
-
-  &lt;!doctype html&gt;
-  [... rest of the response body is omitted from the example ...]
-</code></pre>
-<p>很特別的，就是在於有兩段 response，第一段就是 103 的 status code，然後內容就是 Link headers 了，接著才是常見的 200 回應，看到這邊，自然的出現第一個問題：現有的瀏覽器能相容嗎？</p>
-<p>這個問題在 <a href="https://stackoverflow.com/questions/73320707/http-103-responses-what-happens-if-a-server-sends-a-103-early-hints-response-to/73320831#73320831">Stack Overflow 也有人問</a>，結果回答在 RFC 文件內其實就有，只不過是放在第三章的安全性那邊，我一開始也因為先跳過這章而沒發現，總之關於這個問題，就是如果是 HTTP/2 的話，就比較沒問題，HTTP/1.1 的話，理論上應該要可以相容（沒功能但是也不出錯），但是無法保證現在有在用的 HTTP/1.1 client 都有正確的處理 1xx response，所以比較建議是 HTTP/2 才回 103。</p>
-<p>過了兩天後，我更仔細的研究一下，發現其實早在 HTTP/1.1 時，就有把 <a href="https://www.rfc-editor.org/rfc/rfc9110#section-15.2-3">1xx 的處理需求定義</a>好了：</p>
-<blockquote>
-<p>A client MUST be able to parse one or more 1xx responses received prior to a final response, even if the client does not expect one. A user agent MAY ignore unexpected 1xx responses.</p>
-</blockquote>
-<p>就是說早在 HTTP/1.1 時的設計，就允許 1xx 接 200 的回應，而且還應該要支援多個 1xx 回應，而最後的那個 200（其實是 2xx 到 5xx 都可以），則是稱為 final response，至於這處理的方式，在 WHATWG 的 fetch 的 4.7 章則有清楚的寫下流程，在該章節的第九項裡面的第五子項目，寫成程式碼大概長成：</p>
-<pre><code class="language-js">while (true) {
-  const response = await networkTransmit();
-  const status = response.statusCode;
-    
-  if (status &gt;= 100 &amp;&amp; status &lt;= 199) {
-    // handle 1xx response
-    continue;
-  } else {
-    break;
-  }
-}
-
-// handle final response
-</code></pre>
-<p>所以理論上，Early Hints 的設計在正確支援 HTTP/1.1 但是還沒有支援 Early Hints 的瀏覽器就應該要可以正常的略過，而不會把它當成是 final response。</p>
-<p>解決完第一個問題後，接著來仔細的看看剛剛範例的 server response：</p>
-<pre><code>HTTP/1.1 103 Early Hints
-Link: &lt;/style.css&gt;; rel=preload; as=style
-Link: &lt;/script.js&gt;; rel=preload; as=script
-
-HTTP/1.1 200 OK
-Date: Fri, 26 May 2017 10:02:11 GMT
-Content-Length: 1234
-Content-Type: text/html; charset=utf-8
-Link: &lt;/style.css&gt;; rel=preload; as=style
-Link: &lt;/script.js&gt;; rel=preload; as=script
-
-&lt;!doctype html&gt;
-[... rest of the response body is omitted from the example ...]
-</code></pre>
-<p>不知道會不會有人疑惑，為什麼不直接用 200 response 裡面回應的 Link header 就好了？其實我一開始也是這樣想，不過這完全是因為這個問題落入身為前端工程師的我的盲點之中，因為現在前端開發主流是 SPA，通常 HTTP server 回的就是一個靜態的 HTML 檔案，所以回應速度超快。不過，如果回應的 HTML 文件，是由程式語言動態生成的，或許還需要查詢一下資料庫之類的，那這個回應時間就會變慢了，而 HTTP 103 Early Hints 就是在這種狀態下用的，在你的 server 端程式開始處理 request 之前，就先丟 103 的 status code 和 Early Hints 的內容回給瀏覽器，然後才接著處理資料和生成 HTML 文件，這種情境下，Early Hints 就顯得比較有差異了。Nitropack 的<a href="https://nitropack.io/blog/post/early-hints">文章</a>就解釋的很清楚，還有附上詳細的說明圖。</p>
-<p>相較於 Server Push，其實 Early Hints 的設計簡單很多，所有的傳輸還是從 client 端看有沒有 cache ，決定要不要發 request，而這種操作已經非常成熟（相較於 server push），相信很多地方可以直接使用現有的程式碼來實作，最大的隱憂，就只是不相容 HTTP/1.0，然後會擔心有 HTTP/1.1 的 client 端沒正確實作吧，畢竟 1xx 的處理機制雖然早早就設計好，但是實際上 1xx 有被廣泛使用也是這幾年的事。</p>
-<p>目前 Chrome 是從 103 <a href="https://developer.chrome.com/blog/new-in-chrome-103/">開始支援 Early Hints</a> 的，並且預計在 106 <a href="https://developer.chrome.com/blog/removing-push/">正式移除 Server Push</a>，至於其他瀏覽器則是都還沒有支援， Firefox 是有計畫要支援，<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1407355">進度</a>有點緩慢就是。</p>
-<p>最後，Fastly 其實有提供一個測試用的網站：<a href="https://early-hints.fastlylabs.com/">https://early-hints.fastlylabs.com/</a>，不過這個網站不是用來測試你的瀏覽器支不支援 Early Hints 的，而是用來測試先 103 然後接 200 的 response 會不會有非預期的問題（也就是相容性的測試），如果想要直接看看來回的內容，也可以直接用 curl：</p>
-<pre><code class="language-sh">curl -v https://early-hints.fastlylabs.com
-</code></pre>
-]]></description>
-<dc:subject>web</dc:subject>
-<dc:creator>othree</dc:creator>
-<dc:date>2022-08-23T22:27:35+08:00</dc:date>
 </item>
 
 

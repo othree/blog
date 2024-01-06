@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2023-11">November 2023</b:listData>
+
+			<b:previous>
+				<b:mTitle>October 2023</b:mTitle>
+				<b:mDate>2023/10</b:mDate>
+			</b:previous>
+
+
+			<b:next>
+				<b:mTitle>December 2023</b:mTitle>
+				<b:mDate>2023/12</b:mDate>				
+			</b:next>
+
+		</b:entriesMeta>
+
+		<b:entry entryID="000999" baseName="sign-in-with-">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2023-11-08</b:date>
+				<b:time>21:52:51</b:time>
+			</b:datetime>
+			<b:category>web</b:category>
+			<b:title>Sign-in with OOO ID</b:title>
+			<b:content>
+				<b:summary>最近工作上在研究 Sign-in with Apple/Google ID，其實這件事情也作過很多次了，不過距離上次也有點久了，不知道那些 SDK 有沒有什麼改變，所以還是要重頭來，而且這次多研究了一個 Apple，有搞懂些以前沒釐清的細節，想說紀錄一下。 首先就是，我發現到 Google 和 Apple 現在都會回一個 ID Token，內容則是 JWT，而且是認真的 JWT，真的會有帶一點使用者資料（像是 email）的，可以用來作 user authentication（認證）用的，這在以前只有 OAuth 2.0 的時候是沒有的，查一陣子資料才發現這其實是 OpenID Connect（簡稱 OIDC） 規範的，該規範是是 2014 年發布的，其實還比 JWT 早定稿。 相較於 OAuth 2.0 做的是 authorization（授權），OIDC 做的則是 authentication（認證），只不過 OIDC 是整個依附在...</b:summary>
+				<b:mainContent><p>最近工作上在研究 Sign-in with Apple/Google ID，其實這件事情也作過很多次了，不過距離上次也有點久了，不知道那些 SDK 有沒有什麼改變，所以還是要重頭來，而且這次多研究了一個 Apple，有搞懂些以前沒釐清的細節，想說紀錄一下。</p>
+<p>首先就是，我發現到 Google 和 Apple 現在都會回一個 <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">ID Token</a>，內容則是 JWT，而且是認真的 JWT，真的會有帶一點使用者資料（像是 email）的，可以用來作 user authentication（認證）用的，這在以前只有 OAuth 2.0 的時候是沒有的，查一陣子資料才發現這其實是 <a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect</a>（簡稱 OIDC） 規範的，該規範是是 2014 年發布的，其實還比 JWT 早定稿。</p>
+<p>相較於 OAuth 2.0 做的是 authorization（授權），OIDC 做的則是 authentication（認證），只不過 OIDC 是整個依附在 OAuth 2.0 的架構上，利用的就是 OAuth 2.0 的 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.1">response_type</a>，本來只有 <code>code</code> 和 <code>token</code> 兩種，在 OIDC 多提供了 <a href="https://openid.net/specs/openid-connect-core-1_0.html#Authentication"><code>id_token</code></a>，ID Token 是用 JWT，而且也有明確定義有裡面的 user profile 相關的<a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims">欄位</a>（不是定義哪些是必須提供，而是定義好語意和對應的欄位名稱）。</p>
+<p>第二個則是我一直存疑已久的問題，就是 OAuth 2.0 的設計上基本是用 redirection flow，而且 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.2"><code>redirect_uri</code></a> 也是必要的，但是 Google 其實一直都支援純 JS 的方案，也就是說 Relying Party(應用程式端)不需要實作一個 redirection endpoint 來接資料，前端的 JS 就可以直接拿到 authorization code 和 access token，這次也認真的研究了這個問題，結果發現，Apple 的 OAuth 流程中，<a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes">response_mode</a> 給的值是目前不在標準內的 <code>web_message</code>，而 Google 則是 <a href="https://www.rfc-editor.org/rfc/rfc6749#section-3.1.2"><code>redirect_uri</code></a> 給的是一個沒見過的 scheme：<code>storagerelay://</code> 的 URI。</p>
+<p>其實我一開始以為這些設計，是各個公司自己想一想然後就自己做下去的，結果沒想到其實不是，首先是 Apple 的實作，用的是 <a href="https://datatracker.ietf.org/doc/html/draft-sakimura-oauth-wmrm-00">OAuth 2.0 Web Message Response Mode</a> 這份草稿的設計，這份草稿其中一位作者 Nat Sakimura 現在是 OpenID 的 chairman，而且他也是其他很多相關規範的作者（像是 <a href="https://www.rfc-editor.org/rfc/rfc7519">JWT</a>)，不過這份草稿只有一版且沒人更新，有很多細節沒有寫定，大部分都是提供範例程式碼而已，所以 Apple 有些東西不是照範例做，例如 message 的 payload；Google 實作的則是 <a href="https://lists.openid.net/pipermail/openid-specs-ab/2015-November/005865.html">OAuth 2.0 IDP-IFrame-based Implicit Flow</a>，這份文件其實是我最後才找到的，因為這份只有出現在 OpenID 的 mailing-list，而且也完全沒有討論和更新，不像前一份還有發到 IETF，回到文件內容，這份的作者，就全部都是 Google 的人了，內容完整許多，也有定義好 message 的 payload 結構，不過還是有些細節有缺，像是認證完成後的回傳事件，現在 Google 用的事件名稱在這份文件中就找不到。</p>
+<p>除了這兩份草稿外，其實還有一份是 <a href="https://curity.io/">Curity</a> 提出的 <a href="https://datatracker.ietf.org/doc/html/draft-ideskog-assisted-token-05">OAuth 2.0 Assisted Token</a>，一樣有發到 IETF，而且還比較有在更新，最新一版是 2021 的，Assisted Token 的設計是多給了一個流程叫做 Assisted Token Flow，用不一樣的 URL 來使用這個 flow，這個流程的最後一步就是 postMessage 回到 opener/parent，規範寫的比較完整，包括各種新屬性的 registry、message 的 payload，還有安全性相關的考量都有，不過我看一看有些地方覺得有些疑惑，第一個是 message payload 的結構似乎辨識度沒很高，第二個則是完全沒提到 refresh token 和 authorization code，不確定是目前還沒考慮到那邊，還是因為安全性考量把它們先排除。</p>
+<p>第三個是 Apple 的實作，雖然基本上還是照著 OAuth，但是其實限制更多，首先就是，<code>scope</code> 就只有 email 和 name 可以拿，而且 Apple 做成，只有第一次 authorization 時，會把 user profile 傳給 RP，之後是拿不到的（不過 email 有在 id token 內），然後，雖然可以拿到 access token，但是其實完全沒有可以使用它的 API endpoint，所以什麼事情都不能作，真的只能用來做 authentication，最後一個，就是用 code 換 token 時，要給的 <code>client_secret</code> 參數還特別麻煩，要<a href="https://developer.apple.com/documentation/accountorganizationaldatasharing/creating-a-client-secret">自己組一個 JWT</a>（但是也因此會 expire 比較安全），然後用之前從 Apple Developer 後台生好的 secret key 去算 signature。</p>
+<p>最後一個想紀錄的就是，這幾份標準和文件裡面幾乎都有一個章節是 Security Consideration，內容雖然不全面但是還蠻值得一看的，也有提到一些攻擊手法，而除此之外，其實還有一份文件：<a href="https://www.rfc-editor.org/rfc/rfc6819">RFC6819: OAuth 2.0 Threat Model and Security Considerations</a>，內容就是有說明 OAuth 2.0 各種設計在安全性上的考量（像是為什麼有 <a href="https://www.rfc-editor.org/rfc/rfc6819#section-3.3">Refresh Token</a>，什麼情境下它有助於安全性的提升），以及各種可能的攻擊手法。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>CSP : O3noBLOG</title>
-    <meta name="description" content=" Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 JavaScript Application Architecture On The Road To 2015 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="東京點燈" href="/log/2015/02/10/tokyo-illumination/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2015/02/14/csp/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2015/02/14/csp/amp/"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="CSP"/>
-    <meta property="og:description" content=" Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 JavaScript Application Architecture On The Road To 2015 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2015/02/14/csp/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg"/>
-    <meta property="og:image:width" content="618"/>
-    <meta property="og:image:height" content="800"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content=" Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 JavaScript Application Architecture On The Road To 2015 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2015/02/14/csp/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"/><script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2015/02/14/csp/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2015-02-14T15:26:33",
+        "dateModified": "2015-02-14T15:26:33",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+            
+          "url": "https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg",
+          "width": 618,
+          "height": 800
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,18 +52,22 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
       <div class="pure-g">
@@ -75,26 +84,26 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-csp">
+          <article id="entry-csp">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2015-02-14T15:26:33" id="date-2015-02-14">
+              <time datetime="2015-02-14T15:26:33" id="date-2015-02-14">
                 <span class="mon">02月</span>
                 <span class="day">14日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2015/02/14/csp/">CSP</a>
-              </h3>
+              <h3>CSP</h3>
             </header>
-            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/16440158642/" title="CSP by othree, on Flickr"><img itemprop="url image" src="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg" width="618" height="800" alt="CSP" srcset="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg 791w, https://farm9.staticflickr.com/8598/16440158642_889b87bda0_h.jpg 1236w"><meta itemprop="width" content="618"/><meta itemprop="height" content="800"/></img></a></p>
-
-<p>Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 <a href="https://medium.com/@addyosmani/javascript-application-architecture-on-the-road-to-2015-d8125811101b">JavaScript Application Architecture On The Road To 2015</a> 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。</p>
-<p>CSP 其實不是新東西，是 <a href="http://en.wikipedia.org/wiki/Tony_Hoare">C. A. R. Hoare</a> 在 1978 年就發表的<a href="http://www.cs.ucf.edu/courses/cop4020/sum2009/CSP-hoare.pdf">論文</a>(PDF)，1985 還出了整本書來介紹，而且<a href="http://www.usingcsp.com/cspbook.pdf">全文 PDF</a> 都有在網路上，可是這本書實在太理論了，看了一點點就看不下去，只好找其它資源，發現還真的蠻少的，但是確有找到一些近幾年的實做，像是 Go 的 routine 間用 channel 溝通，或是 Clojure 的 core.async，當然 Addy Osmani 那篇也有提到 JavaScript 的部分。</p>
-
-<p>根據我目前淺薄的理解，CSP 就是用 channel 的非同步溝通機制，channel 怎麼用呢，顧名思義，就是一個傳遞訊息用的頻道，不過我覺得用管線可以更精確的描述它，而且這是一個單向的管線，一邊只能傳訊息進去，一邊只能拿訊息出來，可以達成非同步的溝通最主要在於拿訊息這邊，當你在其中一個 process 中說你要跟某個 channel 拿一個訊息出來時，如果那個 channel 裡面沒有東西，則這邊的 process 就會停下來等到那個 channel 有訊息出現，這個等待的機制不同語言有各自的方法實做。</p>
-
-<p>先來看看 Go 的範例吧，因為實在是比 JavaScript 的直覺多了：</p>
-
-<pre><code>package main
+            <section>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/16440158642/" title="CSP by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg" width="618" height="800" alt="CSP" srcset="https://farm9.staticflickr.com/8598/16440158642_62042f3837_b.jpg 791w, https://farm9.staticflickr.com/8598/16440158642_889b87bda0_h.jpg 1236w"/>
+                </a>
+              </p>
+              <p>Communicating Sequential Processes，簡稱 CSP，和 Content Security Policy 不一樣，是用來處理非同步執行序之間溝通的一個數學模型，我最早是在 Addy Osmani 的 <a href="https://medium.com/@addyosmani/javascript-application-architecture-on-the-road-to-2015-d8125811101b">JavaScript Application Architecture On The Road To 2015</a> 這篇文章裡面看到的，花了蠻多時間試著去瞭解，最近終於覺得懂一點皮毛可以紀錄一下了。</p>
+              <p>CSP 其實不是新東西，是 <a href="http://en.wikipedia.org/wiki/Tony_Hoare">C. A. R. Hoare</a> 在 1978 年就發表的<a href="http://www.cs.ucf.edu/courses/cop4020/sum2009/CSP-hoare.pdf">論文</a>(PDF)，1985 還出了整本書來介紹，而且<a href="http://www.usingcsp.com/cspbook.pdf">全文 PDF</a> 都有在網路上，可是這本書實在太理論了，看了一點點就看不下去，只好找其它資源，發現還真的蠻少的，但是確有找到一些近幾年的實做，像是 Go 的 routine 間用 channel 溝通，或是 Clojure 的 core.async，當然 Addy Osmani 那篇也有提到 JavaScript 的部分。</p>
+              <p>根據我目前淺薄的理解，CSP 就是用 channel 的非同步溝通機制，channel 怎麼用呢，顧名思義，就是一個傳遞訊息用的頻道，不過我覺得用管線可以更精確的描述它，而且這是一個單向的管線，一邊只能傳訊息進去，一邊只能拿訊息出來，可以達成非同步的溝通最主要在於拿訊息這邊，當你在其中一個 process 中說你要跟某個 channel 拿一個訊息出來時，如果那個 channel 裡面沒有東西，則這邊的 process 就會停下來等到那個 channel 有訊息出現，這個等待的機制不同語言有各自的方法實做。</p>
+              <p>先來看看 Go 的範例吧，因為實在是比 JavaScript 的直覺多了：</p>
+              <pre>
+                <code>package main
 import "fmt"
 
 func main() {
@@ -105,13 +114,12 @@ func main() {
     msg := &lt;-messages
     fmt.Println(msg)
 }
-</code></pre>
-
-<p>這段程式碼是基於 Go by Example 說明 channel 的<a href="https://gobyexample.com/channels">範例</a>，程式碼很好理解，<code>messages := make(chan string, 1)</code>這行用 make 產生一個 channel 指派給 messages 這個變數，<code>messages &lt;- "ping"</code> 表示把 "ping" 這個字串丟進去 message 這個 channel 裡面，然後 <code>msg := &lt;-messages</code> 表示從 message channel 裡面抓訊息出來，丟到 msg 這個變數，<code>:=</code> 是指派同時宣告變數的運算子，<code>&lt;-</code> 則是用來描述操作中訊息傳遞方向用的運算子，當它是箭頭就很好理解，在 Go 裡面稱為 <a href="https://golang.org/ref/spec#Receive_operator">receive operator</a>。</p>
-
-<p>在第一個例子當中，因為是先送資料進去 channel 才拿出來，所以還不太有感覺，接下來看第二個例子，一樣是 Go by Example 的，這段是 <a href="https://gobyexample.com/channel-synchronization">Channel Synchronization</a> 的範例：</p>
-
-<pre><code>package main
+</code>
+              </pre>
+              <p>這段程式碼是基於 Go by Example 說明 channel 的<a href="https://gobyexample.com/channels">範例</a>，程式碼很好理解，<code>messages := make(chan string, 1)</code>這行用 make 產生一個 channel 指派給 messages 這個變數，<code>messages &lt;- "ping"</code> 表示把 "ping" 這個字串丟進去 message 這個 channel 裡面，然後 <code>msg := &lt;-messages</code> 表示從 message channel 裡面抓訊息出來，丟到 msg 這個變數，<code>:=</code> 是指派同時宣告變數的運算子，<code>&lt;-</code> 則是用來描述操作中訊息傳遞方向用的運算子，當它是箭頭就很好理解，在 Go 裡面稱為 <a href="https://golang.org/ref/spec#Receive_operator">receive operator</a>。</p>
+              <p>在第一個例子當中，因為是先送資料進去 channel 才拿出來，所以還不太有感覺，接下來看第二個例子，一樣是 Go by Example 的，這段是 <a href="https://gobyexample.com/channel-synchronization">Channel Synchronization</a> 的範例：</p>
+              <pre>
+                <code>package main
 
 import "fmt"
 import "time"
@@ -131,23 +139,17 @@ func main() {
 
     &lt;-done
 }
-</code></pre>
-
-<p>這個範例稍微複雜一點，<code>done := make(chan bool, 1)</code> 先產生一個 done channel，然後用 <code>go worker(done)</code> 產生一個 concurrent routine，跑的是 worker 這個 function，內容在 main 的上面，基本上就是 sleep 一下然後傳訊息回 done channel，然後 main 最後的 <code>&lt;-done</code> 就是從 done channel 拿訊息出來，先不管平行出去的 routine，通常的程式跑到這行結束，整個程式就結束關閉了，不過，就是這個不過，正常情況下，有 <code>&lt;-channel</code> 的話，該 routine 程式執行到這邊就會暫停下來，直到有從 channel 裡面拿到訊息才會繼續跑下去（或是裡面已經有訊息，直接拿到就繼續往下）。</p>
-
-<p>Go 的 channel 還有一些細節可以參考 <a href="http://guzalexander.com/2013/12/06/golang-channels-tutorial.html">Golang channels tutorial</a> 這篇文章，其實就是一個可以跨 routine 的傳遞資料的管道，資料可以一直傳，沒有限制數量，不過還有一些相關的細節，像是 sync channel，還有 channel 的 buffer 等等。</p>
-
-<p>綜合以上的兩個範例，可以歸納出來，要支援 CSP 有兩個必要條件，第一個是可以做得出 channel 物件的機制，可以放資料進去，可以拿資料出來，是先進先出機制，這部分其實不是問題，問題是第二個條件，程式碼要能跑一跑停下來等訊息然後又繼續跑下去，這可不是用 <code>while (1)</code> 可以處理的狀況，用 recursive function call 效能也不太好，以前的 JavaScript 是無法良好的達成第二個條件的，直到 ES6 的 async function 出現。</p>
-
-<p>ES6 async function 之前有<a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">文章</a>介紹過，這邊就不再說明，不過總之就是執行到 <code>yield</code> 後，這個 function call 就會先停下來，把值傳出，直到下次再次執行該 function 才會繼續往下執行，這樣停下來的機制，正好可以利用來作為 CSP 等訊息的機制，不過利用 <code>yield</code> 的話有一個限制，就是一定要在 async function 裡面才可以利用 channel，不像 Go 由於是建在語言裡面的，main thread 也可以跟 channel 溝通。</p>
-
-<p>雖然說可以利用 async function 可以做出 CSP 的架構出來，不過要只用 async function 來寫出像 Go 那樣簡短的程式碼實在是很困難，中間還有很多機制需要補起來，所以就開始有 library 實做，目前最有名的是 <a href="https://github.com/ubolonton/js-csp">js-csp</a>，Facebook 最近的 React.js Conf 其中一場議程介紹 CSP 時也是用 js-csp 做範例，錄影在這，作為入門 CSP 我覺得是蠻不錯的一場演講：</p>
-
-<iframe width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"/>
-
-<p>js-csp 裡面其實做了很多事情，目前看起來像是參考 Go 來設計，例如這樣的 Go <a href="http://talks.golang.org/2013/advconc.slide#6">程式碼</a>：</p>
-
-<pre><code>package main
+</code>
+              </pre>
+              <p>這個範例稍微複雜一點，<code>done := make(chan bool, 1)</code> 先產生一個 done channel，然後用 <code>go worker(done)</code> 產生一個 concurrent routine，跑的是 worker 這個 function，內容在 main 的上面，基本上就是 sleep 一下然後傳訊息回 done channel，然後 main 最後的 <code>&lt;-done</code> 就是從 done channel 拿訊息出來，先不管平行出去的 routine，通常的程式跑到這行結束，整個程式就結束關閉了，不過，就是這個不過，正常情況下，有 <code>&lt;-channel</code> 的話，該 routine 程式執行到這邊就會暫停下來，直到有從 channel 裡面拿到訊息才會繼續跑下去（或是裡面已經有訊息，直接拿到就繼續往下）。</p>
+              <p>Go 的 channel 還有一些細節可以參考 <a href="http://guzalexander.com/2013/12/06/golang-channels-tutorial.html">Golang channels tutorial</a> 這篇文章，其實就是一個可以跨 routine 的傳遞資料的管道，資料可以一直傳，沒有限制數量，不過還有一些相關的細節，像是 sync channel，還有 channel 的 buffer 等等。</p>
+              <p>綜合以上的兩個範例，可以歸納出來，要支援 CSP 有兩個必要條件，第一個是可以做得出 channel 物件的機制，可以放資料進去，可以拿資料出來，是先進先出機制，這部分其實不是問題，問題是第二個條件，程式碼要能跑一跑停下來等訊息然後又繼續跑下去，這可不是用 <code>while (1)</code> 可以處理的狀況，用 recursive function call 效能也不太好，以前的 JavaScript 是無法良好的達成第二個條件的，直到 ES6 的 async function 出現。</p>
+              <p>ES6 async function 之前有<a href="https://blog.othree.net/log/2014/05/24/es6-iterable/">文章</a>介紹過，這邊就不再說明，不過總之就是執行到 <code>yield</code> 後，這個 function call 就會先停下來，把值傳出，直到下次再次執行該 function 才會繼續往下執行，這樣停下來的機制，正好可以利用來作為 CSP 等訊息的機制，不過利用 <code>yield</code> 的話有一個限制，就是一定要在 async function 裡面才可以利用 channel，不像 Go 由於是建在語言裡面的，main thread 也可以跟 channel 溝通。</p>
+              <p>雖然說可以利用 async function 可以做出 CSP 的架構出來，不過要只用 async function 來寫出像 Go 那樣簡短的程式碼實在是很困難，中間還有很多機制需要補起來，所以就開始有 library 實做，目前最有名的是 <a href="https://github.com/ubolonton/js-csp">js-csp</a>，Facebook 最近的 React.js Conf 其中一場議程介紹 CSP 時也是用 js-csp 做範例，錄影在這，作為入門 CSP 我覺得是蠻不錯的一場演講：</p>
+              <amp-iframe sandbox="allow-scripts allow-same-origin" layout="responsive" width="853" height="480" src="https://www.youtube.com/embed/W2DgDNQZOwo?list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr" frameborder="0" allowfullscreen="allowfullscreen"/>
+              <p>js-csp 裡面其實做了很多事情，目前看起來像是參考 Go 來設計，例如這樣的 Go <a href="http://talks.golang.org/2013/advconc.slide#6">程式碼</a>：</p>
+              <pre>
+                <code>package main
 import "fmt"
 import "time"
 
@@ -172,11 +174,11 @@ func main() {
     time.Sleep(1 * time.Second)
     &lt;-table // game over; grab the ball
 }
-</code></pre>
-
-<p>改成用 js-csp 寫的話就變成：</p>
-
-<pre><code>function* player(name, table) {
+</code>
+              </pre>
+              <p>改成用 js-csp 寫的話就變成：</p>
+              <pre>
+                <code>function* player(name, table) {
   while (true) {
     var ball = yield csp.take(table);
     if (ball === csp.CLOSED) {
@@ -200,124 +202,36 @@ csp.go(function* () {
   yield csp.timeout(1000);
   table.close();
 });
-</code></pre>
-
-<p>用 <code>csp.chan</code> 產生 channel，用 <code>yield csp.take</code> 代替從 channel 取訊息，用 <code>yield csp.put</code> 代替送訊息到 channel，然後最重要的是用 <code>csp.go</code> 來代替從 Go 裡面用 <code>go</code> 產生 routine 的操作，然後不說可能沒人注意到，js-csp 把 routine(<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/process.js">process</a>)、<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/dispatch.js">ticker</a> 等比較底層的基礎建設都做起來了，也就是如此才能讓程式碼和 Go 的看起來這麼接近。</p>
-
-<p>js-csp 基本上就是仿照 Go 的的語法來設計，只是常常需要 yield，語法還是不如 Go 來的簡潔，至於何種情境比較適合使用 CSP 呢，以 channel 的特性來說，目前看起來是常常會發生的 event 比較適合，像是常常被拿出來講的 mousemove 事件，另外就是有要分 thread 做平行運算的話也不錯，不過目前看起來是無法接上 WebWorker，主要是因為 <code>postMessage</code> 無法傳遞物件 instance 過去，而是會<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/The_structured_clone_algorithm">複製</a>一份；另外因為 channel 可以關起來，所以要用來實做 Promise 也不是不行，不過就沒什麼必要如此搞就是。</p>
-
-<p>講到做事件的處理，應該會有人注意到實做上的細節問題，就是要怎麼讓多個 process 去讀取同一個 channel 呢，一般而言，channel 的訊息是只能讀取一次的，就是說雖然你可以多個 process 等同一個 channel 的訊息，但是只會有一個 process 會真的拿到新的訊息，而實務上，一個事件綁了多個 handler 的情形非常常見，照 channel 的機制，應該是不能用下去的，不然就要自己管裡 handler，又多繞了一圈，事實上，CSP 模型是有一些<a href="https://github.com/ubolonton/js-csp/blob/master/src/csp.operations.js">運算</a>可以用的，像要處理多個 handler 的問題，就可以用 <code>mult</code>，可以把一個 channel 轉成<a href="http://rupsshankar.tumblr.com/post/66648884392/demystifying-core-asyncs-tap-and-mult">一對多</a>，其它還有多對一的 share resource、Clojure 的 onto <a href="http://www.slideshare.net/borgesleonardo/clojure-reducers-cljsyd-aug-2012?ref=http://www.leonardoborges.com/writings/presentations/">等等</a>，應該是想的到的情形都已經有數學模型或是不同語言的實做可以處理了，不過 js-csp 在這部分還在開發中，像是 mult 就還在 beta 階段，其實還不太能真的用，作者有說現在的介面可能會改，也因此還沒寫到文件裡面。</p>
-
-<p>最後想要記錄一下 Clojure 所提出的 transducer，transducer 的目的是讓 reduce 的操作可以用 compose 來組合，什麼是 reduce  操作呢，其實包括像 map、filter 都可以算是，但是這些操作以前是無法用 function composition 來做組合的，直到有了 transducer，又加上 transducer 把處理資料的型別也 decouple 出去了，所以 channel message 也可以利用。有兩篇文章可以參考，第一篇文章是 <a href="http://phuu.net/2014/08/31/csp-and-transducers.html">CSP and transducers in JavaScript</a>，這篇講得非常清楚，他是從無到有把 transducer 建構起來，我是第二次認真看這篇文章才理解的，另外一篇文章是 <a href="http://jlongster.com/Transducers.js--A-JavaScript-Library-for-Transformation-of-Data">Transducers.js: A JavaScript Library for Transformation of Data</a>，是 Transducer.js 的作者寫的，從不太一樣的角度來看 Transducer 這個設計，有機會再來分享詳細一點。</p>
-
-<p>這篇文章其實也不算是介紹或教學 CSP on JavaScript，比較是記錄一些我花時間想辦法理解的問題，包括為什麼現在才有人用 JavaScript 實做 CSP，實際上怎麼實做，目前適用的地方，還有整理了對 transducer 的理解，如果單純是想理解 CSP，除了前面提到的文章之外，還有幾篇文章可以參考 <a href="https://swannodette.github.io/2013/08/24/es6-generators-and-csp/">ES6 Generators Deliver Go Style Concurrency</a>、<a href="http://jlongster.com/Taming-the-Asynchronous-Beast-with-CSP-in-JavaScript">Taming the Asynchronous Beast with CSP Channels in JavaScript</a>。</p>
-</section>
+</code>
+              </pre>
+              <p>用 <code>csp.chan</code> 產生 channel，用 <code>yield csp.take</code> 代替從 channel 取訊息，用 <code>yield csp.put</code> 代替送訊息到 channel，然後最重要的是用 <code>csp.go</code> 來代替從 Go 裡面用 <code>go</code> 產生 routine 的操作，然後不說可能沒人注意到，js-csp 把 routine(<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/process.js">process</a>)、<a href="https://github.com/ubolonton/js-csp/blob/master/src/impl/dispatch.js">ticker</a> 等比較底層的基礎建設都做起來了，也就是如此才能讓程式碼和 Go 的看起來這麼接近。</p>
+              <p>js-csp 基本上就是仿照 Go 的的語法來設計，只是常常需要 yield，語法還是不如 Go 來的簡潔，至於何種情境比較適合使用 CSP 呢，以 channel 的特性來說，目前看起來是常常會發生的 event 比較適合，像是常常被拿出來講的 mousemove 事件，另外就是有要分 thread 做平行運算的話也不錯，不過目前看起來是無法接上 WebWorker，主要是因為 <code>postMessage</code> 無法傳遞物件 instance 過去，而是會<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/The_structured_clone_algorithm">複製</a>一份；另外因為 channel 可以關起來，所以要用來實做 Promise 也不是不行，不過就沒什麼必要如此搞就是。</p>
+              <p>講到做事件的處理，應該會有人注意到實做上的細節問題，就是要怎麼讓多個 process 去讀取同一個 channel 呢，一般而言，channel 的訊息是只能讀取一次的，就是說雖然你可以多個 process 等同一個 channel 的訊息，但是只會有一個 process 會真的拿到新的訊息，而實務上，一個事件綁了多個 handler 的情形非常常見，照 channel 的機制，應該是不能用下去的，不然就要自己管裡 handler，又多繞了一圈，事實上，CSP 模型是有一些<a href="https://github.com/ubolonton/js-csp/blob/master/src/csp.operations.js">運算</a>可以用的，像要處理多個 handler 的問題，就可以用 <code>mult</code>，可以把一個 channel 轉成<a href="http://rupsshankar.tumblr.com/post/66648884392/demystifying-core-asyncs-tap-and-mult">一對多</a>，其它還有多對一的 share resource、Clojure 的 onto <a href="http://www.slideshare.net/borgesleonardo/clojure-reducers-cljsyd-aug-2012?ref=http://www.leonardoborges.com/writings/presentations/">等等</a>，應該是想的到的情形都已經有數學模型或是不同語言的實做可以處理了，不過 js-csp 在這部分還在開發中，像是 mult 就還在 beta 階段，其實還不太能真的用，作者有說現在的介面可能會改，也因此還沒寫到文件裡面。</p>
+              <p>最後想要記錄一下 Clojure 所提出的 transducer，transducer 的目的是讓 reduce 的操作可以用 compose 來組合，什麼是 reduce  操作呢，其實包括像 map、filter 都可以算是，但是這些操作以前是無法用 function composition 來做組合的，直到有了 transducer，又加上 transducer 把處理資料的型別也 decouple 出去了，所以 channel message 也可以利用。有兩篇文章可以參考，第一篇文章是 <a href="http://phuu.net/2014/08/31/csp-and-transducers.html">CSP and transducers in JavaScript</a>，這篇講得非常清楚，他是從無到有把 transducer 建構起來，我是第二次認真看這篇文章才理解的，另外一篇文章是 <a href="http://jlongster.com/Transducers.js--A-JavaScript-Library-for-Transformation-of-Data">Transducers.js: A JavaScript Library for Transformation of Data</a>，是 Transducer.js 的作者寫的，從不太一樣的角度來看 Transducer 這個設計，有機會再來分享詳細一點。</p>
+              <p>這篇文章其實也不算是介紹或教學 CSP on JavaScript，比較是記錄一些我花時間想辦法理解的問題，包括為什麼現在才有人用 JavaScript 實做 CSP，實際上怎麼實做，目前適用的地方，還有整理了對 transducer 的理解，如果單純是想理解 CSP，除了前面提到的文章之外，還有幾篇文章可以參考 <a href="https://swannodette.github.io/2013/08/24/es6-generators-and-csp/">ES6 Generators Deliver Go Style Concurrency</a>、<a href="http://jlongster.com/Taming-the-Asynchronous-Beast-with-CSP-in-JavaScript">Taming the Asynchronous Beast with CSP Channels in JavaScript</a>。</p>
+            </section>
             <footer>
-              <a href="/log/script/" rel="tag">SCRIPT</a>
-            </footer>
+      文章分類：
+      <a href="/log/script/" rel="tag">SCRIPT</a><a class="canonical" href="/log/2015/02/14/csp/" title="「CSP」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>CSP</strong>發表於 2015-02-14，文章類別為
-			  <a href="/log/script/">SCRIPT</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2015/02/10/tokyo-illumination/"><span class="prefix">上一篇：</span>東京點燈<time>2015-02-10</time></a><a class="next pn" href="/log/2015/03/12/macbook-2015/"><span class="prefix">下一篇：</span>MacBook 2015<time>2015-03-12</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是<a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a>的個人部落格，主要內容為網路標準、網頁設計，穿插些ACG心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/12/singapore-2022/" title="2023-05-12">新加坡 2022</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/04/the-railroad-museum/" title="2023-05-04">大宮鐵道博物館</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/03/sakura-tram/" title="2023-05-03">荒川線（Sakura Tram）一日遊</a>
-            </li>
-            <li>
-              <a href="/log/2023/05/01/2023-tokyo/" title="2023-05-01">2023 Tokyo</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(40)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(132)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(147)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(201)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/site/happybusy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>

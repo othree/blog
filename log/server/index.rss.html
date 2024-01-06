@@ -1,0 +1,776 @@
+
+
+O3noBLOG - server
+https://blog.othree.net//log/ server/
+
+Copyright 2021
+2021-08-02 22:23
+http://www.movabletype.org/?v=4.381
+http://blogs.law.harvard.edu/tech/rss 
+
+
+
+Static Site Hosting 服務需求
+&lt;p&gt;前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。&lt;/p&gt;
+&lt;h4&gt;支援 CDN&lt;/h4&gt;
+&lt;p&gt;這個需求沒什麼好說了吧。&lt;/p&gt;
+&lt;h4&gt;支援 HTTP/2&lt;/h4&gt;
+&lt;p&gt;主要的服務應該都支援了，不過還是列一下。&lt;/p&gt;
+&lt;h4&gt;支援加上 Security Headers&lt;/h4&gt;
+&lt;p&gt;現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。&lt;/p&gt;
+&lt;h4&gt;支援 HTTP 轉成 HTTPS&lt;/h4&gt;
+&lt;p&gt;在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。&lt;/p&gt;
+&lt;p&gt;雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。&lt;/p&gt;
+&lt;h4&gt;支援全站轉址&lt;/h4&gt;
+&lt;p&gt;主要的需求是把 &lt;code&gt;www.example.com&lt;/code&gt; 轉址到 &lt;code&gt;example.com&lt;/code&gt; ，或是反過來，像 &lt;code&gt;www.apple.com&lt;/code&gt; 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？&lt;/p&gt;
+&lt;p&gt;除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 &lt;code&gt;docs.example.com&lt;/code&gt; 要關站，然後要把流量都轉到 &lt;code&gt;https://example.com/docs&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;以下算是非必備的需求&lt;/p&gt;
+&lt;h4&gt;支援把 404 改寫成 200&lt;/h4&gt;
+&lt;p&gt;非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。&lt;/p&gt;
+&lt;h4&gt;支援 CORS&lt;/h4&gt;
+&lt;p&gt;如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。&lt;/p&gt;
+&lt;h4&gt;支援 Basic Auth&lt;/h4&gt;
+&lt;p&gt;如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。&lt;/p&gt;
+&lt;h4&gt;支援根據 Header 切換 origin&lt;/h4&gt;
+&lt;p&gt;這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 &lt;a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"&gt;&lt;code&gt;CloudFront-Is-*-Viewer&lt;/code&gt; header&lt;/a&gt; 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有&lt;a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-"&gt;企業方案有支援&lt;/a&gt;，但是有提供他們如何判斷 device type。&lt;/p&gt;
+&lt;h4&gt;支援根據路徑切換 origin&lt;/h4&gt;
+&lt;p&gt;如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。&lt;/p&gt;
+&lt;h4&gt;支援 brotli&lt;/h4&gt;
+&lt;p&gt;Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。&lt;/p&gt;
+
+https://blog.othree.net/log/2021/08/02/static-site-hosting/
+https://blog.othree.net/log/2021/08/02/static-site-hosting/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2021-08-02 22:23
+
+
+
+JSON Web Token
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr"&gt;&lt;img src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;之前的 &lt;a href="https://blog.othree.net/log/2016/01/11/json-universe/"&gt;JSON Universe&lt;/a&gt; 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 &lt;a href="https://tools.ietf.org/html/rfc7519"&gt;JSON Web Token&lt;/a&gt;(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 &lt;a href="https://datatracker.ietf.org/wg/jose/charter/"&gt;JOSE(JSON Object Signing and Encryption) Working Group&lt;/a&gt; 所制訂的 RFC 標準，目前包括了：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://tools.ietf.org/html/rfc7515"&gt;JSON Web Signature&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tools.ietf.org/html/rfc7516"&gt;JSON Web Encryption&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tools.ietf.org/html/rfc7517"&gt;JSON Web Key&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tools.ietf.org/html/rfc7518"&gt;JSON Web Algorithms&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tools.ietf.org/html/rfc7519"&gt;JSON Web Token&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  "kty":"EC",
+  "crv":"P-256",
+  "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+  "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
+  "kid":"Public key used in JWS spec Appendix A.3 example"
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例如這個 JWK 文件範例中的 &lt;code&gt;kty&lt;/code&gt; 代表的是 Key Type；&lt;code&gt;crv&lt;/code&gt;、&lt;code&gt;x&lt;/code&gt; 和 &lt;code&gt;y&lt;/code&gt; 則是橢圓曲線加密（ECC）類演算法會用到的參數；&lt;code&gt;kid&lt;/code&gt; 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。&lt;/p&gt;
+
+&lt;p&gt;JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 &lt;code&gt;cty&lt;/code&gt;、&lt;code&gt;typ&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  "typ":"JWT",
+  "alg":"HS256"
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 &lt;a href="https://tools.ietf.org/html/rfc7515#appendix-C"&gt;base64url&lt;/a&gt; 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 &lt;code&gt;=&lt;/code&gt; 都拿掉，然後 &lt;code&gt;+&lt;/code&gt; 用 &lt;code&gt;-&lt;/code&gt; 取代，&lt;code&gt;/&lt;/code&gt; 用 &lt;code&gt;_&lt;/code&gt; 取代。例如 &lt;code&gt;ab?ab&lt;/code&gt; 這個 ASCII 字串，用 base64 encoding 就會變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;YWI/YmE=
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;用 base64url 的話就變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;YWI_YmE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 &lt;code&gt;.&lt;/code&gt; 接起來：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;BASE64URL(UTF8(JOSE Header)) || '.' || 
+BASE64URL(JWS Payload))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;JOSE Header&lt;/li&gt;
+&lt;li&gt;Payload&lt;/li&gt;
+&lt;li&gt;Signature&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+BASE64URL(JWS Payload) || '.' ||
+BASE64URL(JWS Signature)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;長的會看起來像是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;另外一種則是 JSON 格式（JSON Serialization Syntax）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
+  "signatures":[
+     {"protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+      "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"}]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
+  "protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。&lt;/p&gt;
+
+&lt;p&gt;最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{"alg":"none"}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後 signature 是空字串，所以精簡格式的就會變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最後是 &lt;code&gt;.&lt;/code&gt; 結尾。&lt;/p&gt;
+
+&lt;p&gt;JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;JOSE Header&lt;/li&gt;
+&lt;li&gt;Encrypted Key&lt;/li&gt;
+&lt;li&gt;Initialization Vector&lt;/li&gt;
+&lt;li&gt;Ciphertext&lt;/li&gt;
+&lt;li&gt;Authentication Tag&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。&lt;/p&gt;
+
+&lt;p&gt;然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意找的話就可以發現四個 &lt;code&gt;.&lt;/code&gt; 把資料切成五段。&lt;/p&gt;
+
+&lt;p&gt;最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;iss&lt;/code&gt;, Issuer&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sub&lt;/code&gt;, Subject&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aud&lt;/code&gt;, Audience&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;exp&lt;/code&gt;, Expiration Time&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nbf&lt;/code&gt;, Not Before&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;iat&lt;/code&gt;, Issued At&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jti&lt;/code&gt;, JWT ID&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;都是非常 meta 的 token 屬性，這些名稱基本上是從 &lt;a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken"&gt;OpenID Connect&lt;/a&gt; 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且&lt;a href="http://www.iana.org/assignments/jwt/jwt.xhtml"&gt;註冊&lt;/a&gt;好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 &lt;code&gt;first_name&lt;/code&gt;、&lt;code&gt;country&lt;/code&gt; 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 &lt;a href="https://tools.ietf.org/html/rfc7523"&gt;RFC-7523&lt;/a&gt; 這份文件有說明，至於要如何使用 OAuth token 則是在 &lt;a href="https://tools.ietf.org/html/rfc6750"&gt;RFC-6750&lt;/a&gt; 有介紹，比較常見的是放在 HTTP Auth Header 裡面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;之前鴨七也有整理過中文的&lt;a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token"&gt;說明&lt;/a&gt;，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。&lt;/p&gt;
+
+&lt;p&gt;目前搜尋 JWT 一定會看到一個網站 &lt;a href="https://jwt.io/"&gt;jwt.io&lt;/a&gt;，這個網站用淺顯易懂的方式來&lt;a href="https://jwt.io/introduction/"&gt;介紹&lt;/a&gt; JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 &lt;a href="https://auth0.com/"&gt;Auth0&lt;/a&gt; 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼&lt;a href="https://auth0.com/opensource"&gt;專案&lt;/a&gt;，當然有一些是串接他們家服務用的 library 啦。&lt;/p&gt;
+
+&lt;p&gt;PS. 對密碼學還沒很熟悉，有誤歡迎指正～&lt;/p&gt;
+
+
+https://blog.othree.net/log/2016/08/13/json-web-token/
+https://blog.othree.net/log/2016/08/13/json-web-token/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2016-08-13 18:46
+
+
+
+nginx &amp; fcgiwrap
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/23099768130/" title="菲貓 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg" width="1024" height="683" alt="菲貓, " srcset="https://farm1.staticflickr.com/621/23099768130_3caf60c59d_b.jpg 1024w, https://farm1.staticflickr.com/621/23099768130_d3a13dc95b_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;雖然很久以前就想換到 nginx 試試看，不過直到最近這次更新才換成功，最早單純只是想要輕量一點的 HTTP server，後來則是因為和 Apache 相比，nginx 明顯開發更新比較快，最近有很多想要嘗試各種新功能都是 nginx 先做，像是 HTTP/2，還有最近這次的 brotli 支援，而以前沒辦法換過去的最主要原因，其實是 nginx 沒有 CGI 的支援，跑 MovableType 會有困難，雖然 MovableType 可以用 FastCGI，不過很難設定，我安裝過 n 次大概也只有成功過一兩次，所以其實一直都不太考慮這個選項。&lt;/p&gt;
+
+&lt;p&gt;不過認真研究了一下，終於發現其實可以透過 &lt;a href="https://github.com/gnosek/fcgiwrap"&gt;FCGI Wrap&lt;/a&gt; 這個工具來達成 nginx 對 CGI script 的支援，它的作法其實就是一個中間人，把 FCGI 介面轉到 CGI 介面過去，我大概設定了一下跑 MovableType 的 nginx conf 如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location ~ ^/path/to/mt/mt.*\.cgi {
+    gzip off;
+    fastcgi_index index.cgi;
+    fastcgi_split_path_info ^(.+?\.cgi)(/.*)$;
+    if (!-e $document_root$fastcgi_script_name) {
+        return 404;
+    }
+    include fastcgi.conf;
+
+    ## MT-related
+    fastcgi_param PERL5LIB $document_root/mt/lib;
+    fastcgi_param MT_HOME $document_root/mt/;
+    fastcgi_param MT_CONFIG $document_root/mt/mt-config.cgi;
+
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    fastcgi_param PATH_TRANSLATED $fastcgi_path_info;
+    fastcgi_pass unix:/var/run/fcgiwrap.sock;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後主機上要開好 FCGI Wrap 的服務，我是用 ArchLinux 的 pacman 直接裝套件，然後參考&lt;a href="https://wiki.archlinux.org/index.php/nginx#fcgiwrap"&gt;官方文件&lt;/a&gt;，有寫說設定檔位置 &lt;code&gt;/usr/lib/systemd/system/fcgiwrap.socket&lt;/code&gt; ，cat 出來就可以看到 UNIX Socket 檔案位置 &lt;code&gt;ListenStream=/run/fcgiwrap.sock&lt;/code&gt; ，這個路徑的位置其實就指到上面設定最後一行的 &lt;code&gt;/var/run/fcgiwrap.sock&lt;/code&gt;，&lt;code&gt;/run&lt;/code&gt; 和 &lt;code&gt;/var/run&lt;/code&gt; 兩邊其實有 Symbolic Link 起來，所以兩個 sock 檔案其實是同一個。&lt;/p&gt;
+
+&lt;p&gt;最後要說一下 conf 裡的這行：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    include fastcgi.conf;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這個 &lt;code&gt;fastcgi.conf&lt;/code&gt; 檔案其實是 nginx 內建好方便大家使用的，內容如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+fastcgi_param  REQUEST_SCHEME     $scheme;
+fastcgi_param  HTTPS              $https if_not_empty;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only, required if PHP was built with --enable-force-cgi-redirect
+fastcgi_param  REDIRECT_STATUS    200;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到其實這個檔案就是把直接走 FCGI 時會遺失的環境變數補回去用的，nginx 還提供很多這類&lt;a href="https://github.com/nginx/nginx/tree/master/conf"&gt;檔案&lt;/a&gt;，以前都不太清楚怎麼剛裝好的 nginx 會附上一堆沒有用到的 conf 檔，直到這次才瞭解它們其實都很有用啊。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2016/04/22/nginx-fcgiwrap/
+https://blog.othree.net/log/2016/04/22/nginx-fcgiwrap/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2016-04-22 21:52
+
+
+
+SSH Agent Forward
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/26226715966/" title="少年バット by othree, on Flickr"&gt;&lt;img src="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg" width="1024" height="576" alt="少年バット" srcset="https://farm2.staticflickr.com/1544/26226715966_bcd656f05b_b.jpg 1024w, https://farm2.staticflickr.com/1544/26226715966_1afbf9905d_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最近對於 blog 的另外一個改動就是檔案權限的修改，我用的 Blog 系統是 MovableType，它的其中一個特色就是會產生好靜態的檔案，而這些檔案其實我都有丟上 Github 和 Bitbucket 備份，以前我基本上都用 root 來做這些事情，所以沒有權限問題，不過這次重灌後想順便把這問題處理一下，所以做了一番研究，首先在 ArchLinux 上，預設給 HTTP 等相關服務例如 nginx、php 等用的帳號是 &lt;strong&gt;http&lt;/strong&gt;，所以我希望讓這些檔案的 owner 就是 http，一來可以確保所有的網路服務需要這些檔案時，都可以正確的存取，因為我嘗試過用 group 來設定權限共有，不過結果不太順利；二來 MovableType 產生的檔案 owner 也都是 http，可以保持一致性，也不用常常在那邊改檔案的 owner。&lt;/p&gt;
+&lt;p&gt;不過 http 這個帳號是沒有 shell 的，也就是不可以用這個帳號登入，當然會這樣預設也是安全性的考量，我並不想改掉他，所以第一個遇到的問題就是，我要怎樣用 http 帳號來執行指令，像是 &lt;code&gt;git commit&lt;/code&gt; 之類的，研究一陣子之後，發現可以用 &lt;code&gt;sudo&lt;/code&gt; 來辦到：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo -u http -s /bin/sh -c "git commit"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;-u&lt;/code&gt; 是設定要換到那個帳號， &lt;code&gt;-s&lt;/code&gt; 就是關鍵的指定 shell 了，最後的 &lt;code&gt;-c&lt;/code&gt; 則是要執行的指令，如果加上這個設定則不會真的換過去該帳號，而是只是用該帳號執行一次指令而已，解決第一個問題後，馬上來的就是第二個問題了，要 &lt;code&gt;git push&lt;/code&gt; 時，要怎麼使用有權限的 ssh private key，最簡單的方法就是丟到 http 帳號的 home 目錄下，不過我覺得這不太安全，所以想著要用其他方法來把 key 傳過去，當然把其他帳號的 key 的檔案權限調寬鬆並不可行，權限不對的 key 會無法使用，找到唯一比較接近的設計就是 &lt;a href="https://ihower.tw/blog/archives/7837"&gt;SSH Agent Forward&lt;/a&gt; 了，可以把本機的 ssh key pair 帶上遠端主機，然後就可以從遠端主機利用這個帶上去的 key 連線到其他地方，使用方法很簡單，只要在連上遠端主機的時候，多加一個 &lt;code&gt;-A&lt;/code&gt; 的參數就可以了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -A user@othree.net
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或是修改 &lt;code&gt;.ssh/config&lt;/code&gt; 的設定：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Host othree
+  HostName othree.net
+  ForwardAgent yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不過可能會需要先把 key 加進去可以 forward 的清單中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh-add
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後連上遠端主機之後，遠端的 login session 就會多一個環境變數 &lt;code&gt;$SSH_AUTH_SOCK&lt;/code&gt;，印出來看內容會像是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; /tmp/ssh-7UJdnvSdy0/agent.18493
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;實際上是個檔案路徑，指到一個 unix socket 檔案，理論上 ssh 在連線時會去這邊找 key pair 然後用來做認證，不過我看 &lt;code&gt;ssh -vvv&lt;/code&gt; 的時候是沒有相關訊息出現，連線是可以正確建立就是，透過 agent forward，的機制，我就可以達成某種程度的 key 共用，不過在遠端主機上要使用的帳號是個沒有 shell 也沒有密碼可以登入的帳號，這就成了另外一個問題，遠端能拿到 key 的帳號不是我要用的帳號，所以第三個問題就是我要如何讓這個 key 能夠轉移到 http 帳號下可用的狀態。&lt;/p&gt;
+
+&lt;p&gt;這個問題的&lt;a href="http://serverfault.com/questions/442048/accessing-ssh-auth-sock-from-another-non-root-user"&gt;解決方法&lt;/a&gt;是在 StackOverflow 上找到的，用的其實是 &lt;a href="http://linux.vbird.org/linux_basic/0410accountmanager.php#acl_talk"&gt;ACL&lt;/a&gt; 這套比較新的檔案權限管理機制，指令大致如下，先把 unix socket 的檔案權限用 ACL 開給 http 帳號：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;setfacl -m u:http:rw $SSH_AUTH_SOCK
+setfacl -m u:http:x $(dirname $SSH_AUTH_SOCK)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後 sudo 時把 &lt;code&gt;$SSH_AUTH_SOCK&lt;/code&gt; 帶過去：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo -u http env SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因為 http 帳號沒有 shell，所以實際上指令會變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; sudo -u http -s /bin/sh -c "env SSH_AUTH_SOCK=$SSH_AUTH_SOCK git pull"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不過這樣執行起來有點麻煩，其實 sudo 可以設定要帶哪些環境變數過去，所以可以去修改 &lt;code&gt;/etc/sudoers&lt;/code&gt; 加上一行：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Defaults    env_keep+=SSH_AUTH_SOCK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後在遠端 &lt;strong&gt;user&lt;/strong&gt; 帳號下的 &lt;code&gt;~/.ssh/rc&lt;/code&gt; 檔案裡面加上 facl 那兩行指令（尚未確認可行性），加上本機端設定好自動 ForwardAgent，整個流程中比較麻煩一點的就只有 sudo 那行指令而已：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; sudo -u http -s /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;就結果而言，這個作法的安全性反而比我本來的預期更進一步，因為我的 ssh key 就不用放上遠端主機，只要在本機端有一份就好了。&lt;/p&gt;
+
+https://blog.othree.net/log/2016/04/05/ssh-agent-forward/
+https://blog.othree.net/log/2016/04/05/ssh-agent-forward/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2016-04-05 22:22
+
+
+
+brotli, gzip 的替代格式
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/23998562432/" title="湯布院 by othree, on Flickr"&gt;&lt;img src="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg" width="1024" height="683" alt="湯布院, " srcset="https://farm2.staticflickr.com/1692/23998562432_ec46795cd9_b.jpg 1024w, https://farm2.staticflickr.com/1692/23998562432_d3f328fdaf_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最近幫 blog 做了不少的調整，最近會慢慢整理放上來，其中的第一個修改就是支援 &lt;a href="https://github.com/google/brotli"&gt;brotli&lt;/a&gt; 了，brotli 是 Google 繼 &lt;a href="https://github.com/google/zopfli"&gt;Zopfli&lt;/a&gt; 之後，又一個針對網路傳輸做的貢獻，兩者都是用瑞士的麵包來命名，Zopfli 是 &lt;a href="http://google-opensource.blogspot.tw/2013/02/compress-data-more-densely-with-zopfli.html"&gt;2013 年 2 月發佈&lt;/a&gt;，Brotli 是在 &lt;a href="http://google-opensource.blogspot.tw/2015/09/introducing-brotli-new-compression.html"&gt;2015 年 9 月發佈&lt;/a&gt;的，不過直到最近才有瀏覽器支援，最先支援的是 Firefox，接著才是 Google 的 Chrome，預計版本號 50 時會支援，brotli 在發表時就同時發表一份&lt;a href="http://www.gstatic.com/b/brotlidocs/brotli-2015-09-22.pdf"&gt;測試數據&lt;/a&gt;了，顯示出它可以讓文件檔案更小約 20%，但是加解密的速度還是和 gzip 差不多，相信對於行動裝置的耗能也不會差異太大，不過對大檔案的壓縮效率就不一定比較好了，基本上非常適合拿來壓縮一般網站傳輸的 HTML/CSS/JS 之類的檔案。&lt;/p&gt;
+&lt;p&gt;支援 brotli 格式的瀏覽器會使用 HTTP 協定跟 server 端溝通，送出的 header 會有：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept-Encoding: br
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一般瀏覽器都已經支援 gzip 和 deflate 很久了，所以像是 Firefox 會送出：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept-Encoding: gzip, deflate, br
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Server 端基本上會自動針對這些資訊作判斷來決定要回傳用什麼格式壓縮的內容，也可以不壓縮，例如已經最佳化過的圖片，通常就不會再次壓縮，因為壓縮效益會很差，反而還要多花 CPU 去解壓縮，得不償失，以前 Apache2 在支援 deflate 格式的時候，用的是內建的 &lt;a href="http://httpd.apache.org/docs/2.0/mod/mod_deflate.html"&gt;mod_deflate&lt;/a&gt;，只要在設定寫好哪些檔案要用 deflate 壓縮，Apache 就會自己處理好跟瀏覽器溝通的部分，不過目前並沒有 mod_brotli 之類的東西可以用，所以 Apache2 要全面支援還有些問題，其中目前比較可行的是採用預先壓縮好的靜態檔案加上 rewrite 來&lt;a href="https://lyncd.com/2015/11/brotli-support-apache/"&gt;支援&lt;/a&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;Files *.js.br&amp;gt;
+  AddType "text/javascript" .br
+  AddEncoding br .br
+&amp;lt;/Files&amp;gt;
+&amp;lt;Files *.css.br&amp;gt;
+  AddType "text/css" .br
+  AddEncoding br .br
+&amp;lt;/Files&amp;gt;
+
+RewriteEngine On
+
+RewriteCond %{HTTP:Accept-Encoding} br
+RewriteCond %{REQUEST_FILENAME}.br -f
+RewriteRule ^(.*)$ $1.br [L]
+
+RewriteCond %{HTTP:Accept-Encoding} gzip
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^(.*)$ $1.gz [L]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;當然這種方法就只能針對純靜態檔案，對於 PHP 之類動態產生的內容就無法處理，可喜的是我有看到 Jim Jagielski 有打算 &lt;a href="http://mail-archives.apache.org/mod_mbox/httpd-users/201601.mbox/%3C549EBED9-2E3F-43CC-BDED-198B8ED4E257@jaguNET.com%3E"&gt;實做&lt;/a&gt; Apache 支援了，只可惜我等不下去，就把我的 web server 重灌（brotli 需要 64 位元作業系統）順便把 Apache 換成 nginx，nginx 上目前有兩個 brotli module，一個是 &lt;a href="https://github.com/google/ngx_brotli"&gt;Google 的&lt;/a&gt;，另外一個是 &lt;a href="https://github.com/cloudflare/ngx_brotli_module"&gt;CloudFlare 的&lt;/a&gt;，我挑的是 Google 的，不過現在覺得應該先試試看 CloudFlare 的才對，Google 的 ngx_brotli 是 depend on &lt;a href="https://github.com/bagder/libbrotli"&gt;libbrotli&lt;/a&gt; 的，libbrotli 很有趣，他是 cURL 的作者 &lt;a href="https://daniel.haxx.se/"&gt;Daniel Stenberg&lt;/a&gt; 去弄起來的，同時也是 Mozilla 的員工（不是 Google），然後 Google 的 ngx_brotli 卻是引用他的 lib，而不是去找自己的 brotli 專案下手，不知道這中間到底是怎麼回事，不過現在應該是快要&lt;a href="https://github.com/google/brotli/issues/326"&gt;整&lt;/a&gt;&lt;a href="https://github.com/google/brotli/issues/332"&gt;併&lt;/a&gt;起來了。&lt;/p&gt;
+
+&lt;p&gt;CloudFlare 的 &lt;a href="https://github.com/cloudflare/ngx_brotli_module"&gt;ngx_brotli_module&lt;/a&gt; 則是直接把 brotli encoder 的程式碼放進去，不用 libbrotli，不過也不是沒有缺點，首先就是它只有 encoder，不能解壓 brotli 格式的 request body，再來是支援的設定比較少，Google 的可以設定的項目比較多，和 gzip 的相當接近，而且提供了 &lt;code&gt;brotli_static&lt;/code&gt; 這個設定可以讓 nginx 自己去找看看有沒有預先壓縮好的 &lt;code&gt;br&lt;/code&gt; 檔案，就像是上面 Apache 用的設定做的事情。我目前對於一般靜態的 css, js 檔案也有使用這個方法來節省 CPU 和降低 request 的反應時間。&lt;/p&gt;
+
+&lt;p&gt;結果當然是蠻不錯的，這邊之前是用 bootstrap 這個 css framework，壓縮前的 &lt;code&gt;bootstrap.min.css&lt;/code&gt; 有 98.9KB，gzip 後是 19.9KB，用 zopfli 約是 15KB，用 brotli 可以再降低到 14.68KB，用的都是預設的壓縮密度，目前改用 Yahoo 的 &lt;a href="http://purecss.io/"&gt;pure.css&lt;/a&gt;，單看某一頁的 HTML + CSS + JS，資料量總共約 57.8 KB，使用 brotli 後，和 gzip(zopfli) 比可以再節省傳輸量到 25% 左右。&lt;/p&gt;
+
+&lt;p&gt;最後補充一下 &lt;a href="https://www.iispeed.com/pagespeed/products/iisbrotli"&gt;IIS 也有支援&lt;/a&gt; 了，這篇文章還有 Alexa 前一萬名網站的檔案下去用 brotli 壓縮的結果比較。&lt;/p&gt;
+
+https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/
+https://blog.othree.net/log/2016/03/21/brotli-gzip-alt/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2016-03-21 13:43
+
+
+
+Apache2 and HTTP/2
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/22116841470/" title="Apache HTTP/2 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/660/22116841470_3998a7318f_c.jpg 768w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最近 Apache HTTPD 2.4.17 出了，內建 HTTP/2 的支援，不免俗的要來測試一下，在 Ubuntu 14.04 LTS 下安裝其實也是蠻辛苦的，最主要的問題是 &lt;a href="https://www.openssl.org/"&gt;OpenSSL&lt;/a&gt; 內建的是 1.0.1，但是要完整支援 HTTP/2 ，還需要 TLS 的 &lt;a href="https://en.wikipedia.org/wiki/Application-Layer_Protocol_Negotiation"&gt;ALPN&lt;/a&gt; ，然後就會需要 OpenSSL 1.0.2，因此第一件事情就是下載編譯安裝 OpenSSL，目前最新的是 1.0.2d，如果是 15.10 就是內建 1.0.2 的，問題會少很多，總之先自己下載解壓縮然後編譯：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./config
+make
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;會把檔案裝到 &lt;code&gt;/usr/local/ssl&lt;/code&gt; 這個位置，大概是因為 OpenSSL 影響比較大所以預設沒有裝到平常的 &lt;code&gt;/usr/local&lt;/code&gt; 下面，不過也因此造就後續比較麻煩的地方。&lt;/p&gt;
+
+&lt;p&gt;Apache 的部分比較麻煩，要分兩個部分，第一個部分是先把 APR 部分的程式碼和 HTTPD 的部分拉下來放一起，這邊參考 &lt;a href="http://d.hatena.ne.jp/ASnoKaze/20151016/1445011720"&gt;あすのかぜ&lt;/a&gt; 上的指令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget http://ftp.jaist.ac.jp/pub/apache//httpd/httpd-2.4.17.tar.gz
+tar zxvf ./httpd-2.4.17.tar.gz
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-1.5.2.tar.gz
+tar zxvf ./apr-util-1.5.4.tar.gz
+mv ./apr-1.5.2 ./httpd-2.4.17/srclib/apr
+
+wget http://ftp.yz.yamagata-u.ac.jp/pub/network/apache//apr/apr-util-1.5.4.tar.gz
+ar zxvf ./apr-util-1.5.4.tar.gz 
+mv ./apr-util-1.5.4 ./httpd-2.4.17/srclib/apr-util
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後進去 &lt;code&gt;httpd-2.4.17&lt;/code&gt; 目錄下指令編譯安裝：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;env PKG_CONFIG_PATH=/usr/local/ssl/lib/pkgconfig ./configure --enable-http2
+make
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;執行的時候也需要注意，需要帶個環境變數，不然他找不到 &lt;code&gt;/usr/local/ssl/&lt;/code&gt; 下的 Library：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/httpd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;env LD_LIBRARY_PATH=/usr/local/ssl/lib /usr/local/apache2/bin/apachectl start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不過其實執行前還需要先修改一下設定，我是加在 VirtualHost 裡面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;VirtualHost *:80&amp;gt;
+    Protocols h2c http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;還有&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;VirtualHost *:443&amp;gt;
+    Protocols h2 http/1.1
+    ServerName blog.othree.net
+    ServerAdmin othree@gmail.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重點是 &lt;code&gt;Protocols&lt;/code&gt; 那行，&lt;code&gt;h2&lt;/code&gt; 指的是 HTTPS(TLS) 下的 HTTP/2 連線，&lt;code&gt;h2c&lt;/code&gt; 則是 HTTP 下的，在其他地方還會看到 &lt;code&gt;h-15&lt;/code&gt;、&lt;code&gt;h-17&lt;/code&gt; 之類的，那些其實是之前草稿的版本，無視就好，另外還有一個地方需要設定的是加密用的 CipherSuite 和溝通協定，可以參考 &lt;a href="https://icing.github.io/mod_h2/howto.html#https"&gt;How to h2 in apache&lt;/a&gt; 提供的設定：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+SSLProtocol All -SSLv2 -SSLv3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不確定 CipherSuite 的選擇影響多大，不過我猜主要是要把 SSL 全部關掉吧，然後其實這組設定就是 Mozilla 推薦的 SSL 設定的 &lt;a href="https://wiki.mozilla.org/Security/Server_Side_TLS"&gt;Modern&lt;/a&gt; 那組，等於是要放棄很多舊瀏覽器了，支援的瀏覽器最低版本如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Firefox 27&lt;/li&gt;
+&lt;li&gt;Chrome 22&lt;/li&gt;
+&lt;li&gt;IE 11&lt;/li&gt;
+&lt;li&gt;Opera 14&lt;/li&gt;
+&lt;li&gt;Safari 7&lt;/li&gt;
+&lt;li&gt;Android 4.4&lt;/li&gt;
+&lt;li&gt;Java 8 &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;都弄好開啟 Apache 就可以了，不過記得如果之前是用 apt 裝的 Apache 的話，設定要自己搬過來。&lt;/p&gt;
+
+&lt;p&gt;驗證工具可以用 Curl 或是 nghttp，我是在 OSX 上用 brew 裝的，Curl 比較麻煩，不過可以看到一開始溝通的部分：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install curl --with-nghttp2
+brew link curl
+
+/usr/local/bin/curl -v --http2 https://othree.net
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後就會出現最上面那張圖那樣的資訊，可以看到有 ALPN 的選項出現，另外一個工具是 nghttp，其實 Curl 的 http2 支援就是用這套 library：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install nghttp2
+
+nghttp -uv https://othree.net
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/22118020729/" title="Apache HTTP/2 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/565/22118020729_9fea221124_c.jpg 768w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/22278832416/" title="Apache HTTP/2 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg" width="570" height="427" alt="Apache HTTP/2" srcset="https://farm1.staticflickr.com/771/22278832416_26528e86cf_c.jpg 768w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到上色整理得很漂亮的資訊，另外用瀏覽器也可以判斷，Firefox 的話會寫上 HTTP 版本號，Chrome 我測試是要 Canary 才支援，然後我網站連線的 SSL 握手那段花的時間反而更多，不過還是比較快全部下載完，只是 render 畫面影響的還有其他檔案，雖然大部分檔案都提早開始下載，不過也同時開始下載重要度比較低的圖形檔案，結果反而 DOM ready 的時間點更晚~~~，下圖是 HTTP/1.1 的時候：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/22305448445/" title="http1.1-1 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg" width="1024" height="531" alt="http1.1-1" srcset="https://farm1.staticflickr.com/707/22305448445_12074cd1b8_b.jpg 1024w, https://farm1.staticflickr.com/707/22305448445_7da40d9f50_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;然後是 2.0：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/21684413063/" title="http2-1 by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg" width="1024" height="531" alt="http2-1" srcset="https://farm1.staticflickr.com/756/21684413063_2aca17abfd_b.jpg 1024w, https://farm1.staticflickr.com/756/21684413063_dbab9bbafb_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最後就是還不支援 Server Push，這個東西其實技術上不難，可是和 Cache 搞在一起就變很複雜了，目前好像還沒有比較好的解法出現，也只有一些非開源的系統支援的樣子。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2015/10/19/apache2-http2/
+https://blog.othree.net/log/2015/10/19/apache2-http2/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2015-10-19 23:04
+
+
+
+隱藏 Apache 版本號
+&lt;p&gt;之前有想過是不是能隱藏 HTTP Server 的資訊，不過 &lt;strong&gt;Server&lt;/strong&gt; 這個 Header 不可省略的樣子，所以最少也是要給個 Server Name，當然也可以改程式碼給假的，不想改的話最多就是把版本號隱藏起來了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ServerSignature Off
+ServerTokens Prod
+&lt;/code&gt;&lt;/pre&gt;
+
+
+https://blog.othree.net/log/2014/12/03/hide-apache-version/
+https://blog.othree.net/log/2014/12/03/hide-apache-version/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2014-12-03 12:09
+
+
+
+SSL 設定更新
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/15059214463/" title="SSL Lab test by othree, on Flickr"&gt;&lt;img src="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg" width="1024" height="670" alt="SSL Lab test" srcset="https://farm8.staticflickr.com/7553/15059214463_004dcbfbfd_b.jpg 1024w, https://farm8.staticflickr.com/7553/15059214463_f3656ce16a_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;因為剛好我的 StartSSL 免費憑證要過期了，所以趁這次更新憑證的同時順便把一些過時的設定都改掉，不然之前我的評等已經新漏洞的關係掉到 F 了，做的事情也不複雜，第一個是把 SSLv3 也關掉：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SSLProtocol all -SSLv2 -SSLv3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然後限制 Cipher Suite：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SSLCipherSuite AES256+EECDH:AES256+EDH
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這組 Cipher Suite 也是網路上找的，不過忘了留下連結，Cipher Suite 的建議組合網路上還蠻好找的，我用的這組基本上就是限制比較多，所以不少舊環境會無法建立連線，像是 Android 2、IE 6、Java 環境等，不過是很可以接受的程度。&lt;/p&gt;
+
+&lt;p&gt;光這樣的設定評等已經不錯了，不過會有個橘色字樣說不支援 TLS_FALLBACK_SCSV，會有被攻擊的危險，研究過後發現要升級 OpenSSL，然後我的系統是 Ubuntu 12.04 LTS，沒有新版的 OpenSSL，雖然也可以自己編譯，不過我還是決定升上 14.04 LTS。&lt;/p&gt;
+
+&lt;p&gt;另外有個特別被 highlight 的項目是我的憑證的 trust chain 中有一個是用 SHA1 簽章的，然後那個其實是 CA 的，就是從 Start SSL 抓的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://www.startssl.com/certs/sub.class1.server.ca.pem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在他的 cert 目錄下找了一下看到疑似是 SHA256 簽的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://www.startssl.com/certs/class1/sha2/pem/sub.class1.server.sha2.ca.pem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;改成這個後看來就沒警告了，我想應該沒搞錯才是 :P&lt;/p&gt;
+
+&lt;p&gt;到這樣我發現總評等已經到 A 了，但是分數卻很難更高，所以先研究了一陣子怎樣到 A+，後來發現是我曾經開過的 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security"&gt;Strict Transport Security(HSTS)&lt;/a&gt;，暫時拿掉後忘了放回來，加上 HSTS Header 後總評等就可以上到 A+ 了。&lt;/p&gt;
+
+&lt;p&gt;設定到這樣其實已經很足夠了，不過我還是對於其中的 Protocol Support 這項沒有滿分感到很好奇，搜尋一陣子發現到要把 Protocol 關到只剩下 TLS 1.2 才會滿分，可是這樣支援度會很慘烈，因為還很多客戶端是只有到 TLS 1.0 的，所以就只抓個圖紀念一下。最後還花了點時間設定 &lt;a href="http://blog.gslin.org/archives/2014/06/21/4786/ocsp-stapling/"&gt;OCSP Stapling&lt;/a&gt;，可以提昇效能，因為把 &lt;a href="http://gca.nat.gov.tw/ocsp/index.html"&gt;OCSP&lt;/a&gt; 上的資訊都抓下來放在本主機給客戶端用，不過目前感覺不到差異就是，設定也不難：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SSLUseStapling on
+SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好像放這兩行就可以了。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2014/11/01/ssl-config/
+https://blog.othree.net/log/2014/11/01/ssl-config/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2014-11-01 16:45
+
+
+
+OpenSSL 安全性問題 CVE-2014-0160
+&lt;p&gt;今天資安的大新聞就是這個了，OpenSSL 的 &lt;a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0160"&gt;新弱點&lt;/a&gt;，嚴重程度高到還有一個專站 &lt;a href="http://heartbleed.com/"&gt;heartbleed.com&lt;/a&gt; （心在流血）。也有人幫忙做了&lt;a href="http://filippo.io/Heartbleed/"&gt;檢測工具&lt;/a&gt;可以看看你的網站有沒有在影響範圍內，不過因為弱點是在 OpenSSL 上，所以其實不是只有網站會受影響，總之有問題的看到會像是這樣：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/13717637293/" title="CVE-2014-016 Vulnerable by othree, on Flickr"&gt;&lt;img src="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg" width="1024" height="853" alt="CVE-2014-016 Vulnerable" srcset="https://farm8.staticflickr.com/7453/13717637293_10e2cde873_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;沒問題的話會是：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/13717637123/" title="CVE-2014-0160 pass by othree, on Flickr"&gt;&lt;img src="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg" width="1024" height="555" alt="CVE-2014-0160 pass" srcset="https://farm8.staticflickr.com/7377/13717637123_3703d23ca2_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;第一時間有很多大站都中鏢了，像是 github 之類的，不過我剛剛看已經修好了，我的 server 用的是 Ubuntu 12 LTS 就是 apt 更新過後重開就好了，建議是連 key 也重新生就是，更詳細的資訊可以看看 Server Fault 的&lt;a href="http://serverfault.com/questions/587329/heartbleed-what-is-it-and-what-are-options-to-mitigate-it"&gt;問答&lt;/a&gt;&lt;/p&gt;
+
+
+https://blog.othree.net/log/2014/04/08/cve-2014-0160/
+https://blog.othree.net/log/2014/04/08/cve-2014-0160/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2014-04-08 23:00
+
+
+
+Start SSL 的 OCSP 錯誤
+&lt;p&gt;今天收到 Start SSL 的信件通知說我的憑證快過期了，所以花時間處理了一下，結果遇到 Firefox 說 OSCP 伺服器沒有憑證。&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/10831576274/" title="Error code: sec_error_ocsp_unknown_cert by othree, on Flickr"&gt;&lt;img src="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg" width="1024" height="794" alt="Error code: sec_error_ocsp_unknown_cert" srcset="https://farm3.staticflickr.com/2856/10831576274_97fe62e951_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在 StartSSL 上有看到相關 &lt;a href="https://forum.startcom.org/viewtopic.php?f=15&amp;amp;t=2654"&gt;討論&lt;/a&gt;，基本上就是放著幾小時候就會好，不過不知道為什麼只有 Firefox 受影響，理論上應該是 OCSP 上都找不到太新的 StartSSL 憑證，不過其他瀏覽器似乎都沒這問題，有差的好像只有 Firefox 剛開始支援 OCSP stapling 而已。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2013/11/13/start-ssl-ocsp/
+https://blog.othree.net/log/2013/11/13/start-ssl-ocsp/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2013-11-13 20:27
+
+
+
+DNSSEC
+&lt;p&gt;前幾天我的網域名稱 &lt;strong&gt;othree.net&lt;/strong&gt; 突然無法從 Google 的 Public DNS 8.8.8.8 查到，經過一些交叉比對後，發現 Google Public DNS 和 Linode 內部用的 DNS 查不到，其他大部分的 DNS 都查的到，一時也不知道到底是什麼問題，就和 namecheap 聯絡，結果對方客服還蠻鬼打牆的，聯繫兩次都說設定沒問題，他們連的到，有問題也是 Google 的，還好 DK 有跟我說可能和 DNSSEC 有關係，讓我比較好找問題，其實我也有跟 namecheap 的人說到 DNSSEC，但是他們好像沒聽到一樣，讓我有些訝異的是， namecheap 的人對於 Google Public DNS 查不到他們客戶的 domain 覺得好像沒什麼，沒有很積極找問題。&lt;/p&gt;
+
+&lt;p&gt;還好 Google Public DNS 有 mailing-list，可以上去問這種問題，結果對方說我的 DNSSEC 驗證不過，附上 &lt;a href="http://dnsviz.net/"&gt;DNSViz&lt;/a&gt; 結果給我。&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979829/" title="Bogus by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg" width="552" height="947" alt="Bogus" srcset="https://farm9.staticflickr.com/8119/8699979829_2005069587_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;其實一開始光看這張圖還不知道問題在哪，接著又去看 DNSSEC 運作的原理才了解，DNSSEC 其中對於 domain name record 要不要信任基本上是靠 chain of trust，也就是一層一層確定沒問題才保證最後的目標沒問題，所以他會先驗證 net 的 resolve 結果是可信任的，然後才往下問 othree.net 的 DNSKEY，然後用 net 那邊的 DS record 來驗證目標的 DNSKEY，而我的狀況是，去問上層的 DNS 有沒有 othree.net 的 DS record ，結果是有的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[/root] -root- &amp;gt;&amp;gt;&amp;gt; dig @192.55.83.30 othree.net. DS
+
+; &amp;lt;&amp;lt;&amp;gt;&amp;gt; DiG 9.7.0-P1 &amp;lt;&amp;lt;&amp;gt;&amp;gt; @192.55.83.30 othree.net. DS
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&amp;gt;&amp;gt;HEADER&amp;lt;&amp;lt;- opcode: QUERY, status: NOERROR, id: 14284
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 13, ADDITIONAL: 12
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;othree.net. IN DS
+
+;; ANSWER SECTION:
+othree.net. 86400 IN DS 1 1 1 1234567890123456789012345678901234657890
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其實看到這邊有點傻眼，因為用來驗證我的 DNSKEY 的 hash 竟然是 '1234567890123456789012345678901234657890' ，怎麼想都是有人亂打的，不過我也不想追究了，總之上層有 DS record，但是去問下層 DNSKEY 時確沒有：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[/root] -root- &amp;gt;&amp;gt;&amp;gt; dig @208.64.122.242 +multiline othree.net. DNSKEY
+
+; &amp;lt;&amp;lt;&amp;gt;&amp;gt; DiG 9.7.0-P1 &amp;lt;&amp;lt;&amp;gt;&amp;gt; @208.64.122.242 +multiline othree.net. DNSKEY
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&amp;gt;&amp;gt;HEADER&amp;lt;&amp;lt;- opcode: QUERY, status: NOERROR, id: 16844
+;; flags: qr aa rd; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;othree.net. IN DNSKEY
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這樣當然無法通過 DNSSEC validation，本來以為把這件事跟 namecheap 講他們就知道該怎麼處理了，結果還是不行，於是我又更直接的請他們跟上層說把那筆 DS record 刪掉，到今天早上終於正常了。&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8699979931/" title="Insecure by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg" width="555" height="910" alt="Insecure" srcset="https://farm9.staticflickr.com/8131/8699979931_575f791a25_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+
+https://blog.othree.net/log/2013/05/02/dnssec/
+https://blog.othree.net/log/2013/05/02/dnssec/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2013-05-02 11:46
+
+
+
+Cache Control 與 ETag
+&lt;p&gt;俗話說的好，最快的連線就是不要連線，最快的下載就是不要下載，訪客連到網站的網路狀況其實是不容易由網站這邊來控制的，所以要提升網頁的速度，除了提升網路的可達性外，還有一個方法就是 cache，瀏覽器在需要某個檔案的時候，首先它會檢查是否有 cache，有的話會看有沒有過期，過期的話就根據現有資訊去問 server 有沒有新版，如果 server 比對之後發現有新版的，才會把要求的檔案傳給瀏覽器。這一個流程一共有三個判斷點，分別是：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;是否需要無視 cache，前面沒講到，可能是 cache 設定或是瀏覽器設定&lt;/li&gt;
+&lt;li&gt;有沒有 cache、有沒有過期&lt;/li&gt;
+&lt;li&gt;Server 端檔案有沒有更新&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Cache 的機制早在 HTTP 1.0 時就有制訂了，不過當時只有 Expires 和 Pragma 這兩個 header，其中一個可以指定 cache 過期的時間，另外一個就只能指定叫瀏覽器 no-cache，到了 HTTP 1.1 之後，改成用 Cache-Control 提供更多功能來控制，支援 HTTP 1.1 的瀏覽器，只要看到 Cache-Control 就會忽略 Expires，除了因為 Cache-Control 的功能比較強大外，單純就過期時間的這點來看，Expires 看的是 ISO Time，會有 server 和 client 之間的時差問題，而 Cache-Control 則是用 max-age 直接說這個 Cache 可以活多久，就沒了時差問題。&lt;/p&gt;
+
+&lt;p&gt;Cache-Control 除了 max-age 外還有很多參數可以用，簡單介紹幾個常用的：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;no-store, 完全不存下來，所以完全沒有 cache&lt;/li&gt;
+&lt;li&gt;no-cache, 雖然會 cache，但還是會每次都問有沒有新內容，就是三個判斷點的第一個&lt;/li&gt;
+&lt;li&gt;private, 限制在只有現在這個使用者可以用，通常用於敏感資料&lt;/li&gt;
+&lt;li&gt;public, cache 公開讓不同使用者用，如果是有 HTTP Auth 的網頁，預設會是 private cache&lt;/li&gt;
+&lt;li&gt;must-revalidate, 在一些情形下會去檢查內容是否有更新，像是使用者自己重新造訪頁面時，也是第一個判斷點&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;根據 Cache-Control 的規則，瀏覽器在有需要時會去問 Server 是否有新版本，而這裡根據的資訊就是 Date 和 ETag 兩個資訊。Date 很簡單，就是回 request 的時間，ETag 全名是 Entity Tag，可以想成是該檔案的版本 hash，理想上確實是用 hash 來當 ETag 最合適，不過不可能每次 request 都算 hash，所以 Apache 內建的 ETag 機制是用 inode、檔案大小和最後修改時間來產生的，不過這種方法有個缺點，在 YSlow 的 guide 有提到其中的 inode 在有負載平衡的架構下，不同機器會產生出不一樣的 ETag，結果反而可能會造成不需要重新抓的檔案又下載一次，雖然說 Apache 也是可以指定說不要用 inode 來生 ETag 啦。&lt;/p&gt;
+
+&lt;p&gt;個人建議是如果是 CMS 之類的系統，每個節點都可以在變動時重算 hash，然後在 response 的時候加上 ETag header，其他靜態檔案就用 Apache 的 ETag，有負載平衡機制的話就把 inode 的部分拿掉就好了。當然也是可以照 YSlow 的建議就是完全不用 ETag，只看修改時間，當然有個小缺點是，時間單位的最小精度是秒，如果是一秒內內容就會一直變動的話，就不適合使用了，似乎也很少這種需求就是（又要 cache 又要在一秒內數次變動還要能反應）。&lt;/p&gt;
+
+&lt;p&gt;瀏覽器如果要問 Server 有沒有新東西的話，就會帶著這兩個資訊一起去問，Date 會變成 If-Modified-Since，字面意思就是從那個時間點以後有更新的話。Etag 則會變成 If-None-Match，字面上意思就是如果和這個不一樣的話。Server 端除非是 Apache 直接 host 的靜態檔案，都要 Server Side 的程式自己來處理，有些 Framework 就有內建支援，像是 Rails。如果要自己實做的話，其實檢查是否有新東西這個動作有分嚴謹 (strong) 和寬鬆 (weak) 兩種驗證方式，其中用更新時間判斷的話，是屬於寬鬆驗證的，因為它的時間精度只有一秒。而 ETag 也不是完全就是嚴謹的驗證方式，其實 ETag 的格式有兩種：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ETag: "1234abcd"
+ETag: W/"1234abcd"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第一種是嚴謹的 ETag，第二種就是寬鬆的格式，W 代表的是 weak，如果宣告是寬鬆的話，那代表的意思是檔案內容不完全相同，但是可以互相通用，像是有沒有最小化過的 JS/CSS，更新解析度的圖片或是小修正排版的文章等等都是，不過如果用寬鬆判斷，由於檔案內容可能不相同，所以就無法用區段下載的功能，也就是所謂的續傳功能，通常這會搭配的是 If-Match，確定要抓的檔案是同一份。理想上支援寬鬆驗證的話可以減少更多的實際傳輸，因為一些小修改可以不用更新訪客端的 cache，不過實際上好像沒看到有人實做，而且實做起來也不是很簡單，所以一般看到有用 ETag 的話都是用嚴謹版的。&lt;/p&gt;
+
+&lt;p&gt;總之，如果 server 端判斷說沒有新內容的話，那就回個 304 Not Modified 的 header 就可以了，同時還可以趁機更新 cache 的 expire time，這樣就不會內容依然沒更新，但是 cache 過期讓瀏覽器還是一直問你更新了沒。&lt;/p&gt;
+
+&lt;p&gt;最前面提到三個判斷點當中的第一二兩個判斷點是用來決定要不要跟 Server 發 request，而不管這邊判斷的依據為何，只要結果是有發 request 的話，都還是會照著標準的流程來看 Server 端檔案是否有更新，不過一些情形下，像是瀏覽器關閉 cache 支援的時候，發出去的 request 不會有 If-Modified-Since 和 If-None-Match，所以這時候一定會把檔案抓一份回來。&lt;/p&gt;
+
+&lt;p&gt;最後設定完後，以本 blog 為例，還沒有 cache 時：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8293989580/" title="chrome nocache by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8216/8293989580_ec78ce5c8e_b.jpg" width="885" height="931" alt="chrome nocache" srcset="https://farm9.staticflickr.com/8216/8293989580_ec78ce5c8e_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;有 cache 還沒過期，request 不會發出，速度最快：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8292934577/" title="chrome norequest by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8080/8292934577_d28fd98f9b_b.jpg" width="885" height="931" alt="chrome norequest" srcset="https://farm9.staticflickr.com/8080/8292934577_d28fd98f9b_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Cache 過期去問 server 有沒有更新版時，檔案沒更新所以都是 304 沒抓內容下來：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8293989462/" title="chrome cache by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8353/8293989462_1dbe5fec22_b.jpg" width="885" height="931" alt="chrome cache" srcset="https://farm9.staticflickr.com/8353/8293989462_1dbe5fec22_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;參考資料：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9"&gt;HTTP 1.1 Cache Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.3.3"&gt;Weak and Strong Validator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://en.wikipedia.org/wiki/HTTP_ETag#Strong_and_weak_validation"&gt;ETag&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developer.mozilla.org/en-US/docs/HTTP_Caching_FAQ"&gt;HTTP Caching FAQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://wp.xdite.net/?p=1045"&gt;Rails ETag&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://developer.yahoo.com/performance/rules.html#etags"&gt;YSlow ETag&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+https://blog.othree.net/log/2012/12/22/cache-control-and-etag/
+https://blog.othree.net/log/2012/12/22/cache-control-and-etag/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2012-12-22 01:24
+
+
+
+mod_proxy 的注意事項
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8277973312/" title="Network when open open propxy by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg" width="829" height="384" alt="Network when open open propxy" srcset="https://farm9.staticflickr.com/8217/8277973312_82f5c92af6_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最近調整 HTTPS 支援的時候，啟用了 &lt;a href="http://httpd.apache.org/"&gt;Apache&lt;/a&gt; 的 &lt;a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html"&gt;mod_proxy&lt;/a&gt;，結果我沒注意到預設的 config 檔案會把 open proxy 開起來，沒兩天就被人 scan 到然後狂打，結果就是上圖那個慘狀，我大概第二天有覺得怪怪的，到第三天才發現問題在哪，可以看到關掉之後流量馬上掉下來，又過了好幾天才比較看不出來，不過看 CPU 和 Disk IO：&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8276915051/" title="CPU when open open propxy by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg" width="829" height="342" alt="CPU when open open propxy" srcset="https://farm9.staticflickr.com/8082/8276915051_90d24d435c_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8277973240/" title="Disk IO when open open propxy by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg" width="829" height="356" alt="Disk IO when open open propxy" srcset="https://farm9.staticflickr.com/8079/8277973240_8d262d60d7_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;到現在都還沒回覆到之前的狀況，尤其是 Disk IO，因為會一直寫 log，到現在還是和當初的 loading 有一段差距，後遺症持續很久，到現在還是一直會被打，整個就是長尾理論(?)的活例子。&lt;/p&gt;
+
+&lt;p&gt;在這邊奉勸大家要用 Apache 的 mod_proxy 的時候記得要把 &lt;a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#proxyrequests"&gt;ProxyRequests&lt;/a&gt; 設成 Off 啊，預設是 On 什麼的根本是蓄意謀殺啊！&lt;/p&gt;
+
+
+https://blog.othree.net/log/2012/12/16/mod-proxy/
+https://blog.othree.net/log/2012/12/16/mod-proxy/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2012-12-16 22:59
+
+
+
+PHP and XSLT 2.0
+&lt;p&gt;最近弄 &lt;a href="http://dev.w3.org/html5/srcset/"&gt;srcset&lt;/a&gt; 支援的時候，一度需要 XSLT 2.0 的 &lt;a href="http://www.w3.org/TR/xslt20/#element-function"&gt;xsl:function&lt;/a&gt;，所以研究一下要怎樣在 php 下可以使用 XSLT 2.0，PHP 自己的 &lt;a href="http://php.net/manual/en/book.xsl.php"&gt;extension&lt;/a&gt; 用的是 &lt;a href="http://xmlsoft.org/XSLT/"&gt;libxslt&lt;/a&gt;，只支援到 1.0，而且沒有支援 2.0 的計畫，所以就需要找其他的引擎，後來是看上 &lt;a href="http://saxon.sourceforge.net/"&gt;SAXON&lt;/a&gt; 這套 Java 寫的 XSLT Processor，有支援 XSLT 2.0，而且近期還有在更新，主要是由 &lt;a href="http://www.saxonica.com/welcome/welcome.xml"&gt;Saxonica&lt;/a&gt; 這間公司維護的，有 open source 的 home edition。&lt;/p&gt;
+
+&lt;p&gt;找好引擎後第二步就是要怎樣用 PHP load Java 的程式來用了，本來是想看 &lt;a href="http://php-java-bridge.sourceforge.net/pjb/"&gt;PHP/Java Bridge&lt;/a&gt;，不過我覺得還要弄 proxy 有些麻煩，幸好有找到 &lt;a href="http://sourceforge.net/projects/xslt2processor/"&gt;XML_XSLT2Processor&lt;/a&gt; 這個專門來把第三方 XSLT 引擎包起來給 PHP 用的專案，用起來很簡單，API 開的和 PHP 自己的版本都一樣，只是產生物件時要跟他說是要用那個引擎，檔案位置在哪而已：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$proc = new XML_XSLT2Processor('SAXON9', './saxon/saxon9he.jar', 'JAVA-CLI');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;像這樣，後面的用法就和以前都一樣了，設計的很不錯，等於可以只動兩行就換過去，不過實際上用了之後覺得，速度差太多 &gt;_&amp;lt; ，而且我後來發現本來讓我想要使用 XSLT 2.0 的那個錯誤並不是因為需要 xsl:function，而是我沒把 namespace 搞好就去用 &lt;a href="http://www.exslt.org/"&gt;EXSLT&lt;/a&gt; 的 &lt;a href="http://www.exslt.org/str/functions/tokenize/index.html"&gt;tokenize&lt;/a&gt; 這個 function，後來根據 stackoverflow 上的 &lt;a href="http://stackoverflow.com/questions/10447292/how-to-implement-xslt-tokenize-function"&gt;回答&lt;/a&gt; 改動之後，發現可以動我就換去 PHP extension 了。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2012/12/01/php-xslt-2/
+https://blog.othree.net/log/2012/12/01/php-xslt-2/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2012-12-01 23:03
+
+
+
+nginx on windows
+&lt;p&gt;這兩天想說在windows上裝個 &lt;a href="http://nginx.net/"&gt;nginx&lt;/a&gt; 來玩玩看，翻了一下官網才發現官方沒有提供 windows 版，不過有人用 &lt;a href="http://www.cygwin.com/"&gt;cygwin&lt;/a&gt; 編譯出 &lt;a href="http://www.kevinworthington.com/category/computers/nginx/"&gt;windows 版&lt;/a&gt;來，所以我還是順利的裝起來玩了，接著馬上就遇到問題了，我 server 裝在 C 碟，不過我想把網頁文件放在 D 碟，然後還要自動產生檔案索引，這兩個問題結果我找了一下午才解決，先說第二個，要自動產生檔案所以只要用 &lt;a href="http://wiki.codemongers.com/NginxHttpAutoindexModule"&gt;AutoIndex module&lt;/a&gt; 就好了，因為apache這是內建的，我想說 nginx 也會內建吧，就一直在 nginx core module 裡面找設定。第一個問題就比較棘手了，我找來找去都找不到相關文章，而且官方也沒提供windows環境的說明，最後再快要回家前終於注意到關鍵字 &lt;strong&gt;cygwin&lt;/strong&gt; 了，由於目前的 nginx windows 版是用 cygwin 環境編譯的，關於磁碟存取應該也是會用一樣的規則，結果果然成功了，想要存取 D 碟，就把路徑寫成 &lt;strong&gt;/cygdrive/d/&lt;/strong&gt; 就可以了。&lt;/p&gt;
+https://blog.othree.net/log/2008/11/04/nginx-on-windows/
+https://blog.othree.net/log/2008/11/04/nginx-on-windows/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="server at del.icio.us">server</a>
+2008-11-04 15:45
+
+
+
+
+

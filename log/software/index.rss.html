@@ -1,0 +1,607 @@
+
+
+O3noBLOG - software
+https://blog.othree.net//log/ software/
+
+Copyright 2019
+2019-03-09 16:46
+http://www.movabletype.org/?v=4.381
+http://blogs.law.harvard.edu/tech/rss 
+
+
+
+使用 VSCode 讀程式碼
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/46408696005/" title="VSCode peek window by othree, on Flickr"&gt;&lt;img src="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg" intrinsicsize="1024x674" width="1024" height="674" alt="VSCode peek window" srcset="https://farm8.staticflickr.com/7907/46408696005_a3a1bddbf5_b.jpg 1024w, https://farm8.staticflickr.com/7907/46408696005_a5b537ca48_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;偶爾看到些有趣的 library 會對它的原理和實做方式有興趣，就會花時間看看他們的程式碼，像是曾經介紹過的 &lt;a href="https://blog.othree.net/log/2018/04/19/immer/"&gt;immer&lt;/a&gt;，或是最近還在看的 &lt;a href="https://lit-html.polymer-project.org/"&gt;lit-html&lt;/a&gt;，然後最近發現 &lt;a href="https://code.visualstudio.com/"&gt;VSCode&lt;/a&gt; 已經有把閱讀程式碼需要的功能都做好，而且因為原生對 JavaScript 支援很好，看 JavaScript 專案的時候很方便，不用特別安裝或設定什麼直接就可以開始。&lt;/p&gt;
+&lt;p&gt;閱讀程式碼其實也沒需要什麼特殊功能，就是看到不知道是什麼的東西（constant, variable, function, class ...）時，能不能快速移動到定義的地方，看完後還可以回到原處這類的 reference 和導覽的功能，在 VSCode 當中，這兩個功能就是 &lt;code&gt;F12&lt;/code&gt; 移動到定義處和 &lt;code&gt;Ctrl&lt;/code&gt;+&lt;code&gt;-&lt;/code&gt; 移動回到上個位置，簡單一點的使用只要記得這兩個快速鍵就可以了，然後其實還有幾個進階的功能：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Opt&lt;/code&gt; + &lt;code&gt;F12&lt;/code&gt; Peek Definition，用 peek window 預覽定義，peek window 就是像上圖那樣一個浮在現在視窗上面的子視窗，通常右邊都會列出一些項目讓你可以挑選（peek），這個指令似乎也可以列出多個定義的位置，不過我還不確定是怎樣的情形會一個變數有多個地方定義它就是。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Cmd&lt;/code&gt; + &lt;code&gt;K&lt;/code&gt; &lt;code&gt;F12&lt;/code&gt; Open Definition to the Side，這是兩段式的指令，先按 &lt;code&gt;Cmd&lt;/code&gt; + &lt;code&gt;K&lt;/code&gt; 然後再按 &lt;code&gt;F12&lt;/code&gt;，就會垂直分割出一個新視窗，然後新開的視窗就是所尋找的定義的程式碼。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;F12&lt;/code&gt; Peek References，這也是開 peek window，不過不一樣的點是它是列出專案內其他有用到這個東西的地方，有時候看定義不太理解可以直接看看怎麼使用，也還蠻有幫助的。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;大概就這樣，Vim 的話其實也有內建的導覽功能，不過要產生對應的 reference 資訊還要些工具幫助，等研究研究後再來介紹嘍。&lt;/p&gt;
+
+https://blog.othree.net/log/2019/03/09/read-code-using-vscode/
+https://blog.othree.net/log/2019/03/09/read-code-using-vscode/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2019-03-09 16:46
+
+
+
+Sublime Text 3
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/37224534155/" title="Sublime Text 3 by othree, on Flickr"&gt;&lt;img src="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4372/37224534155_19ea953001_b.jpg 1024w, https://farm5.staticflickr.com/4372/37224534155_6dc29751a4_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;今天除了任天堂發表 Mario Odyssey 新情報並開放預約之外，還有一個令人意外的消息，就是 Sublime  Text 3 正式版 release 了，官網也整個&lt;a href="https://www.sublimetext.com"&gt;更新&lt;/a&gt;了，就我記憶所及，Sublime Text 最活躍的時期應該也是 Rails 正火熱的那段時間，雖然是閉源的半商業軟體，不過它確實是引入了很多先進的機制進入純文字編輯器世界，例如 &lt;a href="https://github.com/wincent/command-t"&gt;Command-T&lt;/a&gt;（不過我推薦用 &lt;a href="https://github.com/kien/ctrlp.vim"&gt;ctrlp.vim&lt;/a&gt;）、&lt;a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette"&gt;Command Palette&lt;/a&gt;、Multi Cursor 應該也是吧，或許大部分人會覺得我應該是 Vim 為主力的，應該對 Sublime 興趣不大吧，不過事實上我有買他的 license，其實當初購買的原因是我的博士論文是用 Latex 格式的文件，然後用 Vim 寫這麼大份文本有點辛苦，所以後來都是用 Sublime Text 2，後來畢業就決定花錢買個 license 以茲感謝，而即使到今天也還是會有用到，算是和 Vim 不同用途。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/37224533955/" title="Sublime Text 3 by othree, on Flickr"&gt;&lt;img src="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg" width="325" height="168" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4411/37224533955_ccc97a9e2b_b.jpg 650w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;其實本來以為作者已經不太想繼續了，沒想到實際上是偷偷的一直開發，最新這版和上次 Beta 已經相隔一年了，有興趣的可以看看 &lt;a href="https://www.sublimetext.com/3"&gt;Changelog&lt;/a&gt; ，然後整個視覺設計也改很大，最上面那張是 Adaptive 主題的樣子，Default 的則是：&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/37052309552/" title="Sublime Text 3 by othree, on Flickr"&gt;&lt;img src="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg" width="1024" height="670" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4384/37052309552_68f8a32300_b.jpg 1024w, https://farm5.staticflickr.com/4384/37052309552_0318a85a9c_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;似乎很多人不習慣淺灰色的地方就是，另外就是 icon 也換了：&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/37224612235/" title="Sublime Text 3 by othree, on Flickr"&gt;&lt;img src="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg" width="256" height="256" alt="Sublime Text 3, " srcset="https://farm5.staticflickr.com/4386/37224612235_91a13883c4_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我今天也因此好幾次找不到就是了...&lt;/p&gt;
+
+https://blog.othree.net/log/2017/09/14/sublime-text-3/
+https://blog.othree.net/log/2017/09/14/sublime-text-3/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2017-09-14 22:59
+
+
+
+Gitdags, Git 示意圖工具
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/33595934396/" title="cherrypick-2 by othree, on Flickr"&gt;&lt;img src="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg" width="1024" height="384" alt="cherrypick-2" srcset="https://farm3.staticflickr.com/2881/33595934396_3da08a8f62_b.jpg 1024w, https://farm3.staticflickr.com/2881/33595934396_96d863038c_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最近因緣際會，需要畫些圖來教 Git，不是要拿真的 repository 來畫，當然可以用繪圖軟體刻，不過時間不夠，而且覺得應該之前就有人有需求了，應該有現成的工具，所以我就找了一下看有沒有方便的工具可以畫，結果很幸運的，沒多久就找到了 &lt;a href="https://github.com/Jubobs/gitdags"&gt;gitdags&lt;/a&gt; 這個 Latex 的 package，專門就是用來畫教學用的 Git 圖，而且圖的樣版還蠻接近 Pro Git v1 書內的&lt;a href="https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging"&gt;樣子&lt;/a&gt;（v2 的樣版改的更&lt;a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"&gt;簡潔&lt;/a&gt;了），看起來還蠻 ok 的，它是基於 &lt;a href="http://www.texample.net/tikz/"&gt;TikZ&lt;/a&gt; 這個 package，是 Latex 上的繪圖 library，可以產生出向量格式的圖，所以我可以用 pdf2latex 先轉成 pdf，pdf 檔案就可以給 Keynote 用了，不過要通用一點，還可以用 pdf2svg 生成 SVG 圖檔，SVG 內容看起來也還蠻乾淨的，tex 文件內容大概像這樣：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\documentclass[preview]{standalone}
+\usepackage{gitdags}
+
+\begin{document}
+    \centering
+    \begin{tikzpicture}
+      % Commit DAG
+      \gitDAG[grow right sep = 2em]{
+        0 -- {
+          1 -- 2 -- 3 -- 4,
+          A
+        }
+      };
+      \gitbranch
+        {master}     % node name and text 
+        {above=of 4} % node placement
+        {4}          % target
+      \gitbranch
+        {for-rebase} % node name and text 
+        {below=of A} % node placement
+        {A}          % target
+      \gitHEAD
+        {below=of for-rebase} % node placement
+        {for-rebase} 
+      \end{tikzpicture}
+\end{document}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;產生的圖片就像是最上面的圖，gitdags 是用 &lt;a href="http://ethanschoonover.com/solarized"&gt;solarized&lt;/a&gt; 來配色，我覺得顏色不是很精緻，不過還可以接受，另外我有自己調整一版黑底用的，把線條和邊框改淺，還有把 commit node 的形狀調整了一下，也放在 &lt;a href="https://github.com/othree/gitdags"&gt;GtiHub 上&lt;/a&gt;。使用 gitdags 的過程，比較大的問題就是文件和範例不足，所以我把自己畫的部分&lt;a href="https://github.com/othree/git-graph"&gt;全部丟上 GitHub&lt;/a&gt; 了，後來發現原作者也有&lt;a href="https://github.com/Jubobs/talks/tree/e1cfbd07587ac90c1602a6901260a798b858e727/corkdev-oct2015"&gt;一些 sample&lt;/a&gt; 可以參考，作者自己兩年前是說有要寫文件和準備範例，不過後來就都沒動靜就是了。如果要在 Mac 上處理 Latex 文件，一般就是建議直接裝 &lt;a href="http://www.tug.org/mactex/"&gt;MacTeX&lt;/a&gt; 就好，不過 gitdags 沒包在裡面，所以要自己安裝，或是把 sty 檔案和 Tex 文件放在同一個目錄也可以。&lt;/p&gt;
+&lt;p&gt;不過用 pdf2svg 產生的 SVG 檔我用 AI 要編輯時會發現有些問題，我有另外試著用 &lt;a href="https://inkscape.org/en/"&gt;inkscape&lt;/a&gt; 做轉換，出來的文字大小是正常的，不過看起來字形和間距不太正確就是，如果要轉 PNG 之類的非向量格式是可以直接用 Preview 或是 convert 轉換，不過解析度要設定一下，通常預設的 150，輸出的圖片大小是不太夠就是了，上面那張我是設定 450。&lt;/p&gt;
+&lt;p&gt;最後，gitdags 這名字裡面的 dag 應該是&lt;a href="http://www.csie.ntnu.edu.tw/%7Eu91029/DirectedAcyclicGraph.html"&gt;有向無環圖&lt;/a&gt;（Directed Acyclic Graph）的意思，這種圖剛好可以用來描述 Git 裡面 commit、branch 等東西之間的關係。&lt;/p&gt;
+
+https://blog.othree.net/log/2017/03/25/gitdags-git/
+https://blog.othree.net/log/2017/03/25/gitdags-git/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2017-03-25 21:49
+
+
+
+MRT &amp; GIT
+&lt;script async="async" class="speakerdeck-embed" data-id="a6c9e72eb4b44e16b5862fc3e7c84153" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"&gt;/* A_A */&lt;/script&gt;
+
+&lt;p&gt;今年 COSCUP Lightening Talk 分享的主題是 GIT &amp;amp; MRT，主題就是紀錄我之前用 GIT 線圖畫台北捷運路線圖的過程，投影片在上面，這篇文章是補充一下被省略的部分和講不完的部分，當天我有用 Ricoh Theta 錄影，也丟上 YouTube 了：&lt;/p&gt;
+
+&lt;div class="embed_16_9"&gt;
+&lt;iframe width="853" height="480" src="https://www.youtube.com/embed/OBadluXaJi8?rel=0" frameborder="0" allowfullscreen="allowfullscreen"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;接著要來說一下當天省略的部分吧，就是 &lt;code&gt;git branch&lt;/code&gt; 和 &lt;code&gt;git log&lt;/code&gt; 我所學到的東西，不過要把這內容講清楚，需要先介紹一下 &lt;code&gt;.git&lt;/code&gt; 這個資料匣，這是 git repository 的所有資料儲存的地方，包括所有的 branch、commit 資訊、檔案和目錄結構等等都在裡面，一般 &lt;code&gt;git clone&lt;/code&gt; 也是先把這個目錄的內容抓下來，然後才把從裡面把工作目錄（working directory）的檔案弄出來，那麼，如果現在已經把 &lt;code&gt;.git&lt;/code&gt; 的資料都抓下來後，要怎麼取出工作目錄的檔案呢，首先要看 &lt;code&gt;.git/HEAD&lt;/code&gt; 這個檔案，一般而言，內容會是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ref: refs/heads/master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;意思是 reference 到 &lt;code&gt;.git/refs/heads/master&lt;/code&gt;，所以就看一下這個檔案的內容，以 &lt;a href="https://github.com/othree/immutable-quadtree-js"&gt;immutable-quadtree-js&lt;/a&gt; 為例，&lt;code&gt;.git/refs/heads/master&lt;/code&gt; 的內容如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;4b5c03ea81e0e24714bea66de3892a40165fe56f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這是一段 sha-1 hash，那麼要到哪裡找這個 hash 的內容呢？其實這個檔案的位置就在：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.git/objects/4b/5c03ea81e0e24714bea66de3892a40165fe56f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;檔案（又稱為 object）內容是用 zlib 壓縮過的，git 有簡單的工具可以幫忙檢視內容，就是 &lt;code&gt;git cat-file&lt;/code&gt;，只要給他 hash 它就會自動去定位了，例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git cat-file -p 4b5c03ea81e0e24714bea66de3892a40165fe56f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或是&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git cat-file -p 4b5c03
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;就會把上面那個 object 的內容印出來：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tree 96602375208c5d4f028bdbcd7873f049a70d9287
+parent 280142567c56235af3fc7c35513edeb978c1b465
+author othree &amp;lt;othree@gmail.com&amp;gt; 1429321581 +0800
+committer othree &amp;lt;othree@gmail.com&amp;gt; 1429321581 +0800
+
+Use same name in node and global module
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這就是一個 commit 的內容，記錄了現在這個 commit 的檔案狀態（tree）、上一個 commit（parent）、還有作者、提交者及 commit message，要把工作目錄的內容抓出來會需要的是 tree，後面的值也是一個 object hash，所以就來看看內容吧：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;100644 blob 31843d5c03e1a3a0618b40bdd2034b0c492f2132    .gitignore
+100644 blob 20fd86b6a5bee335c75b4efea34312ff7f3a039e    .travis.yml
+100644 blob fd7bce4d5095540e4cb83f56276b9cd831f9ec76    DOC.md
+100644 blob 3c983c1efb8ab258bca8b7a0aed13bd97cf1b47f    LICENSE
+100644 blob c11ab5fc05c2cc398f2be094451f34bf428e0a9e    Makefile
+100644 blob fa3477c3305c08116408aea0ad30520627598804    README.md
+040000 tree 61cc224cb5de89713ac3bdaddc7835ec2dbea129    dist
+100644 blob 3ceec31471c4e4d8e38e0f0e506762feda7b852c    package.json
+040000 tree 48614476be4f27aad0137d57170852a9d5bdd227    src
+040000 tree 05181d9234207ffcc34e0bc4574bd9fb4e3210ad    test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;很容易可以理解這個內容的意思，它其實就是這個 commit (HEAD)，根目錄下的檔案和目錄，分成四個 column 紀錄，第一欄是檔案權限、第二欄是 object type，第三欄是 hash，最後一欄是檔案/目錄名稱，其中的 object type 如果是 &lt;code&gt;tree&lt;/code&gt; 就是子目錄，&lt;code&gt;blob&lt;/code&gt; 就是檔案，然後每一筆資料都透過 hash 指引到一個 object 檔案，如果是 tree  object 就會看到一樣結構的內容，如果是 blob object 就是該檔案本身，所以就可以透過遞迴操作來把整個工作目錄取出（這是我理解 git 資料結構後認為的作法，不是去看 git 原始碼得知的）。&lt;/p&gt;
+
+&lt;p&gt;再回到前面的 commit object，裡面的 parent 屬性就是唯一可以連結每個 commit 之間關係的屬性，如果是 merge point 則會有多個 parent，例如 &lt;a href="https://github.com/othree/taipei-mrt"&gt;taipei-mrt&lt;/a&gt; 中的南京復興站：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git cat-file -p f747e466dd826ff6b81550505412f7bf4875fd68
+
+tree d6d7e908638af9bb8759870723c0c6deed174faf
+parent 460ff499e9917051e747a5305daa19bcd80a86ea
+parent 5f913238492d3b8ea5a15893b463492681ae59ff
+author othree &amp;lt;othree@gmail.com&amp;gt; 1455717204 +0800
+committer othree &amp;lt;othree@gmail.com&amp;gt; 1455717204 +0800
+
+南京復興
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以可以理解的是，git 不是紀錄每個 commit 間的 diff，而是記錄每個 commit 的狀態，然後 commit 間的關係只能透過 parent 來連接，是個單向的關係，每個 commit 都只能往上尋找自己的祖先，沒辦法從 commit 連結到自己的子孫，而這個單向的關係，也影響了 branch 的定義。&lt;/p&gt;
+
+&lt;p&gt;Git 的 branch 嚴格說起來，其實只是進入 commit tree 的入口，一開始預設只有 master branch 這個入口，就如同上面介紹要怎麼把工作目錄的資料抓出來時一樣，git 會先去看 &lt;code&gt;.git/HEAD&lt;/code&gt;，HEAD 是一個特殊的參考（reference），預設會指到 master branch，上面介紹時，master branch 的 reference 檔案位置在 &lt;code&gt;.git/refs/heads/&lt;/code&gt;，事實上，所有的 branch 的 reference 都在這個位置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ll .git/refs/heads/
+
+total 72
+drwxr-xr-x  11 othree  staff  374 Sep 10 00:02 .
+drwxr-xr-x   5 othree  staff  170 Feb 15  2016 ..
+-rw-r--r--   1 othree  staff   41 Aug 14 23:45 blue
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 brown
+-rw-r--r--   1 othree  staff   41 Feb 16  2016 green
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 green-a
+-rw-r--r--   1 othree  staff   41 Feb 15  2016 orange
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 orange-a
+-rw-r--r--   1 othree  staff   41 Sep  9 00:06 orange-b
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red
+-rw-r--r--   1 othree  staff   41 Sep 10 00:02 red-27
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每個檔案內容都是一個 commit hash：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat .git/refs/heads/*
+
+1873fddf2b760cbb753f6d81076e50a079acd687
+1873fddf2b760cbb753f6d81076e50a079acd687
+91631c62df972ee49f7699eb6b15cbda913f50e3
+a245d40e28f75e3bed1b7a8d726906eb230bd6fe
+f861f243e367c15b681919ebc2b1d9d9ceccde17
+e73351a53945ebb3fcf0f9bbc078969bdb6dc29b
+c13ea61e77de42bc579ecf2a1cf32aa2a4a9d6e0
+9ad00b514fccdec7f7f5bb0a91e6d5cb678c2a6f
+99e31bceea7e9446e37603c00cafa04f8c4827a2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有這些入口後，就可以進到編輯歷史裡，然後透過每個 commit 的 parent 來串連起 branch 的修改歷史。事實上這種設計並沒有限制 branch 之間一定要有相連，所以就有了可以完全獨立的 &lt;a href="https://ihower.tw/blog/archives/5691"&gt;orphan branch&lt;/a&gt;，最常見被用來做 &lt;a href="https://pages.github.com/"&gt;Github Pages&lt;/a&gt;，也可以用來放一些相關的資料，不過實務上，會需要放相關資料在 repository 李的話，通常會在根目錄先建立好不同用途的子目錄，不然要查詢時還要切換 branch 實在也不方便，不過要畫捷運路網時， orphan branch 卻是幫助很大，可以簡單的建立不同路線的起點。&lt;/p&gt;
+
+&lt;p&gt;在瞭解 branch 之後，就可以來用 Git 線圖建立路網的交錯了，其實原理很簡單，就是先把兩個分支 branch merge 起來，並且讓兩個 branch 都指向到同一個 merge commit 上，作法就是兩個 branch 互相 merge：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git merge orphan --allow-unrelated-historie
+git co orphan
+git merge master --allow-unrelated-historie
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在 Git 2.9 之後需要加上 &lt;code&gt;--allow-unrelated-historie&lt;/code&gt; 這個參數，第一個 merge 完成會變這樣：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;M─┐ [master] Merge branch 'orphan'
+│ I [orphan] Commit B
+I Commit A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第二個 merge 會是 fast-forward ，然後結果就變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;M─┐ [orphan] [master] Merge branch 'orphan'
+│ I Commit B
+I Commit A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到兩個 branch 現在都指向到同個 commit 了，然後分別在兩個 branch 建立新的 commit，就可以分支成兩條線出去了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;o [orphan] Commit D
+│ o [master] Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不過由於 Git 的歷史紀錄只能靠 parent 屬性建立，branch 也只是一個進入編輯歷史的入口，所以追塑到 merge commit 後，就無法分辨更之前的 commit 是屬於那個 branch 了，我的 MRT 線圖也是如此，其實只能維持到 topology 正確，而沒辦法讓所有的 commit 都能分辨出來是哪條線的。&lt;/p&gt;
+
+&lt;p&gt;第二個要說的則是 &lt;code&gt;git log&lt;/code&gt; 的部分，當天的分享有講到用 &lt;a href="https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html#_specifying_ranges"&gt;git log range&lt;/a&gt; 來查詢捷運路線，主要用的是 &lt;code&gt;A..B&lt;/code&gt; 和 &lt;code&gt;A...B&lt;/code&gt;，其實在一般只有一條線的情形下用，&lt;code&gt;..&lt;/code&gt; 和 &lt;code&gt;...&lt;/code&gt; 都可以用來擷取 A 和 B 兩個 commit 中間的變化，但是用來查捷運路線，就會發現很多時候結果不如預期，事實上，這兩個 syntax 都有其代表的邏輯操作，如同上面所說，git 歷史的記錄只能靠 parent 來建構起來，一般的 &lt;code&gt;git log&lt;/code&gt; 就會從 HEAD 指到的 commit 開始，透過 parent 屬性，把所有可以連結到的 commit 都列出來，而 &lt;code&gt;E..B&lt;/code&gt; 的意思，則是從 E 開始，列出所有 E 能連結到的 commit，但是不列出 B 能連結到的 commit，只有一條線的情境來看：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;E-D-C-B-A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;E 能連結到的包括了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;E-D-C-B-A
+  ^ ^ ^ ^
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;B 能連結到的包括了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;E-D-C-B-A
+        ^
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;把上面的扣掉下面的就變成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;E-D-C-B-A
+  ^ ^ ^
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看起來就剛好是 B 到 E 中間的變化歷程，至於 &lt;code&gt;...&lt;/code&gt; 又有點不同，它的定義是列出所有 B 和 E 可以到達的 commit，但是不列出兩者都可以到達的 commit，單一條線的時候，結果會和 &lt;code&gt;..&lt;/code&gt; 是一樣的，所以差異是在有分支的情形才會出現，舉例來說：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;o [master] &amp;lt;E&amp;gt; Commit E
+│ o [orphan] &amp;lt;F&amp;gt; Commit F
+│ o Commit D
+o │ Commit C
+M─┘ Merge branch 'orphan'
+│ I Commit B
+I Commit A
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果用 &lt;code&gt;...&lt;/code&gt; 看 E 到 F 的話：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git log E...F --oneline --graph
+
+* 8d6c4d5 Commit E
+* d2f593f Commit C
+* f4dad66 Commit F
+* c3ac3ca Commit D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;就可以達成類似從 E 站到 F 站的效果，不過由於 Merge commit 是兩邊都可以到達的 commit，所以不會出現，另外就是出現的順序不會正確。所以我在未來發展那邊有提到可以開發一個工具來專門查詢捷運路線，大概要用的方法就是要從每個 branch 進去找，然後還要尋找 merge commit，再從 merge commit，實際上還要仔細想想才能確定查詢的流程就是。&lt;/p&gt;
+
+&lt;p&gt;以上就是這次學習到的 git 相關知識，當時投影片上寫著下略五千字，沒想到寫起來真的蠻多的，這篇文章的字數統計還真的有達標。&lt;/p&gt;
+
+https://blog.othree.net/log/2016/09/17/git-mrt/
+https://blog.othree.net/log/2016/09/17/git-mrt/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2016-09-17 11:41
+
+
+
+How to Reduce PDF Size and Keep Text
+&lt;h4&gt;Requirement&lt;/h4&gt;
+
+&lt;p&gt;Small size of PDF file generated from PSD, with real text(for accessibility) and good image quality.&lt;/p&gt;
+
+&lt;h4&gt;Expect&lt;/h4&gt;
+
+&lt;p&gt;Expect the PDF file size is a little bit larger than JPG file.&lt;/p&gt;
+
+&lt;h4&gt;Issue&lt;/h4&gt;
+
+&lt;p&gt;Use &lt;strong&gt;save as&lt;/strong&gt; and choose &lt;strong&gt;Photoshop PDF&lt;/strong&gt; will generate large PDF. But save as JPG/PNG is much smaller. Test file spec:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Page Size: 210mm*297mm (A4)&lt;/li&gt;
+&lt;li&gt;Resolution: 1240px*1754px&lt;/li&gt;
+&lt;li&gt;Fonts: 2 English font&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Sizes:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Format&lt;/th&gt;
+    &lt;th&gt;Option&lt;/th&gt;
+    &lt;th&gt;Size&lt;/th&gt;
+  &lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+    &lt;td&gt;PSD&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+    &lt;td&gt;79.7MB&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;PNG&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+    &lt;td&gt;&amp;#160;1.2MB&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;JPG&lt;/td&gt;
+    &lt;td&gt;q: 100&lt;/td&gt;
+    &lt;td&gt;&amp;#160;0.6MB&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;PDF&lt;/td&gt;
+    &lt;td&gt;default&lt;/td&gt;
+    &lt;td&gt;&amp;#160;7.0MB&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;File transformed on Adobe CC 2016 Jan &lt;/p&gt;
+
+&lt;p&gt;Tried several methods to reduce the file size includes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Remove unused layers&lt;/li&gt;
+&lt;li&gt;Merge and flatten all layers&lt;/li&gt;
+&lt;li&gt;Use lower jpeg compression quality&lt;/li&gt;
+&lt;li&gt;Not save meta data&lt;/li&gt;
+&lt;li&gt;Not preserve Photoshop editing capability&lt;/li&gt;
+&lt;li&gt;Use Photoshop autotool &gt; PDF presentation&lt;/li&gt;
+&lt;li&gt;Use Illustrator&lt;/li&gt;
+&lt;li&gt;Use Acrobat Pro to optimize PDF&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But none of them can really make the PDF file as small as expected.&lt;/p&gt;
+
+&lt;h4&gt;Solution&lt;/h4&gt;
+
+&lt;p&gt;Separate the text and image. Also create a clean PSD file. Steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Hide all text layers&lt;/li&gt;
+&lt;li&gt;Save as PNG file&lt;/li&gt;
+&lt;li&gt;Open PNG file in Photoshop&lt;/li&gt;
+&lt;li&gt;Unhide text layers and copy text layers to PNG file (should place at right place)&lt;/li&gt;
+&lt;li&gt;Save as Photoshop PDF file&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h5&gt;Result&lt;/h5&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Format&lt;/th&gt;
+    &lt;th&gt;Option&lt;/th&gt;
+    &lt;th&gt;Size&lt;/th&gt;
+  &lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+    &lt;td&gt;JPG&lt;/td&gt;
+    &lt;td&gt;q: 100&lt;/td&gt;
+    &lt;td style="text-align: right"&gt;618.0KB&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;PDF&lt;/td&gt;
+    &lt;td&gt;default&lt;/td&gt;
+    &lt;td style="text-align: right"&gt;624.0KB&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;PS. I think other vector object can also use this method to keep their quality and maintain PDF in small size. But not tested.&lt;/p&gt;
+
+
+https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/
+https://blog.othree.net/log/2016/02/06/how-to-reduce-pdf-size/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2016-02-06 10:10
+
+
+
+Flickr Share with Template 
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/8233565165/" title="flickr share with template by othree, on Flickr"&gt;&lt;img src="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg" width="1022" height="766" alt="flickr share with template" srcset="https://farm9.staticflickr.com/8198/8233565165_befb00d8cd_b.jpg 1024w" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;前幾天在做 &lt;a href="https://blog.othree.net/log/2012/12/02/srcset/"&gt;srcset 支援&lt;/a&gt; 支援時，遇到一個問題是，Flickr 雖然有提供到 2048px 和原始大小的檔案，可是這些高解析度檔案的檔名和 1024px 以下的檔案是不一樣的，所以不能用簡單的加 postfix 來找到位置，所以我每要貼一張圖，就要辛苦的去開 Flickr 的各種 size 來抓他的路徑，然後剪剪貼貼組合出原始碼，這實在太辛苦了，而且手工作業長期下來很容易會出錯，剛好我也對 Flickr 預設的分享用 HTML code 不支援 XHTML 不滿很久了，所以我就決定寫個 Chrome extension 來做這件事。&lt;/p&gt;
+
+&lt;p&gt;目前還沒正式公開，沒有上架，&lt;a href="https://github.com/othree/flickr-share-template"&gt;專案&lt;/a&gt;在 Github 上，現在因為還沒上架，要使用比較麻煩一點，把專案 clone 到本機後，先開啟 Chrome 擴充功能的開發人員模式，然後選 &lt;strong&gt;載入未封裝擴充功能&lt;/strong&gt;，路徑指到專案下的 source 去。&lt;/p&gt;
+
+&lt;p&gt;目前樣版語法用 mustache 語法，大概看一下預設的樣版就能懂怎麼用了，不過不是很正式的 parser 來處理，以後可能會換成 &lt;a href="http://twitter.github.com/hogan.js/"&gt;hogan.js&lt;/a&gt; 引擎，東西現狀其實只是可以用，還沒有寫文件，寫 License...等，先貼上來其實主要目的是，徵求一組可用的 icon，沒有 icon 就上架好像怪怪，有興趣提供的麻煩跟我聯絡，專案本身會是 MIT License，之後還會弄 Firefox 版，大概就這樣，非常感謝。&lt;/p&gt;
+
+
+https://blog.othree.net/log/2012/12/08/flickr-share-with-templat/
+https://blog.othree.net/log/2012/12/08/flickr-share-with-templat/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2012-12-08 14:17
+
+
+
+Screen 支援 256 色
+&lt;p&gt;之前把 &lt;a href="http://blog.othree.net/log/2008/10/19/256-color-terminal/"&gt;256色終端機環境弄好後&lt;/a&gt; 一直還有個問題，就是跑 screen 的話，screen 裡面的 bash 還是沒有 256 色，本來一直以為是 $TERM 和設定的問題，結果剛剛又花時間找資料才發現是我編譯 screen 的時候根本沒開256色的支援編譯前要先 ./configure --enable-colors256&lt;/p&gt;
+https://blog.othree.net/log/2009/09/21/screen-256colors/
+https://blog.othree.net/log/2009/09/21/screen-256colors/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2009-09-21 11:26
+
+
+
+Opera in Taiwan
+&lt;p&gt;最近 Opera 台灣隨著15週年辦了一系列的活動，包括使用者聚會、校園講座與徵才，15週年記者會等，小弟我有幸參與了其中幾場，好像可以簡單介紹一下XD。&lt;/p&gt;
+
+&lt;p&gt;Opera 大約是去年年底在台灣成立分公司，雖然 Opera Desktop 在台灣幾乎是沒什麼能見度，可是在電腦以外的平台佔有率還是最高的，不過 Opera 台灣並沒有打算只專注在這些平台，除了推廣外，還要把台灣為數不少的 Opera 使用者集結起來，讓社群成形，現在不但有正式的&lt;a href="http://my.opera.com/tradchinese/forums/"&gt;中文討論區&lt;/a&gt;，還有官方的 &lt;a href="http://twitter.com/operatw"&gt;Twitter帳號&lt;/a&gt; 和 &lt;a href="http://www.plurk.com/operatw"&gt;Plurk帳號&lt;/a&gt;，另外還有 &lt;a href="http://my.opera.com/ting0619/blog/"&gt;Opera 第一手消息&lt;/a&gt;這個部落格。目前是可以預見他們會對台灣使用者開始投入些心力、資源，總之是好是一件。&lt;/p&gt;
+
+&lt;p&gt;在這次活動中，有人問到，為什麼 Opera 功能那麼強，但是使用者還是不多，那時候 &lt;a href="http://my.opera.com/andreasbovens/about/"&gt;Andreas&lt;/a&gt; 說他們也好奇原因，其實我一直以來也很納悶， Opera 本身除了效能好，還內建很多功能，其中不少還是 Opera 首先推出的，但是一直以來他們的佔有率就是不高，即使成為免費版後也沒有提昇多少。不過我想這會一直是個難解的問題，但是至少我自己選擇的原因我還有點印象，說來算是時間點不好，當我在決定要選哪個瀏覽器時，Opera 畫中文還畫的很難看，這應該是我當初選擇使用 Firefox 而不是 Opera 的主要原因（我對這種東西很外貿協會的XD），後來才知道 Firefox 很多擴充套件的功能是 Opera 直接就有內建的。&lt;/p&gt;
+
+&lt;p&gt;剛好大約一個月一次的摩茲連續聚，我下次還沒想到可以分享什麼東西，大概就介紹 Opera 吧XD，所以應該這兩天開始要強迫自己用 Opera 用一個月了XD，到時候從功能面來介紹它:P，雖然不能吸引到 IE 使用者跳槽就是~_~。&lt;/p&gt;
+https://blog.othree.net/log/2009/04/30/opera-in-taiwan/
+https://blog.othree.net/log/2009/04/30/opera-in-taiwan/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2009-04-30 10:18
+
+
+
+禁用 docx ?
+&lt;p&gt;剛剛看到 &lt;a target="_blank" href="http://blog.ofset.org/ckhung/index.php?post%2F08cf"&gt;來自立法院的好消息: 「隨身碟優先開機」 及 「禁用 docx」&lt;/a&gt; 這篇文章時，還真是有點嚇到了，首先我要說一下我的立場，我是支持開放的，相較於 doc 和 docx 我比較支持 docx，而 &lt;a target="_blank" href="http://en.wikipedia.org/wiki/OpenDocument"&gt;OpenDocument Format&lt;/a&gt; 和 &lt;a target="_blank" href="http://en.wikipedia.org/wiki/Office_Open_XML"&gt;&lt;span&gt;&lt;span class="caps"&gt;OOXML&lt;/span&gt;&lt;/span&gt;&lt;/a&gt; 比較的話我則是比較支持ODF的，當然支持那個格式不是這篇的重點， &lt;a target="_blank" href="http://www.zdnet.com.tw/news/software/0,2000085678,20128475,00.htm"&gt;&lt;span&gt;&lt;span class="caps"&gt;OOXML &lt;/span&gt;&lt;/span&gt;成為 &lt;span&gt;&lt;span class="caps"&gt;ISO &lt;/span&gt;&lt;/span&gt;的過程&lt;/a&gt; 也不是重點，我要說的是關於決議內容的錯誤。&lt;/p&gt;
+
+&lt;h4&gt;積極宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式&lt;/h4&gt;
+
+&lt;p&gt;&lt;span&gt;&lt;span class="caps"&gt;OOXML&lt;/span&gt;&lt;/span&gt;格式並不是封閉格式，ECMA那有提供完整的 &lt;a target="_blank" href="http://www.ecma-international.org/publications/standards/Ecma-376.htm"&gt;檔案格式說明文件&lt;/a&gt; ，OpenOffice.org也已經 &lt;a target="_blank" href="http://www.ithome.com.tw/itadm/article.php?c=48087"&gt;有辦法支援&lt;/a&gt; ，實在看不出那裡是封閉。&lt;/p&gt;
+
+&lt;p&gt;順便一提，以前的二進位格式檔案的說明也有 &lt;a target="_blank" href="http://www.microsoft.com/interop/docs/OfficeBinaryFormats.mspx"&gt;相關文件&lt;/a&gt; 了。&lt;/p&gt;
+
+&lt;h4&gt;建請在電腦軟體已經升級 Office 2007的公務單位，應積極宣導宣導嚴禁散佈 docx, xlsx, pptx 等封閉檔案格式&lt;/h4&gt;
+
+&lt;p&gt;會有這條是因為其他單位可能還沒有 Office 2007 會沒辦法開啟 &lt;span&gt;&lt;span class="caps"&gt;OOXML &lt;/span&gt;&lt;/span&gt;格式的檔案，而升級到 Office 2007 會有諸多問題，包括預算、訓練（其實我覺得 Office 2007 根本就比以前好用許多），但是事實上微軟為了推廣 &lt;span&gt;&lt;span class="caps"&gt;OOXML &lt;/span&gt;&lt;/span&gt;，特別作了 &lt;a target="_blank" href="http://www.microsoft.com/downloads/details.aspx?displaylang=zh-tw&amp;amp;FamilyID=941b3470-3ae9-4aee-8f43-c6bb74cd1466"&gt;檔案格式相容性套件&lt;/a&gt; ，而且往前支援到 Office 2000，這樣的往前支援其實是很罕見的，而且下載過程並沒有做 &lt;span&gt;&lt;span class="caps"&gt;WGA &lt;/span&gt;&lt;/span&gt;檢查。&lt;/p&gt;
+
+&lt;p&gt;這樣的決議文我覺得不是政商妥協下的產物，就是主事者沒搞清楚狀況造成的，如果真的通過的話而且 &lt;strong&gt;實行確實的話&lt;/strong&gt; ，政府機關只會回去用以前的，真的是封閉格式 doc, xls, ppt 檔，難道立法院能夠真的把這些格式也禁掉嘛？&lt;/p&gt;
+
+&lt;p&gt;其他參考文件：&lt;/p&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a target="_blank" href="http://support.microsoft.com/?scid=kb%3Bzh-tw%3B923505&amp;amp;x=20&amp;amp;y=13"&gt;如何安裝 Microsoft Office 相容性套件，以便使用舊版 Excel、PowerPoint 及 Word 來開啟和儲存 2007 Office 程式的檔案&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a target="_blank" href="http://office.microsoft.com/zh-tw/products/HA102058151028.aspx"&gt;Ecma Office Open &lt;span&gt;&lt;span class="caps"&gt;XML &lt;/span&gt;&lt;/span&gt;檔案格式概觀&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a target="_blank" href="http://local.joelonsoftware.com/mediawiki/index.php/%E7%82%BA%E4%BB%80%E9%BA%BC%E5%BE%AE%E8%BB%9F_Office_%E7%9A%84%E6%AA%94%E6%A1%88%E6%A0%BC%E5%BC%8F%E5%A6%82%E6%AD%A4%E8%A4%87%E9%9B%9C%EF%BC%9F%EF%BC%88%E4%BB%A5%E5%8F%8A%E4%B8%80%E4%BA%9B%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%EF%BC%89"&gt;為什麼微軟 Office 的檔案格式如此複雜？（以及一些解決方案）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+https://blog.othree.net/log/2008/12/27/dont-abandon-docx/
+https://blog.othree.net/log/2008/12/27/dont-abandon-docx/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-12-27 01:26
+
+
+
+Mockups
+&lt;p&gt;&lt;a href="http://www.balsamiq.com/products/mockups/desktop"&gt;Balsamiq Mockups&lt;/a&gt; 是一款用 &lt;span class="caps"&gt;AIR &lt;/span&gt;寫的設計使用者介面的 mockup 軟體，不知道 mockup 是什麼的可以參考前陣子 &lt;a href="http://sites.google.com/a/happydesigner.org/happydesigner-meetup/happydesigner-meetup-no-4"&gt;HappyDesigner Meetup 4&lt;/a&gt; hlb 的&lt;a href="http://www.slideshare.net/hlb/wireframe-mockup-prototype-presentation"&gt;投影片&lt;/a&gt;，也有&lt;a href="http://vimeo.com/2286637"&gt;影片&lt;/a&gt;在 vimeo 上，我蠻早就有知道有這款軟體，而且一直都很喜歡它的手繪風格，不過那時沒什麼需求，所以沒深入研究。&lt;/p&gt;
+
+&lt;p&gt;後來發現到它有免費提供的幾個方法（包括寫篇 blog 介紹），剛好當時準備 &lt;span class="caps"&gt;HDM4 &lt;/span&gt;時有需要畫個幾張常見網頁 layout 的圖示，本來還想像男子漢用 &lt;span class="caps"&gt;HTML &lt;/span&gt;+ &lt;span class="caps"&gt;CSS &lt;/span&gt;來寫，後來就決定申請一個授權來畫這幾張圖片，使用的心得還可以拿來發一篇 blog，實在是一舉兩得啊～～。&lt;/p&gt;&lt;p&gt;&lt;a href="http://www.flickr.com/photos/othree/3078255391/" title="Flickr 上 othree 的 手繪 Mockups"&gt;&lt;img src="http://farm4.static.flickr.com/3015/3078255391_0fe51c3182.jpg" width="500" height="375" alt="手繪 Mockups" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;雖然還沒持續很久，不過現在我做網站的步驟大概是先用紙筆畫 mockup ，然後就進入實作階段，以前的話我是條硬漢，直接寫 &lt;span class="caps"&gt;HTML &lt;/span&gt;+ &lt;span class="caps"&gt;CSS&lt;/span&gt;，不過現在我已經沒辦法這樣做了，會不知道要寫什麼，基本上是大腦把設計和 coding 兩種行為分比較開了。用紙筆畫 mockup 的好處就是任何你想像的到的東西都可以畫的出來，你隨時可以加些不同的記號，像我的 mockup 通常都還會有些互動介面的變化示意，那為什麼還會需要 Balsamiq Mockups 這種軟體呢，我覺得用 Mockups 有幾個優點：首先是快速，Mockups 內建很多常用的UI元件，還可以簡單的拖拉改位置、修改大小、內容，如果是用紙筆畫的，要做修改就會比較辛苦了。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://blog.othree.net/log/2008/12/13/mockups/mockup_schedule.png"&gt;&lt;img src="http://blog.othree.net/assets_c/2008/12/mockup_schedule-thumb-400x309.png" alt="Mockups 的基本介面、各種元件都放在上方工具列" height="309" width="400" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;另外一個好處是 Mockups 內建不少很有用的小圖示，還有一些畫起來比較麻煩的元素，可以讓成品更具說服力，但卻不會讓你設計的過程花太多時間在繪製這些東西上。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://blog.othree.net/log/2008/12/13/mockups/mockup_icon.png"&gt;&lt;img src="http://blog.othree.net/assets_c/2008/12/mockup_icon-thumb-400x309.png" alt="Mockups內建很多的小圖示" height="309" width="400" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最後我覺得最棒的是它的手繪風格了，整個就是很有感覺，不過在我使用的過程中還有發現一些問題，首先就是它不支援自定字形，只能選擇程式內建的字形或是系統字形，而程式內建的字形理所當然的不支援中文，要顯示中文的話要改成使用系統字形，但是這樣就不是手繪風了。另外一個問題是一些元件的邊緣常常會看到白邊，這些白邊其實就是所謂 half pixel 的部分，這些線條邊緣的 pixel 不是半透明，而是白底，所以要是有改動背景顏色的時候就會出現瑕疵了。&lt;/p&gt;
+
+&lt;p&gt;如果能夠忍受這兩個小問題的話，Balsamiq Mockups 是非常值得一用的，使用簡單（基本上只要拖拖拉拉就可以了），產出的成品也不錯，有在畫 mockup 的人可以試用看看。&lt;/p&gt;
+https://blog.othree.net/log/2008/12/13/mockups/
+https://blog.othree.net/log/2008/12/13/mockups/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-12-13 20:19
+
+
+
+256色終端機環境
+&lt;p&gt;前兩天重灌OSX，在搞定OSX上的終端機（目前換用 &lt;a href="http://iterm.sourceforge.net/"&gt;iTerm&lt;/a&gt;）環境時花了很多時間，過程中我才驚覺到我用putty/pietty登入到主機 shell 介面上的文字都是單色的，像是 ls 顯示出來的目錄和執行檔顏色都一樣，花了些時間研究，後來乾脆弄到256色的環境，設定還算簡單，記錄一下過程。&lt;/p&gt;
+
+&lt;h4&gt;Linux端&lt;/h4&gt;
+
+&lt;p&gt;Linux 是 &lt;a href="http://www.ubuntu-tw.org/"&gt;Ubuntu 8.04&lt;/a&gt;，內建的.bashrc會判斷 &lt;strong&gt;$TERM&lt;/strong&gt; 這個環境變數來修改一些設定，而且一開始並沒有支援256色終端機環境，因此需要安裝一些套件，安裝指令為：&lt;/p&gt;
+
+
+
+&lt;pre&gt;sudo aptitude install ncurses-term&lt;/pre&gt;
+
+
+
+&lt;p&gt;裝完後，終端機軟體送出正確的$TERM變數就可以使用到256色的終端機了。&lt;/p&gt;
+
+&lt;h4&gt;PuTTY端&lt;/h4&gt;
+
+&lt;p&gt;我目前使用 &lt;a href="http://www.xs4all.nl/~whaa/putty/"&gt;PuTTY Tray&lt;/a&gt;，這邊要修改的設定有兩項，一就是要送出正確的 termnial-type string，此一設定要在連線前就設定好，不然會找不到選項，位置在 connection → data 的 terminal-detail 內，設為「&lt;strong&gt;xterm-256color&lt;/strong&gt;」，二是要把 Backspace 設為 &lt;strong&gt;Control-H&lt;/strong&gt; ，選項位置在 Terminal → Keyboard 的 Change the sequences sent by 內，這樣設完重新連線應該就可以使用256色的環境了，不確定有沒有成功的可以去抓 &lt;a href="http://www.system-linux.net/doc/xterm/colortest.pl"&gt;colortest.pl&lt;/a&gt; 這個perl script來跑跑看。&lt;/p&gt;
+
+&lt;p&gt;256色有什麼好處呢？雖然掛BBS和IRC是都沒差，不過平常操作和vim的樣式就可以使用比較多顏色了，我現在在主機上的vim就改用 &lt;a href="http://blog.infinitered.com/entries/show/8"&gt;IR_Black&lt;/a&gt; 這個 color schema 了，顏色漂亮不少。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.flickr.com/photos/othree/2962106594/" title="Flickr 上 othree 的 vim"&gt;&lt;img src="//farm4.static.flickr.com/3276/2962106594_9f865fda34.jpg" width="500" height="314" alt="vim" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://push.cx/2008/256-color-xterms-in-ubuntu"&gt;256-Color XTerms in Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.yzlin.org/2008/05/14/22/"&gt;Make &lt;span class="caps"&gt;UTF&lt;/span&gt;-8 Environment Comfortable&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+https://blog.othree.net/log/2008/10/19/256-color-terminal/
+https://blog.othree.net/log/2008/10/19/256-color-terminal/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-10-19 01:28
+
+
+
+我的Google Chrome評測
+&lt;p&gt;推出已經3天的Google瀏覽器，還蠻讓人期待最後正式版的樣子，不過目前有一些問題我覺得要先解決，首先是安裝問題，不少人無法安裝，我自己也有一台電腦是這樣，後來抓了離線版安裝檔順利安裝了，但是卻有一些功能和設定不能正常使用。另一個是memory leak問題，雖然Google說他們用多個process來處理記憶體問題，但不表示就可以不處理這問題，不然像我還是成功的讓Google Chrome吃了1G的記憶體。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.flickr.com/photos/othree/2823904128/" title="Flickr 上 othree 的 1G"&gt;&lt;img src="//farm4.static.flickr.com/3050/2823904128_03e9f343e7_o.png" width="468" height="300" alt="1G" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Firefox 3我不管怎樣弄大概吃到500多MB就最多了，當然我的測試不是開無限多圖，無限多分頁啦，基本上是開一個數百張圖的網頁，然後我發現Google Chrome只要我一直卷上卷下，那個記憶體就會越吃越多XD。&lt;/p&gt;
+
+&lt;p&gt;再來講講優點，其實就是，使用者介面的效果很棒，而且很流暢，我最喜歡的就是書籤工具列的切換，有兩種，第一種是平常看網頁的時候，直接Ctrl+B，就會有類似slide out感覺的動畫效果，另外一種則是隱藏書籤列時開空白新分頁，那個預設的頁面上也有個書籤工具列，如果這時候按下Ctrl + B，就會看到網頁上的書籤工具列往上移動和視窗的介面部分接在一起，感覺棒，而且效果很流暢。&lt;/p&gt;
+
+&lt;p&gt;另外就是用的訊息蠻有趣的，除了讓一堆人&lt;a href="http://www.flickr.com/photos/othree/2830629010/"&gt;重病&lt;/a&gt;的「是不是我講錯什麼話讓你不開心了？」以外，確定反安裝後，還可以回他說「我沒有不高興（I am not unhappy）。」不過這些訊息在日文版似乎都修掉了，感覺有點可惜，又不過反正我也不會去用日文版，也覺得也沒差啦。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.flickr.com/photos/othree/2824058623/" title="Flickr 上 othree 的 我沒有不高興"&gt;&lt;img src="//farm4.static.flickr.com/3007/2824058623_1d1fda1eb9.jpg" width="500" height="374" alt="我沒有不高興" /&gt;&lt;/a&gt;&lt;/p&gt;
+https://blog.othree.net/log/2008/09/07/google-chrome-comment/
+https://blog.othree.net/log/2008/09/07/google-chrome-comment/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-09-07 01:30
+
+
+
+Picasa 3 和 Picasa Web
+&lt;p&gt;就在全世界都在關注&lt;a href="http://www.google.com/chrome/"&gt;Google瀏覽器&lt;/a&gt;的時候，Google其實還同時公開了新版的&lt;a href="http://picasaweb.google.com/home"&gt;Picasa Web&lt;/a&gt;和桌機的&lt;a href="http://picasa.google.com/intl/en_us/"&gt;Picasa 3 beta&lt;/a&gt;版，一如往常的我懶得花篇幅介紹各種新功能，不過現在Google超貼心，都會提供YouTube影片來介紹軟體的新功能：&lt;a href="http://tw.youtube.com/watch?v=rskC6c_5L1M"&gt;Picasa 3 beta&lt;/a&gt;、&lt;a href="http://tw.youtube.com/watch?v=teeGF-w5Cpw"&gt;Picasa Web的新功能，人臉辨識&lt;/a&gt;（目前只有英文版有）。&lt;/p&gt;
+
+&lt;p&gt;新功能在Youtube的影片都介紹的很詳細了，所以我要介紹的就是比較其他的東西，首先是Picasa Web的人臉辨識可以抓到Mii的大頭，其實不只Mii的大頭，還有一堆有的沒的遊戲角色都抓的到XD。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/name-tag.png"&gt;&lt;img src="//blog.othree.net/assets_c/2008/09/name-tag-thumb-400x314.png" alt="一堆Mii大頭" height="314" width="400" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;另外一個則是Picasa 3內新附的圖片瀏覽器&lt;strong&gt;Picasa Photo Viewer&lt;/strong&gt;，功能和設定選項還不多，不過介面實在蠻漂亮的，有裝Picasa 3的人可以順便玩玩。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/picasa-photo-viewer.png"&gt;&lt;img src="//blog.othree.net/assets_c/2008/09/picasa-photo-viewer-thumb-400x250.png" alt="光箱介面真不錯" height="250" width="400" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://googleblog.blogspot.com/2008/09/introducing-picasa-30-and-big-changes.html" title="and big changes for Picasa Web Albums"&gt;Introducing Picasa 3.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+https://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/
+https://blog.othree.net/log/2008/09/04/picasa-3-and-picasaweb/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-09-04 01:09
+
+
+
+Google Chrome !!
+&lt;p&gt;前陣子就聽說Google要推出瀏覽器了，今天起來後真的看到Google公布消息，網路上也到處鬧的沸沸揚揚的，目前Google是說使用WebKit做render engine，Javascript則是使用V8引擎，是Google自己開發的Virtual Machine，目前大部分和瀏覽器相關的訊息都在官方發表的Google Chrome的&lt;a href="http://books.google.com/books?id=8UsqHohwwVYC&amp;amp;printsec=frontcover%23PPA30%2CM1"&gt;簡介漫畫&lt;/a&gt;裡面，包括我上面提到的兩點，還有介面的設計、Open Source、一些使用概念等。Google Blogsphere偷倒了幾張&lt;a href="http://blogoscoped.com/archive/2008-09-02-n72.html"&gt;使用畫面&lt;/a&gt;，我也從他們那偷一張過來放:P&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="//blog.othree.net/log/2008/09/02/google-chrome/google-chrome-screenshot.jpg" alt="藍色為主色，標籤頁在最上面，沒有標準工具列" height="359" width="440" /&gt;&lt;/p&gt;
+
+&lt;p&gt;我比較驚訝的是Google Chrome沒有工具列，之前已經有一個IE7這樣做失敗了，不知道Google表現會怎樣就是，總之，明天就可以下載測試版了\A_A/。&lt;/p&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://googleblog.blogspot.com/2008/09/fresh-take-on-browser.html"&gt;A fresh take on the browser&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+https://blog.othree.net/log/2008/09/02/google-chrome/
+https://blog.othree.net/log/2008/09/02/google-chrome/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="web at del.icio.us">web</a>
+2008-09-02 10:00
+
+
+
+google://
+&lt;p&gt;&lt;a href="http://othree.net/projects/fx-google-protocol/"&gt;http://othree.net/projects/fx-google-protocol/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一切盡在不言中～～&lt;/p&gt;
+https://blog.othree.net/log/2008/07/16/google-protocol/
+https://blog.othree.net/log/2008/07/16/google-protocol/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="software at del.icio.us">software</a>
+2008-07-16 02:21
+
+
+
+
+
