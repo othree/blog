@@ -17,6 +17,11 @@
 }
 */
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 .pure-g,
 .pure-g [class *="pure-u"] {
   font-family: inherit;
@@ -36,7 +41,7 @@
 }
 
 .o-hidden {
-  opacity: 0;
+  /* opacity: 0; */
 }
 
 .well {
@@ -119,14 +124,13 @@ blockquote ul {
 }
 
 #container {
-  padding: 60px 32px 0;
+  padding: 46px 24px 0;
 }
 
 #container h1 {
   font-family: 'Press Start 2P', sans-serif;
   font-size: 46px;
-  margin-top: 10px;
-  margin-bottom: 1em;
+  margin: 1em auto;
 }
 
 h1 a,
@@ -149,6 +153,9 @@ h1 a:hover {
 }
 
 .layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 32px;
   gap: 0 32px;
 }
@@ -170,7 +177,6 @@ h1 a:hover {
 #content article {
   margin: 0.5em 0 2em;
   scroll-margin-top: 56px;
-  scroll-snap-margin-top: 56px;
 }
 #content article section a {
   color: #333;
@@ -238,16 +244,6 @@ h1 a:hover {
 #content p img {
   height: auto;
 }
-/*
-#content p a,
-#content li a {
-  margin: 0 0.2em;
-}
-*/
-#content p a.thumbnail,
-#content li a.thumbnail {
-  margin: 0 -5px;
-}
 
 #content table {
   border-collapse: collapse;
@@ -285,8 +281,6 @@ h1 a:hover {
 /*bootstrap*/
 .thumbnail {
   display: block;
-  margin-left: -5px;
-  margin-right: -5px;
   padding: 4px;
   line-height: 20px;
   border: 1px solid #ddd;
@@ -399,7 +393,7 @@ aside [role=contentinfo] strong {
 }
 
 #nav-search {
-  margin-top: 7px;
+  padding: 7px 0;
 }
 
 #nav-search input,
@@ -422,7 +416,6 @@ aside [role=contentinfo] strong {
   -moz-transition: border linear .2s,box-shadow linear .2s;
   -o-transition: border linear .2s,box-shadow linear .2s;
   transition: border linear .2s,box-shadow linear .2s;
-  height: 20px;
   font-size: 14px;
   line-height: 20px;
   color: #555;
@@ -433,14 +426,6 @@ aside [role=contentinfo] strong {
   -webkit-box-shadow: 0 0 6px #f8b9b7;
   -moz-box-shadow: 0 0 6px #f8b9b7;
   box-shadow: 0 0 6px #f8b9b7;
-}
-
-@media (prefers-color-scheme: dark) {
-  #nav-search input,
-  #search-form input {
-    color: #fff;
-    background: #222;
-  }
 }
 
 aside {
@@ -587,8 +572,8 @@ nav {
   box-sizing: border-box;
   position: fixed;
   top: 0;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding-left: 24px;
+  padding-right: 24px;
   width: 100%;
   /*bootstrap*/
   min-height: 40px;
@@ -608,10 +593,26 @@ nav {
 }
 
 .nav-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.pure-menu-horizontal {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: -16px;
+  overflow: auto;
+  white-space: nowrap;
 }
 
 #nav-search {
@@ -619,8 +620,6 @@ nav {
   -moz-transition: opacity 1s ease;
   -o-transition: opacity 1s ease;
   transition: opacity 1s ease;
-  float: left;
-  margin-top: 6px;
 }
 nav .pure-menu {
   float: right;
@@ -646,7 +645,6 @@ nav .pure-menu-selected {
   box-shadow: inset 0 3px 8px rgba(0,0,0,0.125);
 }
 nav .pure-menu-item.icon.github {
-  margin-right: -16px;
   width: 24px;
   height: 24px;
   mix-blend-mode: difference;
@@ -729,19 +727,23 @@ img.pls-tailbottom {
   height: 100%;
 }
 
-@media (max-width: 767px) {
-  nav {
-    position: absolute;
+@media (max-width: 600px) {
+  .nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-inner .pure-menu-horizontal {
+    align-self: flex-end;
+    margin-right: 0;
   }
   #container {
-    padding-top: 80px;
+    padding-top: 90px;
   }
 }
 
 @media (max-width: 480px) {
   #container h1 {
     font-size: 36px;
-    margin-bottom: 10px;
   }
 
   #nav-search {
@@ -752,6 +754,14 @@ img.pls-tailbottom {
   }
 }
 
+@media (max-width: 360px) {
+  #container h1 {
+    font-size: 30px;
+  }
+
+  
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background: none;
@@ -759,6 +769,11 @@ img.pls-tailbottom {
   }
   .well, body {
     background-color: #222;
+  }
+  #nav-search input,
+  #search-form input {
+    color: #fff;
+    background: #222;
   }
   nav {
     background-color: #030303;
