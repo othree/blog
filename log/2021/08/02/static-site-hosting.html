@@ -1,41 +1,45 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>Static Site Hosting 服務需求 : O3noBLOG</title>
-    <meta name="description" content="前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。 支援 CDN 這個需求沒什麼好說了吧。 支援 HTTP/2 主要的服務應該都支援了，不過還是列一下。 支援加上 Security Headers 現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。 支援 HTTP 轉成 HTTPS 在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。 雖然我自己是都會把..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="MacOS 我的設定" href="/log/2021/07/19/macos-my-pref/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2021/08/02/static-site-hosting/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2021/08/02/static-site-hosting/amp/"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="Static Site Hosting 服務需求"/>
-    <meta property="og:description" content="前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。 支援 CDN 這個需求沒什麼好說了吧。 支援 HTTP/2 主要的服務應該都支援了，不過還是列一下。 支援加上 Security Headers 現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。 支援 HTTP 轉成 HTTPS 在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。 雖然我自己是都會把..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2021/08/02/static-site-hosting/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
-    <meta property="og:image:width" content="240"/>
-    <meta property="og:image:height" content="240"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content="前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。 支援 CDN 這個需求沒什麼好說了吧。 支援 HTTP/2 主要的服務應該都支援了，不過還是列一下。 支援加上 Security Headers 現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。 支援 HTTP 轉成 HTTPS 在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。 雖然我自己是都會把..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2021/08/02/static-site-hosting/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2021/08/02/static-site-hosting/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2021-08-02T22:23:14",
+        "dateModified": "2021-08-02T22:23:14",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://blog.othree.net/images/O3-240x240.png",
+          "width": 240,
+          "height": 240
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +51,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,149 +83,64 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-static-site-hosting">
+          <article id="entry-static-site-hosting">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2021-08-02T22:23:14" id="date-2021-08-02">
+              <time datetime="2021-08-02T22:23:14" id="date-2021-08-02">
                 <span class="mon">08月</span>
                 <span class="day">02日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2021/08/02/static-site-hosting/">Static Site Hosting 服務需求</a>
-              </h3>
+              <h3>Static Site Hosting 服務需求</h3>
             </header>
-            <section itemprop="articleBody"><p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
-<h4>支援 CDN</h4>
-<p>這個需求沒什麼好說了吧。</p>
-<h4>支援 HTTP/2</h4>
-<p>主要的服務應該都支援了，不過還是列一下。</p>
-<h4>支援加上 Security Headers</h4>
-<p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
-<h4>支援 HTTP 轉成 HTTPS</h4>
-<p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
-<p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
-<h4>支援全站轉址</h4>
-<p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
-<p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
-<p>以下算是非必備的需求</p>
-<h4>支援把 404 改寫成 200</h4>
-<p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
-<h4>支援 CORS</h4>
-<p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
-<h4>支援 Basic Auth</h4>
-<p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
-<h4>支援根據 Header 切換 origin</h4>
-<p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
-<h4>支援根據路徑切換 origin</h4>
-<p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
-<h4>支援 brotli</h4>
-<p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
-</section>
+            <section>
+              <p>前陣子研究了一下用 GCP 來放靜態網站，那時候有整理了一下需求，這篇文章把需求的緣由也整理出來，先說在前面，這些需求並不是要求單一家服務就可以達成所有目標，內文也盡量不提到特定服務，所以不同服務要怎樣達到這些需求就有賴各位自行研究了。</p>
+              <h4>支援 CDN</h4>
+              <p>這個需求沒什麼好說了吧。</p>
+              <h4>支援 HTTP/2</h4>
+              <p>主要的服務應該都支援了，不過還是列一下。</p>
+              <h4>支援加上 Security Headers</h4>
+              <p>現在大家對於安全性的要求很高，所以可以加上 security headers 對我來說已經是一個必備的功能了，像是 CSP、HSTS 等，這項需求看廣一點，其實就是要自定義回傳 header 的功能，如果可以根據路徑調整就更好了，基本上應該只有 HTML 文件本身需要這些 header。</p>
+              <h4>支援 HTTP 轉成 HTTPS</h4>
+              <p>在各家瀏覽器的推波助瀾之下，不支援 HTTPS 的網站感覺就是次一等了，所以把 HTTP protocol 的 traffic 全部轉到 HTTPS 這件事情我也列為必備，有兩種支援的方式，一種是服務內建支援 protocol 轉址，這種最好，因為它會保留請求的路徑（path），而不是把訪客導到首頁，另外一種就是用下面要提到的全站轉址的方式來達成。</p>
+              <p>雖然我自己是都會把 HTTP 轉到 HTTPS，不過看網站目標，也還是有可能需要繼續支援 HTTP 的。</p>
+              <h4>支援全站轉址</h4>
+              <p>主要的需求是把 <code>www.example.com</code> 轉址到 <code>example.com</code> ，或是反過來，像 <code>www.apple.com</code> 那樣，當然最好還能保留請求的路徑，這個看似很基本的設定，其實現在還蠻常會發現有網站沒做到這件事，尤其是台灣的，我真的是黑人問號？＿？</p>
+              <p>除了 host name 的轉換之外，還有一種情形是需要把整個網站的 request 都轉到某個 URL，例如 <code>docs.example.com</code> 要關站，然後要把流量都轉到 <code>https://example.com/docs</code> 。</p>
+              <p>以下算是非必備的需求</p>
+              <h4>支援把 404 改寫成 200</h4>
+              <p>非 SSR 的 SPA 然後配上 route 的話，會有個問題就是除了首頁的 route 都會 404，雖然一般可以用 error_document/not_found_page 之類的設定來讓內容可以正確呈現，但是 404 的 status code 還是會有不少問題，一來是影響搜尋引擎的結果，二來是不知道是不是所有瀏覽器都還會正確的處理 404 時的網頁內容，所以最好還是能回正確的 status code，可以辦到這件事的方法就我所知道的也是有兩種，一種是 rewrite 機制，另外一種就是可以寫程式處理 request/respone 的，像是 Lambda@Edge 那樣。不過在處理這個功能時要是直接全部的路徑回應都變 200 其實也不太好，要完美有點麻煩啊。</p>
+              <h4>支援 CORS</h4>
+              <p>如果會有需要靜態的 JSON 檔案，然後跨網域直接抓下來當資料使用，那就會需要支援 CORS header，和上面自定義回傳 header 那一項不太一樣的是，CORS header 其實是有互動而不是寫死的，應該是要根據 request 的 header 內容來改變回傳的 CORS header，如果需要 preflight request 那還要支援 OPTIONS method 和相對應的回應，不過如果單純只是靜態 JSON 檔案，靠自訂回傳 header 的功能直接寫死應該也是夠用了。</p>
+              <h4>支援 Basic Auth</h4>
+              <p>如果有尚未公開的網站，還是希望至少有個基本的保護，Basic Auth 只是其中一種方法。</p>
+              <h4>支援根據 Header 切換 origin</h4>
+              <p>這個需求的來源就是用手機的訪客可以看到手機版網頁，用桌上型電腦的訪客看到桌面版網頁，然後網址想要維持一致而且兩種版本的網站想要分開開發，不一定會有這個需求。然後不得不說，AWS 的 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-cloudfront-headers.html#cloudfront-headers-device-type"><code>CloudFront-Is-*-Viewer</code> header</a> 真是蠻方便的，不過他們沒洩漏過判斷方式，Cloudflare 則是只有<a href="https://support.cloudflare.com/hc/en-us/articles/229373388-Understand-Cache-by-Device-Type-Enterprise-plans-only-">企業方案有支援</a>，但是有提供他們如何判斷 device type。</p>
+              <h4>支援根據路徑切換 origin</h4>
+              <p>如果有特定路徑下的網頁是另外開發的，有支援這個功能的話就會比較好處理，一個比較常見的情境是開發文件的 API spec 是用其他工具或服務產生的，例如用 OpenAPI 文件產生的那種就很常見，或是有些語言也都有常用的文件產生工具，例如 Python 的 Sphinx。</p>
+              <h4>支援 brotli</h4>
+              <p>Google 開發的壓縮格式，對文字資料的壓縮表現比以前主流的 gzip 還好，主要的服務應該都支援了，不過還是列一下。</p>
+            </section>
             <footer>
-              <a href="/log/server/" rel="tag">Server Side</a>
-            </footer>
+      文章分類：
+      <a href="/log/server/" rel="tag">Server Side</a><a class="canonical" href="/log/2021/08/02/static-site-hosting/" title="「Static Site Hosting 服務需求」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Static Site Hosting 服務需求</strong>發表於 2021-08-02，文章類別為
-			  <a href="/log/server/">Server Side</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2021/07/19/macos-my-pref/"><span class="prefix">上一篇：</span>MacOS 我的設定<time>2021-07-19</time></a><a class="next pn" href="/log/2021/08/12/csp-for-lambdaedge/"><span class="prefix">下一篇：</span>CSP for Lambda@Edge<time>2021-08-12</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(133)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/site/happybusy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>

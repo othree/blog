@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>JSON Universe : O3noBLOG</title>
-    <meta name="description" content="JSON 在這幾年不但標準化，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 [] 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下： 不支援註解 物件的 key 一定要用字串型式，就是一定要用引號框起來 字串一定要用雙引號，不能用單引號 陣列或物件的最後一個元素後面不能加逗點（ES5 允許） 當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 E4X 那篇文章開始來的，那篇文章有提到..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="2015" href="/log/2016/01/03/2015/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2016/01/11/json-universe/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2016/01/11/json-universe/amp/"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="JSON Universe"/>
-    <meta property="og:description" content="JSON 在這幾年不但標準化，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 [] 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下： 不支援註解 物件的 key 一定要用字串型式，就是一定要用引號框起來 字串一定要用雙引號，不能用單引號 陣列或物件的最後一個元素後面不能加逗點（ES5 允許） 當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 E4X 那篇文章開始來的，那篇文章有提到..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2016/01/11/json-universe/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg"/>
-    <meta property="og:image:width" content="840"/>
-    <meta property="og:image:height" content="289"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content="JSON 在這幾年不但標準化，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 [] 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下： 不支援註解 物件的 key 一定要用字串型式，就是一定要用引號框起來 字串一定要用雙引號，不能用單引號 陣列或物件的最後一個元素後面不能加逗點（ES5 允許） 當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 E4X 那篇文章開始來的，那篇文章有提到..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2016/01/11/json-universe/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2016/01/11/json-universe/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2016-01-11T22:38:31",
+        "dateModified": "2016-01-11T22:38:31",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+            
+          "url": "https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg",
+          "width": 840,
+          "height": 289
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +52,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,35 +84,29 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-json-universe">
+          <article id="entry-json-universe">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2016-01-11T22:38:31" id="date-2016-01-11">
+              <time datetime="2016-01-11T22:38:31" id="date-2016-01-11">
                 <span class="mon">01月</span>
                 <span class="day">11日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2016/01/11/json-universe/">JSON Universe</a>
-              </h3>
+              <h3>JSON Universe</h3>
             </header>
-            <section itemprop="articleBody"><p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
-
-<ul>
-<li>不支援註解</li>
-<li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
-<li>字串一定要用雙引號，不能用單引號</li>
-<li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
-</ul>
-
-<p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
-<h4>JXON</h4>
-
-<p>第一個要介紹的就是剛剛提到的 <a href="https://developer.mozilla.org/en-US/docs/JXON">JXON</a>，JXON 全名是 lossless JavaScript XML Object Notation，是使用 JavaScript 語言的 syntax 來表示 XML 文件的資料，可以達到完整無失真的呈現，就是說可以還原成一模一樣的 XML，不過其實 JXON 並不是真的有個明確的標準，並沒有一個組織或單位來制訂，雖然如此，還是可以找到有人有<a href="https://github.com/tyrasd/jxon">實做</a>。</p>
-
-<h4>JSONx</h4>
-
-<p>第二個要介紹的是 <a href="https://www-01.ibm.com/support/knowledgecenter/SS9H2Y_7.1.0/com.ibm.dp.doc/json_jsonx.html">JSONx</a>，這是 IBM 推出的一種 XML 文件格式，目的非常有趣，和 JXON 剛好相反，是用 XML 文件來表示 JSON 文件的資料，namespace 是 <code>http://www.ibm.com/xmlns/prod/2009/jsonx</code>，講真的我想不到到底有誰會有需求使用到這個標準，隨便看個範例文件吧：</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            <section>
+              <p><a href="http://json.org/">JSON</a> 在這幾年不但<a href="https://www.ietf.org/rfc/rfc4627.txt">標準化</a>，還開始漸漸的取代了 XML，成為網路上主要的資料交換格式，我認為主要的原因在於他相對於 XML 簡單好懂好用很多，另外一個優點就是他格式很簡單好懂，學起來很快，而相較於更傳統的 Form URL encode 的資料傳輸格式，我覺得最大的優點是他多了 Data Type，而且也可以一口氣送出結構化的資料，傳統的 Form URL encode 雖然有 key value pair，也可以用 <code>[]</code> 模仿出陣列，不過他的所有的 value 都是字串，在 server 端都還要自己判斷欄位，手動做一次型別轉換。只是雖然 JSON 很好上手，還是有幾個地雷容易踩到，如果是會寫 JavaScript 的人更容易中招，大概列舉一下：</p>
+              <ul>
+                <li>不支援註解</li>
+                <li>物件的 key 一定要用字串型式，就是一定要用引號框起來</li>
+                <li>字串一定要用雙引號，不能用單引號</li>
+                <li>陣列或物件的最後一個元素後面不能加逗點（ES5 允許）</li>
+              </ul>
+              <p>當然要避免這些問題，最保險就是用各個語言已經有人實做好的函示庫來處理，而不要自己用組字串的方式來產生 JSON string。不過這篇文章不是要講這些，其實會想寫這篇文章是從 <a href="https://blog.othree.net/log/2015/12/25/jsx-e4x/">E4X</a> 那篇文章開始來的，那篇文章有提到 E4X 已經被棄用了，而 Mozilla 建議的替代方案是一個叫 JXON 的東西，名字看起來和 JSON 很像，而事實上除了 JXON，還有一堆名稱和 JSON 很相近的相關技術，像是 JSONH、BSON、LJSON ...等等，不過其實我找不太到有人去收集這些東西，所以就決定自己來整理一下，這篇文章就是要來介紹一下這堆 JSON 衍生出來的東西，以下沒照特定排序。</p>
+              <h4>JXON</h4>
+              <p>第一個要介紹的就是剛剛提到的 <a href="https://developer.mozilla.org/en-US/docs/JXON">JXON</a>，JXON 全名是 lossless JavaScript XML Object Notation，是使用 JavaScript 語言的 syntax 來表示 XML 文件的資料，可以達到完整無失真的呈現，就是說可以還原成一模一樣的 XML，不過其實 JXON 並不是真的有個明確的標準，並沒有一個組織或單位來制訂，雖然如此，還是可以找到有人有<a href="https://github.com/tyrasd/jxon">實做</a>。</p>
+              <h4>JSONx</h4>
+              <p>第二個要介紹的是 <a href="https://www-01.ibm.com/support/knowledgecenter/SS9H2Y_7.1.0/com.ibm.dp.doc/json_jsonx.html">JSONx</a>，這是 IBM 推出的一種 XML 文件格式，目的非常有趣，和 JXON 剛好相反，是用 XML 文件來表示 JSON 文件的資料，namespace 是 <code>http://www.ibm.com/xmlns/prod/2009/jsonx</code>，講真的我想不到到底有誰會有需求使用到這個標準，隨便看個範例文件吧：</p>
+              <pre>
+                <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;json:object xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:json="http://www.ibm.com/xmlns/prod/2009/jsonx"&gt;
@@ -123,75 +126,60 @@
   &lt;json:number name="height"&gt;62.4&lt;/json:number&gt;
   &lt;json:string name="ficoScore"&gt; &gt; 640&lt;/json:string&gt;
 &lt;/json:object&gt;
-</code></pre>
-
-<h4>MessagePack</h4>
-
-<p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
-
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w"><meta itemprop="width" content="840"/><meta itemprop="height" content="289"/></img></a></p>
-
-<p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
-
-<h4>BSON, BJSON</h4>
-
-<p><a href="http://bsonspec.org/">BSON</a>、<a href="http://bjson.org/">BJSON</a> 也都是 Binary 的 JSON 表現格式，不過這兩個規格都不完全相容於 JSON，有多一些自定義的資料型態，像是 regular expression，然後大部分人都只有談到 BSON，不太有人講到 BJSON 的樣子。</p>
-
-<h4>UBJSON, Smile</h4>
-
-<p><a href="http://ubjson.org/">UBJSON</a>(Universal Binary JSON) 和 <a href="http://wiki.fasterxml.com/SmileFormatSpec">Smile</a> 也和上面幾個一樣是 Binary 的資料格式，和 BSON 比起來則是差在這兩個格式完全相容於 JSON，意思就是可以做到 <code>UBJSON -&gt; JSON -&gt; UBJSON</code> 這樣的資料轉而完全不會遺失資訊。</p>
-
-<p>Binanry 的 JSON 表現格式其實還有一個叫 <a href="https://componentality.com/xjson/">xJSON</a> 的比較沒知名度這樣。</p>
-
-<h4>Hjson</h4>
-
-<p><a href="http://hjson.org/">Hjson</a> 全名是 the Human JSON，顧名思義就是更人性化的 JSON 格式，是一個比 JSON 寬鬆的規範，例如允許註解，不用 <code>,</code> 改成用換行也可以分開不同元素：</p>
-
-<pre><code>[
+</code>
+              </pre>
+              <h4>MessagePack</h4>
+              <p><a href="http://msgpack.org/">MessagePack</a> 是一個類似 Protocol Buffer 的 Binary 資料交換格式，不過其資料的構成很 JSON，官網上的測試頁面就可以讓你直接輸入 JSON 資料，然後它會轉成 MessagePack 的格式。</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/24129761021/" title="MessagePack Try by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg" width="840" height="289" alt="MessagePack Try" srcset="https://farm2.staticflickr.com/1543/24129761021_bf896219e8_c.jpg 768w, https://farm2.staticflickr.com/1543/24129761021_02e672ba3d_h.jpg 1600w"/>
+                </a>
+              </p>
+              <p>MessagePack 相較於下面介紹的其他幾個 Binary 格式是比較好懂些，也有比較完整的實做和支援，是目前比較多人使用的 binary JSON 格式，也有一些商業網站採用，像是 Pinterest、fluentd。這類的 binary 資料格式蠻常被拿來和 Google 的 <a href="https://developers.google.com/protocol-buffers/">Protocol Buffer</a> 來做比較，當然相較於 Protocol Buffer 來說，JSON 型式的資料結構其特色就是 schema free，不用事先定義好傳輸資料內部的結構。</p>
+              <h4>BSON, BJSON</h4>
+              <p><a href="http://bsonspec.org/">BSON</a>、<a href="http://bjson.org/">BJSON</a> 也都是 Binary 的 JSON 表現格式，不過這兩個規格都不完全相容於 JSON，有多一些自定義的資料型態，像是 regular expression，然後大部分人都只有談到 BSON，不太有人講到 BJSON 的樣子。</p>
+              <h4>UBJSON, Smile</h4>
+              <p><a href="http://ubjson.org/">UBJSON</a>(Universal Binary JSON) 和 <a href="http://wiki.fasterxml.com/SmileFormatSpec">Smile</a> 也和上面幾個一樣是 Binary 的資料格式，和 BSON 比起來則是差在這兩個格式完全相容於 JSON，意思就是可以做到 <code>UBJSON -&gt; JSON -&gt; UBJSON</code> 這樣的資料轉而完全不會遺失資訊。</p>
+              <p>Binanry 的 JSON 表現格式其實還有一個叫 <a href="https://componentality.com/xjson/">xJSON</a> 的比較沒知名度這樣。</p>
+              <h4>Hjson</h4>
+              <p><a href="http://hjson.org/">Hjson</a> 全名是 the Human JSON，顧名思義就是更人性化的 JSON 格式，是一個比 JSON 寬鬆的規範，例如允許註解，不用 <code>,</code> 改成用換行也可以分開不同元素：</p>
+              <pre>
+                <code>[
   1
   2
   3
 ]
-</code></pre>
-
-<p>物件的 key 不需要字串的引號：</p>
-
-<pre><code>{ foo: 123 }
-</code></pre>
-
-<p>等等很多方便的語法，不過其實如果要用機器產生這些寬鬆的資料是不太好，比較適合的場合還是用人工維護的 JSON 檔案。</p>
-
-<h4>rson</h4>
-
-<p><a href="https://code.google.com/p/rson/">rson</a> 是一個 JSON 的 superset，和 Hjson 的目標有些接近，不過 rson 的一些新語法更接近 <a href="http://www.yaml.org/">YAML</a> 格式，專案是放在 Google Code 上，而且似乎已經沒維護了，是個總有一天會消失在網路上的東西吧。</p>
-
-<h4>LJSON</h4>
-
-<p><a href="https://github.com/MaiaVictor/LJSON">LJSON</a> 的 L 應該是 lambda 的意思，也是個 JSON 的擴充格式，改變只有一個，就是多了可以儲存 pure function 的能力，儲存 function 的形式是很像 ES6 arrow function 的樣子：</p>
-
-<pre><code>(v0)=&gt;({"author":"John","message":v0})
-</code></pre>
-
-<p>最大的差別在於 <code>=&gt;</code> 後面是接 <code>()</code>，並且還有個特色是它會想辦法最佳化，會有像是 dead code removal 的效果。如果要自己做到用 JSON 儲存 function 的話，一般是可以先用 <code>toString</code> 來輸出 function 的原始碼，要還原時再用 <code>new Function</code> 來還原，不過如果不是 pure function，例如有用到 closure 變數的話，就一定會失去這些 reference 到的變數了。</p>
-
-<p>另外還有一個 <a href="https://github.com/daviddengcn/ljson">LJSON</a> 是叫做 Loose JSON，就和上面介紹的 Hjson 目標差不多，就不再多介紹了。</p>
-
-<h4>JSON Lines</h4>
-
-<p><a href="http://jsonlines.org/">JSON Lines</a> 也是有點接近上面介紹的幾個東西，其實是個很簡單的東西，就是把多個 JSON 資料用換行接在同一個文件檔案內，例如：</p>
-
-<pre><code>[1,2,3]
+</code>
+              </pre>
+              <p>物件的 key 不需要字串的引號：</p>
+              <pre>
+                <code>{ foo: 123 }
+</code>
+              </pre>
+              <p>等等很多方便的語法，不過其實如果要用機器產生這些寬鬆的資料是不太好，比較適合的場合還是用人工維護的 JSON 檔案。</p>
+              <h4>rson</h4>
+              <p><a href="https://code.google.com/p/rson/">rson</a> 是一個 JSON 的 superset，和 Hjson 的目標有些接近，不過 rson 的一些新語法更接近 <a href="http://www.yaml.org/">YAML</a> 格式，專案是放在 Google Code 上，而且似乎已經沒維護了，是個總有一天會消失在網路上的東西吧。</p>
+              <h4>LJSON</h4>
+              <p><a href="https://github.com/MaiaVictor/LJSON">LJSON</a> 的 L 應該是 lambda 的意思，也是個 JSON 的擴充格式，改變只有一個，就是多了可以儲存 pure function 的能力，儲存 function 的形式是很像 ES6 arrow function 的樣子：</p>
+              <pre>
+                <code>(v0)=&gt;({"author":"John","message":v0})
+</code>
+              </pre>
+              <p>最大的差別在於 <code>=&gt;</code> 後面是接 <code>()</code>，並且還有個特色是它會想辦法最佳化，會有像是 dead code removal 的效果。如果要自己做到用 JSON 儲存 function 的話，一般是可以先用 <code>toString</code> 來輸出 function 的原始碼，要還原時再用 <code>new Function</code> 來還原，不過如果不是 pure function，例如有用到 closure 變數的話，就一定會失去這些 reference 到的變數了。</p>
+              <p>另外還有一個 <a href="https://github.com/daviddengcn/ljson">LJSON</a> 是叫做 Loose JSON，就和上面介紹的 Hjson 目標差不多，就不再多介紹了。</p>
+              <h4>JSON Lines</h4>
+              <p><a href="http://jsonlines.org/">JSON Lines</a> 也是有點接近上面介紹的幾個東西，其實是個很簡單的東西，就是把多個 JSON 資料用換行接在同一個文件檔案內，例如：</p>
+              <pre>
+                <code>[1,2,3]
 [4,5,6]
 [7,8,9]
-</code></pre>
-
-<p>三個 JSON 陣列接在一起，不是一個合法的 JSON string，一般 JSON Parser 都會說 Syntax Error，不過支援 JSON Lines 的環境下就可以把這串字串切開，分成三個陣列，支援的環境中我看到比較有名的大概就是 <a href="https://github.com/maxogden/dat/">dat</a> 了，這是一個蠻厲害的資料分享的工具，其中的串流模式傳輸資料就是用到 JSON Lines 格式（其實就是一個一個 JSON 資料輪流輸出）。</p>
-
-<h4>JSONH</h4>
-
-<p><a href="https://github.com/WebReflection/JSONH">JSONH</a> 就不是一個 JSON 的擴充格式了，它事實上是用來壓縮 JSON 的，特別適用於物件的陣列的資料集，像是：</p>
-
-<pre><code>[
+</code>
+              </pre>
+              <p>三個 JSON 陣列接在一起，不是一個合法的 JSON string，一般 JSON Parser 都會說 Syntax Error，不過支援 JSON Lines 的環境下就可以把這串字串切開，分成三個陣列，支援的環境中我看到比較有名的大概就是 <a href="https://github.com/maxogden/dat/">dat</a> 了，這是一個蠻厲害的資料分享的工具，其中的串流模式傳輸資料就是用到 JSON Lines 格式（其實就是一個一個 JSON 資料輪流輸出）。</p>
+              <h4>JSONH</h4>
+              <p><a href="https://github.com/WebReflection/JSONH">JSONH</a> 就不是一個 JSON 的擴充格式了，它事實上是用來壓縮 JSON 的，特別適用於物件的陣列的資料集，像是：</p>
+              <pre>
+                <code>[
   {
     "name": "John",
     "gender": "Male",
@@ -203,93 +191,86 @@
     "country": "Canada"
   }
 ]
-</code></pre>
-
-<p>透過用 JSONH 壓縮就會變成：</p>
-
-<pre><code>[3, "name", "gender", "country", "John", "Male", "USA", "Smith", "Male", "Canada"]
-</code></pre>
-
-<p>最主要節省的就是大量重複的屬性名稱，如果屬性名稱長，陣列又長，這樣壓縮前後的資料量大小差距就會很明顯，不過如果資料階層比較複雜的話，沒辦法整理得這麼漂亮，壓縮效果就會打折了。</p>
-
-<h4>Jsonnet</h4>
-
-<p><a href="http://jsonnet.org/">Jsonnet</a> 是 Google 所推出，帶著一點程式語言特性的 JSON 文件格式，例如多了個 <code>self</code>：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>透過用 JSONH 壓縮就會變成：</p>
+              <pre>
+                <code>[3, "name", "gender", "country", "John", "Male", "USA", "Smith", "Male", "Canada"]
+</code>
+              </pre>
+              <p>最主要節省的就是大量重複的屬性名稱，如果屬性名稱長，陣列又長，這樣壓縮前後的資料量大小差距就會很明顯，不過如果資料階層比較複雜的話，沒辦法整理得這麼漂亮，壓縮效果就會打折了。</p>
+              <h4>Jsonnet</h4>
+              <p><a href="http://jsonnet.org/">Jsonnet</a> 是 Google 所推出，帶著一點程式語言特性的 JSON 文件格式，例如多了個 <code>self</code>：</p>
+              <pre>
+                <code>{
     person1: {
         name: "Alice",
         welcome: "Hello " + self.name + "!",
     },
     person2: self.person1 { name: "Bob" },
 }
-</code></pre>
-
-<p>還有 tempalte string：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>還有 tempalte string：</p>
+              <pre>
+                <code>{
     fmt2: "The word %(wd)s has %(le)d letters.  Go %(wd)s!"
         % {wd: $.word, le: std.length($.word)},
 }
-</code></pre>
-
-<p>Array comprehension：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>Array comprehension：</p>
+              <pre>
+                <code>{
     foo: [1, 2, 3],
     bar: [x * x for x in self.foo if x &gt;= 2],
     baz: { ["field" + x]: x for x in self.foo },
     obj: { ["foo" + "bar"]: 3 },
 }
-</code></pre>
-
-<p>除了這些程式語法的特性之外， Jsonnet 還有像是 Hjson 的一些比較人性化的語法的支援，官網上則自稱是是一種 data template language，而不是單純的資料而已。</p>
-
-<h4>JSON3</h4>
-
-<p><a href="http://bestiejs.github.io/json3/">JSON3</a> 其實不是一個新版本的 JSON，而是一個更加穩健的 JavaScript 的 JSON 實做，多處理了一些不同瀏覽器的差異問題，3 的由來其實是相對於 Douglas 的 <a href="https://github.com/douglascrockford/JSON-js">json2.js</a>，這個 json2.js 是整個 JSON 進 ECMAScript 標準時最主要的依據，包括 Global Varibale 的名稱，API 的設計都是從這邊來的，至於這個 json2.js 的 2 的意思其實就是這是 Douglas 實做的第二版 JSON library。</p>
-
-<h4>JSONP</h4>
-
-<p><a href="https://zh.wikipedia.org/wiki/JSONP">JSONP</a> 其實不是一個標準，最早出處也不詳，不過早一點在 CORS 普及前就開始寫 Ajax 的人應該是很熟悉的東西，瀏覽器為了安全性問題，雖然可以跨直接用 XHR 做出 HTTP request，但是會限制跨 domain 的連線，現在有 CORS 可以讓網站所有者提供允許的白名單，但是在 CORS 普及前，基本上是完全被禁止的，不過有個方法就是插入 <code>&lt;script&gt;</code> 標籤去執行遠端的 js 檔案，這個方法的缺點就是只能執行，不能讀取檔案內容，JSONP 就是在這個限制下所設計出來可以用來跟遠端要資料的方法，基本上實做的方法就是在本地先產生好一個暫時的 callback function：</p>
-
-<pre><code>window.cb123456 = function (data) {
+</code>
+              </pre>
+              <p>除了這些程式語法的特性之外， Jsonnet 還有像是 Hjson 的一些比較人性化的語法的支援，官網上則自稱是是一種 data template language，而不是單純的資料而已。</p>
+              <h4>JSON3</h4>
+              <p><a href="http://bestiejs.github.io/json3/">JSON3</a> 其實不是一個新版本的 JSON，而是一個更加穩健的 JavaScript 的 JSON 實做，多處理了一些不同瀏覽器的差異問題，3 的由來其實是相對於 Douglas 的 <a href="https://github.com/douglascrockford/JSON-js">json2.js</a>，這個 json2.js 是整個 JSON 進 ECMAScript 標準時最主要的依據，包括 Global Varibale 的名稱，API 的設計都是從這邊來的，至於這個 json2.js 的 2 的意思其實就是這是 Douglas 實做的第二版 JSON library。</p>
+              <h4>JSONP</h4>
+              <p><a href="https://zh.wikipedia.org/wiki/JSONP">JSONP</a> 其實不是一個標準，最早出處也不詳，不過早一點在 CORS 普及前就開始寫 Ajax 的人應該是很熟悉的東西，瀏覽器為了安全性問題，雖然可以跨直接用 XHR 做出 HTTP request，但是會限制跨 domain 的連線，現在有 CORS 可以讓網站所有者提供允許的白名單，但是在 CORS 普及前，基本上是完全被禁止的，不過有個方法就是插入 <code>&lt;script&gt;</code> 標籤去執行遠端的 js 檔案，這個方法的缺點就是只能執行，不能讀取檔案內容，JSONP 就是在這個限制下所設計出來可以用來跟遠端要資料的方法，基本上實做的方法就是在本地先產生好一個暫時的 callback function：</p>
+              <pre>
+                <code>window.cb123456 = function (data) {
   window.cb123456 = null; //clean up
 
   //do something with data      
 };
-</code></pre>
-
-<p>然後把遠端資源加上參數指定 callback 名稱：</p>
-
-<pre><code>&lt;script type="text/javascript"
+</code>
+              </pre>
+              <p>然後把遠端資源加上參數指定 callback 名稱：</p>
+              <pre>
+                <code>&lt;script type="text/javascript"
      src="http://server2.example.com/RetrieveUser?UserId=1823&amp;jsonp=cb123456"&gt;
 &lt;/script&gt;
-</code></pre>
-
-<p>遠端收到 Request 後產生特別的 response，本來要回傳的資料如下：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>遠端收到 Request 後產生特別的 response，本來要回傳的資料如下：</p>
+              <pre>
+                <code>{
   "name": "John",
   "gender": "Male",
   "country": "USA"
 }
-</code></pre>
-
-<p>現在會變成一段 JavaScript 程式碼：</p>
-
-<pre><code>cb1231465({
+</code>
+              </pre>
+              <p>現在會變成一段 JavaScript 程式碼：</p>
+              <pre>
+                <code>cb1231465({
   "name": "John",
   "gender": "Male",
   "country": "USA"
 });
-</code></pre>
-
-<h4>JSON Schema</h4>
-
-<p>JSON 本身是很自由的資料格式，不過開發比較大型的應用程式，或是要做一些測試的時候，太過自由就不一定是優點了，所以很合理的就會有個來定義資料內容結構的描述語言出現，<a href="http://json-schema.org/">JSON Schema</a> 就是一個，而且似乎很合理的 JSON Schema 也是 JSON 文件：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <h4>JSON Schema</h4>
+              <p>JSON 本身是很自由的資料格式，不過開發比較大型的應用程式，或是要做一些測試的時候，太過自由就不一定是優點了，所以很合理的就會有個來定義資料內容結構的描述語言出現，<a href="http://json-schema.org/">JSON Schema</a> 就是一個，而且似乎很合理的 JSON Schema 也是 JSON 文件：</p>
+              <pre>
+                <code>{
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Product",
     "description": "A product from Acme's catalog",
@@ -302,206 +283,104 @@
     },
     "required": ["id"]
 }
-</code></pre>
-
-<p>這個文件格式也有在 <a href="http://raml.org/">RAML</a> 中被使用到，RAML 是個 RESTful API 的定義文件，如果 API 傳輸的資料是 JSON 的話，就可以內嵌 JSON Schema，都定義完整就可以用自動化工具來做一些測試了，或是也可以產生一些方便閱讀的文件等等。</p>
-
-<h4>JSON-LD</h4>
-
-<p><a href="http://json-ld.org/">JSON-LD</a> 是 JSON for Linked Data，所謂 Linked Data 其實就是語意網的一部分，基本上還是遵照 <a href="http://www.w3.org/RDF/">RDF</a> 架構去設計出來的文件，目前也很多網路服務都支援，像是 Google、Facebook 等等，甚至 Gmail 的一些特殊能力也是透過在信件內插入 JSON-LD 格式的資料才得以實現。</p>
-
-<h4>JSON-RPC</h4>
-
-<p><a href="http://json-rpc.org/">JSON-RPC</a> 基本上就是 XML-RPC 的 JSON 版本這樣，其實我也不知道有沒有人真的拿來應用就是，倒是 XML-RPC 現在還不少老東西有支援。</p>
-
-<h4>GeoJSON</h4>
-
-<p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
-
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="707"/></img></a></p>
-
-<p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
-
-<h4>JSON-stat</h4>
-
-<p><a href="http://json-stat.org/">JSON-stat</a> 是個把二維統計資訊表格用 JSON 表現的格式，而且不是只能夠處理兩個維度的資料而已，事實上可以儲存更多維度，JSON-stat 在儲存 raw data 的部分是用打平的一維陣列來儲存，所以也不用擔心太多層太過複雜的狀況，想詳細瞭解一點的可以參考官網右上角的投影片看看。</p>
-
-<h4>JSON Graph</h4>
-
-<p><a href="http://netflix.github.io/falcor/documentation/jsongraph.html">JSON Graph</a> 是 Netflix 推出的 <a href="http://netflix.github.io/falcor/">Falcor</a> 裡面用到的，Falcor 是一種用來取代 RESTful API 的新的前後端之間的溝通方式，這種方法和 RESTful 相比最大的差異就是不再是對單一的資源（resource）做操作，而是整個應用程式會用到的東西都組織定義好，放到一個大的 resource 內，然後再對這個大的資源做操作，而這個大的 resource 就是所謂的 JSON Graph 物件，Falcor 的出現是為了解決一些把 RESTful 用到很透徹時會出現的問題，不過真的要想用這套方法在自己的服務上其實是有些難度，因為要實做一個 Falcor Server，官方也只有提供 Node 版的。</p>
-
-<h4>JSONPath</h4>
-
-<p><a href="http://goessner.net/articles/JsonPath/">JSONPath</a> 是一個 JSON 的 query 語言，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/XPath">XPath</a> 之於 XML，語法 syntax 其實和普通 JavaScript 程式碼很像，不會太難理解，一些範例：</p>
-
-<pre><code>$.store.*
+</code>
+              </pre>
+              <p>這個文件格式也有在 <a href="http://raml.org/">RAML</a> 中被使用到，RAML 是個 RESTful API 的定義文件，如果 API 傳輸的資料是 JSON 的話，就可以內嵌 JSON Schema，都定義完整就可以用自動化工具來做一些測試了，或是也可以產生一些方便閱讀的文件等等。</p>
+              <h4>JSON-LD</h4>
+              <p><a href="http://json-ld.org/">JSON-LD</a> 是 JSON for Linked Data，所謂 Linked Data 其實就是語意網的一部分，基本上還是遵照 <a href="http://www.w3.org/RDF/">RDF</a> 架構去設計出來的文件，目前也很多網路服務都支援，像是 Google、Facebook 等等，甚至 Gmail 的一些特殊能力也是透過在信件內插入 JSON-LD 格式的資料才得以實現。</p>
+              <h4>JSON-RPC</h4>
+              <p><a href="http://json-rpc.org/">JSON-RPC</a> 基本上就是 XML-RPC 的 JSON 版本這樣，其實我也不知道有沒有人真的拿來應用就是，倒是 XML-RPC 現在還不少老東西有支援。</p>
+              <h4>GeoJSON</h4>
+              <p><a href="http://geojson.org/">GeoJSON</a> 則是針對地理資訊的 JSON 資料格式，基本上就是點線面，然後座標用經緯度，再加上 meta 資訊這樣，不會很複雜，GitHub 也支援 <a href="https://github.com/blog/1541-geojson-rendering-improvements">直接預覽</a> 的功能，<a href="http://g0v.tw/zh-TW/index.html">g0v</a> 上其實有不少專案都有用到 geojson 資料，還有個 <a href="https://github.com/g0v/twgeojson">twgeojson</a> 的基礎建設，最新版的檔案有點大，不過可以看看舊版本的<a href="https://github.com/g0v/twgeojson/blob/master/legacy/twTown1982.json">檔案</a>：</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/24218757206/" title="twgeojson g0v by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg" width="1024" height="707" alt="twgeojson g0v, " srcset="https://farm2.staticflickr.com/1657/24218757206_9c6e578f87_b.jpg 1024w, https://farm2.staticflickr.com/1657/24218757206_6834908581_h.jpg 1600w"/>
+                </a>
+              </p>
+              <p>GeoJSON 還有一個擴充版的文件格式叫做 <a href="https://github.com/mbostock/topojson">TopoJSON</a>，相較於 GeoJSON 比較適合用在 topology 上（可以想像你只要台灣地圖，但是不用放在世界地圖上），整體檔案大小也因此可以小很多。</p>
+              <h4>JSON-stat</h4>
+              <p><a href="http://json-stat.org/">JSON-stat</a> 是個把二維統計資訊表格用 JSON 表現的格式，而且不是只能夠處理兩個維度的資料而已，事實上可以儲存更多維度，JSON-stat 在儲存 raw data 的部分是用打平的一維陣列來儲存，所以也不用擔心太多層太過複雜的狀況，想詳細瞭解一點的可以參考官網右上角的投影片看看。</p>
+              <h4>JSON Graph</h4>
+              <p><a href="http://netflix.github.io/falcor/documentation/jsongraph.html">JSON Graph</a> 是 Netflix 推出的 <a href="http://netflix.github.io/falcor/">Falcor</a> 裡面用到的，Falcor 是一種用來取代 RESTful API 的新的前後端之間的溝通方式，這種方法和 RESTful 相比最大的差異就是不再是對單一的資源（resource）做操作，而是整個應用程式會用到的東西都組織定義好，放到一個大的 resource 內，然後再對這個大的資源做操作，而這個大的 resource 就是所謂的 JSON Graph 物件，Falcor 的出現是為了解決一些把 RESTful 用到很透徹時會出現的問題，不過真的要想用這套方法在自己的服務上其實是有些難度，因為要實做一個 Falcor Server，官方也只有提供 Node 版的。</p>
+              <h4>JSONPath</h4>
+              <p><a href="http://goessner.net/articles/JsonPath/">JSONPath</a> 是一個 JSON 的 query 語言，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/XPath">XPath</a> 之於 XML，語法 syntax 其實和普通 JavaScript 程式碼很像，不會太難理解，一些範例：</p>
+              <pre>
+                <code>$.store.*
 $.store.book[*].author
 $.store..price
-</code></pre>
-
-<p>不過這些可不是程式碼，而是單純的字串，丟進 JSONPath 引擎再給它相對應的物件（不是 JSON 字串），就可以把目標位置的資料取出來。</p>
-
-<h4>JSONiq</h4>
-
-<p><a href="http://jsoniq.org/">JSONiq</a> 也是個用來 query JSON 資料用的語言，不過和上面的 JSONPath 不一樣，比較像是 SQL 那樣有點程式化，而且語法偏 functional programming，例如：</p>
-
-<pre><code>for $sarah in collection("users"),
+</code>
+              </pre>
+              <p>不過這些可不是程式碼，而是單純的字串，丟進 JSONPath 引擎再給它相對應的物件（不是 JSON 字串），就可以把目標位置的資料取出來。</p>
+              <h4>JSONiq</h4>
+              <p><a href="http://jsoniq.org/">JSONiq</a> 也是個用來 query JSON 資料用的語言，不過和上面的 JSONPath 不一樣，比較像是 SQL 那樣有點程式化，而且語法偏 functional programming，例如：</p>
+              <pre>
+                <code>for $sarah in collection("users"),
     $friend in collection("users")
 where $sarah.name eq "Sarah"
       and
       (some $name in $sarah.friends[]
        satisfies $friend.name eq $name)
 return $friend
-</code></pre>
-
-<h4>JSON Pointer</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> 是一個 2013 的 RFC 標準(RFC-6901)，用途和 JSON Path 有點像，也是用來取出 JSON 文件中的一部份資料，不過最主要的差異在於 JSON Pointer 一定是只能指向到一個節點，只能拿到一個 value，不像 JSONPath 或是 JSONip 可以一次 query 很多節點，然後用陣列的形式傳回值；另外還有一個和 JSONPath 的差異是 JSON Pointer 和 XPath 的語法很接近：</p>
-
-<pre><code>/foo/0
+</code>
+              </pre>
+              <h4>JSON Pointer</h4>
+              <p><a href="https://tools.ietf.org/html/rfc6901">JSON Pointer</a> 是一個 2013 的 RFC 標準(RFC-6901)，用途和 JSON Path 有點像，也是用來取出 JSON 文件中的一部份資料，不過最主要的差異在於 JSON Pointer 一定是只能指向到一個節點，只能拿到一個 value，不像 JSONPath 或是 JSONip 可以一次 query 很多節點，然後用陣列的形式傳回值；另外還有一個和 JSONPath 的差異是 JSON Pointer 和 XPath 的語法很接近：</p>
+              <pre>
+                <code>/foo/0
 /actors/4/name
-</code></pre>
-
-<h4>JSON Patch</h4>
-
-<p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> 是一個另 RFC 標準(RFC-6902)，緊接在 JSON Pointer 之後，這兩個標準都是都是在 <a href="https://blog.gslin.org/archives/2014/02/15/4261/json-patch/">gslin</a> 那邊看到的，JSON Patch 主要是定義了一組標準的對 JSON 的操作(operation)，提供了 add, remove, replace, move, copy, test 幾個操作，基本上看起來如下：</p>
-
-<pre><code>{"op": "add", "path": "/pets/0", "value": "dog"}
-</code></pre>
-
-<p>這行的意思是要在 pets 下的第一個元素的位置加上一個值，字串 "dog"，JSON Patch 基本上是設計來和 HTTP Patch 配合的，以前如果要用 Patch 修改某個特定網路 reource 的話，一定要把整個完整的，更新過後的 JSON 資料傳一次，但是如果用 JSON Patch 就可以只傳要做怎樣的更新就可以了，可以節省很多資料的傳輸量，而且還可以先用 test 做測試，然後也可以一次做一連串的修改動作：</p>
-
-<pre><code>[
+</code>
+              </pre>
+              <h4>JSON Patch</h4>
+              <p><a href="https://tools.ietf.org/html/rfc6902">JSON Patch</a> 是一個另 RFC 標準(RFC-6902)，緊接在 JSON Pointer 之後，這兩個標準都是都是在 <a href="https://blog.gslin.org/archives/2014/02/15/4261/json-patch/">gslin</a> 那邊看到的，JSON Patch 主要是定義了一組標準的對 JSON 的操作(operation)，提供了 add, remove, replace, move, copy, test 幾個操作，基本上看起來如下：</p>
+              <pre>
+                <code>{"op": "add", "path": "/pets/0", "value": "dog"}
+</code>
+              </pre>
+              <p>這行的意思是要在 pets 下的第一個元素的位置加上一個值，字串 "dog"，JSON Patch 基本上是設計來和 HTTP Patch 配合的，以前如果要用 Patch 修改某個特定網路 reource 的話，一定要把整個完整的，更新過後的 JSON 資料傳一次，但是如果用 JSON Patch 就可以只傳要做怎樣的更新就可以了，可以節省很多資料的傳輸量，而且還可以先用 test 做測試，然後也可以一次做一連串的修改動作：</p>
+              <pre>
+                <code>[
   { "op": "replace", "path": "/baz", "value": "boo" },
   { "op": "add", "path": "/hello", "value": ["world"] },
   { "op": "remove", "path": "/foo"}
 ]
-</code></pre>
-
-<h4>JSONDiffPatch</h4>
-
-<p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
-
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr"><img itemprop="url image" src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w"><meta itemprop="width" content="425"/><meta itemprop="height" content="654"/></img></a></p>
-
-<p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
-
-<h4>JSONLint</h4>
-
-<p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還有可以收合展開的樹狀檢視模式。</p>
-
-<h4>?JSON</h4>
-
-<p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
-
-<p>PS: 還有一篇 <a href="https://blog.othree.net/log/2016/08/13/json-web-token/">JSON Web Token</a></p>
-</section>
+</code>
+              </pre>
+              <h4>JSONDiffPatch</h4>
+              <p><a href="http://benjamine.github.io/jsondiffpatch/demo/index.html">JSONDiffPatch</a> 是本來文章發出後才看到的 JSON 文件的 diff, patch 工具，網站上的 demo 還有視覺化的顯示，感覺很華麗：</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/23699590343/" title="JSONDiffPatch by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg" width="425" height="654" alt="JSONDiffPatch, " srcset="https://farm2.staticflickr.com/1507/23699590343_c3d5b0dd16_b.jpg 665w"/>
+                </a>
+              </p>
+              <p>雖然用的格式不是 JSON Patch，而是自己有定義他的 <a href="https://github.com/benjamine/jsondiffpatch/blob/master/docs/deltas.md">delta format</a>，不過基本上作的事情很接近，另外他還可以 undo patch，也有 plugin 可以外掛，還算蠻完整的。</p>
+              <h4>JSONLint</h4>
+              <p><a href="http://jsonlint.com">JSONLint</a> 是 JSON 的文件格式檢查工具，不過實際上大部分人在命令列用的通常是 npm 裝的<a href="https://github.com/zaach/jsonlint">版本</a>，這版是 Mozilla 的 Zach Carter 用 JavaScript 實做的，我自己還蠻常用一個線上服務：<a href="https://jsonformatter.curiousconcept.com/">JSON Formatter</a>，除了可以做語法檢查，還有可以收合展開的樹狀檢視模式。</p>
+              <h4>?JSON</h4>
+              <p>最後，JSON 的相關應用和各種 library 真的是不少，其實 JSON 前面加上 26 個英文字母的任意一個，只有 <code>ojson</code> 沒有東西而已，其他 25 個名稱都有人用，不過大部分都是特定語言的 JSON library 實做就是了。然後相信我這篇文章列出來的不是全部，如果有人知道什麼特別的變化或應用也歡迎提供～</p>
+              <p>PS: 還有一篇 <a href="https://blog.othree.net/log/2016/08/13/json-web-token/">JSON Web Token</a></p>
+            </section>
             <footer>
-              <a href="/log/script/" rel="tag">SCRIPT</a>
-            </footer>
+      文章分類：
+      <a href="/log/script/" rel="tag">SCRIPT</a><a class="canonical" href="/log/2016/01/11/json-universe/" title="「JSON Universe」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>JSON Universe</strong>發表於 2016-01-11，文章類別為
-			  <a href="/log/script/">SCRIPT</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2016/01/03/2015/"><span class="prefix">上一篇：</span>2015<time>2016-01-03</time></a><a class="next pn" href="/log/2016/02/06/how-to-reduce-pdf-size/"><span class="prefix">下一篇：</span>How to Reduce PDF Size and Keep Text<time>2016-02-06</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/11/vim-boss-passed-away/" title="2023-08-11">Vim Boss Passed Away</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/02/yorimoi/" title="2023-08-02">比宇宙更遠的地方</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(133)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/site/happybusy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>
