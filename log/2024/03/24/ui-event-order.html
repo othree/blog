@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>UI Event Order : O3noBLOG</title>
+    <meta name="description" content="我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 mousedown、mouseup、click 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 click 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 focus 事件的順序呢？如果已經有其他元件有 focus，那它的 blur 事件又是在 focus 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 input、change 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。 首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 mousedown、mouseup、click，是在 mouseup 後才接著有 click 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 click 事件。然後這順序其實是有定義在 UI..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="鳥山明過世" href="/log/2024/03/08/akira-toriyama/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2024/03/24/ui-event-order/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2024/03/24/ui-event-order/amp/"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="UI Event Order"/>
+    <meta property="og:description" content="我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 mousedown、mouseup、click 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 click 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 focus 事件的順序呢？如果已經有其他元件有 focus，那它的 blur 事件又是在 focus 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 input、change 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。 首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 mousedown、mouseup、click，是在 mouseup 後才接著有 click 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 click 事件。然後這順序其實是有定義在 UI..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2024/03/24/ui-event-order/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
+    <meta property="og:image:width" content="240"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+    <nav>
+      <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
+        <div class="pure-menu pure-menu-horizontal">
+          <a href="/" class="pure-menu-item">
+                    首頁
+                </a>
+          <a href="/log/" accesskey="3" class="pure-menu-item pure-menu-selected" id="pure-menu-selected">
+                    彙整
+                </a>
+          <a href="/blogroll/" title="BLOGROLL" class="pure-menu-item">
+                    部落滾
+                </a>
+          <a href="/about/me/" class="pure-menu-item">
+                    About
+                </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="container" class="container">
+      <header role="banner" class="pure-g">
+        <h1 class="pure-u-1">
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+        </h1>
+      </header>
+      <div class="pure-g layout">
+        <div id="page-info" class="span9">
+          <div class="row">
+            <div class="span6">
+              <h2>單篇彙整</h2>
+            </div>
+            <div id="page-nav" class="span2">
+              <a href="../">上一層</a>
+              <!--fix for ie-->
+            </div>
+          </div>
+        </div>
+        <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
+          <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-ui-event-order">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2024-03-24T18:07:13" id="date-2024-03-24">
+                <span class="mon">03月</span>
+                <span class="day">24日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2024/03/24/ui-event-order/">UI Event Order</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+<p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
+<p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
+<pre><code>pointerdown
+mousedown
+focus
+focusin
+pointerup
+mouseup
+click
+</code></pre>
+<p>至於這個順序是怎麼決定的呢？根據 Pointer Events 的 <a href="https://w3c.github.io/pointerevents/#compatibility-mapping-with-mouse-events">11 章「Compatibility mapping with mouse events」</a> 所述，瀏覽器開發時可以考慮同時發佈古時候的 Mouse Events，其中 11.2、11.3 就有提到先發佈 Pointer Events 接著再發佈對應的 Mouse Event。</p>
+<p>然後還有一個細節是，根據 Pointer Event <a href="https://w3c.github.io/pointerevents/#the-pointerdown-event">4.2.3 The pointerdown event</a>，如果在 <code>pointerdown</code> 事件裡面呼叫 <code>event.preventDefault()</code> 取消事件的話，後面的 <code>mousedown</code> 和 <code>mouseup</code> 就都不會觸發。</p>
+<p>我上面的那段事件順序，其實還多列了一個 <code>focusin</code>，這其實是一系列的新(相較於 DOM2)事件，包括了：</p>
+<ul>
+<li><code>focusin</code> 對應 <code>focus</code></li>
+<li><code>focusout</code> 對應 <code>blur</code></li>
+<li><code>mouseenter</code> 對應 <code>mouseover</code></li>
+<li><code>mouseleave</code> 對應 <code>mouseout</code></li>
+</ul>
+<p>其實 <code>mouseenter</code>/<code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code>/<code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code>/<code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code>/<code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code>/<code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
+<p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
+<pre><code>keydown
+keypress
+beforeinput
+input
+keyup
+</code></pre>
+<p><code>change</code> 事件則是要在 <code>blur</code> 時才會有，順序是先 <code>change</code> 才 <code>blur</code>：</p>
+<pre><code>change
+blur
+focusout
+</code></pre>
+<p>這個順序是定義在 HTML 的 User Interaction 一章的 <a href="https://html.spec.whatwg.org/multipage/interaction.html#unfocus-causes-change-event">6.6.4 Processing model</a> 裡面，明確的寫下要先 commit change 後才 <code>blur</code>。</p>
+<p>如果有用 IME 的話，事情就很不單純了，還會有 Composition Events，順序是在 <code>beforeinput</code> 前面，剛開始組字會同時有 <code>compositionstart</code> 和 <code>compositionupdate</code> 兩個事件，然後沒有 <code>keypress</code>，之後的輸入組字則就是只有 <code>update</code>：</p>
+<pre><code>keydown
+compositionstart
+compositionupdate
+beforeinput
+input
+keyup
+</code></pre>
+<p>Composition Events 現在標準的文件是放在 <a href="https://w3c.github.io/uievents/#events-compositionevents">UI Events 裡面</a>，不過文件中範例的順序和實際測試的結果並不一致，目前的文件草稿中 <code>compositionupdate</code> 是在 <code>beforeinput</code> 之後，不過其實現在瀏覽器的順序是在 UI Events 的 <a href="https://github.com/w3c/uievents/issues/354">Issue 354</a> 提出的變動，只是目前文件還沒有發布更新的內容。</p>
+<p>結束組字的時候，不同瀏覽器的行為就有差異了，首先是按下 <kbd>Enter</kbd> 完成組字時，Firefox 的話不會有多一個 <code>update</code>，直接就是 <code>compositionend</code>，然後是在 <code>beforeinput</code> 和 <code>input</code> 之間：</p>
+<pre><code>keydown
+beforeinput
+compositionend
+input
+keyup
+</code></pre>
+<p>Chrome(v123) 的話就會有多一個 <code>compositionupdate</code> 然後 <code>compositionend</code> 順序也不一樣，會在 <code>input</code> 的後面：</p>
+<pre><code>keydown
+compositionupdate
+beforeinput
+input
+compositionend
+keyup
+</code></pre>
+<p>其實 <a href="https://w3c.github.io/uievents/#events-composition-key-events">UI Events 文件 5.7.5</a> 內的範例是 Firefox 那種沒有多 <code>compositionupdate</code> 的順序，這個 5.7 章節內其實還有不少其他情境下的事件順序，像是手寫輸入，取消輸入等等。</p>
+<p>如果是還沒完成組字，直接切換輸入法強迫結束組字，事件順序都和按下 <kbd>Enter</kbd> 都一樣，如果是組字到一半直接切換視窗，就是標準沒定義到的狀況了，Firefox 的行為比較接近上面的樣子，先完成 <code>input</code> 才 <code>blur</code>：</p>
+<pre><code>beforeinput
+compositionend
+input
+blur
+focusout
+</code></pre>
+<p>Chrome 則是會先產生 <code>blur</code> 然後接 <code>compositionend</code>：</p>
+<pre><code>change
+blur
+focusout
+compositionend
+
+</code></pre>
+<p>以上，大概紀錄了我一直以來都有疑惑的使用者行為所產生的事件們的順序，最後附上我用的程式碼（超單純）：</p>
+<pre><code class="language-javascript">const events = [
+  "keydown",
+  "keypress",
+  "keyup",
+  "change",
+  "compositionstart",
+  "compositionupdate",
+  "compositionend",
+  "beforeinput",
+  "input",
+  "click",
+  "auxclick",
+  "contextmenu",
+  "mousedown",
+  "mouseup",
+  "focus",
+  "focusin",
+  "focusout",
+  "blur",
+  "pointerdown",
+  "pointerup",
+  "paste",
+];
+
+const elem1 = document.getElementById("target-1");
+const elem2 = document.getElementById("target-2");
+
+events.forEach((event) =&gt; {
+  elem1.addEventListener(
+    `${event}`,
+    () =&gt; {
+      console.log(event.target.id, event);
+    },
+    false
+  );
+  elem2.addEventListener(
+    `${event}`,
+    () =&gt; {
+      console.log(event.target.id, event);
+    },
+    false
+  );
+});
+</code></pre>
+</section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
+        </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>UI Event Order</strong>發表於 2024-03-24，文章類別為
+			  <a href="/log/script/">SCRIPT</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2024/03/08/akira-toriyama/"><span class="prefix">上一篇：</span>鳥山明過世<time>2024-03-08</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
+            </li>
+            <li>
+              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
+            </li>
+            <li>
+              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
+            </li>
+            <li>
+              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
+            </li>
+            <li>
+              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
+            </li>
+            <li>
+              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
+            </li>
+            <li>
+              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/view/happy-busy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
+      </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
+    </div>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
+  </body>
+</html>
