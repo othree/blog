@@ -71,6 +71,24 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-ui-event-order">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2024-03-24T18:07:13" id="date-2024-03-24">
+                <span class="mon">03月</span>
+                <span class="day">24日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2024/03/24/ui-event-order/">UI Event Order</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+<p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
+<em class="extended"><a href="/log/2024/03/24/ui-event-order/">閱讀「UI Event Order」全文</a></em></section>
+            <footer>
+              <a href="/log/script/" rel="tag">SCRIPT</a>
+            </footer>
+          </article>
+          <hr/>
           <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-digital-envelope-routines-unsupported">
             <header>
               <time itemprop="datePublished dateModified" datetime="2023-09-15T11:41:56" id="date-2023-09-15">
@@ -512,33 +530,6 @@ async function asyncTaskWithCb(cb) {
             </footer>
           </article>
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-tern-022-released">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2018-09-02T17:41:32" id="date-2018-09-02">
-                <span class="mon">09月</span>
-                <span class="day">02日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2018/09/02/tern-022-released/">Tern 0.22 released</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody"><blockquote class="twitter-tweet" data-lang="zh-tw"><p lang="en" dir="ltr">First Tern release in a year and a half today <a href="https://t.co/1Ws7zYEJSd">https://t.co/1Ws7zYEJSd</a> . All thanks to <a href="https://twitter.com/othree?ref_src=twsrc%5Etfw">@othree</a> picking up maintenance!</p>--	 Marijn Haverbeke (@MarijnJH) <a href="https://twitter.com/MarijnJH/status/1034328203026984961?ref_src=twsrc%5Etfw">2018年8月28日</a></blockquote>
-<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
-<p>大約七月初的時候，我開始接手幫忙維護 <a href="http://ternjs.net/">Tern</a>，Tern 是一個獨立的 JavaScript inference engine，用於協助撰寫 JavaScript 程式碼，就和之前介紹過的 Microsoft 的 LSP 後面的 Language Server 一樣，都是獨立於編輯器/IDE之外，不過 TernJS 是 2013 年就有開始發展的，所以是走自己的溝通介面；其實我幾年前也有幫忙貢獻過 TernJS，以前弄過我還有印象的有 Promise 支援、fetch 的定義、CoffeeScript plugin。</p>
-<p>後來作者 <a href="https://github.com/marijnh">Marijn</a>暫停維護 Tern 跑去弄其他東西像是 <a href="https://github.com/acornjs/acorn">Acorn</a>、<a href="https://codemirror.net/">CodeMirror</a> 還有 ProseMirror 等（這位很厲害，改天再來介紹），並公開找人接手，在一些文字內有找到他的說法是說現在這個架構有些問題處理不了，很難再發展下去了，總之所以就停了一年多沒更新了，我也是斷斷續續注意到這個狀況，不過在研究 LSP 的時候發現其實還蠻多東西是依賴 TernJS 的，讓他這樣荒廢下去好像有點可惜，認真考慮了一兩週後決定接手維護工作，考慮的點主要在於不知道能不能順利接手處理問題，因為 TernJS 的 code base 實在不容易理解，尤其是我沒有相關的 compiler、工具的訓練和開發經驗，以前那些貢獻其實都是花很大心力下去才弄出來的，幾乎是處於那種「程式碼會動了，但是我不知道為什麼」的狀態，不過這兩年相關的知識補了不少，還玩了好一陣子的 JavaScript AST，有覺得比較看的懂 TernJS 的程式碼了，就心一橫報名說要幫忙維護了，Marijn 看到我過去有發過一些 PR 後，很迅速的就開協作者權限給我了。</p>
-<p>正式開始接手後，我就開始把要做的事情整理出來，我的目標是在保持現有架構之下，盡可能的繼續支援新語法，直到真的這個架構撐不住為止，所以一開始就是把一些落後的語法支援和定義補上，這次發佈的 <a href="http://ternjs.net/#releases">0.22 版</a>就是包括 0.21 之後的一些小 bugfix，還有我加入之後開始弄的 async/await、async iteration(包括 <code>for await of</code>) 以及 <code>**</code> 支援，下一版我會開始一些內部的修改、還有看看 bug，不過 Emacs 相關的我現在是真的無法處理。</p>
-<p>最後一段來說說目前感想吧，Tern 真是我目前為止看過最難理解的 code 了，不知道是不是會寫 compiler 的人腦袋都會轉換到常人無法理解的形狀，我目前為止看的第二辛苦的 code base 是 Kibana 的，不過 Kibana 單純只是東西很多，找入口找很久，Tern 難的點在於它用了很多 side effect 來做事，而且 code 內沒什麼文件說明，所以像下面這行我就花了很多時間才看懂實際上做什麼事：</p>
-<pre><code class="language-js">infer(node.right, scope, new HasMethodCall(":Symbol.iterator", [], null,
-                                           new HasMethodCall("next", [], null,
-                                                             new GetProp("value", target))))
-</code></pre>
-<p>這行程式碼是先拿 <code>node.right</code> 的 <code>:Symbol.iterator</code> method 的執行結果，再看它的 <code>next</code> method 的執行結果，然後取最後這個結果的 <code>value</code> property 的資訊（可能的 type 之類的）塞給 target 物件，然後這行下面你又看不到 target 做何用，因為 target 物件是在上面已經有和其它會回傳的物件有建立關聯的；除此之外，這裡有個 <code>new GetProp</code>，其它地方還有個 <code>AVal.getProp</code> 又是不同功能，一開始看的真的是黑人問號...</p>
-</section>
-            <footer>
-              <a href="/log/script/" rel="tag">SCRIPT</a>
-            </footer>
-          </article>
-          <hr/>
           <a id="prev-link" href="/log/script/all/" class="center">此類別所有文章</a>
         </main>
         <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
@@ -557,14 +548,14 @@ async function asyncTaskWithCb(cb) {
           <h3>分類彙整</h3>
           <ul>
             <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
             <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
             <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
             <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
             <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(149)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>

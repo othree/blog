@@ -1,41 +1,45 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>mod_perl 跑 MT : O3noBLOG</title>
-    <meta name="description" content="今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="感冒第四天" href="/log/2003/12/18/catch-cold-day-4/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2003/12/19/run-mt-under-mod-perl/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2003/12/19/run-mt-under-mod-perl/amp/"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="mod_perl 跑 MT"/>
-    <meta property="og:description" content="今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2003/12/19/run-mt-under-mod-perl/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
-    <meta property="og:image:width" content="240"/>
-    <meta property="og:image:height" content="240"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content="今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2003/12/19/run-mt-under-mod-perl/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2003/12/19/run-mt-under-mod-perl/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2003-12-19T02:36:22",
+        "dateModified": "2003-12-19T02:36:22",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://blog.othree.net/images/O3-240x240.png",
+          "width": 240,
+          "height": 240
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +51,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,37 +83,35 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-run-mt-under-mod-perl">
+          <article id="entry-run-mt-under-mod-perl">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2003-12-19T02:36:22" id="date-2003-12-19">
+              <time datetime="2003-12-19T02:36:22" id="date-2003-12-19">
                 <span class="mon">12月</span>
                 <span class="day">19日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2003/12/19/run-mt-under-mod-perl/">mod_perl 跑 MT</a>
-              </h3>
+              <h3>mod_perl 跑 MT</h3>
             </header>
-            <section itemprop="articleBody"><p>今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P</p><p>我安裝的環境是Windows XP Pro，用的軟體是Apache 1.3.24、ActivePerl 5.8.2.808（請一定要用5.8.x版，原因後述）、mod_perl 1.29_01-dev、libapreq 1.2，其中Apache和ActivePerl的安撞方法就不在多說了，這應該很多地方都找的到相關資訊，因此接下來是從mod_perl的安裝說起，另外還有一點要先說的是我的Apache是裝在<strong>D:/Apache/</strong>裡，ActivePerl是裝在<strong>D:/usr/</strong>裡，後面就不會再特別講了。</p>
-
-<p>首先是mod_perl，因為我用的是Apache 1.3x，所以mod_perl也只能裝1.x版，依照mod_perl官方網頁的<a href="http://perl.apache.org/docs/1.0/os/win32/install.html#PPM_Packages" title="mod_perl官方網站－mod_perl 1.0在win32下以PPM Package安裝的說明">安裝說明</a>，我用的是ActivePerl 5.8.2.808，所以不能簡單的直接用ppm一個指令就裝好，要先set repository alias location（我不會翻，不過大概就是給一個server，好讓ppm用他根據package名稱搜尋ppd）。我直接把從DOS到進入PPM shell到安裝完的mod_perl的指令列出來：</p>
-
-<pre><code>D:\&gt;ppm
+            <section>
+              <p>今天總算是測試成功了，之前測試到程式路徑位置不對後就暫時放棄了，今天又努力了許多小時，總算是把這設定搞定了，至於跑起來的感覺，其實沒很明顯，畢竟還只有在自己電腦上跑，等過兩天弄上現在這台server，再來把全部檔案都重建好測試一下:P</p>
+              <p>我安裝的環境是Windows XP Pro，用的軟體是Apache 1.3.24、ActivePerl 5.8.2.808（請一定要用5.8.x版，原因後述）、mod_perl 1.29_01-dev、libapreq 1.2，其中Apache和ActivePerl的安撞方法就不在多說了，這應該很多地方都找的到相關資訊，因此接下來是從mod_perl的安裝說起，另外還有一點要先說的是我的Apache是裝在<strong>D:/Apache/</strong>裡，ActivePerl是裝在<strong>D:/usr/</strong>裡，後面就不會再特別講了。</p>
+              <p>首先是mod_perl，因為我用的是Apache 1.3x，所以mod_perl也只能裝1.x版，依照mod_perl官方網頁的<a href="http://perl.apache.org/docs/1.0/os/win32/install.html#PPM_Packages" title="mod_perl官方網站－mod_perl 1.0在win32下以PPM Package安裝的說明">安裝說明</a>，我用的是ActivePerl 5.8.2.808，所以不能簡單的直接用ppm一個指令就裝好，要先set repository alias location（我不會翻，不過大概就是給一個server，好讓ppm用他根據package名稱搜尋ppd）。我直接把從DOS到進入PPM shell到安裝完的mod_perl的指令列出來：</p>
+              <pre>
+                <code>D:\&gt;ppm
 ppm&gt; rep add http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58
-ppm&gt; install mod_perl-1</code></pre>
-
-<p>其中要注意的是最後一行的「ppm&gt;install mod_perl-1」最後的那個「-1」是一定要有的，沒有他的話會裝到mod_perl 1.99-dev，是給Apache 2用的。當輸入最後一行指令後一會兒，他會要求你輸入mod_perl.so這個檔案要放的位置，我的例子是「<strong>D:/Apache/modules/</strong>」，連磁碟代碼都要輸入以確保不會出問題喔。</p>
-
-<p>第一歩安裝mod_perl完成後，再來就要安裝libapreq了，這是MT要求的，詳細資料可以在[MT官方使用手冊 (Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl)":http://mtbook.org/mtmanual_alternate.html#mod_perl"]中找到，這份文件很重要，最後一步的設定也要靠它。總之，要MT在mod_perl下跑就會需要libapreq，然而libapreq一定要ActivePerl 5.8以後的版本才能裝，這也就是為什麽我們需要ActivePerl 5.8.x了。如果你的動作沒有太快的話，你應該還在PPM shell裡，輸入下面的指令</p>
-
-<pre><code>ppm&gt; install libapreq-1</code></pre>
-
-<p>同上，後面的「-1」不要砍掉，不然好像是會裝到mod_perl 2用的版本。接著等一會兒應該就會裝完了，這時你可以輸入已下指令離開PPM shell，亦或是直接把命令提示字元的視窗關掉。</p>
-
-<pre><code>ppm&gt; exit</code></pre>
-
-<p>如果以上動作都完成的話，那就只剩下最後的設定了，首先是Apache的設定，我是直接用官方使用手冊上的第二種設定，假設你的httpd.conf都還沒做過關於mod_perl相關的變動的話，那直接在檔案最後貼上下面的設定值，並修改其中的幾個路徑，應該就OK了。</p>
-
-<pre><code>LoadFile /usr/bin/perl58.dll
+ppm&gt; install mod_perl-1</code>
+              </pre>
+              <p>其中要注意的是最後一行的「ppm&gt;install mod_perl-1」最後的那個「-1」是一定要有的，沒有他的話會裝到mod_perl 1.99-dev，是給Apache 2用的。當輸入最後一行指令後一會兒，他會要求你輸入mod_perl.so這個檔案要放的位置，我的例子是「<strong>D:/Apache/modules/</strong>」，連磁碟代碼都要輸入以確保不會出問題喔。</p>
+              <p>第一歩安裝mod_perl完成後，再來就要安裝libapreq了，這是MT要求的，詳細資料可以在[MT官方使用手冊 (Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl)":http://mtbook.org/mtmanual_alternate.html#mod_perl"]中找到，這份文件很重要，最後一步的設定也要靠它。總之，要MT在mod_perl下跑就會需要libapreq，然而libapreq一定要ActivePerl 5.8以後的版本才能裝，這也就是為什麽我們需要ActivePerl 5.8.x了。如果你的動作沒有太快的話，你應該還在PPM shell裡，輸入下面的指令</p>
+              <pre>
+                <code>ppm&gt; install libapreq-1</code>
+              </pre>
+              <p>同上，後面的「-1」不要砍掉，不然好像是會裝到mod_perl 2用的版本。接著等一會兒應該就會裝完了，這時你可以輸入已下指令離開PPM shell，亦或是直接把命令提示字元的視窗關掉。</p>
+              <pre>
+                <code>ppm&gt; exit</code>
+              </pre>
+              <p>如果以上動作都完成的話，那就只剩下最後的設定了，首先是Apache的設定，我是直接用官方使用手冊上的第二種設定，假設你的httpd.conf都還沒做過關於mod_perl相關的變動的話，那直接在檔案最後貼上下面的設定值，並修改其中的幾個路徑，應該就OK了。</p>
+              <pre>
+                <code>LoadFile /usr/bin/perl58.dll
 LoadModule perl_module modules/mod_perl.so
 &lt;IfModule mod_perl.c&gt;
 &lt;Perl&gt;
@@ -144,134 +150,49 @@ PerlHandler Apache::XMLRPC::Lite
 PerlSetVar dispatch_to "blogger, metaWeblog, mt"
 PerlSetVar MTConfig D:/Apache/MT/mt.cfg
 &lt;/Location&gt;
-&lt;/IfModule&gt;</code></pre>
-
-<p>有些人應該會注意到我的MT程式並不是放在htdocs裡面，事實上，放在裡面會出些奇怪的問題，後來移出來後就沒這個問題了（很神秘，而且IE不會出問題），這點也是我剛剛漏掉忘記講的一點。<strong>請把MT資料夾移出htdocs，並用ScriptAlias指向</strong>，這邊也提供我的設定做範例。</p>
-
-<pre><code>ScriptAlias /MT/ "D:/Apache/MT/"</code></pre>
-
-<p>Apache的設定就只有上面那樣而已，假設這部份沒錯的話，Apache應該可以正常的跑起來，不過要完成全部的安裝程序，我們還需要要調整MT裡的設定檔，mt.cfg，在<a href="http://mtbook.org/mtmanual_alternate.html#mod_perl" title="Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl">MT官方使用手冊</a>中最後面有講到需要修改的幾項數值，如果你的mt.cfg檔案都沒動過的話，那你只需要改前三項，剩下四項就是他原來的預設值。</p>
-
-<pre><code>CGIPath http://我的.伺服器.com/mt/
+&lt;/IfModule&gt;</code>
+              </pre>
+              <p>有些人應該會注意到我的MT程式並不是放在htdocs裡面，事實上，放在裡面會出些奇怪的問題，後來移出來後就沒這個問題了（很神秘，而且IE不會出問題），這點也是我剛剛漏掉忘記講的一點。<strong>請把MT資料夾移出htdocs，並用ScriptAlias指向</strong>，這邊也提供我的設定做範例。</p>
+              <pre>
+                <code>ScriptAlias /MT/ "D:/Apache/MT/"</code>
+              </pre>
+              <p>Apache的設定就只有上面那樣而已，假設這部份沒錯的話，Apache應該可以正常的跑起來，不過要完成全部的安裝程序，我們還需要要調整MT裡的設定檔，mt.cfg，在<a href="http://mtbook.org/mtmanual_alternate.html#mod_perl" title="Jedi 翻譯的中文版MT官方使用手冊－替換環境－mod_perl">MT官方使用手冊</a>中最後面有講到需要修改的幾項數值，如果你的mt.cfg檔案都沒動過的話，那你只需要改前三項，剩下四項就是他原來的預設值。</p>
+              <pre>
+                <code>CGIPath http://我的.伺服器.com/mt/
 DataSource /路徑/指到/db
-StaticWebPath /mt-靜態-網頁/</code></pre>
-
-<p>我的例子是</p>
-
-<pre><code>CGIPath http://localhost/MT/
+StaticWebPath /mt-靜態-網頁/</code>
+              </pre>
+              <p>我的例子是</p>
+              <pre>
+                <code>CGIPath http://localhost/MT/
 DataSource D:/apache/MT/db
-StaticWebPath /mt-static</code></pre>
-
-
-<p>localhost是因為我只在本地端作測試的關係。DataSource需要是絕對路徑（也就是從磁碟機代號開始寫），以避免出問題。然後StaticWebPath我的設定值是「/mt-static」，這代表的是「<strong>D:/Apache/htdocs/mt-static/</strong>」，這個如果搞錯地方的話，那管理介面的樣式表、圖和說明文件的連結就都出不來了，事實上是不影響MT的運作啦。</p>
-
-<p>上面的步驟都弄好了的話，就可以開啟你的mt.cgi，享受更低的主機負擔了-o-y～（寫成這樣不知有多少人看的懂~_~）</p></section>
+StaticWebPath /mt-static</code>
+              </pre>
+              <p>localhost是因為我只在本地端作測試的關係。DataSource需要是絕對路徑（也就是從磁碟機代號開始寫），以避免出問題。然後StaticWebPath我的設定值是「/mt-static」，這代表的是「<strong>D:/Apache/htdocs/mt-static/</strong>」，這個如果搞錯地方的話，那管理介面的樣式表、圖和說明文件的連結就都出不來了，事實上是不影響MT的運作啦。</p>
+              <p>上面的步驟都弄好了的話，就可以開啟你的mt.cgi，享受更低的主機負擔了-o-y～（寫成這樣不知有多少人看的懂~_~）</p>
+            </section>
             <footer>
-              <a href="/log/web/" rel="tag">Web</a>
-            </footer>
+      文章分類：
+      <a href="/log/web/" rel="tag">Web</a><a class="canonical" href="/log/2003/12/19/run-mt-under-mod-perl/" title="「mod_perl 跑 MT」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>mod_perl 跑 MT</strong>發表於 2003-12-19，文章類別為
-			  <a href="/log/web/">Web</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2003/12/18/catch-cold-day-4/"><span class="prefix">上一篇：</span>感冒第四天<time>2003-12-18</time></a><a class="next pn" href="/log/2003/12/20/whitespace-pre/"><span class="prefix">下一篇：</span>white-space: pre;<time>2003-12-20</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
-            </li>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/view/happy-busy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>

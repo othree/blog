@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>JSON Web Token : O3noBLOG</title>
-    <meta name="description" content=" 之前的 JSON Universe 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 JSON Web Token(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 JOSE(JSON Object Signing and Encryption) Working Group 所制訂的 RFC 標準，目前包括了： JSON Web Signature JSON Web Encryption JSON Web Key JSON Web Algorithms JSON Web Token 共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="7 Bit Encoding and Email" href="/log/2016/07/19/7bit-encoding-and-email/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2016/08/13/json-web-token/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2016/08/13/json-web-token/amp/"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="JSON Web Token"/>
-    <meta property="og:description" content=" 之前的 JSON Universe 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 JSON Web Token(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 JOSE(JSON Object Signing and Encryption) Working Group 所制訂的 RFC 標準，目前包括了： JSON Web Signature JSON Web Encryption JSON Web Key JSON Web Algorithms JSON Web Token 共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2016/08/13/json-web-token/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg"/>
-    <meta property="og:image:width" content="1024"/>
-    <meta property="og:image:height" content="683"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content=" 之前的 JSON Universe 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 JSON Web Token(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 JOSE(JSON Object Signing and Encryption) Working Group 所制訂的 RFC 標準，目前包括了： JSON Web Signature JSON Web Encryption JSON Web Key JSON Web Algorithms JSON Web Token 共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2016/08/13/json-web-token/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2016/08/13/json-web-token/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2016-08-13T18:46:54",
+        "dateModified": "2016-08-13T18:46:54",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+            
+          "url": "https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg",
+          "width": 1024,
+          "height": 683
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +52,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,266 +84,179 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-json-web-token">
+          <article id="entry-json-web-token">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2016-08-13T18:46:54" id="date-2016-08-13">
+              <time datetime="2016-08-13T18:46:54" id="date-2016-08-13">
                 <span class="mon">08月</span>
                 <span class="day">13日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2016/08/13/json-web-token/">JSON Web Token</a>
-              </h3>
+              <h3>JSON Web Token</h3>
             </header>
-            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr"><img itemprop="url image" src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w"><meta itemprop="width" content="1024"/><meta itemprop="height" content="683"/></img></a></p>
-
-<p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
-
-<ul>
-<li><a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a></li>
-</ul>
-
-<p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
-
-<pre><code>{
+            <section>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/14015411664/" title="大丸百貨 by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg" width="1024" height="683" alt="大丸百貨" srcset="https://farm3.staticflickr.com/2895/14015411664_8cebe3a88c_b.jpg 1024w, https://farm3.staticflickr.com/2895/14015411664_aa01b9bc05_h.jpg 1600w"/>
+                </a>
+              </p>
+              <p>之前的 <a href="https://blog.othree.net/log/2016/01/11/json-universe/">JSON Universe</a> 那篇文章在寫的時候，還沒發現到有這東西，直到上個月才發現到 <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>(JWT) 這個標準，研究過後覺得要單獨介紹一下，不過由於相關的標準有好幾個，花了些時間才搞清楚各個標準之間的關係；這一系列標準是由 <a href="https://datatracker.ietf.org/wg/jose/charter/">JOSE(JSON Object Signing and Encryption) Working Group</a> 所制訂的 RFC 標準，目前包括了：</p>
+              <ul>
+                <li>
+                  <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature</a>
+                </li>
+                <li>
+                  <a href="https://tools.ietf.org/html/rfc7516">JSON Web Encryption</a>
+                </li>
+                <li>
+                  <a href="https://tools.ietf.org/html/rfc7517">JSON Web Key</a>
+                </li>
+                <li>
+                  <a href="https://tools.ietf.org/html/rfc7518">JSON Web Algorithms</a>
+                </li>
+                <li>
+                  <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token</a>
+                </li>
+              </ul>
+              <p>共五個 RFC 標準，事實上，JSON Web Token 是要最後談到的；這一系列標準的目的是提供一個標準的協定，用在傳輸 JSON 資料時提供可靠性（簽章、signature）和安全性（加密、encryption），眼尖的人可能發現了，怎麼沒有 JOSE 的文件呢？事實上是真的沒有，而且也沒官方文件清楚解釋 JOSE 到底是什麼，最常看到的詞就是 JOSE Header 了，思考許久後才理解，JOSE 其實包括了兩種格式，分別是 JSON Web Signature(JWS) 和 JSON Web Encryption(JWE)，JWS 只是加上驗證用的簽章，其實內容是明碼的，JWE 才是真的有把傳輸的資料加密過，至於簽章和加密用的演算法則是用 JWA 格式來紀錄，然後需要用到的 key，例如用非對稱加密保護加密內容的 key 給收信端，這時則是用 JWK 格式來記錄要使用的 public key，而這些資訊就是 JOSE Header 的內容了，JWK 和 JWA 都是很簡單的格式，基本上就是一個物件，然後有定義好的屬性：</p>
+              <pre>
+                <code>{
   "kty":"EC",
   "crv":"P-256",
   "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
   "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
   "kid":"Public key used in JWS spec Appendix A.3 example"
 }
-</code></pre>
-
-<p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
-
-<p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>例如這個 JWK 文件範例中的 <code>kty</code> 代表的是 Key Type；<code>crv</code>、<code>x</code> 和 <code>y</code> 則是橢圓曲線加密（ECC）類演算法會用到的參數；<code>kid</code> 則是自訂的 Key ID，用來在一堆 JWK 當中尋找所要的 key 使用；其它還有像是 X.509 憑證驗證會需要的資訊，各種加密演算法會用到的 Initialization Vector、Salt 等，都有定義好的屬性名稱。</p>
+              <p>JWS 和 JWK 就比較複雜些了，以 JWS 來說，你會先有要傳輸的資料 payload，然後一組 meta data，又稱為 JOSE Header，內容基本上就是 JWA + JWK + 一些基本的屬性，像是 <code>cty</code>、<code>typ</code>：</p>
+              <pre>
+                <code>{
   "typ":"JWT",
   "alg":"HS256"
 }
-</code></pre>
-
-<p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
-
-<pre><code>YWI/YmE=
-</code></pre>
-
-<p>用 base64url 的話就變成：</p>
-
-<pre><code>YWI_YmE
-</code></pre>
-
-<p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
-
-<pre><code>BASE64URL(UTF8(JOSE Header)) || '.' || 
+</code>
+              </pre>
+              <p>這就是一個最簡單的 JOSE Header，它說明傳輸的資料內容和簽名用的 HMAC 演算法，然後這個 JOSE Header 和 payload 要分別轉成 <a href="https://tools.ietf.org/html/rfc7515#appendix-C">base64url</a> 編碼，其實和 base64 沒差很多，就先把 JSON String 轉成 base64 encoding string 後，把 padding 的 <code>=</code> 都拿掉，然後 <code>+</code> 用 <code>-</code> 取代，<code>/</code> 用 <code>_</code> 取代。例如 <code>ab?ab</code> 這個 ASCII 字串，用 base64 encoding 就會變成：</p>
+              <pre>
+                <code>YWI/YmE=
+</code>
+              </pre>
+              <p>用 base64url 的話就變成：</p>
+              <pre>
+                <code>YWI_YmE
+</code>
+              </pre>
+              <p>然後現在我們有一個 JOSE Header 和一個要傳輸的 JSON payload，以 base64url 編碼呈現並且用 <code>.</code> 接起來：</p>
+              <pre>
+                <code>BASE64URL(UTF8(JOSE Header)) || '.' || 
 BASE64URL(JWS Payload))
-</code></pre>
-
-<p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
-
-<ul>
-<li>JOSE Header</li>
-<li>Payload</li>
-<li>Signature</li>
-</ul>
-
-<p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
-
-<pre><code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+</code>
+              </pre>
+              <p>接著把這個字串拿去用 JOSE Header 裡面指定的 HMAC 演算法搭配一組 key 來算出簽章（signature），至此我們就有了 JWS 三樣必須的元素了：</p>
+              <ul>
+                <li>JOSE Header</li>
+                <li>Payload</li>
+                <li>Signature</li>
+              </ul>
+              <p>JWS 文件中定義了兩種格式可以用來傳輸這三個元素，第一種是精簡格式（Compact Serialization Syntax），格式很簡單，就和上面算 signature 用的格式一樣，只是現在多加了 signature 在後面，一樣用 base64url 形式：</p>
+              <pre>
+                <code>BASE64URL(UTF8(JWS Protected Header)) || '.' ||
 BASE64URL(JWS Payload) || '.' ||
 BASE64URL(JWS Signature)
-</code></pre>
-
-<p>長的會看起來像是：</p>
-
-<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
-</code></pre>
-
-<p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>長的會看起來像是：</p>
+              <pre>
+                <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code>
+              </pre>
+              <p>另外一種則是 JSON 格式（JSON Serialization Syntax）：</p>
+              <pre>
+                <code>{
   "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
   "signatures":[
      {"protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
       "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"}]
 }
-</code></pre>
-
-<p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
-
-<pre><code>{
+</code>
+              </pre>
+              <p>這種形式其實是最完整的版本，還可以加上 public header （沒 signature 驗證）和多個 signature；另外也有 flatten 版，只能放一個 signature：</p>
+              <pre>
+                <code>{
   "payload":"eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9",
   "protected":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
   "signature":"TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
 }
-</code></pre>
-
-<p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
-
-<p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
-
-<pre><code>{"alg":"none"}
-</code></pre>
-
-<p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
-
-<pre><code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code></pre>
-
-<p>最後是 <code>.</code> 結尾。</p>
-
-<p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
-
-<ul>
-<li>JOSE Header</li>
-<li>Encrypted Key</li>
-<li>Initialization Vector</li>
-<li>Ciphertext</li>
-<li>Authentication Tag</li>
-</ul>
-
-<p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
-
-<p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
-
-<pre><code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
-</code></pre>
-
-<p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
-
-<p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
-
-<ul>
-<li><code>iss</code>, Issuer</li>
-<li><code>sub</code>, Subject</li>
-<li><code>aud</code>, Audience</li>
-<li><code>exp</code>, Expiration Time</li>
-<li><code>nbf</code>, Not Before</li>
-<li><code>iat</code>, Issued At</li>
-<li><code>jti</code>, JWT ID</li>
-</ul>
-
-<p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
-
-<pre><code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
-</code></pre>
-
-<p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
-
-<p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
-
-<p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
-</section>
+</code>
+              </pre>
+              <p>雖然有 JSON 格式的 JWS，不過 精簡格式目前應該是最廣為通行的，一來是它資料量比較小，二是它比較方便在不同環境下傳輸使用，例如後面會提到的，放在 HTTP Header 內，如果沒有特殊需求要多個 signature，實在很沒有用 JSON 格式的需求。</p>
+              <p>最後，JWS 還有一個特殊的 case，就是它其實允許不加上簽章的，使用這組 JOSE Header：</p>
+              <pre>
+                <code>{"alg":"none"}
+</code>
+              </pre>
+              <p>然後 signature 是空字串，所以精簡格式的就會變成：</p>
+              <pre>
+                <code> eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code>
+              </pre>
+              <p>最後是 <code>.</code> 結尾。</p>
+              <p>JWE 和 JWS 的狀態其實也很像，只是三個元素變成五個，包括了:</p>
+              <ul>
+                <li>JOSE Header</li>
+                <li>Encrypted Key</li>
+                <li>Initialization Vector</li>
+                <li>Ciphertext</li>
+                <li>Authentication Tag</li>
+              </ul>
+              <p>其中 JOSE Header 和 JWS 的內容差不多，Encrypted Key 和 Initialization Vector(IV) 是加密時的輸入，這邊的 Encrypted Key 是一把加密過的 Key，被加密保護的 Key 又稱為 Content Encryption Key(CEK)，是實際上用來加密保護內容時所使用的 Key，這把 CEK 和 IV 都是亂數產生的，那又有一個問題是，用什麼 Key 加密 CEK 來產生 Encrypted Key 呢？這邊建議的是用非對稱加密，拿收信方的 public key 來加密，當然 JOSE Header 裡面也可以塞進 x.509 的相關資訊用來確保 public key 的正確性；最後兩個，Ciphertext 和 Authentication Tag 則是加密的輸出，Authentication Tag 是 authentication encryption 會產生的，用來驗證內容正確性的資訊，就像是 JWS 的 signature 一樣用途，主要也是避免 Ciphertext 被用中間人攻擊替換掉，不過我還不太清楚如果可以偷到 key 偽造出 Ciphertext，是怎樣會沒法同時有另外一組 Authentication Tag 就是了。</p>
+              <p>然後一樣有精簡格式和 JSON 格式，精簡格式看起來就如下：</p>
+              <pre>
+                <code> eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ
+</code>
+              </pre>
+              <p>注意找的話就可以發現四個 <code>.</code> 把資料切成五段。</p>
+              <p>最後終於要來介紹 JSON Web Token（JWT）了，JWT 是什麼呢，它其實就是一個 JOSE 的應用，一句話來說，就是使用 JWS 或 JWE 來做現在網路服務的身分認證協定中常見的 token（權杖）的傳遞。所以 JWT 其實就是規範了一組 JSON 資料的屬性（claim），和身分認證相關，然後要求這個 JSON 資料要用 JWS 或 JWE 來傳輸提供保護，這些預先定義好的屬性有：</p>
+              <ul>
+                <li><code>iss</code>, Issuer</li>
+                <li><code>sub</code>, Subject</li>
+                <li><code>aud</code>, Audience</li>
+                <li><code>exp</code>, Expiration Time</li>
+                <li><code>nbf</code>, Not Before</li>
+                <li><code>iat</code>, Issued At</li>
+                <li><code>jti</code>, JWT ID</li>
+              </ul>
+              <p>都是非常 meta 的 token 屬性，這些名稱基本上是從 <a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenID Connect</a> 那邊來的，除了這些定義好的屬性之外，還可以加上其它自訂的資料，只是這些已經被定義且<a href="http://www.iana.org/assignments/jwt/jwt.xhtml">註冊</a>好的名稱不能另做他用，OpenID Connect 也有不少個人資料的屬性已經註冊上 IANA 了，像是 <code>first_name</code>、<code>country</code> 之類的 profile 資訊，有一種使用 JWT 的方法就是直接把個人 profile 存在客戶端，server 只要驗證簽名是否正確，這樣一個好處是 server 不用保存 session 資訊，減少很多資源的需求，實做起來其實複雜度也比較低。另外由於是用作 token 之用，自然也可以當成 OAuth 的 token 使用，這部分資訊在 <a href="https://tools.ietf.org/html/rfc7523">RFC-7523</a> 這份文件有說明，至於要如何使用 OAuth token 則是在 <a href="https://tools.ietf.org/html/rfc6750">RFC-6750</a> 有介紹，比較常見的是放在 HTTP Auth Header 裡面：</p>
+              <pre>
+                <code>Authorization: Bearer eyJhbGciOiJub25lIn0.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.
+</code>
+              </pre>
+              <p>之前鴨七也有整理過中文的<a href="https://blog.yorkxin.org/2013/09/30/oauth2-6-bearer-token">說明</a>，看起來比較輕鬆，而且說明很完整（不過我承認我沒有從頭看到尾）。</p>
+              <p>目前搜尋 JWT 一定會看到一個網站 <a href="https://jwt.io/">jwt.io</a>，這個網站用淺顯易懂的方式來<a href="https://jwt.io/introduction/">介紹</a> JWT，把比較複雜的關係，像是 JWS、JWE 等等都隱藏起來幫助瞭解，還有一個線上除錯工具和不同語言的 library 整理，不過除錯工具只有支援 JWS，另外也有和一些其它類似標準做比較，還蠻值得看一看的，這個網站是由 <a href="https://auth0.com/">Auth0</a> 提供的，他們其實就是一家專門提供身分認證服務的公司，似乎都已經轉到使用 JWT 了，在 jwt.io 有提到他們似乎是把他用作 stateless 的 token 來用，我對這間公司之前印象是還不錯，一來是 API 文件看起來還蠻不錯的，另外有不少的開放原碼<a href="https://auth0.com/opensource">專案</a>，當然有一些是串接他們家服務用的 library 啦。</p>
+              <p>PS. 對密碼學還沒很熟悉，有誤歡迎指正～</p>
+            </section>
             <footer>
-              <a href="/log/server/" rel="tag">Server Side</a>
-            </footer>
+      文章分類：
+      <a href="/log/server/" rel="tag">Server Side</a><a class="canonical" href="/log/2016/08/13/json-web-token/" title="「JSON Web Token」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>JSON Web Token</strong>發表於 2016-08-13，文章類別為
-			  <a href="/log/server/">Server Side</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2016/07/19/7bit-encoding-and-email/"><span class="prefix">上一篇：</span>7 Bit Encoding and Email<time>2016-07-19</time></a><a class="next pn" href="/log/2016/08/25/modern-html-email-develop/"><span class="prefix">下一篇：</span>Modern HTML Email Development<time>2016-08-25</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
-            </li>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/23/remove-disqus/" title="2023-08-23">Remove Disqus</a>
-            </li>
-            <li>
-              <a href="/log/2023/08/14/common-log-format/" title="2023-08-14">Common Log Format</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(41)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(148)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/view/happy-busy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>
