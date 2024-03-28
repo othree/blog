@@ -8,7 +8,7 @@ stylesheets/all.css.gz: stylesheets/all.css
 	zopfli stylesheets/all.css
 
 stylesheets/all.css: stylesheets/othree.min.css stylesheets/prism.min.css stylesheets/prism.dark.min.css
-	cat stylesheets/othree.min.css > stylesheets/all.css
+	cat stylesheets/prism.min.css stylesheets/prism.dark.min.css stylesheets/othree.min.css > stylesheets/all.css
 
 stylesheets/othree.min.css: stylesheets/othree.css 
 	uglifycss stylesheets/othree.css > stylesheets/othree.min.css
