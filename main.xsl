@@ -43,7 +43,7 @@
         <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-	<link rel="icon" href="/favicon-32.png" sizes="32x32" />
+	<link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
 	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon.png" />
 	<xsl:comment>
 - Graphics Title: 33-20e3.svg
