@@ -43,6 +43,14 @@
         <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+	<link rel="icon" href="/favicon-32.png" sizes="32x32" />
+	<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon.png" />
+	<xsl:comment>
+- Graphics Title: 33-20e3.svg
+- Graphics Author: Copyright 2020 Twitter, Inc and other contributors (https://github.com/twitter/twemoji)
+- Graphics Source: https://github.com/twitter/twemoji/blob/master/assets/svg/33-20e3.svg
+- Graphics License: CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+	</xsl:comment>
         <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous" />
         <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet" /> 
         <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
