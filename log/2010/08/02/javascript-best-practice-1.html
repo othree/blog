@@ -1,41 +1,45 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>JavaScript Best Practice Part.1: JSLint : O3noBLOG</title>
-    <meta name="description" content="前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。 那天被問到的時候我一時只想的到先過 JSLint 再說，所以第一篇就先從 JSLint 開始講起，JSLint 是 Douglas Crockford 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 JSLint 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="TOSSUG HTML5 分享補充" href="/log/2010/07/24/tossug-html5-talk/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2010/08/02/javascript-best-practice-1/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2010/08/02/javascript-best-practice-1/amp/"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="JavaScript Best Practice Part.1: JSLint"/>
-    <meta property="og:description" content="前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。 那天被問到的時候我一時只想的到先過 JSLint 再說，所以第一篇就先從 JSLint 開始講起，JSLint 是 Douglas Crockford 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 JSLint 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2010/08/02/javascript-best-practice-1/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://blog.othree.net/images/O3-240x240.png"/>
-    <meta property="og:image:width" content="240"/>
-    <meta property="og:image:height" content="240"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content="前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。 那天被問到的時候我一時只想的到先過 JSLint 再說，所以第一篇就先從 JSLint 開始講起，JSLint 是 Douglas Crockford 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 JSLint 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2010/08/02/javascript-best-practice-1/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2010/08/02/javascript-best-practice-1/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2010-08-02T22:26:18",
+        "dateModified": "2010-08-02T22:26:18",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://blog.othree.net/images/O3-240x240.png",
+          "width": 240,
+          "height": 240
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +51,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,236 +83,101 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-javascript-best-practice-1">
+          <article id="entry-javascript-best-practice-1">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2010-08-02T22:26:18" id="date-2010-08-02">
+              <time datetime="2010-08-02T22:26:18" id="date-2010-08-02">
                 <span class="mon">08月</span>
                 <span class="day">02日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2010/08/02/javascript-best-practice-1/">JavaScript Best Practice Part.1: JSLint</a>
-              </h3>
+              <h3>JavaScript Best Practice Part.1: JSLint</h3>
             </header>
-            <section itemprop="articleBody"><p>前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。</p>
-
-<p>那天被問到的時候我一時只想的到先過 <a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 再說，所以第一篇就先從 <span class="caps">JSL</span>int 開始講起，JSLint 是 <a href="http://www.crockford.com/">Douglas Crockford</a> 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 <span class="caps">JSL</span>int 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。</p><h4>全域變數</h4>
-
-<p>全域變數很危險，因為這些變數可能會和其他的程式碼產生衝突，畢竟你可以控制自己的程式不用全域變數，但是你無法控制其他人的，甚至是其他人惡意 code，再加上 JavaScript 中只要變數使用前沒有先用 <code>var</code> 宣告過，該變數就會是全域變數，所以在 JavaScript 中是很容易誤用全域變數的，一般的作法是把自己的 code 全部放到同一個 namespace （物件）之下，這樣就可以讓程式使用到的全域變數最小化到只剩一個，或是把你的程式碼整個用 closure 包起來。JSLint 限制全域變數的使用，沒有宣告的全域變數都會被視為錯誤而跑出警告，宣告的方法是寫在註解裡面如下：</p>
-
-
-
-<pre><code>/*global myApp:true, myApp2:true */</code></pre>
-
-
-
-<h4>結尾分號</h4>
-
-<p>每行結尾都要有分號，沒寫雖然程式碼也可以跑，但是寫了比較沒事，尤其是在使用簡單的 JavaScript 壓縮工具時很有差。不過有時候程式敘述沒完，到下一行還要繼續，像是太長的字串要分兩行，然後用 + 接起來時該怎麼辦？ <span class="caps">JSL</span>int 其實也是可以接受，只是加號要放在行尾，不是行首。</p>
-
-<p>另外有有嚴格要求函數結尾的分號使用，分成兩種：</p>
-
-
-
-<pre><code>var f1 = function () {};
+            <section>
+              <p>前陣子有長輩問我 JavaScript 的 Best Practice，一時還真講不出來，因為我不太有把經驗整理出來的習慣，所以有了這系列的文章，雖然會有幾篇不知道XD。</p>
+              <p>那天被問到的時候我一時只想的到先過 <a href="http://www.jslint.com/"><span class="caps">JSL</span>int</a> 再說，所以第一篇就先從 <span class="caps">JSL</span>int 開始講起，JSLint 是 <a href="http://www.crockford.com/">Douglas Crockford</a> 在 2002 年時發表的 JavaScript 程式碼的檢查工具，除了基本的語法檢查外，還多了不少限制和要求，可以讓你的程式碼品質提昇，光是讓你的程式碼能過 <span class="caps">JSL</span>int 檢查就可以減少很多可能的問題了，接下來就針對各項主要的檢查項目做介紹。</p>
+              <h4>全域變數</h4>
+              <p>全域變數很危險，因為這些變數可能會和其他的程式碼產生衝突，畢竟你可以控制自己的程式不用全域變數，但是你無法控制其他人的，甚至是其他人惡意 code，再加上 JavaScript 中只要變數使用前沒有先用 <code>var</code> 宣告過，該變數就會是全域變數，所以在 JavaScript 中是很容易誤用全域變數的，一般的作法是把自己的 code 全部放到同一個 namespace （物件）之下，這樣就可以讓程式使用到的全域變數最小化到只剩一個，或是把你的程式碼整個用 closure 包起來。JSLint 限制全域變數的使用，沒有宣告的全域變數都會被視為錯誤而跑出警告，宣告的方法是寫在註解裡面如下：</p>
+              <pre>
+                <code>/*global myApp:true, myApp2:true */</code>
+              </pre>
+              <h4>結尾分號</h4>
+              <p>每行結尾都要有分號，沒寫雖然程式碼也可以跑，但是寫了比較沒事，尤其是在使用簡單的 JavaScript 壓縮工具時很有差。不過有時候程式敘述沒完，到下一行還要繼續，像是太長的字串要分兩行，然後用 + 接起來時該怎麼辦？ <span class="caps">JSL</span>int 其實也是可以接受，只是加號要放在行尾，不是行首。</p>
+              <p>另外有有嚴格要求函數結尾的分號使用，分成兩種：</p>
+              <pre>
+                <code>var f1 = function () {};
 function f2() {}
-</code></pre>
-
-
-
-<p>f1 這種宣告會要求要有分號結尾，f2 的方式則要求不可以加上多餘的分號。</p>
-
-<h4>if, for 一定要大括號</h4>
-
-<p>當然不寫大括號會有一行被認定是在該條件之內需要被執行的程式碼，不過為了保險不誤判起見（容易發生在修改程式碼時）， <span class="caps">JSL</span>int 強制要求一定要大括號。</p>
-
-<h4>for in 要檢查該屬性是否屬於該物件直接擁有</h4>
-
-<p>簡單說就是要這樣的寫法：</p>
-
-
-
-<pre><code>for (var i in obj) {
+</code>
+              </pre>
+              <p>f1 這種宣告會要求要有分號結尾，f2 的方式則要求不可以加上多餘的分號。</p>
+              <h4>if, for 一定要大括號</h4>
+              <p>當然不寫大括號會有一行被認定是在該條件之內需要被執行的程式碼，不過為了保險不誤判起見（容易發生在修改程式碼時）， <span class="caps">JSL</span>int 強制要求一定要大括號。</p>
+              <h4>for in 要檢查該屬性是否屬於該物件直接擁有</h4>
+              <p>簡單說就是要這樣的寫法：</p>
+              <pre>
+                <code>for (var i in obj) {
     if (obj.hasOwnProperty(i)) {
         ....
     }
-}</code></pre>
-
-
-
-<p>這是為了確保不會存取到不想存取的屬性，舉例來說，像是 prototype 這套 JavaScript 函式庫會對原生的陣列物件加上一些新的 method 到它的 prototype 裡面，這時如果想用 for in 寫法來跑這個陣列就會把這些新增的 method 也一起抓出來，所以需要用 <code>hasOwnProperty</code> 來檢查一下，不過我個人的建議是，不要用 for in 寫法，一來它效率比較慢，二來可能會遇到這種問題，還要一個一個檢查，所以能不用就不用最好，尤其是跑陣列時。</p>
-
-<h4>不要用 with</h4>
-
-<p>總之就是不要用 with，因為會讓你產生混淆，不知道你存取到的變數到底是哪個 scope 來的，而且還有效能問題， with 會多產生一層 scope chain ，本來直接可以存取到的變數反而跑到第二層去了。</p>
-
-<h4><code>===</code> and <code>!==</code></h4>
-
-<p>和 null, 0, undefined, true, false 這些值比較時，一定要用 <code>===</code> 和 <code>!==</code> ，因為 JavaScript 有神祕的型別轉換，讓你的 null <code>==</code> undefined 但是 null != false ，當然還有其他各種有趣的比較，總之你確定是要判斷是否是以上列舉值的其中任一種時，就用 <code>===</code> 和 <code>!==</code> 吧，如果只是要 true/false 判斷，可以用 !! 來把值轉成 boolean。</p>
-
-<h4>eval is evil</h4>
-
-<p>不要用 eval ，或是丟程式碼到 setTimeout、setInterval、Function 裡（和 eval 等價），雖然少數時候會需要 eval，不過大部分的程式應用可以不使用 eval， 它有安全性的問題和效率的問題，如果需要處理 <span class="caps">JSON </span>格式的資料，那大部分的 Library 都有函數可以處理，沒的話也可以使用 Crockford 的 <a href="http://www.json.org/js.html">json2.js</a> ，它相容於現在新瀏覽器內建的 <span class="caps">JSON </span>物件，可以安心使用。</p>
-
-<p>說到 <span class="caps">JSON </span>就不得不提一下，其實它的字串只允許使用雙括號 " ，而且物件屬性名稱有要求一定要用字串形式，用雙括號包起來，不是只有字串值才需要，詳細可以看看 <a href="http://www.json.org/"><span class="caps">JSON </span>官網</a> 的鐵路圖，只是因為很多人使用 eval 來讀 <span class="caps">JSON </span>資料，才會產生誤解以為 <span class="caps">JSON </span>和 JavaScript 語法完全一樣，嚴格說來只是子集而已，這邊衍生的問題是，錯誤的 <span class="caps">JSON </span>格式在用原生 <span class="caps">JSON </span>或是 json2.js 時會過不了。</p>
-
-<h4>使用 {} 建立物件， [] 建立陣列</h4>
-
-<p>不要用 new Object() 和 new Array() 了，直接用 {} 和 [] 吧，還可以同時給初始值，速度也比較快。當然 <code>newString()</code> 、 <code>new Number()</code> 、 <code>new Boolean()</code> 也別用...</p>
-
-<h4>parseInt </h4>
-
-<p>parseInt 可以指定要是幾進位的整數形式，不過第二個參數也可以省略，只是預設值不是固定的，如果你的字串是 0 開頭的話，它會幫你當成 8 進位，如果是 0x 開頭的話會當成 16 進位，不過後者的問題比較小，問題是前者，如果你想要把 09 轉成整數，你本來預期是 9 ，但是因為被當成 8 進位，09 不存在，所以他會回傳 0 ，因此 <span class="caps">JSL</span>int 要求使用 parseInt 時一定要加上第二個參數，指定字串顯示的數值是幾進位的形式。</p>
-
-<h4>使用 obj.name 取代 obj["name"]</h4>
-
-<p>可以的話就使用前者的方法，速度比較快，也比較省程式碼。</p>
-
-<h4>變數只能宣告一次</h4>
-
-<p>在同一個 scope 下，同樣的變數名稱只允許宣告一次，當然也是為了錯誤認知。</p>
-
-<h4>設定</h4>
-
-<p>其實 <span class="caps">JSL</span>int 有不少選項可以設定，甚至可以允許 eval ，畢竟有時候會有需要，和全域變數一樣是寫在註解裡面，我自己現在的設定如下：</p>
-
-
-
-<pre><code>/*jslint browser: true, forin: true, onevar: true, white: true*/
-</code></pre>
-
-
-
-<p>第一個 browser 選項是會提供部分瀏覽器內建的全域變數和函數，我不知道為什麼有些函數反而會關掉，像是 <code>escape</code> 有使用到的話還要自己加到 global 裡面。</p>
-
-<p>第二個 forin 是前面提到的 hasOwnProperty 檢查，我通常是關掉不檢查的（設成 true），因為我很少需要物件繼承的複雜資料結構，所以比較不會有使用 for in 的需要，加上陣列也不會用 for in 來跑，所以就省去這項檢查了。</p>
-
-<p>第三個 onevar 是限制每個 function 只能有一次 var 宣告，這也是一個效率問題，後面的文章會再詳細介紹。</p>
-
-<p>第四個則是嚴格的縮排檢查，預設是四個空白，另外在有名稱的 function 宣告時會要求名稱後面直接接 () 中間不留空白， anonymous function 則否，當然主要目的是為了讓兩者區隔比較明顯，不會把 "function" 看成函數名稱。</p>
-
-
-
-<pre><code>var f1 = function () {};
+}</code>
+              </pre>
+              <p>這是為了確保不會存取到不想存取的屬性，舉例來說，像是 prototype 這套 JavaScript 函式庫會對原生的陣列物件加上一些新的 method 到它的 prototype 裡面，這時如果想用 for in 寫法來跑這個陣列就會把這些新增的 method 也一起抓出來，所以需要用 <code>hasOwnProperty</code> 來檢查一下，不過我個人的建議是，不要用 for in 寫法，一來它效率比較慢，二來可能會遇到這種問題，還要一個一個檢查，所以能不用就不用最好，尤其是跑陣列時。</p>
+              <h4>不要用 with</h4>
+              <p>總之就是不要用 with，因為會讓你產生混淆，不知道你存取到的變數到底是哪個 scope 來的，而且還有效能問題， with 會多產生一層 scope chain ，本來直接可以存取到的變數反而跑到第二層去了。</p>
+              <h4><code>===</code> and <code>!==</code></h4>
+              <p>和 null, 0, undefined, true, false 這些值比較時，一定要用 <code>===</code> 和 <code>!==</code> ，因為 JavaScript 有神祕的型別轉換，讓你的 null <code>==</code> undefined 但是 null != false ，當然還有其他各種有趣的比較，總之你確定是要判斷是否是以上列舉值的其中任一種時，就用 <code>===</code> 和 <code>!==</code> 吧，如果只是要 true/false 判斷，可以用 !! 來把值轉成 boolean。</p>
+              <h4>eval is evil</h4>
+              <p>不要用 eval ，或是丟程式碼到 setTimeout、setInterval、Function 裡（和 eval 等價），雖然少數時候會需要 eval，不過大部分的程式應用可以不使用 eval， 它有安全性的問題和效率的問題，如果需要處理 <span class="caps">JSON </span>格式的資料，那大部分的 Library 都有函數可以處理，沒的話也可以使用 Crockford 的 <a href="http://www.json.org/js.html">json2.js</a> ，它相容於現在新瀏覽器內建的 <span class="caps">JSON </span>物件，可以安心使用。</p>
+              <p>說到 <span class="caps">JSON </span>就不得不提一下，其實它的字串只允許使用雙括號 " ，而且物件屬性名稱有要求一定要用字串形式，用雙括號包起來，不是只有字串值才需要，詳細可以看看 <a href="http://www.json.org/"><span class="caps">JSON </span>官網</a> 的鐵路圖，只是因為很多人使用 eval 來讀 <span class="caps">JSON </span>資料，才會產生誤解以為 <span class="caps">JSON </span>和 JavaScript 語法完全一樣，嚴格說來只是子集而已，這邊衍生的問題是，錯誤的 <span class="caps">JSON </span>格式在用原生 <span class="caps">JSON </span>或是 json2.js 時會過不了。</p>
+              <h4>使用 {} 建立物件， [] 建立陣列</h4>
+              <p>不要用 new Object() 和 new Array() 了，直接用 {} 和 [] 吧，還可以同時給初始值，速度也比較快。當然 <code>newString()</code> 、 <code>new Number()</code> 、 <code>new Boolean()</code> 也別用...</p>
+              <h4>parseInt </h4>
+              <p>parseInt 可以指定要是幾進位的整數形式，不過第二個參數也可以省略，只是預設值不是固定的，如果你的字串是 0 開頭的話，它會幫你當成 8 進位，如果是 0x 開頭的話會當成 16 進位，不過後者的問題比較小，問題是前者，如果你想要把 09 轉成整數，你本來預期是 9 ，但是因為被當成 8 進位，09 不存在，所以他會回傳 0 ，因此 <span class="caps">JSL</span>int 要求使用 parseInt 時一定要加上第二個參數，指定字串顯示的數值是幾進位的形式。</p>
+              <h4>使用 obj.name 取代 obj["name"]</h4>
+              <p>可以的話就使用前者的方法，速度比較快，也比較省程式碼。</p>
+              <h4>變數只能宣告一次</h4>
+              <p>在同一個 scope 下，同樣的變數名稱只允許宣告一次，當然也是為了錯誤認知。</p>
+              <h4>設定</h4>
+              <p>其實 <span class="caps">JSL</span>int 有不少選項可以設定，甚至可以允許 eval ，畢竟有時候會有需要，和全域變數一樣是寫在註解裡面，我自己現在的設定如下：</p>
+              <pre>
+                <code>/*jslint browser: true, forin: true, onevar: true, white: true*/
+</code>
+              </pre>
+              <p>第一個 browser 選項是會提供部分瀏覽器內建的全域變數和函數，我不知道為什麼有些函數反而會關掉，像是 <code>escape</code> 有使用到的話還要自己加到 global 裡面。</p>
+              <p>第二個 forin 是前面提到的 hasOwnProperty 檢查，我通常是關掉不檢查的（設成 true），因為我很少需要物件繼承的複雜資料結構，所以比較不會有使用 for in 的需要，加上陣列也不會用 for in 來跑，所以就省去這項檢查了。</p>
+              <p>第三個 onevar 是限制每個 function 只能有一次 var 宣告，這也是一個效率問題，後面的文章會再詳細介紹。</p>
+              <p>第四個則是嚴格的縮排檢查，預設是四個空白，另外在有名稱的 function 宣告時會要求名稱後面直接接 () 中間不留空白， anonymous function 則否，當然主要目的是為了讓兩者區隔比較明顯，不會把 "function" 看成函數名稱。</p>
+              <pre>
+                <code>var f1 = function () {};
 function f2() {}
-</code></pre>
-
-
-
-<p>像是前面舉過的例子，f1 後面的函數在宣告時是屬於匿名的，他的 () 就要和前面的 "function" 間留一個空白，f2 就要求函數名稱和後面的 () 接在一起。</p>
-
-<h4>其他</h4>
-
-<p>還有不少設定和檢查說明我這篇文章沒有提到，可以參考 <a href="http://www.jslint.com/lint.html"><span class="caps">JSL</span>int Instruction</a> ，而除了這些其實還有不少細部檢查沒列出的，就要等遇到時才知道了（要翻 <a href="http://www.jslint.com/fulljslint.js">原始碼</a> 也是可以的）。</p>
-
-<p>下一篇文章會講一些和效能有關的東西，這兩篇應該都還很偏 coding style XD。</p>
-
-<p class="update">補充：查了一下發現 escape/upescape 已經不推薦使用了，以後請用 encodeURI/decodeURI 。</p></section>
+</code>
+              </pre>
+              <p>像是前面舉過的例子，f1 後面的函數在宣告時是屬於匿名的，他的 () 就要和前面的 "function" 間留一個空白，f2 就要求函數名稱和後面的 () 接在一起。</p>
+              <h4>其他</h4>
+              <p>還有不少設定和檢查說明我這篇文章沒有提到，可以參考 <a href="http://www.jslint.com/lint.html"><span class="caps">JSL</span>int Instruction</a> ，而除了這些其實還有不少細部檢查沒列出的，就要等遇到時才知道了（要翻 <a href="http://www.jslint.com/fulljslint.js">原始碼</a> 也是可以的）。</p>
+              <p>下一篇文章會講一些和效能有關的東西，這兩篇應該都還很偏 coding style XD。</p>
+              <p class="update">補充：查了一下發現 escape/upescape 已經不推薦使用了，以後請用 encodeURI/decodeURI 。</p>
+            </section>
             <footer>
-              <a href="/log/script/" rel="tag">SCRIPT</a>
-            </footer>
+      文章分類：
+      <a href="/log/script/" rel="tag">SCRIPT</a><a class="canonical" href="/log/2010/08/02/javascript-best-practice-1/" title="「JavaScript Best Practice Part.1: JSLint」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>JavaScript Best Practice Part.1: JSLint</strong>發表於 2010-08-02，文章類別為
-			  <a href="/log/script/">SCRIPT</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2010/07/24/tossug-html5-talk/"><span class="prefix">上一篇：</span>TOSSUG HTML5 分享補充<time>2010-07-24</time></a><a class="next pn" href="/log/2010/08/08/yuicompressor-vs-closure-/"><span class="prefix">下一篇：</span>YUICompressor vs Closure-Compiler<time>2010-08-08</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2024/03/24/ui-event-order/" title="2024-03-24">UI Event Order</a>
-            </li>
-            <li>
-              <a href="/log/2024/03/08/akira-toriyama/" title="2024-03-08">鳥山明過世</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
-            </li>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(149)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/view/happy-busy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>

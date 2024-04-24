@@ -85,7 +85,7 @@
                 <a itemprop="mainEntityOfPage" href="/log/2024/03/24/ui-event-order/">UI Event Order</a>
               </h3>
             </header>
-            <section itemprop="articleBody"><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+            <section itemprop="articleBody"><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 <code>keydown</code>、<code>keyup</code> 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
 <p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
 <p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
 <pre><code>pointerdown
@@ -105,7 +105,7 @@ click
 <li><code>mouseenter</code> 對應 <code>mouseover</code></li>
 <li><code>mouseleave</code> 對應 <code>mouseout</code></li>
 </ul>
-<p>其實 <code>mouseenter</code>/<code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code>/<code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code>/<code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code>/<code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code>/<code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
+<p>其實 <code>mouseenter</code> / <code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code> / <code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code> / <code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code> / <code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code> / <code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
 <p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
 <pre><code>keydown
 keypress
@@ -220,13 +220,22 @@ events.forEach((event) =&gt; {
           <hr/>
           <div role="contentinfo"> <h3>關於本文章</h3><p><strong>UI Event Order</strong>發表於 2024-03-24，文章類別為
 			  <a href="/log/script/">SCRIPT</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2024/03/08/akira-toriyama/"><span class="prefix">上一篇：</span>鳥山明過世<time>2024-03-08</time></a></p></div>
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2024/03/08/akira-toriyama/"><span class="prefix">上一篇：</span>鳥山明過世<time>2024-03-08</time></a><a class="next pn" href="/log/2024/03/28/yamani/"><span class="prefix">下一篇：</span>やまに（yamani）旅館<time>2024-03-28</time></a></p></div>
           <h3>關於本網誌</h3>
           <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
             <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
           </address>
           <h3>近期文章</h3>
           <ul>
+            <li>
+              <a href="/log/2024/04/17/json-type-definition/" title="2024-04-17">JSON Type Definition</a>
+            </li>
+            <li>
+              <a href="/log/2024/04/03/the-magic-of-dialog/" title="2024-04-03">Dialog 的魔法</a>
+            </li>
+            <li>
+              <a href="/log/2024/03/28/yamani/" title="2024-03-28">やまに（yamani）旅館</a>
+            </li>
             <li>
               <a href="/log/2024/03/08/akira-toriyama/" title="2024-03-08">鳥山明過世</a>
             </li>
@@ -245,15 +254,6 @@ events.forEach((event) =&gt; {
             <li>
               <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
             </li>
-            <li>
-              <a href="/log/2023/09/15/digital-envelope-routines-unsupported/" title="2023-09-15">digital envelope routines::unsupported</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/11/vim-license-2/" title="2023-09-11">Vim License 的故事（下）</a>
-            </li>
-            <li>
-              <a href="/log/2023/09/10/vim-license-1/" title="2023-09-10">Vim License 的故事（上）</a>
-            </li>
           </ul>
           <h3>分類彙整</h3>
           <ul>
@@ -261,11 +261,11 @@ events.forEach((event) =&gt; {
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(110)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(136)</span></li>
             <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
             <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(149)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(150)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>

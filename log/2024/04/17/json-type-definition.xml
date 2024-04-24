@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>s</b:listType>
+			<b:listData listID="001007" baseName="json-type-definition">JSON Type Definition</b:listData>
+
+			<b:previous>
+				<b:mTitle>Dialog 的魔法</b:mTitle>
+				<b:mDate>2024-04-03</b:mDate>
+				<b:mBase>the-magic-of-dialog</b:mBase>
+			</b:previous>
+
+
+		</b:entriesMeta>
+		<b:entry entryID="001007" baseName="json-type-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-17</b:date>
+				<b:time>22:47:21</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+
+			<b:CommentsAccepted>0</b:CommentsAccepted>
+
+
+			<b:PingsAccepted>0</b:PingsAccepted>
+
+			<b:title>JSON Type Definition</b:title>
+			<b:content>
+				<b:summary>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 JSON Type Definition（簡稱 JSON Typedef 或是 JTD） 這個 RFC 標準，相較於發展已經很久的 JSON Schema，JSON Typedef 的語法簡潔不少： { &quot;properties&quot;: { &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; }, &quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; }, &quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }...</b:summary>
+				<b:mainContent><p>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 <a href="https://jsontypedef.com/">JSON Type Definition</a>（簡稱 JSON Typedef 或是 JTD） 這個 <a href="https://datatracker.ietf.org/doc/html/rfc8927">RFC 標準</a>，相較於發展已經很久的 <a href="https://json-schema.org/">JSON Schema</a>，JSON Typedef 的語法簡潔不少：</p>
+<pre><code class="language-json">{
+	&quot;properties&quot;: {
+		&quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+		&quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; },
+		&quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; },
+		&quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+	 }
+}
+</code></pre>
+</b:mainContent>
+				<b:extendContent><p>光是看不到 <code>$</code> 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 <strong>Independent Submission</strong>，這就讓我好奇了起來，於是就花了不少時間了解前因後果。</p>
+<p>JSON Typedef 的作者是 <a href="https://github.com/ucarion">Ulysse Carion</a>，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 <code>type</code> 屬性，簡單的 TypeScript 定義長這樣：</p>
+<pre><code class="language-typescript">type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+</code></pre>
+<p>然後 <code>Event</code> 則是兩種的聯集：</p>
+<pre><code class="language-typescript">type Event = ClickEvent | KeydownEvent;
+</code></pre>
+<p>這時，如果有支援的工具就可以透過判斷 <code>type</code> 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 <a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming">JSON Scheming</a> 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。</p>
+<p>之後，Carion 在 2019 年四月，在 IETF 的 <a href="https://mailarchive.ietf.org/arch/browse/json/">json mailing list</a> 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 <a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/">JSON Content Rules</a>（網站已死），還有 JSON 的二進位版超集：<a href="https://cbor.io/">CBOR</a> 和用來描述 CBOR 資料的 <a href="https://datatracker.ietf.org/doc/html/rfc8610">CDDL</a>，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：</p>
+<pre><code class="language-cddl">PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&gt; any
+}
+</code></pre>
+<p>然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 <a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/">JSON Schema Language</a>，不過因為會和 JSON Schema <a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema">混淆</a>，所以後來就改名成 <a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/">JSON Data Definition Format</a>（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 <a href="https://www.rfc-editor.org/rfc/rfc9535.html">JSONPath</a> 就有開一個 <a href="https://datatracker.ietf.org/wg/jsonpath/about/">jsonpath WG</a></p>
+<p>最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：</p>
+<pre><code class="language-json">{
+    &quot;discriminator&quot;: &quot;eventType&quot;,
+    &quot;mapping&quot;: {
+        &quot;USER_CREATED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }
+            }
+        },
+        &quot;USER_PAYMENT_PLAN_CHANGED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;plan&quot;: { &quot;enum&quot;: [&quot;FREE&quot;, &quot;PAID&quot;]}
+            }
+        },
+        &quot;USER_DELETED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;softDelete&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以自動轉成：</p>
+<pre><code class="language-typescript">// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &quot;USER_CREATED&quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &quot;USER_DELETED&quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &quot;FREE&quot;,
+  Paid = &quot;PAID&quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &quot;USER_PAYMENT_PLAN_CHANGED&quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+</code></pre>
+<p>然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 <code>switch</code> 來處理這種東西，TypeScript 都會<a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions">幫你判斷好變數的型別</a>：</p>
+<pre><code class="language-typescript">switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+</code></pre>
+<p>當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 <a href="https://ajv.js.org/">ajv</a> 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 <a href="https://react-hook-form.com/">react-hook-form</a> 和 <a href="https://zod.dev/">Zod</a>，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：</p>
+<pre><code class="language-javascript">const myUnion = z.discriminatedUnion(&quot;status&quot;, [
+  z.object({ status: z.literal(&quot;success&quot;), data: z.string() }),
+  z.object({ status: z.literal(&quot;failed&quot;), error: z.instanceof(Error) }),
+]);
+</code></pre>
+<p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
+<p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
+</b:extendContent>
+			</b:content>
+			<b:comments commentCount="0">
+
+			</b:comments>
+			<b:trackbacks trackbackCount="0" trackbackURL="">
+
+			</b:trackbacks>
+		</b:entry>
+	</b:entries>
+</b:blog>

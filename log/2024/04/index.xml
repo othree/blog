@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/main.xsl"?>
+<b:blog xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://blog.othree.net"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://blog.othree.net http://blog.othree.net/blooog.xsd">
+	<b:blogTitle>O3noBLOG</b:blogTitle>
+	<b:blogDescription></b:blogDescription>
+	<b:entries>
+		<b:entriesMeta>
+			<b:listType>m</b:listType>
+			<b:listData listID="2024-04">April 2024</b:listData>
+
+			<b:previous>
+				<b:mTitle>March 2024</b:mTitle>
+				<b:mDate>2024/03</b:mDate>
+			</b:previous>
+
+
+		</b:entriesMeta>
+
+		<b:entry entryID="001007" baseName="json-type-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-17</b:date>
+				<b:time>22:47:21</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JSON Type Definition</b:title>
+			<b:content>
+				<b:summary>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 JSON Type Definition（簡稱 JSON Typedef 或是 JTD） 這個 RFC 標準，相較於發展已經很久的 JSON Schema，JSON Typedef 的語法簡潔不少： { &quot;properties&quot;: { &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; }, &quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; }, &quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }...</b:summary>
+				<b:mainContent><p>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 <a href="https://jsontypedef.com/">JSON Type Definition</a>（簡稱 JSON Typedef 或是 JTD） 這個 <a href="https://datatracker.ietf.org/doc/html/rfc8927">RFC 標準</a>，相較於發展已經很久的 <a href="https://json-schema.org/">JSON Schema</a>，JSON Typedef 的語法簡潔不少：</p>
+<pre><code class="language-json">{
+	&quot;properties&quot;: {
+		&quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+		&quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; },
+		&quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; },
+		&quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+	 }
+}
+</code></pre>
+</b:mainContent>
+				<b:extendContent><p>光是看不到 <code>$</code> 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 <strong>Independent Submission</strong>，這就讓我好奇了起來，於是就花了不少時間了解前因後果。</p>
+<p>JSON Typedef 的作者是 <a href="https://github.com/ucarion">Ulysse Carion</a>，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 <code>type</code> 屬性，簡單的 TypeScript 定義長這樣：</p>
+<pre><code class="language-typescript">type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+</code></pre>
+<p>然後 <code>Event</code> 則是兩種的聯集：</p>
+<pre><code class="language-typescript">type Event = ClickEvent | KeydownEvent;
+</code></pre>
+<p>這時，如果有支援的工具就可以透過判斷 <code>type</code> 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 <a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming">JSON Scheming</a> 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。</p>
+<p>之後，Carion 在 2019 年四月，在 IETF 的 <a href="https://mailarchive.ietf.org/arch/browse/json/">json mailing list</a> 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 <a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/">JSON Content Rules</a>（網站已死），還有 JSON 的二進位版超集：<a href="https://cbor.io/">CBOR</a> 和用來描述 CBOR 資料的 <a href="https://datatracker.ietf.org/doc/html/rfc8610">CDDL</a>，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：</p>
+<pre><code class="language-cddl">PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&gt; any
+}
+</code></pre>
+<p>然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 <a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/">JSON Schema Language</a>，不過因為會和 JSON Schema <a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema">混淆</a>，所以後來就改名成 <a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/">JSON Data Definition Format</a>（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 <a href="https://www.rfc-editor.org/rfc/rfc9535.html">JSONPath</a> 就有開一個 <a href="https://datatracker.ietf.org/wg/jsonpath/about/">jsonpath WG</a></p>
+<p>最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：</p>
+<pre><code class="language-json">{
+    &quot;discriminator&quot;: &quot;eventType&quot;,
+    &quot;mapping&quot;: {
+        &quot;USER_CREATED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }
+            }
+        },
+        &quot;USER_PAYMENT_PLAN_CHANGED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;plan&quot;: { &quot;enum&quot;: [&quot;FREE&quot;, &quot;PAID&quot;]}
+            }
+        },
+        &quot;USER_DELETED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;softDelete&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以自動轉成：</p>
+<pre><code class="language-typescript">// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &quot;USER_CREATED&quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &quot;USER_DELETED&quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &quot;FREE&quot;,
+  Paid = &quot;PAID&quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &quot;USER_PAYMENT_PLAN_CHANGED&quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+</code></pre>
+<p>然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 <code>switch</code> 來處理這種東西，TypeScript 都會<a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions">幫你判斷好變數的型別</a>：</p>
+<pre><code class="language-typescript">switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+</code></pre>
+<p>當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 <a href="https://ajv.js.org/">ajv</a> 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 <a href="https://react-hook-form.com/">react-hook-form</a> 和 <a href="https://zod.dev/">Zod</a>，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：</p>
+<pre><code class="language-javascript">const myUnion = z.discriminatedUnion(&quot;status&quot;, [
+  z.object({ status: z.literal(&quot;success&quot;), data: z.string() }),
+  z.object({ status: z.literal(&quot;failed&quot;), error: z.instanceof(Error) }),
+]);
+</code></pre>
+<p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
+<p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001006" baseName="the-magic-of-dialog">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-03</b:date>
+				<b:time>11:49:41</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Dialog 的魔法</b:title>
+			<b:content>
+				<b:summary> HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 &lt;dialog&gt;。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /></a></p>
+<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
+</b:mainContent>
+				<b:extendContent><p><code>&lt;dialog&gt;</code> 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 <code>confirm</code> 和 <code>alert</code> 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 <a href="https://getbootstrap.com/docs/5.0/components/modal/">modal</a> 了吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /></a></p>
+<p>這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，<code>&lt;dialog&gt;</code> 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 <code>&lt;dialog&gt;</code>，結果一研究下去，發現超多的細節的。</p>
+<p>在回答問題之前，先來介紹一下 <code>&lt;dialog&gt;</code> 吧，首先 <code>&lt;dialog&gt;</code> 預設樣式是 <code>display: none;</code> 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 <code>open</code> 這個專屬的新 attribute：</p>
+<pre><code class="language-html">&lt;dialog open&gt;
+   This is a dialog
+&lt;/dialog&gt;
+</code></pre>
+<p>這樣就會讓 <code>&lt;dialog&gt;</code> 出現在畫面上，表現就如同一般的 <code>&lt;div&gt;</code> 標籤，第二種方法則是透過 JavaScrpt：</p>
+<pre><code class="language-javascript">dialogNode.show()
+</code></pre>
+<p>這樣的效果和 <code>open</code> 一樣，然後除了這兩個方法之外，還有一個最特別的：</p>
+<pre><code class="language-javascript">dialogeNode.showModal()
+</code></pre>
+<p><code>showModal</code> 會讓這個 <code>&lt;dialog&gt;</code> 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 <code>&lt;dialog&gt;</code> 以外的地方都會無法互動。</p>
+<p>在這邊，一下子三件以前辦不到的事情都出現了：</p>
+<ul>
+<li>保證在網頁的最上層</li>
+<li>只有一層標籤就水平垂直置中</li>
+<li>其他地方都無法互動</li>
+</ul>
+<p>那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 <code>&lt;dialog&gt;</code> 一定在最上層呢？那就是一個新規範的東西了，叫做 <a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw">top Layer</a>，標準則是放在 <a href="https://drafts.csswg.org/css-position-4/#top-layer">CSS Positioned Layout Module Level 4</a>，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 <a href="https://web.dev/learn/css/z-index?hl=zh-tw">stacking context</a>，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 <code>&lt;dialog&gt;</code> 之外，文件上是還有寫到 fullscreen API 和還在初期的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover</a>，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /></a></p>
+<p>根據前一點，可以知道其實 <code>&lt;dialog&gt;</code> 一樣是普通 DOM 節點，只是在用 <code>showModal()</code> 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，<code>&lt;dialog&gt;</code> 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+</code></pre>
+<p>其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「<a href="https://www.w3.org/TR/css-position-3/#abspos-old">Old Absolute Positioning Layout Model</a>」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 <code>auto</code>）：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /></a></p>
+<p>以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：</p>
+<blockquote>
+<p>margins split positive free space</p>
+</blockquote>
+<p>剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：</p>
+<blockquote>
+<p>auto margins → zero<br />
+solve for auto</p>
+</blockquote>
+<p>意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 <code>marign: auto</code> 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。</p>
+<p>回來看 <code>&lt;dialog&gt;</code>，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 <code>auto</code> 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：<code>fit-content</code>，完整的樣式應該是：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  inset: 0; /* shorthand of top, right, bottom, left */
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+}
+</code></pre>
+<p>結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。</p>
+<p>了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 <code>&lt;dialog&gt;</code> 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。</p>
+<p>終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 <code>&lt;dialog&gt;</code> 的特異功能，它有一個隱藏的 is modal flag，呼叫 <code>showModal</code> 時，除了會把該 flag 設為 <code>true</code> 之外，還可以讓文件中其它部分變為和有 <code>inert</code> 時一樣，什麼是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"><code>inert</code></a> 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 <code>inert</code> 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。</p>
+<p>然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，<strong>modal</strong> 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 <code>confirm</code> 和 <code>alert</code> 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 <code>returnValue</code> 這個屬性可以用。</p>
+<p>其實 <a href="https://issues.chromium.org/issues/40251038">Chrome</a> 早在 2014 年就支援 <code>&lt;dialog&gt;</code> 了，然後還提供了個 <a href="https://github.com/GoogleChrome/dialog-polyfill">polyfill</a>（當然無法解決 top layer 的問題），不過 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640">Firefox</a> 和 <a href="https://bugs.webkit.org/show_bug.cgi?id=84635">Safari</a> 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，<code>&lt;dialog&gt;</code> 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 <code>&lt;dialog&gt;</code> 還有很多細節，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"><code>::backdrop</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"><code>:modal</code></a>、<code>formmethod=&quot;dialog&quot;</code>、<code>returnValue</code>、怎麼用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"><code>cancel</code> 事件</a>和 <kbd>ESC</kbd> 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的<a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr">範例</a>，有興趣的可以去玩看看。</p>
+<p>最後，如果和我一樣是寫 React 要用 modal 模式的 <code>&lt;dialog&gt;</code> 的話，就一定要用到 <code>useEffect</code>，不能只操作 <code>open</code> 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 <a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts">use-html-dialog</a> ，也可以直接參考它的原始碼，關鍵的部分：</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  if (openModal) {
+    ref.current?.showModal();
+  } else {
+    ref.current?.close();
+  }
+}, [openModal]);
+</code></pre>
+<p>其他參考資料：</p>
+<ul>
+<li><a href="https://webkit.org/blog/12209/introducing-the-dialog-element/">Introducing the Dialog Element</a></li>
+<li><a href="https://intersection.tw/6e9b2104eac0">Modal 模式是大多數設計師不甚瞭解的 UX 概念</a></li>
+<li><a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0">Modal？Dialog？你真的知道他們是什麼嗎？</a></li>
+</ul>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+	</b:entries>
+</b:blog>

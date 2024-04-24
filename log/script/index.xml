@@ -9,6 +9,134 @@
 			<b:listData listID="script">script</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="001007" baseName="json-type-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-17</b:date>
+				<b:time>22:47:21</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JSON Type Definition</b:title>
+			<b:content>
+				<b:summary>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 JSON Type Definition（簡稱 JSON Typedef 或是 JTD） 這個 RFC 標準，相較於發展已經很久的 JSON Schema，JSON Typedef 的語法簡潔不少： { &quot;properties&quot;: { &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; }, &quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; }, &quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }...</b:summary>
+				<b:mainContent><p>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 <a href="https://jsontypedef.com/">JSON Type Definition</a>（簡稱 JSON Typedef 或是 JTD） 這個 <a href="https://datatracker.ietf.org/doc/html/rfc8927">RFC 標準</a>，相較於發展已經很久的 <a href="https://json-schema.org/">JSON Schema</a>，JSON Typedef 的語法簡潔不少：</p>
+<pre><code class="language-json">{
+	&quot;properties&quot;: {
+		&quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+		&quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; },
+		&quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; },
+		&quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+	 }
+}
+</code></pre>
+</b:mainContent>
+				<b:extendContent><p>光是看不到 <code>$</code> 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 <strong>Independent Submission</strong>，這就讓我好奇了起來，於是就花了不少時間了解前因後果。</p>
+<p>JSON Typedef 的作者是 <a href="https://github.com/ucarion">Ulysse Carion</a>，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 <code>type</code> 屬性，簡單的 TypeScript 定義長這樣：</p>
+<pre><code class="language-typescript">type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+</code></pre>
+<p>然後 <code>Event</code> 則是兩種的聯集：</p>
+<pre><code class="language-typescript">type Event = ClickEvent | KeydownEvent;
+</code></pre>
+<p>這時，如果有支援的工具就可以透過判斷 <code>type</code> 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 <a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming">JSON Scheming</a> 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。</p>
+<p>之後，Carion 在 2019 年四月，在 IETF 的 <a href="https://mailarchive.ietf.org/arch/browse/json/">json mailing list</a> 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 <a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/">JSON Content Rules</a>（網站已死），還有 JSON 的二進位版超集：<a href="https://cbor.io/">CBOR</a> 和用來描述 CBOR 資料的 <a href="https://datatracker.ietf.org/doc/html/rfc8610">CDDL</a>，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：</p>
+<pre><code class="language-cddl">PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&gt; any
+}
+</code></pre>
+<p>然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 <a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/">JSON Schema Language</a>，不過因為會和 JSON Schema <a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema">混淆</a>，所以後來就改名成 <a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/">JSON Data Definition Format</a>（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 <a href="https://www.rfc-editor.org/rfc/rfc9535.html">JSONPath</a> 就有開一個 <a href="https://datatracker.ietf.org/wg/jsonpath/about/">jsonpath WG</a></p>
+<p>最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：</p>
+<pre><code class="language-json">{
+    &quot;discriminator&quot;: &quot;eventType&quot;,
+    &quot;mapping&quot;: {
+        &quot;USER_CREATED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }
+            }
+        },
+        &quot;USER_PAYMENT_PLAN_CHANGED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;plan&quot;: { &quot;enum&quot;: [&quot;FREE&quot;, &quot;PAID&quot;]}
+            }
+        },
+        &quot;USER_DELETED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;softDelete&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以自動轉成：</p>
+<pre><code class="language-typescript">// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &quot;USER_CREATED&quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &quot;USER_DELETED&quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &quot;FREE&quot;,
+  Paid = &quot;PAID&quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &quot;USER_PAYMENT_PLAN_CHANGED&quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+</code></pre>
+<p>然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 <code>switch</code> 來處理這種東西，TypeScript 都會<a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions">幫你判斷好變數的型別</a>：</p>
+<pre><code class="language-typescript">switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+</code></pre>
+<p>當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 <a href="https://ajv.js.org/">ajv</a> 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 <a href="https://react-hook-form.com/">react-hook-form</a> 和 <a href="https://zod.dev/">Zod</a>，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：</p>
+<pre><code class="language-javascript">const myUnion = z.discriminatedUnion(&quot;status&quot;, [
+  z.object({ status: z.literal(&quot;success&quot;), data: z.string() }),
+  z.object({ status: z.literal(&quot;failed&quot;), error: z.instanceof(Error) }),
+]);
+</code></pre>
+<p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
+<p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="001004" baseName="ui-event-order">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -23,7 +151,7 @@
 			<b:title>UI Event Order</b:title>
 			<b:content>
 				<b:summary>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 mousedown、mouseup、click 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 click 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 focus 事件的順序呢？如果已經有其他元件有 focus，那它的 blur 事件又是在 focus 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 input、change 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。 首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 mousedown、mouseup、click，是在 mouseup 後才接著有 click 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 click 事件。然後這順序其實是有定義在 UI...</b:summary>
-				<b:mainContent><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+				<b:mainContent><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 <code>keydown</code>、<code>keyup</code> 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
 <p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
 </b:mainContent>
 				<b:extendContent><p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
@@ -44,7 +172,7 @@ click
 <li><code>mouseenter</code> 對應 <code>mouseover</code></li>
 <li><code>mouseleave</code> 對應 <code>mouseout</code></li>
 </ul>
-<p>其實 <code>mouseenter</code>/<code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code>/<code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code>/<code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code>/<code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code>/<code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
+<p>其實 <code>mouseenter</code> / <code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code> / <code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code> / <code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code> / <code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code> / <code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
 <p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
 <pre><code>keydown
 keypress
@@ -584,49 +712,6 @@ async function asyncTaskWithCb(cb) {
 <p>Iterable protocol 的定義其實很簡單，就是定義怎樣把 generator function 放在物件裡的方式，實際上是利用 ES6 另一個新的資料型態： <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a> 來達成的，為什麼不直接定個屬性名稱給它呢？最主要就是不要讓這些內部 protocol 的東西在 <code>for...in</code> 操作的時候被遍歷到，所以定義了新的 Symbol 型別，利用它的特性來把內部 protocol 做了一定程度的保護，iterable protocol 就是把 generator function 用一個預先定義好的 Symbol 來儲存，這個 Symbol 又稱為 <code>Symbol.iterator</code>，這種預先定義好的 Symbol 則統稱為 Well-Known Symbols，ES6 其實定義了<a href="http://exploringjs.com/es6/ch_symbols.html#_well-known-symbols">好幾個</a>，不是只有 iterable 用的到，透過定義這些 Well-Known Symobls，可以介入改變一些 JavaScript 比較基礎的運作。</p>
 <p>Well-Known Symobls 可以做到的事情，其實有點像是改變程式語言的運作，而這種類型的機制又稱為 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Meta_programming">meta programming</a>，除了 Well-Known Symobls 之外，ES6 其實還提供了 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a> 和 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect">Reflect</a>，這兩個東西應該比較多人知道 Proxy 是幹嘛的，對 Reflect 比較陌生，其實 Reflect 有點像是為了 JavaScript 一些設計不好的地方，想了解詳細一點推薦可以看主要的 polyfill harmony-reflect 的 Wiki 頁：<a href="https://github.com/tvcutsem/harmony-reflect/wiki">Why should I use this library?</a></p>
 <p>最後總結一下，這串從 Map/Set 開始，接著連到 <code>for...of</code> 語法、Iterator、Generator、Symbol、Well-Known Symobls 最後到 meta programming 的 Proxy 和 Reflect，其實也差不多佔了 1/4 的 ES6 新功能。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000935" baseName="eslint-plugin-pep8-blank-lines">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2018-09-08</b:date>
-				<b:time>10:24:24</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>eslint-plugin-pep8-blank-lines</b:title>
-			<b:content>
-				<b:summary> 我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 PEP8 coding style 中關於空行的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。 於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 padding-line-between-statements 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 sourceCode 來一行一行看，不過同時也要知道該行的 context...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/43805736994/" title="eslint-plugin-pep8-blank-lines by othree, on Flickr"><img src="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg" width="1024" height="768" alt="eslint-plugin-pep8-blank-lines, " srcset="https://farm2.staticflickr.com/1855/43805736994_ed80198c0b_b.jpg 1024w, https://farm2.staticflickr.com/1855/43805736994_84b2fc4977_h.jpg 1600w" /></a></p>
-<p>我的第二個 ESLint plugin 終於進 beta 了，這是我自己期望很久的檢查規範，上一次介紹 ESLint plugin 的時候就有說到接下來想處理空行，其實 ESLint 內建的 rule 已經有蠻多是用來檢查空行的了，不過沒有一個能符合我想要的規範，我想要的規範其實很簡單，就是希望能在大一點的物件中間能多一點空行，比較有段落的感覺，這樣閱讀起來感覺也比較好（如上圖），剛好我這兩年寫了一點 Python，有用 Flake8 做語法檢查，其中的 <a href="https://www.python.org/dev/peps/pep-0008/#blank-lines">PEP8 coding style 中關於空行</a>的規範，就符合我想要的樣子，而且很簡單，這個規範是在大部分地方都允許最多一行空行，但是最上層（top level）的 function, class 前後要兩行空行。</p>
-<p>於是這個 ESLint plugin 的主要目標，就是把 PEP8 這部分的規範搬過來，一開始想的實做方式有兩個，其一是參考 <a href="https://github.com/eslint/eslint/blob/master/lib/rules/padding-line-between-statements.js">padding-line-between-statements</a> 的作法，比較兩個相鄰 token/node 間的 line number，另一個則是用 <a href="https://eslint.org/docs/developer-guide/working-with-rules#contextgetsourcecode">sourceCode</a> 來一行一行看，不過同時也要知道該行的 context 是什麼才能判斷，所以也是跑不掉要進去看 AST，加上我想要玩玩看 JavaScript 的 AST，所以最終我是選擇第一種作法，不過不是用 ESLint 內建的 walker，而是在 <code>Program:exit</code> 的時候才用自己寫的 walker 進去看 AST；而經過一輪重構後，現在的架構其實是靈活度很高的，我實際上做出了一個比 padding-line-between-statements 還要更多功能的<a href="https://github.com/othree/eslint-plugin-pep8-blank-lines/blob/master/lib/guides/pep8.js">規範定義格式</a>，然後根據這個格式寫出我想要的空行規範，只是目前還沒開介面出來給使用者輸入自訂的空行規範就是了；其實我自己覺得這個 plugin 實做的理想型式應該還是要用實做方案二，並搭配使用 ESLint 的 AST walker，實際上  padding-line-between-statements 也就是這樣做，會這樣想最主要的原因是現在的實做只看 AST，但是 AST 其實不能 100% 表達原來的程式碼，這也是這次開發經驗中我最大的體悟，所以其實一些奇怪地方的空行就會很難抓到，例如 <code>await 1</code> 這兩個 token 中間如果有空行就會跳過，不過會在這種地方放空行的情形應該都是蠻少見的，所以目前也沒打算繼續改下去，短期內都會以處理 bug 為主，過陣子應該會試著加上 fix 的功能，總之歡迎測試並回報問題，雖然有寫測試，不過還沒什麼實際跑在真實的程式碼上，目前唯一的就是它自己的 code base 本身是有用吧，另外就是使用時如果是搭配其它 style 可能會需要把其它 style 的空行規則關掉，例如搭配 <a href="https://standardjs.com/">standardjs</a> 時的 <code>.eslintrc</code> 範例：</p>
-<pre><code class="language-json">{
-  &quot;extends&quot;: &quot;standard&quot;,
- 
-  &quot;plugins&quot;: [
-    &quot;pep8-blank-lines&quot;,
-    &quot;no-parameter-e&quot;
-  ],
- 
-  &quot;rules&quot;: {
-    &quot;semi&quot;: [2, &quot;always&quot;],
-    &quot;no-extra-semi&quot;: 2,
-    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;],
-    &quot;no-multiple-empty-lines&quot;: 0,
-    &quot;pep8-blank-lines/pep8-blank-lines&quot;: 2,
-    &quot;no-parameter-e/no-parameter-e&quot;: 2
-  }
-}
-</code></pre>
-<p>這組其實也是我目前在用的設定啦～</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>

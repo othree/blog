@@ -9,6 +9,231 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="001007" baseName="json-type-definition">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-17</b:date>
+				<b:time>22:47:21</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>JSON Type Definition</b:title>
+			<b:content>
+				<b:summary>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 JSON Type Definition（簡稱 JSON Typedef 或是 JTD） 這個 RFC 標準，相較於發展已經很久的 JSON Schema，JSON Typedef 的語法簡潔不少： { &quot;properties&quot;: { &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }, &quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; }, &quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; }, &quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }...</b:summary>
+				<b:mainContent><p>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 <a href="https://jsontypedef.com/">JSON Type Definition</a>（簡稱 JSON Typedef 或是 JTD） 這個 <a href="https://datatracker.ietf.org/doc/html/rfc8927">RFC 標準</a>，相較於發展已經很久的 <a href="https://json-schema.org/">JSON Schema</a>，JSON Typedef 的語法簡潔不少：</p>
+<pre><code class="language-json">{
+	&quot;properties&quot;: {
+		&quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+		&quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; },
+		&quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; },
+		&quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+	 }
+}
+</code></pre>
+</b:mainContent>
+				<b:extendContent><p>光是看不到 <code>$</code> 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 <strong>Independent Submission</strong>，這就讓我好奇了起來，於是就花了不少時間了解前因後果。</p>
+<p>JSON Typedef 的作者是 <a href="https://github.com/ucarion">Ulysse Carion</a>，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 <code>type</code> 屬性，簡單的 TypeScript 定義長這樣：</p>
+<pre><code class="language-typescript">type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+</code></pre>
+<p>然後 <code>Event</code> 則是兩種的聯集：</p>
+<pre><code class="language-typescript">type Event = ClickEvent | KeydownEvent;
+</code></pre>
+<p>這時，如果有支援的工具就可以透過判斷 <code>type</code> 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 <a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming">JSON Scheming</a> 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。</p>
+<p>之後，Carion 在 2019 年四月，在 IETF 的 <a href="https://mailarchive.ietf.org/arch/browse/json/">json mailing list</a> 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 <a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/">JSON Content Rules</a>（網站已死），還有 JSON 的二進位版超集：<a href="https://cbor.io/">CBOR</a> 和用來描述 CBOR 資料的 <a href="https://datatracker.ietf.org/doc/html/rfc8610">CDDL</a>，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：</p>
+<pre><code class="language-cddl">PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&gt; any
+}
+</code></pre>
+<p>然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 <a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/">JSON Schema Language</a>，不過因為會和 JSON Schema <a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema">混淆</a>，所以後來就改名成 <a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/">JSON Data Definition Format</a>（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 <a href="https://www.rfc-editor.org/rfc/rfc9535.html">JSONPath</a> 就有開一個 <a href="https://datatracker.ietf.org/wg/jsonpath/about/">jsonpath WG</a></p>
+<p>最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：</p>
+<pre><code class="language-json">{
+    &quot;discriminator&quot;: &quot;eventType&quot;,
+    &quot;mapping&quot;: {
+        &quot;USER_CREATED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }
+            }
+        },
+        &quot;USER_PAYMENT_PLAN_CHANGED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;plan&quot;: { &quot;enum&quot;: [&quot;FREE&quot;, &quot;PAID&quot;]}
+            }
+        },
+        &quot;USER_DELETED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;softDelete&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以自動轉成：</p>
+<pre><code class="language-typescript">// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &quot;USER_CREATED&quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &quot;USER_DELETED&quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &quot;FREE&quot;,
+  Paid = &quot;PAID&quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &quot;USER_PAYMENT_PLAN_CHANGED&quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+</code></pre>
+<p>然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 <code>switch</code> 來處理這種東西，TypeScript 都會<a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions">幫你判斷好變數的型別</a>：</p>
+<pre><code class="language-typescript">switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+</code></pre>
+<p>當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 <a href="https://ajv.js.org/">ajv</a> 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 <a href="https://react-hook-form.com/">react-hook-form</a> 和 <a href="https://zod.dev/">Zod</a>，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：</p>
+<pre><code class="language-javascript">const myUnion = z.discriminatedUnion(&quot;status&quot;, [
+  z.object({ status: z.literal(&quot;success&quot;), data: z.string() }),
+  z.object({ status: z.literal(&quot;failed&quot;), error: z.instanceof(Error) }),
+]);
+</code></pre>
+<p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
+<p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001006" baseName="the-magic-of-dialog">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-03</b:date>
+				<b:time>11:49:41</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Dialog 的魔法</b:title>
+			<b:content>
+				<b:summary> HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 &lt;dialog&gt;。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /></a></p>
+<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
+</b:mainContent>
+				<b:extendContent><p><code>&lt;dialog&gt;</code> 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 <code>confirm</code> 和 <code>alert</code> 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 <a href="https://getbootstrap.com/docs/5.0/components/modal/">modal</a> 了吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /></a></p>
+<p>這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，<code>&lt;dialog&gt;</code> 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 <code>&lt;dialog&gt;</code>，結果一研究下去，發現超多的細節的。</p>
+<p>在回答問題之前，先來介紹一下 <code>&lt;dialog&gt;</code> 吧，首先 <code>&lt;dialog&gt;</code> 預設樣式是 <code>display: none;</code> 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 <code>open</code> 這個專屬的新 attribute：</p>
+<pre><code class="language-html">&lt;dialog open&gt;
+   This is a dialog
+&lt;/dialog&gt;
+</code></pre>
+<p>這樣就會讓 <code>&lt;dialog&gt;</code> 出現在畫面上，表現就如同一般的 <code>&lt;div&gt;</code> 標籤，第二種方法則是透過 JavaScrpt：</p>
+<pre><code class="language-javascript">dialogNode.show()
+</code></pre>
+<p>這樣的效果和 <code>open</code> 一樣，然後除了這兩個方法之外，還有一個最特別的：</p>
+<pre><code class="language-javascript">dialogeNode.showModal()
+</code></pre>
+<p><code>showModal</code> 會讓這個 <code>&lt;dialog&gt;</code> 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 <code>&lt;dialog&gt;</code> 以外的地方都會無法互動。</p>
+<p>在這邊，一下子三件以前辦不到的事情都出現了：</p>
+<ul>
+<li>保證在網頁的最上層</li>
+<li>只有一層標籤就水平垂直置中</li>
+<li>其他地方都無法互動</li>
+</ul>
+<p>那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 <code>&lt;dialog&gt;</code> 一定在最上層呢？那就是一個新規範的東西了，叫做 <a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw">top Layer</a>，標準則是放在 <a href="https://drafts.csswg.org/css-position-4/#top-layer">CSS Positioned Layout Module Level 4</a>，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 <a href="https://web.dev/learn/css/z-index?hl=zh-tw">stacking context</a>，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 <code>&lt;dialog&gt;</code> 之外，文件上是還有寫到 fullscreen API 和還在初期的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover</a>，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /></a></p>
+<p>根據前一點，可以知道其實 <code>&lt;dialog&gt;</code> 一樣是普通 DOM 節點，只是在用 <code>showModal()</code> 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，<code>&lt;dialog&gt;</code> 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+</code></pre>
+<p>其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「<a href="https://www.w3.org/TR/css-position-3/#abspos-old">Old Absolute Positioning Layout Model</a>」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 <code>auto</code>）：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /></a></p>
+<p>以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：</p>
+<blockquote>
+<p>margins split positive free space</p>
+</blockquote>
+<p>剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：</p>
+<blockquote>
+<p>auto margins → zero<br />
+solve for auto</p>
+</blockquote>
+<p>意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 <code>marign: auto</code> 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。</p>
+<p>回來看 <code>&lt;dialog&gt;</code>，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 <code>auto</code> 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：<code>fit-content</code>，完整的樣式應該是：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  inset: 0; /* shorthand of top, right, bottom, left */
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+}
+</code></pre>
+<p>結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。</p>
+<p>了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 <code>&lt;dialog&gt;</code> 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。</p>
+<p>終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 <code>&lt;dialog&gt;</code> 的特異功能，它有一個隱藏的 is modal flag，呼叫 <code>showModal</code> 時，除了會把該 flag 設為 <code>true</code> 之外，還可以讓文件中其它部分變為和有 <code>inert</code> 時一樣，什麼是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"><code>inert</code></a> 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 <code>inert</code> 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。</p>
+<p>然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，<strong>modal</strong> 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 <code>confirm</code> 和 <code>alert</code> 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 <code>returnValue</code> 這個屬性可以用。</p>
+<p>其實 <a href="https://issues.chromium.org/issues/40251038">Chrome</a> 早在 2014 年就支援 <code>&lt;dialog&gt;</code> 了，然後還提供了個 <a href="https://github.com/GoogleChrome/dialog-polyfill">polyfill</a>（當然無法解決 top layer 的問題），不過 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640">Firefox</a> 和 <a href="https://bugs.webkit.org/show_bug.cgi?id=84635">Safari</a> 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，<code>&lt;dialog&gt;</code> 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 <code>&lt;dialog&gt;</code> 還有很多細節，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"><code>::backdrop</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"><code>:modal</code></a>、<code>formmethod=&quot;dialog&quot;</code>、<code>returnValue</code>、怎麼用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"><code>cancel</code> 事件</a>和 <kbd>ESC</kbd> 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的<a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr">範例</a>，有興趣的可以去玩看看。</p>
+<p>最後，如果和我一樣是寫 React 要用 modal 模式的 <code>&lt;dialog&gt;</code> 的話，就一定要用到 <code>useEffect</code>，不能只操作 <code>open</code> 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 <a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts">use-html-dialog</a> ，也可以直接參考它的原始碼，關鍵的部分：</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  if (openModal) {
+    ref.current?.showModal();
+  } else {
+    ref.current?.close();
+  }
+}, [openModal]);
+</code></pre>
+<p>其他參考資料：</p>
+<ul>
+<li><a href="https://webkit.org/blog/12209/introducing-the-dialog-element/">Introducing the Dialog Element</a></li>
+<li><a href="https://intersection.tw/6e9b2104eac0">Modal 模式是大多數設計師不甚瞭解的 UX 概念</a></li>
+<li><a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0">Modal？Dialog？你真的知道他們是什麼嗎？</a></li>
+</ul>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="001005" baseName="yamani">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -22,9 +247,9 @@
 			<b:category>diary</b:category>
 			<b:title>やまに（yamani）旅館</b:title>
 			<b:content>
-				<b:summary> 去年的名古屋之行因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 やまに（yamani）旅館，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。 選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。...</b:summary>
+				<b:summary> 去年的名古屋之行因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，加上在台灣要吃河豚相對比較不容易，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 やまに（yamani）旅館，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。 選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097470/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097470_8f640fb9b6_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53403097470_931b7f0426_k.jpg 2x" /></a></p>
-<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年的名古屋之行</a>因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 やまに（yamani）旅館，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。</p>
+<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年的名古屋之行</a>因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，加上在台灣要吃河豚相對比較不容易，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 <a href="https://yamaniryokan.com/">やまに（yamani）旅館</a>，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。</p>
 <p>選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。</p>
 </b:mainContent>
 				<b:extendContent><p>我們訂的是梅套餐，菜色當然是比松或竹少一些，但是份量還是很多，首先是小菜：</p>
@@ -89,7 +314,7 @@
 			<b:title>UI Event Order</b:title>
 			<b:content>
 				<b:summary>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 mousedown、mouseup、click 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 click 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 focus 事件的順序呢？如果已經有其他元件有 focus，那它的 blur 事件又是在 focus 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 input、change 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。 首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 mousedown、mouseup、click，是在 mouseup 後才接著有 click 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 click 事件。然後這順序其實是有定義在 UI...</b:summary>
-				<b:mainContent><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+				<b:mainContent><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 <code>keydown</code>、<code>keyup</code> 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
 <p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
 </b:mainContent>
 				<b:extendContent><p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
@@ -110,7 +335,7 @@ click
 <li><code>mouseenter</code> 對應 <code>mouseover</code></li>
 <li><code>mouseleave</code> 對應 <code>mouseout</code></li>
 </ul>
-<p>其實 <code>mouseenter</code>/<code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code>/<code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code>/<code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code>/<code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code>/<code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
+<p>其實 <code>mouseenter</code> / <code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code> / <code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code> / <code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code> / <code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code> / <code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
 <p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
 <pre><code>keydown
 keypress
@@ -304,244 +529,6 @@ events.forEach((event) =&gt; {
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53459436824/" title="Structure Appended QR Code by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53459436824_dc9923ca6e_b.jpg" width="473" height="1024" alt="Structure Appended QR Code" srcset="https://live.staticflickr.com/65535/53459436824_5117b13520_k.jpg 2x" /></a></p>
 <p>所以接下來就要介紹最後一個收穫了，官方的 QR Code Scanner App：<a href="https://www.qrqrq.com/">クルクル（QRQR）</a>，其實我很久以前，就一直很好奇到底有沒有所謂官方的 QR Code reader 了，古早以前都是用 ZXing 的 <a href="https://play.google.com/store/apps/details?id=com.google.zxing.client.android">Barcode Scanner</a>，不過其實這是 Open Source 專案，現在也已經沒在維護了。而 Denso Wave 的官方 app，則是在 2017 年才和 Arara Inc（Denso Wave 是股東之一）一起合作<a href="https://www.denso-wave.com/ja/adcd/info/detail__14521.html">推出</a>的，當時名稱叫「Q」，後來則更名為 QRQR，免費，有多語系也沒廣告，佛心，然後支援很多種格式，包括了 Barcode、兩種標準的 QR Code，還有 Micro QR、iQR、rMQR、Frame QR 以及剛剛最後提到的連結的 QR Code，解碼速度也很快，不過曾經有過偷收集資料的壞紀錄，所以要不要用就自行評估啦。</p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53459416788/" title="クルクル（QRQR） by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53459416788_2e2fcae982_b.jpg" width="1024" height="686" alt="クルクル（QRQR）" srcset="https://live.staticflickr.com/65535/53459416788_7efb432723_k.jpg 2x" /></a></p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001001" baseName="2023-nagoya">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-01-06</b:date>
-				<b:time>23:34:12</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>2023 名古屋</b:title>
-			<b:content>
-				<b:summary> 去年十一月底的時候，安排了一趟名古屋的旅遊，一開始的目標很簡單，就是帶小孩去樂高樂園，所以挑選了名古屋，結果這趟旅遊在出發前還真是一波三折，首先是因為差不多快要楓葉季了，所以挑選時間時就想說挑個可以順便看楓葉的時間，又考量到公司專案的時程，兩週不錯的時間挑了第二週，和本來那個專案的時間差了兩三週，結果公司專案最後還是拖到我出國前還沒上線；接著在規劃行程時，本來想說一天去下呂溫泉，然後前面四天後面五天都在市區或是近郊，接著看回程要怎樣到機場時，考慮到有想多買行李箱，所以可能無法搭電車，就看了一下計程車費，不意外的很貴，想了一下去查了一下租車一天的價錢，結果發現差不多！但是都租車了，乾脆多租幾天在附近玩，所以就看起了中部國際機場所在的知多半島的觀光景點，發現有虎河豚套餐可以吃，後來老婆覺得可以不用太多小孩行程，想去飛驒高山，排到最後變成： 11/25 名古屋車站 11/26 Toyota 博物館、大須商店街 11/27 栄、Harbs 本店、東山植物園 11/28 Lego Land 11/29 三井 Outlet、名花之里 11/30 飛驒高山 12/01 下呂溫泉 12/02 犬山城、住南知多（源氏香） 12/03 知多半島、河豚套餐 12/04 臨空區、機場回程...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401245579/" title="高山陣屋 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401245579_c93978534b_b.jpg" width="1024" height="683" alt="高山陣屋" srcset="https://live.staticflickr.com/65535/53401245579_50db12c77e_k.jpg 2x" /></a></p>
-<p>去年十一月底的時候，安排了一趟名古屋的旅遊，一開始的目標很簡單，就是帶小孩去樂高樂園，所以挑選了名古屋，結果這趟旅遊在出發前還真是一波三折，首先是因為差不多快要楓葉季了，所以挑選時間時就想說挑個可以順便看楓葉的時間，又考量到公司專案的時程，兩週不錯的時間挑了第二週，和本來那個專案的時間差了兩三週，結果公司專案最後還是拖到我出國前還沒上線；接著在規劃行程時，本來想說一天去下呂溫泉，然後前面四天後面五天都在市區或是近郊，接著看回程要怎樣到機場時，考慮到有想多買行李箱，所以可能無法搭電車，就看了一下計程車費，不意外的很貴，想了一下去查了一下租車一天的價錢，結果發現差不多！但是都租車了，乾脆多租幾天在附近玩，所以就看起了中部國際機場所在的知多半島的觀光景點，發現有虎河豚套餐可以吃，後來老婆覺得可以不用太多小孩行程，想去飛驒高山，排到最後變成：</p>
-<pre><code>11/25 名古屋車站
-11/26 Toyota 博物館、大須商店街
-11/27 栄、Harbs 本店、東山植物園
-11/28 Lego Land
-11/29 三井 Outlet、名花之里
-11/30 飛驒高山
-12/01 下呂溫泉
-12/02 犬山城、住南知多（源氏香）
-12/03 知多半島、河豚套餐
-12/04 臨空區、機場回程
-</code></pre>
-</b:mainContent>
-				<b:extendContent><p>結果行程排定後，快要到出國前，又傳出高山那邊下大雪，高速公路限制沒雪胎不能上去，害我又趕快處理租車的問題，還好 Toyota 租車有一個外國人專用的號碼，可以講英文，雖然是社恐一名還是只能硬著頭皮打國際電話去加雪胎，多了一萬多日圓。至於出發前一週家裡洗衣機壞掉又是另外一回事了...</p>
-<p>到這邊想岔題說一下，前陣子有很多文章在講日本有一些服務會某些程度給外國人加價，其實 Toyota 租車也是有點這種情況，在日文版網頁很多折扣在其他語言是看不到的，不過我是認為這比較不是不願意給外國人折扣，或許只是單純因為不同系統沒有開發資源，加上剛好可以減少複雜度，避免節外生枝，降低溝通成本，當然我是日文網站註冊在日文網站預約的，當初價錢還不錯，不過為了雪胎折扣掉的錢又都回來就是XD。</p>
-<p>回到車子的部分，這次租的是新款的 Hybrid 動力的 Sienta 七人版，後面行李空間可以放兩個大行李箱加上推車和登機箱還有些空間，駕駛座位附近也很多空間，可以放各種東西（鑰匙、飲料、小包包等），不過鈑金什麼的感覺就比較單薄了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401420723/" title="Toyota Sienta by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401420723_2fb8baf46a_b.jpg" width="1024" height="683" alt="Toyota Sienta" srcset="https://live.staticflickr.com/65535/53401420723_a9df5d701d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401784867/" title="Toyota Sienta by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401784867_ef90517eac_b.jpg" width="1024" height="683" alt="Toyota Sienta" srcset="https://live.staticflickr.com/65535/53401784867_197fa2475c_k.jpg 2x" /></a></p>
-<p>接著來介紹一下實際的行程吧：</p>
-<p>首先第一天到中部國際機場，搭電車到名古屋站，住在萬保龍酒店，走路就可以到，所以規劃就是車站附近商圈逛逛和吃晚餐，本來有想第一天就去吃鰻魚飯，結果班機延誤一小時，去到白河看已經一大堆人，後來就是高島屋餐廳街隨便找，然後隨便逛了一下高島屋就回旅館了。</p>
-<p>說到班機延誤，這次搭的是國泰的 CX530，直飛，其實我本來想說香港的航空公司怎麼會可以從台北直飛去日本，結果因為班機延誤一查才發現，原來其實這台是早上從香港到台灣，然後又馬不停蹄飛去日本，沒狀況的話會是同一台飛機下午又飛回台北（CX531），然後再回到香港，表定時間是早上九點出發然後回到香港是晚上十點了，非常忙碌的一台飛機。</p>
-<p>回到名古屋車站，這邊有兩個要來推薦一下，首先是<a href="https://montblanc-hotel.jp/raffine/en/">萬保龍酒店 Raffine（Montblanc Hotel Raffine Nagoya Ekimae）</a>：位置不錯價錢實惠，而且還蠻新的，除了這些之外，裡面用的設備都蠻不錯的，列舉一下：</p>
-<ul>
-<li><a href="https://www.flickr.com/photos/othree/53398667727/in/album-72177720313161615/">Sony Bravia 電視</a>，似乎是我目前住過的飯店用的最好的電視了；</li>
-<li><a href="https://www.flickr.com/photos/othree/53400773731/in/album-72177720313161615/">大金空調</a>；</li>
-<li><a href="https://www.flickr.com/photos/othree/53399597501/in/album-72177720313161615/">Refa FINE BUBBLE PURE 蓮蓬頭（要三萬日幣以上）</a>；</li>
-<li>Panasonic 吹風機；</li>
-<li><a href="https://www.flickr.com/photos/othree/53399842952/in/album-72177720313161615/">Sharp 的空氣清淨機間加濕器</a>；</li>
-<li><a href="https://www.flickr.com/photos/othree/53400029190/in/album-72177720313161615/">房間都有一台平板</a>，台座好像可以收藍芽但是我沒研究出來怎樣配對；</li>
-<li><a href="https://www.flickr.com/photos/othree/53399921484/in/album-72177720313161615/">內建國際通用插座</a>；</li>
-<li><a href="https://www.flickr.com/photos/othree/53400961598/in/album-72177720313161615/">門檔</a>，雖然效果不太好但是搬行李時有沒有還是差很多；</li>
-<li><a href="https://www.flickr.com/photos/othree/53399785703/in/album-72177720313161615/">線材包</a> 和 <a href="https://www.flickr.com/photos/othree/53400785346/in/album-72177720313161615/">置物托盤（トレイ）</a> 也都不是很廉價的材質，更不用說有的飯店根本沒這些東西。</li>
-</ul>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400785346/" title="Montblanc Hotel Raffine Nagoya Ekimae by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400785346_a2bab1fd2e_b.jpg" width="1024" height="683" alt="Montblanc Hotel Raffine Nagoya Ekimae" srcset="https://live.staticflickr.com/65535/53400785346_f4b091fea6_k.jpg 2x" /></a></p>
-<p>另一個要推薦的就是名古屋車站的高島屋了，就在 JR Gate Tower 那一群裡面，非常的好逛，而且我這幾天也根本都沒逛完，裡面有 Uniqlo（可退稅）、GU、Bic Camera、Village Vanguard、三省堂書店（超大），三省堂有很多專業冷門書：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399916764/" title="三省堂書店 名古屋本店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399916764_72b27b18c7_b.jpg" width="1024" height="683" alt="三省堂書店 名古屋本店" srcset="https://live.staticflickr.com/65535/53399916764_af16e11d9d_k.jpg 2x" /></a></p>
-<p>鐵道專區的一小櫃：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400025755/" title="三省堂書店 名古屋本店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400025755_795d98e8d0_b.jpg" width="1024" height="683" alt="三省堂書店 名古屋本店" srcset="https://live.staticflickr.com/65535/53400025755_bac79cb0a5_k.jpg 2x" /></a></p>
-<p>超大野貓玩偶，剛好在辦特展：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399917334/" title="三省堂書店 名古屋本店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399917334_ace03c4d9d_b.jpg" width="600" height="900" alt="三省堂書店 名古屋本店" srcset="https://live.staticflickr.com/65535/53399917334_ae8f26dfdc_k.jpg 2x" /></a></p>
-<p>一樓還有迪士尼專賣店和 Ghibli 專賣店，飛行石抱枕很好笑：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53398663022/" title="名古屋 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53398663022_aaeea72461_b.jpg" width="" height="683" alt="名古屋" srcset="https://live.staticflickr.com/65535/53398663022_e93e440933_k.jpg 2x" /></a></p>
-<p>然後隔壁棟還有手創館，這次幾乎沒去逛到就是，地下室食品區也是很大，我們每次去日本都會順便買一些日本的高湯包（だし），主要是買兵四郎和茅乃舍的，這兩家的高湯包也都不是隨便可以買到的，不過這邊就是都有，兵四郎在超市區，茅乃舍則是有專櫃在同一層附近而已，袋子很豪華：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399594891/" title="名古屋 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399594891_b2a9fa5e8b_b.jpg" width="1024" height="683" alt="名古屋" srcset="https://live.staticflickr.com/65535/53399594891_eaaddb27d4_k.jpg 2x" /></a></p>
-<p>第二天和第三天是週六週日，其實這兩天沒有一定要哪天去哪裡，唯一有限制的就是東山植物園楓葉季的夜間點燈只有五六日，不過總之這第二天我們先去了栄的 Harbs 本店，在那邊隨便逛，在 Oasis 21 逛到一間哈利波特專賣店，然後大國藥妝店買了藥妝後回去名古屋車站附近的白河吃鰻魚飯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399596881/" title="栄 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399596881_1a5732b182_b.jpg" width="1024" height="683" alt="栄" srcset="https://live.staticflickr.com/65535/53399596881_c28d2269d4_k.jpg 2x" /></a></p>
-<p>Harbs 本店的限定款蛋糕：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399919139/" title="HARBS 本店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399919139_dd36a9beb0_b.jpg" width="1024" height="683" alt="HARBS 本店" srcset="https://live.staticflickr.com/65535/53399919139_eab5fe4e7f_k.jpg 2x" /></a></p>
-<p>白河的鰻魚飯、魚骨仙貝：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399918364/" title="うなぎ和食しら河 名駅店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399918364_30458f5005_b.jpg" width="1024" height="683" alt="うなぎ和食しら河 名駅店" srcset="https://live.staticflickr.com/65535/53399918364_aea718d2c0_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399918514/" title="うなぎ和食しら河 名駅店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399918514_dae5e1b76d_b.jpg" width="1024" height="683" alt="うなぎ和食しら河 名駅店" srcset="https://live.staticflickr.com/65535/53399918514_c765046e24_k.jpg 2x" /></a></p>
-<p>第三天就比較精實了，一早先在車站附近地下街的 Komeda 咖啡吃早餐，然後去了 Toyota 產業技術紀念館，結果剛好遇到第 700 萬位入場的訪客的頒獎，覺得有點可惜的是，其實我們早餐等了有點久，然後吃完搭車到荣生站時就發現那邊也一間 Komeda 咖啡...，如果當初有研究完整一點，就不用在車站那邊浪費時間，搞不好有機會成為第 700 萬位入場的XD。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399590361/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399590361_69dc256629_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53399590361_ed1a611237_k.jpg 2x" /></a></p>
-<p>Toyota 產業技術紀念館展出的東西很多，分兩大塊，紡織和汽車，紡織的部分則是從古早時候的紡織技術開始介紹到現在的大型自動化的設備，而且很多機器都可以讓它動給你看，後半汽車則是從材料加工開始介紹，甚至還有現場實際展示金屬加工，汽車部分也是很多東西都會動給你看，還有可以隨便你玩的方向盤等等。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399773323/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399773323_f96e408866_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53399773323_15b3c4f8af_k.jpg 2x" /></a></p>
-<p>午餐就吃館內的餐廳：BrickAge，餐點和價位比起來算是蠻不錯的，擺盤是比較精緻的路線，但是價位還是差不多一般博物館內附設餐廳的價位。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53398647747/" title="BrickAge by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53398647747_742a504a41_b.jpg" width="1024" height="683" alt="BrickAge" srcset="https://live.staticflickr.com/65535/53398647747_ae358b8637_k.jpg 2x" /></a></p>
-<p>下午去了大須觀音和商店街一下，這條商店街我就覺得還好，大須觀音那邊看到有些自願者 cosplay 後在幫忙整理環境，蠻特別的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400911499/" title="大須観音 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400911499_60660c5776_b.jpg" width="1024" height="683" alt="大須観音" srcset="https://live.staticflickr.com/65535/53400911499_6e81e9d5b0_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401018020/" title="大須観音 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401018020_b5d0cc3494_b.jpg" width="600" height="600" alt="大須観音" srcset="https://live.staticflickr.com/65535/53401018020_26af7e597a_k.jpg 2x" /></a></p>
-<p>傍晚就開始移動到東山植物園了，目標就是本次名古屋行程的重要目標之一的楓葉了，不過到達時已經完全天黑了，所以只有看到夜楓。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399658997/" title="東山植物園 夜楓 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399658997_8f5bd9aea2_b.jpg" width="1024" height="683" alt="東山植物園 夜楓" srcset="https://live.staticflickr.com/65535/53399658997_b1c2732332_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401020525/" title="東山植物園 夜楓 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401020525_e3dca15836_b.jpg" width="1024" height="683" alt="東山植物園 夜楓" srcset="https://live.staticflickr.com/65535/53401020525_2b5c76b95a_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401020970/" title="東山植物園 夜楓 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401020970_5f610fd7b4_b.jpg" width="1024" height="683" alt="東山植物園 夜楓" srcset="https://live.staticflickr.com/65535/53401020970_04964052f1_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400910649/" title="東山植物園 夜楓 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400910649_37661cf323_b.jpg" width="1024" height="683" alt="東山植物園 夜楓" srcset="https://live.staticflickr.com/65535/53400910649_2047535acc_k.jpg 2x" /></a></p>
-<p>第四天就是主要目標之二的樂高樂園，相較於迪士尼，樂高樂園小很多，而且土地形狀也比較不漂亮，不過對於小小孩來說是蠻適合的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399843232/" title="LEGOLAND Japan by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399843232_05a9ea809b_b.jpg" width="1024" height="683" alt="LEGOLAND Japan" srcset="https://live.staticflickr.com/65535/53399843232_a0c15d14c1_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400965688/" title="LEGOLAND Japan by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400965688_ffd93c4b38_b.jpg" width="1024" height="683" alt="LEGOLAND Japan" srcset="https://live.staticflickr.com/65535/53400965688_ea89dec4f6_k.jpg 2x" /></a></p>
-<p>樂高樂園也只有營業到傍晚，不像迪士尼還有到晚上，我們也本來就打算晚餐要回車站附近吃。</p>
-<p>第五天白天去了三井爵士之夢 outlet，傍晚則是計畫去名花之里看燈飾，出發之前其實也是研究許久，最後決定是全部搭巴士，沒有買套票，運氣還不錯等車都沒等太久（其實早上出發時是用跑的才趕上），位子也剛好夠，最後回名古屋車站那班差點客滿就是。</p>
-<p>名花之里的燈飾規模真的很大，而也很認真弄，不會有稀稀落落的：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399855947/" title="なばなの里 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399855947_1a54be61fe_b.jpg" width="1024" height="683" alt="なばなの里" srcset="https://live.staticflickr.com/65535/53399855947_7ff2c2e050_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401217005/" title="なばなの里 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401217005_f98c4aa0c2_b.jpg" width="1024" height="683" alt="なばなの里" srcset="https://live.staticflickr.com/65535/53401217005_dc7bf8a659_k.jpg 2x" /></a></p>
-<p>今年的主燈則是金字塔：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401216580/" title="なばなの里 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401216580_4cfc107b87_b.jpg" width="1024" height="683" alt="なばなの里" srcset="https://live.staticflickr.com/65535/53401216580_b715e87864_k.jpg 2x" /></a></p>
-<p>第六天早上一樣是在名古屋車站附近商圈逛逛，午餐後去租車出發往飛驒高山，中間路上有遇到小雪，然後到高山時天也已經都黑了，路上幾乎也沒什麼人，不過那個有名的燒肉店還是排很多人在等，後來找了一家好味燒的餐廳「獨樂」，然後去逛超市結束這天的行程。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401249244/" title="ひるがの高原SA by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401249244_8a6b2148d0_b.jpg" width="1024" height="683" alt="ひるがの高原SA" srcset="https://live.staticflickr.com/65535/53401249244_b8e2b8592d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401111663/" title="お好み焼き独楽 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401111663_c218ab5621_b.jpg" width="1024" height="683" alt="お好み焼き独楽" srcset="https://live.staticflickr.com/65535/53401111663_3113910452_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399995367/" title="飛驒高山 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399995367_4dde884cb4_b.jpg" width="1024" height="683" alt="飛驒高山" srcset="https://live.staticflickr.com/65535/53399995367_7149ef1668_k.jpg 2x" /></a></p>
-<p>第七天白天在飛驒高山觀光，去了高山陣屋、宮川朝市、高山物產館、飛驒之里，結果早上也是沒仔細研究，順序錯了，本來應該要先去宮川朝市然後才往陣屋方向，順便要去看那條三町的老屋街區，結果一開始就跑錯方向，錯過那條老街，然後高山也都沒下雪，其實心理還是有點想看看雪景的。飛驒之里是一些老屋的集落，其實是搬遷過來的，有些是因為蓋水壩所以遷村之類的原因，也是第一次有機會進到合掌屋理參觀，很意外的是，裡面空間其實超大的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401247844/" title="飛驒高山 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401247844_8a17f241ff_b.jpg" width="1024" height="683" alt="飛驒高山" srcset="https://live.staticflickr.com/65535/53401247844_8557873e2f_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401110058/" title="高山陣屋 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401110058_76e1422165_b.jpg" width="1024" height="683" alt="高山陣屋" srcset="https://live.staticflickr.com/65535/53401110058_72a3a74f9d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400312907/" title="飛騨の里 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400312907_fb82c3c2c2_b.jpg" width="1024" height="683" alt="飛騨の里" srcset="https://live.staticflickr.com/65535/53400312907_7f3f2bda05_k.jpg 2x" /></a></p>
-<p>之後就開車往下呂溫泉，這邊有一個失算的，就是這段都不是高速公路，結果害我高速公路 pass 虧到，不過這段路程還算蠻漂亮的，晚上則是入住下呂的冨岳，算是傳統形式的溫泉旅館，早餐晚餐都在房間吃，有大浴場也有包場的時段可以挑。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402799389/" title="下呂温泉 冨岳 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402799389_2a43779e1b_b.jpg" width="1024" height="683" alt="下呂温泉 冨岳" srcset="https://live.staticflickr.com/65535/53402799389_3324ad662d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402663968/" title="下呂温泉 冨岳 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402663968_82d0ae4d67_b.jpg" width="1024" height="683" alt="下呂温泉 冨岳" srcset="https://live.staticflickr.com/65535/53402663968_b301c8d509_k.jpg 2x" /></a></p>
-<p>第八天早上去下呂溫泉街逛了一下，然後去溫泉寺，楓葉雖然已經開始掉了但還是很漂亮，之後就開車下山，這段路其實蠻漂亮的，途中經過一個叫下原水壩的地方，經過時就覺得很漂亮，對岸還有火車經過，結果後來發現那邊還真的是一個<a href="https://maps.app.goo.gl/HUt3CXNCDLGQzdyk6">小有名氣的拍照點</a>。午餐則是吃下山後剛好路過的感動的肉與米，事前有查到這間不過沒預期到會剛好經過。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402471541/" title="温泉寺 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402471541_28628c6a67_b.jpg" width="1024" height="683" alt="温泉寺" srcset="https://live.staticflickr.com/65535/53402471541_0740028769_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401547237/" title="感動の肉と米 鵜沼店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401547237_5408c8659a_b.jpg" width="1024" height="683" alt="感動の肉と米 鵜沼店" srcset="https://live.staticflickr.com/65535/53401547237_b17514068c_k.jpg 2x" /></a></p>
-<p>感動的肉與米是一個蠻特別的餐廳，可以說是最佳化過後的肉排加米飯的餐廳，東西蠻好吃的，我看網路上有人介紹過東京的店，不過東京店似乎小很多，店內的人來來去去比較不好拍照所以就沒什麼照片，我連自己的肉的照片都不見了。</p>
-<p>之後前往犬山城，這趟行程沒去名古屋城反而選擇犬山城，主要是因為犬山城天守是國寶之一，不過天守之外保留下來的部分比姬路城少很多，不過也因此省了很多時間就是，總之就是上去繞了一圈天守這樣，城內倒是沒什麼東西可以看。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402750653/" title="犬山城 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402750653_3fd362ab51_b.jpg" width="1024" height="683" alt="犬山城" srcset="https://live.staticflickr.com/65535/53402750653_ab49664f61_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402562086/" title="犬山城 天守閣 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402562086_2c2b22da41_b.jpg" width="1024" height="683" alt="犬山城 天守閣" srcset="https://live.staticflickr.com/65535/53402562086_66740d3444_k.jpg 2x" /></a></p>
-<p>然後住宿就是<a href="https://blog.othree.net/log/2023/12/09/genji-koh/">前一篇文章介紹過的源氏香</a>了。</p>
-<p>第九天是回國前一天了，這天本來規劃就是知多半島為主，早上去知多半島最南端的羽豆岬，中午吃河豚，下午隨意逛逛，然後晚上去 J Hotel 臨空。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402662956/" title="羽豆岬 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402662956_1b560fdae5_b.jpg" width="1024" height="683" alt="羽豆岬" srcset="https://live.staticflickr.com/65535/53402662956_e98e2e58fe_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401738057/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401738057_cec9176a67_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53401738057_8f39bf8710_k.jpg 2x" /></a></p>
-<p>不過到中午行程結束後，發現沒買小倉山莊的仙貝，所以下午就決定往北走回頭路，跑了一趟<a href="https://ogurasansou.jp.net/store/2021/06/24/16354/">小倉山莊的天白店</a>，順便跑高速公路少虧一點 pass 的錢，其實照本來的規劃應該是要前一天從犬山城往南時過去的，這間店的位置其實意外的偏遠，我覺得應該是沒什麼海外觀光客會到這裡，開車過去途中還經過好一大片的工業區；然後小倉山莊，我真的是覺得很厲害，賣仙貝也可以把商品包裝成這樣，然後店內可以擺的讓人目不暇給，也真的是讓我覺得很佩服，當然東西也好吃。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661296/" title="小倉山荘 天白店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661296_3a1e4ab1eb_b.jpg" width="1024" height="683" alt="小倉山荘 天白店" srcset="https://live.staticflickr.com/65535/53402661296_e8378583cf_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401739502/" title="小倉山荘 天白店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401739502_2ca80d02be_b.jpg" width="1024" height="683" alt="小倉山荘 天白店" srcset="https://live.staticflickr.com/65535/53401739502_9fb6a6e25e_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661171/" title="小倉山荘 天白店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661171_f5c49d9e33_b.jpg" width="1024" height="683" alt="小倉山荘 天白店" srcset="https://live.staticflickr.com/65535/53402661171_1160c63e8d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402851548/" title="小倉山荘 天白店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402851548_126191c4d3_b.jpg" width="1024" height="683" alt="小倉山荘 天白店" srcset="https://live.staticflickr.com/65535/53402851548_20f93503e6_k.jpg 2x" /></a></p>
-<p>雖然跑去小倉山荘有點走回頭路，不過也因為跑這一趟，還有機會順便逛了一下 V drug 和<a href="https://www.otakarasouko.com/">お宝創庫 鳴海店</a>，在 V drug 也第一次在日本看到了 Costco 賣的那種 Attack Zero 超大補充包。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402851133/" title="お宝創庫 鳴海店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402851133_09807b0e9d_b.jpg" width="600" height="900" alt="お宝創庫 鳴海店" srcset="https://live.staticflickr.com/65535/53402851133_e48633e49c_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401738752/" title="お宝創庫 鳴海店 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401738752_a01f5b03de_b.jpg" width="1024" height="683" alt="お宝創庫 鳴海店" srcset="https://live.staticflickr.com/65535/53401738752_6336922c24_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402660816/" title="V drug by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402660816_9dedcc5d1a_b.jpg" width="600" height="900" alt="Attack Zero 補充包" srcset="https://live.staticflickr.com/65535/53402660816_216d5e0049_k.jpg 2x" /></a></p>
-<p>之後就直奔旅館 <a href="https://www.j-hotel-rinku.com/">J Hotel 臨空</a>，旁邊的 AEON Mall 真的超級大，行李丟進房間後又跑去 Costco 逛，我有隨便拍了一些店內商品，可以從<a href="https://www.flickr.com/photos/othree/53402899843/in/album-72177720313161615/">這張</a>開始看，也順便在那邊吃了晚餐。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402899968/" title="AEON Mall 常滑 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402899968_e9eecec6c3_b.jpg" width="1024" height="683" alt="AEON Mall 常滑" srcset="https://live.staticflickr.com/65535/53402899968_7adb1a0c99_k.jpg 2x" /></a></p>
-<p><a href="https://www.j-hotel-rinku.com/">J Hotel 臨空</a>這次住起來感覺也很不錯，2023 剛重新裝潢過，有製冰機洗衣機，地理位置也很不錯，就在臨空站旁邊，離中部國際機場和常滑站都只有一站，旁邊 AEON Mall 走路就可以到，房間大小也都不錯，部分房間還有配 <a href="https://www.aladdinx.jp/">Aladdin 投影機</a>，就是那個現在很流行的西瓜遊戲的開發廠商的那個投影機，本來有想請他們幫忙安排，不過入住的時候忘了，但是被安排到很高的樓層是也不錯，房間正對 AEON Mall，看起來也是蠻震撼的，如果要拍中部國際機場或是電車，其實公共區域走到邊邊有個小陽台可以到外面拍，視野很好，也可以看時刻表來拍電車，一大早光線很不錯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403034194/" title="中部國際機場 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403034194_7033448906_b.jpg" width="1024" height="683" alt="中部國際機場" srcset="https://live.staticflickr.com/65535/53403034194_d7bed7feb7_k.jpg 2x" /></a></p>
-<p>第十天也是最後一天，早上打算去常滑市的招財貓大道，在飯店吃早餐時發現有「想哭的我戴上了貓的面具 mini 原畫展」，才發現到常滑市就是該動畫的舞台，展覽也有列出聖地巡禮的點，不過沒什麼時間就沒細看了。飯後開車去常滑站附近逛了招財貓大道後，又接著逛了陶瓷器散步道去找巨大貓咪，必須要說陶瓷器散步道蠻不錯的，很悠閒又很多廢墟也很多商店，如果可以安排一整天在常滑的行程其實也蠻不錯的，可以早上來市區、中午找間餐廳、然後下午可以去 AEON Mall、Costco、明太子公園那一塊，光是 AEON Mall 就可以逛超久，旁邊還有個小賽車場，不想逛街也可以去玩玩，或是下午去機場的 <a href="https://www.centrair.jp/service/flightofdreams.html">FLIGHT OF DREAMS</a> 參觀，然後再來 AEON Mall 也很不錯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402708386/" title="想哭的我戴上了貓的面具 mini 原畫展 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402708386_97e91b4672_b.jpg" width="600" height="900" alt="想哭的我戴上了貓的面具 mini 原畫展" srcset="https://live.staticflickr.com/65535/53402708386_ee2abbed17_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401907747/" title="とこなめ招き猫通り by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401907747_e0c320dcff_b.jpg" width="1024" height="683" alt="とこなめ招き猫通り" srcset="https://live.staticflickr.com/65535/53401907747_3a0fa69db9_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402827296/" title="やきもの散歩道 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402827296_cf1d6d934d_b.jpg" width="1024" height="683" alt="やきもの散歩道" srcset="https://live.staticflickr.com/65535/53402827296_7a5a6c3bc1_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403261865/" title="とこなめ見守り猫「とこにゃん」 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403261865_c66fd71b66_b.jpg" width="1024" height="683" alt="とこなめ見守り猫「とこにゃん」" srcset="https://live.staticflickr.com/65535/53403261865_5c33ca1394_k.jpg 2x" /></a></p>
-<p>之後因為還有時間就去明太子樂園，然後 AEON Mall 吃午餐、隨便逛逛然後就去機場了，機場去領貨和買了一箱蝦餅，蝦餅本來在那邊挑半天，回來後覺得應該全部買綜合就好（PS. 真的蠻好吃）。</p>
-<p>順帶一提，這間 AEON Mall 也有 Village Vanguard，而且有一半是 Village Vanguard Outlet，是我第一次看到這間書店的 outlet。我第一次知道 Village Vanguard 其實是被表哥帶去的，當時他們在高雄有開分店，中文店名叫「比利治玩家」，就是專門賣一些怪東西 ecxiting book store，到底賣什麼可以參考我從<a href="https://www.flickr.com/photos/othree/53402709586/in/album-72177720313161615/">這張</a>開始的照片，或是上他們<a href="https://www.village-v.co.jp">官網</a>逛逛就知道了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403146263/" title="かねふく めんたいパークとこなめ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403146263_53c42337a0_b.jpg" width="1024" height="683" alt="かねふく めんたいパークとこなめ" srcset="https://live.staticflickr.com/65535/53403146263_3552e69603_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403280364/" title="AEON Mall 常滑 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403280364_00454e6c32_b.jpg" width="1024" height="683" alt="AEON Mall 常滑" srcset="https://live.staticflickr.com/65535/53403280364_6abeeca16f_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402899108/" title="Village Vanguard 常滑 AEON Mall by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402899108_40eaaa9ca6_b.jpg" width="1024" height="683" alt="Village Vanguard 常滑 AEON Mall" srcset="https://live.staticflickr.com/65535/53402899108_d8a379814d_k.jpg 2x" /></a></p>
-<p>最後，就來說說這次旅行的收穫與缺憾吧，首先是收穫的部分，第一個就是稍微體會到下雪天駕駛的感覺，不過因為雪不大，也只有在高速公路上，所以沒有到雪地駕駛的程度；第二個是河豚大餐，之後想單獨寫一篇文章介紹；然後第三個就是常滑和臨空區意外的還不錯，本來也有想單獨寫一篇文章，不過上面已經介紹的差不多了。</p>
-<p>至於比較缺憾的部分：</p>
-<ul>
-<li>沒有看到高山雪景，不過我也有點害怕真的要雪地駕駛就是；</li>
-<li>少去了羽豆岬旁邊的師崎漁港朝市；</li>
-<li>東西買太少；</li>
-<li>沒時間去鈴鹿賽車場；</li>
-</ul>
-<p>其實我當初規劃在市區近郊的行程有好幾個，可是因為後來市區天數縮水就沒機會了，這邊來列一下：</p>
-<ul>
-<li>鈴鹿賽車場，應該可以整個白天，不過要小心有比賽的日子，特別有興趣是因為有可以<a href="https://www.suzukacircuit.jp/tw/experience/amusementpark/circuitchallenger/">上真的賽道開電動車的體驗</a>，不過當然不是房車大小那種，但是也有雙座位的車種可以讓小孩在旁邊；</li>
-<li>名古屋港：可以參觀南極探測船 5001 富士，因為之前看了<a href="https://blog.othree.net/log/2023/08/02/yorimoi/">比宇宙更遠的地方</a>，所以其實還蠻有興趣的；然後可以搭<a href="https://www.shachi-bus.com/marine/">水陸巴士</a>；接著去名古屋港水族館，不過如果想看企鵝散步時間可能要研究一下怎樣搭配比較好；</li>
-<li>吉卜力公園，應該可以一個整天，不過這次因為小孩都還沒看過所以就沒安排，買票也還有點複雜，有想去的話可能要好好花時間研究；</li>
-<li>樂高樂園加磁浮博物館，看地圖距離好像還好不過其實步行走的話還蠻遠的，加上樂高樂園我們離開時也已經五點多，所以就沒機會去磁浮博物館了；</li>
-<li><a href="https://toyota-automobile-museum.jp/">Toyota 博物館</a>，除了我們去的產業技術紀念館之外，其實 Toyota 還有一間博物館，展示的東西內容也和產業技術紀念館不一樣，產業技術紀念館比較著重在各種技術的發展，而 Toyota 博物館就真的是以展示車輛為主的樣子。</li>
-</ul>
-<p>最後就是其他的遊記了：</p>
-<ul>
-<li><a href="https://blog.othree.net/log/2023/12/09/genji-koh/">源氏香 南知多</a></li>
-<li><a href="https://blog.othree.net/log/2024/01/12/qr-code-history/">QR Code 發明歷史展</a></li>
-<li><a href="https://blog.othree.net/log/2024/03/28/yamani/">やまに（yamani）旅館</a></li>
-</ul>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001000" baseName="genji-koh">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2023-12-09</b:date>
-				<b:time>15:41:08</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>源氏香 南知多</b:title>
-			<b:content>
-				<b:summary> 前陣子去了一趟名古屋，一開始其實只是想說帶小孩去樂高樂園，結果行程規劃從一開始的名古屋市區和周邊為主，弄到後來變成市區五天租車五天的，然後打算最後一天住在機場旁邊，就想說那前一天就在附近玩玩好了，要去的地方就因此多了一個一開始完全沒考慮過的「知多半島」了，當然也有研究住宿，當時也有找到「源氏香」這間旅館，不過那時候已經有安排了下呂溫泉的溫泉旅館，所以就沒考慮這個價位的住宿了，就在一切都安排好後沒幾天，突然就看到 FB 上有人分享到他們有特別的，針對台灣人的免費體驗方案，就是入住後要在 SNS 上分享。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377566549/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377566549_d4c2cc3812_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377566549_2332169903_k.jpg 2x" /></a></p>
-<p>前陣子去了一趟名古屋，一開始其實只是想說帶小孩去樂高樂園，結果行程規劃從一開始的名古屋市區和周邊為主，弄到後來變成市區五天租車五天的，然後打算最後一天住在機場旁邊，就想說那前一天就在附近玩玩好了，要去的地方就因此多了一個一開始完全沒考慮過的「知多半島」了，當然也有研究住宿，當時也有找到「<a href="https://genji-koh.kaiei-ryokans.com/">源氏香</a>」這間旅館，不過那時候已經有安排了下呂溫泉的溫泉旅館，所以就沒考慮這個價位的住宿了，就在一切都安排好後沒幾天，突然就看到 FB 上有人分享到他們有特別的，針對台灣人的免費體驗方案，就是入住後要在 SNS 上分享。</p>
-</b:mainContent>
-				<b:extendContent><p>研究加考慮了幾天，決定還是給他申請下去，然後因為有帶小孩的關係，我也有先寫信聯絡確認過沒問題（我日文大概是簡單的可以讀但不太能寫、所以靠 ChatGPT 翻譯，旅館方他們的回信也都有用工具翻譯成中文，所以溝通還算不是太大的問題），當然有另外收費，本來有點期待可以在房間看夕陽的，不過當天因為從下呂出發，中間還去了犬山城，然後七早八早就天黑，所以到達旅館時，已經看不到太陽了，還好還有晚霞。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377252211/" title="源氏香 夕陽 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377252211_1035494cc3_b.jpg" width="1024" height="683" alt="源氏香 夕陽" srcset="https://live.staticflickr.com/65535/53377252211_878a8725b3_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376328142/" title="源氏香 夕陽 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376328142_dc58e088f7_b.jpg" width="1024" height="683" alt="源氏香 夕陽" srcset="https://live.staticflickr.com/65535/53376328142_fecdbaf6a1_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377699285/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377699285_e3eb6e2798_b.jpg" width="683" height="1024" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377699285_3a628c14ab_k.jpg 2x" /></a></p>
-<p>大門邊還有兩盆火和一個鼓，後來看到其他人分享說請他們接送的，到飯店時還會有人擊鼓歡迎，不過我們到的時候停車場其實已經黑麻麻的了。進入大廳後馬上就聞到很特別的香味（飯店的特色），辦理入住後有抹茶和小點心，小點心我當時沒吃，回來才發現也是南知多的點心店的類似麻糬的小點，還蠻好吃的，意外的是還送了紙鶴的摺紙和色紙給我們的小朋友。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377695225/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377695225_da81da4c2f_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377695225_67d87ceeda_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377695225/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377430478_9901c76d9e_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377430478_5227e74aa8_k.jpg 2x" /></a></p>
-<p>房間是他們最標準的和室，另外有獨立廁所、乾濕分離的衛浴、洗臉台還有兩個，其實空間也是很大，棉被則是自己鋪，不過有需要的也可以播電話到前台請他們幫忙，其他備品設備都很齊，可以自己燒水，還有一壺冷水(有冰那種）可以飲用，清潔度也沒大問題，我沒特別刁難的下去找哪裡沒乾淨，當然有些設備有點舊，不過都維護的還不錯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377430593/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377430593_9dc5f67f44_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377430593_805b310402_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377253426/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377253426_129c06686a_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377253426_030b98f08b_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377253426/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377430778_204ce69195_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377430778_66f98f2f8d_k_d.jpg 2x" /></a></p>
-<p>進到房間時天色已經幾乎要全黑了。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377253961/" title="源氏香 夕陽 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377253961_aef74feac6_b.jpg" width="1024" height="683" alt="源氏香 夕陽" srcset="https://live.staticflickr.com/65535/53377253961_e2c4dd71f8_k.jpg 2x" /></a></p>
-<p>然後就是特色的品香體驗了，除了官網介紹的體驗的活動之外，房間都有固定的準備了五種香可以自己點起來品聞。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377431548/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377431548_0e01a75328_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377431548_cc43a881e6_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377701580/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377701580_c55f6148d0_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377701580_2b00978bdb_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376329882/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376329882_d8863a7ef8_b.jpg" width="683" height="1024" alt="源氏香" srcset="https://live.staticflickr.com/65535/53376329882_d00263949c_k.jpg 2x" /></a></p>
-<p>我們試了其中三種，左邊兩個那個就比較接近台灣拜拜燒的香，不過第一款點的藍色的和第二天點的桃紅的都很特別，而且是好聞的味道，文章的前面沒詳述，其實源氏香號稱是日本第一間以薰香為主題的旅館（1999 年開業，其實不算老，有點意外這之前沒人想過經營這樣主題的旅宿），從一進到旅館就可以感受到，不同的公共空間有著不同的香味，像是大廳和電梯就明顯用了不一樣的香味，都是很好聞且會讓人舒服可以放鬆的味道，然後讓我印象深刻的是，這些味道其實我都沒有聞過（記憶中沒聞過），味道濃郁卻不也會刺鼻或讓人不舒服，而且我不會過敏，對我來說是個非常新的體驗，就是開了眼界這樣，原來有這樣的香味，然後原來可以這樣子來使用這些香味。</p>
-<p>接著休息到晚餐時間，日式溫泉旅館的定番：懷石料理套餐，也有準備好中文版的菜單給我們看，有開胃菜、生魚片、肉類拼盤、蒸菜、天婦羅等，食物很美味，份量也夠，吃完時就很飽了，最後還給我們豆皮壽司帶回房間當宵夜，另外就是吃飯時都是單獨包廂，雖不是完全獨立房間但也有簾子可以完全檔著，隱私還是顧的不錯。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377425398/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377425398_1ffcfbf3bf_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377425398_1f78921360_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376330807/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376330807_6e725f49a4_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53376330807_e02bf3c15c_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377433103/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377433103_880a8e4482_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377433103_4b26839cc8_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376332187/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376332187_b673076856_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53376332187_e9bc8de114_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376332352/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376332352_b049f76634_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53376332352_477d362dc6_k.jpg 2x" /></a></p>
-<p>飯店內很多地方都有展示薰香相關的東西，尤其是香爐。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377705165/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377705165_d4fab5674c_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377705165_0c9f74e0bc_k.jpg 2x" /></a></p>
-<p>飯後休息一陣子後，我們就去洗澡泡湯了，旅館內的澡堂，在最頂樓十樓有男女分開兩間露天澡堂，然後八樓九樓各一間室內，一男一女的，我們想說晚上先泡室內的就好了，隔天早上再去泡露天的，不過這個決定有點失算，首先是兩間室內澡堂其實最早的規劃是包場的貸切風呂，現在改成公用的，所以很多基礎設備是沒有的，像是可以上鎖的櫃子，所以房間鑰匙只能和毛巾衣物一起塞到竹籃裡面，我本來覺得很奇怪，想說完全沒有也太奇怪，直到隔天去頂樓一看，才發現兩邊設備差太多了吧，頂樓不但更衣休息空間都大很多，有私人櫃子，還有飲水機和冰櫃，有免費冰棒，但是只有下午到晚上開放取用，所以我沒吃到...，要是還有其他人來造訪記得還是以露天風呂為優先，不然也是可以泡湯完去十樓的休息休息，晚上可以去拿冰棒吃，然後除了兩個澡堂的差異之外，還有一點要特別注意的是，澡堂開放時間不是非常棒，晚上只有到十一點，隔天早上則是九點（退房是十點）。</p>
-<p>泡完澡，回到房間休息，看看外面，發現到看得到內海對岸（看地圖是伊勢神宮那方向最亮）的燈光，然後光害很少，所以星星也很多，用相機拍下去更多。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377429313/" title="源氏香 夜景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377429313_6f8d04c654_b.jpg" width="1024" height="683" alt="源氏香 夜景" srcset="https://live.staticflickr.com/65535/53377429313_ade5d6dee5_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377698565/" title="源氏香 夜景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377698565_6fa79d8ef6_b.jpg" width="683" height="1024" alt="源氏香 夜景" srcset="https://live.staticflickr.com/65535/53377698565_9f27911f1f_k.jpg 2x" /></a></p>
-<p>可以拍星空，算是很意外的收穫，這天還是有月亮跑出來的日子，不然應該可以拍的到更多星星。然後晚上真的是很冷，南知多冬天應該是淡季吧，雖然有虎河豚，但是好像沒什麼其他觀光客。</p>
-<p>隔天早上，意外的發現，這個地理位置竟然可以拍日出，但是我起床時太陽已經跑出來了一陣子了，我真是太小看日本的緯度了，</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53376325997/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53376325997_71e6f0071f_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53376325997_c069bccb7c_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377696905/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377696905_f3519e90fc_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377696905_123e239c57_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377697230/" title="源氏香 廣緣 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377697230_62a1850dfb_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377697230_8fe833fe6e_k.jpg 2x" /></a></p>
-<p>早餐一樣是在二樓餐廳，白天配上窗外景色真是漂亮很多，早餐也很豐盛，而且就有河豚可以吃了，不過是比較小隻的！</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377566549/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377566549_d4c2cc3812_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377566549_2332169903_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377566244/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377566244_df5557fa88_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377566244_40a043453e_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377566469/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377566469_242ecdbbde_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377566469_aa5af1c24d_k.jpg 2x" /></a></p>
-<p>因為澡堂早上九點就關的關係，我們排很早吃早餐，吃完飯後就去泡露天溫泉，外面依然很冷，躲在熱水裡都不敢出來，不過風景很好，其實在決定參加前，有看 Google Map 上的一些評論，有很多人說到露天溫泉水裡有很多羽毛之類ㄉ，這次我倒是沒遇到，不過不確定是因為冬天比較沒鳥來亂，還是有認真改善這個問題就是。</p>
-<p>泡完湯後回房間休息，最後又點了一枝香。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53377426453/" title="源氏香 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53377426453_e156813103_b.jpg" width="1024" height="683" alt="源氏香" srcset="https://live.staticflickr.com/65535/53377426453_fcd357b2c6_k.jpg 2x" /></a></p>
-<p>大廳早上還有一個迷你朝市，有賣些漁產，還有賣早餐的河豚（已經是處理成一夜干加上真空包裝了），逛完我們就退房去南知多的行程了，飯店的人也出來送別，還在門口等我們到準備好發車離開。</p>
-<p>整體而言，這次的住宿是滿意的，雖然有發現一些小問題，不過重要的幾個項目都有不錯的體驗：房間舒適、薰香讓人印象深刻、餐飲也好吃、溫泉、海邊景觀很棒，雖然是特別的方案但是也沒給我們特別關照或是過度干擾，只有入住退房時有跟我們提醒到活動相關的規則。算是個花錢後不會讓人覺得不值的經驗，不過我發現南知多去的外國觀光客好像不多，甚至有很多是只能打電話預約的當地住宿，所以就來附上南知多我簡單研究一下覺得可以值得去看的景點（需自駕）：</p>
-<ul>
-<li><a href="https://www.ebisato.co.jp/index.php">蝦仙貝之里工廠</a>：本來是想讓小孩去作仙貝，但是因為本來就打算去機場買一箱，所以沒時間就放棄了；</li>
-<li><a href="https://www.aichi-now.jp/spots/detail/112/">羽豆岬</a>：知多半島最南端，有神社、小展望台，還有個羽豆崎城跡，很小沒被列到兩百名城中；</li>
-<li><a href="https://www.morozaki.jp/asaichi/">師崎港 朝市</a>：就在羽豆岬附近，不是在主要道路旁邊所以我錯過了，扼碗，看到別人去逛覺得蠻有趣的；</li>
-<li>海鮮餐廳：附近很多海鮮餐廳，冬天有河豚，我有預約一間吃了虎河豚套餐，之後再來介紹（其實源氏香也有河豚套餐）；</li>
-<li>其他還有一些甜食點心的店，像我本來有查了一兩家 parfait 的咖啡廳要去，結果吃完河豚套餐就太飽了；</li>
-<li><a href="https://www.tokoname-kankou.net/">常滑市</a>在機場旁邊，算是比較熱鬧的地方，如果不規劃到更南邊，或是沒有開車，光是常滑市排個半天一天也不錯，車站附近有陶瓷器散步道，氣氛很不錯，還有很多招財貓，靠近機場那邊還有超大的 AEON Mall 和 Costco（見<a href="https://www.flickr.com/photos/othree/53384408327/in/dateposted-public/">照片</a>），然後這次去了我才發現該市也是 <a href="https://www.netflix.com/tw/title/81281872">想哭的我戴上了貓的面具</a> 的取景地。</li>
-</ul>
 </b:extendContent>
 			</b:content>
 

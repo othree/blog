@@ -5,15 +5,216 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2024</copyright>
-<lastBuildDate>Thu, 28 Mar 2024 10:01:14 +0800</lastBuildDate>
+<lastBuildDate>Wed, 17 Apr 2024 22:47:21 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
 
 <item>
+<title>JSON Type Definition</title>
+<description><![CDATA[<p>之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 <a href="https://jsontypedef.com/">JSON Type Definition</a>（簡稱 JSON Typedef 或是 JTD） 這個 <a href="https://datatracker.ietf.org/doc/html/rfc8927">RFC 標準</a>，相較於發展已經很久的 <a href="https://json-schema.org/">JSON Schema</a>，JSON Typedef 的語法簡潔不少：</p>
+<pre><code class="language-json">{
+	&quot;properties&quot;: {
+		&quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+		&quot;createdAt&quot;: { &quot;type&quot;: &quot;timestamp&quot; },
+		&quot;karma&quot;: { &quot;type&quot;: &quot;int32&quot; },
+		&quot;isAdmin&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+	 }
+}
+</code></pre>
+]]><![CDATA[<p>光是看不到 <code>$</code> 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 <strong>Independent Submission</strong>，這就讓我好奇了起來，於是就花了不少時間了解前因後果。</p>
+<p>JSON Typedef 的作者是 <a href="https://github.com/ucarion">Ulysse Carion</a>，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 <code>type</code> 屬性，簡單的 TypeScript 定義長這樣：</p>
+<pre><code class="language-typescript">type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+</code></pre>
+<p>然後 <code>Event</code> 則是兩種的聯集：</p>
+<pre><code class="language-typescript">type Event = ClickEvent | KeydownEvent;
+</code></pre>
+<p>這時，如果有支援的工具就可以透過判斷 <code>type</code> 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 <a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming">JSON Scheming</a> 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。</p>
+<p>之後，Carion 在 2019 年四月，在 IETF 的 <a href="https://mailarchive.ietf.org/arch/browse/json/">json mailing list</a> 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 <a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/">JSON Content Rules</a>（網站已死），還有 JSON 的二進位版超集：<a href="https://cbor.io/">CBOR</a> 和用來描述 CBOR 資料的 <a href="https://datatracker.ietf.org/doc/html/rfc8610">CDDL</a>，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：</p>
+<pre><code class="language-cddl">PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&gt; any
+}
+</code></pre>
+<p>然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 <a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/">JSON Schema Language</a>，不過因為會和 JSON Schema <a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema">混淆</a>，所以後來就改名成 <a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/">JSON Data Definition Format</a>（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 <a href="https://www.rfc-editor.org/rfc/rfc9535.html">JSONPath</a> 就有開一個 <a href="https://datatracker.ietf.org/wg/jsonpath/about/">jsonpath WG</a></p>
+<p>最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：</p>
+<pre><code class="language-json">{
+    &quot;discriminator&quot;: &quot;eventType&quot;,
+    &quot;mapping&quot;: {
+        &quot;USER_CREATED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; }
+            }
+        },
+        &quot;USER_PAYMENT_PLAN_CHANGED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;plan&quot;: { &quot;enum&quot;: [&quot;FREE&quot;, &quot;PAID&quot;]}
+            }
+        },
+        &quot;USER_DELETED&quot;: {
+            &quot;properties&quot;: {
+                &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+                &quot;softDelete&quot;: { &quot;type&quot;: &quot;boolean&quot; }
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以自動轉成：</p>
+<pre><code class="language-typescript">// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &quot;USER_CREATED&quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &quot;USER_DELETED&quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &quot;FREE&quot;,
+  Paid = &quot;PAID&quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &quot;USER_PAYMENT_PLAN_CHANGED&quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+</code></pre>
+<p>然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 <code>switch</code> 來處理這種東西，TypeScript 都會<a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions">幫你判斷好變數的型別</a>：</p>
+<pre><code class="language-typescript">switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+</code></pre>
+<p>當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 <a href="https://ajv.js.org/">ajv</a> 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 <a href="https://react-hook-form.com/">react-hook-form</a> 和 <a href="https://zod.dev/">Zod</a>，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：</p>
+<pre><code class="language-javascript">const myUnion = z.discriminatedUnion(&quot;status&quot;, [
+  z.object({ status: z.literal(&quot;success&quot;), data: z.string() }),
+  z.object({ status: z.literal(&quot;failed&quot;), error: z.instanceof(Error) }),
+]);
+</code></pre>
+<p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
+<p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
+]]></description>
+<link>https://blog.othree.net/log/2024/04/17/json-type-definition/</link>
+<guid>https://blog.othree.net/log/2024/04/17/json-type-definition/</guid>
+<category>script</category>
+<pubDate>Wed, 17 Apr 2024 22:47:21 +0800</pubDate>
+</item>
+
+<item>
+<title>Dialog 的魔法</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /></a></p>
+<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
+]]><![CDATA[<p><code>&lt;dialog&gt;</code> 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 <code>confirm</code> 和 <code>alert</code> 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 <a href="https://getbootstrap.com/docs/5.0/components/modal/">modal</a> 了吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /></a></p>
+<p>這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，<code>&lt;dialog&gt;</code> 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 <code>&lt;dialog&gt;</code>，結果一研究下去，發現超多的細節的。</p>
+<p>在回答問題之前，先來介紹一下 <code>&lt;dialog&gt;</code> 吧，首先 <code>&lt;dialog&gt;</code> 預設樣式是 <code>display: none;</code> 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 <code>open</code> 這個專屬的新 attribute：</p>
+<pre><code class="language-html">&lt;dialog open&gt;
+   This is a dialog
+&lt;/dialog&gt;
+</code></pre>
+<p>這樣就會讓 <code>&lt;dialog&gt;</code> 出現在畫面上，表現就如同一般的 <code>&lt;div&gt;</code> 標籤，第二種方法則是透過 JavaScrpt：</p>
+<pre><code class="language-javascript">dialogNode.show()
+</code></pre>
+<p>這樣的效果和 <code>open</code> 一樣，然後除了這兩個方法之外，還有一個最特別的：</p>
+<pre><code class="language-javascript">dialogeNode.showModal()
+</code></pre>
+<p><code>showModal</code> 會讓這個 <code>&lt;dialog&gt;</code> 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 <code>&lt;dialog&gt;</code> 以外的地方都會無法互動。</p>
+<p>在這邊，一下子三件以前辦不到的事情都出現了：</p>
+<ul>
+<li>保證在網頁的最上層</li>
+<li>只有一層標籤就水平垂直置中</li>
+<li>其他地方都無法互動</li>
+</ul>
+<p>那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 <code>&lt;dialog&gt;</code> 一定在最上層呢？那就是一個新規範的東西了，叫做 <a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw">top Layer</a>，標準則是放在 <a href="https://drafts.csswg.org/css-position-4/#top-layer">CSS Positioned Layout Module Level 4</a>，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 <a href="https://web.dev/learn/css/z-index?hl=zh-tw">stacking context</a>，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 <code>&lt;dialog&gt;</code> 之外，文件上是還有寫到 fullscreen API 和還在初期的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover</a>，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /></a></p>
+<p>根據前一點，可以知道其實 <code>&lt;dialog&gt;</code> 一樣是普通 DOM 節點，只是在用 <code>showModal()</code> 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，<code>&lt;dialog&gt;</code> 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+</code></pre>
+<p>其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「<a href="https://www.w3.org/TR/css-position-3/#abspos-old">Old Absolute Positioning Layout Model</a>」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 <code>auto</code>）：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /></a></p>
+<p>以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：</p>
+<blockquote>
+<p>margins split positive free space</p>
+</blockquote>
+<p>剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：</p>
+<blockquote>
+<p>auto margins → zero<br />
+solve for auto</p>
+</blockquote>
+<p>意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 <code>marign: auto</code> 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。</p>
+<p>回來看 <code>&lt;dialog&gt;</code>，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 <code>auto</code> 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：<code>fit-content</code>，完整的樣式應該是：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  inset: 0; /* shorthand of top, right, bottom, left */
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+}
+</code></pre>
+<p>結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。</p>
+<p>了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 <code>&lt;dialog&gt;</code> 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。</p>
+<p>終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 <code>&lt;dialog&gt;</code> 的特異功能，它有一個隱藏的 is modal flag，呼叫 <code>showModal</code> 時，除了會把該 flag 設為 <code>true</code> 之外，還可以讓文件中其它部分變為和有 <code>inert</code> 時一樣，什麼是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"><code>inert</code></a> 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 <code>inert</code> 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。</p>
+<p>然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，<strong>modal</strong> 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 <code>confirm</code> 和 <code>alert</code> 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 <code>returnValue</code> 這個屬性可以用。</p>
+<p>其實 <a href="https://issues.chromium.org/issues/40251038">Chrome</a> 早在 2014 年就支援 <code>&lt;dialog&gt;</code> 了，然後還提供了個 <a href="https://github.com/GoogleChrome/dialog-polyfill">polyfill</a>（當然無法解決 top layer 的問題），不過 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640">Firefox</a> 和 <a href="https://bugs.webkit.org/show_bug.cgi?id=84635">Safari</a> 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，<code>&lt;dialog&gt;</code> 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 <code>&lt;dialog&gt;</code> 還有很多細節，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"><code>::backdrop</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"><code>:modal</code></a>、<code>formmethod=&quot;dialog&quot;</code>、<code>returnValue</code>、怎麼用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"><code>cancel</code> 事件</a>和 <kbd>ESC</kbd> 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的<a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr">範例</a>，有興趣的可以去玩看看。</p>
+<p>最後，如果和我一樣是寫 React 要用 modal 模式的 <code>&lt;dialog&gt;</code> 的話，就一定要用到 <code>useEffect</code>，不能只操作 <code>open</code> 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 <a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts">use-html-dialog</a> ，也可以直接參考它的原始碼，關鍵的部分：</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  if (openModal) {
+    ref.current?.showModal();
+  } else {
+    ref.current?.close();
+  }
+}, [openModal]);
+</code></pre>
+<p>其他參考資料：</p>
+<ul>
+<li><a href="https://webkit.org/blog/12209/introducing-the-dialog-element/">Introducing the Dialog Element</a></li>
+<li><a href="https://intersection.tw/6e9b2104eac0">Modal 模式是大多數設計師不甚瞭解的 UX 概念</a></li>
+<li><a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0">Modal？Dialog？你真的知道他們是什麼嗎？</a></li>
+</ul>
+]]></description>
+<link>https://blog.othree.net/log/2024/04/03/the-magic-of-dialog/</link>
+<guid>https://blog.othree.net/log/2024/04/03/the-magic-of-dialog/</guid>
+<category>css-html</category>
+<pubDate>Wed, 03 Apr 2024 11:49:41 +0800</pubDate>
+</item>
+
+<item>
 <title>やまに（yamani）旅館</title>
 <description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097470/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097470_8f640fb9b6_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53403097470_931b7f0426_k.jpg 2x" /></a></p>
-<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年的名古屋之行</a>因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 やまに（yamani）旅館，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。</p>
+<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年的名古屋之行</a>因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，加上在台灣要吃河豚相對比較不容易，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 <a href="https://yamaniryokan.com/">やまに（yamani）旅館</a>，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。</p>
 <p>選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。</p>
 ]]><![CDATA[<p>我們訂的是梅套餐，菜色當然是比松或竹少一些，但是份量還是很多，首先是小菜：</p>
 <p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401737977/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401737977_21dd10297c_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53401737977_11775c73be_k.jpg 2x" /></a></p>
@@ -66,7 +267,7 @@
 
 <item>
 <title>UI Event Order</title>
-<description><![CDATA[<p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
+<description><![CDATA[<p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 <code>keydown</code>、<code>keyup</code> 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
 <p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
 ]]><![CDATA[<p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
 <pre><code>pointerdown
@@ -86,7 +287,7 @@ click
 <li><code>mouseenter</code> 對應 <code>mouseover</code></li>
 <li><code>mouseleave</code> 對應 <code>mouseout</code></li>
 </ul>
-<p>其實 <code>mouseenter</code>/<code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code>/<code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code>/<code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code>/<code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code>/<code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
+<p>其實 <code>mouseenter</code> / <code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code> / <code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code> / <code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code> / <code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code> / <code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
 <p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
 <pre><code>keydown
 keypress
@@ -761,57 +962,6 @@ furnished to do so, subject to the following conditions:
 <guid>https://blog.othree.net/log/2023/08/14/common-log-format/</guid>
 <category>unix</category>
 <pubDate>Mon, 14 Aug 2023 21:29:05 +0800</pubDate>
-</item>
-
-<item>
-<title>Vim Boss Passed Away</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53108661434/" title="Vim by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53108661434_38230541b1_b.jpg" width="1024" height="684" alt="Vim" srcset="https://live.staticflickr.com/65535/53108661434_6c5922f3cf_k.jpg 2x" /></a></p>
-<p>Vim 的作者 Bram Moolenaar 在<a href="https://groups.google.com/g/vim_announce/c/tWahca9zkt4">月初過世</a>，消息出來至今大約已經過了一週，<a href="https://www.vim.org/">Vim 官網</a>也在兩天前有了正式公告，現在除了各方的緬懷之外，Vim 的未來也是令人非常在意，這陣子也都大概有些<a href="https://github.com/vim/vim/discussions/12736">方向</a>了，目前狀況是 Vim 的另外一位維護者 Christian Brabandt 在負責，包括了維護 Vim 本身、網站主機和網站修改、各種使用到的服務的統整（像是 binary 放哪）、未來捐款的處理方式等等，其實事情很多，而我這篇文章則是要紀錄一些這幾天看到的東西。</p>
-<p>Bram Moolenaar 之前其實在 Google 工作了很久，到 2021 年十月才退休，在 <a href="https://www.theregister.com/2023/08/07/bram_moolenaar_obituary/">The Register 的報導</a>中，有當時的訪談的部分內容，只不過當時因為種種原因沒有成為一篇報導刊出，其實看內容也感覺的出來他當時還有些退休計畫，然後接著一年後，2022 年十月，Bram 有在 mailing-group 裡面提到自己有<a href="https://groups.google.com/g/vim_dev/c/ivkq22t3LQM">健康問題</a>，當時就已經有中斷 Vim 的維護工作了，然後就是今年過世的消息了，講真的，措手不及，而且 Bram 也才 62 歲，歐洲國家的預期壽命其實都有七八十的。</p>
-<p>回到我與 Vim 之間的關係，除了我早期花很多心力在 html5.vim 之外，其實我目前還是 runtime 裡面 <code>csscomplete.vim</code> 的維護者，剛剛查一下才發現我也好久沒更新了，然後就是去年 COSCUP 我分享的 <a href="https://www.youtube.com/watch?v=YM7RHRwIrKU&amp;themeRefresh=1">Vim License 的事情</a>了，在 <a href="https://github.com/vim/vim/blob/master/LICENSE">Vim License</a> 的文本裡面的那一個特別的條文，就是開源與否的爭議是交給 Vim 的維護者決定，文本內還直接寫了現在的維護者是 Bram，然後現在就有個問題是這個條文需不需要修改，除此之外還有一個就是 vim.org 的 mail server 不知道有沒有辦法轉移，不然 maintainer@vim.org 也會無法繼續使用；其實就我所知，那個條文好像沒有真的發揮效用過，我覺得未來會用上它的機會應該也是很小，而且未來也不知道會不會有單一的 maintainer，我自己判斷社群應該會傾向維持條文不動吧。</p>
-<p>最後就是，其實 Git 的每個 commit 的作者（author）和提交者（committer）可以是不同人的，而 Vim 早期，一直走的是老派的發 email 提交 Patch 給 Bram，然後由 Bram commit 進去 repository 裡面的流程，我當年想要用 Gmail 提交還發生過檔案內容太長，Gmail 無法發送這種信件的問題，後來是用 cli 的工具來發信，後來才開始有收 GitHub PR，但是 Bram 並不是直接用上面的功能來 merge，而是一樣拉 patch 下來，保留 author 資訊後 commit 進 repository，所以以前在 GitHub 上就很容易看到文章一開始那張圖那樣，全部都是 Bram 頭像的樣子，現在新的 commit 也開始進來了，所以最新的地方已經看不到這個樣子了。</p>
-]]></description>
-<link>https://blog.othree.net/log/2023/08/11/vim-boss-passed-away/</link>
-<guid>https://blog.othree.net/log/2023/08/11/vim-boss-passed-away/</guid>
-<category>vim</category>
-<pubDate>Fri, 11 Aug 2023 20:16:47 +0800</pubDate>
-</item>
-
-<item>
-<title>比宇宙更遠的地方</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53088711466/" title="宇宙よりも遠い場所 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53088711466_b346a743d6_b.jpg" width="600" height="787" alt="宇宙よりも遠い場所" srcset="" /></a></p>
-<p>在剛進入串流時代之時，我想著以後不太需要買什麼 DVD/BD 之類的了，因為想看的東西應該以後網路上都可以看的到，不過過了幾年下來，我的想法又慢慢的改變了，因為這些作品的授權都有個期限，過期之後不一定會重新上架，甚至連自家的原創作品都可能會下架，所以我慢慢的心中開始有了幾部作品，是覺得應該收藏一份實體版下來，其中的評斷標準算是我個人主觀，不過有一個條件倒是比較明確，就是希望讓我兒子長大後能看的，其實在這清單之中也沒幾個作品，而且很少有新增，不過就在最近新增了一部：「<a href="https://ani.gamer.com.tw/animeVideo.php?sn=16507">比宇宙更遠的地方</a>」，簡稱為<strong>よりもい</strong>（yorimoi）。</p>
-<p>這部我一直都有聽到不錯的評價，第一印象是屬於那種「一群女孩去完成一件事」的日常系作品，其實我在看之前也沒有深入了解，本來以為就是一群女高中生因為對南極的憧憬，想方設法去南極旅遊的過程吧，畢竟這種類型作品很多是流水帳般將主角們有趣的生活演出來，這樣的日常系作品雖然也是會很有趣，但是就比較會變成打發時間用的，可能看過一陣子就會慢慢淡忘。</p>
-<p>結果，看完よりもい之後我第一個感想就是：「真是太好我有看到這部作品了。」我也實在是非常幸運能在作品出來將近五年後還能在沒被捏他到的情況下看完這部作品。其實這陣子因為小孩去過暑假，所以我多了很多時間可以補看之前沒空看的東西，看了很多不錯的作品，也在推特上紀錄了一些心得，不過よりもい是第一部我特別想寫一篇文章紀錄的，因為他帶給我的不是風景多漂亮、劇情多有趣，而是更深刻的，故事中幾位角色的成長與自我突破。</p>
-<p>以下有劇情，沒看過的話建議迴避，或是可以轉去看看 YouTube，匯雨有一個比較沒劇透的<a href="https://www.youtube.com/watch?v=O8qowhGwjyc">推坑影片</a>。</p>
-]]><![CDATA[<p>防雷保護<br />
-防雷保護<br />
-防雷保護</p>
-<p>雖然劇情主軸是前往南極，不過故事的核心其實是成長，而且每個角色都有一個明確的成長目標，不是什麼不著邊際的東西，所以每當有人有了自我突破，觀眾都能確實的感受到：小決（キマリ、kimari）想要能夠更獨立，不再依賴親友惠；報瀬（しらせ、shirase）則是需要走出母親過世的心理陰影(?)；日向的部分我就先跳過，她的部分來的又急又快，雖然前面早有鋪陳，但是我一直沒放在心上，後來覺得根本是編劇給觀眾的一場襲擊，但是還好有這段，讓這個角色的一切行為變得合理許多；結月則是想要交朋友，但是她其實連怎樣算是朋友也不知道，而在這邊，小決藉由 Line 來形容她心中的朋友這段我也是很喜歡。</p>
-<p>故事的最高潮當然就是從一開始就一心只想去南極的報瀬的部分了，她的母親三年前在南極失蹤（沒找到屍體、不過可以說等於死亡了），因為南極任務一去就是幾個月，所以她本來就已經是和外祖母一起生活邊等媽媽回來，母親失蹤，她的生活也沒什麼變化，結果讓她沒有母親已經過世的實感，所以她一直想去南極確認母親是不是真的不在了，在劇中她也還時不時的寄信給媽媽，最後，他們終於到了內陸的基地，小決他們在基地中找到報瀬媽媽的筆電，報瀬打開電腦，收信軟體跟著啟動和收信，包括了她寄給母親的信，隨著未讀信件的增加，報瀬終於體認到母親過世的事實，大哭了一場。</p>
-<p>其實小時候，我都會覺得什麼婚禮喪禮這些儀式很麻煩，不過長大後，我的想法跟著我的經歷有了變化，我發現儀式這些東西其實是為了人心而存在的，因為人心有慣性，生命中的重要的東西的喪失，人是可以一直逃避假裝沒有發生一樣，所以才會有這些儀式存在的必要，藉由這些儀式的突兀感，讓人真真正正的體認到接下來不一樣了，不論是生命中少了些存在，或是多了重要的人都是，而對於報瀬來說，在那個時候，才真的是她跟媽媽道別的儀式吧。</p>
-<p>故事中還有很多我很喜歡的小細節，像是<strong>キマリ</strong>這個暱稱的由來，然後這個暱稱卻又和她的個性不合；報瀬（しらせ）的發音其實和破冰船的船名白瀨（劇中退役前和現實世界）一樣，而那個昭和基地和白瀨號破冰船其實是日本現在都還在用的，而且兩個都長得和真的一樣，去到日本<a href="https://www.nipr.ac.jp/antarctic/">極地研究所的網站</a>一開始就可以看到基地的空拍；還有像是去到內陸為什麼比較冷雖然沒明說，不過想在那邊建立天文台，應該是海拔高很多位置，日本其實有在富士冰穹建立過一個基地作科學研究，那邊海拔 3810 公尺，距離昭和基地一千公里，氣溫也低上非常多；白瀨號和昭和基地內的郵筒，現在都還有在運作，特別的郵戳也一直都有，還有相關的<a href="https://allabout.co.jp/gm/gc/463441/">報導</a>，好像有一直更新，不確定是不是每年換新圖案，我還有找到去年日本郵局的特別郵戳<a href="https://www.post.japanpost.jp/notification/pressrelease/2021/03_tokyo/1022_01_01.pdf">公告</a>；最後我還查了那幾年的觀測隊員同行者，沒有發現看起來和動畫製作有關係的人，極地研究所應該是提供照片給動畫公司吧。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53088845553/" title="昭和基地 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53088845553_516dcd996d_b.jpg" width="1024" height="576" alt="昭和基地" srcset="" /></a></p>
-<p>其他我還有查到一些有趣的資料，日本的南極觀測船總共有四艘：</p>
-<ul>
-<li>初代：<a href="https://ja.wikipedia.org/wiki/%E5%AE%97%E8%B0%B7_(%E8%88%B9)">宗谷</a> 現在在東京台場的<a href="https://funenokagakukan.or.jp/">船的科學館</a></li>
-<li>2代：<a href="https://ja.wikipedia.org/wiki/%E3%81%B5%E3%81%98_(%E7%A0%95%E6%B0%B7%E8%89%A6)" title="ふじ (砕氷艦)">ふじ</a> 現在在<a href="https://nagoyaaqua.jp/garden-pier/fuji/">名古屋港</a></li>
-<li>3代：<a href="https://ja.wikipedia.org/wiki/%E3%81%97%E3%82%89%E3%81%9B_(%E7%A0%95%E6%B0%B7%E8%89%A6%E3%83%BB%E5%88%9D%E4%BB%A3)" title="しらせ (砕氷艦・初代)">しらせ（初代）</a> 現在在<a href="https://shirase.info/">千葉縣船橋市</a>，旁邊還有 Saporro 的工廠，有 <a href="https://www.sapporobeer.jp/brewery/chiba/kengaku/">combo 行程</a></li>
-<li>4代：<a href="https://ja.wikipedia.org/wiki/%E3%81%97%E3%82%89%E3%81%9B_(%E7%A0%95%E6%B0%B7%E8%89%A6%E3%83%BB2%E4%BB%A3)" title="しらせ (砕氷艦・2代)">しらせ（2代目）</a> 現役</li>
-</ul>
-<p>其實我一開始覺得有點奇怪，為什麼四代目還是叫しらせ而不換名字呢？後來才發現，日本首位的南極探險家就叫做<a href="https://zh.wikipedia.org/wiki/%E7%99%BD%E7%80%A8%E7%9F%97">白瀬矗</a>（Shirase Nobu），所以しらせ這個名字的傳承其實比我一開始想的還要久遠。</p>
-<p>另外一個是日本南極觀測隊確實有人<a href="https://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E7%B4%B3">罹難</a>過，而且遺體是八年後才發現。可以想見那邊的地域是多麼艱險，然後我才想起幾年前去過紐西蘭的南極中心，裡面就有一個設施是可以讓人體驗暴風雪，雖然有提供超厚的防寒服，不過氣溫極低，風一直在吹的情況下，體感溫度還是降的很快的。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/25482185598/" title="International Antarctic Centre by othree, on Flickr"><img src="https://live.staticflickr.com/4644/25482185598_59dec02bcf_b.jpg" width="1024" height="683" alt="International Antarctic Centre" srcset="https://live.staticflickr.com/4644/25482185598_41ae37af4a_k.jpg 2x" /></a></p>
-<p>最後附上一些其他人的文章：</p>
-<ul>
-<li>hinac 的<a href="https://talk.ltn.com.tw/article/breakingnews/2901936">聖地巡禮</a> <a href="https://talk.ltn.com.tw/article/breakingnews/2908856">之二</a></li>
-<li><a href="https://medium.com/allen365/a-place-further-than-the-universe-88f042f36a1b">艾倫蘋果的感想</a></li>
-</ul>
-]]></description>
-<link>https://blog.othree.net/log/2023/08/02/yorimoi/</link>
-<guid>https://blog.othree.net/log/2023/08/02/yorimoi/</guid>
-<category>acg</category>
-<pubDate>Wed, 02 Aug 2023 19:46:42 +0800</pubDate>
 </item>
 
 

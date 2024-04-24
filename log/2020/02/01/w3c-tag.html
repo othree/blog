@@ -1,46 +1,41 @@
 <!DOCTYPE html>
-<html amp="amp">
-  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content=" 去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 W3C TAG(Technical Architecture Group) 的 design-reviews，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 SameSite=Lax by default，還有剛提出的 Partial freezing of the User-Agent string。 W3C 有一份 Consortium Process Document 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
-      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
-    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2020/02/01/w3c-tag/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-
-    <script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
-      {
-        "@context": "http://schema.org",
-        "@type": "BlogPosting",
-        "mainEntityOfPage": "https://blog.othree.net/log/2020/02/01/w3c-tag/",
-        "publisher": {
-          "@type": "Organization",
-          "name": "othree.net",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://blog.othree.net/images/logo-amp-google.png",
-            "width": 600,
-            "height": 60
-          }
-        },
-        "headline": "O3noBLOG",
-        "datePublished": "2020-02-01T23:40:51",
-        "dateModified": "2020-02-01T23:40:51",
-        "author": {
-          "@type": "Person",
-          "name": "othree"
-        },
-        
-        "image": {
-          "@type": "ImageObject",
-            
-          "url": "https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg",
-          "width": 320,
-          "height": 320
-        }
-        
-        }
-      }
-    </script></head>
-  <body>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8"/>
+    <title>W3C TAG : O3noBLOG</title>
+    <meta name="description" content=" 去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 W3C TAG(Technical Architecture Group) 的 design-reviews，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 SameSite=Lax by default，還有剛提出的 Partial freezing of the User-Agent string。 W3C 有一份 Consortium Process Document 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到..."/>
+    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
+    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
+    <link rel="made" href="mailto:othree@gmail.com"/>
+    <link rel="prev" title="DNS CAA record" href="/log/2020/01/27/dns-caa/"/>
+    <link rel="up" title="上一層" href="../"/>
+    <link rel="top" title="首頁" href="/"/>
+    <link rel="canonical" href="https://blog.othree.net/log/2020/02/01/w3c-tag/"/>
+    <link rel="amphtml" href="https://blog.othree.net/log/2020/02/01/w3c-tag/amp/"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="@othree"/>
+    <meta property="og:title" content="W3C TAG"/>
+    <meta property="og:description" content=" 去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 W3C TAG(Technical Architecture Group) 的 design-reviews，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 SameSite=Lax by default，還有剛提出的 Partial freezing of the User-Agent string。 W3C 有一份 Consortium Process Document 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到..."/>
+    <meta property="og:url" content="https://blog.othree.net/log/2020/02/01/w3c-tag/"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg"/>
+    <meta property="og:image:width" content="320"/>
+    <meta property="og:image:height" content="320"/>
+    <meta name="twitter:widgets:csp" content="on"/>
+    <meta property="fb:admins" content="582724207"/>
+  </head>
+  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
     <nav>
       <div class="nav-inner">
+        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
+          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+          <input type="hidden" name="sites" value="blog.othree.net"/>
+        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -52,25 +47,21 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    關於
+                    About
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
+            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
+          </a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">
-            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
-              <g>
-                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
-              </g>
-            </svg>
-          </a>
+          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
         </h1>
       </header>
-      <div class="pure-g">
+      <div class="pure-g layout">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -84,61 +75,142 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article id="entry-w3c-tag">
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-w3c-tag">
             <header>
-              <time datetime="2020-02-01T23:40:51" id="date-2020-02-01">
+              <time itemprop="datePublished dateModified" datetime="2020-02-01T23:40:51" id="date-2020-02-01">
                 <span class="mon">02月</span>
                 <span class="day">01日</span>
               </time>
-              <h3>W3C TAG</h3>
+              <h3 itemprop="name headline">
+                <a itemprop="mainEntityOfPage" href="/log/2020/02/01/w3c-tag/">W3C TAG</a>
+              </h3>
             </header>
-            <section>
-              <p>
-                <a class="thumbnail" href="https://www.flickr.com/photos/othree/49471463826/" title="3874462 by othree, on Flickr">
-                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg" width="320" height="320" alt="" srcset="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg 320w"/>
-                </a>
-              </p>
-              <p>去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 <a href="https://www.w3.org/2001/tag/">W3C TAG(Technical Architecture Group)</a> 的 <a href="https://github.com/w3ctag/design-reviews">design-reviews</a>，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 <a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，還有剛提出的 <a href="https://github.com/w3ctag/design-reviews/issues/467">Partial freezing of the User-Agent string</a>。</p>
-              <p>W3C 有一份 <a href="https://www.w3.org/2019/Process-20190301/">Consortium Process Document</a> 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到 W3C Rec（推薦標準），除此之外，這份文件還有制訂了兩個獨立組別的構成方法，這兩個組分別為：<a href="https://www.w3.org/2002/ab/">Advisory Board</a>（顧問團） 和 Technical Architecture Group（TAG、技術架構組），兩者都有負責解決跨技術報告（aka 標準）之間的問題，前者是負責非技術的問題，後者則是負責技術問題。W3C TAG 的成員結構現在是：</p>
-              <ul>
-                <li>Tim Bernes Lee 為終生成員</li>
-                <li>W3C 總監</li>
-                <li>總監可以提名三位成員</li>
-                <li>另外有六名成員則是由 Advisory Committee（諮詢委員會，其實就是所有 W3C 會員代表人）選出</li>
-              </ul>
-              <p>其實看他們的審查意見都覺得真的很厲害，不過這些成員的名字其實曝光都很少。然後我一直很好奇，為什麼幾乎所有的技術報告都來這邊提審查，應該是有在技術報告開發流程上寫到才會這麼多，結果那份 Process 文件找來找去就是沒找到，花了幾個小時最後終於在其中一分外連的「如何建立一個工作/興趣小組」的文件中找到，其實找 TAG 做審查是 <a href="https://www.w3.org/Guide/process/charter.html#horizontal-review">Horizontal Review</a>（橫向審查） 的一部分，Horizontal Review 指的是技術報告在發展的過程中，找各個相關/相依的小組一起來做審查，而這些組別間的關係其實是寫在小組各自的章程裡面的，該份文件還有列出一些比較關鍵的組別：</p>
-              <ul>
-                <li><a href="https://www.w3.org/WAI/APA/">WAI Accessible Platform Architectures (APA) Working Group</a> 親和力</li>
-                <li><a href="https://www.w3.org/International/review-request">Internationalization Working Group</a> 多國語言支援</li>
-                <li><a href="https://www.w3.org/Security/wiki/IG">Security Interest Group</a> 安全性</li>
-                <li><a href="https://www.w3.org/Privacy/">Privacy Interest Group</a> 隱私</li>
-                <li><a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> 技術架構</li>
-              </ul>
-              <p>這五個確實是非常跨技術的主題，尤其是 TAG，技術的議題都跑不掉，我也循線去其它四個小組看了一下，發現真的也有相關的審查請求，不過不同小組申請審查的管道不一樣，有的還是用 W3C 傳統的 mailing-list，TAG 已經用 GitHub 算是非常先進而且方便訂閱了，從開發者的角度如果要關心網路標準的新發展可以以這邊為主，明顯比較缺的就是 CSS 的新東西不會發到這邊，我自己是還有訂 CSS Working Group 的 issue list。</p>
-              <p>最後就是現在台灣的 W3C 會員似乎只剩下 <a href="http://www.dpublishing.org.tw/">台灣數位出版聯盟</a>，日本現在倒是很多組織有加入了，像是不知道為什麼加入的 DWANGO，看起來也沒參加 Chinese Interest Group 的 <a href="https://w3c.github.io/danmaku/api.zh.html">Danmaku</a>。</p>
-            </section>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/49471463826/" title="3874462 by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg" width="320" height="320" alt="" srcset="https://live.staticflickr.com/65535/49471463826_8119bbecd7_n.jpg 320w"><meta itemprop="width" content="320"/><meta itemprop="height" content="320"/></img></a></p>
+<p>去年我在規劃 COSCUP 的 Open Web Technologies 的時候，有準備了一個備用的演講，題目是關於到哪裡可以追蹤到新的網路標準發展，其中的一個可以關注的資源，就是 <a href="https://www.w3.org/2001/tag/">W3C TAG(Technical Architecture Group)</a> 的 <a href="https://github.com/w3ctag/design-reviews">design-reviews</a>，我一開始其實是誤打誤撞發現這個 issue list 的，有點像是發現寶庫一樣，幾乎所有的新標準都會到這邊提出審查請求，而除了標准之外，Web 相關的比較重要的修改提案也會發到這邊來，像是最近要進行的 <a href="https://github.com/w3ctag/design-reviews/issues/373">SameSite=Lax by default</a>，還有剛提出的 <a href="https://github.com/w3ctag/design-reviews/issues/467">Partial freezing of the User-Agent string</a>。</p>
+<p>W3C 有一份 <a href="https://www.w3.org/2019/Process-20190301/">Consortium Process Document</a> 的文件（簡稱為 Process），內容包括了 W3C 的一些基本構成，規範如何建立 Working/Interest Group 以及這些小組如何發展技術報告（Technical Report），這邊說的技術報告包括了草稿到 W3C Rec（推薦標準），除此之外，這份文件還有制訂了兩個獨立組別的構成方法，這兩個組分別為：<a href="https://www.w3.org/2002/ab/">Advisory Board</a>（顧問團） 和 Technical Architecture Group（TAG、技術架構組），兩者都有負責解決跨技術報告（aka 標準）之間的問題，前者是負責非技術的問題，後者則是負責技術問題。W3C TAG 的成員結構現在是：</p>
+<ul>
+<li>Tim Bernes Lee 為終生成員</li>
+<li>W3C 總監</li>
+<li>總監可以提名三位成員</li>
+<li>另外有六名成員則是由 Advisory Committee（諮詢委員會，其實就是所有 W3C 會員代表人）選出</li>
+</ul>
+<p>其實看他們的審查意見都覺得真的很厲害，不過這些成員的名字其實曝光都很少。然後我一直很好奇，為什麼幾乎所有的技術報告都來這邊提審查，應該是有在技術報告開發流程上寫到才會這麼多，結果那份 Process 文件找來找去就是沒找到，花了幾個小時最後終於在其中一分外連的「如何建立一個工作/興趣小組」的文件中找到，其實找 TAG 做審查是 <a href="https://www.w3.org/Guide/process/charter.html#horizontal-review">Horizontal Review</a>（橫向審查） 的一部分，Horizontal Review 指的是技術報告在發展的過程中，找各個相關/相依的小組一起來做審查，而這些組別間的關係其實是寫在小組各自的章程裡面的，該份文件還有列出一些比較關鍵的組別：</p>
+<ul>
+<li><a href="https://www.w3.org/WAI/APA/">WAI Accessible Platform Architectures (APA) Working Group</a> 親和力</li>
+<li><a href="https://www.w3.org/International/review-request">Internationalization Working Group</a> 多國語言支援</li>
+<li><a href="https://www.w3.org/Security/wiki/IG">Security Interest Group</a> 安全性</li>
+<li><a href="https://www.w3.org/Privacy/">Privacy Interest Group</a> 隱私</li>
+<li><a href="https://www.w3.org/2001/tag/">Technical Architecture Group</a> 技術架構</li>
+</ul>
+<p>這五個確實是非常跨技術的主題，尤其是 TAG，技術的議題都跑不掉，我也循線去其它四個小組看了一下，發現真的也有相關的審查請求，不過不同小組申請審查的管道不一樣，有的還是用 W3C 傳統的 mailing-list，TAG 已經用 GitHub 算是非常先進而且方便訂閱了，從開發者的角度如果要關心網路標準的新發展可以以這邊為主，明顯比較缺的就是 CSS 的新東西不會發到這邊，我自己是還有訂 CSS Working Group 的 issue list。</p>
+<p>最後就是現在台灣的 W3C 會員似乎只剩下 <a href="http://www.dpublishing.org.tw/">台灣數位出版聯盟</a>，日本現在倒是很多組織有加入了，像是不知道為什麼加入的 DWANGO，看起來也沒參加 Chinese Interest Group 的 <a href="https://w3c.github.io/danmaku/api.zh.html">Danmaku</a>。</p>
+</section>
             <footer>
-      文章分類：
-      <a href="/log/web/" rel="tag">Web</a><a class="canonical" href="/log/2020/02/01/w3c-tag/" title="「W3C TAG」的原始位置">原始位置</a></footer>
+              <a href="/log/web/" rel="tag">Web</a>
+            </footer>
           </article>
           <hr/>
         </main>
+        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
+          <hr/>
+          <h2>其它資訊</h2>
+          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
+            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
+            <input type="hidden" name="sites" value="blog.othree.net"/>
+          </form>
+          <hr/>
+          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>W3C TAG</strong>發表於 2020-02-01，文章類別為
+			  <a href="/log/web/">Web</a>。
+                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2020/01/27/dns-caa/"><span class="prefix">上一篇：</span>DNS CAA record<time>2020-01-27</time></a><a class="next pn" href="/log/2020/02/21/scroll-to-text/"><span class="prefix">下一篇：</span>Scroll to Text<time>2020-02-21</time></a></p></div>
+          <h3>關於本網誌</h3>
+          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
+          </address>
+          <h3>近期文章</h3>
+          <ul>
+            <li>
+              <a href="/log/2024/04/17/json-type-definition/" title="2024-04-17">JSON Type Definition</a>
+            </li>
+            <li>
+              <a href="/log/2024/04/03/the-magic-of-dialog/" title="2024-04-03">Dialog 的魔法</a>
+            </li>
+            <li>
+              <a href="/log/2024/03/28/yamani/" title="2024-03-28">やまに（yamani）旅館</a>
+            </li>
+            <li>
+              <a href="/log/2024/03/24/ui-event-order/" title="2024-03-24">UI Event Order</a>
+            </li>
+            <li>
+              <a href="/log/2024/03/08/akira-toriyama/" title="2024-03-08">鳥山明過世</a>
+            </li>
+            <li>
+              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
+            </li>
+            <li>
+              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
+            </li>
+            <li>
+              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
+            </li>
+            <li>
+              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
+            </li>
+            <li>
+              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
+            </li>
+          </ul>
+          <h3>分類彙整</h3>
+          <ul>
+            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
+            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
+            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
+            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(110)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(136)</span></li>
+            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
+            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(150)</span></li>
+            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
+            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
+            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
+            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
+            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
+          </ul>
+          <h3>訂閱本網誌</h3>
+          <ul id="feeds">
+            <li>
+              <a href="https://feeds.feedburner.com/othree">
+                    FeedBurner
+                  </a>
+            </li>
+          </ul>
+          <h3>貼紙</h3>
+          <p id="stickers">
+            <a href="https://sites.google.com/view/happy-busy/">
+              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
+            </a>
+            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
+              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
+            </a>
+          </p>
+        </aside>
       </div>
+      <footer class="pure-g">
+        <h2 class="pure-u-1">使用技術、規範、服務</h2>
+        <p class="pure-u-1">
+          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
+          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
+            <span itemprop="name">othree.net</span>
+            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
+              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
+              <meta itemprop="width" content="600"/>
+              <meta itemprop="height" content="60"/>
+            </span>
+          </a>
+        </p>
+      </footer>
     </div>
-    <amp-analytics type="googleanalytics" id="analytics1">
-      <script type="application/json">
-        {
-          "vars": {
-            "account": "UA-77906-1"
-          },
-          "triggers": {
-            "trackPageview": {
-              "on": "visible",
-              "request": "pageview"
-            }
-          }
-        }
-        </script>
-    </amp-analytics>
+    <script async="async" src="/scripts/all.js"/>
+    <script async="async" src="/scripts/prism.js"/>
   </body>
 </html>

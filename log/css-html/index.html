@@ -71,6 +71,24 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
+          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-the-magic-of-dialog">
+            <header>
+              <time itemprop="datePublished dateModified" datetime="2024-04-03T11:49:41" id="date-2024-04-03">
+                <span class="mon">04月</span>
+                <span class="day">03日</span>
+              </time>
+              <h3 itemprop="name headline">
+                <a href="/log/2024/04/03/the-magic-of-dialog/">Dialog 的魔法</a>
+              </h3>
+            </header>
+            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="235"/></img></a></p>
+<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
+<em class="extended"><a href="/log/2024/04/03/the-magic-of-dialog/">閱讀「Dialog 的魔法」全文</a></em></section>
+            <footer>
+              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
+            </footer>
+          </article>
+          <hr/>
           <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-wbr-and-nobr">
             <header>
               <time itemprop="datePublished dateModified" datetime="2023-01-13T22:52:00" id="date-2023-01-13">
@@ -472,57 +490,6 @@ wbr::before { all: unset !important; content: "\200B" !important; }
             </footer>
           </article>
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-form-practice">
-            <header>
-              <time itemprop="datePublished dateModified" datetime="2017-06-13T22:42:42" id="date-2017-06-13">
-                <span class="mon">06月</span>
-                <span class="day">13日</span>
-              </time>
-              <h3 itemprop="name headline">
-                <a href="/log/2017/06/13/form-practice/">表單 Practice</a>
-              </h3>
-            </header>
-            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/34947056856/" title="Form Validation by othree, on Flickr"><img itemprop="url image" src="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg" width="500" height="270" alt="Form Validation" srcset="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg 500w"><meta itemprop="width" content="500"/><meta itemprop="height" content="270"/></img></a></p>
-<p>這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。</p>
-<p>首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation">HTML5 的表單檢查</a>，會這樣決定的主因是：</p>
-<ol>
-<li>JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的；</li>
-<li>幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗；</li>
-<li>支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server side 檢查對付他們就好，使用體驗稍微差一點也還可以接受，這也是種 graceful degradation（優雅降級）；</li>
-<li>HTML5 的表單檢查可以說是 web developer 當年對抗網路標準發展遲緩一大勝利指標，當然應該要好好用一下。</li>
-</ol>
-<p>而用 HTML5 表單檢查還有個意外的好處是基本的錯誤訊息自動有翻譯（看使用者瀏覽器的語言），另外如果有自製的輸入元件，也有 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation#Validating_forms_using_JavaScript">API</a> 可以串接，當然訊息就要自己提供就是了。</p>
-<p>用 HTML5 表單檢查當然也不是完全沒有問題，例如目前 email 欄位還沒有瀏覽器支援 <a href="https://github.com/w3c/html/issues/538">IDN domain 的信箱</a>；另外就是上傳檔案的 file input 的值不能從 server 端直接給，這限制是因為會有安全性問題，而這限制所衍生的問題是：表單送到 server side 檢查後發現有錯誤時（例如 captcha 錯），使用者就一定要重新選取上傳的檔案，對於使用者體驗算是個扣分（而且上傳檔案大的話很花時間，然後另外還有個上傳檔案大小限制、就又是另外一個議題了），要解決這問題一般來說就是靠 JavaScript 做些加強，例如針對 captcha 可以先用 ajax call 檢查 captcha ，正確的話就換個 session token 之類的回來，不過即使這樣，還是逃不了完整的 server side 表單檢查，所以也還要處理 ajax submit 後的表單錯誤訊息顯示。</p>
-<p>不管是 server side 檢查後產生的錯誤訊息，還是 ajax call 之前檢查產生的錯誤訊息，理所當然都會放在欄位附近，不過還要讓訊息和欄位之間建立關聯，才好進一步做一些處理，例如使用者有更新欄位值之後會把錯誤訊息隱藏之類的，或許很多人會用父層 DOM 節點加上特殊的 class 包起來找，不過我比較偏好用 <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute"><code>aria-describedby</code></a>，大概會看起像是：</p>
-<pre><code class="language-html">&lt;input id="mail" name="mail" type="email" aria-describedby="mail-field-info" /&gt;
-&lt;span id="mail-field-info"&gt;Required field!&lt;/span&gt;
-</code></pre>
-<p>這樣只要找的到 <code>#mail</code> 欄位，就可以透過他的 <code>aria-describedby</code> 屬性找到該欄位的相關訊息的 DOM 節點，另外值得注意的是，aria-describedby 值的格式是 <a href="https://www.w3.org/TR/wai-aria/states_and_properties#valuetype_idref_list">IDRefList</a>，不是單一個 ID，而是一個用空白切分的 ID 指標們，所以如果有這種情形，還可以在錯誤訊息的那個 DOM 節點加上  <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_alert_role"><code>role="alert"</code></a> 給它用來辨識，其實就算只有一個 ID 也還是可以加上 role 屬性啦。如果真的需要用透過父層 DOM 節點來找的話，之前研究的結論是可以在預期的父層標籤用 <code>role="section"</code>來方便定位，用 jQuery 大概會像是：</p>
-<pre><code class="language-javascript">$fieldSection = $field.closest('[role="section"]');
-</code></pre>
-<p>這個標籤下應該會包括欄位的標籤（label）、欄位的 input element 以及相關的資訊（說明、錯誤訊息）等。</p>
-<p>另外還有一點，就是要用 ajax 上傳檔案的話，需要有支援 <a href="http://caniuse.com/#feat=xhr2">FormData</a> 的瀏覽器，並且如果用 jQuery 送 FormData 的話記得要加點設定：</p>
-<pre><code class="language-javaascript">contentType: false,
-processData: false
-</code></pre>
-<p>還有就是 ajax 送表單的目標 URL，我目前比較喜歡的作法是讀 <code>&lt;form&gt;</code> 的 <code>action</code> 屬性，也就是和瀏覽器自己送的 URL 一樣，然後透過 HTTP content negotiation 機制來決定回傳的格式，比較正確的作法是看 <code>Accept</code>，以 jQuery 來說，如果要 server 回 JSON 格式的話，可以加上：</p>
-<pre><code class="language-javascript">dataType: 'json'
-</code></pre>
-<p>這樣送出的 request 就會帶上正確的 <code>Accept</code> header，向 server 端要求 <code>application/json</code> ，不過 <code>Accept</code> 的值解析起來比較麻煩些，其實是可以送出說 client 端可以接受多種格式，然後還加上個優先度的，也因此也有很多人是看 <code>X-Requested-With</code>，一般 library 如果是透過 XHR 發的 request 都會有這個 header；還有就是送出的資料格式（Content-Type），即使是 ajax call，我目前也都不用 JSON 了，還是用 <code>application/x-www-form-urlencoded</code> 為主，另外要上傳檔案的話當然一定要用 <code>multipart/form-data</code>，主要是因為：</p>
-<ol>
-<li>送 JSON 的話就不會是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Simple_requests">simple request</a> 了，有些時候會比較麻煩，例如 Cross Origin 時會需要發 preflight，然後就可能遇到 AWS 以前不支援 preflight request 的 bug；</li>
-<li>用這幾個老的 Content-Type 支援度還是比較高，對於 server 端實做和 client 端實做其實都相對友善一點，例如 jQuery 預設就依然是 form-urlencoded，没特别需求還是用標準一點的格式，特殊需求是例如 GraphQL，不過一般表單發送應該不會走 GraphQL 吧。</li>
-</ol>
-<p>其實 JSON 雖然已經有 RFC 規範了，不過在 Web 標準的世界還沒相當深入內化，不知道以後有沒有機會更加的內化整合進去。</p>
-<p>前面有提到 ajax call 送出的目標 URL 我會偏好從，<code>&lt;form&gt;</code> 裡面讀，不過或許有的情境會讓 ajax call 必須要自己用不一樣的 API URL，這時候我建議還是把 API URL 寫在 <code>&lt;form&gt;</code> 的屬性裡面，這樣可以讓 JavaScript 的邏輯比較乾淨，也不用作什麼 mapping 或是常數來儲存 API 的 URL，維護修改時也不用兩邊檢查，屬性名稱可以用例如：<code>data-action</code> 之類的屬性，<code>data-*</code>屬性正好適合來做這些事情，不但有 DOM API 支援，jQuery 也可以用 <code>.data()</code> method 來讀取，命名上，如果覺得有個標準參考比較好，可以看看 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 的設計，雖然比較長一點，它用的是：<a href="https://github.com/rails/jquery-ujs/blob/master/src/rails.js#L117"><code>data-ujs:submit-button-formaction</code></a>，我是覺得有些不正確啦，畢竟要送出表單不一定是點擊 submit button。</p>
-<p>其實假設送出表單的動作都是滑鼠點擊 submit button 這是個親和力問題，如果只把 ajax call 送的函式 bind 在 submit button 的 click 事件上，這其實是不太好的，因為其實瀏覽器預設的行為是可以在很多地方用鍵盤送出表單，例如在 text input 上按下 Enter 鍵，或是在 submit button 上按下空白鍵之類的，所以針對表單還是要去 bind form submit 事件才是正解，至於 jQuery-ujs，其實也是這樣做的，它是用 delegate event 的形式去監聽傳遞到 document 上的 submit 事件，然後才去做後續的處理，只是命名上讓人覺得不太正確。</p>
-<p>最後一項，前面說不用 JavaScript 做表單檢查（不看自訂輸入元件的話），其實有一個例外，就是上傳檔案的大小檢查，因為沒做對使用體驗的影響比較大，然後就是要還要記得針對 ajax call 送表單加上 <a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">HTTP 413</a> Status Code 的錯誤訊息處理。</p>
-</section>
-            <footer>
-              <a href="/log/css-html/" rel="tag">CSS &amp; HTML</a>
-            </footer>
-          </article>
-          <hr/>
           <a id="prev-link" href="/log/css-html/all/" class="center">此類別所有文章</a>
         </main>
         <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
@@ -544,11 +511,11 @@ processData: false
             <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
             <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
             <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(109)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(135)</span></li>
+            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(110)</span></li>
+            <li><a href="/log/diary/">日記</a> <span>(136)</span></li>
             <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
             <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(149)</span></li>
+            <li><a href="/log/script/">SCRIPT</a> <span>(150)</span></li>
             <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
             <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
             <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>

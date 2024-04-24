@@ -9,6 +9,103 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="001006" baseName="the-magic-of-dialog">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-03</b:date>
+				<b:time>11:49:41</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Dialog 的魔法</b:title>
+			<b:content>
+				<b:summary> HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 &lt;dialog&gt;。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /></a></p>
+<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
+</b:mainContent>
+				<b:extendContent><p><code>&lt;dialog&gt;</code> 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 <code>confirm</code> 和 <code>alert</code> 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 <a href="https://getbootstrap.com/docs/5.0/components/modal/">modal</a> 了吧。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /></a></p>
+<p>這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，<code>&lt;dialog&gt;</code> 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 <code>&lt;dialog&gt;</code>，結果一研究下去，發現超多的細節的。</p>
+<p>在回答問題之前，先來介紹一下 <code>&lt;dialog&gt;</code> 吧，首先 <code>&lt;dialog&gt;</code> 預設樣式是 <code>display: none;</code> 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 <code>open</code> 這個專屬的新 attribute：</p>
+<pre><code class="language-html">&lt;dialog open&gt;
+   This is a dialog
+&lt;/dialog&gt;
+</code></pre>
+<p>這樣就會讓 <code>&lt;dialog&gt;</code> 出現在畫面上，表現就如同一般的 <code>&lt;div&gt;</code> 標籤，第二種方法則是透過 JavaScrpt：</p>
+<pre><code class="language-javascript">dialogNode.show()
+</code></pre>
+<p>這樣的效果和 <code>open</code> 一樣，然後除了這兩個方法之外，還有一個最特別的：</p>
+<pre><code class="language-javascript">dialogeNode.showModal()
+</code></pre>
+<p><code>showModal</code> 會讓這個 <code>&lt;dialog&gt;</code> 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 <code>&lt;dialog&gt;</code> 以外的地方都會無法互動。</p>
+<p>在這邊，一下子三件以前辦不到的事情都出現了：</p>
+<ul>
+<li>保證在網頁的最上層</li>
+<li>只有一層標籤就水平垂直置中</li>
+<li>其他地方都無法互動</li>
+</ul>
+<p>那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 <code>&lt;dialog&gt;</code> 一定在最上層呢？那就是一個新規範的東西了，叫做 <a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw">top Layer</a>，標準則是放在 <a href="https://drafts.csswg.org/css-position-4/#top-layer">CSS Positioned Layout Module Level 4</a>，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 <a href="https://web.dev/learn/css/z-index?hl=zh-tw">stacking context</a>，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 <code>&lt;dialog&gt;</code> 之外，文件上是還有寫到 fullscreen API 和還在初期的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover</a>，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /></a></p>
+<p>根據前一點，可以知道其實 <code>&lt;dialog&gt;</code> 一樣是普通 DOM 節點，只是在用 <code>showModal()</code> 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，<code>&lt;dialog&gt;</code> 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+</code></pre>
+<p>其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「<a href="https://www.w3.org/TR/css-position-3/#abspos-old">Old Absolute Positioning Layout Model</a>」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 <code>auto</code>）：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /></a></p>
+<p>以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：</p>
+<blockquote>
+<p>margins split positive free space</p>
+</blockquote>
+<p>剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：</p>
+<blockquote>
+<p>auto margins → zero<br />
+solve for auto</p>
+</blockquote>
+<p>意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 <code>marign: auto</code> 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。</p>
+<p>回來看 <code>&lt;dialog&gt;</code>，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 <code>auto</code> 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：<code>fit-content</code>，完整的樣式應該是：</p>
+<pre><code class="language-css">dialog {
+  position: fixed;
+  inset: 0; /* shorthand of top, right, bottom, left */
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+}
+</code></pre>
+<p>結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。</p>
+<p>了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 <code>&lt;dialog&gt;</code> 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。</p>
+<p>終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 <code>&lt;dialog&gt;</code> 的特異功能，它有一個隱藏的 is modal flag，呼叫 <code>showModal</code> 時，除了會把該 flag 設為 <code>true</code> 之外，還可以讓文件中其它部分變為和有 <code>inert</code> 時一樣，什麼是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"><code>inert</code></a> 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 <code>inert</code> 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。</p>
+<p>然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，<strong>modal</strong> 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 <code>confirm</code> 和 <code>alert</code> 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 <code>returnValue</code> 這個屬性可以用。</p>
+<p>其實 <a href="https://issues.chromium.org/issues/40251038">Chrome</a> 早在 2014 年就支援 <code>&lt;dialog&gt;</code> 了，然後還提供了個 <a href="https://github.com/GoogleChrome/dialog-polyfill">polyfill</a>（當然無法解決 top layer 的問題），不過 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640">Firefox</a> 和 <a href="https://bugs.webkit.org/show_bug.cgi?id=84635">Safari</a> 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，<code>&lt;dialog&gt;</code> 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 <code>&lt;dialog&gt;</code> 還有很多細節，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"><code>::backdrop</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"><code>:modal</code></a>、<code>formmethod=&quot;dialog&quot;</code>、<code>returnValue</code>、怎麼用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"><code>cancel</code> 事件</a>和 <kbd>ESC</kbd> 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的<a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr">範例</a>，有興趣的可以去玩看看。</p>
+<p>最後，如果和我一樣是寫 React 要用 modal 模式的 <code>&lt;dialog&gt;</code> 的話，就一定要用到 <code>useEffect</code>，不能只操作 <code>open</code> 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 <a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts">use-html-dialog</a> ，也可以直接參考它的原始碼，關鍵的部分：</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  if (openModal) {
+    ref.current?.showModal();
+  } else {
+    ref.current?.close();
+  }
+}, [openModal]);
+</code></pre>
+<p>其他參考資料：</p>
+<ul>
+<li><a href="https://webkit.org/blog/12209/introducing-the-dialog-element/">Introducing the Dialog Element</a></li>
+<li><a href="https://intersection.tw/6e9b2104eac0">Modal 模式是大多數設計師不甚瞭解的 UX 概念</a></li>
+<li><a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0">Modal？Dialog？你真的知道他們是什麼嗎？</a></li>
+</ul>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="000986" baseName="wbr-and-nobr">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -448,62 +545,6 @@ wbr::before { all: unset !important; content: &quot;\200B&quot; !important; }
 <li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
 </ol>
 <p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000901" baseName="form-practice">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-06-13</b:date>
-				<b:time>22:42:42</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>表單 Practice</b:title>
-			<b:content>
-				<b:summary> 這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。 首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 HTML5 的表單檢查，會這樣決定的主因是： JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的； 幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗； 支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/34947056856/" title="Form Validation by othree, on Flickr"><img src="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg" width="500" height="270" alt="Form Validation" srcset="https://farm5.staticflickr.com/4274/34947056856_e1ae234f6c_b.jpg 500w" /></a></p>
-<p>這邊是我最近對於表單的一些作法，因為內化還不夠，每次都會漏掉一些，所以花了些時間整理整理，適合的情境不是 single page application 就是了，比較偏傳統形式網頁的表單，然後可能也包括不少大家早就知道(?)的細節就是了。</p>
-<p>首先，我現在偏好不用 JavaScript 做表單檢查，而是先做好最基本的 server side 檢查，然後加上 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation">HTML5 的表單檢查</a>，會這樣決定的主因是：</p>
-<ol>
-<li>JavaScript 的表單檢查 library 用起來都不太順手，而且不想花時間處理串接，且能少點 library 總是好的；</li>
-<li>幾個常用的 type，像是 email, url 比較不需要擔心檢查的 pattern 有不周全的地方，我想很多人都有上網搜尋過這些欄位的 regular expression pettern 的經驗；</li>
-<li>支援度已經不是大問題了，事實上我的工作上還需要支援 IE 10, 9 之類的，其實這些非 modern browser 的量都已經非常少了，所以就靠個 server side 檢查對付他們就好，使用體驗稍微差一點也還可以接受，這也是種 graceful degradation（優雅降級）；</li>
-<li>HTML5 的表單檢查可以說是 web developer 當年對抗網路標準發展遲緩一大勝利指標，當然應該要好好用一下。</li>
-</ol>
-<p>而用 HTML5 表單檢查還有個意外的好處是基本的錯誤訊息自動有翻譯（看使用者瀏覽器的語言），另外如果有自製的輸入元件，也有 <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation#Validating_forms_using_JavaScript">API</a> 可以串接，當然訊息就要自己提供就是了。</p>
-<p>用 HTML5 表單檢查當然也不是完全沒有問題，例如目前 email 欄位還沒有瀏覽器支援 <a href="https://github.com/w3c/html/issues/538">IDN domain 的信箱</a>；另外就是上傳檔案的 file input 的值不能從 server 端直接給，這限制是因為會有安全性問題，而這限制所衍生的問題是：表單送到 server side 檢查後發現有錯誤時（例如 captcha 錯），使用者就一定要重新選取上傳的檔案，對於使用者體驗算是個扣分（而且上傳檔案大的話很花時間，然後另外還有個上傳檔案大小限制、就又是另外一個議題了），要解決這問題一般來說就是靠 JavaScript 做些加強，例如針對 captcha 可以先用 ajax call 檢查 captcha ，正確的話就換個 session token 之類的回來，不過即使這樣，還是逃不了完整的 server side 表單檢查，所以也還要處理 ajax submit 後的表單錯誤訊息顯示。</p>
-<p>不管是 server side 檢查後產生的錯誤訊息，還是 ajax call 之前檢查產生的錯誤訊息，理所當然都會放在欄位附近，不過還要讓訊息和欄位之間建立關聯，才好進一步做一些處理，例如使用者有更新欄位值之後會把錯誤訊息隱藏之類的，或許很多人會用父層 DOM 節點加上特殊的 class 包起來找，不過我比較偏好用 <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute"><code>aria-describedby</code></a>，大概會看起像是：</p>
-<pre><code class="language-html">&lt;input id=&quot;mail&quot; name=&quot;mail&quot; type=&quot;email&quot; aria-describedby=&quot;mail-field-info&quot; /&gt;
-&lt;span id=&quot;mail-field-info&quot;&gt;Required field!&lt;/span&gt;
-</code></pre>
-<p>這樣只要找的到 <code>#mail</code> 欄位，就可以透過他的 <code>aria-describedby</code> 屬性找到該欄位的相關訊息的 DOM 節點，另外值得注意的是，aria-describedby 值的格式是 <a href="https://www.w3.org/TR/wai-aria/states_and_properties#valuetype_idref_list">IDRefList</a>，不是單一個 ID，而是一個用空白切分的 ID 指標們，所以如果有這種情形，還可以在錯誤訊息的那個 DOM 節點加上  <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_alert_role"><code>role=&quot;alert&quot;</code></a> 給它用來辨識，其實就算只有一個 ID 也還是可以加上 role 屬性啦。如果真的需要用透過父層 DOM 節點來找的話，之前研究的結論是可以在預期的父層標籤用 <code>role=&quot;section&quot;</code>來方便定位，用 jQuery 大概會像是：</p>
-<pre><code class="language-javascript">$fieldSection = $field.closest('[role=&quot;section&quot;]');
-</code></pre>
-<p>這個標籤下應該會包括欄位的標籤（label）、欄位的 input element 以及相關的資訊（說明、錯誤訊息）等。</p>
-<p>另外還有一點，就是要用 ajax 上傳檔案的話，需要有支援 <a href="http://caniuse.com/#feat=xhr2">FormData</a> 的瀏覽器，並且如果用 jQuery 送 FormData 的話記得要加點設定：</p>
-<pre><code class="language-javaascript">contentType: false,
-processData: false
-</code></pre>
-<p>還有就是 ajax 送表單的目標 URL，我目前比較喜歡的作法是讀 <code>&lt;form&gt;</code> 的 <code>action</code> 屬性，也就是和瀏覽器自己送的 URL 一樣，然後透過 HTTP content negotiation 機制來決定回傳的格式，比較正確的作法是看 <code>Accept</code>，以 jQuery 來說，如果要 server 回 JSON 格式的話，可以加上：</p>
-<pre><code class="language-javascript">dataType: 'json'
-</code></pre>
-<p>這樣送出的 request 就會帶上正確的 <code>Accept</code> header，向 server 端要求 <code>application/json</code> ，不過 <code>Accept</code> 的值解析起來比較麻煩些，其實是可以送出說 client 端可以接受多種格式，然後還加上個優先度的，也因此也有很多人是看 <code>X-Requested-With</code>，一般 library 如果是透過 XHR 發的 request 都會有這個 header；還有就是送出的資料格式（Content-Type），即使是 ajax call，我目前也都不用 JSON 了，還是用 <code>application/x-www-form-urlencoded</code> 為主，另外要上傳檔案的話當然一定要用 <code>multipart/form-data</code>，主要是因為：</p>
-<ol>
-<li>送 JSON 的話就不會是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Simple_requests">simple request</a> 了，有些時候會比較麻煩，例如 Cross Origin 時會需要發 preflight，然後就可能遇到 AWS 以前不支援 preflight request 的 bug；</li>
-<li>用這幾個老的 Content-Type 支援度還是比較高，對於 server 端實做和 client 端實做其實都相對友善一點，例如 jQuery 預設就依然是 form-urlencoded，没特别需求還是用標準一點的格式，特殊需求是例如 GraphQL，不過一般表單發送應該不會走 GraphQL 吧。</li>
-</ol>
-<p>其實 JSON 雖然已經有 RFC 規範了，不過在 Web 標準的世界還沒相當深入內化，不知道以後有沒有機會更加的內化整合進去。</p>
-<p>前面有提到 ajax call 送出的目標 URL 我會偏好從，<code>&lt;form&gt;</code> 裡面讀，不過或許有的情境會讓 ajax call 必須要自己用不一樣的 API URL，這時候我建議還是把 API URL 寫在 <code>&lt;form&gt;</code> 的屬性裡面，這樣可以讓 JavaScript 的邏輯比較乾淨，也不用作什麼 mapping 或是常數來儲存 API 的 URL，維護修改時也不用兩邊檢查，屬性名稱可以用例如：<code>data-action</code> 之類的屬性，<code>data-*</code>屬性正好適合來做這些事情，不但有 DOM API 支援，jQuery 也可以用 <code>.data()</code> method 來讀取，命名上，如果覺得有個標準參考比較好，可以看看 <a href="https://github.com/rails/jquery-ujs">jQuery-ujs</a> 的設計，雖然比較長一點，它用的是：<a href="https://github.com/rails/jquery-ujs/blob/master/src/rails.js#L117"><code>data-ujs:submit-button-formaction</code></a>，我是覺得有些不正確啦，畢竟要送出表單不一定是點擊 submit button。</p>
-<p>其實假設送出表單的動作都是滑鼠點擊 submit button 這是個親和力問題，如果只把 ajax call 送的函式 bind 在 submit button 的 click 事件上，這其實是不太好的，因為其實瀏覽器預設的行為是可以在很多地方用鍵盤送出表單，例如在 text input 上按下 Enter 鍵，或是在 submit button 上按下空白鍵之類的，所以針對表單還是要去 bind form submit 事件才是正解，至於 jQuery-ujs，其實也是這樣做的，它是用 delegate event 的形式去監聽傳遞到 document 上的 submit 事件，然後才去做後續的處理，只是命名上讓人覺得不太正確。</p>
-<p>最後一項，前面說不用 JavaScript 做表單檢查（不看自訂輸入元件的話），其實有一個例外，就是上傳檔案的大小檢查，因為沒做對使用體驗的影響比較大，然後就是要還要記得針對 ajax call 送表單加上 <a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">HTTP 413</a> Status Code 的錯誤訊息處理。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>
