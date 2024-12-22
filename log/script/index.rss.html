@@ -3,10 +3,253 @@
 O3noBLOG - script
 https://blog.othree.net//log/ script/
 
-Copyright 2023
-2023-09-15 11:41
+Copyright 2024
+2024-04-17 22:47
 http://www.movabletype.org/?v=4.381
 http://blogs.law.harvard.edu/tech/rss 
+
+
+
+JSON Type Definition
+&lt;p&gt;之前工作上需要，想要一個簡單的可以檢查 JSON 資料結構的工具，研究了一陣子，發現到了 &lt;a href="https://jsontypedef.com/"&gt;JSON Type Definition&lt;/a&gt;（簡稱 JSON Typedef 或是 JTD） 這個 &lt;a href="https://datatracker.ietf.org/doc/html/rfc8927"&gt;RFC 標準&lt;/a&gt;，相較於發展已經很久的 &lt;a href="https://json-schema.org/"&gt;JSON Schema&lt;/a&gt;，JSON Typedef 的語法簡潔不少：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+	&amp;quot;properties&amp;quot;: {
+		&amp;quot;id&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot; },
+		&amp;quot;createdAt&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;timestamp&amp;quot; },
+		&amp;quot;karma&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;int32&amp;quot; },
+		&amp;quot;isAdmin&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;boolean&amp;quot; }
+	 }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;光是看不到 &lt;code&gt;$&lt;/code&gt; 那種 meta 屬性的前綴就覺得簡潔不少，然後官網上也提供了幾個常見程式語言的實作，接著我在看 RFC 文件的時候，發現到文件的分類是 &lt;strong&gt;Independent Submission&lt;/strong&gt;，這就讓我好奇了起來，於是就花了不少時間了解前因後果。&lt;/p&gt;
+&lt;p&gt;JSON Typedef 的作者是 &lt;a href="https://github.com/ucarion"&gt;Ulysse Carion&lt;/a&gt;，當時在 segment.com 工作，不過在講到他之前，要先來提另外一位在 AWS 工作的 Tim Bray，他常常要處理 AWS 服務間的事件，這些事件都是 JSON 資料，然後有很多種事件，整體而言是 discriminated union(tagged union)，中文有翻譯為可辨識聯合或是標簽聯合，那這是什麼東西呢？簡單舉例，在 DOM 裡面的事件，滑鼠 click 事件會有點擊的座標，鍵盤 keydown 事件則會有按下的按鍵，這兩個事件都有一個 &lt;code&gt;type&lt;/code&gt; 屬性，簡單的 TypeScript 定義長這樣：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-typescript"&gt;type ClickEvent {
+  type: 'click';
+  offsetX: number;
+  offsetY: number;
+}
+
+type KeydownEvent {
+  type: 'keydown';
+  keyCode: number;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然後 &lt;code&gt;Event&lt;/code&gt; 則是兩種的聯集：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-typescript"&gt;type Event = ClickEvent | KeydownEvent;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;這時，如果有支援的工具就可以透過判斷 &lt;code&gt;type&lt;/code&gt; 屬性的值來知道該物件應該是長什麼樣子，但是就是沒有，當然也不用說更進一步用 schema 驗證收到的事件資料，他也在 2018 年九月寫了一篇 &lt;a href="https://www.tbray.org/ongoing/When/201x/2018/09/22/JSON-scheming"&gt;JSON Scheming&lt;/a&gt; 講到這件事情，也說明了為什麼無法用 JSON Schema，除了不支援 discriminated union 這個主因之外，還有錯誤訊息不好和沒有 code generation 可用。&lt;/p&gt;
+&lt;p&gt;之後，Carion 在 2019 年四月，在 IETF 的 &lt;a href="https://mailarchive.ietf.org/arch/browse/json/"&gt;json mailing list&lt;/a&gt; 發了一封信，想要找人一起協作開發一個 JSON 的 schema 語言，他遇到的問題是他常常用 JSON-RPC，然後這些 RPC 協定的 request/response 本身也和 AWS 團隊要處理的那些 events 一樣是 discriminated union，然後一樣檯面上沒有好用的工具和語言可以用來作資料檢查，Carion 那封信件後面的回應有些人提了一些 prior arts，像是我從來沒聽過的 &lt;a href="https://web.archive.org/web/20210616220814/http://json-content-rules.org/"&gt;JSON Content Rules&lt;/a&gt;（網站已死），還有 JSON 的二進位版超集：&lt;a href="https://cbor.io/"&gt;CBOR&lt;/a&gt; 和用來描述 CBOR 資料的 &lt;a href="https://datatracker.ietf.org/doc/html/rfc8610"&gt;CDDL&lt;/a&gt;，CDDL 也可以用在 JSON 資料結構上，也已經是 RFC 標準了，不過 CDDL 是一個完全不同的語言，要使用它要從 parser 開始導入，會困難並且慢很多，隨便找一個 CDDL 範例：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-cddl"&gt;PersonalData = {
+  ? displayName: tstr,
+  NameComponents,
+  ? age: uint,
+  * tstr =&amp;gt; any
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然後五月的時候 Carion 提交了第一版的 Internet-Draft 到 IETF 了，當時使用的名稱叫 &lt;a href="https://mailarchive.ietf.org/arch/msg/json/pkI8w-djHBKsfPFv43g_2G3A3Mg/"&gt;JSON Schema Language&lt;/a&gt;，不過因為會和 JSON Schema &lt;a href="https://stackoverflow.com/questions/60959556/using-discriminator-keyword-in-json-schema"&gt;混淆&lt;/a&gt;，所以後來就改名成 &lt;a href="https://mailarchive.ietf.org/arch/msg/json/tnG7o3jTAcLnT9XCYTJi62rXXUo/"&gt;JSON Data Definition Format&lt;/a&gt;（簡稱：JDDF），然後等到正式發布時則又改名為現在的名稱：JSON Type Definition，至於為何會是 Independent Submission 呢？其實是因為 IETF 的 JSON-WG 早早就已經關閉了，只是 mailing-list 還一直開著，可以讓人討論，但是已經不能透過 JSON-WG 發佈新文件了，這時不是走獨立提交，那就是要另外找一個或開一個 WG，就會有一些行政流程要跑，其實現在很多的 JSON 相關的 RFC 文件，都是有各自的 WG 來處理，像是 &lt;a href="https://www.rfc-editor.org/rfc/rfc9535.html"&gt;JSONPath&lt;/a&gt; 就有開一個 &lt;a href="https://datatracker.ietf.org/wg/jsonpath/about/"&gt;jsonpath WG&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最後正式版的 JSON Typedef 達成了 Carion 一開始的目標，支援 discriminated union（到這個時間點 JSON Schema 還沒法這樣簡單的支援）以及很容易就可以做出 code generation 的特性，Carion 還自己實作了數個語言的支援，例如 JavaScript 生態系就是可以生成 TypeScript type definition，例如以下的 schema：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+    &amp;quot;discriminator&amp;quot;: &amp;quot;eventType&amp;quot;,
+    &amp;quot;mapping&amp;quot;: {
+        &amp;quot;USER_CREATED&amp;quot;: {
+            &amp;quot;properties&amp;quot;: {
+                &amp;quot;id&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot; }
+            }
+        },
+        &amp;quot;USER_PAYMENT_PLAN_CHANGED&amp;quot;: {
+            &amp;quot;properties&amp;quot;: {
+                &amp;quot;id&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot; },
+                &amp;quot;plan&amp;quot;: { &amp;quot;enum&amp;quot;: [&amp;quot;FREE&amp;quot;, &amp;quot;PAID&amp;quot;]}
+            }
+        },
+        &amp;quot;USER_DELETED&amp;quot;: {
+            &amp;quot;properties&amp;quot;: {
+                &amp;quot;id&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot; },
+                &amp;quot;softDelete&amp;quot;: { &amp;quot;type&amp;quot;: &amp;quot;boolean&amp;quot; }
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以自動轉成：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-typescript"&gt;// Code generated by jtd-codegen for TypeScript v0.2.1
+
+export type Event = EventUserCreated | EventUserDeleted | EventUserPaymentPlanChanged;
+
+export interface EventUserCreated {
+  eventType: &amp;quot;USER_CREATED&amp;quot;;
+  id: string;
+}
+
+export interface EventUserDeleted {
+  eventType: &amp;quot;USER_DELETED&amp;quot;;
+  id: string;
+  softDelete: boolean;
+}
+
+export enum EventUserPaymentPlanChangedPlan {
+  Free = &amp;quot;FREE&amp;quot;,
+  Paid = &amp;quot;PAID&amp;quot;,
+}
+
+export interface EventUserPaymentPlanChanged {
+  eventType: &amp;quot;USER_PAYMENT_PLAN_CHANGED&amp;quot;;
+  id: string;
+  plan: EventUserPaymentPlanChangedPlan;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然後 TypeScript 也支援這樣定義的語法，我最近特別喜歡用 &lt;code&gt;switch&lt;/code&gt; 來處理這種東西，TypeScript 都會&lt;a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions"&gt;幫你判斷好變數的型別&lt;/a&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-typescript"&gt;switch (event.eventType) {
+  case 'USER_CREATED':
+    // event type is EventUserCreated
+    break;
+  case 'USER_DELETED':
+    // event type is EventUserDeleted
+    break;
+  default:
+    // blah blah
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;當然 JTD 也可以用來驗證資料，除了 Carion 自己實作的之外，另外還有一套 &lt;a href="https://ajv.js.org/"&gt;ajv&lt;/a&gt; 支援 JSON Typedef，不過如果是表單驗證，我自己是沒那麼推薦，我目前表單通常會是用 &lt;a href="https://react-hook-form.com/"&gt;react-hook-form&lt;/a&gt; 和 &lt;a href="https://zod.dev/"&gt;Zod&lt;/a&gt;，一個原因是 JTD 不太有擴充性，而且也沒有太多什麼奇妙的型別，都是很基本的型別，所以沒有 email、ip、url 那種 pattern 形式的驗證，至於我推薦表單檢查用 Zod 除了它比較容易擴充自訂的檢查之外，還有其他原因，其一是它也支援 discriminated union：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;const myUnion = z.discriminatedUnion(&amp;quot;status&amp;quot;, [
+  z.object({ status: z.literal(&amp;quot;success&amp;quot;), data: z.string() }),
+  z.object({ status: z.literal(&amp;quot;failed&amp;quot;), error: z.instanceof(Error) }),
+]);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;另一個原因就是 &lt;a href="https://github.com/sindresorhus/ow"&gt;ow&lt;/a&gt; 的作者 @sindresorhus 也推薦用 Zod 了XD。&lt;/p&gt;
+&lt;p&gt;回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。&lt;/p&gt;
+
+https://blog.othree.net/log/2024/04/17/json-type-definition/
+https://blog.othree.net/log/2024/04/17/json-type-definition/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="script at del.icio.us">script</a>
+2024-04-17 22:47
+
+
+
+UI Event Order
+&lt;p&gt;我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 &lt;code&gt;mousedown&lt;/code&gt;、&lt;code&gt;mouseup&lt;/code&gt;、&lt;code&gt;click&lt;/code&gt; 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 &lt;code&gt;click&lt;/code&gt; 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 &lt;code&gt;focus&lt;/code&gt; 事件的順序呢？如果已經有其他元件有 focus，那它的 &lt;code&gt;blur&lt;/code&gt; 事件又是在 &lt;code&gt;focus&lt;/code&gt; 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 &lt;code&gt;keydown&lt;/code&gt;、&lt;code&gt;keyup&lt;/code&gt; 之外還有 &lt;code&gt;input&lt;/code&gt;、&lt;code&gt;change&lt;/code&gt; 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。&lt;/p&gt;
+&lt;p&gt;首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 &lt;code&gt;mousedown&lt;/code&gt;、&lt;code&gt;mouseup&lt;/code&gt;、&lt;code&gt;click&lt;/code&gt;，是在 &lt;code&gt;mouseup&lt;/code&gt; 後才接著有 &lt;code&gt;click&lt;/code&gt; 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 &lt;code&gt;click&lt;/code&gt; 事件。然後這順序其實是有定義在 &lt;a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order"&gt;UI Events 5.3.3&lt;/a&gt; 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 &lt;code&gt;mousemove&lt;/code&gt; 和 &lt;code&gt;dblclick&lt;/code&gt; 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 &lt;code&gt;mouseover&lt;/code&gt;、&lt;code&gt;mouseout&lt;/code&gt; 事件的順序。&lt;/p&gt;
+&lt;p&gt;除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 &lt;a href="https://w3c.github.io/pointerevents/"&gt;Pointer Events&lt;/a&gt; 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 &lt;code&gt;mouse&lt;/code&gt; 換成 &lt;code&gt;pointer&lt;/code&gt;，例如：&lt;code&gt;pointerdown&lt;/code&gt;、&lt;code&gt;pointerup&lt;/code&gt;，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pointerdown
+mousedown
+focus
+focusin
+pointerup
+mouseup
+click
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;至於這個順序是怎麼決定的呢？根據 Pointer Events 的 &lt;a href="https://w3c.github.io/pointerevents/#compatibility-mapping-with-mouse-events"&gt;11 章「Compatibility mapping with mouse events」&lt;/a&gt; 所述，瀏覽器開發時可以考慮同時發佈古時候的 Mouse Events，其中 11.2、11.3 就有提到先發佈 Pointer Events 接著再發佈對應的 Mouse Event。&lt;/p&gt;
+&lt;p&gt;然後還有一個細節是，根據 Pointer Event &lt;a href="https://w3c.github.io/pointerevents/#the-pointerdown-event"&gt;4.2.3 The pointerdown event&lt;/a&gt;，如果在 &lt;code&gt;pointerdown&lt;/code&gt; 事件裡面呼叫 &lt;code&gt;event.preventDefault()&lt;/code&gt; 取消事件的話，後面的 &lt;code&gt;mousedown&lt;/code&gt; 和 &lt;code&gt;mouseup&lt;/code&gt; 就都不會觸發。&lt;/p&gt;
+&lt;p&gt;我上面的那段事件順序，其實還多列了一個 &lt;code&gt;focusin&lt;/code&gt;，這其實是一系列的新(相較於 DOM2)事件，包括了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;focusin&lt;/code&gt; 對應 &lt;code&gt;focus&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;focusout&lt;/code&gt; 對應 &lt;code&gt;blur&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mouseenter&lt;/code&gt; 對應 &lt;code&gt;mouseover&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mouseleave&lt;/code&gt; 對應 &lt;code&gt;mouseout&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其實 &lt;code&gt;mouseenter&lt;/code&gt; / &lt;code&gt;mouseleave&lt;/code&gt; 是 IE5.5 時微軟先提出的，ppk 也有&lt;a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter"&gt;文章&lt;/a&gt;介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 &lt;a href="https://w3c.github.io/uievents/#event-type-mouseenter"&gt;UI Events&lt;/a&gt; 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；&lt;code&gt;focusin&lt;/code&gt; / &lt;code&gt;focusout&lt;/code&gt; 則是剛好相反，它們會 bubble 而 &lt;code&gt;focus&lt;/code&gt; / &lt;code&gt;blur&lt;/code&gt; 不會，一樣 ppk 也有&lt;a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html"&gt;文章&lt;/a&gt;介紹到，簡單說就是 &lt;code&gt;focus&lt;/code&gt; / &lt;code&gt;blur&lt;/code&gt; 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 &lt;code&gt;focusin&lt;/code&gt; / &lt;code&gt;focusout&lt;/code&gt; 事件，現在也是標準化，收到 &lt;a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin"&gt;DOM 3 Events&lt;/a&gt; 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。&lt;/p&gt;
+&lt;p&gt;接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 &lt;code&gt;keydown&lt;/code&gt;、&lt;code&gt;keypress&lt;/code&gt;、&lt;code&gt;keyup&lt;/code&gt; 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 &lt;code&gt;input&lt;/code&gt; 事件，會在 &lt;code&gt;keypress&lt;/code&gt; 之後，&lt;code&gt;input&lt;/code&gt; 則還有一個成對的 &lt;code&gt;beforeinput&lt;/code&gt;，如果在 &lt;code&gt;beforeinput&lt;/code&gt; 內叫 &lt;code&gt;preventDefault()&lt;/code&gt; 的話則可以阻止文字的輸入，總之順序如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;keydown
+keypress
+beforeinput
+input
+keyup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;change&lt;/code&gt; 事件則是要在 &lt;code&gt;blur&lt;/code&gt; 時才會有，順序是先 &lt;code&gt;change&lt;/code&gt; 才 &lt;code&gt;blur&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;change
+blur
+focusout
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;這個順序是定義在 HTML 的 User Interaction 一章的 &lt;a href="https://html.spec.whatwg.org/multipage/interaction.html#unfocus-causes-change-event"&gt;6.6.4 Processing model&lt;/a&gt; 裡面，明確的寫下要先 commit change 後才 &lt;code&gt;blur&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如果有用 IME 的話，事情就很不單純了，還會有 Composition Events，順序是在 &lt;code&gt;beforeinput&lt;/code&gt; 前面，剛開始組字會同時有 &lt;code&gt;compositionstart&lt;/code&gt; 和 &lt;code&gt;compositionupdate&lt;/code&gt; 兩個事件，然後沒有 &lt;code&gt;keypress&lt;/code&gt;，之後的輸入組字則就是只有 &lt;code&gt;update&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;keydown
+compositionstart
+compositionupdate
+beforeinput
+input
+keyup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Composition Events 現在標準的文件是放在 &lt;a href="https://w3c.github.io/uievents/#events-compositionevents"&gt;UI Events 裡面&lt;/a&gt;，不過文件中範例的順序和實際測試的結果並不一致，目前的文件草稿中 &lt;code&gt;compositionupdate&lt;/code&gt; 是在 &lt;code&gt;beforeinput&lt;/code&gt; 之後，不過其實現在瀏覽器的順序是在 UI Events 的 &lt;a href="https://github.com/w3c/uievents/issues/354"&gt;Issue 354&lt;/a&gt; 提出的變動，只是目前文件還沒有發布更新的內容。&lt;/p&gt;
+&lt;p&gt;結束組字的時候，不同瀏覽器的行為就有差異了，首先是按下 &lt;kbd&gt;Enter&lt;/kbd&gt; 完成組字時，Firefox 的話不會有多一個 &lt;code&gt;update&lt;/code&gt;，直接就是 &lt;code&gt;compositionend&lt;/code&gt;，然後是在 &lt;code&gt;beforeinput&lt;/code&gt; 和 &lt;code&gt;input&lt;/code&gt; 之間：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;keydown
+beforeinput
+compositionend
+input
+keyup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Chrome(v123) 的話就會有多一個 &lt;code&gt;compositionupdate&lt;/code&gt; 然後 &lt;code&gt;compositionend&lt;/code&gt; 順序也不一樣，會在 &lt;code&gt;input&lt;/code&gt; 的後面：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;keydown
+compositionupdate
+beforeinput
+input
+compositionend
+keyup
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其實 &lt;a href="https://w3c.github.io/uievents/#events-composition-key-events"&gt;UI Events 文件 5.7.5&lt;/a&gt; 內的範例是 Firefox 那種沒有多 &lt;code&gt;compositionupdate&lt;/code&gt; 的順序，這個 5.7 章節內其實還有不少其他情境下的事件順序，像是手寫輸入，取消輸入等等。&lt;/p&gt;
+&lt;p&gt;如果是還沒完成組字，直接切換輸入法強迫結束組字，事件順序都和按下 &lt;kbd&gt;Enter&lt;/kbd&gt; 都一樣，如果是組字到一半直接切換視窗，就是標準沒定義到的狀況了，Firefox 的行為比較接近上面的樣子，先完成 &lt;code&gt;input&lt;/code&gt; 才 &lt;code&gt;blur&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;beforeinput
+compositionend
+input
+blur
+focusout
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Chrome 則是會先產生 &lt;code&gt;blur&lt;/code&gt; 然後接 &lt;code&gt;compositionend&lt;/code&gt;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;change
+blur
+focusout
+compositionend
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以上，大概紀錄了我一直以來都有疑惑的使用者行為所產生的事件們的順序，最後附上我用的程式碼（超單純）：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;const events = [
+  &amp;quot;keydown&amp;quot;,
+  &amp;quot;keypress&amp;quot;,
+  &amp;quot;keyup&amp;quot;,
+  &amp;quot;change&amp;quot;,
+  &amp;quot;compositionstart&amp;quot;,
+  &amp;quot;compositionupdate&amp;quot;,
+  &amp;quot;compositionend&amp;quot;,
+  &amp;quot;beforeinput&amp;quot;,
+  &amp;quot;input&amp;quot;,
+  &amp;quot;click&amp;quot;,
+  &amp;quot;auxclick&amp;quot;,
+  &amp;quot;contextmenu&amp;quot;,
+  &amp;quot;mousedown&amp;quot;,
+  &amp;quot;mouseup&amp;quot;,
+  &amp;quot;focus&amp;quot;,
+  &amp;quot;focusin&amp;quot;,
+  &amp;quot;focusout&amp;quot;,
+  &amp;quot;blur&amp;quot;,
+  &amp;quot;pointerdown&amp;quot;,
+  &amp;quot;pointerup&amp;quot;,
+  &amp;quot;paste&amp;quot;,
+];
+
+const elem1 = document.getElementById(&amp;quot;target-1&amp;quot;);
+const elem2 = document.getElementById(&amp;quot;target-2&amp;quot;);
+
+events.forEach((event) =&amp;gt; {
+  elem1.addEventListener(
+    `${event}`,
+    () =&amp;gt; {
+      console.log(event.target.id, event);
+    },
+    false
+  );
+  elem2.addEventListener(
+    `${event}`,
+    () =&amp;gt; {
+      console.log(event.target.id, event);
+    },
+    false
+  );
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+https://blog.othree.net/log/2024/03/24/ui-event-order/
+https://blog.othree.net/log/2024/03/24/ui-event-order/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="script at del.icio.us">script</a>
+2024-03-24 18:07
 
 
 
@@ -469,93 +712,6 @@ https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/
 https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/
 <a xmlns="http://www.w3.org/1999/xhtml" href="" title="script at del.icio.us">script</a>
 2018-04-21 21:17
-
-
-
-Immer 原理
-&lt;p&gt;前陣子有個蠻有趣的 library 叫 &lt;a href="https://github.com/mweststrate/immer"&gt;Immer&lt;/a&gt;，是 MobX 的開發者 Michel Weststrate 做的，這個 library 做的事情很有趣，它整合了 immutable 資料和原生資料的特性，反過來從缺點來看，immutable 資料型態的問題就是操作比較不方便，所有的修改動作都要透過 method 來執行，不能直接用 assign 的，有時候要改比較深層一點的資料就很麻煩，像 Facebook 的 &lt;a href="https://github.com/facebook/immutable-js"&gt;immutable.js&lt;/a&gt; 就需要用 &lt;code&gt;getIn&lt;/code&gt;、&lt;code&gt;updateIn&lt;/code&gt; 來處理：&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-js"&gt;getIn({ x: { y: { z: 123 }}}, ['x', 'y', 'z']) // 123
-
-const original = { x: { y: { z: 123 }}}
-setIn(original, ['x', 'y', 'z'], 456) // { x: { y: { z: 456 }}}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;用陣列丟每層的屬性名稱，也有一些是用 &lt;code&gt;.&lt;/code&gt; 切分的 path 來處理這個問題（像是 &lt;code&gt;prop1.prop2.prop3&lt;/code&gt; 這種結構），而原生資料的缺點，在這個場景來看當然就是不 immutable 了，Immer 就提出了一個新的構想，把這兩者的優點結合在一起，讓資料可以保持 immutable 特性，又可以直接修改，當然不能直接修改 JavaScript 行為，所以還是有些地方需要等價交換，就是修改資料的時候，要包進 produce function 內：&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-js"&gt;const nextState = produce(baseState, draftState =&amp;gt; {
-    draftState.push({ todo: &amp;quot;Tweet about it&amp;quot; })
-    draftState[1].done = true
-})
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然後得到的 &lt;code&gt;nextState&lt;/code&gt; 和 &lt;code&gt;baseState&lt;/code&gt; 就會是不同物件，就像是 immutable 物件一樣行為，所以如果沒修改就還是同個物件，初看覺得有點黑魔法，不過思考過後覺得也不是不能做，有了些假想的實做方法後去研究了一下程式碼，不太意外的其實在 produce 裡面拿到的 draft 物件，是一個 &lt;a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Proxy"&gt;Proxy&lt;/a&gt; 包裝過的物件，然後 immutable 相關的邏輯都做在 Proxy 內，produce 跑完後再把新的值 finalize 取出用 plain object 傳回給 &lt;code&gt;nextState&lt;/code&gt;，當然因為 Proxy 是比較新的東西，所以針對 ES5 也有另外的處理，我大致看一下就是比較土法煉鋼的下去比對，至於為什麼不全部都這樣做應該是效能考量吧。其實我覺得比起實做的原理，能想到這樣設計實在是很厲害，不像大部分人早就放棄了，還持續思考是不是有更好的作法可以整合兩種資料格式的優點才有機會找到這條路。&lt;/p&gt;
-&lt;p&gt;最後，Immer 這名字的由來，雖然在德文有這單字，不過我判斷應該還是從 immersive 來的吧。&lt;/p&gt;
-
-https://blog.othree.net/log/2018/04/19/immer/
-https://blog.othree.net/log/2018/04/19/immer/
-<a xmlns="http://www.w3.org/1999/xhtml" href="" title="script at del.icio.us">script</a>
-2018-04-19 23:11
-
-
-
-PEG.js
-&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/40359029595/" title="pegjs by othree, on Flickr"&gt;&lt;img src="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg" width="1024" height="991" alt="pegjs" srcset="https://farm1.staticflickr.com/792/40359029595_8bd25d41e5_b.jpg 1024w, https://farm1.staticflickr.com/792/40359029595_f00581bfe8_h.jpg 1600w" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;知道這東西也好一陣子了，最近才真的第一次用，感覺還不錯，很久沒有因為東西會動而這麼高興了，大概也是太久沒努力離開舒適圈的關係吧。&lt;/p&gt;
-&lt;p&gt;總之，最近想著要做出類似一些搜尋引擎支援的條件語法，像是 and、or、not 之類的，稍微花了點時間調查一下確定要正確的處理就是要個 parser，沒錯，就是 compiler 最前面那個 parser，身為非 CS 領域出身的人，compiler 我一直是朦懂朦懂的，parser 到產生 AST 那塊算是比較清楚一些，因為像是 Babel、還有以前幫忙過的 &lt;a href="http://ternjs.net/"&gt;TernJS&lt;/a&gt; 都是先 parse 程式碼產生 AST 才開始做事，不過這次和以前不一樣的是我要從頭開始建立一個語法的 parser，然後因為是網頁前端要用的，所以就找到了 &lt;a href="https://pegjs.org/"&gt;PEG.js&lt;/a&gt; 這個用 JavaScript 寫的 parser generator，相較於手工的 parser，這種工具只要有定義好的語法（grammer）給它，它就可以產生出對應的 parser，至於什麼是語法（grammer）呢，例如下面這段就是：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;IdentifierName ::
-    IdentifierStart
-    IdentifierName IdentifierPart
-
-IdentifierStart ::
-    UnicodeIDStart
-    $
-    _
-    \ UnicodeEscapeSequence
-
-IdentifierPart ::
-    UnicodeIDContinue
-    $
-    _
-    \ UnicodeEscapeSequence
-    &amp;lt;ZWNJ&amp;gt;
-    &amp;lt;ZWJ&amp;gt;
-
-UnicodeIDStart ::
-    any Unicode code point with the Unicode property &amp;amp;ldquo;ID_Start&amp;amp;rdquo;
-
-UnicodeIDContinue ::
-    any Unicode code point with the Unicode property &amp;amp;ldquo;ID_Continue&amp;amp;rdquo;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;這段是從 ECMAScript Spec 內找出來的，identifier 名稱格式的語法（grammer）定義，其實還算蠻好理解的，而 PEG.js 也有自己定的語法格式，只要使用該格式定義好語法，就可以產生出 parser 來，不過當我開始寫的時候，才發現到一個問題：我不知道 parse 後要產生什麼東西，這時我才意識到，在開始定義語法之前，我應該要先想清楚後續的產出物（例如 AST）的結構，和要如何使用這個 parser 的產出物實做出真正想要的效果。&lt;/p&gt;
-&lt;p&gt;以我的目標來說，我希望可以做出簡單的邏輯組合，包括 and、or、not 和 parenthesized expression（括號包起來的），其實我一開始的想法也沒很明確，只是覺得應該可以用樹狀結構加上遞迴來實做後面的判斷，然後參考了 &lt;a href="https://www.elastic.co/products/kibana"&gt;Kibana&lt;/a&gt; 裡面 Kuery 的語法，也算是慢慢的把語法和 AST 的組合方式定義出來，當時做的語法我還有放在 &lt;a href="https://gist.github.com/othree/8beecb7e3a6d4650ddbada3426854362"&gt;gist&lt;/a&gt; 上，語法和 AST 定義好的時候，其實後面應用端的 script 還沒寫，不過因為結構很簡單，所以我已經確信一定可以運作了，後來隔一天果然不花什麼時間就把應用端的 script 也寫好，之後還花時間作了些手工測試，修正了一些語法上的細節問題，像是支援 &lt;code&gt;&amp;amp;&lt;/code&gt; 、&lt;code&gt;|&lt;/code&gt; 這些符號之類的，還有符號兩邊不用空格等等。&lt;/p&gt;
-&lt;p&gt;還有一點想特別說的是，其實一開始定義語法的時候，我是沒有想要去參考 Kibana 的，雖然我當時就知道 Kibana 的 Kuery 語法和我的需求很像，而且也是用 PEG.js 做的，不過我開始寫語法定義沒多久就卡關了，卡關的地方就是，一開始就是 and、or、not、parenthesized expression 都有可能出現，但是這無法用 &lt;code&gt;/&lt;/code&gt; 的方式來處理，因為 PEG.js 的 parser 不會解析到一半發現不對就游標往回退（&lt;a href="https://github.com/pegjs/pegjs/blob/master/docs/grammar/backtracking.md"&gt;backtracking&lt;/a&gt;），然後我就卡關了，我可以寫出 and 加上判斷，支援以下兩種查詢：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;keyword
-keyword1 and keyword2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;但是卻無法更進一步加上支援 &lt;code&gt;or&lt;/code&gt;，結果只好去參考 Kuery 語法，發現奇妙的寫法，以下是我後來成品的定義：&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-pegjs"&gt;start
-  = orQuery?
-
-orQuery
-  = left:andQuery Or right:orQuery
-  / andQuery
-
-andQuery
-  = left:notQuery And right:andQuery
-  / notQuery
-
-notQuery
-  = Not right:subQuery
-  / subQuery
-
-subQuery
-  = '(' ws* query:orQuery ws* ')'
-  / queryValue
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;如此，&lt;code&gt;or&lt;/code&gt; 查詢支援兩種內容，第一種是 &lt;code&gt;and&lt;/code&gt; 查詢語句，第二種才是真的 &lt;code&gt;or&lt;/code&gt; 查詢，但是他的第一個元素是 &lt;code&gt;and&lt;/code&gt; 查詢，也就是說雖然是 &lt;code&gt;or&lt;/code&gt; 查詢的判斷，但是卻先去看有沒有 &lt;code&gt;and&lt;/code&gt; 查詢，然後 &lt;code&gt;and&lt;/code&gt; 查詢也是類似的定義，實際上先去找有沒有 &lt;code&gt;not&lt;/code&gt;  的語句，然後 &lt;code&gt;not&lt;/code&gt; 會去看有沒有子查詢（parenthesized expression），整個讓人覺得很神奇，仔細下去推敲也確實可以理解判斷的過程，不過在邏輯上我還不太能完全通透的理解。第一次看到這種定義方式時，覺得很神妙，不過也有想說這應該是什麼常見的 grammer 寫法，後來去查了一下 ECMAScript Spec，發現也是這樣的作法，看來真的算是個 convention 了吧（看起來是 &lt;a href="https://zh.wikipedia.org/wiki/%E5%B7%A6%E9%81%9E%E6%AD%B8"&gt;left recursive&lt;/a&gt;），真不知道第一個寫出這種 grammer 的人腦袋裝什麼。&lt;/p&gt;
-&lt;p&gt;最後我的成果有丟一個可以讓人用的版本上 GitHub，也有用 NPM 發佈，叫 &lt;a href="https://github.com/othree/simple-search-query"&gt;simple-search-query&lt;/a&gt;，詳細用法可以參考 README，至於完整的語法定義就在 &lt;code&gt;query&lt;/code&gt; 目錄內，還在補測試就是。&lt;/p&gt;
-
-https://blog.othree.net/log/2018/04/09/pegjs/
-https://blog.othree.net/log/2018/04/09/pegjs/
-<a xmlns="http://www.w3.org/1999/xhtml" href="" title="script at del.icio.us">script</a>
-2018-04-09 21:15
 
 
 

@@ -5,10 +5,80 @@
 <link>https://blog.othree.net//log/ script/</link>
 <description></description>
 <copyright>Copyright 2024</copyright>
-<lastBuildDate>2024-04-17 22:47</lastBuildDate>
+<lastBuildDate>2024-10-19 13:17</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>onAutofill</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/54075332210/" title="Credit Card autofill by othree, on Flickr"><img src="https://live.staticflickr.com/65535/54075332210_2204a73894_b.jpg" width="1024" height="529" alt="Credit Card autofill" srcset="" /></a></p>
+<p>在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。</p>
+<p>首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 <code>autocomplete</code> 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？</p>
+<p>問題就是這種 autofill 發生時，瀏覽器不一定會觸發 <code>change/input</code> 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 <code>&lt;input&gt;</code> 的 <code>change/input</code> 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 <code>change/input</code> 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。</p>
+<p>那麼在 Web 標準中，<code>change</code> 事件應該何時觸發的定義是為何呢？在 <a href="https://www.w3.org/TR/html401/interact/scripts.html#adef-onchange">HTML 4.01</a> 是這樣寫的：</p>
+<blockquote>
+<p>The onchange event occurs when a control loses the input focus <em>and</em> its value has been modified since gaining focus. This attribute applies to the following elements: INPUT, SELECT, and TEXTAREA.</p>
+</blockquote>
+<p>按照古時候網路標準的規範，autofill 不是使用者和 DOM 之間的互動，沒有經過 focus blur，所以沒有觸發 change 事件也是合理，事實上也就是現在部分瀏覽器的行為；不過在現在的 <a href="https://html.spec.whatwg.org/multipage/input.html#common-input-element-events">HTML Living Standard</a> 是這樣寫的：</p>
+<blockquote>
+<p>The <code>change</code> event fires when the value is committed, if that makes sense for the control, or else when the control loses focus.</p>
+</blockquote>
+<p>觸發的時機除了失去 focus 時之外，還多了資料 commit（提交）時，變成兩種時機，而這邊的提交主要指的是像 <code>type=color</code> 或是 <code>type=date</code> 那種，瀏覽器有支援，有提供另外頁面內的小工具讓使用者方便挑選值的時候，使用者選好，瀏覽器更新值進入 <code>&lt;input&gt;</code> 的 value 的動作，那 autofill 更新值該算是 commit 嗎？其實文件內也是有講到的，就在同個章節的後面：</p>
+<blockquote>
+<p>When the user agent is to change an input element's value on behalf of the user (e.g. as part of a form prefilling feature), the user agent must queue an element task on the user interaction task source given the input element to first update the value accordingly, then fire an event named <code>input</code> at the <code>input</code> element, with the <code>bubbles</code> and <code>composed</code> attributes initialized to true, then fire an event named <code>change</code> at the <code>input</code> element, with the <code>bubbles</code> attribute initialized to true.</p>
+</blockquote>
+<p>這段就是說當瀏覽器代表使用者改變 input 的值時，也是要發一個 input 一個 change 事件，這段文字的重點在於 &quot;on behalf of the user&quot;，就是「代表使用者做事」，後面舉的例是 prefill 時，prefill 通常發生在 帳號/密碼 欄位，發生時間點又不太一樣，可能是在 render DOM 時就發生；不過根據文字解釋其實 autofill 應該也符合 &quot;on behalf of the user&quot;。</p>
+<p>雖然 HTML 標準有規範了，但是現實世界總是不會這麼美好，不然也不會有這篇文章了，那麼現實世界是怎樣呢？我遇到的狀況就是有些瀏覽器是照著舊的規範，完全沒有事件，發現問題後我就上網搜尋一番之後發現，這問題其實已經很久了，早在 2010 年，<a href="http://twitter.com/avernet">@avernet</a> 就寫了一篇 [Autocomplete and JavaScript Change Event][]，紀錄了當年的這個問題，根據不同欄位、不同瀏覽器會有不同的行為，即使到了今天，也還是同樣情形，文章最後建議的解法也是很無奈的：</p>
+<p><a href="https://avernet.blogspot.com/2010/11/autocomplete-and-javascript-change.html">Autocomplete and JavaScript Change Event</a></p>
+<ol>
+<li>關掉相關功能 <code>autocomplete=off</code></li>
+<li>定時檢查</li>
+</ol>
+<p>總之就是讓人不喜歡的解法，那麼時至今日，有沒有比較好的方法呢？其實還真的有，而且蠻聰明的，<a href="https://klarna.com">Klarna</a> 的 Tommy Brunn 在 2016 年寫了 <a href="https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7">Detecting autofilled fields in Javascript</a> 一文介紹了這種方法，透過 CSS pseudo-class <code>:autofill</code> 和 CSS animation 配上 <code>animationStart</code> 事件，首先 CSS 這樣：</p>
+<pre><code class="language-css">input:autofill {  
+  animation-name: autofill;
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+}
+
+@keyframes autofill {
+  from {
+    background: var(--color1);
+  }
+  to {
+    background: var(--color2);
+  }
+}
+</code></pre>
+<p>然後 JS 監聽事件並確定動畫名稱沒錯，就可以做事了：</p>
+<pre><code class="language-js">inputNode.addEventListener('animationstart', (event) =&gt; {  
+  const { currentTarget, animationName } = event;
+  
+  if (animationName === 'autofill') {
+    // do what ever you want, or
+    // trigger `change` event
+    currentTarget.dispatchEvent(new Event('change'));
+    // trigger custom event
+    currentTarget.dispatchEvent(new Event('autofill'));
+  }  
+}, false);
+</code></pre>
+<p>完全成為真的 event based，不用定時檢查了，不過缺點是要 CSS 搭配，不是純 JS 的方案，維護上比較麻煩一些，另外就是 Tommy Brunn 文章內用的是 <code>:--webkit-autofill</code>，但是現在完全可以用沒有 prefix 的 pseudo class 了。</p>
+<p>以上的程式碼範例就可以處理好瀏覽器內建的自動填入事件，不過現實世界除了瀏覽器內建的自動填入，還有很多的第三方工具支援，像是各種 password manager: 1Password, LastPass, Dashlane 等，這些工具自動填入的行為又不太一樣，我確實有發現有其中一兩家的行為也是 value 會改變，但是不會有 input 和 change 事件，幸好這些工具都會加上各自自訂的 attribute，所以可以另外透過 observer 監看 attribute 的變化來判斷是否有相關的事件，目前我所知道有以下的 attributeName 可以檢查：</p>
+<ul>
+<li><code>data-dashlane-autofilled</code> Dashlane 的</li>
+<li><code>data-com-onepassword-filled</code> 1Password 的</li>
+<li><code>chrome-autofilled</code> iOS Chrome，超容易漏掉</li>
+</ul>
+<p>至於 LastPass 目前測試結果是不會有自訂的 attribute，但是會有 change 事件，所以也可以照常運作（不過相對的就完全沒有提供給使用者的視覺提示好像怪怪的）。</p>
+<p>這篇內容大概就到這邊，雖然沒有提供很完整的程式碼，不過這些資訊應該很夠幫助其他人完成 autofill 事件的偵測了，其實這次弄信用卡資訊的輸入欄位真是費了不少心力，很多細節可以弄，也很多 domain knowledge（都靠 lib 搞定就是），真是想不到只是信用卡欄位也這麼多眉角。</p>
+]]></description>
+<link>https://blog.othree.net/log/2024/10/19/onautofill/</link>
+<guid>https://blog.othree.net/log/2024/10/19/onautofill/</guid>
+<category>script</category>
+<pubDate>2024-10-19 13:17</pubDate>
+</item>
 
 <item>
 <title>JSON Type Definition</title>
@@ -679,40 +749,6 @@ async function asyncTaskWithCb(cb) {
 <guid>https://blog.othree.net/log/2018/05/28/smooshgate/</guid>
 <category>script</category>
 <pubDate>2018-05-28 12:32</pubDate>
-</item>
-
-<item>
-<title>ESLint Plugin 入門</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/26729618387/" title="ESLint by othree, on Flickr"><img src="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg" width="581" height="514" alt="ESLint" srcset="https://farm1.staticflickr.com/912/26729618387_d25b36bfed_z.jpg 581w" /></a></p>
-<p>最近寫了個簡單的 ESLint plugin，來記錄一下一些基礎知識，我做的 plugin 很簡單，叫做 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，這個 ESLint plugins 做的事情只是檢查所有 function 的參數，然後如果有任何一個參數名是 <code>e</code> 的話就警報，這條 rule 其實是為了避免把 <code>error</code> 或 <code>event</code> 簡寫成 <code>e</code>，會容易混淆。</p>
-<p>接下來進入正題，ESLint 基本上就是透過 <a href="https://github.com/eslint/espree">ESPree</a> 這個 parser 先把程式碼轉為 <a href="https://github.com/estree/estree">ESTree</a> 相容的 AST，EStree 是個 de facto standard，是從 Mozilla Spider Monkey 用的 AST 演化而來，現在幾乎做 JavaScript 工具，會需要轉 AST 的話都會用這個格式；有了 AST 後，才來分析 AST 做檢查，然後現在有工具叫 <a href="https://astexplorer.net/">AST Explorer</a>，非常方便，可以線上直接修改 code sample 看 AST 變化，可以用它來看你想要處理的 code 的 AST 結構，至於怎麼寫 rule 就看個人了，基本上就是監聽要注意的 node，然後檢查 AST 結構，有問題就呼叫 report 這樣。</p>
-<p>第二點，npm module 的名稱要用 <code>eslint-plugin-</code> 開頭，官方說的規則，應該不遵守還是可以抓的到，不過就還是遵守一下免的有意外。</p>
-<p>第三點，測試其實 ESLint 有 RuleTester 可以拿來寫測試用：</p>
-<pre><code class="language-javascript">const rule = require('../rule.js')
-const RuleTester = require('eslint').RuleTester
-
-const ruleTester = new RuleTester();
-
-ruleTester.run('no-parameter-e', rule, {
-  valid: [
-    'function a (event) {}',
-  ],
-  invalid: [
-    {
-      code: 'function e (e) {}',
-      errors: [{ message }],
-    }
-  ],
-});
-</code></pre>
-<p>很方便，都不用 test framework 了，並且有特別要求 valid 和 invalid 都要有 test case，不然測試就會失敗。</p>
-<p>然後測試的時候是每個 rule 獨立跑，每個 plugin 可以有多個 rule，很多 plugin 是把不同 rule 都獨立一個檔案，每個 rule 可以丟的東西除了檢查外還有不少，像是說明文件、自動修復的動作等，詳見<a href="https://eslint.org/docs/developer-guide/working-with-rules">官方文件</a>，我一開始是參考 <a href="https://github.com/benmosher/eslint-plugin-import">eslint-plugin-import</a> 的，不過現在初心者應該也可以先看我的 <a href="https://github.com/othree/eslint-plugin-no-parameter-e">eslint-plugin-no-parameter-e</a>，東西更少一些。</p>
-<p>下一個想來挑戰處理空行，看了一下感覺是比較困難啊～</p>
-]]></description>
-<link>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</link>
-<guid>https://blog.othree.net/log/2018/04/21/eslint-plugin-intro/</guid>
-<category>script</category>
-<pubDate>2018-04-21 21:17</pubDate>
 </item>
 
 

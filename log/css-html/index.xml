@@ -9,6 +9,52 @@
 			<b:listData listID="css-html">css-html</b:listData>
 		</b:entriesMeta>
 
+		<b:entry entryID="001011" baseName="oklab-color-space">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-07-21</b:date>
+				<b:time>18:33:34</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Oklab Color Space</b:title>
+			<b:content>
+				<b:summary>2019 年的時候，寫過一篇文章介紹了 Lab Gradient，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 Oklab 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。 因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...# -- 勞哥 maylogger (@may_logger) July 13, 2024 在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為...</b:summary>
+				<b:mainContent><p>2019 年的時候，寫過一篇文章介紹了 <a href="https://blog.othree.net/log/2019/03/18/lab-gradient/">Lab Gradient</a>，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...</p># -- 勞哥 maylogger (@may_logger) <a href="https://twitter.com/may_logger/status/1812110985752420697?ref_src=twsrc%5Etfw">July 13, 2024</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為 L*a*b*，多加 <code>*</code> 為了避免混淆，Lab 其實是不正確的縮寫，不過這三個字母其實就是該顏色空間的三個軸：L 代表亮度、a 代表紅色到綠色間的位置、b 代表藍色到黃色間的位置，也就是 opponent color theory（又稱對比色理論或色覺對向論）的顏色組成，這個色彩空間的重點在它的座標比較符合人類對色彩的感知。</p>
+<p>那 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 又是什麼呢？它是 Björn Ottosson 在 2020 年底發表的一個新的色彩空間定義，他在文章內有詳細的說明為什麼會想要定義一個新的色彩空間，文內也列舉了現存的色彩空間的主要問題，其中 CIELAB 的問題就是在 predict hue （預測色相）有些問題，尤其是藍色附近，其實我一開始對於這個 predict 感到很疑惑，想說到底是什麼意思，後來看到另外一篇文章 <a href="https://raphlinus.github.io/color/2021/01/18/oklab-critique.html">An interactive review of Oklab</a>，文章一開始放的互動工具預設的漸層設定就是藍色到白色，然後一看就很明顯， CIELAB 的漸層色相跑一下就歪掉了變成偏紫色去了（random 按鈕可以按按看看其他色相都沒這樣嚴重），才了解到因為 CIELAB 是屬於人類感知的色彩空間，意思就是它的依歸其實是人類的感覺，所以需要從三維座標去<strong>推測</strong>人類實際上看到感覺到的顏色，數值上一樣的話就應該讓人感覺一致，而 Oklab 則是結構和 CIELAB 一樣，但是透過新的資料集來調整並解決前面提到的問題，而後在 2023，Oklab 進了 CSS Color Level 4 的草稿，主流瀏覽器現在也都已經支援。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53870474429/" title="CIELAB by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53870474429_b239243a3e_b.jpg" width="1024" height="484" alt="CIELAB" /></a></p>
+<p>進 CSS Color 代表什麼意思呢？第一個當然就是可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab"><code>oklab()</code></a> 函數來定義顏色了：</p>
+<pre><code>oklab(40.1% 0.1143 0.045);
+oklab(59.69% 0.1007 0.1191);
+oklab(59.69% 0.1007 0.1191 / 0.5);
+</code></pre>
+<p>除了直接定義顏色之外，現在 CSS 也支援相對顏色（relative color）了：</p>
+<pre><code>/* Relative values */
+oklab(from green l a b / 0.5)
+oklab(from #0000FF calc(l + 0.1) a b / calc(alpha * 0.9))
+oklab(from hsl(180 100% 50%) calc(l - 0.1) a b)
+</code></pre>
+<p>這樣要只調整色相或是亮度都變得很簡單，或是也可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch"><code>oklch()</code></a>，這樣色相（Hue）就更好挑選。</p>
+<p>然後就是漸層了，現在的 CSS 漸層也支援使用不同的顏色內差方式，也就是用不同色彩空間來算中間的顏色變化：</p>
+<pre><code>linear-gradient(in oklab, blue, red)
+linear-gradient(in lab to right, #44C, #795)
+</code></pre>
+<p>在最前面加上 <code>in &lt;color-space&gt;</code> 就可以，支援的色彩空間其實不少，如果是線性漸層，那支援 srgb、srgb-linear、display-p3、a98-rgb、prophoto-rgb、rec2020、lab、oklab、xyz、xyz-d50、xyz-d65，如果是 polar 漸層，那支援 hsl、hwb、lch、oklch，其實相當夠用，而這段語法其實是叫 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color-interpolation-method">color-interpolate</a>（顏色內插），除了漸層之外，會用到的地方還包括 filter、animation、transition 和 <code>color-mix()</code> 函數等。</p>
+<p>前面也已經提到，現在主流瀏覽器都已經支援了，不過還是來看一下 <a href="https://caniuse.com/mdn-css_types_image_gradient_linear-gradient_interpolation_color_space">caniuse</a> 上的細節，Chrome 是 2022 就支援了，但是 Firefox 是到去年的 2023 才支援，如果要抓兩年的時間的話就還要再等等，當然現在也還是可以直接用，多加一組 fallback 就可以。</p>
+<p>除了瀏覽器原生支援外，其實也不少其它開發相關的工具支援，也有不少文章在介紹，像是 Smashing Magazine 的 <a href="https://www.smashingmagazine.com/2023/08/oklch-color-spaces-gamuts-css/">Falling For Oklch: A Love Story Of Color Spaces, Gamuts, And CSS</a> 和 Evil Martians 的 <a href="https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl">OKLCH in CSS: why we moved from RGB and HSL</a>，兩篇文章就介紹了不少工具和一些延伸的文章，工具部分像是 Figma 的 plugin <a href="https://www.figma.com/community/plugin/1173638098109123591/okcolor">OkColor</a> 和 npm 上的 <a href="https://www.npmjs.com/package/convert-to-oklch/v/1.2.0">convert-to-oklch</a>，Evil Martians 還做了一個 <a href="https://oklch.com/">oklch.com</a> ，是針對 Oklch 的 color picker 還蠻厲害的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53869218887/" title="oklch.com by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53869218887_128b804d16_b.jpg" width="1024" height="686" alt="oklch.com" srcset="https://live.staticflickr.com/65535/53869218887_067ddb5f54_k.jpg 2x" /></a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="001006" baseName="the-magic-of-dialog">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -461,8 +507,9 @@ wbr::before { all: unset !important; content: &quot;\200B&quot; !important; }
 			<b:category>css-html</b:category>
 			<b:title>Lab Gradient</b:title>
 			<b:content>
-				<b:summary> 一早起來就看到這篇文章 視覺上的完美漸層 Chromatic，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。 目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 chromatic-sass，PostCSS 則是 postcss-easing-gradients，這套背後用的則是首篇文章也有介紹的 chroma.js 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的工具，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 Lch and Lab colour and...</b:summary>
+				<b:summary> 2024-07-21 更新，現在推薦使用 Oklab 這個 color space，詳見 Oklab color space 這篇文章。 一早起來就看到這篇文章 視覺上的完美漸層 Chromatic，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。 目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 chromatic-sass，PostCSS 則是 postcss-easing-gradients，這套背後用的則是首篇文章也有介紹的 chroma.js 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient...</b:summary>
 				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/47359638052/" title="Gradient by othree, on Flickr"><img src="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg" intrinsicsize="1024x768" width="1024" height="768" alt="Gradient" srcset="https://farm8.staticflickr.com/7852/47359638052_59f473d2c0_b.jpg 1024w" /></a></p>
+<p>2024-07-21 更新，現在推薦使用 Oklab 這個 color space，詳見 <a href="https://blog.othree.net/log/2024/07/21/oklab-color-space/">Oklab color space</a> 這篇文章。</p>
 <p>一早起來就看到這篇文章 <a href="https://medium.com/@citysite1025/%E8%A6%96%E8%A6%BA%E4%B8%8A%E7%9A%84%E5%AE%8C%E7%BE%8E%E6%BC%B8%E5%B1%A4-chromatic-e1acbfcd2428">視覺上的完美漸層 Chromatic</a>，介紹了一個 Sketch plugin 可以用不同色彩系統的漸層來產生更好的視覺效果，之前其實也有注意到這個問題好幾次，就是覺得 CSS gradient 的效果不好，也有注意到一些其他的漸層方法，不過一直沒記錄下來，所以趁這時候把一些資源記錄一下，該篇文章的作者 Samuel 是推薦 Lab 色彩系統的漸層。</p>
 <p>目前因為 CSS 就是只有 RGB 漸層，所以要用其他系統的漸層就只能用模擬的，SASS 的話有 <a href="https://github.com/bugsnag/chromatic-sass">chromatic-sass</a>，PostCSS 則是 <a href="https://github.com/larsenwork/postcss-easing-gradients">postcss-easing-gradients</a>，這套背後用的則是首篇文章也有介紹的 <a href="https://vis4.net/chromajs/">chroma.js</a> 來轉換的，不過它其實主要是在做 easing gradient 的，然後還有一些線上的模擬工具可以讓人直接看看效果，第一個其實是 easing gradient 的<a href="https://larsenwork.com/easing-gradients/">工具</a>，其實就是在 easing gradient 標準提案時有人做來讓人體驗的，另一個介面比較不 fancy，但是我覺得比較實用的 <a href="http://davidjohnstone.net/pages/lch-lab-colour-gradient-picker">Lch and Lab colour and gradient picker</a>。</p>
 </b:mainContent>
@@ -500,51 +547,6 @@ wbr::before { all: unset !important; content: &quot;\200B&quot; !important; }
 <li>Grid、 column、 flex、 float 這幾個屬性你會怎麼排呢～？</li>
 <li>如果 <code>box-sizing: border-box;</code> 設下去後，width/height 要放在 padding 前面還後面呢？</li>
 </ol>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="000902" baseName="svg">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2017-07-29</b:date>
-				<b:time>11:14:28</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>SVG</b:title>
-			<b:content>
-				<b:summary> 最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 Material Icons，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些問題，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。 GitHub 的用法是 inline SVG 為主，我自己則是用 &lt;picture&gt; 比較多： &lt;picture&gt; &lt;source srcset=&quot;/path/to/icon.svg&quot; type=&quot;image/svg+xml&quot;&gt; &lt;img src=&quot;/path/to/icon.png&quot; alt=&quot;&quot;...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/35882767130/" title="SVG by othree, on Flickr"><img src="https://farm5.staticflickr.com/4300/35882767130_abb5a7e7b3_b.jpg" width="1024" height="782" alt="SVG" srcset="https://farm5.staticflickr.com/4300/35882767130_2848f09cbc_k.jpg 2x" /></a></p>
-<p>最近網站的 icon 都盡量改用 SVG 向量檔了，網路上也有不少資源，像是 <a href="https://material.io/icons/">Material Icons</a>，累積了一些心得可以記錄一下，其實早在 GitHub 開使用 icon font 之前，大部分的瀏覽器就都有支援 SVG 了，只不過當時的支援還不夠完備，會各自有一些<a href="http://voormedia.com/blog/2012/10/creating-svg-vector-graphics-for-maximum-browser-compatibility">問題</a>，這應該也是 Github 當年不先用 SVG，而是用 icon font 先檔了幾年的主因，總之現在比較不用擔心這些問題了，所以 GitHub 又開槍轉用 SVG icon 了。</p>
-<p>GitHub 的用法是 inline SVG 為主，我自己則是用 <code>&lt;picture&gt;</code> 比較多：</p>
-<pre><code class="language-html">&lt;picture&gt;
-  &lt;source srcset=&quot;/path/to/icon.svg&quot; type=&quot;image/svg+xml&quot;&gt;
-  &lt;img src=&quot;/path/to/icon.png&quot; alt=&quot;&quot; width=&quot;32&quot; height=&quot;32&quot; /&gt;
-&lt;/picture&gt;
-</code></pre>
-<p>CSS Trick 有一篇文章 <a href="https://css-tricks.com/a-complete-guide-to-svg-fallbacks/">A Complete Guide to SVG Fallbacks</a> 則介紹了各種在網頁內放入 SVG 圖檔的古老方法，用 <code>&lt;picture&gt;</code> 是比較新的，沒列在其中，而我是為了向下相容選擇用 <code>&lt;picture&gt;</code>，因為支援<code>&lt;picture&gt;</code>標籤的瀏覽器都很新了，對於 SVG 的支援度很夠，剩下少數（大概都是 IE）就讓他直接吃 png 之類的（PS: pngquant 處理過的 PNG 很多可以直接在 IE6 上顯示透明色），這樣用起來就像是一般 <code>&lt;img&gt;</code> 一樣，SVG 檔可以先用 <a href="https://github.com/svg/svgo">svgo</a> 工具處理過，除此之外，我通常會先用 Adobe Illustrator 把不必要的圖層階層刪除，圖層在 SVG 原始碼裡面通常是會 <code>&lt;g&gt;</code> 標籤，另外也記得要把圖層名稱（id）改成 ASCII only 的名稱，甚至直接編輯原始碼刪除 id，因為 svgo 不會處理這部分。</p>
-<p>用外部 SVG 檔案好處是可以善用 browser cache 減少傳輸量，尤其是大量重複使用的圖片，不過也會犧牲一些 SVG 的特性，例如會因此不能直接用 CSS 來調整樣式，做 transition，做動畫等等，所以有時候也是會用 inline SVG，就可以搭配 CSS、JS 弄出很多不錯的效果（Safari 偶爾還有遇到無解 bug），不過要讓 inline SVG fallback 回一般圖片就比較麻煩些了，在做這件事之前可以先看一下是不是有需要<a href="http://caniuse.com/#feat=svg-html5">支援</a>，以前是 iOS 不支援，現在還有機會碰到的大概還是 IE（6-8）吧，總之，如果有需要的話，就是參考 CSS Trick 的 <a href="https://css-tricks.com/svg-fallbacks/">SVG Fallbacks</a> 這篇文章，使用</p>
-<pre><code class="language-html">&lt;svg width=&quot;96&quot; height=&quot;96&quot;&gt;
-  &lt;image xlink:href=&quot;svg.svg&quot; src=&quot;svg.png&quot; width=&quot;96&quot; height=&quot;96&quot; /&gt;
-&lt;/svg&gt;
-</code></pre>
-<p>這是個很有趣的技巧，首先 <code>&lt;image&gt;</code> 標籤是<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image">合法的 SVG 元素</a>，所以放在 SVG 不成問題，但是不支援 SVG 的瀏覽器，照理說也不應該認得 <code>&lt;image&gt;</code> 標籤啊，其實，<code>&lt;image&gt;</code> 在很久以前就一直是 <code>&lt;img&gt;</code> 的別名了，甚至在 WHATWG 的 parse HTML 文件的<a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">流程</a>裡都還有提到處理的方式，而經過測試也都證實了以前的瀏覽器確實是這樣的行為，文裡也有各瀏覽器的行為和支援狀況，不支援 inline SVG 的就會顯示替代的 png 或 jpg 。</p>
-<p>文章裡面還有提到背景圖使用 SVG 的處理方式，不過因為我沒這樣使用，所以沒什麼實做到，另外最近也有人用外部 SVG 加上 CSS filter 來改變 <a href="https://codepen.io/noahblon/post/coloring-svgs-in-css-background-images">SVG icon 顏色</a>，不過這太技巧太新了，考慮到支援度我也是沒有用過。</p>
-<p>親和力問題的部分，一樣 CSS Tricks 有篇文章 <a href="https://css-tricks.com/accessible-svgs/">Accessible SVG</a> 在講相關的作法，像是用 <code>&lt;title&gt;</code> 加替代文字，加上 <code>role=&quot;img&quot;</code> 等；如果要自己編寫 SVG，W3C 還有份 <a href="http://w3c.github.io/svgwg/specs/svg-authoring/">Authering Guide</a> 可以參考，除了親和力相關的資訊外還有不少技巧可以參考。</p>
-<p>最後整理一下，拿到 svg 檔案後我的處理過程：</p>
-<ol>
-<li>用 Adobe Illustrator 先開來整理一下，修改圖層名稱、刪去合併不必要的圖層</li>
-<li>輸出成 SVG 和 1x 解析度的 PNG</li>
-<li>SVG 檔用 <code>svgo</code> 最佳化、PNG 會用 <code>pngquant</code> 和 <code>zopflipng</code> 處理過</li>
-</ol>
-<p>使用方式則還是當成一般外部圖片為主，需要動畫效果才會用 inline SVG。</p>
 </b:mainContent>
 				<b:extendContent></b:extendContent>
 			</b:content>

@@ -3,10 +3,95 @@
 O3noBLOG - css-html
 https://blog.othree.net//log/ css-html/
 
-Copyright 2023
-2023-01-13 22:52
+Copyright 2024
+2024-04-03 11:49
 http://www.movabletype.org/?v=4.381
 http://blogs.law.harvard.edu/tech/rss 
+
+
+
+Dialog 的魔法
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"&gt;&lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt;&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 &lt;code&gt;confirm&lt;/code&gt; 和 &lt;code&gt;alert&lt;/code&gt; 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 &lt;a href="https://getbootstrap.com/docs/5.0/components/modal/"&gt;modal&lt;/a&gt; 了吧。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，&lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt;，結果一研究下去，發現超多的細節的。&lt;/p&gt;
+&lt;p&gt;在回答問題之前，先來介紹一下 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 吧，首先 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 預設樣式是 &lt;code&gt;display: none;&lt;/code&gt; 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 &lt;code&gt;open&lt;/code&gt; 這個專屬的新 attribute：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-html"&gt;&amp;lt;dialog open&amp;gt;
+   This is a dialog
+&amp;lt;/dialog&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;這樣就會讓 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 出現在畫面上，表現就如同一般的 &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt; 標籤，第二種方法則是透過 JavaScrpt：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;dialogNode.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;這樣的效果和 &lt;code&gt;open&lt;/code&gt; 一樣，然後除了這兩個方法之外，還有一個最特別的：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;dialogeNode.showModal()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;showModal&lt;/code&gt; 會讓這個 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 以外的地方都會無法互動。&lt;/p&gt;
+&lt;p&gt;在這邊，一下子三件以前辦不到的事情都出現了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;保證在網頁的最上層&lt;/li&gt;
+&lt;li&gt;只有一層標籤就水平垂直置中&lt;/li&gt;
+&lt;li&gt;其他地方都無法互動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 一定在最上層呢？那就是一個新規範的東西了，叫做 &lt;a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw"&gt;top Layer&lt;/a&gt;，標準則是放在 &lt;a href="https://drafts.csswg.org/css-position-4/#top-layer"&gt;CSS Positioned Layout Module Level 4&lt;/a&gt;，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 &lt;a href="https://web.dev/learn/css/z-index?hl=zh-tw"&gt;stacking context&lt;/a&gt;，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 之外，文件上是還有寫到 fullscreen API 和還在初期的 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"&gt;popover&lt;/a&gt;，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;根據前一點，可以知道其實 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 一樣是普通 DOM 節點，只是在用 &lt;code&gt;showModal()&lt;/code&gt; 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，&lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-css"&gt;dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「&lt;a href="https://www.w3.org/TR/css-position-3/#abspos-old"&gt;Old Absolute Positioning Layout Model&lt;/a&gt;」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 &lt;code&gt;auto&lt;/code&gt;）：&lt;/p&gt;
+&lt;p&gt;&lt;a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"&gt;&lt;img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;margins split positive free space&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;auto margins → zero&lt;br /&gt;
+solve for auto&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 &lt;code&gt;marign: auto&lt;/code&gt; 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。&lt;/p&gt;
+&lt;p&gt;回來看 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt;，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 &lt;code&gt;auto&lt;/code&gt; 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：&lt;code&gt;fit-content&lt;/code&gt;，完整的樣式應該是：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-css"&gt;dialog {
+  position: fixed;
+  inset: 0; /* shorthand of top, right, bottom, left */
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。&lt;/p&gt;
+&lt;p&gt;了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。&lt;/p&gt;
+&lt;p&gt;終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 的特異功能，它有一個隱藏的 is modal flag，呼叫 &lt;code&gt;showModal&lt;/code&gt; 時，除了會把該 flag 設為 &lt;code&gt;true&lt;/code&gt; 之外，還可以讓文件中其它部分變為和有 &lt;code&gt;inert&lt;/code&gt; 時一樣，什麼是 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"&gt;&lt;code&gt;inert&lt;/code&gt;&lt;/a&gt; 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 &lt;code&gt;inert&lt;/code&gt; 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。&lt;/p&gt;
+&lt;p&gt;然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，&lt;strong&gt;modal&lt;/strong&gt; 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 &lt;code&gt;confirm&lt;/code&gt; 和 &lt;code&gt;alert&lt;/code&gt; 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 &lt;code&gt;returnValue&lt;/code&gt; 這個屬性可以用。&lt;/p&gt;
+&lt;p&gt;其實 &lt;a href="https://issues.chromium.org/issues/40251038"&gt;Chrome&lt;/a&gt; 早在 2014 年就支援 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 了，然後還提供了個 &lt;a href="https://github.com/GoogleChrome/dialog-polyfill"&gt;polyfill&lt;/a&gt;（當然無法解決 top layer 的問題），不過 &lt;a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640"&gt;Firefox&lt;/a&gt; 和 &lt;a href="https://bugs.webkit.org/show_bug.cgi?id=84635"&gt;Safari&lt;/a&gt; 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，&lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 還有很多細節，像是 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"&gt;&lt;code&gt;::backdrop&lt;/code&gt;&lt;/a&gt;、&lt;a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"&gt;&lt;code&gt;:modal&lt;/code&gt;&lt;/a&gt;、&lt;code&gt;formmethod=&amp;quot;dialog&amp;quot;&lt;/code&gt;、&lt;code&gt;returnValue&lt;/code&gt;、怎麼用 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"&gt;&lt;code&gt;cancel&lt;/code&gt; 事件&lt;/a&gt;和 &lt;kbd&gt;ESC&lt;/kbd&gt; 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的&lt;a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr"&gt;範例&lt;/a&gt;，有興趣的可以去玩看看。&lt;/p&gt;
+&lt;p&gt;最後，如果和我一樣是寫 React 要用 modal 模式的 &lt;code&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt; 的話，就一定要用到 &lt;code&gt;useEffect&lt;/code&gt;，不能只操作 &lt;code&gt;open&lt;/code&gt; 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 &lt;a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts"&gt;use-html-dialog&lt;/a&gt; ，也可以直接參考它的原始碼，關鍵的部分：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-javascript"&gt;useEffect(() =&amp;gt; {
+  if (openModal) {
+    ref.current?.showModal();
+  } else {
+    ref.current?.close();
+  }
+}, [openModal]);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其他參考資料：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://webkit.org/blog/12209/introducing-the-dialog-element/"&gt;Introducing the Dialog Element&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://intersection.tw/6e9b2104eac0"&gt;Modal 模式是大多數設計師不甚瞭解的 UX 概念&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0"&gt;Modal？Dialog？你真的知道他們是什麼嗎？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+https://blog.othree.net/log/2024/04/03/the-magic-of-dialog/
+https://blog.othree.net/log/2024/04/03/the-magic-of-dialog/
+<a xmlns="http://www.w3.org/1999/xhtml" href="" title="css-html at del.icio.us">css-html</a>
+2024-04-03 11:49
 
 
 
@@ -560,46 +645,6 @@ https://blog.othree.net/log/2016/04/08/purecss/
 https://blog.othree.net/log/2016/04/08/purecss/
 <a xmlns="http://www.w3.org/1999/xhtml" href="" title="css-html at del.icio.us">css-html</a>
 2016-04-08 22:48
-
-
-
-Device Pixel Ratio Header
-&lt;p&gt;之前&lt;a href="https://blog.othree.net/log/2012/10/28/device-pixel-ratio/"&gt;文章&lt;/a&gt;有介紹過 DPR（Device Pixel Ratio），不過當時只能透過 JavaScript 在 client 端存取，如果 server 端要知道 client 端的 DPR 至少得要來回交換一次資訊，在那個時候就有想過應該之後會有新的標準來負責處理這個問題，而最近終於看到標準的草案了，叫做 &lt;a href="http://httpwg.org/http-extensions/client-hints.html"&gt;HTTP Client Hints&lt;/a&gt;，照字面的意思，這個 HTTP 擴充標準不是只有 DPR，而是提供 client 端的一些資訊，目前包括了：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;DPR&lt;/li&gt;
-&lt;li&gt;width&lt;/li&gt;
-&lt;li&gt;viewport-width&lt;/li&gt;
-&lt;li&gt;downlink&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;其中 &lt;code&gt;DPR&lt;/code&gt; 就是 device pixel ratio；&lt;code&gt;viewport-width&lt;/code&gt; 就和以前介紹過的 viewport width 一樣；&lt;code&gt;width&lt;/code&gt; 比較特別，是實際希望的 resource 寬度，而不是真的屬於 device 的資訊，例如圖片在網頁內是 160px，裝置的 DPR 是 2，&lt;code&gt;width&lt;/code&gt; 就是 160×2 = 320px；最後一個 &lt;code&gt;downlink&lt;/code&gt; 則是以前一直很難取得的網路速度，以前最大的限制在於不管是 client 端還是 server 端都很難取得實際的網路速度，雖然可以用 JavaScript 下載檔案算時間來取得素質，但是這樣的作法其實有個兩難的問題，一方面問題是如果檔案大小，那取得的數字會很不準確，另一方面問題是如果檔案太大，那必然就是浪費時間和網路頻寬，更不用說很多地方沒有吃到飽方案可以用，這樣的作法應該不會太受歡迎，甚至如果不測速度，搞不好都已經把網頁讀好了。現在把這個資訊的提供者更往上一層，改成由瀏覽器提供，瀏覽器就可以跟作業系統作溝通，就比較有機會不用先測速就拿到可以參考的網路速度。這些 Header 傳輸的時候都不用附上單位，只有數字，其中 downlink 的單位是 Mbps，而規範所希望瀏覽器提供的 downlink 數字是參考 &lt;a href="https://w3c.github.io/netinfo/#downlinkmax-attribute"&gt;Network Information API&lt;/a&gt; 這份 API 裡面整理的，主要連線方法的理論速度上限，例如 GSM 就是 0.01、LTE 是 100﹑wifi 802.11g 是 54，本來是想說這個數字是看瀏覽器自己決定，不只根據連線的方式，還會看實際的傳輸數字或是使用者偏好，例如他可能使用 LTE 但是因為不是吃到飽，所以希望把速度報低一點之類的。&lt;/p&gt;
-
-&lt;p&gt;Downlink 其實會比預期的還要有用，除了可以根據網路速度決定回傳的圖片大小外，還可以根據 downlink 大小來決定要回傳的 CSS，實際上使用可能像是，網路慢的時候就給出比較輕量的 CSS 回去給 client 端，用不一樣的版面呈現給使用者，有點像是 Google 的 &lt;a href="https://www.ampproject.org/"&gt;Accelerated Mobile Pages Project&lt;/a&gt;  所做的。&lt;/p&gt;
-
-&lt;p&gt;Client hint header 是個需要 opt-in 的擴充功能，就是預設是沒開的，那要怎麼開啟呢，就是在網頁 document 的 header 加上 &lt;code&gt;Accept-CH&lt;/code&gt;：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Accept-CH: "DPR, Downlink"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;或是加上 meta tag&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width"&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中 equiv 是 equivalent 意思，就是和 HTTP header 等效的意思，透過這個 header 跟瀏覽器說 server 端可以接收 client hint 資訊，然後支援的瀏覽器就會在後續，這個網頁所需要用到的其它資源，像是 js, css, 圖片等等的 request 都加上這些資訊，這個溝通過程其實就是使用已經很久的機制： &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation"&gt;HTTP content negotiation&lt;/a&gt;，用的 header 也是 &lt;code&gt;Accept&lt;/code&gt; 開頭的，目前已經支援的還只有 Chrome，而且要 46 版以後，其他幾個瀏覽器大多都還在討論要不要支援，Firefox 是有一些&lt;a href="https://bugzilla.mozilla.org/show_bug.cgi?id=935216"&gt;進度&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;這樣的設計其實有點先進，不完全是褒意，因為這意味著要 server 端，負責提供圖片的服務器，收到 request 後去看 DPR 或是 width 之類的資訊再來挑選要回傳哪一張圖片回去，而通常提供圖片靜態檔案的服務都不太有邏輯處理，大部分就是簡單的 HTTP server，只看靜態檔案，有就傳檔案回去，沒有就回傳 404，相信之後是會有些 module 或是設定的方法讓 HTTP server 可以把這部分直接處理掉，不過一些規模比較大的網站，如果有用上 CDN 的，可能就沒法直接用上這功能，還要等看有沒有 CDN 廠商支援。&lt;/p&gt;
-
-&lt;p&gt;Client hint 目前看來會是 responsive image 未來的一個主要解法，和 media query 相比其實有兩個很大的差異，第一個是 media query 是馬上（且隨時）發生效果，和 HTTP request 是無關的，所以一開始下載下來的網頁就會發生效果，但是 client hint 要透過第一個 HTML document 本身的 request 進行溝通，意味著 HTML document 本身的 request 是不會收到 client hint。第二個就是 media query 是隨時發生作用的，即使在網頁完整讀取下來後，還是有可能因為使用者造成的 client 環境變化，而讓瀏覽器去多下載一份檔案，最常見的情形就是調整視窗大小，在手機上可能就是轉直轉橫造成 viewport 寬度變化，甚至在 Mac 如果外接普通螢幕，拖拉瀏覽器視窗到不同螢幕也會造成影響，如果這些變化剛好符合設定的 media query，DPR 從 1 變成 2，就會讓瀏覽器又去下載了一張 DPR 不同的圖片，這類狀況在網路頻寬有限的環境下實在不是好事，而用 client hint header 的話就完全不會有這種狀況了，就只會有一開始帶著 Client Hint 去抓下來的那個檔案。&lt;/p&gt;
-
-&lt;p&gt;不過 Client Hint 也不是完全沒有副作用，目前最大的問題就是這幾個新 header 都不列在 &lt;a href="https://fetch.spec.whatwg.org/#simple-header"&gt;simple headers&lt;/a&gt; 裡面，所以在做 CORS request 的時候，本來不用 preflight request 的都會變成需要 preflight request 了，這個問題其實現在還在討論，因為其實有很多類似的新 header 都會造成一樣的問題，像是 CSP、Server-Sent Events 裡面的 Event-ID，主要是這麼多 Header 進去，就不 simple 了，而且照最近標準發展的狀況來看，這份 simple headers 的清單很難固定不變，有興趣的可以跟一下&lt;a href="https://github.com/whatwg/fetch/issues/52"&gt;討論&lt;/a&gt;。&lt;/p&gt;
-
-
-https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/
-https://blog.othree.net/log/2016/02/28/device-pixel-ratio-header/
-<a xmlns="http://www.w3.org/1999/xhtml" href="" title="css-html at del.icio.us">css-html</a>
-2016-02-28 14:34
 
 
 

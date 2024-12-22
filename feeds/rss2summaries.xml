@@ -5,10 +5,167 @@
 <link>https://blog.othree.net/</link>
 <description></description>
 <copyright>Copyright 2024</copyright>
-<lastBuildDate>Wed, 17 Apr 2024 22:47:21 +0800</lastBuildDate>
+<lastBuildDate>Sat, 19 Oct 2024 13:17:31 +0800</lastBuildDate>
 <generator>http://www.movabletype.org/?v=4.381</generator>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
 
+
+<item>
+<title>onAutofill</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/54075332210/" title="Credit Card autofill by othree, on Flickr"><img src="https://live.staticflickr.com/65535/54075332210_2204a73894_b.jpg" width="1024" height="529" alt="Credit Card autofill" srcset="" /></a></p>
+<p>在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。</p>
+<p>首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 <code>autocomplete</code> 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？</p>
+<p>問題就是這種 autofill 發生時，瀏覽器不一定會觸發 <code>change/input</code> 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 <code>&lt;input&gt;</code> 的 <code>change/input</code> 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 <code>change/input</code> 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。</p>
+<p>那麼在 Web 標準中，<code>change</code> 事件應該何時觸發的定義是為何呢？在 <a href="https://www.w3.org/TR/html401/interact/scripts.html#adef-onchange">HTML 4.01</a> 是這樣寫的：</p>
+<blockquote>
+<p>The onchange event occurs when a control loses the input focus <em>and</em> its value has been modified since gaining focus. This attribute applies to the following elements: INPUT, SELECT, and TEXTAREA.</p>
+</blockquote>
+<p>按照古時候網路標準的規範，autofill 不是使用者和 DOM 之間的互動，沒有經過 focus blur，所以沒有觸發 change 事件也是合理，事實上也就是現在部分瀏覽器的行為；不過在現在的 <a href="https://html.spec.whatwg.org/multipage/input.html#common-input-element-events">HTML Living Standard</a> 是這樣寫的：</p>
+<blockquote>
+<p>The <code>change</code> event fires when the value is committed, if that makes sense for the control, or else when the control loses focus.</p>
+</blockquote>
+<p>觸發的時機除了失去 focus 時之外，還多了資料 commit（提交）時，變成兩種時機，而這邊的提交主要指的是像 <code>type=color</code> 或是 <code>type=date</code> 那種，瀏覽器有支援，有提供另外頁面內的小工具讓使用者方便挑選值的時候，使用者選好，瀏覽器更新值進入 <code>&lt;input&gt;</code> 的 value 的動作，那 autofill 更新值該算是 commit 嗎？其實文件內也是有講到的，就在同個章節的後面：</p>
+<blockquote>
+<p>When the user agent is to change an input element's value on behalf of the user (e.g. as part of a form prefilling feature), the user agent must queue an element task on the user interaction task source given the input element to first update the value accordingly, then fire an event named <code>input</code> at the <code>input</code> element, with the <code>bubbles</code> and <code>composed</code> attributes initialized to true, then fire an event named <code>change</code> at the <code>input</code> element, with the <code>bubbles</code> attribute initialized to true.</p>
+</blockquote>
+<p>這段就是說當瀏覽器代表使用者改變 input 的值時，也是要發一個 input 一個 change 事件，這段文字的重點在於 &quot;on behalf of the user&quot;，就是「代表使用者做事」，後面舉的例是 prefill 時，prefill 通常發生在 帳號/密碼 欄位，發生時間點又不太一樣，可能是在 render DOM 時就發生；不過根據文字解釋其實 autofill 應該也符合 &quot;on behalf of the user&quot;。</p>
+<p>雖然 HTML 標準有規範了，但是現實世界總是不會這麼美好，不然也不會有這篇文章了，那麼現實世界是怎樣呢？我遇到的狀況就是有些瀏覽器是照著舊的規範，完全沒有事件，發現問題後我就上網搜尋一番之後發現，這問題其實已經很久了，早在 2010 年，<a href="http://twitter.com/avernet">@avernet</a> 就寫了一篇 [Autocomplete and JavaScript Change Event][]，紀錄了當年的這個問題，根據不同欄位、不同瀏覽器會有不同的行為，即使到了今天，也還是同樣情形，文章最後建議的解法也是很無奈的：</p>
+<p><a href="https://avernet.blogspot.com/2010/11/autocomplete-and-javascript-change.html">Autocomplete and JavaScript Change Event</a></p>
+<ol>
+<li>關掉相關功能 <code>autocomplete=off</code></li>
+<li>定時檢查</li>
+</ol>
+<p>總之就是讓人不喜歡的解法，那麼時至今日，有沒有比較好的方法呢？其實還真的有，而且蠻聰明的，<a href="https://klarna.com">Klarna</a> 的 Tommy Brunn 在 2016 年寫了 <a href="https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7">Detecting autofilled fields in Javascript</a> 一文介紹了這種方法，透過 CSS pseudo-class <code>:autofill</code> 和 CSS animation 配上 <code>animationStart</code> 事件，首先 CSS 這樣：</p>
+<pre><code class="language-css">input:autofill {  
+  animation-name: autofill;
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+}
+
+@keyframes autofill {
+  from {
+    background: var(--color1);
+  }
+  to {
+    background: var(--color2);
+  }
+}
+</code></pre>
+<p>然後 JS 監聽事件並確定動畫名稱沒錯，就可以做事了：</p>
+<pre><code class="language-js">inputNode.addEventListener('animationstart', (event) =&gt; {  
+  const { currentTarget, animationName } = event;
+  
+  if (animationName === 'autofill') {
+    // do what ever you want, or
+    // trigger `change` event
+    currentTarget.dispatchEvent(new Event('change'));
+    // trigger custom event
+    currentTarget.dispatchEvent(new Event('autofill'));
+  }  
+}, false);
+</code></pre>
+<p>完全成為真的 event based，不用定時檢查了，不過缺點是要 CSS 搭配，不是純 JS 的方案，維護上比較麻煩一些，另外就是 Tommy Brunn 文章內用的是 <code>:--webkit-autofill</code>，但是現在完全可以用沒有 prefix 的 pseudo class 了。</p>
+<p>以上的程式碼範例就可以處理好瀏覽器內建的自動填入事件，不過現實世界除了瀏覽器內建的自動填入，還有很多的第三方工具支援，像是各種 password manager: 1Password, LastPass, Dashlane 等，這些工具自動填入的行為又不太一樣，我確實有發現有其中一兩家的行為也是 value 會改變，但是不會有 input 和 change 事件，幸好這些工具都會加上各自自訂的 attribute，所以可以另外透過 observer 監看 attribute 的變化來判斷是否有相關的事件，目前我所知道有以下的 attributeName 可以檢查：</p>
+<ul>
+<li><code>data-dashlane-autofilled</code> Dashlane 的</li>
+<li><code>data-com-onepassword-filled</code> 1Password 的</li>
+<li><code>chrome-autofilled</code> iOS Chrome，超容易漏掉</li>
+</ul>
+<p>至於 LastPass 目前測試結果是不會有自訂的 attribute，但是會有 change 事件，所以也可以照常運作（不過相對的就完全沒有提供給使用者的視覺提示好像怪怪的）。</p>
+<p>這篇內容大概就到這邊，雖然沒有提供很完整的程式碼，不過這些資訊應該很夠幫助其他人完成 autofill 事件的偵測了，其實這次弄信用卡資訊的輸入欄位真是費了不少心力，很多細節可以弄，也很多 domain knowledge（都靠 lib 搞定就是），真是想不到只是信用卡欄位也這麼多眉角。</p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2024/10/19/onautofill/</link>
+<guid>https://blog.othree.net/log/2024/10/19/onautofill/</guid>
+<category>script</category>
+<pubDate>Sat, 19 Oct 2024 13:17:31 +0800</pubDate>
+</item>
+
+<item>
+<title>Oklab Color Space</title>
+<description><![CDATA[<p>2019 年的時候，寫過一篇文章介紹了 <a href="https://blog.othree.net/log/2019/03/18/lab-gradient/">Lab Gradient</a>，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...</p># -- 勞哥 maylogger (@may_logger) <a href="https://twitter.com/may_logger/status/1812110985752420697?ref_src=twsrc%5Etfw">July 13, 2024</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為 L*a*b*，多加 <code>*</code> 為了避免混淆，Lab 其實是不正確的縮寫，不過這三個字母其實就是該顏色空間的三個軸：L 代表亮度、a 代表紅色到綠色間的位置、b 代表藍色到黃色間的位置，也就是 opponent color theory（又稱對比色理論或色覺對向論）的顏色組成，這個色彩空間的重點在它的座標比較符合人類對色彩的感知。</p>
+<p>那 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 又是什麼呢？它是 Björn Ottosson 在 2020 年底發表的一個新的色彩空間定義，他在文章內有詳細的說明為什麼會想要定義一個新的色彩空間，文內也列舉了現存的色彩空間的主要問題，其中 CIELAB 的問題就是在 predict hue （預測色相）有些問題，尤其是藍色附近，其實我一開始對於這個 predict 感到很疑惑，想說到底是什麼意思，後來看到另外一篇文章 <a href="https://raphlinus.github.io/color/2021/01/18/oklab-critique.html">An interactive review of Oklab</a>，文章一開始放的互動工具預設的漸層設定就是藍色到白色，然後一看就很明顯， CIELAB 的漸層色相跑一下就歪掉了變成偏紫色去了（random 按鈕可以按按看看其他色相都沒這樣嚴重），才了解到因為 CIELAB 是屬於人類感知的色彩空間，意思就是它的依歸其實是人類的感覺，所以需要從三維座標去<strong>推測</strong>人類實際上看到感覺到的顏色，數值上一樣的話就應該讓人感覺一致，而 Oklab 則是結構和 CIELAB 一樣，但是透過新的資料集來調整並解決前面提到的問題，而後在 2023，Oklab 進了 CSS Color Level 4 的草稿，主流瀏覽器現在也都已經支援。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53870474429/" title="CIELAB by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53870474429_b239243a3e_b.jpg" width="1024" height="484" alt="CIELAB" /></a></p>
+<p>進 CSS Color 代表什麼意思呢？第一個當然就是可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab"><code>oklab()</code></a> 函數來定義顏色了：</p>
+<pre><code>oklab(40.1% 0.1143 0.045);
+oklab(59.69% 0.1007 0.1191);
+oklab(59.69% 0.1007 0.1191 / 0.5);
+</code></pre>
+<p>除了直接定義顏色之外，現在 CSS 也支援相對顏色（relative color）了：</p>
+<pre><code>/* Relative values */
+oklab(from green l a b / 0.5)
+oklab(from #0000FF calc(l + 0.1) a b / calc(alpha * 0.9))
+oklab(from hsl(180 100% 50%) calc(l - 0.1) a b)
+</code></pre>
+<p>這樣要只調整色相或是亮度都變得很簡單，或是也可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch"><code>oklch()</code></a>，這樣色相（Hue）就更好挑選。</p>
+<p>然後就是漸層了，現在的 CSS 漸層也支援使用不同的顏色內差方式，也就是用不同色彩空間來算中間的顏色變化：</p>
+<pre><code>linear-gradient(in oklab, blue, red)
+linear-gradient(in lab to right, #44C, #795)
+</code></pre>
+<p>在最前面加上 <code>in &lt;color-space&gt;</code> 就可以，支援的色彩空間其實不少，如果是線性漸層，那支援 srgb、srgb-linear、display-p3、a98-rgb、prophoto-rgb、rec2020、lab、oklab、xyz、xyz-d50、xyz-d65，如果是 polar 漸層，那支援 hsl、hwb、lch、oklch，其實相當夠用，而這段語法其實是叫 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color-interpolation-method">color-interpolate</a>（顏色內插），除了漸層之外，會用到的地方還包括 filter、animation、transition 和 <code>color-mix()</code> 函數等。</p>
+<p>前面也已經提到，現在主流瀏覽器都已經支援了，不過還是來看一下 <a href="https://caniuse.com/mdn-css_types_image_gradient_linear-gradient_interpolation_color_space">caniuse</a> 上的細節，Chrome 是 2022 就支援了，但是 Firefox 是到去年的 2023 才支援，如果要抓兩年的時間的話就還要再等等，當然現在也還是可以直接用，多加一組 fallback 就可以。</p>
+<p>除了瀏覽器原生支援外，其實也不少其它開發相關的工具支援，也有不少文章在介紹，像是 Smashing Magazine 的 <a href="https://www.smashingmagazine.com/2023/08/oklch-color-spaces-gamuts-css/">Falling For Oklch: A Love Story Of Color Spaces, Gamuts, And CSS</a> 和 Evil Martians 的 <a href="https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl">OKLCH in CSS: why we moved from RGB and HSL</a>，兩篇文章就介紹了不少工具和一些延伸的文章，工具部分像是 Figma 的 plugin <a href="https://www.figma.com/community/plugin/1173638098109123591/okcolor">OkColor</a> 和 npm 上的 <a href="https://www.npmjs.com/package/convert-to-oklch/v/1.2.0">convert-to-oklch</a>，Evil Martians 還做了一個 <a href="https://oklch.com/">oklch.com</a> ，是針對 Oklch 的 color picker 還蠻厲害的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53869218887/" title="oklch.com by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53869218887_128b804d16_b.jpg" width="1024" height="686" alt="oklch.com" srcset="https://live.staticflickr.com/65535/53869218887_067ddb5f54_k.jpg 2x" /></a></p>
+]]>
+
+</description>
+<link>https://blog.othree.net/log/2024/07/21/oklab-color-space/</link>
+<guid>https://blog.othree.net/log/2024/07/21/oklab-color-space/</guid>
+<category>css-html</category>
+<pubDate>Sun, 21 Jul 2024 18:33:34 +0800</pubDate>
+</item>
+
+<item>
+<title>溝通</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403022423/" title="とこなめ招き猫通り by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403022423_5539409fe7_b.jpg" width="683" height="1024" alt="とこなめ招き猫通り" srcset="https://live.staticflickr.com/65535/53403022423_7446cfc748_k.jpg 2x" /></a></p>
+<p>照片是常滑招財貓大道的「除憂解難」。</p>
+<p>沒想到這週這麼熱鬧，前後兩天分別發生兩件和溝通有關的熱烈討論（網路對罵？），第一件事情比較少人知道，是發生在 COSCUP 的 telegram 社群，雖然是公開社群但是因為沒有直接的公開網址所以我就不寫網路 id 了。有社群朋友（後面用 A 代稱）想要辦 BoF 需要一些硬體設備，但是因為今年的 BoF 公告還沒出來，所以他想知道大會方是不是有機會能協助（幫忙借用設備），可以的話就會提出申請，其實如果熟悉 BoF 的應該都知道大會方只有提供場地，不過我當時在開車也沒辦法馬上幫忙回，總之就有其他朋友幫忙回了，四貓作為工作人員也在幫忙釐清對方的需求，當時大概就是有位社群朋友回文時多了一句：</p>
+<blockquote>
+<p>但如果認為大會方該要提供的話，你們預期大會方能從哪搞到這個資源呀</p>
+</blockquote>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2024/05/16/communication/">閱讀 「溝通」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2024/05/16/communication/</link>
+<guid>https://blog.othree.net/log/2024/05/16/communication/</guid>
+<category>diary</category>
+<pubDate>Thu, 16 May 2024 20:19:02 +0800</pubDate>
+</item>
+
+<item>
+<title>看見不同的學習風景</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53705215124/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53705215124_e27643e0af_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53705215124_3bdc8e8496_k.jpg 2x" /></a></p>
+<p>週末帶小孩去松山菸廠意外發現到「<a href="https://www.songshanculturalpark.org/exhibition/activity/20028bbd-8f9c-472a-ad04-3e7584800adf">SEE DIFFERENT 看見不同的學習風景</a>」這個展覽，心中實在是有些想法和感觸想分享，首先先來介紹一下這個展覽吧：這個展覽其實是「<a href="https://schooltextbooks.design.org.tw/news/20240422">第二屆教科圖書設計獎</a>」的得獎作品，沒錯，是教科書，國中國小的教科書的設計展！而且不只是視覺上的設計，評選的範圍也包含內容的設計，展場展出的就是本屆得獎的教科書們，有一整區是可以翻閱的，只能說現在的教科書和我接觸過的三十年前左右的真的是差很多，除了更加活潑有質感的設計，還有各種清晰的圖表輔助，甚至連內文都變得很好閱讀，很像是在看科普書而不是教科書，深入了解之後，才知道這一切其實要從十年前，也就是 2014 年在 FlyingV 上的「<a href="https://www.flyingv.cc/projects/4221">美感細胞的教科書改造計畫</a>」開始，其實我當年也有看到，不過我是沒什麼參與，覺得就是很理想但是很難進入體制內，沒想到，美感細胞默默耕耘十年，加上教育部推動美感教育，還真的推展開來了，教科圖書設計獎都辦到了第二屆，而<a href="https://www.aestheticell.org/research/">美感細胞</a>在其中的角色，除了在 FlyingV 上三季的募資計畫，後來還成立社團法人，承接一些政府合作案之外，也持續進行相關研究，發佈了不少的<a href="https://www.aestheticell.org/research/">設計報告和參考資料</a>，另外還有一個很重要的角色，就是作為教科書出版社和設計師之間的媒合橋樑，其實教科書的出版不是那麼容易，和一般書籍比起來限制較多，除了內容要送審之外，教育部還有<a href="https://edu.law.moe.gov.tw/LawContent.aspx?id=FL033134">印製規定</a>。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2024/05/08/see-different/">閱讀 「看見不同的學習風景」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2024/05/08/see-different/</link>
+<guid>https://blog.othree.net/log/2024/05/08/see-different/</guid>
+<category>diary</category>
+<pubDate>Wed, 08 May 2024 17:06:12 +0800</pubDate>
+</item>
+
+<item>
+<title>時間ねぇ</title>
+<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53676063087/" title="時間のないサイト運営者リング by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53676063087_6e0a1efc69_b.jpg" width="1024" height="824" alt="時間のないサイト運営者リング" srcset="https://live.staticflickr.com/65535/53676063087_91a1755290_k.jpg 2x" /></a></p>
+<p>在 blog 這詞最為蓬勃之時，很流行在自己的網站上放各式各樣的 banner，這些 banner 種類用途很多，像是顯示你網站使用了甚麼技術、你想幫忙宣傳的東西、網站連結、甚至是一些自我的主張表現或是可以稱為無用小廢物（像是<a href="http://www.max.hi-ho.ne.jp/mao_h/nhk/">日本放置協会</a>，又簡寫為 NHK）的都有，我以前也放了不少，不過最後留下來的就只有兩個，第一個是 MDN 的推廣貼紙，第二個則是「<a href="https://sites.google.com/view/happy-busy/">時間のないサイト運営者リング</a>」，沒時間的站長串連，這張 banner 我看到的第一眼就很喜歡，有很符合個人狀況所以我放了很久，從 2007 年五月開始就一直放著，也有連結回去，直到前陣子整理網站的時候才發現，當初連回的串連網站已經死掉了！然後我就花了些時間尋找替代方案。</p>
+]]>
+
+<span class="extended"><a href="https://blog.othree.net/log/2024/04/24/happy-busy/">閱讀 「時間ねぇ」 全文</a></span>
+
+</description>
+<link>https://blog.othree.net/log/2024/04/24/happy-busy/</link>
+<guid>https://blog.othree.net/log/2024/04/24/happy-busy/</guid>
+<category>diary</category>
+<pubDate>Wed, 24 Apr 2024 23:10:47 +0800</pubDate>
+</item>
 
 <item>
 <title>JSON Type Definition</title>
@@ -199,150 +356,6 @@
 <guid>https://blog.othree.net/log/2023/10/22/celeste/</guid>
 <category>acg</category>
 <pubDate>Sun, 22 Oct 2023 20:56:37 +0800</pubDate>
-</item>
-
-<item>
-<title>digital envelope routines::unsupported</title>
-<description><![CDATA[<p>Node.js 16 LTS 已經結束維護，所以手上的東西就開始需要升級升級，然後就必須要來正面面對這個我逃避已久的錯誤訊息：</p>
-<pre><code>digital envelope routines::unsupported
-</code></pre>
-<p>這錯誤基本上就是發生在幾個網站的專案，尤其是 build 專案時特別會容易看到，而且這個錯誤其實和一般看到的 JS 錯誤長得不太一樣，全貌其實是這樣：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53186660279/" title="digital envelope routines::unsupported by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53186660279_4f2b82bbbc_b.jpg" width="1024" height="738" alt="digital envelope routines::unsupported" srcset="https://live.staticflickr.com/65535/53186660279_a5cd706923_k.jpg 2x" /></a></p>
-<pre><code>Error: error:0308010C:digital envelope routines::unsupported
-</code></pre>
-<p>首先是錯誤訊息，前面有一些 hex 值，不知道是什麼，然後下面 trace 的地方，可以看到幾乎都是 node_module 內的東西，不是因為我們自己的 code 造成的，所以就很讓人困惑，想說是不是什麼系統問題、還是有什麼偷用非公開 API 造成不相容的狀況。總之以前就是遇到這個問題就是又降版回來，沒有仔細深究，這次終於要來認真處理，不過搜尋結果，幾乎都是說加一個 <code>--openssl-legacy-provider</code> flag，都沒人說到底是什麼問題，尋找許久，終於在 StackOverflow 找到一則<a href="https://stackoverflow.com/a/73027407/443051">最正確的答案</a>，沒想到和 OpenSSL 1.x 的生命已經到盡頭有關。</p>
-<p>結果這個錯誤，其實是因為 Node.js 17 開始，從 OpenSSL 1.x 換到 3.x，然後 OpenSSL 3.x 不是向下相容的，所以有些東西有機會出錯，這邊爛掉的，其實是一些 legacy 的 hash method 預設是拿掉的，而 Webpack 在建立 bundle 檔案時，如果檔名有用到 hash 的話，預設的 hash method 用的就是已經被淘汰的 <a href="https://www.openssl.org/docs/man3.1/man3/MD4.html">md4</a>，然後 md4 是用 Node.js 的 <a href="https://nodejs.org/docs/latest-v20.x/api/crypto.html#cryptocreatehashalgorithm-options">crypto</a> 來呼叫 OpenSSL 做事，Node.js 的文件也有提到支援的演算法是依據你的 OpenSSL 版本和系統而定，所以其實並沒有保證 <strong>md4</strong> 一定可以用，而如果使用了 OpenSSL 不支援的演算法，跑出來的錯誤訊息就是像上面截圖一樣特別了，然後我還特別去用 OpenSSL 3 cli 跑跑看，結果出來的錯誤訊息真的就是差不多：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53188641438/" title="OpenSSL 3 error by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53188641438_3493041848_b.jpg" width="512" height="341" alt="OpenSSL 3 error" srcset="" /></a></p>
-<p>使用 flag 開啟舊演算法的支援其實我覺得還算可以接受，畢竟是 build 而已，不是拿來跑服務，不過這個 flag 似乎有點特殊，似乎不能直接放在 <code>NODE_OPTIONS</code> 裡面，而且同個程式庫要是拿到舊版 Node.js 環境去跑，加這個 flag 反而跑不起來，所以最理想還是把問題解決掉。</p>
-<p>那這個問題應該怎麼處理呢？其實簡單說就是把套件升級升級就好了，因為現在的套件新版本都有處理這個問題，不過走上升級這條路之前可以先試試看 StackOverflow 上的解法（有可能讓你專案爛掉，請先備份）：</p>
-<pre><code class="language-bash">npm audit fix --force 
-</code></pre>
-<p>如果你用的是 yarn，沒有 <code>audit fix</code> 可用，但是也有人提供用 npm 來修理的<a href="https://stackoverflow.com/questions/51732435/is-there-a-yarn-alternative-for-npm-audit/60878037#60878037">流程</a>，不過我是沒試過這個流程，我自己有一個專案是靠 <code>yarn upgrade</code> 升級後解決問題的（實際上是把所有有用到的 <a href="https://github.com/webpack/loader-utils/releases/tag/v2.0.1"><strong>loader-utils</strong> 都升級到 2.0.4</a>，本來有個套件用到 2.0.0），剩下的還是無法修好的就要靠手工了，然後因為我處理的網站只有 Gatsby 和 CRE(Create React App) 兩種，所以以下就是只有說明這兩個系統的為主，兩者其實都是使用 Webpack 作打包工具的，而 <a href="https://github.com/webpack/webpack/releases/tag/v5.61.0">Webpack</a> 是從 v5.61.0 開始保證支援 Node.js 17 的，我稍微查了一下 Gatsby 是從 <a href="https://github.com/gatsbyjs/gatsby/releases/tag/gatsby%404.2.0">4.2.0</a>，而 CRA 的則是要最新版 react-script <a href="https://github.com/facebook/create-react-app/releases/tag/v5.0.1">5.0.1</a> 才保證支援，為什麼說是保證呢？因為 <code>^</code> 的 semver range 的關係，例如要是你的 react-script 是 5.0.0，那你本地可能會是裝到 Webpack v5.60.0，那就不支援 Node.js 17 了，像我就是有 Gatsby 3.x 的，升級到 4.x 就沒事了。</p>
-<p>Gatsby 和 CRA 其實都還好，最慘的是 eject 過的 CRA 了，只能手工升級，基本上就是去 <a href="https://github.com/facebook/create-react-app/tree/main/packages/react-scripts">react-script</a> 那邊，複製需要的檔案回到你的專案覆蓋過去，最主要的是 <code>scripts/</code> 和 <code>config/</code> 下的檔案，然後根據自己的修改紀錄把自己作過的修改改回去，接著更新 <code>package.json</code> 裡面的 dependencies，版本號就是參照 react-script 那邊的 <a href="https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/package.json#L30-L78">package.json</a>，最主要的就是 <code>webpack</code> 相關的，接著安裝套件後重新 build，要是還有一樣的錯誤，就看 trace 看看是哪個相依套件，看有沒有新版有修正就更新試試看，大概就是這樣，很容易漏東西所以會一直重複測試，蠻花時間的，不過最後 build 成功還是有成就感的。</p>
-<p>PS. 還要小心其他升級的後遺症，如果是 app 最好要測試過各種行為，像我遇到 Webpack 5 不支援 polyfill Buffer 的問題，剛好那個錯誤又被 catch 掉，所以我 build 是沒問題的，就是測試跑不過，後來參考網路上的<a href="https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5">文章</a>處理。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</link>
-<guid>https://blog.othree.net/log/2023/09/15/digital-envelope-routines-unsupported/</guid>
-<category>script</category>
-<pubDate>Fri, 15 Sep 2023 11:41:56 +0800</pubDate>
-</item>
-
-<item>
-<title>Vim License 的故事（下）</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x" /></a></p>
-<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
-<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2023/09/11/vim-license-2/">閱讀 「Vim License 的故事（下）」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2023/09/11/vim-license-2/</link>
-<guid>https://blog.othree.net/log/2023/09/11/vim-license-2/</guid>
-<category>vim</category>
-<pubDate>Mon, 11 Sep 2023 17:27:11 +0800</pubDate>
-</item>
-
-<item>
-<title>Vim License 的故事（上）</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53177898493/" title="‎vim-license-slide.‎001 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53177898493_0143b6204a_b.jpg" width="1024" height="576" alt="‎vim-license-slide.‎001" srcset="https://live.staticflickr.com/65535/53177898493_530da1ec12_k.jpg 2x" /></a></p>
-<p>這篇是我<a href="https://blog.othree.net/log/2022/07/31/coscup-2022/">去年 COSCUP</a> 分享的文字版，拖稿許久終於寫出來了，以下正文開始。</p>
-<p>Open Source Software 一直是 GitHub 的心頭肉(?)，也因此 GitHub 一直都有在各方面協助 OSS 開發者，其中也包括了對 Open Source License（開源授權）相關的協助。在 2013 年，GitHub <a href="https://github.blog/2013-07-15-choosing-an-open-source-license/">發佈了一個小網站</a> 叫 <a href="https://choosealicense.com/">choosealicense.com</a>，用簡單的條列介紹各開源授權條款的特色，並且藉由一些問答互動來幫助開發者挑選開源軟體授權條款。</p>
-<p>而到了 2016 年，GitHub 更進一步提供了<a href="https://github.blog/2016-09-21-license-now-displayed-on-repository-overview/">授權條款的偵測功能</a>，只要你的程式庫裡面有正確的授權條款資訊（像是 LICENSE 檔案），然後使用的條款也在偵測的範圍內，那在 GitHub 上就會顯示該專案所使用的授權條款，也會同時提供該授權條款的特色給訪客參考，不過這個偵測功能，能偵測到的授權條款只有一些，更精確的說，就是只有 choosealicense 網站上的那些。</p>
-<p>在 GitHub 推出授權條款偵測功能後沒多久，我就發現到 Vim 所使用的 Vim License 並不在偵測的範圍內。Vim License 是一個很特別的授權條款，是 Vim 的作者 Bram Moolenaar 專為 Vim 使用而寫的，雖然內文是針對 Vim 本身寫的，不過其實有很多的 Vim Script 也是標注使用 Vim License，甚至常常是寫 &quot;Same as Vim&quot;，所以實際上使用的專案並不少，所以我就一直想著，是不是有可能讓 GitHub 可以支援偵測 Vim License 呢？</p>
-]]>
-
-<span class="extended"><a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">閱讀 「Vim License 的故事（上）」 全文</a></span>
-
-</description>
-<link>https://blog.othree.net/log/2023/09/10/vim-license-1/</link>
-<guid>https://blog.othree.net/log/2023/09/10/vim-license-1/</guid>
-<category>vim</category>
-<pubDate>Sun, 10 Sep 2023 23:32:05 +0800</pubDate>
-</item>
-
-<item>
-<title>Remove Disqus</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53136393026/" title="EFF Privacy Badger by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53136393026_ffc28f0f35_c.jpg" width="400" height="280" alt="EFF Privacy Badger" /></a></p>
-<p>前陣子有整理了一下部落格的東西，大致上作的事情是：</p>
-<ul>
-<li>拿掉 Google Analytic</li>
-<li>拿掉所有的 SNS 按鈕</li>
-<li>拿掉 Disqus</li>
-<li>換 web font 服務</li>
-</ul>
-<p>首先是拿掉 Google Analytic 這件事，其實我已經想很久了，一部分原因是不想餵資料資料給 Google，另一個原因則是剛好現在舊的 Universal Analytic 已經停用了，一定要改成用 GA4，所以趁這個機會就乾脆的拿掉了，不過還是會好奇哪些內容比較有人看，所以又花了點時間研究了 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析軟體</a>，因為不想多架服務，老牌的 AWStats 介面現在實在是無法接受，所以現在選的是 <a href="https://goaccess.io/">goaccess</a> 當成 terminal 工具來用，不過它其實還蠻強的，選項很多，要當成服務跑也可以。另外就是如果還是偏好前端的追蹤， Twitter(現在的X) 上也有<a href="https://twitter.com/hsins_/status/1690038318732611584">朋友</a>推薦了 <a href="https://www.goatcounter.com/">GoatCounter</a> 和 <a href="https://umami.is/">umami</a>，分別是 golang 和 js 寫的服務，有開源也有線上的服務，有限度的服務使用額度，當然自架的話也可以，不意外的都需要資料庫，非開源專案的話也有一個 <a href="https://plausible.io/">Plausible</a> 看起來不錯。</p>
-<p>第二個是 SNS 按鈕，其實以前有三個按鈕，分別是 Google+、Facebook 和 Twitter，然後我都是用 iframe 掛上按鈕的，這樣比較不用擔心直接掛第三方 js 的各種問題（隱私、安全），不過 Google+ 收掉了，FB 按鈕因為 Firefox container 的關係我其實也都看不到，後來忘了什麼原因也拿掉了，最後只剩下 Twitter 的，結果最近發現我掛按鈕使用的那個 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/web-intents/overview">Web Intent</a> 也被改的無法在 iframe 內顯示按鈕了，所以就乾脆的剩下的全拿掉，最後只留下一個用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API">Web Share API</a> 的按鈕。</p>
-<p>然後是 Disqus，其實留言系統原理簡單不難，但是真的要做的話也是很麻煩，一來要有資料庫，這樣現在很多的靜態網頁產生工具就先死一票了、二來還要有能檔 spam 的能力，所以 Disqus 的出現真的是補了一個很大的缺口，我以前是很喜歡 Disqus 的，畢竟它是這種需求數一數二的先行者，該公司的工程師也很認真的研究 3rd party script 的技巧，我現在工作也有一部分是在寫 3rd party script，對此有興趣之餘，也對於這東西的麻煩之處很有感，不過現實就是開公司就是還是要賺錢，所以慢慢的它也是走向我比較不喜歡的方向，開始大量收集資料，然後甚至有人說開始有插入廣告了，不過除此之外，更大的一個原因是在我這邊的使用率實在太低，如果都沒人用的話，一直掛著也只是訪客被收集資料而已，於是我決定把整個迴響區塊都拔掉，帶來的副作用當然就是以前一些少數的留言也都消失了。</p>
-<p>我在拿掉迴響後沒兩天，就剛好看到 HackMD 也拿掉 Disqus 的<a href="https://twitter.com/hackmdio/status/1692158313704910982">消息</a>，跟著原推文下去找其實也有不少的替代方案，像是 <a href="https://cusdis.com/">cusdis</a>、用 GitHub 的 <a href="https://giscus.app/">giscus</a> 和 <a href="https://utteranc.es/">utterances</a> 等，其實 <a href="https://www.wappalyzer.com/technologies/comment-systems/">Wappalyzer</a> 上也有些替代方案（然後也可以看到 Disqus 佔有率目前還很高）。</p>
-<p>其實還有另外一種類型的替代方案，就是去支援新的 protocol，像是 <a href="https://activitypub.rocks/">ActivityPub</a> 和 <a href="https://indieweb.org/Webmention">Webmention</a> ，第一次看到 ActivityPub 加上靜態網站產生器的方案時，我就想起以前消失在 spam 的洪流之中的 trackback 機制，不過靜態網站產生器和 ActivityHub 相性不是那麼好，它其實也是和留言系統一樣，需要有 API endpoint 和資料庫，所以有辦法做到支援的選擇也沒很多，相關的服務和專案也相對不成熟，還需要不少<a href="https://paul.kinlan.me/adding-activity-pub-to-your-static-site/">手工</a>；另外一個選擇 Webmention，則可以參考 Jason 的「<a href="https://jason-memo.dev/posts/webmention/">透過 webmention 來搜集 blog 的社群迴響</a>」，基本上是可以透過第三方服務來弄成純前端的方案。</p>
-<p>最後一個就是 web font 了，其實本來沒有要調整這塊，只是上面幾項改完，發現網站幾乎要沒有追蹤器了，只剩下 Google Fonts 相關的 request，Google Fonts 一直是被歸類為潛在的追蹤器，實際上到底有沒有被偷偷用來當做追蹤器也無法證實，總之我就試著尋找替代方案，一開始想的是自己放檔案，因為我只有用到兩個英文字型，不過結果大小差了 10 倍，不進一步調整不行，就在這時候看到了 <a href="https://twitter.com/littlegoodjack/status/1691699453877682247">Laravel 因為 GDPR 的關係改用</a> <a href="https://fonts.bunny.net/">Bunny Fonts</a> 了，大概研究了一下，bunny.net 本身是 CDN 服務商，而 Bunny Fonts 就是主打無追蹤，所以 GDPR 沒問題，另一個特點就是介面和 Google Fonts 相容，也就是說只要把 domain name 換掉就好（我的狀況是還有 CSP 要修改）。</p>
-<p>然後最後的結果就是如文章上面的圖片一樣，現在大部分頁面，<a href="https://www.eff.org/pages/privacy-badger">EFF Privacy Badger</a> 的檢查結果已經是沒有需要阻擋的東西了，只有部分文章有內嵌 Tweet 或 YouTube 影片的，就還是會顯示有潛在的追蹤器。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2023/08/23/remove-disqus/</link>
-<guid>https://blog.othree.net/log/2023/08/23/remove-disqus/</guid>
-<category>about</category>
-<pubDate>Wed, 23 Aug 2023 23:03:25 +0800</pubDate>
-</item>
-
-<item>
-<title>Common Log Format</title>
-<description><![CDATA[<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53115754953/" title="Common Log File Format by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53115754953_56deb9d603_b.jpg" width="512" height="380" alt="Common Log File Format" /></a></p>
-<p>這篇算是一篇軟體的考古文吧，最近對部落格做了些調整，其中一個改變就是把 Google Analytic 拿掉了，一部分是因為現在已經不能用 UA 而要改用 GA4 了，然後其實我也想拿掉很久了，這次就順便把它移除，不過我還是有興趣想知道不同文章大家感興趣的程度差異，所以就又研究起以前那種根據 HTTP server log 來整理網站統計資訊的工具，其實以前一直沒成功拿掉 GA 的原因之一就是找不到好的替代工具，一直以來我比較有印象的就是 <a href="https://www.awstats.org/">AWStats</a>，只是那個介面我實在是受不了，然後搜尋其他替代工具的過程也不太順利，直到這次重新研究之後，發現到一個關鍵字 <strong>Common Log Format</strong>，這聽起來很一般的詞，在軟體工程界其實已經變成是一個專有名詞了。</p>
-<p><a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format 的 Wikipedia 條目</a> 寫著這是一種 HTTP server log 的標準格式，不過我覺得應該只能算是 de facto standard（業界標準），因為沒有任何機構真的定義並作為標準發布過，現在網路上可以找到 W3C 的一份格式說明，但是那其實是 CERN 時代的 <a href="https://www.w3.org/Daemon/">httpd</a> 這個軟體的說明文件，趁這個機會，我就想著要來搞清楚幾個我一直很疑惑的幾個和 log 相關的單字，分別就是一開始說到的 <strong>common</strong>，然後就是 <strong>combined</strong> 和 <strong>extended</strong>，這幾個關鍵字都是我以前在設定 Apache HTTPD 的時後常常會看到的，甚至其它的 web server 也有用到，但是一直沒有搞的很清楚，而且使用的字我也覺得很奇怪，像是 combined 是在 combine 什麼。</p>
-<p>結果就是，這些問題的答案，幾乎都在 NCSA(National Center for Supercomputing Applications、美國國家超級電腦應用中心) 開發的 HTTPd 軟體文件中，NCSA HTTPd 也就是最早提出這種 log format 的 HTTP server，而 NCSA HTTPd 的 log，其實預設下是有三個的，分別是：</p>
-<ul>
-<li><a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/TransferLog.html">TransferLog</a></li>
-<li><a href="https://web.archive.org/web/20090130083429/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/RefererLog.html">RefererLog</a></li>
-<li><a href="https://web.archive.org/web/20090130083423/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/AgentLog.html">AgentLog</a></li>
-</ul>
-<p>TransferLog 其實就是現在大家說的 access log，格式就是所謂的 CLF，不過其實當時是寫作 <strong>Common Log File(CLF) Format</strong>，紀錄的資料格式就是：</p>
-<pre><code>host rfc931 authuser [DD/Mon/YYYY:hh:mm:ss] &quot;request&quot; ddd bbbb
-
-- host: Either the DNS name or the IP number of the remote client
-- rfc931: Any information returned by identd for this person, - otherwise.
-- authuser: If user sent a userid for authentication, the user name, - otherwise.
-- DD: Day
-- Mon: Month (calendar name)
-- YYYY: Year
-- hh: hour (24-hour format, the machine's timezone)
-- mm: minutes
-- ss: seconds
-- request: The first line of the HTTP request as sent by the client.
-- ddd: the status code returned by the server, - if not available.
-- bbbb: the total number of bytes sent, *not including the HTTP/1.0 header*, - if not available
-</code></pre>
-<p>然後文件還有定義了一個可擴充版的 <strong>Extended CLF Format</strong>，允許在這些 log 的末端加上其他的資料，如果 <a href="https://web.archive.org/web/20090124003443/http://hoohoo.ncsa.uiuc.edu/docs/setup/httpd/LogOptions.html"><code>LogOptions</code></a> 設定為 <code>Combined</code> 的話，三種 log 會 combine 在一起，使用 Extended CLF Format，多加上了 referrer 和 user-agent 資訊，這也就是 Combined 這個格式名稱的由來，而這邊有另外一個容易混淆的東西，就是 W3C 有一份很古老的 <a href="https://www.w3.org/TR/WD-logfile">Extended Log File Format 的 Working Draft</a>，這份文件定義的格式和 CLF 其實是沒關係的，所以看文件時，有比較仔細的文件就會寫到是 W3C 的 extended 還是 NCSA 的。</p>
-<p>雖然我沒仔細查先後關係，不過 CERN 版的 HTTPd 應該是後來才實作了 NCSA 版的 log format，文件內則是稱為 <strong>Common Logfile Format</strong>，簡稱也是 CLF，不過單字有一點點不一樣就是，當然格式是一樣的，然後其實它也保留了 CERN HTTPd 的舊版 log，格式是：</p>
-<pre><code>time remotehost request 
-</code></pre>
-<p>實作是：</p>
-<pre><code>fprintf(log, &quot;%24.24s %s %s\n&quot;,
-		asctime(gorl), HTClientHost, n_noth(HTReqLine));
-</code></pre>
-<p>其中的 <code>%24.24s</code> 我還是<a href="https://en.cppreference.com/w/c/io/fprintf">研究</a>了好一陣子才看懂第一個 24 是最短長度，資料不夠長時會加上空白，然後 <code>.</code> 後面的是精確度，遇到字串時則會變成最長長度，超過的就會不輸出，<a href="https://cplusplus.com/reference/ctime/asctime/"><code>asctime</code></a> 則是一個內建函數可以把時間轉成字串，格式是：</p>
-<pre><code>Www Mmm dd hh:mm:ss yyyy
-</code></pre>
-<p>長度剛好是 24 個字元，至於那個變數名稱 <code>gorl</code> 則是我花最多時間才參透的，它的意思是：「GMT time or Local time」，但是它不是 indicator 那種二元值，而是變數本身就是那個時間，而那個時間可能是 GMT 時區時間也可能是本地時間。</p>
-<p>這樣，其實很多細節的小疑問都有了解答，像是以前看 log 常常看到兩個 <code>-</code> 接連出現，其實代表的是連續兩個沒有值的欄位，其中一個是現在已經幾乎沒用到的 Identification Protocol（<a href="https://www.rfc-editor.org/rfc/rfc1413">RFC1413</a>），也是個古早的東西，我稍微看了一下好像 IRC 有用到；然後因為其實沒有標準，所以以前和現在的日期格式用的已經不一樣了，現在是普遍有加上時區，當時 NCSA 的和後來 CERN 實做的都沒有時區資訊；另外就是 <a href="https://httpd.apache.org/docs/current/mod/mod_log_config.html#examples">Apache HTTPD 文件</a> 的範例也有提到 RefererLog 和 AgentLog，我當時看到時就想說怎麼會有人只要這兩種資訊的 log；發現 CLF 這個專有名詞後，我也循線找到更多的 <a href="https://en.wikipedia.org/wiki/List_of_web_analytics_software">web log 分析工具</a>了，目前我是先挑了 goaccess 來用。</p>
-<p>最後整理一下，這三個關鍵字在 web log 的情境下時：</p>
-<ul>
-<li>Common 格式，通常指的是 Common Log File(CLF) Format；</li>
-<li>Extended，不考慮 W3C 的版本的話，這邊指的是 NCSA Extended CLF Foramt，如果 CLF Format 定義的欄位不夠用，需要更多資訊時，就可以使用這種格式，多的資訊是加在 log 尾端；</li>
-<li>Combined 格式，多加了 referrer 和 user-agent 的 web log，使用 NCSA 版 Extended CLF Foramt 的格式，combine 指的是合併 TransferLog、RefererLog 和 AgentLog 三種 log。</li>
-</ul>
-<p>實際上 NCSA HTTPd 就不只 Common 和 Combined 兩種，還有 ServerName 可以加上，當然也是使用 Extended 格式，不過目前流傳下來，最常見的就是這兩種了。</p>
-]]>
-
-</description>
-<link>https://blog.othree.net/log/2023/08/14/common-log-format/</link>
-<guid>https://blog.othree.net/log/2023/08/14/common-log-format/</guid>
-<category>unix</category>
-<pubDate>Mon, 14 Aug 2023 21:29:05 +0800</pubDate>
 </item>
 
 

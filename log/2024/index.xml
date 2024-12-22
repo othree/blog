@@ -16,6 +16,249 @@
 
 		</b:entriesMeta>
 
+		<b:entry entryID="001012" baseName="onautofill">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-10-19</b:date>
+				<b:time>13:17:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>onAutofill</b:title>
+			<b:content>
+				<b:summary> 在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。 首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 autocomplete 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？ 問題就是這種 autofill 發生時，瀏覽器不一定會觸發 change/input 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 &lt;input&gt; 的 change/input 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 change/input 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。 那麼在 Web 標準中，change 事件應該何時觸發的定義是為何呢？在 HTML 4.01 是這樣寫的： The onchange event occurs when a control loses...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/54075332210/" title="Credit Card autofill by othree, on Flickr"><img src="https://live.staticflickr.com/65535/54075332210_2204a73894_b.jpg" width="1024" height="529" alt="Credit Card autofill" srcset="" /></a></p>
+<p>在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。</p>
+<p>首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 <code>autocomplete</code> 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？</p>
+<p>問題就是這種 autofill 發生時，瀏覽器不一定會觸發 <code>change/input</code> 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 <code>&lt;input&gt;</code> 的 <code>change/input</code> 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 <code>change/input</code> 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。</p>
+<p>那麼在 Web 標準中，<code>change</code> 事件應該何時觸發的定義是為何呢？在 <a href="https://www.w3.org/TR/html401/interact/scripts.html#adef-onchange">HTML 4.01</a> 是這樣寫的：</p>
+<blockquote>
+<p>The onchange event occurs when a control loses the input focus <em>and</em> its value has been modified since gaining focus. This attribute applies to the following elements: INPUT, SELECT, and TEXTAREA.</p>
+</blockquote>
+<p>按照古時候網路標準的規範，autofill 不是使用者和 DOM 之間的互動，沒有經過 focus blur，所以沒有觸發 change 事件也是合理，事實上也就是現在部分瀏覽器的行為；不過在現在的 <a href="https://html.spec.whatwg.org/multipage/input.html#common-input-element-events">HTML Living Standard</a> 是這樣寫的：</p>
+<blockquote>
+<p>The <code>change</code> event fires when the value is committed, if that makes sense for the control, or else when the control loses focus.</p>
+</blockquote>
+<p>觸發的時機除了失去 focus 時之外，還多了資料 commit（提交）時，變成兩種時機，而這邊的提交主要指的是像 <code>type=color</code> 或是 <code>type=date</code> 那種，瀏覽器有支援，有提供另外頁面內的小工具讓使用者方便挑選值的時候，使用者選好，瀏覽器更新值進入 <code>&lt;input&gt;</code> 的 value 的動作，那 autofill 更新值該算是 commit 嗎？其實文件內也是有講到的，就在同個章節的後面：</p>
+<blockquote>
+<p>When the user agent is to change an input element's value on behalf of the user (e.g. as part of a form prefilling feature), the user agent must queue an element task on the user interaction task source given the input element to first update the value accordingly, then fire an event named <code>input</code> at the <code>input</code> element, with the <code>bubbles</code> and <code>composed</code> attributes initialized to true, then fire an event named <code>change</code> at the <code>input</code> element, with the <code>bubbles</code> attribute initialized to true.</p>
+</blockquote>
+<p>這段就是說當瀏覽器代表使用者改變 input 的值時，也是要發一個 input 一個 change 事件，這段文字的重點在於 &quot;on behalf of the user&quot;，就是「代表使用者做事」，後面舉的例是 prefill 時，prefill 通常發生在 帳號/密碼 欄位，發生時間點又不太一樣，可能是在 render DOM 時就發生；不過根據文字解釋其實 autofill 應該也符合 &quot;on behalf of the user&quot;。</p>
+<p>雖然 HTML 標準有規範了，但是現實世界總是不會這麼美好，不然也不會有這篇文章了，那麼現實世界是怎樣呢？我遇到的狀況就是有些瀏覽器是照著舊的規範，完全沒有事件，發現問題後我就上網搜尋一番之後發現，這問題其實已經很久了，早在 2010 年，<a href="http://twitter.com/avernet">@avernet</a> 就寫了一篇 [Autocomplete and JavaScript Change Event][]，紀錄了當年的這個問題，根據不同欄位、不同瀏覽器會有不同的行為，即使到了今天，也還是同樣情形，文章最後建議的解法也是很無奈的：</p>
+<p><a href="https://avernet.blogspot.com/2010/11/autocomplete-and-javascript-change.html">Autocomplete and JavaScript Change Event</a></p>
+<ol>
+<li>關掉相關功能 <code>autocomplete=off</code></li>
+<li>定時檢查</li>
+</ol>
+<p>總之就是讓人不喜歡的解法，那麼時至今日，有沒有比較好的方法呢？其實還真的有，而且蠻聰明的，<a href="https://klarna.com">Klarna</a> 的 Tommy Brunn 在 2016 年寫了 <a href="https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7">Detecting autofilled fields in Javascript</a> 一文介紹了這種方法，透過 CSS pseudo-class <code>:autofill</code> 和 CSS animation 配上 <code>animationStart</code> 事件，首先 CSS 這樣：</p>
+<pre><code class="language-css">input:autofill {  
+  animation-name: autofill;
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+}
+
+@keyframes autofill {
+  from {
+    background: var(--color1);
+  }
+  to {
+    background: var(--color2);
+  }
+}
+</code></pre>
+<p>然後 JS 監聽事件並確定動畫名稱沒錯，就可以做事了：</p>
+<pre><code class="language-js">inputNode.addEventListener('animationstart', (event) =&gt; {  
+  const { currentTarget, animationName } = event;
+  
+  if (animationName === 'autofill') {
+    // do what ever you want, or
+    // trigger `change` event
+    currentTarget.dispatchEvent(new Event('change'));
+    // trigger custom event
+    currentTarget.dispatchEvent(new Event('autofill'));
+  }  
+}, false);
+</code></pre>
+<p>完全成為真的 event based，不用定時檢查了，不過缺點是要 CSS 搭配，不是純 JS 的方案，維護上比較麻煩一些，另外就是 Tommy Brunn 文章內用的是 <code>:--webkit-autofill</code>，但是現在完全可以用沒有 prefix 的 pseudo class 了。</p>
+<p>以上的程式碼範例就可以處理好瀏覽器內建的自動填入事件，不過現實世界除了瀏覽器內建的自動填入，還有很多的第三方工具支援，像是各種 password manager: 1Password, LastPass, Dashlane 等，這些工具自動填入的行為又不太一樣，我確實有發現有其中一兩家的行為也是 value 會改變，但是不會有 input 和 change 事件，幸好這些工具都會加上各自自訂的 attribute，所以可以另外透過 observer 監看 attribute 的變化來判斷是否有相關的事件，目前我所知道有以下的 attributeName 可以檢查：</p>
+<ul>
+<li><code>data-dashlane-autofilled</code> Dashlane 的</li>
+<li><code>data-com-onepassword-filled</code> 1Password 的</li>
+<li><code>chrome-autofilled</code> iOS Chrome，超容易漏掉</li>
+</ul>
+<p>至於 LastPass 目前測試結果是不會有自訂的 attribute，但是會有 change 事件，所以也可以照常運作（不過相對的就完全沒有提供給使用者的視覺提示好像怪怪的）。</p>
+<p>這篇內容大概就到這邊，雖然沒有提供很完整的程式碼，不過這些資訊應該很夠幫助其他人完成 autofill 事件的偵測了，其實這次弄信用卡資訊的輸入欄位真是費了不少心力，很多細節可以弄，也很多 domain knowledge（都靠 lib 搞定就是），真是想不到只是信用卡欄位也這麼多眉角。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001011" baseName="oklab-color-space">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-07-21</b:date>
+				<b:time>18:33:34</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Oklab Color Space</b:title>
+			<b:content>
+				<b:summary>2019 年的時候，寫過一篇文章介紹了 Lab Gradient，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 Oklab 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。 因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...# -- 勞哥 maylogger (@may_logger) July 13, 2024 在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為...</b:summary>
+				<b:mainContent><p>2019 年的時候，寫過一篇文章介紹了 <a href="https://blog.othree.net/log/2019/03/18/lab-gradient/">Lab Gradient</a>，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...</p># -- 勞哥 maylogger (@may_logger) <a href="https://twitter.com/may_logger/status/1812110985752420697?ref_src=twsrc%5Etfw">July 13, 2024</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為 L*a*b*，多加 <code>*</code> 為了避免混淆，Lab 其實是不正確的縮寫，不過這三個字母其實就是該顏色空間的三個軸：L 代表亮度、a 代表紅色到綠色間的位置、b 代表藍色到黃色間的位置，也就是 opponent color theory（又稱對比色理論或色覺對向論）的顏色組成，這個色彩空間的重點在它的座標比較符合人類對色彩的感知。</p>
+<p>那 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 又是什麼呢？它是 Björn Ottosson 在 2020 年底發表的一個新的色彩空間定義，他在文章內有詳細的說明為什麼會想要定義一個新的色彩空間，文內也列舉了現存的色彩空間的主要問題，其中 CIELAB 的問題就是在 predict hue （預測色相）有些問題，尤其是藍色附近，其實我一開始對於這個 predict 感到很疑惑，想說到底是什麼意思，後來看到另外一篇文章 <a href="https://raphlinus.github.io/color/2021/01/18/oklab-critique.html">An interactive review of Oklab</a>，文章一開始放的互動工具預設的漸層設定就是藍色到白色，然後一看就很明顯， CIELAB 的漸層色相跑一下就歪掉了變成偏紫色去了（random 按鈕可以按按看看其他色相都沒這樣嚴重），才了解到因為 CIELAB 是屬於人類感知的色彩空間，意思就是它的依歸其實是人類的感覺，所以需要從三維座標去<strong>推測</strong>人類實際上看到感覺到的顏色，數值上一樣的話就應該讓人感覺一致，而 Oklab 則是結構和 CIELAB 一樣，但是透過新的資料集來調整並解決前面提到的問題，而後在 2023，Oklab 進了 CSS Color Level 4 的草稿，主流瀏覽器現在也都已經支援。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53870474429/" title="CIELAB by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53870474429_b239243a3e_b.jpg" width="1024" height="484" alt="CIELAB" /></a></p>
+<p>進 CSS Color 代表什麼意思呢？第一個當然就是可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab"><code>oklab()</code></a> 函數來定義顏色了：</p>
+<pre><code>oklab(40.1% 0.1143 0.045);
+oklab(59.69% 0.1007 0.1191);
+oklab(59.69% 0.1007 0.1191 / 0.5);
+</code></pre>
+<p>除了直接定義顏色之外，現在 CSS 也支援相對顏色（relative color）了：</p>
+<pre><code>/* Relative values */
+oklab(from green l a b / 0.5)
+oklab(from #0000FF calc(l + 0.1) a b / calc(alpha * 0.9))
+oklab(from hsl(180 100% 50%) calc(l - 0.1) a b)
+</code></pre>
+<p>這樣要只調整色相或是亮度都變得很簡單，或是也可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch"><code>oklch()</code></a>，這樣色相（Hue）就更好挑選。</p>
+<p>然後就是漸層了，現在的 CSS 漸層也支援使用不同的顏色內差方式，也就是用不同色彩空間來算中間的顏色變化：</p>
+<pre><code>linear-gradient(in oklab, blue, red)
+linear-gradient(in lab to right, #44C, #795)
+</code></pre>
+<p>在最前面加上 <code>in &lt;color-space&gt;</code> 就可以，支援的色彩空間其實不少，如果是線性漸層，那支援 srgb、srgb-linear、display-p3、a98-rgb、prophoto-rgb、rec2020、lab、oklab、xyz、xyz-d50、xyz-d65，如果是 polar 漸層，那支援 hsl、hwb、lch、oklch，其實相當夠用，而這段語法其實是叫 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color-interpolation-method">color-interpolate</a>（顏色內插），除了漸層之外，會用到的地方還包括 filter、animation、transition 和 <code>color-mix()</code> 函數等。</p>
+<p>前面也已經提到，現在主流瀏覽器都已經支援了，不過還是來看一下 <a href="https://caniuse.com/mdn-css_types_image_gradient_linear-gradient_interpolation_color_space">caniuse</a> 上的細節，Chrome 是 2022 就支援了，但是 Firefox 是到去年的 2023 才支援，如果要抓兩年的時間的話就還要再等等，當然現在也還是可以直接用，多加一組 fallback 就可以。</p>
+<p>除了瀏覽器原生支援外，其實也不少其它開發相關的工具支援，也有不少文章在介紹，像是 Smashing Magazine 的 <a href="https://www.smashingmagazine.com/2023/08/oklch-color-spaces-gamuts-css/">Falling For Oklch: A Love Story Of Color Spaces, Gamuts, And CSS</a> 和 Evil Martians 的 <a href="https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl">OKLCH in CSS: why we moved from RGB and HSL</a>，兩篇文章就介紹了不少工具和一些延伸的文章，工具部分像是 Figma 的 plugin <a href="https://www.figma.com/community/plugin/1173638098109123591/okcolor">OkColor</a> 和 npm 上的 <a href="https://www.npmjs.com/package/convert-to-oklch/v/1.2.0">convert-to-oklch</a>，Evil Martians 還做了一個 <a href="https://oklch.com/">oklch.com</a> ，是針對 Oklch 的 color picker 還蠻厲害的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53869218887/" title="oklch.com by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53869218887_128b804d16_b.jpg" width="1024" height="686" alt="oklch.com" srcset="https://live.staticflickr.com/65535/53869218887_067ddb5f54_k.jpg 2x" /></a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001010" baseName="communication">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-05-16</b:date>
+				<b:time>20:19:02</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>溝通</b:title>
+			<b:content>
+				<b:summary> 照片是常滑招財貓大道的「除憂解難」。 沒想到這週這麼熱鬧，前後兩天分別發生兩件和溝通有關的熱烈討論（網路對罵？），第一件事情比較少人知道，是發生在 COSCUP 的 telegram 社群，雖然是公開社群但是因為沒有直接的公開網址所以我就不寫網路 id 了。有社群朋友（後面用 A 代稱）想要辦 BoF 需要一些硬體設備，但是因為今年的 BoF 公告還沒出來，所以他想知道大會方是不是有機會能協助（幫忙借用設備），可以的話就會提出申請，其實如果熟悉 BoF 的應該都知道大會方只有提供場地，不過我當時在開車也沒辦法馬上幫忙回，總之就有其他朋友幫忙回了，四貓作為工作人員也在幫忙釐清對方的需求，當時大概就是有位社群朋友回文時多了一句： 但如果認為大會方該要提供的話，你們預期大會方能從哪搞到這個資源呀...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403022423/" title="とこなめ招き猫通り by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403022423_5539409fe7_b.jpg" width="683" height="1024" alt="とこなめ招き猫通り" srcset="https://live.staticflickr.com/65535/53403022423_7446cfc748_k.jpg 2x" /></a></p>
+<p>照片是常滑招財貓大道的「除憂解難」。</p>
+<p>沒想到這週這麼熱鬧，前後兩天分別發生兩件和溝通有關的熱烈討論（網路對罵？），第一件事情比較少人知道，是發生在 COSCUP 的 telegram 社群，雖然是公開社群但是因為沒有直接的公開網址所以我就不寫網路 id 了。有社群朋友（後面用 A 代稱）想要辦 BoF 需要一些硬體設備，但是因為今年的 BoF 公告還沒出來，所以他想知道大會方是不是有機會能協助（幫忙借用設備），可以的話就會提出申請，其實如果熟悉 BoF 的應該都知道大會方只有提供場地，不過我當時在開車也沒辦法馬上幫忙回，總之就有其他朋友幫忙回了，四貓作為工作人員也在幫忙釐清對方的需求，當時大概就是有位社群朋友回文時多了一句：</p>
+<blockquote>
+<p>但如果認為大會方該要提供的話，你們預期大會方能從哪搞到這個資源呀</p>
+</blockquote>
+</b:mainContent>
+				<b:extendContent><p>其實我覺得 A 一開始的文字並沒有這樣的意思，但總之結果這段文字就激起 A 的情緒了，然後就口氣變差，出現了一些情緒回文，接著就變成 A 和一些其他社群朋友開始互吵，其中心穎四貓和我其實都有想要幫忙緩和一下，不過雙邊都沒想要暫停一下，所以就一發不可收拾吵了整個下午，總之直到最後都還是有些情緒文字。</p>
+<p>其實這件事有點讓我聯想到「<a href="https://gnn.gamer.com.tw/detail.php?sn=253915">精製動畫坊</a>（HGA）」，非常早期就在台灣經營動畫模型領域的商品，年過四十小時候就有接觸動畫的人可能多少都會聽過 HGA 的大名，黃老闆其實人很好，然後店內也有一群熟客，其實很多人都在圈子內有點名氣，不過就是這群熟客其實也某種程度製造了一個 AT 力場，會讓不在圈子內的人想要進去有阻力，其實我在光顧 HGA 的幾次經驗也沒真的實際接觸到黃老闆以外的那些人，但是我還是要說那個氛圍確實是存在的，有朋友就說是「成也熟客、敗也熟客」。</p>
+<p>當然我不是在說 A 的發言都沒錯，A 後來的幾則發言我都覺得這我也很難幫忙緩和了，所以要我說的話，在那個時間點這或許已經是一場無可挽回的難過事件了，不過我還是想說，非當事人的幫忙有時候真的是沒幫上忙啊。</p>
+<p>然後隔天發生的另一件事，則是在推特上的「最困難的就是和工程師溝通了！有夠固執不懂變通！」炎上事件了：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">這也是位年薪百萬的學員喔！恭喜恭喜！<br /><br />她說，她現在不只要跨部門討論專案，還得跨國溝通，公司裡什麼樣的同事都有。<br /><br />「最困難的就是和工程師溝通了！有夠固執不懂變通！」<br /><br />這是第 N 位跟我抱怨工程師有夠難溝通的學員了。<br />（我也這麼覺得！）<a href="https://t.co/s7jjdgJ4I4">https://t.co/s7jjdgJ4I4</a></p>-- Akane Lee (@akane_lee) <a href="https://twitter.com/akane_lee/status/1790279494114415027?ref_src=twsrc%5Etfw">May 14, 2024</a></blockquote>
+<p>然後推特上一堆工程師就受不了了，紛紛分享出他們遇過的很瞎的<a href="https://twitter.com/zonble/status/1790643069949452790">溝</a><a href="https://twitter.com/hiroshiyui/status/1790765506934505869">通</a><a href="https://www.ptt.cc/bbs/Soft_Job/M.1463058955.A.D03.html">經</a><a href="https://twitter.com/ChengWeiLai2/status/1790734521027195149">驗</a>或是他們的看法，當然也是有一些比較沒意義的酸文，不過其實有一些蠻值得一讀的，像是海總理的這串（共九則，請點過去看完整文串）：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">覺得對方難溝通，大多是因為<br /><br />「你只想得到你想要的，不想聽你不懂的」</p>-- 海總理 (@tzangms) <a href="https://twitter.com/tzangms/status/1790895526365524474?ref_src=twsrc%5Etfw">May 16, 2024</a></blockquote>
+<p>其實這個炎上事件我覺得是屬於用詞不精確所引發的，因為 Akane 一開始的文字直接使用「工程師」，沒有加上「部分」或是「一些」之類的修飾，就直接被當成是貼標籤，其實她也有提到他有合作過很好溝通的工程師，更何況她的課程也不是溝通課，文章的受眾也不是工程師，這也讓我想到我在研究所寫論文時，有一個眉角就是不能用什麼「最好」、「全部」這種太過絕對的形容，而是要用「最好的之一」、「大部分」等比較相對一點的，因為你永遠不知道你的最好，是不是真的「最好」，或是更直接的利害關係，口試前你永遠不知道口試委員有沒有知道你沒查到的資料；當然，或許就算一開始的文字就有修飾過，也無法完全避免這件事情生，Ash 是這樣說的：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">看大家討論這麼熱烈，大家在職場上真的都是傷痕累累呢。我們都是帶著過去的傷痕去跟下一段新的職涯邂逅。<br /><br />有時候你覺得同事很尖銳，但他針對的可能並不是你，而是整個環境或者他的過去。</p>-- Ash Wu (@hSATAC) <a href="https://twitter.com/hSATAC/status/1790658579185512861?ref_src=twsrc%5Etfw">May 15, 2024</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>然後我才發現原來這已經是工程師的集體創傷了嗎？難怪大家反應這麼大，後來還有說到「男性說教（mansplaining）」這我就覺得不太行，不過她還提到收到的回饋是女性工程師普遍比較好溝通，所以我也實在很難說到底是什麼狀況，畢竟我不是當事人，不過確實在這個圈子要說完全沒有性別差異/問題也是不可能，只是這到底算不算是「男性說教」，我就真的很存疑了，畢竟這也沒有客觀的計量方式來判斷，畢竟我才發生過跟親近的人解釋一些事情，之後發現他完全沒聽進去，然後才了解到：「啊，我剛剛被認為是在男性說教。」</p>
+<p>最後還是來分享點比較有趣的東西吧，Huli 趁機也<a href="https://twitter.com/hulitw/status/1790724403661267257">重貼</a>了一個老影片「The Expert」：</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/BKorP55Aqvg?si=x4SSz3M8PekaNx2U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="allowfullscreen"></iframe>
+<p>這影片其實我也很久以前就看過了，只是沒想到下面 <a href="https://tzengyuxio.me/">Tzeng Yuxio</a> 貼了另一個真正的專家完美達成上面的需求的過程：</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/B7MIJP90biM?si=zgCVRr47tpmzyHX3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="allowfullscreen"></iframe>
+<p>十年前的解答我今天才看到！</p>
+<p>同場加映：剛好昨天在 FB 的「陳名珉」粉絲專頁有這麼一篇<a href="https://www.facebook.com/share/p/7eunE1cwcb87KKjv/">文章</a>，是在講傳統市場的變化，其實追根究底也是溝通的需求在哪一端的問題（海總理的那串）。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001009" baseName="see-different">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-05-08</b:date>
+				<b:time>17:06:12</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>看見不同的學習風景</b:title>
+			<b:content>
+				<b:summary> 週末帶小孩去松山菸廠意外發現到「SEE DIFFERENT 看見不同的學習風景」這個展覽，心中實在是有些想法和感觸想分享，首先先來介紹一下這個展覽吧：這個展覽其實是「第二屆教科圖書設計獎」的得獎作品，沒錯，是教科書，國中國小的教科書的設計展！而且不只是視覺上的設計，評選的範圍也包含內容的設計，展場展出的就是本屆得獎的教科書們，有一整區是可以翻閱的，只能說現在的教科書和我接觸過的三十年前左右的真的是差很多，除了更加活潑有質感的設計，還有各種清晰的圖表輔助，甚至連內文都變得很好閱讀，很像是在看科普書而不是教科書，深入了解之後，才知道這一切其實要從十年前，也就是 2014 年在 FlyingV 上的「美感細胞的教科書改造計畫」開始，其實我當年也有看到，不過我是沒什麼參與，覺得就是很理想但是很難進入體制內，沒想到，美感細胞默默耕耘十年，加上教育部推動美感教育，還真的推展開來了，教科圖書設計獎都辦到了第二屆，而美感細胞在其中的角色，除了在 FlyingV 上三季的募資計畫，後來還成立社團法人，承接一些政府合作案之外，也持續進行相關研究，發佈了不少的設計報告和參考資料，另外還有一個很重要的角色，就是作為教科書出版社和設計師之間的媒合橋樑，其實教科書的出版不是那麼容易，和一般書籍比起來限制較多，除了內容要送審之外，教育部還有印製規定。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53705215124/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53705215124_e27643e0af_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53705215124_3bdc8e8496_k.jpg 2x" /></a></p>
+<p>週末帶小孩去松山菸廠意外發現到「<a href="https://www.songshanculturalpark.org/exhibition/activity/20028bbd-8f9c-472a-ad04-3e7584800adf">SEE DIFFERENT 看見不同的學習風景</a>」這個展覽，心中實在是有些想法和感觸想分享，首先先來介紹一下這個展覽吧：這個展覽其實是「<a href="https://schooltextbooks.design.org.tw/news/20240422">第二屆教科圖書設計獎</a>」的得獎作品，沒錯，是教科書，國中國小的教科書的設計展！而且不只是視覺上的設計，評選的範圍也包含內容的設計，展場展出的就是本屆得獎的教科書們，有一整區是可以翻閱的，只能說現在的教科書和我接觸過的三十年前左右的真的是差很多，除了更加活潑有質感的設計，還有各種清晰的圖表輔助，甚至連內文都變得很好閱讀，很像是在看科普書而不是教科書，深入了解之後，才知道這一切其實要從十年前，也就是 2014 年在 FlyingV 上的「<a href="https://www.flyingv.cc/projects/4221">美感細胞的教科書改造計畫</a>」開始，其實我當年也有看到，不過我是沒什麼參與，覺得就是很理想但是很難進入體制內，沒想到，美感細胞默默耕耘十年，加上教育部推動美感教育，還真的推展開來了，教科圖書設計獎都辦到了第二屆，而<a href="https://www.aestheticell.org/research/">美感細胞</a>在其中的角色，除了在 FlyingV 上三季的募資計畫，後來還成立社團法人，承接一些政府合作案之外，也持續進行相關研究，發佈了不少的<a href="https://www.aestheticell.org/research/">設計報告和參考資料</a>，另外還有一個很重要的角色，就是作為教科書出版社和設計師之間的媒合橋樑，其實教科書的出版不是那麼容易，和一般書籍比起來限制較多，除了內容要送審之外，教育部還有<a href="https://edu.law.moe.gov.tw/LawContent.aspx?id=FL033134">印製規定</a>。</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53704881941/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53704881941_6bd801e4be_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53704881941_064a65ac95_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53703980092/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53703980092_8094c3afea_b.jpg" width="1024" height="745" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53703980092_5f1a36eef1_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53703980312/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53703980312_056ee81b10_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53703980312_561bd49d91_k.jpg 2x" /></a></p>
+<p>我確實以前也是認為台灣的美感素養真的差很多，而這在各種層面上展現，從平面設計開始像是文宣、廣告設計、然後一些政府機關的公文、表單的排版字體（看過數年前香港的報稅表單，排版和字體真的是比台灣好很多）等等，更進一步到店面、商場設計（像是台北車站站前地下街 K 區的前後對比：誠品 vs 東森）、道路規劃、建築設計、年末的燈飾、街景、古蹟打燈（像是以前<a href="https://news.ltn.com.tw/news/life/breakingnews/1173165">台北郵局</a>）等等。台灣一來普遍不重視美感和設計，二來是設計人材也少，尤其是公部門相關的東西更是慘烈，最常被人拿出來講的大概就是國慶典禮的主視覺設計了吧，這幾年的改變確實有目共睹，終於能夠脫離千篇一律的設計風格，然後我才慢慢了解到台灣其實不是沒有設計人材，而是主政者和業主不重視，甚至可能是根據種種不能直說的原因來挑選廠商，當然這也造成了惡性循環，業主不重視、設計師沒案子、願意投入設計領域的人就少；美感細胞的三位創辦人張柏韋、林宗諺和陳慕天在十年前的教科書改造計畫第一季其實就有見到這個問題，見到這個問題的人其實應該不少，但是真的有想面對它處理它的人就少之又少，更何況三人還不是設計相關領域、還在體制之外、當時也還只是大學畢業生，實在相當讓人佩服。</p>
+<p>另一個感觸則是體制外到體制內這件事，沒想到在這幾年內可以看到兩件事情真的這樣發生，真的是要感謝現在的主政者願意沒事找事作，這邊提到的教科書質的改變是一個，當然這只是一個手段，真正想要改變的是整體國民的美學素養，這還需要很長時間的發酵；另外一個體制外到體制內的改變，則是報稅軟體，相信這就是大家都有目共睹的了，最早是設計師卓致遠在 Join 平台上提出的，財政部注意到這個問題後也非常重視且積極，才推動了報稅軟體整個大改變，提案人卓致遠當然也不是起個頭就跑走，他也是很積極的參與協助設計改善，一些過程可以參考雨蒼在 2018 年寫的「<a href="https://pdis.nat.gov.tw/zh-TW/blog/%E6%96%B0%E7%89%88%E5%A0%B1%E7%A8%85%E7%B6%B2%E7%AB%99%E6%98%AF%E6%80%8E%E9%BA%BC%E7%85%89%E6%88%90%E7%9A%84/">新版報稅網站是怎麼煉成的？</a>」，唐鳳也在其中出了些力協助溝通，當年她還是政務委員，數位發展部是到 2022 年才成立的，當然數發部的貢獻在基礎建設，所以一些新的認證方式應該也是有其貢獻才得以實現。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53709130260/" title="美感細胞  研究報告 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53709130260_10b5826d15_b.jpg" width="1024" height="401" alt="美感細胞  研究報告" srcset="https://live.staticflickr.com/65535/53709130260_50a301e57a_k.jpg 2x" /></a></p>
+<p>然後另外想提的是，美感細胞的那些<a href="https://www.aestheticell.org/research/">研究報告</a>內容其實都蠻不錯的，像我主業是前端工程師，但是也一直對平面設計、字體、文字排版等有些興趣，所以這些報告當中的<a href="https://drive.google.com/file/d/1W70mr6WG-1zDVnAD8qSnpolGUa_HMCcz/view">教育字體應用指南</a>、<a href="https://drive.google.com/file/d/1va3uHSay-9SSqXSwZNK8Oe9fw6x9-CrO/view">敎科書印製規格提議報吿</a>、<a href="https://drive.google.com/file/d/1zzO7I1WPVA8va29toRTBcsd2d-EYHp5o/view">易讀設計指南 Guidebook</a>和<a href="https://drive.google.com/file/d/1wGv0x24pruNfWi2oiV3u1hoUWvFEc3GB/view">教材通用色彩應用指南</a>四份我都有看過一遍，內容都蠻不錯的，都從問題和背景開始就做了很詳細的介紹，報告本身的編排和一些輔助的圖表也都弄的很清楚，可以看得出來花了不少心力要讓報告本身可以自證其述（self-hosting?）；另外還有一本在會場有展出的「<a href="https://drive.google.com/file/d/1HaWUSIK1N_PWfYihuqDr8gFq5R16CPNp/view?usp=drive_link">翻開下一頁➝NEXT PAGE教科書風格創新趨勢研究探討</a>」，則是以教科書近年來的變化為主題，還介紹了第一屆的教科圖書設計獎的得獎作品，這本的<a href="https://www.tdri.org.tw/46397/">出版則是台灣設計研究院</a>，也就是展覽的主辦單位，不想下載的話其實以上這幾本也都有放到 issuu 平台上，可以參考以下連結：</p>
+<ul>
+<li><a href="https://issuu.com/aestheticellassociation">美感細胞</a></li>
+<li><a href="https://issuu.com/tdcpr">TDRI 台灣設計研究院</a></li>
+</ul>
+<p>最後補一個 中央社 文化+ 的專題報導「<a href="https://www.cna.com.tw/culture/topic/111">聽說課本不一樣</a>」，還有這次展覽我最喜歡的教科書封面：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53705091718/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53705091718_b788fcf24d_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53705091718_5e716c4397_k.jpg 2x" /></a></p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001008" baseName="happy-busy">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-24</b:date>
+				<b:time>23:10:47</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>時間ねぇ</b:title>
+			<b:content>
+				<b:summary> 在 blog 這詞最為蓬勃之時，很流行在自己的網站上放各式各樣的 banner，這些 banner 種類用途很多，像是顯示你網站使用了甚麼技術、你想幫忙宣傳的東西、網站連結、甚至是一些自我的主張表現或是可以稱為無用小廢物（像是日本放置協会，又簡寫為 NHK）的都有，我以前也放了不少，不過最後留下來的就只有兩個，第一個是 MDN 的推廣貼紙，第二個則是「時間のないサイト運営者リング」，沒時間的站長串連，這張 banner 我看到的第一眼就很喜歡，有很符合個人狀況所以我放了很久，從 2007 年五月開始就一直放著，也有連結回去，直到前陣子整理網站的時候才發現，當初連回的串連網站已經死掉了！然後我就花了些時間尋找替代方案。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53676063087/" title="時間のないサイト運営者リング by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53676063087_6e0a1efc69_b.jpg" width="1024" height="824" alt="時間のないサイト運営者リング" srcset="https://live.staticflickr.com/65535/53676063087_91a1755290_k.jpg 2x" /></a></p>
+<p>在 blog 這詞最為蓬勃之時，很流行在自己的網站上放各式各樣的 banner，這些 banner 種類用途很多，像是顯示你網站使用了甚麼技術、你想幫忙宣傳的東西、網站連結、甚至是一些自我的主張表現或是可以稱為無用小廢物（像是<a href="http://www.max.hi-ho.ne.jp/mao_h/nhk/">日本放置協会</a>，又簡寫為 NHK）的都有，我以前也放了不少，不過最後留下來的就只有兩個，第一個是 MDN 的推廣貼紙，第二個則是「<a href="https://sites.google.com/view/happy-busy/">時間のないサイト運営者リング</a>」，沒時間的站長串連，這張 banner 我看到的第一眼就很喜歡，有很符合個人狀況所以我放了很久，從 2007 年五月開始就一直放著，也有連結回去，直到前陣子整理網站的時候才發現，當初連回的串連網站已經死掉了！然後我就花了些時間尋找替代方案。</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53674904362/" title="blog.othree.net 2006-08-13 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53674904362_ae98efaf0d_b.jpg" width="1024" height="640" alt="blog.othree.net 2006-08-13" srcset="https://live.staticflickr.com/65535/53674904362_05d13d1fc8_k.jpg 2x" /></a></p>
+<p>考古研究了一下，時間のないサイト運営者リング的網址也變動過不少次，後來可能是為了一勞永逸，所以轉移到 Google Site，當時網址是：</p>
+<pre><code>https://sites.google.com/site/happybusy/
+</code></pre>
+<p>只是沒想到在 Google Site 2023 年二三月之間的一次<a href="https://support.google.com/sites/answer/7035197?hl=en">版本整合</a>之後，網站就不見了，然後根據 internet archive 上的資料，找到當初原作者是一位筆名叫「<a href="https://twitter.com/skysuka">すか</a>」的繪師兼漫畫家，不過商業連載不多，同人社團叫「しろくま屋」（白熊屋），在 <a href="https://www.melonbooks.co.jp/circle/index.php?circle_id=12568">melonbook</a> 也還有賣東西，然後還發現以前還有賣<a href="https://web.archive.org/web/20040927010149/http://www.buddiez.jp/busy/">周邊</a>，然後在推特上也找到另外一個站，路徑不一樣：</p>
+<pre><code>https://sites.google.com/view/happy-busy/
+</code></pre>
+<p>雖然在すか的推上沒有承認也沒有否認，不過應該是原作弄的，最有參考性的是這串<a href="https://twitter.com/skysuka/status/1704070783642018074">推文</a>：</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">時間のないサイト運営者リングサイトのドメイン<br />happy-busyは私が考えました（笑</p>-- すか@えりまき (@skysuka) <a href="https://twitter.com/skysuka/status/1704095641100845207?ref_src=twsrc%5Etfw">September 19, 2023</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大概就是他畫了新的圖，然後還挑了 <code>happy-busy</code> 這個名字，發文時間是 2023 年九月，當時新站也已經上線了一陣子了，只不過到今天新圖也沒擺上去就是。總之，雖然沒有很直接的承認，加上新站也沒也什麼詭異的跡象，我就還是把連結改過去了。</p>
+<p>文章最後，還是想來感嘆一下日本真的很多閒人（稱讚的意味），各種古老冷門數位資料的收集整理非常多，連這些網站 banner 都有人整理，而且資料還留存到現在，像是這份「<a href="https://w.atwiki.jp/proposalwiki/pages/84.html">消滅した主張系同盟ウェブサイトリングの一覧</a>」就列出了一堆已經消失了的個人主張系網站串連（<a href="https://en.wikipedia.org/wiki/Webring">Web ring</a>）。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="001007" baseName="json-type-definition">
 			<b:author>
 				<b:authorName>othree</b:authorName>

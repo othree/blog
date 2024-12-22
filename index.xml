@@ -9,6 +9,249 @@
 			<b:listData listID="index"/>
 		</b:entriesMeta>
 
+		<b:entry entryID="001012" baseName="onautofill">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-10-19</b:date>
+				<b:time>13:17:31</b:time>
+			</b:datetime>
+			<b:category>script</b:category>
+			<b:title>onAutofill</b:title>
+			<b:content>
+				<b:summary> 在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。 首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 autocomplete 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？ 問題就是這種 autofill 發生時，瀏覽器不一定會觸發 change/input 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 &lt;input&gt; 的 change/input 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 change/input 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。 那麼在 Web 標準中，change 事件應該何時觸發的定義是為何呢？在 HTML 4.01 是這樣寫的： The onchange event occurs when a control loses...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/54075332210/" title="Credit Card autofill by othree, on Flickr"><img src="https://live.staticflickr.com/65535/54075332210_2204a73894_b.jpg" width="1024" height="529" alt="Credit Card autofill" srcset="" /></a></p>
+<p>在現在這個網路標準橫行的時代，要遇到還沒廣泛標準化的東西其實是越來越難了，不過我最近還是遇到了一個，那就是 autofill 的偵測。</p>
+<p>首先要說的是，autofill（自動填入）和 autocomplete（自動補完）嚴格定義下是不一樣的，雖然都可以透過 <code>autocomplete</code> 來控制相關的行為，但是 autocomplete 其實只能算是 autofill 的一種，而我遇到的就是非 autocomplete 的，信用卡資料的自動填入，那問題在哪呢？</p>
+<p>問題就是這種 autofill 發生時，瀏覽器不一定會觸發 <code>change/input</code> 事件，如果表單設計成自動檢查表單輸入，然後輸入都正確才讓人送出的話就會有使用體驗的問題發生，因為這種設計的欄位檢查通常就是綁在 <code>&lt;input&gt;</code> 的 <code>change/input</code> 事件上，結果就是如果瀏覽器自動填入，然後又沒觸發 <code>change/input</code> 事件，於是就不會執行到欄位檢查，表單也就會一直維持在無法送出的狀態，產生的副作用就是使用者體驗反而比按下送出按鈕才作表單檢查還要來的差。</p>
+<p>那麼在 Web 標準中，<code>change</code> 事件應該何時觸發的定義是為何呢？在 <a href="https://www.w3.org/TR/html401/interact/scripts.html#adef-onchange">HTML 4.01</a> 是這樣寫的：</p>
+<blockquote>
+<p>The onchange event occurs when a control loses the input focus <em>and</em> its value has been modified since gaining focus. This attribute applies to the following elements: INPUT, SELECT, and TEXTAREA.</p>
+</blockquote>
+<p>按照古時候網路標準的規範，autofill 不是使用者和 DOM 之間的互動，沒有經過 focus blur，所以沒有觸發 change 事件也是合理，事實上也就是現在部分瀏覽器的行為；不過在現在的 <a href="https://html.spec.whatwg.org/multipage/input.html#common-input-element-events">HTML Living Standard</a> 是這樣寫的：</p>
+<blockquote>
+<p>The <code>change</code> event fires when the value is committed, if that makes sense for the control, or else when the control loses focus.</p>
+</blockquote>
+<p>觸發的時機除了失去 focus 時之外，還多了資料 commit（提交）時，變成兩種時機，而這邊的提交主要指的是像 <code>type=color</code> 或是 <code>type=date</code> 那種，瀏覽器有支援，有提供另外頁面內的小工具讓使用者方便挑選值的時候，使用者選好，瀏覽器更新值進入 <code>&lt;input&gt;</code> 的 value 的動作，那 autofill 更新值該算是 commit 嗎？其實文件內也是有講到的，就在同個章節的後面：</p>
+<blockquote>
+<p>When the user agent is to change an input element's value on behalf of the user (e.g. as part of a form prefilling feature), the user agent must queue an element task on the user interaction task source given the input element to first update the value accordingly, then fire an event named <code>input</code> at the <code>input</code> element, with the <code>bubbles</code> and <code>composed</code> attributes initialized to true, then fire an event named <code>change</code> at the <code>input</code> element, with the <code>bubbles</code> attribute initialized to true.</p>
+</blockquote>
+<p>這段就是說當瀏覽器代表使用者改變 input 的值時，也是要發一個 input 一個 change 事件，這段文字的重點在於 &quot;on behalf of the user&quot;，就是「代表使用者做事」，後面舉的例是 prefill 時，prefill 通常發生在 帳號/密碼 欄位，發生時間點又不太一樣，可能是在 render DOM 時就發生；不過根據文字解釋其實 autofill 應該也符合 &quot;on behalf of the user&quot;。</p>
+<p>雖然 HTML 標準有規範了，但是現實世界總是不會這麼美好，不然也不會有這篇文章了，那麼現實世界是怎樣呢？我遇到的狀況就是有些瀏覽器是照著舊的規範，完全沒有事件，發現問題後我就上網搜尋一番之後發現，這問題其實已經很久了，早在 2010 年，<a href="http://twitter.com/avernet">@avernet</a> 就寫了一篇 [Autocomplete and JavaScript Change Event][]，紀錄了當年的這個問題，根據不同欄位、不同瀏覽器會有不同的行為，即使到了今天，也還是同樣情形，文章最後建議的解法也是很無奈的：</p>
+<p><a href="https://avernet.blogspot.com/2010/11/autocomplete-and-javascript-change.html">Autocomplete and JavaScript Change Event</a></p>
+<ol>
+<li>關掉相關功能 <code>autocomplete=off</code></li>
+<li>定時檢查</li>
+</ol>
+<p>總之就是讓人不喜歡的解法，那麼時至今日，有沒有比較好的方法呢？其實還真的有，而且蠻聰明的，<a href="https://klarna.com">Klarna</a> 的 Tommy Brunn 在 2016 年寫了 <a href="https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7">Detecting autofilled fields in Javascript</a> 一文介紹了這種方法，透過 CSS pseudo-class <code>:autofill</code> 和 CSS animation 配上 <code>animationStart</code> 事件，首先 CSS 這樣：</p>
+<pre><code class="language-css">input:autofill {  
+  animation-name: autofill;
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+}
+
+@keyframes autofill {
+  from {
+    background: var(--color1);
+  }
+  to {
+    background: var(--color2);
+  }
+}
+</code></pre>
+<p>然後 JS 監聽事件並確定動畫名稱沒錯，就可以做事了：</p>
+<pre><code class="language-js">inputNode.addEventListener('animationstart', (event) =&gt; {  
+  const { currentTarget, animationName } = event;
+  
+  if (animationName === 'autofill') {
+    // do what ever you want, or
+    // trigger `change` event
+    currentTarget.dispatchEvent(new Event('change'));
+    // trigger custom event
+    currentTarget.dispatchEvent(new Event('autofill'));
+  }  
+}, false);
+</code></pre>
+<p>完全成為真的 event based，不用定時檢查了，不過缺點是要 CSS 搭配，不是純 JS 的方案，維護上比較麻煩一些，另外就是 Tommy Brunn 文章內用的是 <code>:--webkit-autofill</code>，但是現在完全可以用沒有 prefix 的 pseudo class 了。</p>
+<p>以上的程式碼範例就可以處理好瀏覽器內建的自動填入事件，不過現實世界除了瀏覽器內建的自動填入，還有很多的第三方工具支援，像是各種 password manager: 1Password, LastPass, Dashlane 等，這些工具自動填入的行為又不太一樣，我確實有發現有其中一兩家的行為也是 value 會改變，但是不會有 input 和 change 事件，幸好這些工具都會加上各自自訂的 attribute，所以可以另外透過 observer 監看 attribute 的變化來判斷是否有相關的事件，目前我所知道有以下的 attributeName 可以檢查：</p>
+<ul>
+<li><code>data-dashlane-autofilled</code> Dashlane 的</li>
+<li><code>data-com-onepassword-filled</code> 1Password 的</li>
+<li><code>chrome-autofilled</code> iOS Chrome，超容易漏掉</li>
+</ul>
+<p>至於 LastPass 目前測試結果是不會有自訂的 attribute，但是會有 change 事件，所以也可以照常運作（不過相對的就完全沒有提供給使用者的視覺提示好像怪怪的）。</p>
+<p>這篇內容大概就到這邊，雖然沒有提供很完整的程式碼，不過這些資訊應該很夠幫助其他人完成 autofill 事件的偵測了，其實這次弄信用卡資訊的輸入欄位真是費了不少心力，很多細節可以弄，也很多 domain knowledge（都靠 lib 搞定就是），真是想不到只是信用卡欄位也這麼多眉角。</p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001011" baseName="oklab-color-space">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-07-21</b:date>
+				<b:time>18:33:34</b:time>
+			</b:datetime>
+			<b:category>css-html</b:category>
+			<b:title>Oklab Color Space</b:title>
+			<b:content>
+				<b:summary>2019 年的時候，寫過一篇文章介紹了 Lab Gradient，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 Oklab 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。 因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...# -- 勞哥 maylogger (@may_logger) July 13, 2024 在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為...</b:summary>
+				<b:mainContent><p>2019 年的時候，寫過一篇文章介紹了 <a href="https://blog.othree.net/log/2019/03/18/lab-gradient/">Lab Gradient</a>，然後就沒特別關注相關發展，直到前幾天看到勞哥的推文提到 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 這個色彩空間，而且瀏覽器已經原生支援了，我才發現原來網路標準的發展有跟上來，我也趁機多惡補了一些相關的知識。</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">因為一些搜尋讓我今天才了解 oklch 這個色彩格式（或是色彩空間）的使用方法。這個色彩格式在 2023 年納入了幾乎所有現代瀏覽器，好奇查詢之下發現了作者的 blog 有寫為什麼要製作 Oklab 的原因與研究過程，以及詳細的討論過去 HSV 或 HSL 系的色彩空間到底有什麼問題，收穫滿滿。...</p># -- 勞哥 maylogger (@may_logger) <a href="https://twitter.com/may_logger/status/1812110985752420697?ref_src=twsrc%5Etfw">July 13, 2024</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>在介紹 Oklab 前，先來介紹以前提到的 Lab 吧，其實它是國際照明委員會(International Commission on Illumination，簡稱 CIE)在 1976 年提出的色彩空間定義，全名是 CIELAB color space，或是簡寫為 L*a*b*，多加 <code>*</code> 為了避免混淆，Lab 其實是不正確的縮寫，不過這三個字母其實就是該顏色空間的三個軸：L 代表亮度、a 代表紅色到綠色間的位置、b 代表藍色到黃色間的位置，也就是 opponent color theory（又稱對比色理論或色覺對向論）的顏色組成，這個色彩空間的重點在它的座標比較符合人類對色彩的感知。</p>
+<p>那 <a href="https://bottosson.github.io/posts/oklab/">Oklab</a> 又是什麼呢？它是 Björn Ottosson 在 2020 年底發表的一個新的色彩空間定義，他在文章內有詳細的說明為什麼會想要定義一個新的色彩空間，文內也列舉了現存的色彩空間的主要問題，其中 CIELAB 的問題就是在 predict hue （預測色相）有些問題，尤其是藍色附近，其實我一開始對於這個 predict 感到很疑惑，想說到底是什麼意思，後來看到另外一篇文章 <a href="https://raphlinus.github.io/color/2021/01/18/oklab-critique.html">An interactive review of Oklab</a>，文章一開始放的互動工具預設的漸層設定就是藍色到白色，然後一看就很明顯， CIELAB 的漸層色相跑一下就歪掉了變成偏紫色去了（random 按鈕可以按按看看其他色相都沒這樣嚴重），才了解到因為 CIELAB 是屬於人類感知的色彩空間，意思就是它的依歸其實是人類的感覺，所以需要從三維座標去<strong>推測</strong>人類實際上看到感覺到的顏色，數值上一樣的話就應該讓人感覺一致，而 Oklab 則是結構和 CIELAB 一樣，但是透過新的資料集來調整並解決前面提到的問題，而後在 2023，Oklab 進了 CSS Color Level 4 的草稿，主流瀏覽器現在也都已經支援。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53870474429/" title="CIELAB by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53870474429_b239243a3e_b.jpg" width="1024" height="484" alt="CIELAB" /></a></p>
+<p>進 CSS Color 代表什麼意思呢？第一個當然就是可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklab"><code>oklab()</code></a> 函數來定義顏色了：</p>
+<pre><code>oklab(40.1% 0.1143 0.045);
+oklab(59.69% 0.1007 0.1191);
+oklab(59.69% 0.1007 0.1191 / 0.5);
+</code></pre>
+<p>除了直接定義顏色之外，現在 CSS 也支援相對顏色（relative color）了：</p>
+<pre><code>/* Relative values */
+oklab(from green l a b / 0.5)
+oklab(from #0000FF calc(l + 0.1) a b / calc(alpha * 0.9))
+oklab(from hsl(180 100% 50%) calc(l - 0.1) a b)
+</code></pre>
+<p>這樣要只調整色相或是亮度都變得很簡單，或是也可以用 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch"><code>oklch()</code></a>，這樣色相（Hue）就更好挑選。</p>
+<p>然後就是漸層了，現在的 CSS 漸層也支援使用不同的顏色內差方式，也就是用不同色彩空間來算中間的顏色變化：</p>
+<pre><code>linear-gradient(in oklab, blue, red)
+linear-gradient(in lab to right, #44C, #795)
+</code></pre>
+<p>在最前面加上 <code>in &lt;color-space&gt;</code> 就可以，支援的色彩空間其實不少，如果是線性漸層，那支援 srgb、srgb-linear、display-p3、a98-rgb、prophoto-rgb、rec2020、lab、oklab、xyz、xyz-d50、xyz-d65，如果是 polar 漸層，那支援 hsl、hwb、lch、oklch，其實相當夠用，而這段語法其實是叫 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color-interpolation-method">color-interpolate</a>（顏色內插），除了漸層之外，會用到的地方還包括 filter、animation、transition 和 <code>color-mix()</code> 函數等。</p>
+<p>前面也已經提到，現在主流瀏覽器都已經支援了，不過還是來看一下 <a href="https://caniuse.com/mdn-css_types_image_gradient_linear-gradient_interpolation_color_space">caniuse</a> 上的細節，Chrome 是 2022 就支援了，但是 Firefox 是到去年的 2023 才支援，如果要抓兩年的時間的話就還要再等等，當然現在也還是可以直接用，多加一組 fallback 就可以。</p>
+<p>除了瀏覽器原生支援外，其實也不少其它開發相關的工具支援，也有不少文章在介紹，像是 Smashing Magazine 的 <a href="https://www.smashingmagazine.com/2023/08/oklch-color-spaces-gamuts-css/">Falling For Oklch: A Love Story Of Color Spaces, Gamuts, And CSS</a> 和 Evil Martians 的 <a href="https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl">OKLCH in CSS: why we moved from RGB and HSL</a>，兩篇文章就介紹了不少工具和一些延伸的文章，工具部分像是 Figma 的 plugin <a href="https://www.figma.com/community/plugin/1173638098109123591/okcolor">OkColor</a> 和 npm 上的 <a href="https://www.npmjs.com/package/convert-to-oklch/v/1.2.0">convert-to-oklch</a>，Evil Martians 還做了一個 <a href="https://oklch.com/">oklch.com</a> ，是針對 Oklch 的 color picker 還蠻厲害的。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53869218887/" title="oklch.com by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53869218887_128b804d16_b.jpg" width="1024" height="686" alt="oklch.com" srcset="https://live.staticflickr.com/65535/53869218887_067ddb5f54_k.jpg 2x" /></a></p>
+</b:mainContent>
+				<b:extendContent></b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001010" baseName="communication">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-05-16</b:date>
+				<b:time>20:19:02</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>溝通</b:title>
+			<b:content>
+				<b:summary> 照片是常滑招財貓大道的「除憂解難」。 沒想到這週這麼熱鬧，前後兩天分別發生兩件和溝通有關的熱烈討論（網路對罵？），第一件事情比較少人知道，是發生在 COSCUP 的 telegram 社群，雖然是公開社群但是因為沒有直接的公開網址所以我就不寫網路 id 了。有社群朋友（後面用 A 代稱）想要辦 BoF 需要一些硬體設備，但是因為今年的 BoF 公告還沒出來，所以他想知道大會方是不是有機會能協助（幫忙借用設備），可以的話就會提出申請，其實如果熟悉 BoF 的應該都知道大會方只有提供場地，不過我當時在開車也沒辦法馬上幫忙回，總之就有其他朋友幫忙回了，四貓作為工作人員也在幫忙釐清對方的需求，當時大概就是有位社群朋友回文時多了一句： 但如果認為大會方該要提供的話，你們預期大會方能從哪搞到這個資源呀...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403022423/" title="とこなめ招き猫通り by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403022423_5539409fe7_b.jpg" width="683" height="1024" alt="とこなめ招き猫通り" srcset="https://live.staticflickr.com/65535/53403022423_7446cfc748_k.jpg 2x" /></a></p>
+<p>照片是常滑招財貓大道的「除憂解難」。</p>
+<p>沒想到這週這麼熱鬧，前後兩天分別發生兩件和溝通有關的熱烈討論（網路對罵？），第一件事情比較少人知道，是發生在 COSCUP 的 telegram 社群，雖然是公開社群但是因為沒有直接的公開網址所以我就不寫網路 id 了。有社群朋友（後面用 A 代稱）想要辦 BoF 需要一些硬體設備，但是因為今年的 BoF 公告還沒出來，所以他想知道大會方是不是有機會能協助（幫忙借用設備），可以的話就會提出申請，其實如果熟悉 BoF 的應該都知道大會方只有提供場地，不過我當時在開車也沒辦法馬上幫忙回，總之就有其他朋友幫忙回了，四貓作為工作人員也在幫忙釐清對方的需求，當時大概就是有位社群朋友回文時多了一句：</p>
+<blockquote>
+<p>但如果認為大會方該要提供的話，你們預期大會方能從哪搞到這個資源呀</p>
+</blockquote>
+</b:mainContent>
+				<b:extendContent><p>其實我覺得 A 一開始的文字並沒有這樣的意思，但總之結果這段文字就激起 A 的情緒了，然後就口氣變差，出現了一些情緒回文，接著就變成 A 和一些其他社群朋友開始互吵，其中心穎四貓和我其實都有想要幫忙緩和一下，不過雙邊都沒想要暫停一下，所以就一發不可收拾吵了整個下午，總之直到最後都還是有些情緒文字。</p>
+<p>其實這件事有點讓我聯想到「<a href="https://gnn.gamer.com.tw/detail.php?sn=253915">精製動畫坊</a>（HGA）」，非常早期就在台灣經營動畫模型領域的商品，年過四十小時候就有接觸動畫的人可能多少都會聽過 HGA 的大名，黃老闆其實人很好，然後店內也有一群熟客，其實很多人都在圈子內有點名氣，不過就是這群熟客其實也某種程度製造了一個 AT 力場，會讓不在圈子內的人想要進去有阻力，其實我在光顧 HGA 的幾次經驗也沒真的實際接觸到黃老闆以外的那些人，但是我還是要說那個氛圍確實是存在的，有朋友就說是「成也熟客、敗也熟客」。</p>
+<p>當然我不是在說 A 的發言都沒錯，A 後來的幾則發言我都覺得這我也很難幫忙緩和了，所以要我說的話，在那個時間點這或許已經是一場無可挽回的難過事件了，不過我還是想說，非當事人的幫忙有時候真的是沒幫上忙啊。</p>
+<p>然後隔天發生的另一件事，則是在推特上的「最困難的就是和工程師溝通了！有夠固執不懂變通！」炎上事件了：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">這也是位年薪百萬的學員喔！恭喜恭喜！<br /><br />她說，她現在不只要跨部門討論專案，還得跨國溝通，公司裡什麼樣的同事都有。<br /><br />「最困難的就是和工程師溝通了！有夠固執不懂變通！」<br /><br />這是第 N 位跟我抱怨工程師有夠難溝通的學員了。<br />（我也這麼覺得！）<a href="https://t.co/s7jjdgJ4I4">https://t.co/s7jjdgJ4I4</a></p>-- Akane Lee (@akane_lee) <a href="https://twitter.com/akane_lee/status/1790279494114415027?ref_src=twsrc%5Etfw">May 14, 2024</a></blockquote>
+<p>然後推特上一堆工程師就受不了了，紛紛分享出他們遇過的很瞎的<a href="https://twitter.com/zonble/status/1790643069949452790">溝</a><a href="https://twitter.com/hiroshiyui/status/1790765506934505869">通</a><a href="https://www.ptt.cc/bbs/Soft_Job/M.1463058955.A.D03.html">經</a><a href="https://twitter.com/ChengWeiLai2/status/1790734521027195149">驗</a>或是他們的看法，當然也是有一些比較沒意義的酸文，不過其實有一些蠻值得一讀的，像是海總理的這串（共九則，請點過去看完整文串）：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">覺得對方難溝通，大多是因為<br /><br />「你只想得到你想要的，不想聽你不懂的」</p>-- 海總理 (@tzangms) <a href="https://twitter.com/tzangms/status/1790895526365524474?ref_src=twsrc%5Etfw">May 16, 2024</a></blockquote>
+<p>其實這個炎上事件我覺得是屬於用詞不精確所引發的，因為 Akane 一開始的文字直接使用「工程師」，沒有加上「部分」或是「一些」之類的修飾，就直接被當成是貼標籤，其實她也有提到他有合作過很好溝通的工程師，更何況她的課程也不是溝通課，文章的受眾也不是工程師，這也讓我想到我在研究所寫論文時，有一個眉角就是不能用什麼「最好」、「全部」這種太過絕對的形容，而是要用「最好的之一」、「大部分」等比較相對一點的，因為你永遠不知道你的最好，是不是真的「最好」，或是更直接的利害關係，口試前你永遠不知道口試委員有沒有知道你沒查到的資料；當然，或許就算一開始的文字就有修飾過，也無法完全避免這件事情生，Ash 是這樣說的：</p>
+<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">看大家討論這麼熱烈，大家在職場上真的都是傷痕累累呢。我們都是帶著過去的傷痕去跟下一段新的職涯邂逅。<br /><br />有時候你覺得同事很尖銳，但他針對的可能並不是你，而是整個環境或者他的過去。</p>-- Ash Wu (@hSATAC) <a href="https://twitter.com/hSATAC/status/1790658579185512861?ref_src=twsrc%5Etfw">May 15, 2024</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>然後我才發現原來這已經是工程師的集體創傷了嗎？難怪大家反應這麼大，後來還有說到「男性說教（mansplaining）」這我就覺得不太行，不過她還提到收到的回饋是女性工程師普遍比較好溝通，所以我也實在很難說到底是什麼狀況，畢竟我不是當事人，不過確實在這個圈子要說完全沒有性別差異/問題也是不可能，只是這到底算不算是「男性說教」，我就真的很存疑了，畢竟這也沒有客觀的計量方式來判斷，畢竟我才發生過跟親近的人解釋一些事情，之後發現他完全沒聽進去，然後才了解到：「啊，我剛剛被認為是在男性說教。」</p>
+<p>最後還是來分享點比較有趣的東西吧，Huli 趁機也<a href="https://twitter.com/hulitw/status/1790724403661267257">重貼</a>了一個老影片「The Expert」：</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/BKorP55Aqvg?si=x4SSz3M8PekaNx2U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="allowfullscreen"></iframe>
+<p>這影片其實我也很久以前就看過了，只是沒想到下面 <a href="https://tzengyuxio.me/">Tzeng Yuxio</a> 貼了另一個真正的專家完美達成上面的需求的過程：</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/B7MIJP90biM?si=zgCVRr47tpmzyHX3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="allowfullscreen"></iframe>
+<p>十年前的解答我今天才看到！</p>
+<p>同場加映：剛好昨天在 FB 的「陳名珉」粉絲專頁有這麼一篇<a href="https://www.facebook.com/share/p/7eunE1cwcb87KKjv/">文章</a>，是在講傳統市場的變化，其實追根究底也是溝通的需求在哪一端的問題（海總理的那串）。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001009" baseName="see-different">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-05-08</b:date>
+				<b:time>17:06:12</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>看見不同的學習風景</b:title>
+			<b:content>
+				<b:summary> 週末帶小孩去松山菸廠意外發現到「SEE DIFFERENT 看見不同的學習風景」這個展覽，心中實在是有些想法和感觸想分享，首先先來介紹一下這個展覽吧：這個展覽其實是「第二屆教科圖書設計獎」的得獎作品，沒錯，是教科書，國中國小的教科書的設計展！而且不只是視覺上的設計，評選的範圍也包含內容的設計，展場展出的就是本屆得獎的教科書們，有一整區是可以翻閱的，只能說現在的教科書和我接觸過的三十年前左右的真的是差很多，除了更加活潑有質感的設計，還有各種清晰的圖表輔助，甚至連內文都變得很好閱讀，很像是在看科普書而不是教科書，深入了解之後，才知道這一切其實要從十年前，也就是 2014 年在 FlyingV 上的「美感細胞的教科書改造計畫」開始，其實我當年也有看到，不過我是沒什麼參與，覺得就是很理想但是很難進入體制內，沒想到，美感細胞默默耕耘十年，加上教育部推動美感教育，還真的推展開來了，教科圖書設計獎都辦到了第二屆，而美感細胞在其中的角色，除了在 FlyingV 上三季的募資計畫，後來還成立社團法人，承接一些政府合作案之外，也持續進行相關研究，發佈了不少的設計報告和參考資料，另外還有一個很重要的角色，就是作為教科書出版社和設計師之間的媒合橋樑，其實教科書的出版不是那麼容易，和一般書籍比起來限制較多，除了內容要送審之外，教育部還有印製規定。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53705215124/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53705215124_e27643e0af_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53705215124_3bdc8e8496_k.jpg 2x" /></a></p>
+<p>週末帶小孩去松山菸廠意外發現到「<a href="https://www.songshanculturalpark.org/exhibition/activity/20028bbd-8f9c-472a-ad04-3e7584800adf">SEE DIFFERENT 看見不同的學習風景</a>」這個展覽，心中實在是有些想法和感觸想分享，首先先來介紹一下這個展覽吧：這個展覽其實是「<a href="https://schooltextbooks.design.org.tw/news/20240422">第二屆教科圖書設計獎</a>」的得獎作品，沒錯，是教科書，國中國小的教科書的設計展！而且不只是視覺上的設計，評選的範圍也包含內容的設計，展場展出的就是本屆得獎的教科書們，有一整區是可以翻閱的，只能說現在的教科書和我接觸過的三十年前左右的真的是差很多，除了更加活潑有質感的設計，還有各種清晰的圖表輔助，甚至連內文都變得很好閱讀，很像是在看科普書而不是教科書，深入了解之後，才知道這一切其實要從十年前，也就是 2014 年在 FlyingV 上的「<a href="https://www.flyingv.cc/projects/4221">美感細胞的教科書改造計畫</a>」開始，其實我當年也有看到，不過我是沒什麼參與，覺得就是很理想但是很難進入體制內，沒想到，美感細胞默默耕耘十年，加上教育部推動美感教育，還真的推展開來了，教科圖書設計獎都辦到了第二屆，而<a href="https://www.aestheticell.org/research/">美感細胞</a>在其中的角色，除了在 FlyingV 上三季的募資計畫，後來還成立社團法人，承接一些政府合作案之外，也持續進行相關研究，發佈了不少的<a href="https://www.aestheticell.org/research/">設計報告和參考資料</a>，另外還有一個很重要的角色，就是作為教科書出版社和設計師之間的媒合橋樑，其實教科書的出版不是那麼容易，和一般書籍比起來限制較多，除了內容要送審之外，教育部還有<a href="https://edu.law.moe.gov.tw/LawContent.aspx?id=FL033134">印製規定</a>。</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53704881941/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53704881941_6bd801e4be_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53704881941_064a65ac95_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53703980092/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53703980092_8094c3afea_b.jpg" width="1024" height="745" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53703980092_5f1a36eef1_k.jpg 2x" /></a></p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53703980312/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53703980312_056ee81b10_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53703980312_561bd49d91_k.jpg 2x" /></a></p>
+<p>我確實以前也是認為台灣的美感素養真的差很多，而這在各種層面上展現，從平面設計開始像是文宣、廣告設計、然後一些政府機關的公文、表單的排版字體（看過數年前香港的報稅表單，排版和字體真的是比台灣好很多）等等，更進一步到店面、商場設計（像是台北車站站前地下街 K 區的前後對比：誠品 vs 東森）、道路規劃、建築設計、年末的燈飾、街景、古蹟打燈（像是以前<a href="https://news.ltn.com.tw/news/life/breakingnews/1173165">台北郵局</a>）等等。台灣一來普遍不重視美感和設計，二來是設計人材也少，尤其是公部門相關的東西更是慘烈，最常被人拿出來講的大概就是國慶典禮的主視覺設計了吧，這幾年的改變確實有目共睹，終於能夠脫離千篇一律的設計風格，然後我才慢慢了解到台灣其實不是沒有設計人材，而是主政者和業主不重視，甚至可能是根據種種不能直說的原因來挑選廠商，當然這也造成了惡性循環，業主不重視、設計師沒案子、願意投入設計領域的人就少；美感細胞的三位創辦人張柏韋、林宗諺和陳慕天在十年前的教科書改造計畫第一季其實就有見到這個問題，見到這個問題的人其實應該不少，但是真的有想面對它處理它的人就少之又少，更何況三人還不是設計相關領域、還在體制之外、當時也還只是大學畢業生，實在相當讓人佩服。</p>
+<p>另一個感觸則是體制外到體制內這件事，沒想到在這幾年內可以看到兩件事情真的這樣發生，真的是要感謝現在的主政者願意沒事找事作，這邊提到的教科書質的改變是一個，當然這只是一個手段，真正想要改變的是整體國民的美學素養，這還需要很長時間的發酵；另外一個體制外到體制內的改變，則是報稅軟體，相信這就是大家都有目共睹的了，最早是設計師卓致遠在 Join 平台上提出的，財政部注意到這個問題後也非常重視且積極，才推動了報稅軟體整個大改變，提案人卓致遠當然也不是起個頭就跑走，他也是很積極的參與協助設計改善，一些過程可以參考雨蒼在 2018 年寫的「<a href="https://pdis.nat.gov.tw/zh-TW/blog/%E6%96%B0%E7%89%88%E5%A0%B1%E7%A8%85%E7%B6%B2%E7%AB%99%E6%98%AF%E6%80%8E%E9%BA%BC%E7%85%89%E6%88%90%E7%9A%84/">新版報稅網站是怎麼煉成的？</a>」，唐鳳也在其中出了些力協助溝通，當年她還是政務委員，數位發展部是到 2022 年才成立的，當然數發部的貢獻在基礎建設，所以一些新的認證方式應該也是有其貢獻才得以實現。</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53709130260/" title="美感細胞  研究報告 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53709130260_10b5826d15_b.jpg" width="1024" height="401" alt="美感細胞  研究報告" srcset="https://live.staticflickr.com/65535/53709130260_50a301e57a_k.jpg 2x" /></a></p>
+<p>然後另外想提的是，美感細胞的那些<a href="https://www.aestheticell.org/research/">研究報告</a>內容其實都蠻不錯的，像我主業是前端工程師，但是也一直對平面設計、字體、文字排版等有些興趣，所以這些報告當中的<a href="https://drive.google.com/file/d/1W70mr6WG-1zDVnAD8qSnpolGUa_HMCcz/view">教育字體應用指南</a>、<a href="https://drive.google.com/file/d/1va3uHSay-9SSqXSwZNK8Oe9fw6x9-CrO/view">敎科書印製規格提議報吿</a>、<a href="https://drive.google.com/file/d/1zzO7I1WPVA8va29toRTBcsd2d-EYHp5o/view">易讀設計指南 Guidebook</a>和<a href="https://drive.google.com/file/d/1wGv0x24pruNfWi2oiV3u1hoUWvFEc3GB/view">教材通用色彩應用指南</a>四份我都有看過一遍，內容都蠻不錯的，都從問題和背景開始就做了很詳細的介紹，報告本身的編排和一些輔助的圖表也都弄的很清楚，可以看得出來花了不少心力要讓報告本身可以自證其述（self-hosting?）；另外還有一本在會場有展出的「<a href="https://drive.google.com/file/d/1HaWUSIK1N_PWfYihuqDr8gFq5R16CPNp/view?usp=drive_link">翻開下一頁➝NEXT PAGE教科書風格創新趨勢研究探討</a>」，則是以教科書近年來的變化為主題，還介紹了第一屆的教科圖書設計獎的得獎作品，這本的<a href="https://www.tdri.org.tw/46397/">出版則是台灣設計研究院</a>，也就是展覽的主辦單位，不想下載的話其實以上這幾本也都有放到 issuu 平台上，可以參考以下連結：</p>
+<ul>
+<li><a href="https://issuu.com/aestheticellassociation">美感細胞</a></li>
+<li><a href="https://issuu.com/tdcpr">TDRI 台灣設計研究院</a></li>
+</ul>
+<p>最後補一個 中央社 文化+ 的專題報導「<a href="https://www.cna.com.tw/culture/topic/111">聽說課本不一樣</a>」，還有這次展覽我最喜歡的教科書封面：</p>
+<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53705091718/" title="SEE DIFFERENT 看見不同的學習風景 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53705091718_b788fcf24d_b.jpg" width="1024" height="768" alt="SEE DIFFERENT 看見不同的學習風景" srcset="https://live.staticflickr.com/65535/53705091718_5e716c4397_k.jpg 2x" /></a></p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
+		<b:entry entryID="001008" baseName="happy-busy">
+			<b:author>
+				<b:authorName>othree</b:authorName>
+				<b:authorEmail>othree@gmail.com</b:authorEmail>
+				<b:authorUrl></b:authorUrl>
+			</b:author>
+			<b:datetime>
+				<b:date>2024-04-24</b:date>
+				<b:time>23:10:47</b:time>
+			</b:datetime>
+			<b:category>diary</b:category>
+			<b:title>時間ねぇ</b:title>
+			<b:content>
+				<b:summary> 在 blog 這詞最為蓬勃之時，很流行在自己的網站上放各式各樣的 banner，這些 banner 種類用途很多，像是顯示你網站使用了甚麼技術、你想幫忙宣傳的東西、網站連結、甚至是一些自我的主張表現或是可以稱為無用小廢物（像是日本放置協会，又簡寫為 NHK）的都有，我以前也放了不少，不過最後留下來的就只有兩個，第一個是 MDN 的推廣貼紙，第二個則是「時間のないサイト運営者リング」，沒時間的站長串連，這張 banner 我看到的第一眼就很喜歡，有很符合個人狀況所以我放了很久，從 2007 年五月開始就一直放著，也有連結回去，直到前陣子整理網站的時候才發現，當初連回的串連網站已經死掉了！然後我就花了些時間尋找替代方案。...</b:summary>
+				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53676063087/" title="時間のないサイト運営者リング by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53676063087_6e0a1efc69_b.jpg" width="1024" height="824" alt="時間のないサイト運営者リング" srcset="https://live.staticflickr.com/65535/53676063087_91a1755290_k.jpg 2x" /></a></p>
+<p>在 blog 這詞最為蓬勃之時，很流行在自己的網站上放各式各樣的 banner，這些 banner 種類用途很多，像是顯示你網站使用了甚麼技術、你想幫忙宣傳的東西、網站連結、甚至是一些自我的主張表現或是可以稱為無用小廢物（像是<a href="http://www.max.hi-ho.ne.jp/mao_h/nhk/">日本放置協会</a>，又簡寫為 NHK）的都有，我以前也放了不少，不過最後留下來的就只有兩個，第一個是 MDN 的推廣貼紙，第二個則是「<a href="https://sites.google.com/view/happy-busy/">時間のないサイト運営者リング</a>」，沒時間的站長串連，這張 banner 我看到的第一眼就很喜歡，有很符合個人狀況所以我放了很久，從 2007 年五月開始就一直放著，也有連結回去，直到前陣子整理網站的時候才發現，當初連回的串連網站已經死掉了！然後我就花了些時間尋找替代方案。</p>
+</b:mainContent>
+				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53674904362/" title="blog.othree.net 2006-08-13 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53674904362_ae98efaf0d_b.jpg" width="1024" height="640" alt="blog.othree.net 2006-08-13" srcset="https://live.staticflickr.com/65535/53674904362_05d13d1fc8_k.jpg 2x" /></a></p>
+<p>考古研究了一下，時間のないサイト運営者リング的網址也變動過不少次，後來可能是為了一勞永逸，所以轉移到 Google Site，當時網址是：</p>
+<pre><code>https://sites.google.com/site/happybusy/
+</code></pre>
+<p>只是沒想到在 Google Site 2023 年二三月之間的一次<a href="https://support.google.com/sites/answer/7035197?hl=en">版本整合</a>之後，網站就不見了，然後根據 internet archive 上的資料，找到當初原作者是一位筆名叫「<a href="https://twitter.com/skysuka">すか</a>」的繪師兼漫畫家，不過商業連載不多，同人社團叫「しろくま屋」（白熊屋），在 <a href="https://www.melonbooks.co.jp/circle/index.php?circle_id=12568">melonbook</a> 也還有賣東西，然後還發現以前還有賣<a href="https://web.archive.org/web/20040927010149/http://www.buddiez.jp/busy/">周邊</a>，然後在推特上也找到另外一個站，路徑不一樣：</p>
+<pre><code>https://sites.google.com/view/happy-busy/
+</code></pre>
+<p>雖然在すか的推上沒有承認也沒有否認，不過應該是原作弄的，最有參考性的是這串<a href="https://twitter.com/skysuka/status/1704070783642018074">推文</a>：</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">時間のないサイト運営者リングサイトのドメイン<br />happy-busyは私が考えました（笑</p>-- すか@えりまき (@skysuka) <a href="https://twitter.com/skysuka/status/1704095641100845207?ref_src=twsrc%5Etfw">September 19, 2023</a></blockquote>
+<script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>大概就是他畫了新的圖，然後還挑了 <code>happy-busy</code> 這個名字，發文時間是 2023 年九月，當時新站也已經上線了一陣子了，只不過到今天新圖也沒擺上去就是。總之，雖然沒有很直接的承認，加上新站也沒也什麼詭異的跡象，我就還是把連結改過去了。</p>
+<p>文章最後，還是想來感嘆一下日本真的很多閒人（稱讚的意味），各種古老冷門數位資料的收集整理非常多，連這些網站 banner 都有人整理，而且資料還留存到現在，像是這份「<a href="https://w.atwiki.jp/proposalwiki/pages/84.html">消滅した主張系同盟ウェブサイトリングの一覧</a>」就列出了一堆已經消失了的個人主張系網站串連（<a href="https://en.wikipedia.org/wiki/Webring">Web ring</a>）。</p>
+</b:extendContent>
+			</b:content>
+
+
+		</b:entry>
+
 		<b:entry entryID="001007" baseName="json-type-definition">
 			<b:author>
 				<b:authorName>othree</b:authorName>
@@ -131,404 +374,6 @@ export interface EventUserPaymentPlanChanged {
 </code></pre>
 <p>另一個原因就是 <a href="https://github.com/sindresorhus/ow">ow</a> 的作者 @sindresorhus 也推薦用 Zod 了XD。</p>
 <p>回到 JSON Typedef，其實使用起來還是有一點隱憂的，主要的隱憂就是怕之後就沒人用了，一來使用族群不大，二來是 Carion 那些套件都很久沒更新了，他本人後來也跑去創業了，大概也沒時間來故這些東西了吧，所以要不要用 JTD 也只能自己承擔後果了吧，不過都做為正式 RFC 文件發佈了，我覺得應該是不會慘到哪去啦。</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001006" baseName="the-magic-of-dialog">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-04-03</b:date>
-				<b:time>11:49:41</b:time>
-			</b:datetime>
-			<b:category>css-html</b:category>
-			<b:title>Dialog 的魔法</b:title>
-			<b:content>
-				<b:summary> HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 &lt;dialog&gt;。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626597432/" title="HTML dialog by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626597432_f11da51222_b.jpg" width="1024" height="235" alt="HTML dialog" srcset="https://live.staticflickr.com/65535/53626597432_8d2190c44e_k.jpg 2x" /></a></p>
-<p>HTML 在 2014 的 HTML5 之後，其實就很少有什麼新的標籤，比較多是在各種細節的釐清和標準化各種未定義行為，不過在這些屈指可數的新標籤中，有一個比較廣為人知的，就是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog"><code>&lt;dialog&gt;</code></a>。</p>
-</b:mainContent>
-				<b:extendContent><p><code>&lt;dialog&gt;</code> 的出現和前端工程實務上的發展很有關係，我個人認為它其實就是古早時候的 <code>confirm</code> 和 <code>alert</code> 的現代版本，十多年前大部分的網路服務有類似需求還是直接用這兩個原生的互動介面為主，不過因為是原生的，對開發者來說可控性很低，加上以前的版本很容易會把瀏覽器卡死，使用體驗也不太好，現在的版本則考慮到使用者隱私也多了很多限制，加上樣式無法客製，所以在前端工程開始熱烈發展之時，很多網站也都開始自己做自己的對話框了；其中，最具代表性的或許是當年紅極一時的 Bootstrap 的 <a href="https://getbootstrap.com/docs/5.0/components/modal/">modal</a> 了吧。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627498716/" title="Bootstrap Modal by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627498716_a215f9150e_b.jpg" width="1024" height="686" alt="Bootstrap Modal" srcset="https://live.staticflickr.com/65535/53627498716_dc28344076_k.jpg 2x" /></a></p>
-<p>這些各家自製的對話框都很不錯，設計漂亮、功能完善，不過它畢竟沒有魔法（那些無法透過網路標準辦到的東西），有幾個問題還是無法克服，首先第一個就是，它無法永遠保持在最上層；第二個就是，使用者還是有可能意外 focus 跑到 modal 對話框之外的元素上；最後一個是，<code>&lt;dialog&gt;</code> 是如何沒有外層元素，卻可以垂直水平置中且本身大小是非固定的？其實我一開始就是對最後這個問題感到疑惑，才開始認真的研究 <code>&lt;dialog&gt;</code>，結果一研究下去，發現超多的細節的。</p>
-<p>在回答問題之前，先來介紹一下 <code>&lt;dialog&gt;</code> 吧，首先 <code>&lt;dialog&gt;</code> 預設樣式是 <code>display: none;</code> 隱藏起來的，不考慮直接改 CSS 的話，要讓它出現有幾種方法，首先是透過 <code>open</code> 這個專屬的新 attribute：</p>
-<pre><code class="language-html">&lt;dialog open&gt;
-   This is a dialog
-&lt;/dialog&gt;
-</code></pre>
-<p>這樣就會讓 <code>&lt;dialog&gt;</code> 出現在畫面上，表現就如同一般的 <code>&lt;div&gt;</code> 標籤，第二種方法則是透過 JavaScrpt：</p>
-<pre><code class="language-javascript">dialogNode.show()
-</code></pre>
-<p>這樣的效果和 <code>open</code> 一樣，然後除了這兩個方法之外，還有一個最特別的：</p>
-<pre><code class="language-javascript">dialogeNode.showModal()
-</code></pre>
-<p><code>showModal</code> 會讓這個 <code>&lt;dialog&gt;</code> 出現在網頁的最上層，並且保持置中，而且同時，網頁上除了該 <code>&lt;dialog&gt;</code> 以外的地方都會無法互動。</p>
-<p>在這邊，一下子三件以前辦不到的事情都出現了：</p>
-<ul>
-<li>保證在網頁的最上層</li>
-<li>只有一層標籤就水平垂直置中</li>
-<li>其他地方都無法互動</li>
-</ul>
-<p>那麼，這些事情是如何辦到的呢？首先就來說說第一點吧，如何能夠保證 <code>&lt;dialog&gt;</code> 一定在最上層呢？那就是一個新規範的東西了，叫做 <a href="https://developer.chrome.com/blog/what-is-the-top-layer?hl=zh-tw">top Layer</a>，標準則是放在 <a href="https://drafts.csswg.org/css-position-4/#top-layer">CSS Positioned Layout Module Level 4</a>，這東西指的現在瀏覽器在繪製文件之餘，還要建立一個獨立於文件之外的 <a href="https://web.dev/learn/css/z-index?hl=zh-tw">stacking context</a>，然後該 context 一定是在其他所有 stacking context 之上，尺寸則是和 viewport 一樣大，這個 stacking context 就是 top layer 了，開發者是無法直接控制該 context，需要透過一些特定 API 操作，才能把東西丟到 top layer 來繪製，目前有用到 top layer 的除了 <code>&lt;dialog&gt;</code> 之外，文件上是還有寫到 fullscreen API 和還在初期的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover</a>，開發工具都已經有支援，下圖的開發工具的截圖中，文件的尾端就多了一個 top layer。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53626368602/" title="Top layer by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53626368602_726c893848_b.jpg" width="1024" height="689" alt="Top layer" srcset="https://live.staticflickr.com/65535/53626368602_185cc1da44_k.jpg 2x" /></a></p>
-<p>根據前一點，可以知道其實 <code>&lt;dialog&gt;</code> 一樣是普通 DOM 節點，只是在用 <code>showModal()</code> 時會放在不同的 stacking context，一樣可以用 CSS 設定樣式，那麼，<code>&lt;dialog&gt;</code> 是如何只有一層標籤就置中的呢？這當中可沒有魔法，其實很簡單，也是一個很古早的水平垂直置中的方法之一：</p>
-<pre><code class="language-css">dialog {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-}
-</code></pre>
-<p>其實就是絕對定位 + 上下左右都設為 0 + margin 設定為 auto 的方法，等等，如果垂直水平置中這麼簡單，那大家怎麼會痛苦了幾十年還一直在尋求一個物件置中的方法？其實原因就在於，這個方法有個先決條件，就是該標籤的寬高必須是要明確定義的值，而不能是 auto，詳細的計算方式規範目前在 CSS Position Level 3 裡面的第五章「<a href="https://www.w3.org/TR/css-position-3/#abspos-old">Old Absolute Positioning Layout Model</a>」，更早則是 CSS 2 就已經有了，這一個章節是在介紹如果是絕對定位的標籤，要怎樣計算它的位置、寬高和 margin，有個表格詳細的列出各種情境的排列組合（是否為 <code>auto</code>）：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53627463283/" title="Summary of rules for dir=ltr in horizontal writing modes by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53627463283_af610fb8ac_b.jpg" width="776" height="1024" alt="Summary of rules for dir=ltr in horizontal writing modes" srcset="https://live.staticflickr.com/65535/53627463283_69bc0a53b3_k.jpg 2x" /></a></p>
-<p>以 modal dialog 的例子來看怎樣計算水平的定位吧：首先來看屬性的組合，left 和 right 都是有值，值為 0、margin-left 和 margin-right 都是 auto，如果寬度是有值的話，那就是表格第二行中的第三項，算法就是：</p>
-<blockquote>
-<p>margins split positive free space</p>
-</blockquote>
-<p>剩餘的空間平分給兩個 margin auto，結果就會是水平置中；如果 width 是 auto 的話就是最下面一行：</p>
-<blockquote>
-<p>auto margins → zero<br />
-solve for auto</p>
-</blockquote>
-<p>意思就是 margin 的 auto 都為 0，剩下的空間都給設為 auto 的 width。這表格也解釋了為何有些 <code>marign: auto</code> 會有元件置中的效果，其實這個問題也在我腦中好久了，沒想到計算方法在 CSS 2 就已經有明確的定義好了。</p>
-<p>回來看 <code>&lt;dialog&gt;</code>，它在 modal 模式下，是會水平垂直置中的，但是它的寬高表現也很像是用 <code>auto</code> 一般，是根據內容變化的，那到底是怎樣達成這樣的效果的呢？其實關鍵就是它的寬高是一個新的值：<code>fit-content</code>，完整的樣式應該是：</p>
-<pre><code class="language-css">dialog {
-  position: fixed;
-  inset: 0; /* shorthand of top, right, bottom, left */
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
-}
-</code></pre>
-<p>結果就是，因為 width 不是 auto，所以套用的規則就是表格中的第二行中的第三項，根據標籤內容決定標籤的寬度之後，剩下的空間就平分給 margin，達成置中的效果。</p>
-<p>了解原理之後，就可以知道哪些 CSS style 宣告是和定位有關的，除了可以避免不小心覆蓋掉（我最最一開始就是因為自訂 CSS 讓它定位不正常才開始研究的），還可以隨心所欲的調整標籤的位置，舉例來說，我的版面有一個 sidebar 佔去左邊的 300px，然後我希望 <code>&lt;dialog&gt;</code> 是在剩下的主要區域內置中，那我就把 left 設為 300px 就好了。</p>
-<p>終於來到第三個問題，是怎樣讓其他地方都無法互動的呢？這就也是一個 <code>&lt;dialog&gt;</code> 的特異功能，它有一個隱藏的 is modal flag，呼叫 <code>showModal</code> 時，除了會把該 flag 設為 <code>true</code> 之外，還可以讓文件中其它部分變為和有 <code>inert</code> 時一樣，什麼是 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert"><code>inert</code></a> 呢？中文翻譯為惰性，可以讓互動元件失去活性，使用時機就是如果互動元件因為一些原因需要暫時性的停用，例如收合起來的目錄，這時候我們不希望使用者的 focus 移動到目錄內，甚至不小心點擊到，那就可以用 <code>inert</code> 這個屬性讓它失去活性，使用者的游標就永遠不會跑進去，也不會有互動事件。</p>
-<p>然後研究到這邊，我突然想起另外一個在腦中疑惑許久的問題，<strong>modal</strong> 這個單字到底是哪裡來的？為什麼 Bootstrap 也是選這個字？然後為什麼 HTML 不就 dialog 這個字用到底呢？進一步搜尋之後才發現，原來這邊的 modal 不是指 UI 元件，而是一種流程，這個 modal 其實是 modal window(dialog) 的 modal，而這個 modal 是專指應用程式中一種特定的模式(modal 的字源即為 mode)，在該模式之下，除了 modal window 之外的元件都被停用，使用者必須要先完成 modal window 內的互動才可以繼續。這就很像是古早時候的 <code>confirm</code> 和 <code>alert</code> 一樣，不把它關掉就無法繼續用網頁，然後我也才理解為什麼會標準文件內還會提到 autofocus 流程、還有為什麼會有 <code>returnValue</code> 這個屬性可以用。</p>
-<p>其實 <a href="https://issues.chromium.org/issues/40251038">Chrome</a> 早在 2014 年就支援 <code>&lt;dialog&gt;</code> 了，然後還提供了個 <a href="https://github.com/GoogleChrome/dialog-polyfill">polyfill</a>（當然無法解決 top layer 的問題），不過 <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=840640">Firefox</a> 和 <a href="https://bugs.webkit.org/show_bug.cgi?id=84635">Safari</a> 則是要到 2022 才支援，我去找出 Firefox 的 issue 來看，一路看下來，Firefox 是約 2016 開始，斷斷續續的實作，在實做的這段期間，其實標準也一直有修改，Safari 和 Firefox 都是 2022 才正式支援，到 2022 正式支援時的版本已經蠻穩定了，所以可以說是直到 2022，<code>&lt;dialog&gt;</code> 才是真正意義上的可用，我則是直到今年才有考慮拿來用，然後也才生出了這篇文章，其實 <code>&lt;dialog&gt;</code> 還有很多細節，像是 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop"><code>::backdrop</code></a>、<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:modal"><code>:modal</code></a>、<code>formmethod=&quot;dialog&quot;</code>、<code>returnValue</code>、怎麼用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/cancel_event"><code>cancel</code> 事件</a>和 <kbd>ESC</kbd> 等，雖然內文礙於篇幅沒有介紹，不過我有用 codesandbox 做了個簡單的<a href="https://codesandbox.io/p/sandbox/dialog-kf6fgr">範例</a>，有興趣的可以去玩看看。</p>
-<p>最後，如果和我一樣是寫 React 要用 modal 模式的 <code>&lt;dialog&gt;</code> 的話，就一定要用到 <code>useEffect</code>，不能只操作 <code>open</code> 屬性，實作其實很簡單，我隨意搜尋一下也有看到一個 <a href="https://github.com/sjc5/use-html-dialog/blob/main/index.ts">use-html-dialog</a> ，也可以直接參考它的原始碼，關鍵的部分：</p>
-<pre><code class="language-javascript">useEffect(() =&gt; {
-  if (openModal) {
-    ref.current?.showModal();
-  } else {
-    ref.current?.close();
-  }
-}, [openModal]);
-</code></pre>
-<p>其他參考資料：</p>
-<ul>
-<li><a href="https://webkit.org/blog/12209/introducing-the-dialog-element/">Introducing the Dialog Element</a></li>
-<li><a href="https://intersection.tw/6e9b2104eac0">Modal 模式是大多數設計師不甚瞭解的 UX 概念</a></li>
-<li><a href="https://medium.com/@choce1378/modal-dialog-%E4%BD%A0%E7%9C%9F%E7%9A%84%E7%9F%A5%E9%81%93%E4%BB%96%E5%80%91%E6%98%AF%E4%BB%80%E9%BA%BC%E5%97%8E-a1d1a975d3e0">Modal？Dialog？你真的知道他們是什麼嗎？</a></li>
-</ul>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001005" baseName="yamani">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-03-28</b:date>
-				<b:time>10:01:14</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>やまに（yamani）旅館</b:title>
-			<b:content>
-				<b:summary> 去年的名古屋之行因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，加上在台灣要吃河豚相對比較不容易，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 やまに（yamani）旅館，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。 選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097470/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097470_8f640fb9b6_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53403097470_931b7f0426_k.jpg 2x" /></a></p>
-<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年的名古屋之行</a>因為所以然後就跑去了南知多，研究行程時發現當地冬天有虎河豚，也很多餐廳有套餐可以享用，加上在台灣要吃河豚相對比較不容易，所以在安排行程時就花了不少時間研究要找哪一間，做這種套餐的其實很多是旅館，蠻大部分是當地的小型旅館，沒有上國際的訂房網站，甚至有的只有電話可以聯絡訂房訂位的，後來我的搜尋方法就是用 Google Map 慢慢找，在上面找了很久，最後選的旅館叫 <a href="https://yamaniryokan.com/">やまに（yamani）旅館</a>，本來是打算住一晚，後來因為參加源氏香活動的關係，就改成只有去吃河豚套餐。</p>
-<p>選擇 Yamani 旅館的一個主要原因是，雖然舊，但是看起來蠻乾淨，我也一直很想體驗看看比較在地的住宿體驗（雖然沒住），另外就是它們其實也是有上樂天旅遊可以接外國遊客，不過樂天旅遊訂的話會比較貴，所以就還是在官網訂（不過沒住宿的我忘了樂天能不能能訂），唯一比較擔心的大概就是我沒日本電話號碼吧，不過結果還蠻順利的，不多說廢話，就趕快來看看 やまに旅館 的虎河豚套餐吧。</p>
-</b:mainContent>
-				<b:extendContent><p>我們訂的是梅套餐，菜色當然是比松或竹少一些，但是份量還是很多，首先是小菜：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401737977/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401737977_21dd10297c_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53401737977_11775c73be_k.jpg 2x" /></a></p>
-<p>重點的河豚生魚片，非常大盤，這樣的份量台灣不知道會多貴：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402677121/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402677121_0ee9d0f2d9_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402677121_da33f93d34_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403095425/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403095425_f80d4546c2_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53403095425_007315e940_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402985869/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402985869_99a3e7e93e_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402985869_cb020dd19f_k.jpg 2x" /></a></p>
-<p>河豚生魚片很好吃，脆脆的口感非常特別，是整個套餐我最喜歡的，而且份量多讓我吃得很滿足。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402988134/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402988134_573282f201_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402988134_ecf32e7aeb_k.jpg 2x" /></a></p>
-<p>然後是另外一個主要餐點之一的火鍋：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402985919/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402985919_8d8fdc8446_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402985919_564cf8cb5d_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402852473/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402852473_fe2d926e31_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402852473_2a1ee2c9cc_k.jpg 2x" /></a></p>
-<p>河豚生魚片也可以用火鍋煮，不過就沒那麼好吃了，火鍋本身就味道很清淡，河豚肉就稍微比較硬，然後有一堆蔬菜，是整趟行程吃到最多菜的一餐了，給的菜和河豚肉還有豆腐等等差不多可以煮兩鍋。</p>
-<p>然後是炸河豚：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401740302/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401740302_5e6bc856e9_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53401740302_fef53a7dd7_k.jpg 2x" /></a></p>
-<p>我們還有點兒童餐，也是很豐盛，這次名古屋行點了好幾次兒童餐，都蠻讓人滿意的，這邊的還有生魚片：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402850033/" title="やまに旅館 兒童餐 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402850033_cfc6d17f84_b.jpg" width="1024" height="683" alt="やまに旅館 兒童餐" srcset="https://live.staticflickr.com/65535/53402850033_efd17b042f_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53401738032/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53401738032_3226e3e7d2_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53401738032_183c5ac46c_k.jpg 2x" /></a></p>
-<p>最後的雜炊，因為火鍋吃完時已經很飽了，但是又很想吃吃看所以請他做一人份，結果份量根本還是兩人吃也很夠：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402662081/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402662081_37cd660103_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402662081_3966c3afd2_k.jpg 2x" /></a>
-<a class="thumbnail" href="https://www.flickr.com/photos/othree/53402662051/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402662051_3e45455680_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402662051_532ed836fb_k.jpg 2x" /></a></p>
-<p>甜點：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402987994/" title="やまに旅館 お手頃ふぐ梅 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402987994_e08a7ef6f8_b.jpg" width="1024" height="683" alt="やまに旅館 お手頃ふぐ梅" srcset="https://live.staticflickr.com/65535/53402987994_79c09427e1_k.jpg 2x" /></a></p>
-<p>套餐內容其實還有兩個附近的富古神社（音同河豚）的繪馬，可以寫下願望後他幫我們去綁，我們一個寫願望一個帶回家當紀念。</p>
-<p>然後稍微放些旅館本身的照片：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097250/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097250_805d477e51_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53403097250_f1d09170fb_k.jpg 2x" /></a>
-<a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097225/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097225_d8c93ed0c4_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53403097225_8f5d8a7bc8_k.jpg 2x" /></a></p>
-<p>洗手間超有年代感，但是很乾淨完全沒異味：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661896/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661896_636dd2321c_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53402661896_0029df0058_k.jpg 2x" /></a></p>
-<p>兒童拖鞋是小熊維尼的皮拖鞋：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661406/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661406_3c029e9230_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53402661406_4c366c51bc_k.jpg 2x" /></a></p>
-<p>玄關的擺飾：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661716/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661716_9a1d162ab8_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53402661716_1b0a06f1cd_k.jpg 2x" /></a>
-<a class="thumbnail" href="https://www.flickr.com/photos/othree/53402987649/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402987649_cc95099649_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53402987649_3b80627c4b_k.jpg 2x" /></a>
-<a class="thumbnail" href="https://www.flickr.com/photos/othree/53402661626/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53402661626_d02d6b2a61_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53402661626_c623ff82cd_k.jpg 2x" /></a></p>
-<p>簽名板們：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403097105/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403097105_146bd33a5c_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53403097105_88efa09b19_k.jpg 2x" /></a></p>
-<p>外觀：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403096770/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403096770_19fe3649ca_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53403096770_fceda8081b_k.jpg 2x" /></a></p>
-<p>大門：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53403096745/" title="やまに旅館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53403096745_23fbb63856_b.jpg" width="1024" height="683" alt="やまに旅館" srcset="https://live.staticflickr.com/65535/53403096745_aec28c474a_k.jpg 2x" /></a></p>
-<p>結帳可以刷卡還有很正式的收據，然後因為非旺季又是平日，所以當天只有我們一組客人，女將(?)也很樂情的跟我稍微攀談，問我們怎麼找到他們旅館的，後來還送了小朋友一些東西，非常不好意思。</p>
-<p>PS. 南知多很多旅館都有內部的全景可以看，似乎是當地的觀光協會之類的統一委託建制的，在 Google Maps 上就可以看到</p>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001004" baseName="ui-event-order">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-03-24</b:date>
-				<b:time>18:07:13</b:time>
-			</b:datetime>
-			<b:category>script</b:category>
-			<b:title>UI Event Order</b:title>
-			<b:content>
-				<b:summary>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 mousedown、mouseup、click 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 click 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 focus 事件的順序呢？如果已經有其他元件有 focus，那它的 blur 事件又是在 focus 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 keydown、keyup 之外還有 input、change 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。 首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 mousedown、mouseup、click，是在 mouseup 後才接著有 click 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 click 事件。然後這順序其實是有定義在 UI...</b:summary>
-				<b:mainContent><p>我一直以來都對於 DOM 事件的順序抱有一種不確定的感覺，舉例來說，當使用者點滑鼠時，你可以預期到會有 <code>mousedown</code>、<code>mouseup</code>、<code>click</code> 事件，但是它們的順序是什麼呢？可以確定的是 down 一定是第一個，up 一定在 down 之後，那 <code>click</code> 是在中間還是最後呢？更進一步，點在可以有 focus 的元件上，那 <code>focus</code> 事件的順序呢？如果已經有其他元件有 focus，那它的 <code>blur</code> 事件又是在 <code>focus</code> 的前面還後面呢？除了滑鼠事件外，鍵盤事件又更複雜，除了 <code>keydown</code>、<code>keyup</code> 之外還有 <code>input</code>、<code>change</code> 和 IME 的 composition 事件等，總之最近實在是太在意了，就認真的弄了個測試網頁自己測試，之後又查找了相關的標準規範，這篇就來記錄一下這些事件的順序。</p>
-<p>首先就來說滑鼠（指標裝置）相關的事件順序吧，第一個是滑鼠點擊，就是 <code>mousedown</code>、<code>mouseup</code>、<code>click</code>，是在 <code>mouseup</code> 後才接著有 <code>click</code> 事件，其實仔細想了一下也是蠻合理的，要有 up 事件才代表完成了 <code>click</code> 事件。然後這順序其實是有定義在 <a href="https://www.w3.org/TR/uievents/#events-mouseevent-event-order">UI Events 5.3.3</a> 之中的，其中的最後一個表格就是一個標準的點擊時事件的順序，而且這個表格還包括了 <code>mousemove</code> 和 <code>dblclick</code> 事件，這個章節中的其他部分則是滑鼠移動經過不同、多層的 DOM node 時，不同 node 上的 <code>mouseover</code>、<code>mouseout</code> 事件的順序。</p>
-</b:mainContent>
-				<b:extendContent><p>除了 Mouse Events 之外，其實現在瀏覽器的實作應該是都實作 <a href="https://w3c.github.io/pointerevents/">Pointer Events</a> 了，Pointer Events 涵蓋了各種指標式的控制方式，包括了滑鼠、觸控、觸控筆等，所以可以說 Mouse Events 只能算是子集，相對應的事件名稱基本上就是把 <code>mouse</code> 換成 <code>pointer</code>，例如：<code>pointerdown</code>、<code>pointerup</code>，現在主流的瀏覽器也都已經有支援 Pointer Events 了，然後這時候問題就來了，Pointer Event 和 Mouse Events 誰先誰後？根據測試的結果，是 Pointer 先然後才 Mouse，所以更完整的順序是：</p>
-<pre><code>pointerdown
-mousedown
-focus
-focusin
-pointerup
-mouseup
-click
-</code></pre>
-<p>至於這個順序是怎麼決定的呢？根據 Pointer Events 的 <a href="https://w3c.github.io/pointerevents/#compatibility-mapping-with-mouse-events">11 章「Compatibility mapping with mouse events」</a> 所述，瀏覽器開發時可以考慮同時發佈古時候的 Mouse Events，其中 11.2、11.3 就有提到先發佈 Pointer Events 接著再發佈對應的 Mouse Event。</p>
-<p>然後還有一個細節是，根據 Pointer Event <a href="https://w3c.github.io/pointerevents/#the-pointerdown-event">4.2.3 The pointerdown event</a>，如果在 <code>pointerdown</code> 事件裡面呼叫 <code>event.preventDefault()</code> 取消事件的話，後面的 <code>mousedown</code> 和 <code>mouseup</code> 就都不會觸發。</p>
-<p>我上面的那段事件順序，其實還多列了一個 <code>focusin</code>，這其實是一系列的新(相較於 DOM2)事件，包括了：</p>
-<ul>
-<li><code>focusin</code> 對應 <code>focus</code></li>
-<li><code>focusout</code> 對應 <code>blur</code></li>
-<li><code>mouseenter</code> 對應 <code>mouseover</code></li>
-<li><code>mouseleave</code> 對應 <code>mouseout</code></li>
-</ul>
-<p>其實 <code>mouseenter</code> / <code>mouseleave</code> 是 IE5.5 時微軟先提出的，ppk 也有<a href="https://www.quirksmode.org/js/events_mouse.html#mouseenter">文章</a>介紹過它解決了什麼問題，jQuery 當年也有支援，後來進入了 W3C 標準，現在是放到 <a href="https://w3c.github.io/uievents/#event-type-mouseenter">UI Events</a> 裡面，這些事件最大的差異就是它們不會 bubble 到外層，減少了很多問題；<code>focusin</code> / <code>focusout</code> 則是剛好相反，它們會 bubble 而 <code>focus</code> / <code>blur</code> 不會，一樣 ppk 也有<a href="https://www.quirksmode.org/blog/archives/2008/04/delegating_the.html">文章</a>介紹到，簡單說就是 <code>focus</code> / <code>blur</code> 不會 bubble 只有 capture（外往內到 event target 的過程），但是 IE 不是用 addEventListener 所以沒有 capture 階段，所以會無法實作出 event delegation，然後只能用當年微軟 IE 特有的 <code>focusin</code> / <code>focusout</code> 事件，現在也是標準化，收到 <a href="https://www.w3.org/TR/DOM-Level-3-Events/#event-type-focusin">DOM 3 Events</a> 裡面；而除了這四組之外，其實 Pointer Events 也有 enter 和 leave，一樣順序是在 over 和 out 的後面，然後這些成對的事件，都是比較早定義的那些先發生，才接後來定義的，和有沒有 bubble 無關。</p>
-<p>接著來說 Keyboard Events，這邊就針對 input 節點上的，一個鍵盤按鍵按壓的動作，會產生 <code>keydown</code>、<code>keypress</code>、<code>keyup</code> 三個基本的事件，通常按鍵盤按鍵就是為了輸入東西，所以會有個也是比較新的 <code>input</code> 事件，會在 <code>keypress</code> 之後，<code>input</code> 則還有一個成對的 <code>beforeinput</code>，如果在 <code>beforeinput</code> 內叫 <code>preventDefault()</code> 的話則可以阻止文字的輸入，總之順序如下：</p>
-<pre><code>keydown
-keypress
-beforeinput
-input
-keyup
-</code></pre>
-<p><code>change</code> 事件則是要在 <code>blur</code> 時才會有，順序是先 <code>change</code> 才 <code>blur</code>：</p>
-<pre><code>change
-blur
-focusout
-</code></pre>
-<p>這個順序是定義在 HTML 的 User Interaction 一章的 <a href="https://html.spec.whatwg.org/multipage/interaction.html#unfocus-causes-change-event">6.6.4 Processing model</a> 裡面，明確的寫下要先 commit change 後才 <code>blur</code>。</p>
-<p>如果有用 IME 的話，事情就很不單純了，還會有 Composition Events，順序是在 <code>beforeinput</code> 前面，剛開始組字會同時有 <code>compositionstart</code> 和 <code>compositionupdate</code> 兩個事件，然後沒有 <code>keypress</code>，之後的輸入組字則就是只有 <code>update</code>：</p>
-<pre><code>keydown
-compositionstart
-compositionupdate
-beforeinput
-input
-keyup
-</code></pre>
-<p>Composition Events 現在標準的文件是放在 <a href="https://w3c.github.io/uievents/#events-compositionevents">UI Events 裡面</a>，不過文件中範例的順序和實際測試的結果並不一致，目前的文件草稿中 <code>compositionupdate</code> 是在 <code>beforeinput</code> 之後，不過其實現在瀏覽器的順序是在 UI Events 的 <a href="https://github.com/w3c/uievents/issues/354">Issue 354</a> 提出的變動，只是目前文件還沒有發布更新的內容。</p>
-<p>結束組字的時候，不同瀏覽器的行為就有差異了，首先是按下 <kbd>Enter</kbd> 完成組字時，Firefox 的話不會有多一個 <code>update</code>，直接就是 <code>compositionend</code>，然後是在 <code>beforeinput</code> 和 <code>input</code> 之間：</p>
-<pre><code>keydown
-beforeinput
-compositionend
-input
-keyup
-</code></pre>
-<p>Chrome(v123) 的話就會有多一個 <code>compositionupdate</code> 然後 <code>compositionend</code> 順序也不一樣，會在 <code>input</code> 的後面：</p>
-<pre><code>keydown
-compositionupdate
-beforeinput
-input
-compositionend
-keyup
-</code></pre>
-<p>其實 <a href="https://w3c.github.io/uievents/#events-composition-key-events">UI Events 文件 5.7.5</a> 內的範例是 Firefox 那種沒有多 <code>compositionupdate</code> 的順序，這個 5.7 章節內其實還有不少其他情境下的事件順序，像是手寫輸入，取消輸入等等。</p>
-<p>如果是還沒完成組字，直接切換輸入法強迫結束組字，事件順序都和按下 <kbd>Enter</kbd> 都一樣，如果是組字到一半直接切換視窗，就是標準沒定義到的狀況了，Firefox 的行為比較接近上面的樣子，先完成 <code>input</code> 才 <code>blur</code>：</p>
-<pre><code>beforeinput
-compositionend
-input
-blur
-focusout
-</code></pre>
-<p>Chrome 則是會先產生 <code>blur</code> 然後接 <code>compositionend</code>：</p>
-<pre><code>change
-blur
-focusout
-compositionend
-
-</code></pre>
-<p>以上，大概紀錄了我一直以來都有疑惑的使用者行為所產生的事件們的順序，最後附上我用的程式碼（超單純）：</p>
-<pre><code class="language-javascript">const events = [
-  &quot;keydown&quot;,
-  &quot;keypress&quot;,
-  &quot;keyup&quot;,
-  &quot;change&quot;,
-  &quot;compositionstart&quot;,
-  &quot;compositionupdate&quot;,
-  &quot;compositionend&quot;,
-  &quot;beforeinput&quot;,
-  &quot;input&quot;,
-  &quot;click&quot;,
-  &quot;auxclick&quot;,
-  &quot;contextmenu&quot;,
-  &quot;mousedown&quot;,
-  &quot;mouseup&quot;,
-  &quot;focus&quot;,
-  &quot;focusin&quot;,
-  &quot;focusout&quot;,
-  &quot;blur&quot;,
-  &quot;pointerdown&quot;,
-  &quot;pointerup&quot;,
-  &quot;paste&quot;,
-];
-
-const elem1 = document.getElementById(&quot;target-1&quot;);
-const elem2 = document.getElementById(&quot;target-2&quot;);
-
-events.forEach((event) =&gt; {
-  elem1.addEventListener(
-    `${event}`,
-    () =&gt; {
-      console.log(event.target.id, event);
-    },
-    false
-  );
-  elem2.addEventListener(
-    `${event}`,
-    () =&gt; {
-      console.log(event.target.id, event);
-    },
-    false
-  );
-});
-</code></pre>
-</b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001003" baseName="akira-toriyama">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-03-08</b:date>
-				<b:time>23:15:52</b:time>
-			</b:datetime>
-			<b:category>acg</b:category>
-			<b:title>鳥山明過世</b:title>
-			<b:content>
-				<b:summary> 今天（2024-03-08）官方發布的消息，七龍珠的作者鳥山明在三月一日時因病過世了，JUMP 也有訃報，而且還有堀井雄二、桂正和、尾田栄一郎和岸本斉史的緬懷文（巴哈姆特 GNN 有譯文），在緬懷鳥山明之餘，想來紀錄一下我對七龍珠系列的一些小心得。 首先是作者名字，其實我小時候一直搞錯，而且搞錯很久，把「鳥」當成「島」，即使到現在我都還需要在腦中確認一下，然後直到今天我才知道名字的念法（Akira Toriyama）；然後就是雖然現在大家對於 Z 那段的印象是很拖，但是其實拖的是電視動畫而已，後來我回去重看漫畫時，其實節奏還蠻明快的，當然有不少轉折拉長連載的時間，但不會在同一段劇情上拖拖拉拉；然後另外一個印象就是角色強度的通膨，以前總有個是不是一直吃書改設定的印象，像是佛力札已經號稱是宇宙最強了，怎麼後面還可以一直有更強的角色，後來重看漫畫才發現其實沒有，宇宙帝王佛力札就是在那個時間點的該宇宙中戰鬥力最高的人，接在後面的人造人是紅緞帶軍團製造出來的，魔人普烏則是古早時候就被大界王神封印的，所以佛力札作威作福時人造人還不存在，普烏則是被封印的狀態。 然後動畫故事到魔人普烏之後的續作，有「GT」和「神 vs 神」、「超」那一個系列的兩個線，其實我兩部都蠻喜歡的，比較早的 GT 是鳥山明沒有參與的，這邊就先略過，後來好不容易鳥山明回來參與的「神 vs 神」劇場版開始的世界設定，擴展了整個世界/宇宙的設定，從和界王神成對的破壞神開始到後來的多重宇宙、超級賽亞人 Blue、全王等等，我覺得都很非常的精巧，有趣而且最厲害的是沒有破壞到既有的設定，只能說真不愧是鳥山明，不知道這些設定有多詳細，和未來的企劃也不知道有多少關聯（像是那個還沒開始的大魔），不管如何，都是無限讓人惋惜啊。 最後想放一個 YouTube 的影片連結： https://www.youtube.com/watch?v=aOXs5hg0a5Y 這是龍珠超最後悟空和吉連對決最高潮的片段，也就是悟空進入「身勝手の極意」狀態的片段，似乎是在墨西哥的非官方?公開放映的景象（一開始有非授權的放映，但是後來有各種地方政府取得授權的放映活動），當初看到這影片的時候就覺得很驚訝，沒想到會在離日本這麼遙遠的地方，有個國家這麼多人都對七龍珠有這麼大的熱情，真的是個空前的成就。 追記：在發文的時間點，推特（現在的 X）的日本的 Trends 上沒有鳥山明，不過其實有三個相關的：「かめはめ波」、「スーパーサイヤ人」和「国民栄誉賞」。...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53575001401/" title="鳥山明訃報 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53575001401_24c238fbc5_b.jpg" width="600" height="800" alt="鳥山明訃報" /></a></p>
-<p>今天（2024-03-08）官方發布的<a href="https://dragon-ball-official.com/news/01_2499.html">消息</a>，七龍珠的作者鳥山明在三月一日時因病過世了，JUMP 也有<a href="https://www.shonenjump.com/j/2024/03/08/240308_oshirase.html">訃報</a>，而且還有堀井雄二、桂正和、尾田栄一郎和岸本斉史的緬懷文（巴哈姆特 GNN 有<a href="https://gnn.gamer.com.tw/detail.php?sn=264681">譯文</a>），在緬懷鳥山明之餘，想來紀錄一下我對七龍珠系列的一些小心得。</p>
-<p>首先是作者名字，其實我小時候一直搞錯，而且搞錯很久，把「鳥」當成「島」，即使到現在我都還需要在腦中確認一下，然後直到今天我才知道名字的念法（Akira Toriyama）；然後就是雖然現在大家對於 Z 那段的印象是很拖，但是其實拖的是電視動畫而已，後來我回去重看漫畫時，其實節奏還蠻明快的，當然有不少轉折拉長連載的時間，但不會在同一段劇情上拖拖拉拉；然後另外一個印象就是角色強度的通膨，以前總有個是不是一直吃書改設定的印象，像是佛力札已經號稱是宇宙最強了，怎麼後面還可以一直有更強的角色，後來重看漫畫才發現其實沒有，宇宙帝王佛力札就是在那個時間點的該宇宙中戰鬥力最高的人，接在後面的人造人是紅緞帶軍團製造出來的，魔人普烏則是古早時候就被大界王神封印的，所以佛力札作威作福時人造人還不存在，普烏則是被封印的狀態。</p>
-<p>然後動畫故事到魔人普烏之後的續作，有「GT」和「神 vs 神」、「超」那一個系列的兩個線，其實我兩部都蠻喜歡的，比較早的 GT 是鳥山明沒有參與的，這邊就先略過，後來好不容易鳥山明回來參與的「神 vs 神」劇場版開始的世界設定，擴展了整個世界/宇宙的設定，從和界王神成對的破壞神開始到後來的多重宇宙、超級賽亞人 Blue、全王等等，我覺得都很非常的精巧，有趣而且最厲害的是沒有破壞到既有的設定，只能說真不愧是鳥山明，不知道這些設定有多詳細，和未來的企劃也不知道有多少關聯（像是那個還沒開始的大魔），不管如何，都是無限讓人惋惜啊。</p>
-<p>最後想放一個 YouTube 的影片連結：</p>
-<p><a href="https://www.youtube.com/watch?v=aOXs5hg0a5Y">https://www.youtube.com/watch?v=aOXs5hg0a5Y</a></p>
-<p>這是龍珠超最後悟空和吉連對決最高潮的片段，也就是悟空進入「身勝手の極意」狀態的片段，似乎是在墨西哥的非官方?公開放映的景象（一開始有非授權的放映，但是後來有各種地方政府取得授權的放映活動），當初看到這影片的時候就覺得很驚訝，沒想到會在離日本這麼遙遠的地方，有個國家這麼多人都對七龍珠有這麼大的熱情，真的是個空前的成就。</p>
-<p>追記：在發文的時間點，推特（現在的 X）的日本的 Trends 上沒有鳥山明，不過其實有三個相關的：「かめはめ波」、「スーパーサイヤ人」和「国民栄誉賞」。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53575020381/" title="Japan Trends 2024-03-08 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53575020381_d36fbe330e_b.jpg" width="387" height="1024" alt="Japan Trends 2024-03-08" srcset="https://live.staticflickr.com/65535/53575020381_37c354f542_k.jpg 2x" /></a></p>
-</b:mainContent>
-				<b:extendContent></b:extendContent>
-			</b:content>
-
-
-		</b:entry>
-
-		<b:entry entryID="001002" baseName="qr-code-history">
-			<b:author>
-				<b:authorName>othree</b:authorName>
-				<b:authorEmail>othree@gmail.com</b:authorEmail>
-				<b:authorUrl></b:authorUrl>
-			</b:author>
-			<b:datetime>
-				<b:date>2024-01-12</b:date>
-				<b:time>23:42:13</b:time>
-			</b:datetime>
-			<b:category>diary</b:category>
-			<b:title>QR Code 發明歷史展</b:title>
-			<b:content>
-				<b:summary> 去年去名古屋時，有去了 Toyota 產業技術紀念館，館內的展覽其實著重在技術介紹，分為紡織和汽車，其實我以前不知道 Toyota 是紡織起家的，展覽的內容非常不錯，很多機器都還可以運作，而且也可以讓訪客按按鈕自動展示，非常用心：...</b:summary>
-				<b:mainContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400019990/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400019990_281e6bd784_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53400019990_9636388588_k.jpg 2x" /></a></p>
-<p><a href="https://blog.othree.net/log/2024/01/06/2023-nagoya/">去年去名古屋</a>時，有去了 <a href="https://www.tcmit.org/">Toyota 產業技術紀念館</a>，館內的展覽其實著重在技術介紹，分為紡織和汽車，其實我以前不知道 Toyota 是紡織起家的，展覽的內容非常不錯，很多機器都還可以運作，而且也可以讓訪客按按鈕自動展示，非常用心：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400018490/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400018490_75533ab6f8_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53400018490_9bfe9edc2b_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53398655727/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53398655727_79d94ac64f_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53398655727_1525f1a646_k.jpg 2x" /></a></p>
-</b:mainContent>
-				<b:extendContent><p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400010890/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400010890_481e2c8b8e_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53400010890_b51e087f6e_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399581111/" title="トヨタ産業技術記念館 by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399581111_f6dc3bdb30_b.jpg" width="1024" height="683" alt="トヨタ産業技術記念館" srcset="https://live.staticflickr.com/65535/53399581111_5924ffeee2_k.jpg 2x" /></a></p>
-<p>而除了兩個展覽館之外，其實這段時間在入口附近還有一個特別企劃的 <a href="https://www.tcmit.org/information/news/2023/10/50182">QR Code 發明歷史展</a>，應該是因為去年是 QR Code 發明的 30 週年吧，我自然是對這個很有興趣，雖然展區小小的但是也有些收穫，為了寫這篇文章我也又查了不少資料。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400021685/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400021685_84f171c074_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53400021685_deea6cb207_k.jpg 2x" /></a></p>
-<p>QR Code 的很多資訊其實在 Wikipedia 上都有，不過我是看展覽才注意到原來是因日本電装（Denso）內部的需求而要開始研發二維條碼，設計出 QR Code 的原昌宏當然也是日本電装的員工，該社的研發能力蠻強的，日本電装還有一個東西是我以前在介紹<a href="https://blog.othree.net/log/2022/12/23/japan-postal-code/">日本郵遞區號</a>時有提過的，就是日本導航常用的 <a href="https://www.denso-solution.com/mapcode/whats.html">Mapcode</a>，都是非常廣泛使用的東西，由於是 Toyota 子公司，這些發明也都是圍繞著汽車相關而生的，Mapcode 主要應用在導航，而 QR Code 當初主要是為了「かんばん」系統的汽車生產零件管理，而會能像現在這樣廣泛的被使用，我覺得有兩個主要的因素，第一個是原昌宏在設計 QR Code 時，底層的設計很通用，而沒有特化於汽車零件，另一個就是日本電装當時雖然有申請專利，但各種考量後決定公開來讓大家自由使用，接下來就來看看展覽的內容吧：</p>
-<p>專利書：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399914129/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399914129_7bf2d481fc_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53399914129_327369b27d_k.jpg 2x" /></a></p>
-<p>原昌宏是設計 QR Code 的人，渡部元秋則是主要的軟體開發者，一開始的研發團隊就只有這兩位，另外三位當中的野尻忠雄是主管，另外兩位則是 Toyota 中央研究所的成員，應該是協助軟體開發的。</p>
-<p>還有列出其他的關係者，以前比較沒機會看到的團隊成員、負責人還有推動公開標準化的成員等：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53398660467/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53398660467_e106eb192a_b.jpg" width="600" height="900" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53398660467_51b68c3a7f_k.jpg 2x" /></a></p>
-<p>讀本裡面有介紹其他的二維條碼：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399914069/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399914069_b81e43605b_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53399914069_3e03ed7782_k.jpg 2x" /></a></p>
-<p>簡單的歷史：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399589081/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399589081_e89a7a029f_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53399589081_9835b3e861_k.jpg 2x" /></a></p>
-<p>中間有提到開放的原因之一，就是為了搶佔市占率，然後他們可以從 code reader 和印刷市場來賺取收益。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400020610/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400020610_8ba2bb2c6b_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53400020610_99d696225f_k.jpg 2x" /></a></p>
-<p>在各個關係者當中，負責標準化的柴田彰於 2022 年八月有在 Digital Practice 發表「<a href="https://www.ipsj.or.jp/dp/contents/publication/51/S1303-S05.html">QRコードの事業戦略と標準化</a>」一文，內容很多，有各種背景介紹，競爭對手，還有像是 Toyota 內部的「かんばん」系統在導入 QR Code 前後的標籤；與其他二維條碼的比較，有一組對照不同條碼相同設定相同資料的面積差異；還有標準化的各種紀錄，像是 ISO 15394 的包裹標籤在使用 QR Code 前後的差異等，非常值得看看。</p>
-<p>然後就是我覺得最貴重的研究手稿了，不知道有沒有數位化保存：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53399912629/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53399912629_b8d3024ed9_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53399912629_9736eb38c1_k.jpg 2x" /></a></p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53400019990/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53400019990_281e6bd784_b.jpg" width="1024" height="683" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53400019990_9636388588_k.jpg 2x" /></a></p>
-<p>然後是各種的變形版 QR Code：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53398659582/" title="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～ by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53398659582_23a22e9a85_b.jpg" width="600" height="900" alt="QRコード発明ヒストリー～QRコードはトヨタグループの発明だった！～" srcset="https://live.staticflickr.com/65535/53398659582_47e87667dd_k.jpg 2x" /></a></p>
-<p>展覽中列出的有：</p>
-<ul>
-<li><a href="https://www.qrcode.com/codes/microqr.html">Micro QR Code</a>: 比較小的 QR Code，只有一個定位點；</li>
-<li><a href="https://www.qrcode.com/codes/rmqr.html">rMQR Code(Rectangular Micro QR Code)</a>: 矩形的 Micro QR Code，可以弄成長方形列印在比較狹窄的地方；</li>
-<li><a href="https://www.denso-wave.com/ja/system/qr/product/sqrc.html">SQRC(Security QR Code)</a>: 包含隱藏資料區的 code，要特定的 code reader 才可以讀取到隱藏內容，還有配合用特殊油墨列印的防複製的方法；</li>
-<li><a href="https://www.denso-wave.com/ja/system/qr/product/frame.html">Frame QR</a>: 中間有留白一塊可以任意加工的版本。</li>
-</ul>
-<p>除了以上四種之外，其實還有：</p>
-<ul>
-<li><a href="https://www.qrcode.com/codes/iqr.html">iQR</a>: 也是可以做成長方形的 code，不過其實是過渡規格，沒有標準化，相關的設計後來就是用在 rMQR 中；</li>
-<li><a href="https://www.denso-wave.com/ja/adcd/event/aice2019/tqr.pdf">tQR</a>: t 是 toughness，是東京都營地下鐵和 Denso Wave（日本電装子公司，負責 QR Code 的部門已經拆分至此）合作的，專門用來判斷列車車門位置用的，官方的介紹就有提到為什麼需要這種機制判斷車門位置，為的像是對應不同編成的列車或是不同車門配置的車廂等等，另外有一份日本自動識別系統協會的<a href="https://www.jaisa.or.jp/action/aim/pdfs/vol64.pdf">會報</a>（4-6 頁）裡面也有介紹部分的系統運作機制，而 tQR 就是這個系統所使用的特規的 QR Code，第一眼應該就可以發現三個定位點的位置不一樣，然後編碼的容錯率則有加強到 50%。</li>
-</ul>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53458136027/" title="tQR by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53458136027_270911a92b_o_d.jpg" width="201" height="200" alt="tQR" /></a></p>
-<p>然後除了這些，回來查資料後我還發現其實普通的 QR Code 就可以多個連接，日文就稱為「連接」，英文則是稱為 Structured Append，最多可以連接 16 個，如下圖：</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53458187002/" title="Structure Append QR Code by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53458187002_dddb55862e_b.jpg" width="1024" height="630" alt="Structure Append QR Code" /></a></p>
-<p>這個機制除了可以增加資料量外，也是早期在 iQR 或是 rMQR 出來前，可以把正方形轉成長方形的一種方式，不過有支援的裝置和軟體比較少，例如我用 iPhone 相機就不支援一次全部讀取，然後如果要讀取單一個 code 就可能會跑出「找不到可用的資料」，事實上，前面介紹的 QR Code 的變形版本，iPhone 內建的相機也都不支援。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53459436824/" title="Structure Appended QR Code by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53459436824_dc9923ca6e_b.jpg" width="473" height="1024" alt="Structure Appended QR Code" srcset="https://live.staticflickr.com/65535/53459436824_5117b13520_k.jpg 2x" /></a></p>
-<p>所以接下來就要介紹最後一個收穫了，官方的 QR Code Scanner App：<a href="https://www.qrqrq.com/">クルクル（QRQR）</a>，其實我很久以前，就一直很好奇到底有沒有所謂官方的 QR Code reader 了，古早以前都是用 ZXing 的 <a href="https://play.google.com/store/apps/details?id=com.google.zxing.client.android">Barcode Scanner</a>，不過其實這是 Open Source 專案，現在也已經沒在維護了。而 Denso Wave 的官方 app，則是在 2017 年才和 Arara Inc（Denso Wave 是股東之一）一起合作<a href="https://www.denso-wave.com/ja/adcd/info/detail__14521.html">推出</a>的，當時名稱叫「Q」，後來則更名為 QRQR，免費，有多語系也沒廣告，佛心，然後支援很多種格式，包括了 Barcode、兩種標準的 QR Code，還有 Micro QR、iQR、rMQR、Frame QR 以及剛剛最後提到的連結的 QR Code，解碼速度也很快，不過曾經有過偷收集資料的壞紀錄，所以要不要用就自行評估啦。</p>
-<p><a class="thumbnail" href="https://www.flickr.com/photos/othree/53459416788/" title="クルクル（QRQR） by othree, on Flickr"><img src="https://live.staticflickr.com/65535/53459416788_2e2fcae982_b.jpg" width="1024" height="686" alt="クルクル（QRQR）" srcset="https://live.staticflickr.com/65535/53459416788_7efb432723_k.jpg 2x" /></a></p>
 </b:extendContent>
 			</b:content>
 

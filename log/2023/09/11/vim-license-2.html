@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hant-TW" prefix="og: http://ogp.me/ns#">
-  <head>
-    <meta charset="utf-8"/>
-    <title>Vim License 的故事（下） : O3noBLOG</title>
-    <meta name="description" content=" 接續前一篇。 Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 Tagbar；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt..."/>
-    <meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin="anonymous"/>
-    <link href="https://fonts.bunny.net/css?family=jetbrains-mono:400|press-start-2p:400" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" lazyload="lazyload" href="/stylesheets/all.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/>
-    <link rel="made" href="mailto:othree@gmail.com"/>
-    <link rel="prev" title="Vim License 的故事（上）" href="/log/2023/09/10/vim-license-1/"/>
-    <link rel="up" title="上一層" href="../"/>
-    <link rel="top" title="首頁" href="/"/>
-    <link rel="canonical" href="https://blog.othree.net/log/2023/09/11/vim-license-2/"/>
-    <link rel="amphtml" href="https://blog.othree.net/log/2023/09/11/vim-license-2/amp/"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:creator" content="@othree"/>
-    <meta property="og:title" content="Vim License 的故事（下）"/>
-    <meta property="og:description" content=" 接續前一篇。 Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 Tagbar；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt..."/>
-    <meta property="og:url" content="https://blog.othree.net/log/2023/09/11/vim-license-2/"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:image" content="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg"/>
-    <meta property="og:image:width" content="1024"/>
-    <meta property="og:image:height" content="684"/>
-    <meta name="twitter:widgets:csp" content="on"/>
-    <meta property="fb:admins" content="582724207"/>
-  </head>
-  <body itemscope="itemscope" itemtype="http://schema.org/Blog">
+<html amp="amp">
+  <head><meta charset="utf-8"/><title>O3noBLOG</title><meta name="description" content=" 接續前一篇。 Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 Tagbar；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt..."/><meta name="keywords" content="othree, ooo, blog, acg, html, css, javascript, vim, web page design"/><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/><style amp-custom="amp-custom">
+      .thumbnail,pre{display:block;line-height:20px}#content h3,h1{text-align:center}html body{background-color:#fffffb;font-family:-apple-system,PingFangTC-Regular,"微軟正黑體","Microsoft JhengHei",sans-serif;scroll-behavior:smooth}#page-info,hr{display:none}a:link,a:visited{margin-left:3px;margin-right:3px;text-decoration:none;color:#666}a:active,a:hover{text-decoration:underline}footer,header,main,nav{margin-left:auto;margin-right:auto;max-width:480px}h1{margin-bottom:30px}#content{padding:5px 5px 0}amp-img,img{width:auto\9;height:auto;max-width:100%;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic}amp-iframe{margin-left:-5px;margin-right:-5px}ol,ul{padding-left:1.3em}.thumbnail{padding:4px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.055);-moz-box-shadow:0 1px 3px rgba(0,0,0,.055);box-shadow:0 1px 3px rgba(0,0,0,.055);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}a.thumbnail:hover{border-color:#08c;-webkit-box-shadow:0 1px 4px rgba(0,105,214,.25);-moz-box-shadow:0 1px 4px rgba(0,105,214,.25);box-shadow:0 1px 4px rgba(0,105,214,.25)}.thumbnail img{border-radius:2px;display:block;max-width:100%;margin-right:auto;margin-left:auto}code,pre,pre code{font-size:12px;font-family:'Droid Sans Mono',Monaco,monospace}pre{padding:9.5px;margin:0 0 10px;font-size:13px;word-break:break-all;word-wrap:break-word;white-space:pre;background-color:#f5f5f5;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;overflow-x:auto}@media (max-width:480px){pre{border-radius:0;border-left:none;border-right:none;margin-left:-5px;margin-right:-5px}}code{padding:2px 4px;color:#d14;background-color:#f7f7f9;border:1px solid #e1e1e8}pre code{padding:0;color:inherit;background-color:transparent;border:0}blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}.nav-inner{background:#51A8DD;padding:0 6px}.nav-inner a:link,.nav-inner a:visited{display:inline-block;padding:6px;color:#fff}#content footer a:active,#content footer a:hover,.nav-inner a:active,.nav-inner a:hover{text-decoration:none;color:#FFE600}#content header time{display:none}#content h3{color:#0872b3;font-size:24px;line-height:1.2;margin:0 0 1.2em}#content p{line-height:1.5}#content footer{color:#fff;background:#51A8DD;padding:0 6px 0 12px;margin-top:2em;margin-left:-5px;margin-right:-5px}#content footer a:link,#content footer a:visited{display:inline-block;padding:6px 6px 6px 0;color:#fff}#content footer .canonical{float:right}
+    </style><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/><link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://feeds.feedburner.com/othree"/><link rel="made" href="mailto:othree@gmail.com"/><link rel="canonical" href="https://blog.othree.net/log/2023/09/11/vim-license-2/"/><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <script async="async" custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"/><script async="async" custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"/><script async="async" src="https://cdn.ampproject.org/v0.js"/><script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "mainEntityOfPage": "https://blog.othree.net/log/2023/09/11/vim-license-2/",
+        "publisher": {
+          "@type": "Organization",
+          "name": "othree.net",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.othree.net/images/logo-amp-google.png",
+            "width": 600,
+            "height": 60
+          }
+        },
+        "headline": "O3noBLOG",
+        "datePublished": "2023-09-11T17:27:11",
+        "dateModified": "2023-09-11T17:27:11",
+        "author": {
+          "@type": "Person",
+          "name": "othree"
+        },
+        
+        "image": {
+          "@type": "ImageObject",
+            
+          "url": "https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg",
+          "width": 1024,
+          "height": 684
+        }
+        
+        }
+      }
+    </script></head>
+  <body>
     <nav>
       <div class="nav-inner">
-        <form method="get" id="nav-search" class="navbar-search o-hidden" action="https://duckduckgo.com/" role="search">
-          <input id="search" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-          <input type="hidden" name="sites" value="blog.othree.net"/>
-        </form>
         <div class="pure-menu pure-menu-horizontal">
           <a href="/" class="pure-menu-item">
                     首頁
@@ -47,21 +52,25 @@
                     部落滾
                 </a>
           <a href="/about/me/" class="pure-menu-item">
-                    About
+                    關於
                 </a>
-          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github" title="GitHub">
-            <img src="/images/github.svg" width="24" height="24" alt="GitHub"/>
-          </a>
+          <a href="https://github.com/othree" target="_blank" class="pure-menu-item icon github">Github</a>
         </div>
       </div>
     </nav>
     <div id="container" class="container">
       <header role="banner" class="pure-g">
         <h1 class="pure-u-1">
-          <a href="/" accesskey="1" title="O3noBLOG">O3noBLOG</a>
+          <a href="/" accesskey="1" title="O3noBLOG">
+            <svg version="1.1" id="logo" x="0px" y="0px" width="320" height="37" viewBox="0 0 569 65">
+              <g>
+                <path fill="#F75C2F" stroke="#000000" stroke-width="2" d="M10,5.5V1h22.5H55v4.5V10h4.5H64v22.5V55h-4.5H55v4.5V64H32.5H10v-4.5V55H5.5H1V32.5V10h4.5H10V5.5z M46,32.5 V10H32.5H19v22.5V55h13.5H46V32.5z M82,5.5V1h27h27v4.5V10h-4.5H127v4.5V19h-4.5H118v4.5V28h4.5h4.5v4.5V37h4.5h4.5v9v9h-4.5H127v4.5V64h-22.5H82 v-4.5V55h-4.5H73v-4.5V46h9h9v4.5V55h13.5H118v-9v-9h-13.5H91v-4.5V28h4.5h4.5v-4.5V19h4.5h4.5v-4.5V10H95.5H82V5.5z M145,41.5V19h27h27v4.5V28h4.5h4.5v18v18h-9h-9V46V28h-13.5H163v18v18h-9h-9V41.5z M226,23.5V19h22.5H271v4.5V28h4.5h4.5v13.5V55h-4.5H271v4.5V64h-22.5H226v-4.5V55h-4.5H217V41.5V28h4.5h4.5 V23.5z M262,41.5V28h-13.5H235v13.5V55h13.5H262V41.5z M289,32.5V1h27h27v4.5V10h4.5h4.5v9v9h-4.5H343v4.5V37h4.5h4.5v9v9h-4.5H343v4.5V64h-27h-27V32.5z M334,19v-9 h-13.5H307v9v9h13.5H334V19z M334,46v-9h-13.5H307v9v9h13.5H334V46z M370,32.5V1h9h9v27v27h18h18v4.5V64h-27h-27V32.5z M442,5.5V1h22.5H487v4.5V10h4.5h4.5v22.5V55h-4.5H487v4.5V64h-22.5H442v-4.5V55h-4.5H433V32.5V10h4.5h4.5V5.5z M478,32.5V10h-13.5H451v22.5V55h13.5H478V32.5z M523,5.5V1h22.5H568v4.5V10h-18h-18v4.5V19h-4.5H523v13.5V46h4.5h4.5v4.5V55h9h9v-9v-9h-4.5H541v-4.5V28h13.5 H568v18v18h-22.5H523v-4.5V55h-4.5H514v-4.5V46h-4.5H505V32.5V19h4.5h4.5v-4.5V10h4.5h4.5V5.5z"/>
+              </g>
+            </svg>
+          </a>
         </h1>
       </header>
-      <div class="pure-g layout">
+      <div class="pure-g">
         <div id="page-info" class="span9">
           <div class="row">
             <div class="span6">
@@ -75,60 +84,82 @@
         </div>
         <main id="content" role="main" class="pure-u-1 pure-u-lg-3-4">
           <hr/>
-          <article itemprop="blogPost" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" id="entry-vim-license-2">
+          <article id="entry-vim-license-2">
             <header>
-              <time itemprop="datePublished dateModified" datetime="2023-09-11T17:27:11" id="date-2023-09-11">
+              <time datetime="2023-09-11T17:27:11" id="date-2023-09-11">
                 <span class="mon">09月</span>
                 <span class="day">11日</span>
               </time>
-              <h3 itemprop="name headline">
-                <a itemprop="mainEntityOfPage" href="/log/2023/09/11/vim-license-2/">Vim License 的故事（下）</a>
-              </h3>
+              <h3>Vim License 的故事（下）</h3>
             </header>
-            <section itemprop="articleBody"><p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
-<p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
-<p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
-<p>解決了上游問題，回到 Licensee 偵測的問題，我本來的 PR 沒被合併，而是 Mike 另外弄了一個比較通用的解法，是根據條款文本內的替換字串來動態調整差異的容許範圍，然後接著 2020/03/13，Licensee 9.13.1 作為第一版支援 Vim License 的 Licensee 發佈了，接下來，我理論上就只要等 GitHub 更新 Licensee 的版本就好了，這我倒是不太擔心，我是有種感覺 GitHub 是有在認真更新這些東西的，然後，時間快轉到三個月後，這段期間其實我都有偶爾上去 GitHub 看一下 Vim License 有沒有被偵測出來，想著要是終於完成的話就可以投個稿了，當時的時間大概是搞了三年這樣，總之因為過有點久了，我又去拉了最新版 Licensee 來測試，結果讓我嚇了一跳，竟然偵測不出來了！</p>
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177845605/" title="Licensee 9.13.1 by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177845605_dbd6f40e06_b.jpg" width="1024" height="684" alt="Licensee 9.13.1" srcset="https://live.staticflickr.com/65535/53177845605_169f7db9ba_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
-<p>所以我又花時間下去查原因，結果是 2020/05/12 的 9.14 開始爛掉的，Mike 在 9.14 有修改一部分的演算法，在比對兩份文件時，因為有替換字串的關係，不可能用完全比對的方式，所以在有替換字串時，文件的長度差異會影響相似度，有個動態的 <code>max_delta</code>，如果替換字串後長度差異太大超過 <code>max_delta</code> 的話，就會被判定為不同的文件，在 9.14 則是把這個機制拿掉，直接把替換字串的影響弄進相似度之中，不過其中長度差異的懲罰太大，結果造成 Vim 專案本身的判斷失準，發現原因之後，我就發了 PR 調整懲罰的參數，讓 Vim 剛好可以過關這樣，結果我發 PR 時 Mike 早已經發現這個問題，也已經修改好開了 PR 只是還在 review，而該 PR 的方法是則是動態的根據替換字串的數量來調整文件長度差異的值，除此之外，Vim License 還被加到測試之中，所以以後應該不會再發生這種問題了。</p>
-<p>然後，我就等這個 PR merge 等了三個月，不過還好 merge 後馬上就發佈 9.14.1 了，接著又回到等 GitHub 更新的時間了，我就一直等，一直等，偶爾上去 GitHub 的 Vim repo 確認一下，2021 年初我還寫信去 GitHub Support 問他們當時使用的版本是哪一版，Support 還有認真去幫我確認是沒更新，然後就這樣一直等一直等到 2022 年初，有天在用 GitHub 的搜尋功能時，突然發現到，可以用條件設定搜尋特定授權條款的專案，然後我就想說可以來試試看 Vim License：<code>license:vim</code>，結果竟然有<a href="https://github.com/search?q=license%3Avim&amp;type=repositories">符合條件的專案</a>出現！讓我大吃一驚！原來不知何時 GitHub 已經偵測的到 Vim License 了，可是 Vim 那個 repo 結果卻還是不正確，深入了解一下，推測應該是 GitHub 有 cache 機制，找了一下文件發現到有提到說如果有發現專案的授權條款標示不正確，可以聯絡 support，於是我就發了 support request，這次很快就收到回應，然後在 2022/01/12 這天，確認了 GitHub 上的 Vim 專案有正確的顯示為 Vim License 了，歷時將近五年，那天我還發推慶祝了一下。</p>
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177410816/" title="Search result of Vim Licensed repo by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177410816_564bde201f_b.jpg" width="1024" height="684" alt="Search result of Vim Licensed repo" srcset="https://live.staticflickr.com/65535/53177410816_1f295d5269_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
-<blockquote class="twitter-tweet"><p lang="zh" dir="ltr">自己挖了將近五年的坑今天終於填平了，今年終於可以投個稿</p>-- othree (@othree) <a href="https://twitter.com/othree/status/1481290722368458757?ref_src=twsrc%5Etfw">January 12, 2022</a></blockquote> <script async="async" src="https://platform.twitter.com/widgets.js" charset="utf-8"/>
-<p>之後，終於可以準備投稿，然後順利投上 2022 年的 COSCUP，題目是「<a href="https://coscup.org/2022/zh-TW/session/ESQUUF">歷時五年的開源貢獻，GitHub 支援 Vim License 的故事</a>」（<a href="https://www.youtube.com/watch?v=YM7RHRwIrKU">影片</a>、<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>），在準備分享的過程也是遭受很多的<del>電玩干擾</del>阻力，分享過程還算順利，自己有點小不滿意不過還算可以接受，不滿意的地方是有些我一開始有想要分享的點忘了說，不過也是在這篇文章有補齊了。</p>
-<p>其實在初期那段等待的時間之間，我還開了一個小專案 <a href="https://vim-license.dev/">Vim License Gen</a>，用來幫人產生自己的專案/軟體用的 Vim License 文件，為什麼要有這個工具是因為以前的純文字文件，每行的寬度大概都在 80 個字元以內，但是每個專案的名稱都不一樣，如果直接做替換，有可能會破版，所以這個工具一是會保持版面，二是它可以正確的只替換需要替換的部分，然後這個專案就是用 Vim License 開源，並且是用自己產生 Vim License 文件，然後我也把他列為使用 Vim License 的三個專案之一（另外兩個分別是 Vim 和 vim-pathogen），這也是個 self-hosting 的實現。</p>
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53177408966/" title="Vim License Gen by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53177408966_62bd21b8ab_b.jpg" width="1024" height="684" alt="Vim License Gen" srcset="https://live.staticflickr.com/65535/53177408966_c7baf853ea_k.jpg 2x"><meta itemprop="width" content="1024"/><meta itemprop="height" content="684"/></img></a></p>
-<p>故事並沒有到這邊就結束，COSCUP 分享之後的目標就是把這篇文章寫下來了，不過一拖再拖，其中一個主因是以前我是先把文章寫好順便作整理，但是這次因為準備時間不夠，無法在分享前先把文章寫好，變成後寫，沒了趕稿壓力，加上又有像是王國之淚等讓人分心的東西，就一直無限期拖搞，直到今年 2023/08/05 傳出了 Vim 的作者 Bram Moolenaar 於八月三日因病過世的消息了。</p>
-<p>Bram 過世之後，除了緬懷之外，大家也會擔心起 Vim 的後續誰維護的問題，還好 Vim GitHub 組織內還有另外兩位成員，其中 Christian Brabandt 算是接起主持人的角色，他同時也是我用很久的 vim-airline 的作者，然後很快的也發了 PR 做了一些相關的修改，像是在 doc 裡面緬懷 Bram、更新檔案內的維護者資訊等，只不過其中一項修改，改到了 LICENSE 檔案！改的地方當然就是那個高度耦合的 Vim Maintainer 的部分：</p>
-<blockquote>
-<p>The current maintainer is Bram Moolenaar <a href="mailto:Bram@vim.org">Bram@vim.org</a>.</p>
-</blockquote>
-<p>改成</p>
-<blockquote>
-<p>The current maintainers are listed here: https://github.com/orgs/vim/people.</p>
-</blockquote>
-<p>然後我還是被 ping 了才知道這 PR 已經合併，這下我可緊張了，其實我本來也是有在想 Vim License 的問題，只不過想說 Bram 才剛過世，可以晚點再提出，當時有想了幾個方案，理想上要能同時繼續支援現有的使用 Vim License 的專案、然後也要能讓授權條款內的文字正確的更新，不過當時不管哪個方案，都無法保證兩全齊美，當時想的方案為：</p>
-<ul>
-<li>方案一：更改條款內文並且發布新版，可能是叫 Vim License 1.1 之類的，缺點是可能需要重新提交提交新版的條款到 choosealicense，但是現況來看幾乎不可能符合提交的一千個專案的條件；</li>
-<li>方案二：更改條款內文，繼續用一樣的條款名，不推修改到 choosealicense，缺點是 Licensee 可能辨認不出來，結果就是 Vim 專案自己無法被辨識為使用 Vim License；</li>
-<li>方案三：同二，但是該推送修改的地方如 SPDX License List 和 choosealicense 都送，缺點是使用舊版授權條款文字的可能都再也辨認不出來，另一個問題是這樣的變化 Mike 是否會接受？</li>
-</ul>
-<p>就之前的紀錄，當時版本偵測出來的相似度也只有 98.45%，這樣一改下去，會不會就爆炸又偵測不出來了呢，於是我趕快找了個時間拉最新版的 Vim 和 Licnesee 下來測試，結果，竟然還是 98.45%，這結果又讓我驚呆了，直覺是因為 Licensee 的演算法改的更好了，一查下去，原來剛好在今年初的 Licensee 9.16.0 其中的一項修改就是針對替換字串提供更高的差異容許範圍，所以舊版 Vim License 下去比對會有 99.12% 的相似度，剛好足夠新版修改後的差異，而這結果就剛好克服了方案三的缺點，所以接下來應該就是會朝這個方向進行，先提交新版的文字給 SPDX License List，然後再更新 choosealicense 內的範本吧。</p>
-<p><a itemprop="image" itemscope="itemscope" itemtype="http://schema.org/ImageObject" class="thumbnail" href="https://www.flickr.com/photos/othree/53176812027/" title="Vim License detection by othree, on Flickr"><img itemprop="url image" src="https://live.staticflickr.com/65535/53176812027_c95d17b663_b.jpg" width="1024" height="666" alt="Vim License detection" srcset=""><meta itemprop="width" content="1024"/><meta itemprop="height" content="666"/></img></a></p>
-<p>以上，就是到目前為主的故事了，最後想來作一個總結，也就是談談當初為什麼想在 COSCUP 分享這個呢？其實我當初假想的聽眾是開源的新手，我想分享的其中一點是，對於開源專案的貢獻，我完全是照自己的步調，也不給任何一邊壓力，所有的等待過程我都沒去催促過任何人，不過標題的「五年」或許造成反效果也說不定，投稿時 Rock 有建議過我可以調整一下標題，不過我實在是想不到什麼其他好標題，結果就都沒改，後來，當天在我的前一場是 Max 的「<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>」（<a href="https://www.youtube.com/watch?v=OxuQ1sdLhks">影片</a>），就有提到這點，可以選擇你最舒服的方式參與，不用害怕參與；第二點想分享的東西則是關於在這個過程中學到的東西，像是 Licensee 的判斷原理，SPDX 相關的東西，和各個群體溝通的過程，很多東西都是我之前並不清楚的，像是我以前知道有個 SPDX License Indentifier，但是並不清楚 SPDX 是搞什麼用的，然後它們有維護 License List，甚至授權條款文本裡面可以有替換字串等，我覺得這些都是蠻有趣的知識；最後一點則是分享這一整個過程，中間一波三折，坑坑相連到天邊的轉折，我自己都覺得很有趣。</p>
-<p>以下列出我一路以來開過的 PR、Issue 和討論:</p>
-<ul>
-<li><a href="https://github.com/github/choosealicense.com/issues/498">choosealicense.com/issues/498</a> 最初的 issue</li>
-<li><a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">vim_dev: A Questions about Vim License</a> 跟 Bram 詢問　Vim License 的細節</li>
-<li><a href="https://github.com/licensee/licensee/issues/385">licensee/issues/385</a> 提出 Vim License 偵測的問題</li>
-<li><a href="https://github.com/spdx/license-list-XML/pull/901">license-list-XML/pull/901</a> 幫 SPDX License List 裡面的 Vim License 加上替換字串</li>
-<li><a href="https://github.com/vim/vim/pull/5458">vim/pull/5458</a> 幫 Vim 加入　LICENSE 檔案</li>
-<li><a href="https://github.com/tpope/vim-pathogen/pull/210">vim-pathogen/pull/210</a> 幫 vim-pathogen 加入 LICENSE 檔案</li>
-<li><a href="https://github.com/github/choosealicense.com/pull/717">choosealicense.com/pull/717</a> 最重要的那個 PR，加 vim.txt 到 choosealicense</li>
-<li><a href="https://github.com/licensee/licensee/pull/445">licensee/pull/445</a> 修改新版 Licensee 的問題</li>
-<li><a href="https://github.com/othree/vim-license/issues/2">vim-license/issues/2</a> Vim License Gen 紀錄各個連結用的 issue</li>
-</ul>
-<p>最後的最後就來個簡單的 timeline 吧：</p>
-<pre><code>- 2013/07/15 Choose a license released
+            <section>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/53177611514/" title="Vim License on choosealicense by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/53177611514_6232063ea9_b.jpg" width="1024" height="684" alt="Vim License on choosealicense" srcset="https://live.staticflickr.com/65535/53177611514_69382dace8_k.jpg 2x"/>
+                </a>
+              </p>
+              <p>接續<a href="https://blog.othree.net/log/2023/09/10/vim-license-1/">前一篇</a>。</p>
+              <p>Mike 在 SPDX License List 這邊提出的問題則是，為什麼會有 Vim 要替換，但是 Vim Maintainer 不要替換這樣特別的情形，所以我就是認真的解釋，並且說明這是跟原作者 Bram 確認過的細節並附上討論，還有舉我前面提過那個最極端的例子，然後我猜最重要的是現實世界有沒有人這樣使用過，還好我還真的找到幾個專案有認真的把條款內的 Vim 替換掉（當然是連 Vim Maintainer 也換掉了），像是 <a href="https://github.com/preservim/tagbar/blob/master/LICENSE">Tagbar</a>；我的 PR 是 2019/07/11 提的，然後一直來回到 9/25 回了最後一個回應之後就沒人回我了，之後到了 10/19 就突然被合併了（其實 SPDX 有定期的會議，應該是在其中有討論過要不要合併這個 PR 吧），接著等到 2020 一月我發了 PR 到 choosealicense 把 vim.txt 加進去，這次就蠻順利就合併了。</p>
+              <p>解決了上游問題，回到 Licensee 偵測的問題，我本來的 PR 沒被合併，而是 Mike 另外弄了一個比較通用的解法，是根據條款文本內的替換字串來動態調整差異的容許範圍，然後接著 2020/03/13，Licensee 9.13.1 作為第一版支援 Vim License 的 Licensee 發佈了，接下來，我理論上就只要等 GitHub 更新 Licensee 的版本就好了，這我倒是不太擔心，我是有種感覺 GitHub 是有在認真更新這些東西的，然後，時間快轉到三個月後，這段期間其實我都有偶爾上去 GitHub 看一下 Vim License 有沒有被偵測出來，想著要是終於完成的話就可以投個稿了，當時的時間大概是搞了三年這樣，總之因為過有點久了，我又去拉了最新版 Licensee 來測試，結果讓我嚇了一跳，竟然偵測不出來了！</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/53177845605/" title="Licensee 9.13.1 by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/53177845605_dbd6f40e06_b.jpg" width="1024" height="684" alt="Licensee 9.13.1" srcset="https://live.staticflickr.com/65535/53177845605_169f7db9ba_k.jpg 2x"/>
+                </a>
+              </p>
+              <p>所以我又花時間下去查原因，結果是 2020/05/12 的 9.14 開始爛掉的，Mike 在 9.14 有修改一部分的演算法，在比對兩份文件時，因為有替換字串的關係，不可能用完全比對的方式，所以在有替換字串時，文件的長度差異會影響相似度，有個動態的 <code>max_delta</code>，如果替換字串後長度差異太大超過 <code>max_delta</code> 的話，就會被判定為不同的文件，在 9.14 則是把這個機制拿掉，直接把替換字串的影響弄進相似度之中，不過其中長度差異的懲罰太大，結果造成 Vim 專案本身的判斷失準，發現原因之後，我就發了 PR 調整懲罰的參數，讓 Vim 剛好可以過關這樣，結果我發 PR 時 Mike 早已經發現這個問題，也已經修改好開了 PR 只是還在 review，而該 PR 的方法是則是動態的根據替換字串的數量來調整文件長度差異的值，除此之外，Vim License 還被加到測試之中，所以以後應該不會再發生這種問題了。</p>
+              <p>然後，我就等這個 PR merge 等了三個月，不過還好 merge 後馬上就發佈 9.14.1 了，接著又回到等 GitHub 更新的時間了，我就一直等，一直等，偶爾上去 GitHub 的 Vim repo 確認一下，2021 年初我還寫信去 GitHub Support 問他們當時使用的版本是哪一版，Support 還有認真去幫我確認是沒更新，然後就這樣一直等一直等到 2022 年初，有天在用 GitHub 的搜尋功能時，突然發現到，可以用條件設定搜尋特定授權條款的專案，然後我就想說可以來試試看 Vim License：<code>license:vim</code>，結果竟然有<a href="https://github.com/search?q=license%3Avim&amp;type=repositories">符合條件的專案</a>出現！讓我大吃一驚！原來不知何時 GitHub 已經偵測的到 Vim License 了，可是 Vim 那個 repo 結果卻還是不正確，深入了解一下，推測應該是 GitHub 有 cache 機制，找了一下文件發現到有提到說如果有發現專案的授權條款標示不正確，可以聯絡 support，於是我就發了 support request，這次很快就收到回應，然後在 2022/01/12 這天，確認了 GitHub 上的 Vim 專案有正確的顯示為 Vim License 了，歷時將近五年，那天我還發推慶祝了一下。</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/53177410816/" title="Search result of Vim Licensed repo by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/53177410816_564bde201f_b.jpg" width="1024" height="684" alt="Search result of Vim Licensed repo" srcset="https://live.staticflickr.com/65535/53177410816_1f295d5269_k.jpg 2x"/>
+                </a>
+              </p>
+              <amp-twitter layout="responsive" data-tweetid="1481290722368458757?ref_src=twsrc%5Etfw">
+                <blockquote class="twitter-tweet"><p lang="zh" dir="ltr">自己挖了將近五年的坑今天終於填平了，今年終於可以投個稿</p>-- othree (@othree) <a href="https://twitter.com/othree/status/1481290722368458757?ref_src=twsrc%5Etfw">January 12, 2022</a></blockquote>
+              </amp-twitter>
+              <p>之後，終於可以準備投稿，然後順利投上 2022 年的 COSCUP，題目是「<a href="https://coscup.org/2022/zh-TW/session/ESQUUF">歷時五年的開源貢獻，GitHub 支援 Vim License 的故事</a>」（<a href="https://www.youtube.com/watch?v=YM7RHRwIrKU">影片</a>、<a href="https://speakerdeck.com/othree/how-github-supports-vim-license-detection-the-five-years-journey">投影片</a>），在準備分享的過程也是遭受很多的<del>電玩干擾</del>阻力，分享過程還算順利，自己有點小不滿意不過還算可以接受，不滿意的地方是有些我一開始有想要分享的點忘了說，不過也是在這篇文章有補齊了。</p>
+              <p>其實在初期那段等待的時間之間，我還開了一個小專案 <a href="https://vim-license.dev/">Vim License Gen</a>，用來幫人產生自己的專案/軟體用的 Vim License 文件，為什麼要有這個工具是因為以前的純文字文件，每行的寬度大概都在 80 個字元以內，但是每個專案的名稱都不一樣，如果直接做替換，有可能會破版，所以這個工具一是會保持版面，二是它可以正確的只替換需要替換的部分，然後這個專案就是用 Vim License 開源，並且是用自己產生 Vim License 文件，然後我也把他列為使用 Vim License 的三個專案之一（另外兩個分別是 Vim 和 vim-pathogen），這也是個 self-hosting 的實現。</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/53177408966/" title="Vim License Gen by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/53177408966_62bd21b8ab_b.jpg" width="1024" height="684" alt="Vim License Gen" srcset="https://live.staticflickr.com/65535/53177408966_c7baf853ea_k.jpg 2x"/>
+                </a>
+              </p>
+              <p>故事並沒有到這邊就結束，COSCUP 分享之後的目標就是把這篇文章寫下來了，不過一拖再拖，其中一個主因是以前我是先把文章寫好順便作整理，但是這次因為準備時間不夠，無法在分享前先把文章寫好，變成後寫，沒了趕稿壓力，加上又有像是王國之淚等讓人分心的東西，就一直無限期拖搞，直到今年 2023/08/05 傳出了 Vim 的作者 Bram Moolenaar 於八月三日因病過世的消息了。</p>
+              <p>Bram 過世之後，除了緬懷之外，大家也會擔心起 Vim 的後續誰維護的問題，還好 Vim GitHub 組織內還有另外兩位成員，其中 Christian Brabandt 算是接起主持人的角色，他同時也是我用很久的 vim-airline 的作者，然後很快的也發了 PR 做了一些相關的修改，像是在 doc 裡面緬懷 Bram、更新檔案內的維護者資訊等，只不過其中一項修改，改到了 LICENSE 檔案！改的地方當然就是那個高度耦合的 Vim Maintainer 的部分：</p>
+              <blockquote>
+                <p>The current maintainer is Bram Moolenaar <a href="mailto:Bram@vim.org">Bram@vim.org</a>.</p>
+              </blockquote>
+              <p>改成</p>
+              <blockquote>
+                <p>The current maintainers are listed here: https://github.com/orgs/vim/people.</p>
+              </blockquote>
+              <p>然後我還是被 ping 了才知道這 PR 已經合併，這下我可緊張了，其實我本來也是有在想 Vim License 的問題，只不過想說 Bram 才剛過世，可以晚點再提出，當時有想了幾個方案，理想上要能同時繼續支援現有的使用 Vim License 的專案、然後也要能讓授權條款內的文字正確的更新，不過當時不管哪個方案，都無法保證兩全齊美，當時想的方案為：</p>
+              <ul>
+                <li>方案一：更改條款內文並且發布新版，可能是叫 Vim License 1.1 之類的，缺點是可能需要重新提交提交新版的條款到 choosealicense，但是現況來看幾乎不可能符合提交的一千個專案的條件；</li>
+                <li>方案二：更改條款內文，繼續用一樣的條款名，不推修改到 choosealicense，缺點是 Licensee 可能辨認不出來，結果就是 Vim 專案自己無法被辨識為使用 Vim License；</li>
+                <li>方案三：同二，但是該推送修改的地方如 SPDX License List 和 choosealicense 都送，缺點是使用舊版授權條款文字的可能都再也辨認不出來，另一個問題是這樣的變化 Mike 是否會接受？</li>
+              </ul>
+              <p>就之前的紀錄，當時版本偵測出來的相似度也只有 98.45%，這樣一改下去，會不會就爆炸又偵測不出來了呢，於是我趕快找了個時間拉最新版的 Vim 和 Licnesee 下來測試，結果，竟然還是 98.45%，這結果又讓我驚呆了，直覺是因為 Licensee 的演算法改的更好了，一查下去，原來剛好在今年初的 Licensee 9.16.0 其中的一項修改就是針對替換字串提供更高的差異容許範圍，所以舊版 Vim License 下去比對會有 99.12% 的相似度，剛好足夠新版修改後的差異，而這結果就剛好克服了方案三的缺點，所以接下來應該就是會朝這個方向進行，先提交新版的文字給 SPDX License List，然後再更新 choosealicense 內的範本吧。</p>
+              <p>
+                <a class="thumbnail" href="https://www.flickr.com/photos/othree/53176812027/" title="Vim License detection by othree, on Flickr">
+                  <amp-img layout="responsive" src="https://live.staticflickr.com/65535/53176812027_c95d17b663_b.jpg" width="1024" height="666" alt="Vim License detection" srcset=""/>
+                </a>
+              </p>
+              <p>以上，就是到目前為主的故事了，最後想來作一個總結，也就是談談當初為什麼想在 COSCUP 分享這個呢？其實我當初假想的聽眾是開源的新手，我想分享的其中一點是，對於開源專案的貢獻，我完全是照自己的步調，也不給任何一邊壓力，所有的等待過程我都沒去催促過任何人，不過標題的「五年」或許造成反效果也說不定，投稿時 Rock 有建議過我可以調整一下標題，不過我實在是想不到什麼其他好標題，結果就都沒改，後來，當天在我的前一場是 Max 的「<a href="https://coscup.org/2022/zh-TW/session/99GBZC">開源軟體與社群 - 參與國際社群經驗談</a>」（<a href="https://www.youtube.com/watch?v=OxuQ1sdLhks">影片</a>），就有提到這點，可以選擇你最舒服的方式參與，不用害怕參與；第二點想分享的東西則是關於在這個過程中學到的東西，像是 Licensee 的判斷原理，SPDX 相關的東西，和各個群體溝通的過程，很多東西都是我之前並不清楚的，像是我以前知道有個 SPDX License Indentifier，但是並不清楚 SPDX 是搞什麼用的，然後它們有維護 License List，甚至授權條款文本裡面可以有替換字串等，我覺得這些都是蠻有趣的知識；最後一點則是分享這一整個過程，中間一波三折，坑坑相連到天邊的轉折，我自己都覺得很有趣。</p>
+              <p>以下列出我一路以來開過的 PR、Issue 和討論:</p>
+              <ul>
+                <li><a href="https://github.com/github/choosealicense.com/issues/498">choosealicense.com/issues/498</a> 最初的 issue</li>
+                <li><a href="https://groups.google.com/g/vim_dev/c/DlTVMew1ZSo/m/b9QCTlXgEAAJ">vim_dev: A Questions about Vim License</a> 跟 Bram 詢問　Vim License 的細節</li>
+                <li><a href="https://github.com/licensee/licensee/issues/385">licensee/issues/385</a> 提出 Vim License 偵測的問題</li>
+                <li><a href="https://github.com/spdx/license-list-XML/pull/901">license-list-XML/pull/901</a> 幫 SPDX License List 裡面的 Vim License 加上替換字串</li>
+                <li><a href="https://github.com/vim/vim/pull/5458">vim/pull/5458</a> 幫 Vim 加入　LICENSE 檔案</li>
+                <li><a href="https://github.com/tpope/vim-pathogen/pull/210">vim-pathogen/pull/210</a> 幫 vim-pathogen 加入 LICENSE 檔案</li>
+                <li><a href="https://github.com/github/choosealicense.com/pull/717">choosealicense.com/pull/717</a> 最重要的那個 PR，加 vim.txt 到 choosealicense</li>
+                <li><a href="https://github.com/licensee/licensee/pull/445">licensee/pull/445</a> 修改新版 Licensee 的問題</li>
+                <li><a href="https://github.com/othree/vim-license/issues/2">vim-license/issues/2</a> Vim License Gen 紀錄各個連結用的 issue</li>
+              </ul>
+              <p>最後的最後就來個簡單的 timeline 吧：</p>
+              <pre>
+                <code>- 2013/07/15 Choose a license released
 - 2016/09/21 Display/detect the license
 - 2017/03/26 Open issue to choosealicense
 - 2018/06/15 First issue closed
@@ -152,114 +183,31 @@
 - 2023/08/13 Vim License file updated
 - 2023/09/04 再次開始寫文章
 - 2023/09/12 發表文章
-</code></pre>
-</section>
+</code>
+              </pre>
+            </section>
             <footer>
-              <a href="/log/vim/" rel="tag">VIM</a>
-            </footer>
+      文章分類：
+      <a href="/log/vim/" rel="tag">VIM</a><a class="canonical" href="/log/2023/09/11/vim-license-2/" title="「Vim License 的故事（下）」的原始位置">原始位置</a></footer>
           </article>
           <hr/>
         </main>
-        <aside role="complementary" class="pure-u-1 pure-u-lg-1-4">
-          <hr/>
-          <h2>其它資訊</h2>
-          <form method="get" id="search-form" class="form-search" action="https://duckduckgo.com/" role="search">
-            <input accesskey="4" id="search-input" type="search" name="q" size="20" tabindex="8" aria-label="搜尋" placeholder="搜尋" required="required" aria-required="true" class="search-query input-medium"/>
-            <input type="hidden" name="sites" value="blog.othree.net"/>
-          </form>
-          <hr/>
-          <div role="contentinfo"> <h3>關於本文章</h3><p><strong>Vim License 的故事（下）</strong>發表於 2023-09-11，文章類別為
-			  <a href="/log/vim/">VIM</a>。
-                  </p><div><button id="share-button" type="button">Share</button></div><p><a class="prev pn" href="/log/2023/09/10/vim-license-1/"><span class="prefix">上一篇：</span>Vim License 的故事（上）<time>2023-09-10</time></a><a class="next pn" href="/log/2023/09/15/digital-envelope-routines-unsupported/"><span class="prefix">下一篇：</span>digital envelope routines::unsupported<time>2023-09-15</time></a></p></div>
-          <h3>關於本網誌</h3>
-          <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <p class="vcard">本網誌是 <a itemprop="name" href="https://twitter.com/othree" class="fn nickname" rel="me">othree</a> 的個人部落格，主要內容為網路標準、網頁設計，穿插些 ACG 心得和敗家紀錄，更詳細的資訊請見<a href="http://blog.othree.net/about/here/">關於這</a>，如要聯絡我請寄信到 <a itemprop="email" href="mailto:othree@gmail.com" class="email">othree@gmail.com</a></p>
-          </address>
-          <h3>近期文章</h3>
-          <ul>
-            <li>
-              <a href="/log/2024/04/17/json-type-definition/" title="2024-04-17">JSON Type Definition</a>
-            </li>
-            <li>
-              <a href="/log/2024/04/03/the-magic-of-dialog/" title="2024-04-03">Dialog 的魔法</a>
-            </li>
-            <li>
-              <a href="/log/2024/03/28/yamani/" title="2024-03-28">やまに（yamani）旅館</a>
-            </li>
-            <li>
-              <a href="/log/2024/03/24/ui-event-order/" title="2024-03-24">UI Event Order</a>
-            </li>
-            <li>
-              <a href="/log/2024/03/08/akira-toriyama/" title="2024-03-08">鳥山明過世</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/12/qr-code-history/" title="2024-01-12">QR Code 發明歷史展</a>
-            </li>
-            <li>
-              <a href="/log/2024/01/06/2023-nagoya/" title="2024-01-06">2023 名古屋</a>
-            </li>
-            <li>
-              <a href="/log/2023/12/09/genji-koh/" title="2023-12-09">源氏香 南知多</a>
-            </li>
-            <li>
-              <a href="/log/2023/11/08/sign-in-with-/" title="2023-11-08">Sign-in with OOO ID</a>
-            </li>
-            <li>
-              <a href="/log/2023/10/22/celeste/" title="2023-10-22">Celeste</a>
-            </li>
-          </ul>
-          <h3>分類彙整</h3>
-          <ul>
-            <li><a href="/log/about/">關於這裡</a> <span>(43)</span></li>
-            <li><a href="/log/acg/">動畫、漫畫、遊戲</a> <span>(42)</span></li>
-            <li><a href="/log/books/">與書相關</a> <span>(38)</span></li>
-            <li><a href="/log/buy/">敗家</a> <span>(51)</span></li>
-            <li><a href="/log/css-html/">CSS &amp; HTML</a> <span>(110)</span></li>
-            <li><a href="/log/diary/">日記</a> <span>(136)</span></li>
-            <li><a href="/log/mac/">蘋果蘋果</a> <span>(17)</span></li>
-            <li><a href="/log/others/">其他</a> <span>(23)</span></li>
-            <li><a href="/log/script/">SCRIPT</a> <span>(150)</span></li>
-            <li><a href="/log/server/">Server Side</a> <span>(16)</span></li>
-            <li><a href="/log/software/">軟體推薦、TIP</a> <span>(82)</span></li>
-            <li><a href="/log/unix/">UNIX</a> <span>(20)</span></li>
-            <li><a href="/log/vim/">VIM</a> <span>(46)</span></li>
-            <li><a href="/log/web/">Web</a> <span>(202)</span></li>
-          </ul>
-          <h3>訂閱本網誌</h3>
-          <ul id="feeds">
-            <li>
-              <a href="https://feeds.feedburner.com/othree">
-                    FeedBurner
-                  </a>
-            </li>
-          </ul>
-          <h3>貼紙</h3>
-          <p id="stickers">
-            <a href="https://sites.google.com/view/happy-busy/">
-              <img src="/images/busy_banner.png" width="200" height="40" alt="時間がない"/>
-            </a>
-            <a href="https://developer.mozilla.org/en/JavaScript" title="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation">
-              <img src="/images/240x480-1.2v2.png" height="240" width="120" alt="JavaScript Reference, JavaScript Guide, JavaScript API, JS API, JS Guide, JS Reference, Learn JS, JS Documentation"/>
-            </a>
-          </p>
-        </aside>
       </div>
-      <footer class="pure-g">
-        <h2 class="pure-u-1">使用技術、規範、服務</h2>
-        <p class="pure-u-1">
-          <a href="http://creativecommons.org/licenses/by/4.0/deed.zh_TW">CC BY 4.0</a>
-          <a itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization" href="https://othree.net">
-            <span itemprop="name">othree.net</span>
-            <span itemprop="logo" itemscope="itemscope" itemtype="http://schema.org/ImageObject">
-              <link itemprop="url image" content="https://blog.othree.net/images/logo-amp-google.png"/>
-              <meta itemprop="width" content="600"/>
-              <meta itemprop="height" content="60"/>
-            </span>
-          </a>
-        </p>
-      </footer>
     </div>
-    <script async="async" src="/scripts/all.js"/>
-    <script async="async" src="/scripts/prism.js"/>
+    <amp-analytics type="googleanalytics" id="analytics1">
+      <script type="application/json">
+        {
+          "vars": {
+            "account": "UA-77906-1"
+          },
+          "triggers": {
+            "trackPageview": {
+              "on": "visible",
+              "request": "pageview"
+            }
+          }
+        }
+        </script>
+    </amp-analytics>
   </body>
 </html>
